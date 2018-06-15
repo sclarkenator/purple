@@ -112,12 +112,7 @@ view: return_order {
     sql: ${TABLE}.return_reason_id ;;
   }
 
-  dimension: return_reason {
-    type: string
-    sql: ${return_reason.return_reason} ;;
-  }
-
-   dimension: return_ref_id {
+  dimension: return_ref_id {
     hidden: yes
     type: string
     sql: ${TABLE}.RETURN_REF_ID ;;

@@ -1,21 +1,16 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
-  measure: unit_return_rate {
-    type: sum
-    sql: ${return_order_line.units_returned}/${sales_order_line.Total_units} ;;
-  }
-
   measure: Total_net_sales {
     type: sum
     sql:  ${TABLE}.net_amt ;;
   }
 
-  measure: Hours_to_fulfill {
-    description: "Hours between order placed and order fulfilled"
-    type: average
-    sql:  datediff(hour,${TABLE}.fulfilled_Date,${TABLE}.created_Date) ;;
-  }
+  #measure: Hours_to_fulfill {
+   # description: "Hours between order placed and order fulfilled"
+    #type: average
+    #sql:  datediff(hour,${TABLE}.fulfilled_Date,${TABLE}.created_Date) ;;
+#  }
 
   measure: Total_units {
     type: sum
@@ -95,11 +90,13 @@ view: sales_order_line {
   }
 
   dimension: discount_code {
+    hidden: yes
     type: string
     sql: ${TABLE}.DISCOUNT_CODE ;;
   }
 
   dimension: estimated_cost {
+    hidden: yes
     label: "Estimated COGS"
     description: "Estimated COGS, excluding freight"
     type: number
