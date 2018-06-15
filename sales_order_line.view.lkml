@@ -1,18 +1,23 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
-  measure: Total_net_sales {
+  measure: total_net_sales {
     type: sum
     sql:  ${TABLE}.net_amt ;;
   }
 
-  #measure: Hours_to_fulfill {
-   # description: "Hours between order placed and order fulfilled"
-    #type: average
-    #sql:  datediff(hour,${TABLE}.fulfilled_Date,${TABLE}.created_Date) ;;
-#  }
+  measure: Hours_to_fulfill {
+    description: "Hours between order placed and order fulfilled"
+    type: average
+    sql:  datediff(hour,${TABLE}.fulfilled_Date,${TABLE}.created_Date) ;;
+  }
 
-  measure: Total_units {
+  measure: return_rate {
+    type: number
+    sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
+  }
+
+  measure: total_units {
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
   }
@@ -51,6 +56,11 @@ view: sales_order_line {
     map_layer_name: countries
     sql: ${TABLE}.COUNTRY ;;
   }
+
+dimension: MTD_flg{
+  type: yesno
+  sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
+}
 
  dimension_group: created {
   label: "Order"
