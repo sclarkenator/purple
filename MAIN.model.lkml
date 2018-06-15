@@ -15,6 +15,7 @@ persist_with: gross_to_net_sales_default_datagroup
 
 explore: cancelled_order {
   label:  "Cancellations"
+  fields: [ALL_FIELDS*,-sales_order_line.return_rate]
   join: sales_order_line {
     type: left_outer
     sql_on: ${cancelled_order.item_order} = ${sales_order_line.item_order} ;;

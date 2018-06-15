@@ -8,13 +8,15 @@ view: sales_order_line {
 
   measure: Hours_to_fulfill {
     description: "Hours between order placed and order fulfilled"
+    drill_fields: [fulfill_details*]
     type: average
-    sql:  datediff(hour,${TABLE}.fulfilled_Date,${TABLE}.created_Date) ;;
+    sql:  datediff(hour,${TABLE}.created,${TABLE}.fulfilled) ;;
   }
 
   measure: return_rate {
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
+    value_format: ""
   }
 
   measure: total_units {
@@ -26,6 +28,12 @@ view: sales_order_line {
     description: "Total discounts applied at time of order"
     type: sum
     sql:  ${TABLE}.discount_amt ;;
+  }
+
+  measure: count_lines {
+    type: count
+    drill_fields: [fulfill_details*]
+
   }
 
   dimension: item_order{
@@ -62,7 +70,14 @@ dimension: MTD_flg{
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
 }
 
- dimension_group: created {
+dimension: month {
+    label:  "Month order was placed"
+    type:  date_month_name
+    sql: ${TABLE}.created ;;
+}
+
+
+dimension_group: created {
   label: "Order"
   description:  "Time and date order was placed"
   type: time
@@ -75,8 +90,8 @@ dimension: MTD_flg{
     year
   ]
   convert_tz: no
-  datatype: date
-  sql: ${TABLE}.Created ;;
+  datatype: timestamp
+  sql: to_timestamp_ntz(${TABLE}.Created) ;;
 }
 
   dimension: department_id {
@@ -133,8 +148,8 @@ dimension: MTD_flg{
       year
     ]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}.FULFILLED ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}.FULFILLED) ;;
   }
 
   dimension: fulfillment_method {
@@ -171,6 +186,7 @@ dimension: MTD_flg{
 
   dimension: order_id {
     view_label: "ID Fields"
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
     sql: ${TABLE}.ORDER_ID ;;
@@ -238,4 +254,7 @@ dimension: MTD_flg{
     sql: substr(${TABLE}.ZIP,1,5) ;;
   }
 
+  set: fulfill_details {
+    fields: [order_id,company_id,created_date,fulfilled_date]
+  }
 }
