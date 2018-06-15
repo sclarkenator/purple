@@ -16,8 +16,8 @@ view: sales_order_line {
   measure: return_rate {
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
-    value_format: ""
-  }
+    value_format: "percent_2"
+    }
 
   measure: total_units {
     type: sum
