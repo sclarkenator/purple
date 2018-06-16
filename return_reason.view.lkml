@@ -1,15 +1,16 @@
 view: return_reason {
   sql_table_name: ANALYTICS_STAGE.NETSUITE_STG.RETURN_REASON ;;
 
-dimension: list_id {
-  type: number
-  hidden: yes
-  primary_key: yes
-  sql: ${TABLE}.LIST_ID ;;
-}
-dimension: return_reason {
-  label:"Return reason"
-  type:  string
-  sql:  ${TABLE}.list_item_name ;;
-}
+  dimension: list_id {
+    type: number
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.LIST_ID ;;
+  }
+
+  dimension: return_reason {
+    label:"Return reason"
+    type:  string
+    sql:  ${TABLE}.list_item_name ;;
+  }
 }

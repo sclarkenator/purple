@@ -15,7 +15,7 @@ view: return_order {
   }
 
   dimension: channel_id {
-  #hidden: yes
+  hidden: yes
   description: "1 - DTC, 2 - Wholesale"
     type: number
     sql: ${TABLE}.CHANNEL_ID ;;
@@ -97,6 +97,7 @@ view: return_order {
   }
 
   dimension: replacement_order_link_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.REPLACEMENT_ORDER_LINK_ID ;;
   }
@@ -164,12 +165,14 @@ view: return_order {
   }
 
   dimension: rma_stretchy_sheet_id {
+    hidden: yes
     description: "Does the customer say they've tried it with stretchy sheets?"
     type: number
     sql: ${TABLE}.RMA_STRETCHY_SHEET_ID ;;
   }
 
   dimension: rmawarranty_ticket_number {
+    hidden: yes
     description: "RMA number"
     type: string
     sql: ${TABLE}.RMAWARRANTY_TICKET_NUMBER ;;
@@ -237,12 +240,9 @@ view: return_order {
   }
 
   dimension: warranty_order {
+    hidden: yes
     type: string
     sql: ${TABLE}.WARRANTY_ORDER ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [return_order_id, return_order_line.count]
-  }
 }

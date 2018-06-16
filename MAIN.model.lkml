@@ -79,14 +79,14 @@ explore: sales_order_line {
     }
 
   join: return_order_line {
-    view_label: "Returns at line-level"
+    view_label: "Returns info"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
     relationship: one_to_many
   }
 
   join: return_order {
-    view_label: "Returns at order-level"
+    view_label: "Returns info"
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${return_order.order_id} ;;
     relationship:many_to_one

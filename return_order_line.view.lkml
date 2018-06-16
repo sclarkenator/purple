@@ -27,14 +27,7 @@ view: return_order_line {
     sql: ${TABLE}.ALLOW_DISCOUNT_REMOVAL ;;
   }
 
-#  dimension: days_since_fulfilled {
-#    type: tier
-#    tiers: [30,60,90,120]
-#        sql: datediff(day,${sales_order_line.fulfilled_Date},${TABLE}.closed_Date) ;;
-#  }
-
   dimension: auto_invoice_type_id {
-    view_label: "ID Fields"
     hidden: yes
     type: number
     sql: ${TABLE}.AUTO_INVOICE_TYPE_ID ;;
@@ -69,7 +62,6 @@ view: return_order_line {
   }
 
   dimension: department_id {
-    view_label: "ID Fields"
     hidden: yes
     type: number
     sql: ${TABLE}.DEPARTMENT_ID ;;
@@ -82,7 +74,6 @@ view: return_order_line {
   }
 
   dimension: item_id {
-    view_label: "ID Fields"
     type: number
     # hidden: yes
     sql: ${TABLE}.ITEM_ID ;;
@@ -117,13 +108,11 @@ view: return_order_line {
 
   dimension: order_id {
     hidden: yes
-    view_label: "ID Fields"
     type: number
     sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: price_type_id {
-    view_label: "ID Fields"
     hidden: yes
     type: number
     sql: ${TABLE}.PRICE_TYPE_ID ;;
@@ -142,7 +131,6 @@ view: return_order_line {
   }
 
   dimension: return_order_id {
-    view_label: "ID Fields"
     hidden: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;;
@@ -187,10 +175,7 @@ view: return_order_line {
     sql: ${TABLE}.UPDATE_TS ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {
