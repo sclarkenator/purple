@@ -35,13 +35,6 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;;
   }
 
-  measure: count_lines {
-    view_label: "Order info"
-    type: count
-    drill_fields: [fulfill_details*]
-
-  }
-
   dimension: item_order{
     view_label: "Order info"
     primary_key:  yes
@@ -50,7 +43,7 @@ view: sales_order_line {
   }
 
   dimension: city {
-    group_label: "Address"
+    group_label: "Customer address"
     view_label: "Customer info"
     hidden: yes
     type: string
@@ -65,7 +58,7 @@ view: sales_order_line {
   }
 
   dimension: country {
-    group_label: "Address"
+    group_label: "Customer address"
     view_label: "Customer info"
     type: string
     map_layer_name: countries
@@ -74,17 +67,10 @@ view: sales_order_line {
 
 dimension: MTD_flg{
   view_label: "Order info"
+  description: "This field is for formatting on MTD reports"
   type: yesno
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
 }
-
-dimension: month {
-  view_label: "Order info"
-  label:  "Month order was placed"
-    type:  date_month_name
-    sql: ${TABLE}.created ;;
-}
-
 
 dimension_group: created {
   view_label: "Order info"
@@ -143,6 +129,7 @@ dimension_group: created {
   }
 
   dimension: etail_order_line_id {
+    hidden:  yes
     view_label: "Order info"
     label: "Shopify order line ID"
     description: "You can use this ID to look up orders in Shopify"
@@ -169,6 +156,7 @@ dimension_group: created {
 
   dimension: mattress_trial_period {
     view_label: "Order info"
+    description:  "Ageing buckets for trial return period"
     type: tier
     tiers: [30,60,90,120]
     style: integer
@@ -190,6 +178,7 @@ dimension_group: created {
   }
 
   dimension: item_id {
+    hidden:  yes
     view_label: "Order info"
     type: number
     sql: ${TABLE}.ITEM_ID ;;
@@ -197,7 +186,8 @@ dimension_group: created {
 
   dimension: location {
     view_label: "Order info"
-    label:  "Source warehouse"
+    label:  "Fulfillment warehouse"
+    description:  "Warehouse that order was fulfilled out of"
     type: string
     sql: ${TABLE}.LOCATION ;;
   }
@@ -242,15 +232,14 @@ dimension_group: created {
 
   dimension: state {
     view_label: "Customer info"
-    group_label: "Address"
+    group_label: "Customer address"
     type: string
     sql: ${TABLE}.STATE ;;
   }
 
   dimension: street_address {
     view_label: "Customer info"
-    group_label: "Address"
-    hidden: yes
+    group_label: "Customer address"
     type: string
     sql: ${TABLE}.STREET_ADDRESS ;;
   }
@@ -280,7 +269,7 @@ dimension_group: created {
 
   dimension: zip {
     view_label: "Customer info"
-    group_label: "Address"
+    group_label: "Customer address"
     type: zipcode
     sql: substr(${TABLE}.ZIP,1,5) ;;
   }

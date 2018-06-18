@@ -1,22 +1,31 @@
 view: sales_order {
   sql_table_name: SALES.SALES_ORDER ;;
 
-  measure: net_order_amt {
+  measure: total_orders {
     view_label: "Order info"
-    description: "Net order amount, excluding tax"
+    label: "Total unique orders"
+    description:"Unique orders placed"
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+
+  measure: total_order_amt {
+    view_label: "Order info"
+    description: "Total order amount, excluding tax"
     type: sum
     sql: ${TABLE}.net_amt ;;
   }
 
   measure: average_order_size {
     view_label: "Order info"
-    description: "Average net order amount, excluding tax"
+    description: "Average total order amount, excluding tax"
     type: average
     sql: ${TABLE}.net_amt ;;
   }
 
   dimension: channel_id {
     view_label: "Order info"
+    description:  "1-DTC | 2-Wholesale"
     can_filter: yes
     type:number
     sql: ${TABLE}.CHANNEL_id ;;
@@ -30,7 +39,7 @@ view: sales_order {
   }
 
   dimension: created_by_id {
-        view_label: "Order info"
+    view_label: "Order info"
     hidden: yes
     type: number
     sql: ${TABLE}.CREATED_BY_ID ;;
@@ -51,8 +60,8 @@ view: sales_order {
   }
 
   dimension: etail_order_id {
-        view_label: "Order info"
-    #hidden: yes
+    view_label: "Order info"
+    hidden: yes
     type: string
     sql: ${TABLE}.ETAIL_ORDER_ID ;;
   }
@@ -70,7 +79,7 @@ view: sales_order {
       year
     ]
     convert_tz: no
-    datatype: date
+    datatype: timestamp
     sql: ${TABLE}.IN_HAND ;;
   }
 
@@ -82,6 +91,8 @@ view: sales_order {
   }
 
   dimension: is_upgrade {
+    label: "Upgrade order?"
+    description: "Is this order an upgrade on a previous order?"
     view_label: "Order info"
     type: string
     sql: ${TABLE}.IS_UPGRADE ;;
@@ -103,8 +114,8 @@ view: sales_order {
 
   dimension: net_amt {
     view_label: "Order info"
-    label:  "Order Size"
-    description: "Net order size, excluding taxes."
+    label:  "Total Order Size"
+    description: "Gross sales, excluding taxes."
     type: number
     sql: ${TABLE}.NET_AMT ;;
   }
@@ -175,7 +186,7 @@ view: sales_order {
       year
     ]
     convert_tz: no
-    datatype: date
+    datatype: timestamp
     sql: ${TABLE}.SHIPMENT_RECEIVED ;;
   }
 
@@ -209,13 +220,16 @@ view: sales_order {
 
   dimension: source {
     view_label: "Order info"
+    label:  "Order source"
+    description: "System where order was placed"
+    #hidden: yes
     type: string
     sql: ${TABLE}.SOURCE ;;
   }
 
   dimension: status {
+    label: "Status of order"
     view_label: "Order info"
-    hidden: yes
     type: string
     sql: ${TABLE}.STATUS ;;
   }
@@ -228,6 +242,7 @@ view: sales_order {
   }
 
   dimension: tax_amt {
+    hidden: yes
     view_label: "Order info"
     type: number
     sql: ${TABLE}.TAX_AMT ;;

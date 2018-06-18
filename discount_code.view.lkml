@@ -3,22 +3,20 @@ view: discount_code {
 
   dimension: discount_code_id {
     primary_key: yes
+    hidden:  yes
     type: number
     sql: ${TABLE}.DISCOUNT_CODE_ID ;;
   }
 
   dimension: created {
+    hidden: yes
     type: string
     sql: ${TABLE}.CREATED ;;
   }
 
-  dimension: description {
+  dimension: discount_reason {
+    description: "Reason for retroactive discount"
     type: string
     sql: ${TABLE}.DESCRIPTION ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: [discount_code_id, refund_line.count, retroactive_discount.count]
   }
 }

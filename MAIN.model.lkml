@@ -113,6 +113,13 @@ explore: sales_order_line {
     relationship: many_to_one
   }
 
+  join: discount_code {
+    view_label: "Retro discounts"
+    type:  left_outer
+    sql_on: ${retroactive_discount.discount_code_id} = ${discount_code.discount_code_id} ;;
+    relationship: many_to_one
+  }
+
   join: cancelled_order {
     view_label: "Cancelled orders"
     type: left_outer

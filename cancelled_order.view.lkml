@@ -7,8 +7,14 @@ view: cancelled_order {
     sql:  ${TABLE}.cancelled_qty  ;;
   }
 
+  measure: orders_cancelled {
+    description: "# of distinct orders with at least 1 item cancelled"
+    type: count_distinct
+    sql: ${order_id} ;;
+
+  }
   measure: amt_cancelled {
-    description: "Total USD amount of cancelled order"
+    description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
     sql: ${TABLE}.net_amt ;;
   }
@@ -32,7 +38,7 @@ view: cancelled_order {
       year
     ]
     convert_tz: no
-    datatype: date
+    datatype: timestamp
     sql: ${TABLE}.CANCELLED ;;
   }
 
@@ -44,6 +50,7 @@ view: cancelled_order {
   }
 
   dimension: cancelled_qty {
+    hidden:  yes
     type: number
     sql: ${TABLE}.CANCELLED_QTY ;;
   }
@@ -85,6 +92,7 @@ view: cancelled_order {
   }
 
   dimension: refunded {
+    hidden: yes
     type: string
     sql: ${TABLE}.REFUNDED ;;
   }
@@ -120,8 +128,4 @@ view: cancelled_order {
     sql: ${TABLE}.UPDATE_TS ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [item.item_id, item.model_name, item.category_name, item.sub_category_name, item.product_line_name]
-  }
 }

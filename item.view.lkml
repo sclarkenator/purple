@@ -32,20 +32,26 @@ view: item {
           sql:  ${TABLE}.MODEL_NAME = 'Purple.4' ;;
           label: "Purple.4"
               }
+        when: {
+          sql:  ${TABLE}.MODEL_NAME is null ;;
+          label: "non-mattress"
+              }
       }
   }
 
   dimension: product_line_name {
+    label: "Product line"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME ;;
   }
 
   dimension: sub_category_name {
+    hidden: yes
     type: string
     sql: ${TABLE}.SUB_CATEGORY_NAME ;;
   }
   dimension: category_name {
-    description: "Sit / Sleep / Stand"
+    label: "Sit / Sleep / Stand"
     type: string
     sql: ${TABLE}.CATEGORY_NAME ;;
   }
@@ -69,7 +75,7 @@ view: item {
   }
 
   dimension: size {
-    label: "Size of Mattress"
+    label: "Mattress size"
     type: string
     sql: ${TABLE}.SIZE ;;
   }

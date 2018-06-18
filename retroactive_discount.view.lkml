@@ -27,6 +27,7 @@ view: retroactive_discount {
   }
 
   dimension_group: created {
+    label:  "Discount applied"
     type: time
     timeframes: [
       raw,
@@ -42,6 +43,7 @@ view: retroactive_discount {
   }
 
   dimension: discount_code_id {
+    description: "Type of discount applied"
     type: number
     # hidden: yes
     sql: ${TABLE}.DISCOUNT_CODE_ID ;;
@@ -110,6 +112,7 @@ view: retroactive_discount {
   }
 
   measure: count {
+    label: "Distinct discounts applied"
     type: count
     drill_fields: [product_line.product_line_id, discount_code.discount_code_id]
   }
