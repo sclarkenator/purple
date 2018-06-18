@@ -13,12 +13,31 @@ view: retroactive_discount {
   }
 
   dimension: amount {
+    label:  "Discount amount"
     type: number
     sql: ${TABLE}.AMOUNT ;;
   }
 
-  dimension: created {
-    type: string
+  dimension: discount_amt_bucket {
+    label: "Discount buckets"
+    type:  tier
+    tiers: [50,100,150,200,350,500,1000]
+    style: integer
+    sql: ${TABLE}.AMOUNT ;;
+  }
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}.CREATED ;;
   }
 
@@ -29,52 +48,63 @@ view: retroactive_discount {
   }
 
   dimension: etail_order_line_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.ETAIL_ORDER_LINE_ID ;;
   }
 
   dimension: insert_mst {
+    hidden: yes
     type: string
     sql: ${TABLE}.INSERT_MST ;;
   }
 
   dimension: order_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: product_line_id {
+    hidden: yes
     type: number
     # hidden: yes
     sql: ${TABLE}.PRODUCT_LINE_ID ;;
   }
 
   dimension: refund_link_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.REFUND_LINK_ID ;;
   }
 
   dimension: refunded_amount {
+    description: "Amount refunded, including tax"
+    hidden: yes
     type: number
     sql: ${TABLE}.REFUNDED_AMOUNT ;;
   }
 
   dimension: retroactive_discount_line_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.RETROACTIVE_DISCOUNT_LINE_ID ;;
   }
 
   dimension: sku_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.SKU_ID ;;
   }
 
   dimension: system {
+    hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;;
   }
 
   dimension: update_mst {
+    hidden: yes
     type: string
     sql: ${TABLE}.UPDATE_MST ;;
   }

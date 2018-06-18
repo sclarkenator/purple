@@ -23,6 +23,7 @@ view: return_order_line {
   }
 
   dimension: allow_discount_removal {
+    hidden: yes
     type: string
     sql: ${TABLE}.ALLOW_DISCOUNT_REMOVAL ;;
   }
@@ -75,11 +76,12 @@ view: return_order_line {
 
   dimension: item_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.ITEM_ID ;;
   }
 
   dimension: item_received {
+    hidden: yes
     type: string
     sql: ${TABLE}.ITEM_RECEIVED ;;
   }
@@ -91,6 +93,7 @@ view: return_order_line {
   }
 
   dimension: location_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.LOCATION_ID ;;
   }
@@ -102,6 +105,7 @@ view: return_order_line {
   }
 
   dimension: net_amt {
+    description: "Net amount ($) being returned"
     type: number
     sql: ${TABLE}.NET_AMT ;;
   }
@@ -126,6 +130,8 @@ view: return_order_line {
   }
 
   dimension: quantity_received_in_shipment {
+    label: "Received quantity"
+    hidden:  yes
     type: number
     sql: ${TABLE}.QUANTITY_RECEIVED_IN_SHIPMENT ;;
   }
@@ -137,12 +143,13 @@ view: return_order_line {
   }
 
   dimension: return_qty {
+    label: "Quantity returned"
     type: number
     sql: ${TABLE}.RETURN_QTY ;;
   }
 
   dimension: revenue_item {
-    label: "Is return amount tied to a revenue item?"
+    description: "Is return amount tied to a revenue item?"
     type: yesno
     sql: ${TABLE}.REVENUE_ITEM ;;
   }

@@ -3,6 +3,7 @@ view: return_order {
 
   dimension: return_order_id {
     description:  "This is the return_order_id to search on in Netsuite"
+    hidden: yes
     primary_key: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;;
@@ -44,6 +45,7 @@ view: return_order {
   }
 
   dimension: entity_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.ENTITY_ID ;;
   }
@@ -103,6 +105,7 @@ view: return_order {
   }
 
   dimension: return_option_id {
+    description: "How customer chooses to dispose/return item"
     type: number
     sql: ${TABLE}.RETURN_OPTION_ID ;;
   }
@@ -121,6 +124,7 @@ view: return_order {
 
   dimension_group: return_trial_expiry {
     description: "100 days from when customer RECEIVED order for mattresses"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -217,6 +221,7 @@ view: return_order {
   }
 
   dimension: status {
+    label: "Status of return"
     type: string
     sql: ${TABLE}.STATUS ;;
   }
