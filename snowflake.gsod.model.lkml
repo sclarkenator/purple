@@ -1,3 +1,3 @@
-connection: "snowflake-datablocks"
+connection: "analytics_warehouse"
 
 include: "snowflake.explore"
