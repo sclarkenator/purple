@@ -40,7 +40,7 @@ view: item {
   }
 
   dimension: product_line_name {
-    label: "Product line"
+    label: "Product type"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME ;;
   }
@@ -51,13 +51,14 @@ view: item {
     sql: ${TABLE}.SUB_CATEGORY_NAME ;;
   }
   dimension: category_name {
-    label: "Sit / Sleep / Stand"
+    label: "Category"
+    description:  "Sit / Sleep / Stand"
     type: string
     sql: ${TABLE}.CATEGORY_NAME ;;
   }
 
   dimension: color {
-    description: "Color of sheets"
+    description: "Only sheets have color assigned"
     type: string
     sql: ${TABLE}.COLOR ;;
   }
@@ -85,7 +86,6 @@ view: item {
     type: string
     sql: ${TABLE}.SKU_ID ;;
   }
-
 
   dimension: update_ts {
   hidden: yes

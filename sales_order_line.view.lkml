@@ -2,13 +2,13 @@ view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
   measure: total_net_sales {
-    view_label: "Order info"
+    view_label: "Sales info"
     type: sum
     sql:  ${TABLE}.net_amt ;;
   }
 
   measure: Hours_to_fulfill {
-    view_label: "Order info"
+    view_label: "Sales info"
     description: "Hours between order placed and order fulfilled"
     drill_fields: [fulfill_details*]
     type: average
@@ -16,27 +16,27 @@ view: sales_order_line {
   }
 
   measure: return_rate {
-    view_label: "Order info"
+    view_label: "Sales info"
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
     value_format_name: "percent_2"
   }
 
   measure: total_units {
-    view_label: "Order info"
+    view_label: "Sales info"
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
   }
 
   measure: Total_discounts {
-    view_label: "Order info"
+    view_label: "Sales info"
     description: "Total discounts applied at time of order"
     type: sum
     sql:  ${TABLE}.discount_amt ;;
   }
 
   dimension: item_order{
-    view_label: "Order info"
+    view_label: "Sales info"
     primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
@@ -51,7 +51,7 @@ view: sales_order_line {
   }
 
   dimension: company_id {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: number
     sql: ${TABLE}.COMPANY_ID ;;
@@ -66,14 +66,14 @@ view: sales_order_line {
   }
 
 dimension: MTD_flg{
-  view_label: "Order info"
+  view_label: "Sales info"
   description: "This field is for formatting on MTD reports"
   type: yesno
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
 }
 
 dimension_group: created {
-  view_label: "Order info"
+  view_label: "Sales info"
   label: "Order"
   description:  "Time and date order was placed"
   type: time
@@ -91,7 +91,7 @@ dimension_group: created {
 }
 
   dimension: department_id {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     description: "Internal department IDs (accounting)"
     type: number
@@ -99,28 +99,28 @@ dimension_group: created {
   }
 
   dimension: discount_amt {
-    view_label: "Order info"
+    view_label: "Sales info"
     description:  "Amount of discount applied at initial order"
     type: number
     sql: ${TABLE}.DISCOUNT_AMT ;;
   }
 
   dimension: discount_cancel_type {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
       type: string
     sql: ${TABLE}.DISCOUNT_CANCEL_TYPE ;;
   }
 
   dimension: discount_code {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.DISCOUNT_CODE ;;
   }
 
   dimension: estimated_cost {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     label: "Estimated COGS"
     description: "Estimated COGS, excluding freight"
@@ -130,7 +130,7 @@ dimension_group: created {
 
   dimension: etail_order_line_id {
     hidden:  yes
-    view_label: "Order info"
+    view_label: "Sales info"
     label: "Shopify order line ID"
     description: "You can use this ID to look up orders in Shopify"
     type: string
@@ -138,7 +138,7 @@ dimension_group: created {
   }
 
   dimension_group: fulfilled {
-    view_label: "Order info"
+    view_label: "Sales info"
     description:  "Date order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [
@@ -155,7 +155,7 @@ dimension_group: created {
   }
 
   dimension: mattress_trial_period {
-    view_label: "Order info"
+    view_label: "Sales info"
     description:  "Ageing buckets for trial return period"
     type: tier
     tiers: [30,60,90,120]
@@ -164,14 +164,14 @@ dimension_group: created {
   }
 
   dimension: fulfillment_method {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.FULFILLMENT_METHOD ;;
   }
 
   dimension: insert_ts {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.INSERT_TS ;;
@@ -179,13 +179,13 @@ dimension_group: created {
 
   dimension: item_id {
     hidden:  yes
-    view_label: "Order info"
+    view_label: "Sales info"
     type: number
     sql: ${TABLE}.ITEM_ID ;;
   }
 
   dimension: location {
-    view_label: "Order info"
+    view_label: "Sales info"
     label:  "Fulfillment warehouse"
     description:  "Warehouse that order was fulfilled out of"
     type: string
@@ -193,7 +193,7 @@ dimension_group: created {
   }
 
   dimension: net_amt {
-    view_label: "Order info"
+    view_label: "Sales info"
     label: "Net sales"
     description: "Net sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
     type: number
@@ -201,7 +201,7 @@ dimension_group: created {
   }
 
   dimension: order_id {
-    view_label: "Order info"
+    view_label: "Sales info"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
@@ -209,14 +209,14 @@ dimension_group: created {
   }
 
   dimension: ordered_qty {
-    view_label: "Order info"
+    view_label: "Sales info"
     description: "Units purchased"
     type: number
     sql: ${TABLE}.ORDERED_QTY ;;
   }
 
   dimension: pre_discount_amt {
-    view_label: "Order info"
+    view_label: "Sales info"
     label: "Pre-discounted price"
     description: "Price of item before any discounts or promotions are applied"
     type: number
@@ -224,7 +224,7 @@ dimension_group: created {
   }
 
   dimension: refund_link_id {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: number
     sql: ${TABLE}.REFUND_LINK_ID ;;
@@ -245,7 +245,7 @@ dimension_group: created {
   }
 
   dimension: system {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     label: "Source system"
     description: "This is the system the data came from"
@@ -254,14 +254,14 @@ dimension_group: created {
   }
 
   dimension: tax_amt {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: number
     sql: ${TABLE}.TAX_AMT ;;
   }
 
   dimension: update_ts {
-    view_label: "Order info"
+    view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.UPDATE_TS ;;
