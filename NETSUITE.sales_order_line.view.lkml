@@ -17,6 +17,7 @@ view: sales_order_line {
 
   measure: return_rate {
     view_label: "Sales info"
+    description: "Units returned/Units fulfilled"
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
     value_format_name: "percent_2"
