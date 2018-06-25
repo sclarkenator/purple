@@ -13,5 +13,9 @@ view: customer_table {
       sql: ${TABLE}.companyname ;;
     }
 
-
+    dimension: mf_or_other {
+      label: "Mattress Firm"
+      type: yesno
+      sql: ${customer_id}=2662 ;;
+    }
 }

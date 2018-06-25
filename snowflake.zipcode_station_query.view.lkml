@@ -9,7 +9,7 @@ view: state_year {
     sql_trigger_value: select count(*) ;;
     sql:
       SELECT distinct year, state
-              FROM GSOD.GSOD
+              FROM LOOKER_DATABLOCKS.GSOD.GSOD
               CROSS JOIN (
               select state
                 from LOOKER_DATABLOCKS.GSOD.ZIPCODE
