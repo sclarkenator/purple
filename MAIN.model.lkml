@@ -30,7 +30,21 @@ explore: sales_order_line {
     type: left_outer
     sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
     relationship: many_to_one
-    }
+  }
+
+  join: sales_order {
+    view_label: "Order-level info"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${sales_order.order_id} ;;
+    relationship: many_to_one
+  }
+
+  join: return_order {
+    view_label: "Returns info"
+    type: left_outer
+    sql_on: ${sales_order.order_id} = ${return_order.order_id} ;;
+    relationship:many_to_one
+  }
 
   join: return_order_line {
     view_label: "Returns info"
@@ -39,24 +53,10 @@ explore: sales_order_line {
     relationship: one_to_many
   }
 
-  join: return_order {
-    view_label: "Returns info"
-    type: left_outer
-    sql_on: ${sales_order_line.order_id} = ${return_order.order_id} ;;
-    relationship:many_to_one
-  }
-
   join: return_reason {
     view_label: "Returns info"
     type: left_outer
     sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
-    relationship: many_to_one
-  }
-
-  join: sales_order {
-    view_label: "Order-level info"
-    type: left_outer
-    sql_on: ${sales_order_line.order_id} = ${sales_order.order_id} ;;
     relationship: many_to_one
   }
 

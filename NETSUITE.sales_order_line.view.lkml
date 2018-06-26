@@ -3,6 +3,8 @@ view: sales_order_line {
 
   measure: total_net_sales {
     view_label: "Sales info"
+    label:  "Total sales, excluding tax and freight"
+    description:  "This is what the customer paid, excluding tax and freight"
     type: sum
     sql:  ${TABLE}.gross_amt ;;
   }

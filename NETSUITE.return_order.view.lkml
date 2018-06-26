@@ -1,8 +1,6 @@
 view: return_order {
   sql_table_name: SALES.RETURN_ORDER ;;
 
-
-
   dimension: return_order_id {
     description:  "This is the return_order_id to search on in Netsuite"
     hidden: yes
@@ -18,20 +16,29 @@ view: return_order {
   }
 
   dimension: channel_id {
-  label: "Returns channel ID"
-  description: "Channel ID just on the returned orders. 1 - DTC, 2 - Wholesale"
-  type: number
-  sql: ${TABLE}.CHANNEL_ID ;;
+    label: "Returns channel ID"
+    description: "Channel ID just on the returned orders. 1 - DTC, 2 - Wholesale"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.CHANNEL_ID ;;
+    }
+
+  dimension_group: created {
+    type: time
+    label:  "Return"
+    description:"Date/time that RMA was initiated"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}.CREATED) ;;
   }
-
-
- # dimension: days_between_buckets {
-#    label: "Return aging buckets"
- #   description: "What aging bucket the order was returned in"
-  #  type: tier
-  #  tiers: [30,60,90,120]
-  #  sql: datediff(day,${sales_order_line.fullfilled_Date},${TABLE}.created)    ;;
-#  }
 
   dimension_group: customer_receipt {
     hidden: yes

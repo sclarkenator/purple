@@ -7,18 +7,15 @@ view: return_order_line {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
     }
 
-  measure: days_between {
-    description: "Average number of days between fulfillment and return"
-    type: average
-    sql: datediff(day,${sales_order_line.fulfilled_date},${TABLE}.created)    ;;
-  }
-
   measure: units_returned {
+    description: "Total returns (units)"
     type: sum
     sql: ${TABLE}.return_qty ;;
   }
 
   measure: gross_amt_returned {
+    label:  "Total returns ($)"
+    description: "Total $ returned, excluding tax and freight"
     type: sum
     sql: ${TABLE}.gross_amt ;;
   }
@@ -33,23 +30,6 @@ view: return_order_line {
     hidden: yes
     type: number
     sql: ${TABLE}.AUTO_INVOICE_TYPE_ID ;;
-  }
-
-  dimension_group: created {
-    type: time
-    label:  "Return date"
-    description:"Date/time that RMA was initiated"
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: timestamp
-    sql: to_timestamp_ntz($Sales.return_order.CREATED) ;;
   }
 
   dimension_group: closed {

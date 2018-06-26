@@ -10,6 +10,7 @@ view: return_reason {
 
   dimension: return_reason {
     label:"Return reason"
+    description: "Reason customer gives for returning that item"
     type:  string
     sql:  ${TABLE}.list_item_name ;;
   }

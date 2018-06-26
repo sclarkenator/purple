@@ -56,6 +56,8 @@ view: cancelled_order {
   }
 
   dimension: channel_id {
+    label: "Cancelled channel ID"
+    description: "Channel ID for orders that have been cancelled"
     hidden:  yes
     type: number
     sql: ${TABLE}.CHANNEL_ID ;;
