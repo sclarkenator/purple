@@ -6,7 +6,7 @@
 
 view: state_year {
   derived_table: {
-    sql_trigger_value: select count(*) ;;
+    persist_for: "24 hours"
     sql:
       SELECT distinct year, state
               FROM LOOKER_DATABLOCKS.GSOD.GSOD
@@ -33,6 +33,7 @@ view: state_year {
 ## An ipython notebook can be found here:
 view: sql_query_for_zipcode_station {
   derived_table: {
+    persist_for: "24 hours"
     sql:
     CREATE TEMP FUNCTION RADIANS(x FLOAT64) AS (
         ACOS(-1) * x / 180
