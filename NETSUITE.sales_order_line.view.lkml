@@ -4,7 +4,7 @@ view: sales_order_line {
   measure: total_net_sales {
     view_label: "Sales info"
     type: sum
-    sql:  ${TABLE}.net_amt ;;
+    sql:  ${TABLE}.gross_amt ;;
   }
 
   measure: Hours_to_fulfill {
@@ -193,12 +193,12 @@ dimension_group: created {
     sql: ${TABLE}.LOCATION ;;
   }
 
-  dimension: net_amt {
+  dimension: gross_amt {
     view_label: "Sales info"
     label: "Net sales"
     description: "Net sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
     type: number
-    sql: ${TABLE}.NET_AMT ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: order_id {

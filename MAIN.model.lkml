@@ -13,63 +13,17 @@ datagroup: gross_to_net_sales_default_datagroup {
 
 persist_with: gross_to_net_sales_default_datagroup
 
-explore: cancelled_order {
-  label:  "Cancellations"
-  fields: [ALL_FIELDS*,-sales_order_line.return_rate]
-  join: sales_order_line {
-    type: left_outer
-    sql_on: ${cancelled_order.item_order} = ${sales_order_line.item_order} ;;
-    relationship: many_to_one
-  }
-
-  join: item {
-    view_label: "Product info"
-    type: left_outer
-    sql_on: ${cancelled_order.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
-
-  join: return_reason {
-    type: left_outer
-    sql_on: ${return_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: return_order {
-  label: "Returns"
-  description: "For analysis on orders that have been returned"
-  join: return_order_line {
-    type: left_outer
-    sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
-    relationship: one_to_many
-  }
-
-  join: sales_order_line {
-    type: left_outer
-    sql_on: ${return_order_line.item_order} = ${sales_order_line.item_order} ;;
-    relationship: many_to_one
-  }
-
-  join: item {
-    view_label: "Product info"
-    type: left_outer
-    sql_on: ${return_order_line.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
-
-  join: return_reason {
-    type: left_outer
-    sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
-    relationship: many_to_one
-  }
-
-}
 
 explore: sales_order_line {
   label:  "Sales"
   description:  "All sales orders for all channels"
   view_label: "Sales at line-level"
+  always_filter: {
+    filters: {
+      field: sales_order.channel_id
+      value: "1"
+    }
+  }
 
   join: item {
     view_label: "Product info"
@@ -90,6 +44,13 @@ explore: sales_order_line {
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${return_order.order_id} ;;
     relationship:many_to_one
+  }
+
+  join: return_reason {
+    view_label: "Returns info"
+    type: left_outer
+    sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+    relationship: many_to_one
   }
 
   join: sales_order {
@@ -124,6 +85,13 @@ explore: sales_order_line {
     view_label: "Cancelled orders"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
+    relationship: many_to_one
+  }
+
+  join: NETSUITE_cancelled_reason {
+    view_label: "Cancelled orders"
+    type: left_outer
+    sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
     relationship: many_to_one
   }
 }

@@ -2,6 +2,7 @@ view: retroactive_discount {
   sql_table_name: SALES.RETROACTIVE_DISCOUNT ;;
 
   measure: total_retro_discounts {
+    description:  "Total of all applied retroactive discounts"
     type:  sum
     sql:  ${TABLE}.amount;;
   }
@@ -14,6 +15,7 @@ view: retroactive_discount {
 
   dimension: amount {
     label:  "Discount amount"
+    description: "Discount amount applied at item-level"
     type: number
     sql: ${TABLE}.AMOUNT ;;
   }
@@ -28,6 +30,7 @@ view: retroactive_discount {
 
   dimension_group: created {
     label:  "Discount applied"
+    description:  "Date discount was applied"
     type: time
     timeframes: [
       raw,
@@ -45,7 +48,7 @@ view: retroactive_discount {
   dimension: discount_code_id {
     description: "Type of discount applied"
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.DISCOUNT_CODE_ID ;;
   }
 

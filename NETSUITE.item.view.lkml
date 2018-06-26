@@ -8,12 +8,15 @@ view: item {
   }
 
   dimension: product_description {
+    label:  "Product name"
+    description: "Product name"
     type: string
     sql: ${TABLE}.PRODUCT_DESCRIPTION ;;
   }
 
   dimension: model_name {
     label:  "Mattress model"
+    description: "Original|Purple.2|Purple.3|Purple.4"
     type: string
       case: {
         when: {
@@ -41,6 +44,7 @@ view: item {
 
   dimension: product_line_name {
     label: "Product type"
+    description: "Type of product (mattress, pillow, cushion, etc.)"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME ;;
   }
@@ -77,6 +81,7 @@ view: item {
 
   dimension: size {
     label: "Mattress size"
+    description:  "TwinXL|Full|Queen|King|Cal-king"
     type: string
     sql: ${TABLE}.SIZE ;;
   }

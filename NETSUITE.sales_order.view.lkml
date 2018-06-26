@@ -13,14 +13,14 @@ view: sales_order {
     view_label: "Sales info"
     description: "Total order amount, excluding tax"
     type: sum
-    sql: ${TABLE}.net_amt ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   measure: average_order_size {
     view_label: "Sales info"
     description: "Average total order amount, excluding tax"
     type: average
-    sql: ${TABLE}.net_amt ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: channel_id {
@@ -112,12 +112,12 @@ view: sales_order {
     sql: ${TABLE}.MODIFIED ;;
   }
 
-  dimension: net_amt {
+  dimension: gross_amt {
     view_label: "Sales info"
     label:  "Total Order Size"
     description: "Gross sales, excluding taxes."
     type: number
-    sql: ${TABLE}.NET_AMT ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: Order_size_buckets{
@@ -125,7 +125,7 @@ view: sales_order {
     type:  tier
     style: integer
     tiers: [300,500,1000,2000,3000,5000]
-    sql: ${TABLE}.NET_AMT ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: order_id {

@@ -16,7 +16,7 @@ view: cancelled_order {
   measure: amt_cancelled {
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
-    sql: ${TABLE}.net_amt ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: item_order{
@@ -79,10 +79,11 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;;
   }
 
-  dimension: net_amt {
-    label:  "Net returned amount"
+  dimension: gross_amt {
+    label:  "Gross returned amount"
+    description: "Total $ returned to customer (excluding shipping and freight)"
     type: number
-    sql: ${TABLE}.NET_AMT ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: order_id {
@@ -106,6 +107,7 @@ view: cancelled_order {
 
   dimension: shopify_cancel_reason_id {
     label: "Cancellation reason"
+    hidden:  yes
     type: number
     sql: ${TABLE}.SHOPIFY_CANCEL_REASON_ID ;;
   }

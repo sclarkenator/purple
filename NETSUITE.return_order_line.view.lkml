@@ -8,8 +8,9 @@ view: return_order_line {
     }
 
   measure: days_between {
+    description: "Average number of days between fulfillment and return"
     type: average
-    sql: datediff(day,${sales_order_line.created_date},${TABLE}.closed_Date)    ;;
+    sql: datediff(day,${sales_order_line.fulfilled_date},${TABLE}.created)    ;;
   }
 
   measure: units_returned {
@@ -17,9 +18,9 @@ view: return_order_line {
     sql: ${TABLE}.return_qty ;;
   }
 
-  measure: net_amt_returned {
+  measure: gross_amt_returned {
     type: sum
-    sql: ${TABLE}.net_amt ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: allow_discount_removal {
@@ -34,7 +35,25 @@ view: return_order_line {
     sql: ${TABLE}.AUTO_INVOICE_TYPE_ID ;;
   }
 
+  dimension_group: created {
+    type: time
+    label:  "Return date"
+    description:"Date/time that RMA was initiated"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz($Sales.return_order.CREATED) ;;
+  }
+
   dimension_group: closed {
+    hidden:  yes
     label: "Return"
     type: time
     timeframes: [
@@ -104,10 +123,10 @@ view: return_order_line {
     sql: ${TABLE}.MEMO ;;
   }
 
-  dimension: net_amt {
+  dimension: gross_amt {
     description: "Net amount ($) being returned"
     type: number
-    sql: ${TABLE}.NET_AMT ;;
+    sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: order_id {
@@ -144,6 +163,7 @@ view: return_order_line {
 
   dimension: return_qty {
     label: "Quantity returned"
+    description:  "Total units returned"
     type: number
     sql: ${TABLE}.RETURN_QTY ;;
   }

@@ -15,6 +15,7 @@ view: customer_table {
 
     dimension: mf_or_other {
       label: "Mattress Firm"
+      description: "Toggle to select Mattress Firm"
       type: yesno
       sql: ${customer_id}=2662 ;;
     }
