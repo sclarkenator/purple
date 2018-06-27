@@ -8,16 +8,32 @@ view: return_order_line {
     }
 
   measure: units_returned {
-    description: "Total returns (units)"
+    label: "Total returns (units)"
+    description: "Total individual items returned"
     type: sum
     sql: ${TABLE}.return_qty ;;
   }
 
-  measure: gross_amt_returned {
+  measure: total_gross_amt {
     label:  "Total returns ($)"
     description: "Total $ returned, excluding tax and freight"
     type: sum
     sql: ${TABLE}.gross_amt ;;
+  }
+
+  measure: days_between {
+    description: "Average number of days between fulfillment and return"
+    type: average
+    sql: datediff(day,${sales_order_line.fulfilled_date},${return_order.created_raw}) ;;
+  }
+
+  dimension: days_between_buckets {
+    label: "Return aging buckets"
+    description: "What aging bucket the order was returned in"
+    type: tier
+    style: integer
+    tiers: [30,60,90,120]
+    sql: datediff(day,${sales_order_line.fulfilled_date},${return_order.created_raw})   ;;
   }
 
   dimension: allow_discount_removal {

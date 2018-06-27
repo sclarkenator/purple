@@ -1,10 +1,10 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
-  measure: total_net_sales {
+  measure: total_gross_Amt {
     view_label: "Sales info"
-    label:  "Total sales, excluding tax and freight"
-    description:  "This is what the customer paid, excluding tax and freight"
+    label:  "Gross sales ($)"
+    description:  "Total the customer paid, excluding tax and freight"
     type: sum
     sql:  ${TABLE}.gross_amt ;;
   }
@@ -17,16 +17,28 @@ view: sales_order_line {
     sql:  datediff(hour,${TABLE}.created,${TABLE}.fulfilled) ;;
   }
 
-  measure: return_rate {
-    view_label: "Sales info"
+  measure: return_rate_units {
+    view_label: "Returns info"
+    label: "Return rate (units)"
     description: "Units returned/Units fulfilled"
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
-    value_format_name: "percent_2"
+    value_format_name: "percent_1"
+  }
+
+  measure: return_rate_dollars {
+    view_label: "Returns info"
+    label: "Return rate ($)"
+    description: "Total $ returned / Total $ fulfilled"
+    type: number
+    sql: ${return_order_line.total_gross_amt} / nullif(${total_gross_Amt},0) ;;
+    value_format_name: "percent_1"
   }
 
   measure: total_units {
     view_label: "Sales info"
+    label:  "Gross sales (units)"
+    description: "Total units purchased, before returns and cancellations"
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
   }
@@ -103,7 +115,8 @@ dimension_group: created {
 
   dimension: discount_amt {
     view_label: "Sales info"
-    description:  "Amount of discount applied at initial order"
+    hidden: yes
+    description:  "Amount of discount to individual items applied at initial order"
     type: number
     sql: ${TABLE}.DISCOUNT_AMT ;;
   }
@@ -142,7 +155,7 @@ dimension_group: created {
 
   dimension_group: fulfilled {
     view_label: "Sales info"
-    description:  "Date order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
+    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [
       raw,
@@ -160,6 +173,7 @@ dimension_group: created {
   dimension: mattress_trial_period {
     view_label: "Sales info"
     description:  "Ageing buckets for trial return period"
+    hidden: yes
     type: tier
     tiers: [30,60,90,120]
     style: integer
@@ -196,14 +210,16 @@ dimension_group: created {
   }
 
   dimension: gross_amt {
+    hidden: yes
     view_label: "Sales info"
-    label: "Net sales"
+    label: "Gross sales ($)"
     description: "Net sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
     type: number
     sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: order_id {
+    hidden: yes
     view_label: "Sales info"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
@@ -212,13 +228,15 @@ dimension_group: created {
   }
 
   dimension: ordered_qty {
+    hidden: yes
     view_label: "Sales info"
-    description: "Units purchased"
+    description: "Gross sales (units)"
     type: number
     sql: ${TABLE}.ORDERED_QTY ;;
   }
 
   dimension: pre_discount_amt {
+    hidden:  yes
     view_label: "Sales info"
     label: "Pre-discounted price"
     description: "Price of item before any discounts or promotions are applied"

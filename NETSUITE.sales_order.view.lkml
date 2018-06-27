@@ -9,13 +9,6 @@ view: sales_order {
     sql: ${order_id} ;;
   }
 
-  measure: total_order_amt {
-    view_label: "Sales info"
-    description: "Total order amount, excluding tax"
-    type: sum
-    sql: ${TABLE}.gross_amt ;;
-  }
-
   measure: average_order_size {
     view_label: "Sales info"
     description: "Average total order amount, excluding tax"
@@ -114,14 +107,15 @@ view: sales_order {
 
   dimension: gross_amt {
     view_label: "Sales info"
-    label:  "Total Order Size"
-    description: "Gross sales, excluding taxes."
+    label:  "Gross order size ($)"
+    description: "Total gross sales for all items on order, excluding taxes."
     type: number
     sql: ${TABLE}.gross_amt ;;
   }
 
   dimension: Order_size_buckets{
     view_label: "Sales info"
+    description: "Different price buckets for total gross order amount (customizable)"
     type:  tier
     style: integer
     tiers: [300,500,1000,2000,3000,5000]
@@ -230,6 +224,7 @@ view: sales_order {
   dimension: status {
     label: "Status of order"
     view_label: "Sales info"
+    hidden:  yes
     type: string
     sql: ${TABLE}.STATUS ;;
   }

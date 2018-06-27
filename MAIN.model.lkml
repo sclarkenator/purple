@@ -17,7 +17,6 @@ persist_with: gross_to_net_sales_default_datagroup
 explore: sales_order_line {
   label:  "Sales"
   description:  "All sales orders for all channels"
-  view_label: "Sales at line-level"
   always_filter: {
     filters: {
       field: sales_order.channel_id
@@ -39,19 +38,20 @@ explore: sales_order_line {
     relationship: many_to_one
   }
 
-  join: return_order {
-    view_label: "Returns info"
-    type: left_outer
-    sql_on: ${sales_order.order_id} = ${return_order.order_id} ;;
-    relationship:many_to_one
-  }
-
   join: return_order_line {
     view_label: "Returns info"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
     relationship: one_to_many
   }
+
+  join: return_order {
+    view_label: "Returns info"
+    type: left_outer
+    required_joins: [return_order_line]
+    sql_on: ${return_order_line.order_id} = ${return_order.order_id} ;;
+    relationship: many_to_one
+      }
 
   join: return_reason {
     view_label: "Returns info"
@@ -71,7 +71,7 @@ explore: sales_order_line {
     view_label: "Retro discounts"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order} ;;
-    relationship: many_to_one
+    relationship: one_to_many
   }
 
   join: discount_code {
@@ -85,7 +85,7 @@ explore: sales_order_line {
     view_label: "Cancelled orders"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
-    relationship: many_to_one
+    relationship: one_to_many
   }
 
   join: NETSUITE_cancelled_reason {

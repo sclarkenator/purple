@@ -2,6 +2,7 @@ view: cancelled_order {
   sql_table_name: SALES.CANCELLED_ORDER ;;
 
   measure: units_cancelled {
+    label: "Total cancelled (units)"
     description: "Total individual units cancelled"
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;;
@@ -14,6 +15,7 @@ view: cancelled_order {
 
   }
   measure: amt_cancelled {
+    label:  "Total cancelled ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
     sql: ${TABLE}.gross_amt ;;
@@ -39,7 +41,7 @@ view: cancelled_order {
     ]
     convert_tz: no
     datatype: timestamp
-    sql: ${TABLE}.CANCELLED ;;
+    sql: to_timestamp_ntz(${TABLE}.CANCELLED) ;;
   }
 
   dimension: cancelled_order_type {
@@ -82,7 +84,7 @@ view: cancelled_order {
   }
 
   dimension: gross_amt {
-    label:  "Gross returned amount"
+    label:  "Total cancelled ($)"
     description: "Total $ returned to customer (excluding shipping and freight)"
     type: number
     sql: ${TABLE}.gross_amt ;;
