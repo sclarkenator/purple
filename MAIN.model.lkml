@@ -49,7 +49,7 @@ explore: sales_order_line {
     view_label: "Returns info"
     type: left_outer
     required_joins: [return_order_line]
-    sql_on: ${return_order_line.order_id} = ${return_order.order_id} ;;
+    sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
     relationship: many_to_one
       }
 
