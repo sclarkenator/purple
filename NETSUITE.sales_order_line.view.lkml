@@ -10,14 +10,25 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;;
   }
 
-  measure: Hours_to_fulfill {
+  measure: fulfilled_in_SLA {
     view_label: "Sales info"
     description: "Hours between order placed and order fulfilled"
     drill_fields: [fulfill_details*]
-    type: average
-    sql:  datediff(hour,${TABLE}.created,${TABLE}.fulfilled) ;;
+    type: sum
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 then 1 else 0 end ;;
   }
 
+  measure: total_line_item {
+    description: "Total line items to fulfill"
+    type: count_distinct
+    sql:  ${item_order} ;;
+  }
+
+  measure: SLA_rate {
+    type: number
+    value_format_name: percent_0
+    sql: ${fulfilled_in_SLA}/${total_line_item} ;;
+  }
   measure: return_rate_units {
     view_label: "Returns info"
     label: "Return rate (units)"
@@ -49,6 +60,11 @@ view: sales_order_line {
     description: "Total discounts applied at time of order"
     type: sum
     sql:  ${TABLE}.discount_amt ;;
+  }
+
+  dimension: fulfill_rate_flg {
+    type: yesno
+    sql: ${created_date}  < current_date ;;
   }
 
   dimension: item_order{
@@ -88,13 +104,6 @@ dimension: MTD_flg{
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
 }
 
-  dimension: YTD_flg{
-    view_label: "Sales info"
-    description: "This field is for formatting on MTD reports"
-    type: yesno
-    sql: ${TABLE}.Created <= current_date and year(${TABLE}.Created) = year(current_date) ;;
-  }
-
 dimension_group: created {
   view_label: "Sales info"
   label: "Order"
@@ -120,6 +129,12 @@ dimension_group: created {
     description: "Filter to limit data to the most recent 4 weeks"
     type: yesno
     sql: ${created_week_of_year} >= weekofyear(current_date) - 3 and year(${TABLE}.Created) = year(current_date)   ;;
+  }
+
+  dimension:  4_week_filter {
+    view_label:  "Report filters"
+    type:  yesno
+    sql: case when extract(day${created_day_of_week} = 6 then  ;;
   }
 
   dimension: department_id {

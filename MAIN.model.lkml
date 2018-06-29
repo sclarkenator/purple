@@ -13,6 +13,7 @@ datagroup: gross_to_net_sales_default_datagroup {
 
 persist_with: gross_to_net_sales_default_datagroup
 
+week_start_day: sunday
 
 explore: sales_order_line {
   label:  "Sales"
