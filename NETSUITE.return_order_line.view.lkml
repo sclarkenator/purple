@@ -24,7 +24,14 @@ view: return_order_line {
   measure: days_between {
     description: "Average number of days between fulfillment and return"
     type: average
-    sql: datediff(day,${sales_order_line.fulfilled_date},${return_order.created_raw}) ;;
+    sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;;
+  }
+
+  dimension: days_between_dimension {
+    label: "Return window (days)"
+    description: "How many days until product return was initiated?"
+    type: number
+    sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
   }
 
   dimension: days_between_buckets {
@@ -33,7 +40,7 @@ view: return_order_line {
     type: tier
     style: integer
     tiers: [30,60,90,120]
-    sql: datediff(day,${sales_order_line.fulfilled_date},${return_order.created_raw})   ;;
+    sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
   }
 
   dimension: allow_discount_removal {

@@ -6,6 +6,7 @@ view: sales_order_line {
     label:  "Gross sales ($)"
     description:  "Total the customer paid, excluding tax and freight"
     type: sum
+    value_format: "#,##0,\" K\""
     sql:  ${TABLE}.gross_amt ;;
   }
 
@@ -87,6 +88,13 @@ dimension: MTD_flg{
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
 }
 
+  dimension: YTD_flg{
+    view_label: "Sales info"
+    description: "This field is for formatting on MTD reports"
+    type: yesno
+    sql: ${TABLE}.Created <= current_date and year(${TABLE}.Created) = year(current_date) ;;
+  }
+
 dimension_group: created {
   view_label: "Sales info"
   label: "Order"
@@ -98,12 +106,21 @@ dimension_group: created {
     week,
     month,
     quarter,
-    year
+    year,
+    day_of_week,
+    week_of_year
   ]
   convert_tz: no
   datatype: timestamp
   sql: to_timestamp_ntz(${TABLE}.Created) ;;
 }
+
+  dimension: 4_week_window {
+    view_label: "Report filters"
+    description: "Filter to limit data to the most recent 4 weeks"
+    type: yesno
+    sql: ${created_week_of_year} >= weekofyear(current_date) - 3 and year(${TABLE}.Created) = year(current_date)   ;;
+  }
 
   dimension: department_id {
     view_label: "Sales info"

@@ -15,32 +15,11 @@ view: item {
   }
 
   dimension: model_name {
-    label:  "Mattress model"
-    description: "Original|Purple.2|Purple.3|Purple.4"
+    label:  "Model"
+    description: "Model or style of item (model of cushion, mattress, etc)"
     type: string
-      case: {
-        when: {
-          sql:  ${TABLE}.MODEL_NAME = 'The Purple Mattress' ;;
-          label: "Original"
-        }
-        when: {
-          sql:  ${TABLE}.MODEL_NAME = 'Purple.2' ;;
-          label: "Purple.2"
-        }
-          when: {
-            sql:  ${TABLE}.MODEL_NAME = 'Purple.3' ;;
-            label: "Purple.3"
-          }
-        when: {
-          sql:  ${TABLE}.MODEL_NAME = 'Purple.4' ;;
-          label: "Purple.4"
-              }
-        when: {
-          sql:  ${TABLE}.MODEL_NAME is null ;;
-          label: "non-mattress"
-              }
+    sql: ${TABLE}.MODEL_NAME ;;
       }
-  }
 
   dimension: product_line_name {
     label: "Product type"

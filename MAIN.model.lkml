@@ -94,4 +94,13 @@ explore: sales_order_line {
     sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
     relationship: many_to_one
   }
+
+  join: order_flag {
+    view_label: "Summary details"
+    type: left_outer
+    sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+    relationship: one_to_one
+  }
+
+
 }
