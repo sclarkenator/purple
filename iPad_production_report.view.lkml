@@ -19,13 +19,17 @@ view: production_report {
                     JOIN statuses s ON pl.status_id = s.status_id
                     JOIN products p on pl.products_id = p.id
                   GROUP BY m.name
+                          ,p.name
+                          ,pl.timestamp
                 )t
           ORDER BY machine ;;
   }
+
   dimension_group: timestamp {
     type: time
     timeframes: [
       raw,
+      hour,
       date,
       week,
       month,
