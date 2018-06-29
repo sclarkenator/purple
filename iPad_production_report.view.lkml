@@ -18,11 +18,12 @@ view: production_report {
                     JOIN machines m ON pl.machines_id = m.id
                     JOIN statuses s ON pl.status_id = s.status_id
                     JOIN products p on pl.products_id = p.id
+                  where timestamp >= '2018-06-24'
                   GROUP BY m.name
                           ,p.name
                           ,pl.timestamp
                 )t
-          ORDER BY machine ;;
+          ;;
   }
 
   dimension_group: timestamp {
@@ -36,7 +37,7 @@ view: production_report {
       quarter,
       year
     ]
-    convert_tz: no
+    convert_tz: yes
     datatype: timestamp
     sql: ${TABLE}.timestamp ;;
   }

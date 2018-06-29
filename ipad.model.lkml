@@ -13,5 +13,4 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
-
 explore: production_report {}
