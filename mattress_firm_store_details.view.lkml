@@ -13,7 +13,7 @@ view: mattress_firm_store_details {
     sql:  ${TABLE}.district ;;
   }
 
-  dimension: markett {
+  dimension: market {
     hidden:  yes
     type:  string
     sql:  ${TABLE}.market ;;
@@ -36,12 +36,6 @@ view: mattress_firm_store_details {
     type:  location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
-  }
-
-  dimension: longitude {
-    hidden:  yes
-    type:  location
-    sql:  ${TABLE}.longitude ;;
   }
 
   dimension: zipcode {

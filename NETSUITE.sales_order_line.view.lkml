@@ -63,7 +63,8 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;;
   }
 
-  dimension: fulfill_rate_flg {
+  dimension: yesterday_flg {
+    view_label:  "x - report filters"
     type: yesno
     sql: ${created_date}  < current_date ;;
   }
@@ -99,7 +100,7 @@ view: sales_order_line {
   }
 
 dimension: MTD_flg{
-  view_label: "Sales info"
+  view_label:  "x - report filters"
   description: "This field is for formatting on MTD reports"
   type: yesno
   sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
