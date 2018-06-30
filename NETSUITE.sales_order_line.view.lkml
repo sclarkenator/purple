@@ -25,6 +25,7 @@ view: sales_order_line {
   }
 
   measure: SLA_rate {
+    view_label: "Sales info"
     type: number
     value_format_name: percent_0
     sql: ${fulfilled_in_SLA}/${total_line_item} ;;
@@ -124,18 +125,18 @@ dimension_group: created {
   sql: to_timestamp_ntz(${TABLE}.Created) ;;
 }
 
-  dimension: 4_week_window {
-    view_label: "Report filters"
-    description: "Filter to limit data to the most recent 4 weeks"
-    type: yesno
-    sql: ${created_week_of_year} >= weekofyear(current_date) - 3 and year(${TABLE}.Created) = year(current_date)   ;;
-  }
-
   dimension:  4_week_filter {
-    view_label:  "Report filters"
+    view_label:  "x - report filters"
     type:  yesno
-    sql: case when extract(day${created_day_of_week} = 6 then  ;;
-  }
+    sql: ${created_date} >=
+                case when dayofweek(current_date) = 6 then dateadd(day,-27,current_date)
+                 when dayofweek(current_date) = 5 then dateadd(day,-26,current_date)
+                 when dayofweek(current_date) = 4 then dateadd(day,-25,current_date)
+                 when dayofweek(current_date) = 3 then dateadd(day,-24,current_date)
+                 when dayofweek(current_date) = 2 then dateadd(day,-23,current_date)
+                 when dayofweek(current_date) = 1 then dateadd(day,-22,current_date)
+                 else dateadd(day,-21,current_date) end   ;;
+        }
 
   dimension: department_id {
     view_label: "Sales info"

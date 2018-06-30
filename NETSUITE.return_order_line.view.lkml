@@ -18,6 +18,7 @@ view: return_order_line {
     label:  "Total returns ($)"
     description: "Total $ returned, excluding tax and freight"
     type: sum
+    value_format: "0,\" K\""
     sql: ${TABLE}.gross_amt ;;
   }
 
