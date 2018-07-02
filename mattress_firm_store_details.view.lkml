@@ -8,19 +8,16 @@ view: mattress_firm_store_details {
   }
 
   dimension: district {
-    hidden:  yes
     type:  string
     sql:  ${TABLE}.district ;;
   }
 
   dimension: market {
-    hidden:  yes
     type:  string
     sql:  ${TABLE}.market ;;
   }
 
   dimension: market_state {
-    hidden:  yes
     type:  string
     sql:  ${TABLE}.market_state ;;
   }
@@ -32,7 +29,6 @@ view: mattress_firm_store_details {
   }
 
   dimension: coordinates {
-    hidden:  yes
     type:  location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
@@ -56,15 +52,7 @@ view: mattress_firm_store_details {
       year
     ]
     datatype: date
-    sql: ${TABLE}.start_date
+    sql: ${TABLE}.start_date ;;
   }
 
-  measure: final_units {
-    label: "Total units sold"
-    description: "Total units finalized to customer"
-    type:  sum
-    sql:  ${TABLE}.mf_Sku ;;
-  }
-
-
-}
+ }

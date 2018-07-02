@@ -18,8 +18,17 @@ view: sales_order_line {
     sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 then 1 else 0 end ;;
   }
 
+  dimension: sla_filter {
+    label: "SLA filter"
+    view_label: "x - report filters"
+    description: "Filter to keep days within SLA window suppressed in visualization"
+    type: yesno
+    sql: ${created_date} < dateadd(day,-5,current_date) ;;
+  }
+
   measure: total_line_item {
     description: "Total line items to fulfill"
+    hidden: yes
     type: count_distinct
     sql:  ${item_order} ;;
   }
@@ -64,9 +73,17 @@ view: sales_order_line {
   }
 
   dimension: yesterday_flg {
+    label:  "before today flag"
     view_label:  "x - report filters"
     type: yesno
     sql: ${created_date}  < current_date ;;
+  }
+
+  dimension: yesterday_flag {
+    label:  "Yesterday-sales"
+    view_label:  "x - report filters"
+    type: yesno
+    sql: ${created_date} = dateadd(d,-1,current_date) ;;
   }
 
   dimension: item_order{
@@ -288,8 +305,9 @@ dimension_group: created {
   dimension: state {
     view_label: "Customer info"
     group_label: "Customer address"
+    map_layer_name: us_states
     type: string
-    sql: ${TABLE}.STATE ;;
+    sql: ${sf_zipcode_facts.state} ;;
   }
 
   dimension: street_address {

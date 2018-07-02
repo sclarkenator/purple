@@ -28,6 +28,13 @@ view: retroactive_discount {
     sql: ${TABLE}.AMOUNT ;;
   }
 
+  dimension: yesterday_flag {
+    label:  "Yesterday-discount"
+    view_label:  "x - report filters"
+    type: yesno
+    sql: ${created_date} = dateadd(d,-1,current_date) ;;
+  }
+
   dimension_group: created {
     label:  "Discount applied"
     description:  "Date discount was applied"

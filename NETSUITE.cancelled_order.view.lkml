@@ -21,6 +21,13 @@ view: cancelled_order {
     sql: ${TABLE}.gross_amt ;;
   }
 
+  dimension: yesterday_flag {
+    label:  "Yesterday-cancelled"
+    view_label:  "x - report filters"
+    type: yesno
+    sql: ${cancelled_date} = dateadd(d,-1,current_date) ;;
+  }
+
   dimension: item_order{
     primary_key:  yes
     hidden:  yes

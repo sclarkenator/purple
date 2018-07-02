@@ -8,7 +8,6 @@ view: mattress_firm_sales {
   }
 
   dimension_group: finalized_date{
-    hidden:  yes
     type:  time
     timeframes: [
       date,
@@ -18,7 +17,7 @@ view: mattress_firm_sales {
       year,
     ]
     datatype: date
-    sql: ${TABLE}.finalized_date) ;;
+    sql: ${TABLE}.finalized_date ;;
   }
 
   dimension: store_id {
@@ -31,7 +30,14 @@ view: mattress_firm_sales {
     label: "Total units sold"
     description: "Total units finalized to customer"
     type:  sum
-    sql:  ${TABLE}.mf_Sku ;;
+    sql:  ${TABLE}.final_units ;;
+  }
+
+  measure: avg_units {
+    label: "Average units sold"
+    description: "Average units finalized to customer"
+    type:  average
+    sql:  ${TABLE}.final_units ;;
   }
 
 

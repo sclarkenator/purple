@@ -25,6 +25,13 @@ explore: sales_order_line {
     }
   }
 
+  join: sf_zipcode_facts {
+    view_label: "Customer info"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip} = ${sf_zipcode_facts.zipcode} ;;
+    relationship: many_to_one
+  }
+
   join: item {
     view_label: "Product info"
     type: left_outer
@@ -186,21 +193,28 @@ explore: sales_order_line {
       relationship: many_to_one
     }
 
-    join: order_flag {
-      view_label: "Summary details"
-      type: left_outer
-      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one
-    }
-}
+  }
 
 explore: Mattress_Firm {
   from: mattress_firm_store_details
 
   join: mattress_firm_sales {
     type: left_outer
-    sql_on:  ${Mattress_Firm.store_id} = ${mattress_firm_sales.store_id} and ${Mattress_Firm.start_date_date} <= ${mattress_firm_sales.finalized_date_date} ;;
+    sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store_id} and ${mattress_firm_sales.finalized_date_date} is not null ;;
     relationship: one_to_many
   }
+
+  join: mattress_firm_item {
+    type:  left_outer
+    sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.mf_sku} ;;
+    relationship:  many_to_one
+  }
+
+  join: item {
+    type:  left_outer
+    sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;;
+    relationship:  many_to_one
+  }
+
 
 }

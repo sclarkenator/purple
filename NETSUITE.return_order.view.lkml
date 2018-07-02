@@ -23,6 +23,13 @@ view: return_order {
     sql: ${TABLE}.CHANNEL_ID ;;
     }
 
+  dimension: yesterday_flag {
+    label:  "Yesterday-returns"
+    view_label:  "x - report filters"
+    type: yesno
+    sql: ${created_date} = dateadd(d,-1,current_date) ;;
+  }
+
   dimension_group: created {
     type: time
     label:  "Return"
