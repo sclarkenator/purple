@@ -111,6 +111,7 @@ explore: sales_order_line {
   }
 }
 
+### replicates DTC explore, with filters for wholesale
   explore: wholesale {
     from: sales_order_line
     label:  "Wholesale"
@@ -120,6 +121,13 @@ explore: sales_order_line {
         field: sales_order.channel_id
         value: "2"
       }
+    }
+
+    join: sf_zipcode_facts {
+      view_label: "Customer info"
+      type:  left_outer
+      sql_on: ${wholesale.zip} = ${sf_zipcode_facts.zipcode} ;;
+      relationship: many_to_one
     }
 
     join: item {
