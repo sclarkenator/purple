@@ -15,6 +15,11 @@ persist_with: gross_to_net_sales_default_datagroup
 
 week_start_day: sunday
 
+explore: sales_targets {
+  label: "Finance targets"
+  description: "Monthly finance targets, spread by day"
+}
+
 explore: sales_order_line {
   label:  "DTC sales"
   description:  "All sales orders for all channels"

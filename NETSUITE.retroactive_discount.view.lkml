@@ -10,7 +10,7 @@ view: retroactive_discount {
   dimension: item_order{
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.sku_id||'-'||${TABLE}.order_id ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
   }
 
   dimension: amount {
@@ -103,10 +103,10 @@ view: retroactive_discount {
     sql: ${TABLE}.RETROACTIVE_DISCOUNT_LINE_ID ;;
   }
 
-  dimension: sku_id {
+  dimension: item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}.SKU_ID ;;
+    sql: ${TABLE}.item_ID ;;
   }
 
   dimension: system {
