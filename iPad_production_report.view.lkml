@@ -1,27 +1,25 @@
 view: production_report {
 
   derived_table: {
-    sql:  select timestamp,
+    sql:  select created,
                   CASE machine WHEN 'Glue Roller 3' THEN 'Core Station 1' ELSE machine END as machine,
                   product,
                   CASE WHEN machine like 'IMM%' THEN CASE WHEN product like '%Pillow%' THEN 'Pillow' ELSE 'Cushion' END ELSE product END as category,
-                  total as "total",
+                  total,
                   regrind + scrap as "regrind_scrap"
           from (
-                  SELECT m.name as machine,
-                          p.name as product,
-                          pl.timestamp,
+                  SELECT m.machine_name as machine,
+                          p.product_name as product,
+                          pl.created,
                           count(*) AS total,
-                          SUM(CASE WHEN s.name = 'Regrind' THEN 1 ELSE 0 END) AS regrind,
-                          SUM(CASE WHEN s.name = 'Scrap' THEN 1 ELSE 0 END) AS scrap
-                  FROM production_log pl
-                    JOIN machines m ON pl.machines_id = m.id
-                    JOIN statuses s ON pl.status_id = s.status_id
-                    JOIN products p on pl.products_id = p.id
-                  where pl.timestamp >= '2018-06-01'
-                  GROUP BY m.name
-                          ,p.name
-                          ,pl.timestamp
+                          SUM(CASE WHEN pl.status_id = 3 THEN 1 ELSE 0 END) AS regrind,
+                          SUM(CASE WHEN pl.status_id = 2 THEN 1 ELSE 0 END) AS scrap
+                  FROM analytics_stage.ipad_stg.production_log pl
+                    JOIN analytics_stage.ipad_stg.machine m ON pl.machine_id = m.machine_id
+                    JOIN analytics_stage.ipad_stg.product p on pl.product_id = p.product_id
+                  GROUP BY m.machine_name
+                          ,p.product_name
+                          ,pl.created
                 )t
           ;;
   }
@@ -39,7 +37,12 @@ view: production_report {
     ]
     convert_tz: yes
     datatype: timestamp
-    sql: ${TABLE}.timestamp ;;
+    sql: ${TABLE}.created ;;
+  }
+
+  dimension: shift {
+    type: string
+    sql: case when ${timestamp_hour} between 07:00 and 19:00 then 'DAY' else 'NIGHT' end ;;
   }
 
   dimension: machine {
@@ -59,7 +62,7 @@ view: production_report {
 
   measure: total {
     type:  sum
-    sql: ${TABLE}.total ;;
+    sql: ${TABLE}.total;;
   }
 
   measure: regrind_scrap {
@@ -67,4 +70,8 @@ view: production_report {
     sql: ${TABLE}.regrind_scrap ;;
   }
 
+  measure: finished {
+    type: number
+    sql:  ${total} - ${regrind_scrap} ;;
+  }
 }

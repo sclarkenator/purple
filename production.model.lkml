@@ -1,6 +1,7 @@
-connection: "ipad"
+connection: "analytics_warehouse"
 
 # include all the views
+
 include: "*.view"
 
 # include all the dashboards

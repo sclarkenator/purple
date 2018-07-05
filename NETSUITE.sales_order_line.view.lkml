@@ -15,7 +15,7 @@ view: sales_order_line {
     description: "Hours between order placed and order fulfilled"
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 then 1 else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and ${cancelled_order.cancelled_date} is null then 1 else 0 end ;;
   }
 
   dimension: sla_filter {

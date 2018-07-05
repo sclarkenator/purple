@@ -53,14 +53,14 @@ explore: sales_order_line {
 
   join: return_order_line {
     view_label: "Returns info"
-    type: left_outer
+    type: full_outer
     sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
     relationship: one_to_many
   }
 
   join: return_order {
     view_label: "Returns info"
-    type: left_outer
+    type: full_outer
     required_joins: [return_order_line]
     sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
     relationship: many_to_one
@@ -68,7 +68,7 @@ explore: sales_order_line {
 
   join: return_reason {
     view_label: "Returns info"
-    type: left_outer
+    type: full_outer
     sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
     relationship: many_to_one
   }
@@ -82,7 +82,7 @@ explore: sales_order_line {
 
   join: retroactive_discount {
     view_label: "Retro discounts"
-    type: left_outer
+    type: full_outer
     sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order} ;;
     relationship: one_to_many
   }
@@ -96,7 +96,7 @@ explore: sales_order_line {
 
   join: cancelled_order {
     view_label: "Cancelled orders"
-    type: left_outer
+    type: full_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
     relationship: one_to_many
   }
