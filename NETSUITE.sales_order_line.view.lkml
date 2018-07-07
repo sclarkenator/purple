@@ -116,32 +116,44 @@ view: sales_order_line {
     sql: ${TABLE}.COUNTRY ;;
   }
 
-dimension: MTD_flg{
-  view_label:  "x - report filters"
-  description: "This field is for formatting on MTD reports"
-  type: yesno
-  sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
-}
+  dimension: MTD_flg{
+    view_label:  "x - report filters"
+    description: "This field is for formatting on MTD reports"
+    type: yesno
+    sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
+  }
 
-dimension_group: created {
-  view_label: "Sales info"
-  label: "Order"
-  description:  "Time and date order was placed"
-  type: time
-  timeframes: [
-    raw,
-    date,
-    week,
-    month,
-    quarter,
-    year,
-    day_of_week,
-    week_of_year
-  ]
-  convert_tz: no
-  datatype: timestamp
-  sql: to_timestamp_ntz(${TABLE}.Created) ;;
-}
+  dimension_group: created {
+    view_label: "Sales info"
+    label: "Order"
+    description:  "Time and date order was placed"
+    type: time
+    timeframes: [
+      raw,
+      hour_of_day,
+      day_of_month,
+      month_name,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week,
+      week_of_year,
+      day_of_year
+
+    ]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}.Created) ;;
+  }
+
+  dimension: mmdd {
+    view_label:  "Sales info"
+    description: "Date field without year"
+    type: string
+    sql:  ${created_month_name}||' '||${created_day_of_month};;
+  }
 
   dimension:  4_week_filter {
     view_label:  "x - report filters"

@@ -28,6 +28,13 @@ view: item {
     sql: ${TABLE}.PRODUCT_LINE_NAME ;;
   }
 
+  dimension: is_mattress {
+    label: "Mattress?"
+    description: "Is this product a mattress"
+    type: yesno
+    sql: ${product_line_name} = 'MATTRESS' ;;
+  }
+
   dimension: sub_category_name {
     hidden: yes
     type: string
