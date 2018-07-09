@@ -20,6 +20,11 @@ explore: sales_targets {
   description: "Monthly finance targets, spread by day"
 }
 
+explore: daily_summary {
+  label: "Daily net cash report"
+  description: "This aggregates net cash position for the day"
+}
+
 explore: sales_order_line {
   label:  "DTC sales"
   description:  "All sales orders for all channels"
