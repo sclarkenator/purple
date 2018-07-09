@@ -2,8 +2,8 @@ view: mattress_firm_store_details {
   sql_table_name: mattress_firm.store ;;
 
   dimension: store_id {
-    hidden:  yes
     type:  string
+    primary_key: yes
     sql:  ${TABLE}.store_id ;;
   }
 
@@ -22,20 +22,28 @@ view: mattress_firm_store_details {
     sql:  ${TABLE}.market_state ;;
   }
 
-  dimension: state {
-    hidden:  yes
-    type:  string
-    sql:  ${TABLE}.state ;;
-  }
-
   dimension: coordinates {
     type:  location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
   }
 
+  dimension: address {
+    type:  string
+    sql:  ${TABLE}.address ;;
+  }
+
+  dimension: city {
+    type:  string
+    sql:  ${TABLE}.city ;;
+  }
+
+  dimension: state {
+    type:  string
+    sql:  ${TABLE}.state ;;
+  }
+
   dimension: zipcode {
-    hidden:  yes
     type:  zipcode
     sql:  ${TABLE}.zip ;;
   }
@@ -54,5 +62,11 @@ view: mattress_firm_store_details {
     datatype: date
     sql: ${TABLE}.start_date ;;
   }
+
+  measure: store_count {
+    type:  count
+
+  }
+
 
  }

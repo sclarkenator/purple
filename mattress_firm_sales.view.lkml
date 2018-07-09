@@ -1,6 +1,14 @@
 view: mattress_firm_sales {
   sql_table_name: mattress_firm.sales_data ;;
 
+  dimension: key {
+    type: string
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.mf_sku || || ${TABLE}.store_id || ||  ${TABLE}.created_utc;;
+  }
+
+
   dimension: mf_sku{
     hidden:  yes
     type:  string
@@ -40,5 +48,8 @@ view: mattress_firm_sales {
     sql:  ${TABLE}.final_units ;;
   }
 
+  measure: transaction_count {
+    type: count
+  }
 
 }

@@ -10,6 +10,7 @@ view: mattress_firm_item {
   dimension: mf_sku {
     hidden: yes
     type:  string
+    primary_key: yes
     sql: ${TABLE}.mf_sku ;;
   }
 }
