@@ -16,6 +16,13 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;;
   }
 
+  dimension: order_system {
+    view_label: "Sales info"
+    primary_key:  no
+    hidden:  yes
+    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
+  }
+
   dimension: channel_id {
     view_label: "Sales info"
     description:  "1-DTC | 2-Wholesale"

@@ -39,6 +39,7 @@ view: sales_order_line {
     value_format_name: percent_0
     sql: ${fulfilled_in_SLA}/${total_line_item} ;;
   }
+
   measure: return_rate_units {
     view_label: "Returns info"
     label: "Return rate (units)"
@@ -72,7 +73,7 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;;
   }
 
-  dimension: yesterday_flg {
+  dimension: before_today_flag {
     label:  "before today flag"
     view_label:  "x - report filters"
     type: yesno
@@ -90,7 +91,20 @@ view: sales_order_line {
     view_label: "Sales info"
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
+  }
+
+  dimension: order_system {
+    view_label: "Sales info"
+    primary_key:  no
+    hidden:  yes
+    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
+  }
+
+  dimension: item_order_refund{
+    primary_key:  yes
+    hidden:  yes
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||${TABLE}.refund_link_id||'-'||${TABLE}.system ;;
   }
 
   dimension: city {

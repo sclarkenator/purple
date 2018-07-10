@@ -7,10 +7,10 @@ view: retroactive_discount {
     sql:  ${TABLE}.amount;;
   }
 
-  dimension: item_order{
+  dimension: item_order_refund{
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||${TABLE}.refund_link_id||'-'||${TABLE}.system ;;
   }
 
   dimension: amount {

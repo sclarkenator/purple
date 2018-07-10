@@ -31,7 +31,7 @@ view: cancelled_order {
   dimension: item_order{
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
  dimension_group: cancelled {

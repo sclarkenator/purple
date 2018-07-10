@@ -52,7 +52,7 @@ explore: sales_order_line {
   join: sales_order {
     view_label: "Order-level info"
     type: left_outer
-    sql_on: ${sales_order_line.order_id} = ${sales_order.order_id} ;;
+    sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one
   }
 
@@ -88,7 +88,7 @@ explore: sales_order_line {
   join: retroactive_discount {
     view_label: "Retro discounts"
     type: full_outer
-    sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order} ;;
+    sql_on: ${sales_order_line.item_order_refund} = ${retroactive_discount.item_order_refund} ;;
     relationship: one_to_many
   }
 
@@ -150,7 +150,7 @@ explore: sales_order_line {
     join: sales_order {
       view_label: "Order-level info"
       type: left_outer
-      sql_on: ${wholesale.order_id} = ${sales_order.order_id} ;;
+      sql_on: ${wholesale.order_system} = ${sales_order.order_system} ;;
       relationship: many_to_one
     }
 
@@ -186,7 +186,7 @@ explore: sales_order_line {
     join: retroactive_discount {
       view_label: "Retro discounts"
       type: left_outer
-      sql_on: ${wholesale.item_order} = ${retroactive_discount.item_order} ;;
+      sql_on: ${wholesale.item_order_refund} = ${retroactive_discount.item_order_refund} ;;
       relationship: one_to_many
     }
 
