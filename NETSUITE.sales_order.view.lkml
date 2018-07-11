@@ -18,7 +18,7 @@ view: sales_order {
 
   dimension: order_system {
     view_label: "Sales info"
-    primary_key:  no
+    primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }

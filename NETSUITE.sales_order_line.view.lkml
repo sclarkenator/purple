@@ -89,6 +89,7 @@ view: sales_order_line {
 
   dimension: item_order{
     view_label: "Sales info"
+    type: string
     primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
@@ -96,13 +97,14 @@ view: sales_order_line {
 
   dimension: order_system {
     view_label: "Sales info"
+    type: string
     primary_key:  no
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
   dimension: item_order_refund{
-    primary_key:  yes
+    type:  string
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||${TABLE}.refund_link_id||'-'||${TABLE}.system ;;
   }
