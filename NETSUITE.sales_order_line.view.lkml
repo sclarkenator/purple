@@ -289,10 +289,10 @@ view: sales_order_line {
   }
 
   dimension: gross_amt {
-    hidden: yes
+    hidden: no
     view_label: "Sales info"
     label: "Gross sales ($)"
-    description: "Net sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
+    description: "Gross sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
     type: number
     sql: ${TABLE}.gross_amt ;;
   }
