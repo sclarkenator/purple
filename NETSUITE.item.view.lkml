@@ -28,11 +28,28 @@ view: item {
     sql: ${TABLE}.PRODUCT_LINE_NAME ;;
   }
 
+  dimension: product_line_name_with_bases_breakout {
+    label: "Product type with Bases Breakout"
+    description: "Type of product (mattress, pillow, cushion, etc.)"
+    type: string
+    sql: case when ${TABLE}.MODEL_NAME = 'POWERBASE' then 'POWERBASE'
+              when ${TABLE}.MODEL_NAME = 'PLATFORM' then 'PLATFORM'
+              else ${TABLE}.PRODUCT_LINE_NAME end;;
+  }
+
   dimension: is_mattress {
     label: "Mattress?"
     description: "Is this product a mattress"
     type: yesno
     sql: ${product_line_name} = 'MATTRESS' ;;
+  }
+
+  dimension: is_original_New_mattress {
+    label: "Original or New Mattress?"
+    description: "Is this product a mattress"
+    type: string
+    sql: case when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name = 'ORIGINAL'  then 'Original'
+              when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then 'New' end;;
   }
 
   dimension: sub_category_name {
