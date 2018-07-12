@@ -6,7 +6,7 @@ view: production_report {
                   product,
                   CASE WHEN machine like 'IMM%' THEN CASE WHEN product like '%Pillow%' THEN 'Pillow' ELSE 'Cushion' END ELSE product END as category,
                   total,
-                  regrind + scrap as "regrind_scrap"
+                  regrind + scrap as regrind_scrap
           from (
                   SELECT m.machine_name as machine,
                           p.product_name as product,
@@ -42,7 +42,7 @@ view: production_report {
 
   dimension: shift {
     type: string
-    sql: case when ${timestamp_hour} between 07:00 and 19:00 then 'DAY' else 'NIGHT' end ;;
+    sql: case when date_part('hour', ${TABLE}.created) between 7 and 19 then 'DAY' else 'NIGHT' end ;;
   }
 
   dimension: machine {
