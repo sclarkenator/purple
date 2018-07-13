@@ -1,5 +1,5 @@
 view: return_reason {
-  sql_table_name: ANALYTICS_STAGE.NETSUITE_STG.RETURN_REASON ;;
+  sql_table_name: ANALYTICS_STAGE.NETSUITE_STG.UPDATED_RETURN_REASONS ;;
 
   dimension: list_id {
     type: number
@@ -12,6 +12,6 @@ view: return_reason {
     label:"Return reason"
     description: "Reason customer gives for returning that item"
     type:  string
-    sql:  ${TABLE}.list_item_name ;;
+    sql:  upper(${TABLE}.list_item_name) ;;
   }
 }

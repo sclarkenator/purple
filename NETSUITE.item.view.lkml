@@ -18,8 +18,28 @@ view: item {
     label:  "Model"
     description: "Model or style of item (model of cushion, mattress, etc)"
     type: string
-    sql: ${TABLE}.MODEL_NAME ;;
+    case: {
+      when: {
+        sql: ${TABLE}.model_name = 'ORIGINAL' ;;
+        label: "ORIGINAL"
       }
+
+      when: {
+        sql: ${TABLE}.model_name = 'PURPLE.2' ;;
+        label: "PURPLE.2"
+      }
+
+      when: {
+        sql: ${TABLE}.model_name = 'PURPLE.3' ;;
+        label: "PURPLE.3"
+      }
+
+      when: {
+        sql: ${TABLE}.model_name = 'PURPLE.4' ;;
+        label: "PURPLE.4"
+      }
+    }
+  }
 
   dimension: product_line_name {
     label: "Product type"
@@ -69,7 +89,32 @@ view: item {
     label: "Mattress size"
     description:  "TwinXL|Full|Queen|King|Cal-king"
     type: string
-    sql: ${TABLE}.SIZE ;;
+    case: {
+            when: {
+              sql: ${TABLE}.SIZE = 'TWIN XL' ;;
+              label: "TWIN XL"
+            }
+
+            when: {
+              sql: ${TABLE}.SIZE = 'FULL' ;;
+              label: "FULL"
+            }
+
+            when: {
+              sql: ${TABLE}.SIZE = 'QUEEN' ;;
+              label: "QUEEN"
+            }
+
+            when: {
+              sql: ${TABLE}.SIZE = 'KING' ;;
+              label: "KING"
+            }
+
+            when: {
+              sql: ${TABLE}.SIZE = 'CAL KING' ;;
+              label: "CAL KING"
+            }
+          }
   }
 
   dimension: sku_id {

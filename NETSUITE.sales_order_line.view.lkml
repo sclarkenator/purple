@@ -12,18 +12,37 @@ view: sales_order_line {
 
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
-    description: "Hours between order placed and order fulfilled"
+    hidden: no
+    description: "Was order fulfilled within 5 days?"
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and ${cancelled_order.cancelled_date} is null then 1 else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 5) then 1 else 0 end ;;
+  }
+
+  measure: SLA_eligible {
+    view_label: "Sales info"
+    hidden: no
+    description: "Was this line item cancelled within the SLA window?"
+    type:  sum
+    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,5,${created_date}) then 1 else 0 end ;;
+
+  }
+
+  measure: SLA_achieved{
+    label: "SLA achieved"
+    view_label: "Sales info"
+    description: "% of line items fulfilled within 5 days of order"
+    type: number
+    value_format_name: percent_0
+    sql: ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) ;;
   }
 
   dimension: sla_filter {
-    label: "SLA filter"
+    label: "30-day SLA filter"
     view_label: "x - report filters"
     description: "Filter to keep days within SLA window suppressed in visualization"
     type: yesno
-    sql: ${created_date} < dateadd(day,-5,current_date) ;;
+    sql: ${created_date} < dateadd(day,-5,current_date) and ${created_date} > dateadd(day,-35,current_date);;
   }
 
   measure: total_line_item {
@@ -31,13 +50,6 @@ view: sales_order_line {
     hidden: yes
     type: count_distinct
     sql:  ${item_order} ;;
-  }
-
-  measure: SLA_rate {
-    view_label: "Sales info"
-    type: number
-    value_format_name: percent_0
-    sql: ${fulfilled_in_SLA}/${total_line_item} ;;
   }
 
   measure: return_rate_units {
@@ -145,7 +157,6 @@ view: sales_order_line {
     description:  "Time and date order was placed"
     type: time
     timeframes: [
-      raw,
       hour_of_day,
       day_of_month,
       month_name,
@@ -154,21 +165,11 @@ view: sales_order_line {
       month,
       quarter,
       year,
-      day_of_week,
-      week_of_year,
-      day_of_year
-
+      day_of_week
     ]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
-  }
-
-  dimension: mmdd {
-    view_label:  "Sales info"
-    description: "Date field without year"
-    type: string
-    sql:  ${created_month_name}||' '||${created_day_of_month};;
   }
 
   dimension:  4_week_filter {
