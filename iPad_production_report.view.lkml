@@ -6,7 +6,7 @@ view: production_report {
                   product,
                   CASE WHEN machine like 'IMM%' THEN CASE WHEN product like '%Pillow%' THEN 'Pillow' ELSE 'Cushion' END ELSE product END as category,
                   total,
-                  regrind + scrap as "regrind_scrap"
+                  regrind + scrap as regrind_scrap
           from (
                   SELECT m.machine_name as machine,
                           p.product_name as product,
@@ -40,9 +40,21 @@ view: production_report {
     sql: ${TABLE}.created ;;
   }
 
+  dimension: day_night_shift {
+    type: string
+    label: "Day or Night Shift"
+    sql: case when date_part('hour', ${TABLE}.created) between 7 and 18 then 'DAY' else 'NIGHT' end ;;
+  }
+
   dimension: shift {
     type: string
-    sql: case when ${timestamp_hour} between 07:00 and 19:00 then 'DAY' else 'NIGHT' end ;;
+    sql:             case when DATE_PART('hour', ${TABLE}.created) between 7 and 18 and Dayname(${TABLE}.created) in ('Mon', 'Tue', 'Wed') then 'M-W Day'
+                    when DATE_PART('hour', ${TABLE}.created) between 7 and 18 and Dayname(${TABLE}.created) in ('Thu', 'Fri', 'Sat') then 'Th-Sa Day'
+                    when ((DATE_PART('hour', ${TABLE}.created) > 18 and Dayname(${TABLE}.created) in ('Mon', 'Tue', 'Wed'))
+                      or (DATE_PART('hour', ${TABLE}.created) < 7 and Dayname(${TABLE}.created) in ('Tue', 'Wed', 'Thu'))) then 'M-W Night'
+                    when ((DATE_PART('hour', ${TABLE}.created) > 18 and Dayname(${TABLE}.created) in ('Thu', 'Fri', 'Sat'))
+                      or (DATE_PART('hour', ${TABLE}.created) < 7 and Dayname(${TABLE}.created) in ('Fri', 'Sat', 'Sun'))) then 'Th-Sa Night'
+                    else 'Out of shift' end ;;
   }
 
   dimension: machine {

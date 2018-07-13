@@ -6,7 +6,7 @@ view: sales_order_line {
     label:  "Gross sales ($)"
     description:  "Total the customer paid, excluding tax and freight"
     type: sum
-    value_format: "#,##0,\" K\""
+    value_format: "$#,##0,\" K\""
     sql:  ${TABLE}.gross_amt ;;
   }
 
