@@ -172,6 +172,13 @@ view: sales_order_line {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: rolling_7day {
+    view_label:  "x - report filters"
+    description: "Filter to show just most recent 7 completed days"
+    type: yesno
+    sql: ${created_date} between dateadd(d,-8,current_date) and dateadd(d,-1,current_date)  ;;
+  }
+
   dimension:  4_week_filter {
     view_label:  "x - report filters"
     type:  yesno
