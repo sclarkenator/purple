@@ -11,6 +11,7 @@ view: sales_targets {
   measure: whlsl_target {
     label: "Wholesale sales target"
     description: "Monthly gross sales target, spread by day"
+    value_format: "0.0,,\" M\""
     type: sum
     sql: ${TABLE}.WHLSL ;;
   }
