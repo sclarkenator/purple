@@ -266,7 +266,7 @@ view: sales_order_line {
 
   dimension: mattress_trial_period {
     view_label: "Sales info"
-    description:  "Ageing buckets for trial return period"
+    description:  "Aging buckets for trial return period"
     hidden: yes
     type: tier
     tiers: [30,60,90,120]
