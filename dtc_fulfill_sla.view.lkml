@@ -8,7 +8,7 @@ view: dtc_fulfill_sla {
           from (
 
           select order_id
-                  ,order_Date
+                  ,max(order_Date) order_Date
                   ,sum(fulfilled_flg) ful
                   ,sum(eligible) el
           from (
@@ -24,7 +24,7 @@ view: dtc_fulfill_sla {
           where to_date(sl.created) >= '2018-01-01'
           )
 
-          group by 1,2
+          group by 1
 
             )  ;;
   }
@@ -45,6 +45,14 @@ view: dtc_fulfill_sla {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.order_date ;;
+  }
+
+  dimension: sla_filter {
+    label: "30-day SLA filter"
+    view_label: "x - report filters"
+    description: "Filter to keep days within SLA window suppressed in visualization"
+    type: yesno
+    sql: ${order_date} > dateadd(day,-35,current_date) and ${order_date} < dateadd(day,-5,current_date) ;;
   }
 
   dimension: order_id {

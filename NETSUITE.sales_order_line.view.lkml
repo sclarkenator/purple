@@ -37,15 +37,7 @@ view: sales_order_line {
     sql: ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) ;;
   }
 
-  dimension: sla_filter {
-    label: "30-day SLA filter"
-    view_label: "x - report filters"
-    description: "Filter to keep days within SLA window suppressed in visualization"
-    type: yesno
-    sql: ${created_date} < dateadd(day,-5,current_date) and ${created_date} > dateadd(day,-35,current_date);;
-  }
-
-  measure: total_line_item {
+ measure: total_line_item {
     description: "Total line items to fulfill"
     view_label: "Sales info"
     hidden: no
