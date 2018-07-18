@@ -20,10 +20,22 @@ explore: daily_adspend {
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }
 
-explore: sales_targets {
-  label: "Finance targets"
-  description: "Monthly finance targets, spread by day"
+explore: inventory {
+  label: "Inventory"
+  description: "Inventory positions, by item by location"
+
+  join: item {
+    view_label: "Inventory"
+    type: left_outer
+    sql_on: ${inventory.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
 }
+
+#explore: sales_targets {
+#  label: "Finance targets"
+#  description: "Monthly finance targets, spread by day"
+#}
 
 #explore: daily_summary {
 #  label: "Daily net cash report"
@@ -92,8 +104,8 @@ explore: sales_order_line {
 
   join: retroactive_discount {
     view_label: "Retro discounts"
-    type: full_outer
-    sql_on: ${sales_order_line.item_order_refund} = ${retroactive_discount.item_order_refund} ;;
+    type: left_outer
+    sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
     relationship: one_to_many
   }
 
