@@ -188,37 +188,37 @@ view: sales_order_line {
     case: {
       when: {
         sql: ${created_day_of_week} = 'Sunday' ;;
-        label: "Sun"
+        label: "Su"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Monday' ;;
-        label: "Mon"
+        label: "Mo"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Tuesday' ;;
-        label: "Tue"
+        label: "Tu"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Wednesday' ;;
-        label: "Wed"
+        label: "We"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Thursday' ;;
-        label: "Thu"
+        label: "Th"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Friday' ;;
-        label: "Fri"
+        label: "Fr"
       }
 
       when: {
         sql: ${created_day_of_week} = 'Saturday' ;;
-        label: "Sat"
+        label: "Sa"
       }
     }
   }
