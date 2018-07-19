@@ -13,6 +13,7 @@ view: sales_order {
     view_label: "Sales info"
     description: "Average total order amount, excluding tax"
     type: average
+    value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;;
   }
 
