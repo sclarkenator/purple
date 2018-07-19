@@ -180,6 +180,49 @@ view: sales_order_line {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: day_of_week {
+    view_label: "Sales info"
+    label:  "Day of week"
+    description: "abbreviated day of week"
+    type: string
+    case: {
+      when: {
+        sql: ${created_day_of_week} = 'Sunday' ;;
+        label: "Sun"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Monday' ;;
+        label: "Mon"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Tuesday' ;;
+        label: "Tue"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Wednesday' ;;
+        label: "Wed"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Thursday' ;;
+        label: "Thu"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Friday' ;;
+        label: "Fri"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Saturday' ;;
+        label: "Sat"
+      }
+    }
+  }
+
   dimension: rolling_7day {
     view_label:  "x - report filters"
     description: "Filter to show just most recent 7 completed days"
