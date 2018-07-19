@@ -4,7 +4,7 @@ connection: "analytics_warehouse"
 include: "*.view"
 
 # include all the dashboards
-include: "*.dashboard"
+#include: "*.dashboard"
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -25,17 +25,21 @@ explore: inventory {
   description: "Inventory positions, by item by location"
 
   join: item {
-    view_label: "Inventory"
     type: left_outer
     sql_on: ${inventory.item_id} = ${item.item_id} ;;
     relationship: many_to_one
   }
+
+  join: warehouse_location {
+    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one
+  }
 }
 
-#explore: sales_targets {
-#  label: "Finance targets"
-#  description: "Monthly finance targets, spread by day"
-#}
+explore: sales_targets {
+  label: "Finance targets"
+  description: "Monthly finance targets, spread by day"
+}
 
 #explore: daily_summary {
 #  label: "Daily net cash report"

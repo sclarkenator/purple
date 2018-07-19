@@ -5,7 +5,7 @@ connection: "analytics_warehouse"
 include: "*.view"
 
 # include all the dashboards
-include: "*.dashboard"
+#include: "*.dashboard"
 
 datagroup: temp_ipad_database_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
