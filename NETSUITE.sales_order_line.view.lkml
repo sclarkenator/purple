@@ -119,7 +119,7 @@ view: sales_order_line {
   dimension: item_order_refund{
     type:  string
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||${TABLE}.refund_link_id||'-'||${TABLE}.system ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
   dimension: city {

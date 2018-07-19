@@ -4,7 +4,7 @@ connection: "analytics_warehouse"
 include: "*.view"
 
 # include all the dashboards
-include: "*.dashboard"
+#include: "*.dashboard"
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -18,6 +18,22 @@ week_start_day: sunday
 explore: daily_adspend {
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
+}
+
+explore: inventory {
+  label: "Inventory"
+  description: "Inventory positions, by item by location"
+
+  join: item {
+    type: left_outer
+    sql_on: ${inventory.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
+
+  join: warehouse_location {
+    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: sales_targets {
@@ -92,8 +108,8 @@ explore: sales_order_line {
 
   join: retroactive_discount {
     view_label: "Retro discounts"
-    type: full_outer
-    sql_on: ${sales_order_line.item_order_refund} = ${retroactive_discount.item_order_refund} ;;
+    type: left_outer
+    sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
     relationship: one_to_many
   }
 
