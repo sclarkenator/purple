@@ -12,20 +12,19 @@ view: sales_order_line {
 
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
-    hidden: yes
+    hidden: no
     description: "Was order fulfilled within 5 days?"
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 5) then 1 else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 5) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_eligible {
     view_label: "Sales info"
-    hidden: yes
+    hidden: no
     description: "Was this line item cancelled within the SLA window?"
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,5,${created_date}) then 1 else 0 end ;;
-
+    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,5,${created_date}) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
@@ -178,6 +177,121 @@ view: sales_order_line {
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
+  }
+
+  dimension: day_of_week {
+    view_label: "Sales info"
+    label:  "Day of week"
+    description: "abbreviated day of week"
+    type: string
+    case: {
+      when: {
+        sql: ${created_day_of_week} = 'Sunday' ;;
+        label: "Sun"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Monday' ;;
+        label: "Mon"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Tuesday' ;;
+        label: "Tue"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Wednesday' ;;
+        label: "Wed"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Thursday' ;;
+        label: "Thu"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Friday' ;;
+        label: "Fri"
+      }
+
+      when: {
+        sql: ${created_day_of_week} = 'Saturday' ;;
+        label: "Sat"
+      }
+    }
+  }
+
+  dimension: 7_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${created_date},current_date) < 7 ;;
+  }
+
+  dimension: 30_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${created_date},current_date) < 30 ;;
+  }
+
+  dimension: 60_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${created_date},current_date) < 60 ;;
+  }
+
+  dimension: 90_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${created_date},current_date) < 90 ;;
+  }
+
+  measure: 7_day_sales {
+    description: "7-day average daily units"
+    view_label: "Time-slice totals"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 7_day_window
+      value: "yes"
+    }
+    sql: ${ordered_qty}/7 ;;
+  }
+
+  measure: 30_day_sales {
+    description: "30-day average daily units"
+    view_label: "Time-slice totals"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 30_day_window
+      value: "yes"
+    }
+    sql: ${ordered_qty}/30 ;;
+  }
+
+  measure: 60_day_sales {
+    description: "60-day average daily units"
+    view_label: "Time-slice totals"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 60_day_window
+      value: "yes"
+    }
+    sql: ${ordered_qty}/60 ;;
+  }
+
+  measure: 90_day_sales {
+    description: "90-day average daily units"
+    view_label: "Time-slice totals"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 90_day_window
+      value: "yes"
+    }
+    sql: ${ordered_qty}/90 ;;
   }
 
   dimension: rolling_7day {
