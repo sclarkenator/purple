@@ -256,6 +256,12 @@ explore: Mattress_Firm {
     relationship:  many_to_one
   }
 
+  join: mattress_firm_master_store_list {
+    type:  inner
+    sql_on: ${Mattress_Firm.store_id} = ${Mattress_Firm_master_sore_list.store_id} ;;
+    relationship:  one_to_one
+  }
+
   join: item {
     type:  left_outer
     sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;;
