@@ -54,7 +54,7 @@ view: production_report {
                       or (DATE_PART('hour', ${TABLE}.created) < 7 and Dayname(${TABLE}.created) in ('Tue', 'Wed', 'Thu'))) then 'M-W Night'
                     when ((DATE_PART('hour', ${TABLE}.created) > 18 and Dayname(${TABLE}.created) in ('Thu', 'Fri', 'Sat'))
                       or (DATE_PART('hour', ${TABLE}.created) < 7 and Dayname(${TABLE}.created) in ('Fri', 'Sat', 'Sun'))) then 'Th-Sa Night'
-                    else 'Out of shift' end ;;
+                    else 'Sunday' end ;;
   }
 
   dimension: machine {
