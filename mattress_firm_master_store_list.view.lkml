@@ -97,19 +97,19 @@ view: mattress_firm_master_store_list {
     sql: ${TABLE}."END_DATE" ;;
   }
 
-  dimension: weeks_open {
+  dimension: open_weeks {
     type: number
     sql: case when ${TABLE}."END_DATE" is null then datediff('week' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('week' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
 
-  dimension: days_open {
+  dimension: open_days {
     type: number
     sql: case when ${TABLE}."END_DATE" is null then datediff('day' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('day' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end  ;;
   }
 
-  dimension: months_open {
+  dimension: open_months {
     type: number
     sql: case when ${TABLE}."END_DATE" is null then datediff('month' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
