@@ -1,8 +1,5 @@
-view: sql_runner_query {
-  derived_table: {
-    sql: select * from mattress_firm.master_store_list;
-      ;;
-  }
+view: mattress_firm_master_store_list {
+  sql_table_name: mattress_firm.master_store_list ;;
 
   measure: count {
     type: count
@@ -42,7 +39,7 @@ view: sql_runner_query {
 
   dimension: city_state {
     type: string
-    sql: ${TABLE}."CITY" ||", " ||  ${TABLE}."STATE_NAME";;
+    sql: ${TABLE}."CITY" ||', ' ||  ${TABLE}."STATE_NAME";;
   }
 
   dimension: zip {
@@ -102,18 +99,20 @@ view: sql_runner_query {
 
   dimension: weeks_open {
     type: number
-    sql: case when ${TABLE}."END_DATE" is null then datediff('week' ,${TABLE}."OPEN_DATE", current_timestamp())
+    sql: case when ${TABLE}."END_DATE" is null then datediff('week' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('week' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
 
   dimension: days_open {
     type: number
-    sql: datediff('day' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE")  ;;
+    sql: case when ${TABLE}."END_DATE" is null then datediff('day' ,${TABLE}."OPEN_DATE", current_date())
+         else datediff('day' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end  ;;
   }
 
   dimension: months_open {
     type: number
-    sql: datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE")  ;;
+    sql: case when ${TABLE}."END_DATE" is null then datediff('month' ,${TABLE}."OPEN_DATE", current_date())
+         else datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
 
   dimension: models {
