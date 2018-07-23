@@ -99,18 +99,21 @@ view: mattress_firm_master_store_list {
 
   dimension: open_weeks {
     type: number
+    description: "Number of complete weeks the store has been open"
     sql: case when ${TABLE}."END_DATE" is null then datediff('week' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('week' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
 
   dimension: open_days {
     type: number
+    description: "Number of complete days the store has been open"
     sql: case when ${TABLE}."END_DATE" is null then datediff('day' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('day' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end  ;;
   }
 
   dimension: open_months {
     type: number
+    description: "Number of complete months the store has been open"
     sql: case when ${TABLE}."END_DATE" is null then datediff('month' ,${TABLE}."OPEN_DATE", current_date())
          else datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
