@@ -261,6 +261,20 @@ explore: Mattress_Firm {
     sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;;
     relationship:  many_to_one
   }
+}
 
+explore: warranty {
+  from: warranty_order
 
+  join: warranty_reason {
+    type: left_outer
+    sql_on: ${warranty.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+    relationship: many_to_one
+  }
+
+  join: item {
+    type:  left_outer
+    sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
 }
