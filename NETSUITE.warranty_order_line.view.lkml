@@ -1,5 +1,5 @@
 view: warranty_order_line {
-  sql_table_name: SALES.WARRANTY_ORDER_LINE ;;
+  sql_table_name: sales.warranty_order_line ;;
 
   dimension_group: closed {
     hidden: yes
@@ -92,6 +92,7 @@ view: warranty_order_line {
 
   dimension: warranty_order_id {
     hidden: yes
+    primary_key: yes
     type: number
     # hidden: yes
     sql: ${TABLE}."WARRANTY_ORDER_ID" ;;
