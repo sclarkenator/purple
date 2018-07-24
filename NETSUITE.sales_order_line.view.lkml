@@ -12,7 +12,7 @@ view: sales_order_line {
 
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
-    hidden: no
+    hidden: yes
     description: "Was order fulfilled within 5 days?"
     drill_fields: [fulfill_details*]
     type: sum
@@ -21,7 +21,7 @@ view: sales_order_line {
 
   measure: SLA_eligible {
     view_label: "Sales info"
-    hidden: no
+    hidden: yes
     description: "Was this line item cancelled within the SLA window?"
     type:  sum
     sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,5,${created_date}) then ${ordered_qty} else 0 end ;;
@@ -96,7 +96,7 @@ view: sales_order_line {
     description: "Was this item free with purchase of mattress"
     view_label:  "x - report filters"
     type: yesno
-    sql: (${gross_amt} = ${discount_amt}) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;;
+    sql: ((${gross_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;;
   }
 
   dimension: item_order{
@@ -225,25 +225,25 @@ view: sales_order_line {
   dimension: 7_day_window {
     hidden: yes
     type: yesno
-    sql: datediff(d,${created_date},current_date) < 7 ;;
+    sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 7 ;;
   }
 
   dimension: 30_day_window {
     hidden: yes
     type: yesno
-    sql: datediff(d,${created_date},current_date) < 30 ;;
+    sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 30 ;;
   }
 
   dimension: 60_day_window {
     hidden: yes
     type: yesno
-    sql: datediff(d,${created_date},current_date) < 60 ;;
+    sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 60 ;;
   }
 
   dimension: 90_day_window {
     hidden: yes
     type: yesno
-    sql: datediff(d,${created_date},current_date) < 90 ;;
+    sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 90 ;;
   }
 
   measure: 7_day_sales {

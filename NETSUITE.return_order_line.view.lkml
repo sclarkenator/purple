@@ -44,6 +44,40 @@ view: return_order_line {
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
   }
 
+  dimension: 7_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${return_order.created_raw},dateadd(d,-1,current_date)) < 7 ;;
+  }
+
+  dimension: 60_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${return_order.created_raw},dateadd(d,-1,current_date)) < 60 ;;
+  }
+
+  measure: 7_day_sales {
+    description: "7-day average daily cancelled $"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 7_day_window
+      value: "yes"
+    }
+    sql: ${gross_amt}/7 ;;
+  }
+
+  measure: 60_day_sales {
+    description: "60-day average daily cancelled $"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 60_day_window
+      value: "yes"
+    }
+    sql: ${gross_amt}/60 ;;
+  }
+
   dimension: allow_discount_removal {
     hidden: yes
     type: string
