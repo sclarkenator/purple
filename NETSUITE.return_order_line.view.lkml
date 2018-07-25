@@ -14,6 +14,11 @@ view: return_order_line {
     sql: ${TABLE}.return_qty ;;
   }
 
+  measure: average_gross_return {
+    type: average
+    sql: ${TABLE}.gross_amt ;;
+  }
+
   measure: total_gross_amt {
     label:  "Total returns ($)"
     description: "Total $ returned, excluding tax and freight"

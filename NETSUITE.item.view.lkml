@@ -57,6 +57,49 @@ view: item {
               else ${TABLE}.PRODUCT_LINE_NAME end;;
   }
 
+  dimension: product_line_model_name {
+    label: "Product/model combo"
+    description: "Type of product (mattress, pillow, cushion, etc.)"
+    type: string
+    case: {
+      when: {
+        sql: ${model_name} = 'ORIGINAL' ;;
+        label: "ORIGINAL"
+      }
+
+      when: {
+        sql: ${model_name} = 'PURPLE.2' ;;
+        label: "PURPLE.2"
+      }
+
+      when: {
+        sql:  ${model_name} = 'PURPLE.3' ;;
+        label: "PURPLE.3"
+      }
+
+      when: {
+        sql:  ${model_name} = 'PURPLE.4' ;;
+        label: "PURPLE.4"
+      }
+
+      when: {
+        sql: ${product_line_name} = 'PILLOW' ;;
+        label: "PILLOW"
+      }
+
+#      when: {
+#        sql: ${product_line_name} = 'CUSHION' ;;
+#        label: "CUSHION"
+#      }
+
+#      when: {
+#        sql: ${product_line_name} = 'SHEETS' ;;
+#        label: "SHEETS"
+#      }
+        else: "OTHER"
+    }
+  }
+
   dimension: is_mattress {
     label: "Mattress?"
     description: "Is this product a mattress"
