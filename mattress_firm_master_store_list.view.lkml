@@ -118,6 +118,7 @@ view: mattress_firm_master_store_list {
          else datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;;
   }
 
+
   dimension: models {
     type: number
     sql: ${TABLE}."MODELS" ;;
