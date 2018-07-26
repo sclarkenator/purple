@@ -1,6 +1,7 @@
 view: return_order {
   sql_table_name: SALES.RETURN_ORDER ;;
 
+
   dimension: return_order_id {
     description:  "This is the return_order_id to search on in Netsuite"
     hidden: yes

@@ -14,6 +14,11 @@ view: return_order_line {
     sql: ${TABLE}.return_qty ;;
   }
 
+  measure: average_gross_return {
+    type: average
+    sql: ${TABLE}.gross_amt ;;
+  }
+
   measure: total_gross_amt {
     label:  "Total returns ($)"
     description: "Total $ returned, excluding tax and freight"
@@ -42,6 +47,40 @@ view: return_order_line {
     style: integer
     tiers: [30,60,90,120]
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
+  }
+
+  dimension: 7_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${return_order.created_raw},dateadd(d,-1,current_date)) < 7 ;;
+  }
+
+  dimension: 60_day_window {
+    hidden: yes
+    type: yesno
+    sql: datediff(d,${return_order.created_raw},dateadd(d,-1,current_date)) < 60 ;;
+  }
+
+  measure: 7_day_sales {
+    description: "7-day average daily cancelled $"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 7_day_window
+      value: "yes"
+    }
+    sql: ${gross_amt}/7 ;;
+  }
+
+  measure: 60_day_sales {
+    description: "60-day average daily cancelled $"
+    type: sum
+    value_format_name: decimal_0
+    filters: {
+      field: 60_day_window
+      value: "yes"
+    }
+    sql: ${gross_amt}/60 ;;
   }
 
   dimension: allow_discount_removal {
