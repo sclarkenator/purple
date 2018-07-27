@@ -257,7 +257,7 @@ explore: Mattress_Firm {
   }
 
   join: mattress_firm_master_store_list {
-    type:  left_outer
+    type:  full_outer
     sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
     relationship:  one_to_one
   }
