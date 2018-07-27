@@ -10,6 +10,20 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;;
   }
 
+  measure: avg_days_to_fulfill {
+    view_label: "Sales info"
+    description: "Average number of days between order and fulfillment"
+    type:  average
+    sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;;
+  }
+
+#  measure: med_days_to_fulfill {
+#    view_label: "Sales info"
+#    description: "Average number of days between order and fulfillment"
+#    type:  median
+#    sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;;
+#  }
+
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
     hidden: yes

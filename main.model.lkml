@@ -122,7 +122,7 @@ explore: sales_order_line {
 
   join: cancelled_order {
     view_label: "Cancelled orders"
-    type: full_outer
+    type: left_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
     relationship: one_to_many
   }
