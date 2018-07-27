@@ -29,7 +29,9 @@ view: production_report {
     timeframes: [
       raw,
       hour,
+      hour_of_day,
       date,
+      day_of_week,
       week,
       month,
       quarter,
