@@ -29,7 +29,7 @@ view: daily_adspend {
   dimension: rolling_7day {
     description: "Filter to show just most recent 7 completed days"
     type: yesno
-    sql: ${ad_date} between dateadd(d,-8,current_date) and dateadd(d,-1,current_date)  ;;
+    sql: ${ad_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;
   }
 
   measure: adspend {
@@ -58,14 +58,14 @@ view: daily_adspend {
 
   dimension: ad_display_type {
     description: "How ad was presented (search, display, video, TV, etc.)"
-    hidden:  yes
+    #hidden:  yes
     type:  string
     sql: ${TABLE}.source ;;
   }
 
   dimension: ad_device {
     description: "What device was ad viewed on? (smartphone, desktop, tablet, TV, etc.)"
-    hidden:  yes
+    #hidden:  yes
     type:  string
     sql: ${TABLE}.device ;;
   }
