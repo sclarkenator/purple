@@ -16,7 +16,34 @@ view: discount_code {
 
   dimension: discount_reason {
     description: "Reason for retroactive discount"
-    type: string
-    sql: ${TABLE}.DESCRIPTION ;;
+    case: {
+      when: {
+        sql:  ${TABLE}.discount_code_id in (5,13) ;;
+        label: "APOLOGY/ISSUE"
+      }
+
+      when: {
+        sql: ${TABLE}.discount_code_id in (2,10) ;;
+        label: "MILITARY DISCOUNT"
+      }
+
+      when: {
+        sql: ${TABLE}.discount_code_id in (1,9,7,15) ;;
+        label: "MARKETING - PROMO"
+      }
+
+#      when: {
+#        sql: ${TABLE}.discount_code_id in (36,40) ;;
+#        label: "MARKETING - NSI"
+#      }
+
+      when: {
+        sql: ${TABLE}.discount_code_id = 23 ;;
+        label: "CHANGE/CANCEL"
+      }
+
+      else: "OTHER"
+    }
   }
+
 }
