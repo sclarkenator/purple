@@ -162,14 +162,14 @@ view: sales_order_line {
     view_label:  "x - report filters"
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
+    sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;;
   }
 
   dimension: MTD_fulfilled_flg{
     view_label:  "x - report filters"
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(current_date) and year(${TABLE}.fulfilled) = year(current_date) ;;
+    sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;;
   }
 
   dimension_group: created {
