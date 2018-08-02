@@ -91,6 +91,16 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;;
   }
 
+  dimension: order_age_bucket {
+    view_label: "Sales info"
+    description: "Number of days between today and when order was placed"
+    type:  tier
+    tiers: [3,5,10,15,20]
+    style: integer
+    sql: datediff(day,${created_date},current_date) ;;
+  }
+
+
   dimension: before_today_flag {
     label:  "before today flag"
     view_label:  "x - report filters"

@@ -87,7 +87,8 @@ view: sales_order {
   dimension_group: minimum_ship {
     view_label: "Sales info"
     label: "Minimum ship-by date"
-    description: "This is the date the wholesale order must be fulfilled by to arrive as expected"
+    description: "This is the earliest date the wholesale order could be fulfilled"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -100,6 +101,23 @@ view: sales_order {
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.minimum_ship) ;;
+  }
+
+  dimension_group: ship_by {
+    view_label: "Sales info"
+    description: "This is the date the wholesale order must be fulfilled by to arrive as expected"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.SHIP_BY ;;
   }
 
   dimension: insert_ts {
