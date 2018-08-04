@@ -10,7 +10,15 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;;
   }
 
-  measure: avg_days_to_fulfill {
+  measure: total_discounts {
+    view_label: "Sales info"
+    label:  "Total discounts ($)"
+    description:  "Total of all applied discounts when order was placed"
+    type: sum
+    sql:  ${TABLE}.discount_amt ;;
+  }
+
+    measure: avg_days_to_fulfill {
     view_label: "Sales info"
     description: "Average number of days between order and fulfillment"
     type:  average

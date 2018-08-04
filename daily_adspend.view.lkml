@@ -23,7 +23,7 @@ view: daily_adspend {
   dimension: MTD_flg{
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.date <= current_date and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;
+    sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;
   }
 
   dimension: rolling_7day {
