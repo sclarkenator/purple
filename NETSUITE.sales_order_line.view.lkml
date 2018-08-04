@@ -92,13 +92,6 @@ view: sales_order_line {
     sql:  ${TABLE}.ordered_qty ;;
   }
 
-  measure: Total_discounts {
-    view_label: "Sales info"
-    description: "Total discounts applied at time of order"
-    type: sum
-    sql:  ${TABLE}.discount_amt ;;
-  }
-
   dimension: order_age_bucket {
     view_label: "Sales info"
     description: "Number of days between today and when order was placed"
