@@ -41,8 +41,8 @@ view: daily_adspend {
   measure: avg_adspend {
     label: "Average daily spend"
     description: "Total adspend for selected channels"
-    type: average
-    sql: ${TABLE}.spend ;;
+    type: number
+    sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;
   }
 
   measure: impressions {
@@ -76,12 +76,12 @@ view: daily_adspend {
     type: string
     case: {
       when: {
-        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSER','SMARTPHONE') ;;
+        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSERS','SMARTPHONE') ;;
         label: "MOBILE"
       }
 
       when: {
-        sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSER','IPOD','TABLET') ;;
+        sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSERS','IPOD','TABLET') ;;
         label: "TABLET"
       }
 
