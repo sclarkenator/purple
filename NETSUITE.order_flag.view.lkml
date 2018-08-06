@@ -85,4 +85,12 @@ derived_table: {
     type:  number
     sql: ${TABLE}.order_id ;;
   }
+
+  dimension: mm_orders_flg {
+    label: "Total orders w/ multiple mattresses"
+    description: "Flag of there was more than 1 mattress in the order"
+    type:  number
+    sql:  ${TABLE}.mm_flg ;;
+  }
+
 }
