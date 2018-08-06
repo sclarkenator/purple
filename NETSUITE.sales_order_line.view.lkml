@@ -183,6 +183,13 @@ view: sales_order_line {
     sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;;
   }
 
+  dimension: this_month_next_month {
+    view_label: "x - report filters"
+    description: "This is used to generate a this month, next month year over year chart (adpsend dashboard"
+    type: string
+    sql:  ;;
+  }
+
   dimension_group: created {
     view_label: "Sales info"
     label: "Order"

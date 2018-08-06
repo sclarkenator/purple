@@ -38,6 +38,13 @@ view: daily_adspend {
     sql: ${TABLE}.spend ;;
   }
 
+  measure: avg_adspend {
+    label: "Average daily spend"
+    description: "Total adspend for selected channels"
+    type: average
+    sql: ${TABLE}.spend ;;
+  }
+
   measure: impressions {
     description: "Total impressions for selected channels (online only)"
     type: sum
@@ -66,8 +73,24 @@ view: daily_adspend {
   dimension: ad_device {
     description: "What device was ad viewed on? (smartphone, desktop, tablet, TV, etc.)"
     #hidden:  yes
-    type:  string
-    sql: ${TABLE}.device ;;
-  }
+    type: string
+    case: {
+      when: {
+        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSER','SMARTPHONE') ;;
+        label: "MOBILE"
+      }
 
+      when: {
+        sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSER','IPOD','TABLET') ;;
+        label: "TABLET"
+      }
+
+      when: {
+        sql: upper(${TABLE}.device) in ('COMPUTER','COMPUTERS','DESKTOP') ;;
+        label: "DESKTOP"
+      }
+
+      else: "OTHER"
+    }
+  }
 }

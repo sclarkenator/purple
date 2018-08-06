@@ -16,6 +16,12 @@ view: sales_targets {
     sql: ${TABLE}.WHLSL ;;
   }
 
+  measure: days {
+    label: "Days in month"
+    description: "This is the number of days in the month by any of the applied fields"
+    type: count
+   }
+
   dimension_group: date {
     hidden:  no
     type:  time
