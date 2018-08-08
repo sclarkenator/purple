@@ -23,19 +23,26 @@ view: daily_adspend {
   dimension: MTD_flg{
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.date <= current_date and month(${TABLE}.date) = month(current_date) and year(${TABLE}.date) = year(current_date) ;;
+    sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;
   }
 
   dimension: rolling_7day {
     description: "Filter to show just most recent 7 completed days"
     type: yesno
-    sql: ${ad_date} between dateadd(d,-8,current_date) and dateadd(d,-1,current_date)  ;;
+    sql: ${ad_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;
   }
 
   measure: adspend {
     description: "Total adspend for selected channels"
     type: sum
     sql: ${TABLE}.spend ;;
+  }
+
+  measure: avg_adspend {
+    label: "Average daily spend"
+    description: "Total adspend for selected channels"
+    type: number
+    sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;
   }
 
   measure: impressions {
@@ -58,16 +65,32 @@ view: daily_adspend {
 
   dimension: ad_display_type {
     description: "How ad was presented (search, display, video, TV, etc.)"
-    hidden:  yes
+    #hidden:  yes
     type:  string
     sql: ${TABLE}.source ;;
   }
 
   dimension: ad_device {
     description: "What device was ad viewed on? (smartphone, desktop, tablet, TV, etc.)"
-    hidden:  yes
-    type:  string
-    sql: ${TABLE}.device ;;
-  }
+    #hidden:  yes
+    type: string
+    case: {
+      when: {
+        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSERS','SMARTPHONE') ;;
+        label: "MOBILE"
+      }
 
+      when: {
+        sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSERS','IPOD','TABLET') ;;
+        label: "TABLET"
+      }
+
+      when: {
+        sql: upper(${TABLE}.device) in ('COMPUTER','COMPUTERS','DESKTOP') ;;
+        label: "DESKTOP"
+      }
+
+      else: "OTHER"
+    }
+  }
 }

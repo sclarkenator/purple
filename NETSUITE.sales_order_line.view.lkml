@@ -10,7 +10,15 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;;
   }
 
-  measure: avg_days_to_fulfill {
+  measure: total_discounts {
+    view_label: "Sales info"
+    label:  "Total discounts ($)"
+    description:  "Total of all applied discounts when order was placed"
+    type: sum
+    sql:  ${TABLE}.discount_amt ;;
+  }
+
+    measure: avg_days_to_fulfill {
     view_label: "Sales info"
     description: "Average number of days between order and fulfillment"
     type:  average
@@ -84,12 +92,15 @@ view: sales_order_line {
     sql:  ${TABLE}.ordered_qty ;;
   }
 
-  measure: Total_discounts {
+  dimension: order_age_bucket {
     view_label: "Sales info"
-    description: "Total discounts applied at time of order"
-    type: sum
-    sql:  ${TABLE}.discount_amt ;;
+    description: "Number of days between today and when order was placed"
+    type:  tier
+    tiers: [3,5,10,15,20]
+    style: integer
+    sql: datediff(day,${created_date},current_date) ;;
   }
+
 
   dimension: before_today_flag {
     label:  "before today flag"
@@ -162,14 +173,21 @@ view: sales_order_line {
     view_label:  "x - report filters"
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.Created <= current_date and month(${TABLE}.Created) = month(current_date) and year(${TABLE}.Created) = year(current_date) ;;
+    sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;;
   }
 
   dimension: MTD_fulfilled_flg{
     view_label:  "x - report filters"
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(current_date) and year(${TABLE}.fulfilled) = year(current_date) ;;
+    sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;;
+  }
+
+  dimension: this_month_next_month {
+    view_label: "x - report filters"
+    description: "This is used to generate a this month, next month year over year chart (adpsend dashboard"
+    type: string
+    sql:  ;;
   }
 
   dimension_group: created {

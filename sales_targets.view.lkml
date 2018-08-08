@@ -16,6 +16,12 @@ view: sales_targets {
     sql: ${TABLE}.WHLSL ;;
   }
 
+  measure: days {
+    label: "Days in month"
+    description: "This is the number of days in the month by any of the applied fields"
+    type: count
+   }
+
   dimension_group: date {
     hidden:  no
     type:  time
@@ -34,7 +40,7 @@ view: sales_targets {
   dimension: MTD_flg{
     description: "This field is for formatting on MTD reports"
     type: yesno
-    sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(current_date) and year(${TABLE}.date) = year(current_date) ;;
+    sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;
   }
 
 }
