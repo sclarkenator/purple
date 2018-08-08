@@ -74,9 +74,44 @@ derived_table: {
 
   dimension: mattress_flg {
     label: "Mattress order"
-    description: "Was there a mattress in this order"
+    description: "Was there a mattress in this order (1 = Yes)"
     type:  number
     sql: ${TABLE}.mattress_flg ;;
+  }
+
+  dimension: cushion_flg {
+    label: "Cushion order"
+    description: "Was there a cushion in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.cushion_flg ;;
+  }
+
+  dimension: sheets_flg {
+    label: "Sheets order"
+    description: "Were there sheets in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.sheets_flg ;;
+  }
+
+  dimension: protector_flg {
+    label: "Protector order"
+    description: "Was there a mattress protector in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.protector_flg ;;
+  }
+
+  dimension: base_flg {
+    label: "Base order"
+    description: "Was there a base in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.base_flg ;;
+  }
+
+  dimension: pillow_flg {
+    label: "Pillow order"
+    description: "Was there a pillow in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.pillow_flg ;;
   }
 
   dimension: order_id {
