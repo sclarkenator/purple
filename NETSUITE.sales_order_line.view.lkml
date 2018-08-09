@@ -330,7 +330,7 @@ view: sales_order_line {
     view_label:  "x - report filters"
     description: "Filter to show just most recent 7 completed days"
     type: yesno
-    sql: ${created_date} between dateadd(d,-8,current_date) and dateadd(d,-1,current_date)  ;;
+    sql: ${created_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;
   }
 
   dimension:  4_week_filter {
