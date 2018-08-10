@@ -6,11 +6,15 @@ view: production_report {
                   product,
                   CASE WHEN machine like 'IMM%' THEN CASE WHEN product like '%Pillow%' THEN 'Pillow' ELSE 'Cushion' END ELSE product END as category,
                   total,
+                  reason_code,
+                  reason_text,
                   regrind + scrap as regrind_scrap
           from (
                   SELECT m.machine_name as machine,
                           p.product_name as product,
                           pl.created,
+                          pl.reason_code,
+                          pl.reason_text,
                           count(*) AS total,
                           SUM(CASE WHEN pl.status_id = 3 THEN 1 ELSE 0 END) AS regrind,
                           SUM(CASE WHEN pl.status_id = 2 THEN 1 ELSE 0 END) AS scrap
@@ -20,6 +24,8 @@ view: production_report {
                   GROUP BY m.machine_name
                           ,p.product_name
                           ,pl.created
+                          ,pl.reason_code
+                          ,pl.reason_text
                 )t
           ;;
   }
@@ -72,6 +78,16 @@ view: production_report {
   dimension: category {
     type: string
     sql: ${TABLE}.category ;;
+  }
+
+  dimension: reason_code {
+    type: string
+    sql: ${TABLE}.reason_code ;;
+  }
+
+  dimension: reason_text {
+    type: string
+    sql: ${TABLE}.reason_text ;;
   }
 
   measure: total {
