@@ -93,10 +93,10 @@ view: daily_adspend {
         label: "YAHOO"
       }
 
-      when: {
-        sql: ${TABLE}.platform = 'BING' ;;
-        label: "BING"
-      }
+#      when: {
+#        sql: ${TABLE}.platform = 'BING' ;;
+#        label: "BING"
+#      }
 
       else: "ALL OTHERS"
     }
