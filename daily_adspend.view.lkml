@@ -63,11 +63,74 @@ view: daily_adspend {
     sql: ${TABLE}.platform ;;
   }
 
+  dimension: Spend_platform_condensed {
+    description: "What platform for spend, grouping smaller platforms into all other"
+    label: "Major spend platforms"
+    type: string
+    case: {
+      when: {
+        sql: ${TABLE}.platform = 'FACEBOOK' ;;
+        label: "FACEBOOK"
+        }
+
+      when: {
+        sql: ${TABLE}.platform = 'GOOGLE' ;;
+        label: "GOOGLE"
+      }
+
+      when: {
+        sql: ${TABLE}.platform = 'TV' ;;
+        label: "TV"
+      }
+
+      when: {
+        sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' ;;
+        label: "AMAZON"
+      }
+
+      when: {
+        sql: ${TABLE}.platform = 'YAHOO' ;;
+        label: "YAHOO"
+      }
+
+      when: {
+        sql: ${TABLE}.platform = 'BING' ;;
+        label: "BING"
+      }
+
+      else: "ALL OTHERS"
+    }
+  }
+
   dimension: ad_display_type {
     description: "How ad was presented (search, display, video, TV, etc.)"
     #hidden:  yes
     type:  string
     sql: ${TABLE}.source ;;
+  }
+
+  dimension: campaign_type {
+    description: "Prospecting/Retargeting/Brand"
+    #hidden:  yes
+    type:  string
+    case: {
+      when: {
+        sql:  ${TABLE}.campaign_type = 'BRAND' ;;
+        label: "BRAND"
+      }
+
+      when: {
+        sql:  ${TABLE}.campaign_type = 'PROSPECTING' ;;
+        label: "PROSPECTING"
+      }
+
+      when: {
+        sql:  ${TABLE}.campaign_type = 'RETARGETING' ;;
+        label: "RETARGETING"
+      }
+
+      else: "OTHER"
+    }
   }
 
   dimension: ad_device {
