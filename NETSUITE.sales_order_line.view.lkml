@@ -10,6 +10,15 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;;
   }
 
+  measure: gross_gross_Amt {
+    view_label: "Sales info"
+    label:  "Gross-gross sales ($)"
+    description:  "Total the customer paid plus value of discounts they received, excluding tax and freight"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql:  ${TABLE}.gross_amt + ${TABLE}.discount_amt ;;
+  }
+
   measure: total_discounts {
     view_label: "Sales info"
     label:  "Total discounts ($)"
@@ -18,7 +27,7 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;;
   }
 
-    measure: avg_days_to_fulfill {
+  measure: avg_days_to_fulfill {
     view_label: "Sales info"
     description: "Average number of days between order and fulfillment"
     type:  average
