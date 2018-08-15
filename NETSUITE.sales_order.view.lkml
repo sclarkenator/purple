@@ -24,6 +24,40 @@ view: sales_order {
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
+  dimension: channel_source {
+    view_label: "Sales info"
+    label: "Order source"
+    description: "Where was the order placed?"
+    case: {
+      when: {
+        sql: ${TABLE}.system = 'SHOPIFY-US' or ${TABLE}.source = 'Shopify - US' or ${TABLE}.source is null or ${TABLE}.source = 'Direct Entry' ;;
+        label: "SHOPIFY-US"
+      }
+
+      when: {
+        sql: ${TABLE}.system = 'SHOPIFY-CA' or ${TABLE}.source = 'Shopify - CA' ;;
+        label: "SHOPIFY-CA"
+      }
+
+      when: {
+        sql: ${TABLE}.system = 'AMAZON.COM' ;;
+        label: "AMAZON-US"
+      }
+
+      when: {
+        sql: ${TABLE}.system = 'AMAZON-US' ;;
+        label: "AMAZON-US"
+      }
+
+      when: {
+        sql: ${TABLE}.system = 'AMAZON-CA' ;;
+        label: "AMAZON-CA"
+      }
+
+      else: "OTHER"
+    }
+  }
+
   dimension: channel_id {
     view_label: "Sales info"
     description:  "1-DTC | 2-Wholesale"
@@ -260,7 +294,7 @@ view: sales_order {
     view_label: "Sales info"
     label:  "Order source"
     description: "System where order was placed"
-    #hidden: yes
+    hidden: yes
     type: string
     sql: ${TABLE}.SOURCE ;;
   }
@@ -337,6 +371,14 @@ view: sales_order {
     hidden: yes
     type: number
     sql: ${TABLE}.WARRANTY_CLAIM_ID ;;
+  }
+
+  dimension: warranty_order_flg {
+    view_label: "Sales info"
+    label: "Warranty_order?"
+    description: "Was this order a warranty replacement"
+    type: yesno
+    sql: ${TABLE}.WARRANTY_CLAIM_ID is not null ;;
   }
 
 }
