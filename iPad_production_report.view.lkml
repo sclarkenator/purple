@@ -8,6 +8,8 @@ view: production_report {
                   total,
                   reason_code,
                   reason_text,
+                  regrind,
+                  scrap,
                   regrind + scrap as regrind_scrap
           from (
                   SELECT m.machine_name as machine,
@@ -99,6 +101,16 @@ view: production_report {
     type:  sum
     sql: ${TABLE}.regrind_scrap ;;
   }
+
+  measure: scrap {
+    type:  sum
+    sql: ${TABLE}.scrap ;;
+  }
+
+  measure: regrind {
+    type:  sum
+    sql: ${TABLE}.regrind ;;
+ }
 
   measure: finished {
     type: number
