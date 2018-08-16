@@ -10,7 +10,9 @@ view: production_report {
                   reason_text,
                   regrind,
                   scrap,
-                  regrind + scrap as regrind_scrap
+                  regrind + scrap as regrind_scrap,
+                  CASE WHEN netsuite_location_id = 5 THEN 'Alpine'
+                    WHEN netsuite_location_id = 41 THEN 'West' END as facility
           from (
                   SELECT m.machine_name as machine,
                           p.product_name as product,
@@ -19,7 +21,8 @@ view: production_report {
                           pl.reason_text,
                           count(*) AS total,
                           SUM(CASE WHEN pl.status_id = 3 THEN 1 ELSE 0 END) AS regrind,
-                          SUM(CASE WHEN pl.status_id = 2 THEN 1 ELSE 0 END) AS scrap
+                          SUM(CASE WHEN pl.status_id = 2 THEN 1 ELSE 0 END) AS scrap,
+                          m.netsuite_location_id
                   FROM analytics_stage.ipad_stg.production_log pl
                     JOIN analytics_stage.ipad_stg.machine m ON pl.machine_id = m.machine_id
                     JOIN analytics_stage.ipad_stg.product p on pl.product_id = p.product_id
@@ -28,6 +31,7 @@ view: production_report {
                           ,pl.created
                           ,pl.reason_code
                           ,pl.reason_text
+                          ,m.netsuite_location_id
                 )t
           ;;
   }
@@ -90,6 +94,11 @@ view: production_report {
   dimension: reason_text {
     type: string
     sql: ${TABLE}.reason_text ;;
+  }
+
+  dimension: facility {
+    type: string
+    sql: ${TABLE}.facility ;;
   }
 
   measure: total {
