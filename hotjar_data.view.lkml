@@ -54,6 +54,11 @@ view: hotjar_data {
         }
 
         when: {
+          sql: ${how_heard} = 'TV' ;;
+          label: "TV"
+        }
+
+        when: {
           sql: ${how_heard} like 'Search Engine%' ;;
           label: "Search engine"
         }
