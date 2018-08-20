@@ -4,7 +4,6 @@ view: hotjar_data {
   dimension_group: created {
     type: time
     timeframes: [
-      raw,
       date,
       week,
       month,
@@ -34,5 +33,10 @@ view: hotjar_data {
   measure: count {
     type: count
     drill_fields: []
+  }
+
+  measure: respondants {
+    type: count_distinct
+    sql: ${TABLE}.token ;;
   }
 }
