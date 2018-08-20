@@ -1,6 +1,14 @@
 view: hotjar_data {
   sql_table_name: MARKETING.HOTJAR_DATA ;;
 
+  dimension: pk_hotjar {
+    label: "PK for Hotjar"
+    description: "token combined with how heard"
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.token||${TABLE}.how_heard ;;
+  }
+
   dimension_group: created {
     type: time
     timeframes: [
@@ -35,8 +43,10 @@ view: hotjar_data {
     drill_fields: []
   }
 
-  measure: respondants {
+  measure: respondents {
+#    hidden: yes
     type: count_distinct
     sql: ${TABLE}.token ;;
   }
+
 }
