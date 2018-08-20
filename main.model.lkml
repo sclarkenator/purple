@@ -77,6 +77,13 @@ explore: sales_order_line {
     relationship: many_to_one
   }
 
+  join: shopify_orders {
+    view_label: "Shopify-RAW"
+    type:  left_outer
+    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    relationship:  one_to_one
+  }
+
   join: return_order_line {
     view_label: "Returns info"
     type: full_outer

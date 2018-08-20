@@ -209,7 +209,10 @@ view: sales_order {
 
   dimension: payment_method {
     view_label: "Sales info"
-    hidden: yes
+    label: "Order payment method"
+    description: "**FOR Shopify-US orders only***
+    What was the customer's method of payment?"
+    hidden: no
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;;
   }
