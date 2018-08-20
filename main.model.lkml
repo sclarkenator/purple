@@ -20,6 +20,11 @@ explore: daily_adspend {
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }
 
+explore: refund {
+  label: "Accounting Refunds"
+  description: "Refunds on sales at an order level, for accounting."
+}
+
 explore: inventory {
   label: "Inventory"
   description: "Inventory positions, by item by location"
