@@ -15,9 +15,19 @@ persist_with: gross_to_net_sales_default_datagroup
 
 week_start_day: sunday
 
+explore: hotjar_data {
+  label: "Hotjar survey results"
+  description: "Results form Hotjar post-purchase survey"
+}
+
 explore: daily_adspend {
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
+}
+
+explore: refund {
+  label: "Accounting Refunds"
+  description: "Refunds on sales at an order level, for accounting."
 }
 
 explore: inventory {
@@ -75,6 +85,13 @@ explore: sales_order_line {
     type: left_outer
     sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one
+  }
+
+  join: shopify_orders {
+    view_label: "Shopify-RAW"
+    type:  left_outer
+    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    relationship:  one_to_one
   }
 
   join: return_order_line {
