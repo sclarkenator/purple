@@ -15,6 +15,11 @@ persist_with: gross_to_net_sales_default_datagroup
 
 week_start_day: sunday
 
+explore: hotjar_data {
+  label: "Hotjar survey results"
+  description: "Results form Hotjar post-purchase survey"
+}
+
 explore: daily_adspend {
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
