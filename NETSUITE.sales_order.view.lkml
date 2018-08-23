@@ -202,7 +202,7 @@ view: sales_order {
 
   dimension: order_id {
     view_label: "Sales info"
-    hidden: yes
+    ## hidden: yes
     type: number
     sql: ${TABLE}.ORDER_ID ;;
   }
