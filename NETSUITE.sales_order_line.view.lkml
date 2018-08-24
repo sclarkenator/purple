@@ -547,6 +547,6 @@ view: sales_order_line {
   }
 
   set: fulfill_details {
-    fields: [order_id,company_id,created_date,fulfilled_date]
+    fields: [order_id,item_id,created_date,fulfilled_date]
   }
 }

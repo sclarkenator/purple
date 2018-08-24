@@ -20,6 +20,11 @@ explore: hotjar_data {
   description: "Results form Hotjar post-purchase survey"
 }
 
+explore: orphan_orders {
+  label: "Orphan orders"
+  description: "Orders that exist in Shopify that aren't yet in Netsuite"
+}
+
 explore: daily_adspend {
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
