@@ -16,11 +16,19 @@ persist_with: gross_to_net_sales_default_datagroup
 week_start_day: sunday
 
 explore: hotjar_data {
+  hidden:  yes
   label: "Hotjar survey results"
   description: "Results form Hotjar post-purchase survey"
+
+  join: sales_order {
+    type:  left_outer
+    sql_on: ${hotjar_data.related_tranid} = ${sales_order.related_tranid} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: orphan_orders {
+  hidden:  yes
   label: "Orphan orders"
   description: "Orders that exist in Shopify that aren't yet in Netsuite"
 }
@@ -52,6 +60,7 @@ explore: inventory {
 }
 
 explore: sales_targets {
+  hidden:  yes
   label: "Finance targets"
   description: "Monthly finance targets, spread by day"
 }
