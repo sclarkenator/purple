@@ -196,7 +196,7 @@ view: sales_order {
     description: "Different price buckets for total gross order amount (customizable)"
     type:  tier
     style: integer
-    tiers: [300,500,1000,2000,3000,5000]
+    tiers: [150,600,1000,1500,2500]
     sql: ${TABLE}.gross_amt ;;
   }
 

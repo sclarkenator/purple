@@ -1,12 +1,29 @@
 view: hotjar_data {
-  sql_table_name: MARKETING.HOTJAR_DATA ;;
+  derived_table: {
+    sql:
+          select created
+                  ,how_heard
+                  ,first_heard
+                  ,name related_tranid
+          from analytics.marketing.hotjar_data h
+          join
+          (select checkout_token
+                  ,name
+          from analytics_stage.shopify_ca_ft."ORDER"
+          union
+          select checkout_token
+                  ,name
+          from analytics_stage.shopify_us_ft."ORDER"
+          where created_at > '2018-05-20') s
+          on h.token = s.checkout_token ;;
+  }
 
   dimension: pk_hotjar {
     label: "PK for Hotjar"
     description: "token combined with how heard"
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.token||${TABLE}.how_heard ;;
+    sql: ${TABLE}.related_tranid||${TABLE}.how_heard ;;
   }
 
   dimension_group: created {
@@ -97,9 +114,10 @@ view: hotjar_data {
     }
   }
 
-  dimension: token {
+  dimension: related_tranid {
+    hidden:  yes
     type: string
-    sql: ${TABLE}."TOKEN" ;;
+    sql: ${TABLE}.related_tranid ;;
   }
 
   measure: count {
@@ -110,7 +128,7 @@ view: hotjar_data {
   measure: respondents {
 #    hidden: yes
     type: count_distinct
-    sql: ${TABLE}.token ;;
+    sql: ${TABLE}.related_tranid ;;
   }
 
 }
