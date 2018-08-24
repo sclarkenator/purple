@@ -49,6 +49,12 @@ explore: inventory {
     sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
     relationship: many_to_one
   }
+
+  join: kanban {
+    type: left_outer
+    sql_on: ${inventory.item_id} = ${kanban.item_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: sales_targets {
