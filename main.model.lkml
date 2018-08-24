@@ -27,6 +27,12 @@ explore: hotjar_data {
   }
 }
 
+explore: shopify_orders {
+  hidden:  yes
+  label: "Shopify sales simple"
+  description: "Shopify header level information"
+}
+
 explore: orphan_orders {
   hidden:  yes
   label: "Orphan orders"
