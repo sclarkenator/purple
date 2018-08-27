@@ -12,6 +12,7 @@ view: sales_order_line {
 
   measure: gross_gross_Amt {
     view_label: "Sales info"
+    hidden:  yes
     label:  "Gross-gross sales ($)"
     description:  "Total the customer paid plus value of discounts they received, excluding tax and freight"
     type: sum
