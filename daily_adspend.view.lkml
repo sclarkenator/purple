@@ -39,12 +39,12 @@ view: daily_adspend {
     sql: ${TABLE}.spend ;;
   }
 
-  #measure: avg_adspend {
-  #  label: "Average daily spend"
-  #  description: "Total adspend for selected channels"
-  #  type: number
-  #  sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;
-  #}
+  measure: avg_adspend {
+    label: "Average daily spend"
+    description: "Total adspend for selected channels"
+    type: number
+    sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;
+  }
 
   measure: impressions {
     description: "Total impressions for selected channels (online only)"
