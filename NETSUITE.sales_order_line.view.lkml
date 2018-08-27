@@ -51,6 +51,42 @@ view: sales_order_line {
     sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 5) then ${ordered_qty} else 0 end ;;
   }
 
+  measure: amazon_ca_sales {
+    view_label: "Sales info"
+    description: "used to generate the sales by channel report"
+    label: "Amazon-CA gross"
+    hidden: no
+    type: sum
+    sql: case when ${sales_order.channel_source} = 'AMAZON-CA' then ${TABLE}.gross_amt else 0 end ;;
+  }
+
+  measure: amazon_us_sales {
+    view_label: "Sales info"
+    description: "used to generate the sales by channel report"
+    label: "Amazon-US gross"
+    hidden: no
+    type: sum
+    sql: case when ${sales_order.channel_source} = 'AMAZON-US' then ${TABLE}.gross_amt else 0 end ;;
+  }
+
+  measure: shopify_ca_sales {
+    view_label: "Sales info"
+    description: "used to generate the sales by channel report"
+    label: "Shopify-CA sales"
+    hidden: no
+    type: sum
+    sql: case when ${sales_order.channel_source} = 'SHOPIFY-CA' then ${TABLE}.gross_amt else 0 end ;;
+  }
+
+  measure: shopify_us_sales {
+    view_label: "Sales info"
+    description: "US Shopify gross sales as reported in Netsuite"
+    label: "Shopify-US gross"
+    hidden: no
+    type: sum
+    sql: case when ${sales_order.channel_source} = 'SHOPIFY-US' then ${TABLE}.gross_amt else 0 end ;;
+  }
+
   measure: SLA_eligible {
     view_label: "Sales info"
     hidden: yes
