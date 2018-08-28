@@ -72,7 +72,7 @@ explore: inventory {
 }
 
 explore: sales_targets {
-  hidden:  yes
+  hidden:  no
   label: "Finance targets"
   description: "Monthly finance targets, spread by day"
 }
