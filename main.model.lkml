@@ -27,6 +27,12 @@ explore: hotjar_data {
   }
 }
 
+explore: shopify_orders {
+  hidden:  yes
+  label: "Shopify sales simple"
+  description: "Shopify header level information"
+}
+
 explore: orphan_orders {
   hidden:  yes
   label: "Orphan orders"
@@ -60,7 +66,7 @@ explore: inventory {
 }
 
 explore: sales_targets {
-  hidden:  yes
+  hidden:  no
   label: "Finance targets"
   description: "Monthly finance targets, spread by day"
 }

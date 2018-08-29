@@ -35,12 +35,14 @@ view: daily_adspend {
   measure: adspend {
     description: "Total adspend for selected channels"
     type: sum
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.spend ;;
   }
 
   measure: avg_adspend {
     label: "Average daily spend"
-    description: "Total adspend for selected channels"
+    hidden:  yes
+    description: "Hidden field to get average daily adspend for defined period"
     type: number
     sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;
   }
