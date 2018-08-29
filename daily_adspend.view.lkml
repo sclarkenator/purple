@@ -5,7 +5,7 @@ view: daily_adspend {
     hidden: yes
     type: string
     primary_key: yes
-    sql: ${TABLE}.ad_id||'-'||${TABLE}.date;;
+    sql: ${TABLE}.campaign_id||'-'||${TABLE}.date||'-'||${adspend};;
   }
 
   dimension_group: ad {

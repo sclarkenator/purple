@@ -1,6 +1,14 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
+  dimension: item_order{
+    view_label: "Sales info"
+    type: string
+    primary_key:  yes
+    hidden:  yes
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
+  }
+
   measure: total_gross_Amt {
     view_label: "Sales info"
     label:  "Gross sales ($)"
@@ -146,14 +154,14 @@ view: sales_order_line {
     view_label: "Sales info"
     description: "Number of days between today and when order was placed"
     type:  tier
-    tiers: [3,5,10,15,20]
+    tiers: [4,6,10,15,20]
     style: integer
     sql: datediff(day,${created_date},current_date) ;;
   }
 
-
   dimension: before_today_flag {
     label:  "before today flag"
+    hidden: yes
     view_label:  "x - report filters"
     type: yesno
     sql: ${created_date}  < current_date ;;
@@ -161,6 +169,7 @@ view: sales_order_line {
 
   dimension: yesterday_flag {
     label:  "Yesterday-sales"
+    hidden:  yes
     view_label:  "x - report filters"
     type: yesno
     sql: ${created_date} = dateadd(d,-1,current_date) ;;
@@ -172,14 +181,6 @@ view: sales_order_line {
     view_label:  "x - report filters"
     type: yesno
     sql: ((${gross_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;;
-  }
-
-  dimension: item_order{
-    view_label: "Sales info"
-    type: string
-    primary_key:  yes
-    hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
   dimension: order_system {
@@ -233,13 +234,6 @@ view: sales_order_line {
     sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;;
   }
 
-  dimension: this_month_next_month {
-    view_label: "x - report filters"
-    description: "This is used to generate a this month, next month year over year chart (adpsend dashboard"
-    type: string
-    sql:  ;;
-  }
-
   dimension_group: created {
     view_label: "Sales info"
     label: "Order"
@@ -262,6 +256,7 @@ view: sales_order_line {
   }
 
   dimension: day_of_week {
+    hidden:  yes
     view_label: "Sales info"
     label:  "Day of week"
     description: "abbreviated day of week"
@@ -331,6 +326,7 @@ view: sales_order_line {
   measure: 7_day_sales {
     description: "7-day average daily units"
     view_label: "Time-slice totals"
+    hidden: yes
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -343,6 +339,7 @@ view: sales_order_line {
   measure: 30_day_sales {
     description: "30-day average daily units"
     view_label: "Time-slice totals"
+    hidden:  yes
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -355,6 +352,7 @@ view: sales_order_line {
   measure: 60_day_sales {
     description: "60-day average daily units"
     view_label: "Time-slice totals"
+    hidden: yes
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -367,6 +365,7 @@ view: sales_order_line {
   measure: 90_day_sales {
     description: "90-day average daily units"
     view_label: "Time-slice totals"
+    hidden:  yes
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -449,7 +448,6 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [
-      raw,
       date,
       week,
       month,
@@ -459,16 +457,6 @@ view: sales_order_line {
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.FULFILLED) ;;
-  }
-
-  dimension: mattress_trial_period {
-    view_label: "Sales info"
-    description:  "Aging buckets for trial return period"
-    hidden: yes
-    type: tier
-    tiers: [30,60,90,120]
-    style: integer
-    sql: datediff(day,${TABLE}.fulfilled,current_Date) ;;
   }
 
   dimension: fulfillment_method {
@@ -540,14 +528,6 @@ view: sales_order_line {
     hidden: yes
     type: number
     sql: ${TABLE}.REFUND_LINK_ID ;;
-  }
-
-  dimension: state {
-    view_label: "Customer info"
-    group_label: "Customer address"
-    map_layer_name: us_states
-    type: string
-    sql: ${sf_zipcode_facts.state} ;;
   }
 
   dimension: street_address {
