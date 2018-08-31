@@ -12,9 +12,18 @@ view: sales_order_line {
   measure: total_gross_Amt {
     view_label: "Sales info"
     label:  "Gross sales ($)"
-    description:  "Total the customer paid, excluding tax and freight"
+    description:  "Total the customer paid, excluding tax and freight, in $K"
     type: sum
     value_format: "$#,##0,\" K\""
+    sql:  ${TABLE}.gross_amt ;;
+  }
+
+  measure: total_gross_Amt_non_rounded {
+    view_label: "Sales info"
+    label:  "Gross sales ($) Non-Rounded"
+    description:  "Total the customer paid, excluding tax and freight, in $"
+    type: sum
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.gross_amt ;;
   }
 
