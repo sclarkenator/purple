@@ -63,6 +63,12 @@ explore: inventory {
     sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
     relationship: many_to_one
   }
+
+  join: stock_level {
+    type: full_outer
+    sql_on: ${inventory.item_id} = ${stock_level.item_id} and ${inventory.location_id} = ${stock_level.location_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: sales_targets {
