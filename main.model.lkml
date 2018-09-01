@@ -25,6 +25,18 @@ explore: hotjar_data {
     sql_on: ${hotjar_data.related_tranid} = ${sales_order.related_tranid} ;;
     relationship: many_to_one
   }
+
+  join: sales_order_line {
+    type: left_outer
+    sql_on: ${sales_order.order_system} = ${sales_order_line.order_system} ;;
+    relationship: one_to_many
+  }
+
+  join: item {
+    type: left_outer
+    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: shopify_orders {
@@ -104,6 +116,13 @@ explore: sales_order_line {
     type: left_outer
     sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
     relationship: many_to_one
+  }
+
+  join: fulfillment {
+    view_label: "Fulfillment details"
+    type: left_outer
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.order_id}||'-'||${fulfillment.item_id} ;;
+    relationship: many_to_many
   }
 
   join: sales_order {

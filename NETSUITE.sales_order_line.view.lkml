@@ -52,11 +52,16 @@ view: sales_order_line {
 
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
+    label: "Fulfillment SLA - WEST"
+    filters: {
+      field: fulfillment.carrier
+      value: "FedEx"
+    }
     hidden: yes
-    description: "Was order fulfilled within 5 days?"
+    description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 6 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 5) then ${ordered_qty} else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 4 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 3) then ${ordered_qty} else 0 end ;;
   }
 
   measure: amazon_ca_sales {
@@ -102,15 +107,19 @@ view: sales_order_line {
   measure: SLA_eligible {
     view_label: "Sales info"
     hidden: yes
+    filters: {
+      field: fulfillment.carrier
+      value: "FedEx"
+    }
     description: "Was this line item cancelled within the SLA window?"
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,5,${created_date}) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
-    label: "SLA achieved"
+    label: "West SLA achievement"
     view_label: "Sales info"
-    description: "% of line items fulfilled within 5 days of order"
+    description: "% of line items fulfilled by Purple West within 3 days of order"
     type: number
     value_format_name: percent_0
     sql: ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) ;;
