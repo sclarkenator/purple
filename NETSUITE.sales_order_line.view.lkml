@@ -62,10 +62,6 @@ view: sales_order_line {
   measure: fulfilled_in_SLA {
     view_label: "Sales info"
     label: "Fulfillment SLA - WEST"
-    filters: {
-      field: fulfillment.carrier
-      value: "FedEx"
-    }
     hidden: yes
     description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
     drill_fields: [fulfill_details*]
@@ -116,10 +112,6 @@ view: sales_order_line {
   measure: SLA_eligible {
     view_label: "Sales info"
     hidden: yes
-    filters: {
-      field: fulfillment.carrier
-      value: "FedEx"
-    }
     description: "Was this line item cancelled within the SLA window?"
     type:  sum
     sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
