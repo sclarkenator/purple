@@ -138,7 +138,7 @@ view: sales_order {
   }
 
   dimension_group: ship_by {
-    view_label: "Sales info"
+    view_label: "Fulfillment details"
     description: "This is the date the wholesale order must be fulfilled by to arrive as expected"
     type: time
     timeframes: [

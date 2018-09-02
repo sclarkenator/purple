@@ -46,7 +46,7 @@ view: sales_order_line {
   }
 
   measure: avg_days_to_fulfill {
-    view_label: "Sales info"
+    view_label: "Fulfillment details"
     description: "Average number of days between order and fulfillment"
     type:  average
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;;
@@ -60,13 +60,39 @@ view: sales_order_line {
 #  }
 
   measure: fulfilled_in_SLA {
-    view_label: "Sales info"
-    label: "Fulfillment SLA - WEST"
-    hidden: yes
+    view_label: "Fulfillment details"
+    label: "WEST - Fulfillment SLA"
+    hidden: no
     description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
+    filters: {
+      field: item.manna_fulfilled
+      value: "No"
+    }
+    filters: {
+      field: system
+      value: "NETSUITE"
+    }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 4 and (${cancelled_order.cancelled_date} is null or datediff(day,${TABLE}.created,${cancelled_order.cancelled_date}) > 3) then ${ordered_qty} else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 4 then ${ordered_qty} else 0 end ;;
+  }
+
+  measure: manna_fulfilled_in_SLA {
+    view_label: "Fulfillment details"
+    label: "Manna - Fulfillment SLA"
+    hidden: no
+    description: "Was this item fulfilled from Manna within 10 days of order (as per website)?"
+    filters: {
+      field: item.manna_fulfilled
+      value: "Yes"
+      }
+    filters: {
+      field: system
+      value: "NETSUITE"
+      }
+    drill_fields: [fulfill_details*]
+    type: sum
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 11 then ${ordered_qty} else 0 end ;;
   }
 
   measure: amazon_ca_sales {
@@ -110,23 +136,58 @@ view: sales_order_line {
   }
 
   measure: SLA_eligible {
-    view_label: "Sales info"
-    hidden: yes
-    description: "Was this line item cancelled within the SLA window?"
+    view_label: "Fulfillment details"
+    label: "WEST SLA eligible"
+    hidden: no
+    description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
+     filters: {
+      field: item.manna_fulfilled
+      value: "No"
+    }
+    filters: {
+      field: system
+      value: "NETSUITE"
+    }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} < dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
+  }
+
+  measure: manna_SLA_eligible {
+    view_label: "Fulfillment details"
+    label: "Manna SLA eligible"
+    hidden: no
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+     filters: {
+      field: item.manna_fulfilled
+      value: "Yes"
+    }
+    filters: {
+      field: system
+      value: "NETSUITE"
+    }
+    type:  sum
+    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,10,${created_date}) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
     label: "West SLA achievement"
-    view_label: "Sales info"
+    view_label: "Fulfillment details"
     description: "% of line items fulfilled by Purple West within 3 days of order"
     type: number
     value_format_name: percent_0
-    sql: ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) ;;
+    sql: case when datediff(day,${created_date},current_date) < 3 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;;
   }
 
- measure: total_line_item {
+  measure: manna_sla_achieved{
+    label: "Manna SLA achievement"
+    view_label: "Fulfillment details"
+    description: "% of line items fulfilled by Manna within 10 days of order"
+    type: number
+    value_format_name: percent_0
+    sql: case when datediff(day,${created_date},current_date) > 10 then ${manna_fulfilled_in_SLA}/nullif(${manna_SLA_eligible},0) else null end ;;
+  }
+
+measure: total_line_item {
     description: "Total line items to fulfill"
     view_label: "Sales info"
     hidden: no
@@ -454,7 +515,7 @@ view: sales_order_line {
   }
 
   dimension_group: fulfilled {
-    view_label: "Sales info"
+    view_label: "Fulfillment details"
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [
@@ -470,8 +531,8 @@ view: sales_order_line {
   }
 
   dimension: fulfillment_method {
-    view_label: "Sales info"
-    hidden: yes
+    view_label: "Fulfillment details"
+    hidden: no
     type: string
     sql: ${TABLE}.FULFILLMENT_METHOD ;;
   }
@@ -491,7 +552,7 @@ view: sales_order_line {
   }
 
   dimension: location {
-    view_label: "Sales info"
+    view_label: "Fulfillment details"
     label:  "Fulfillment warehouse"
     description:  "Warehouse that order was fulfilled out of"
     type: string

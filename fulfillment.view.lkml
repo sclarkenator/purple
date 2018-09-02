@@ -1,10 +1,11 @@
 view: fulfillment {
   sql_table_name: SALES.FULFILLMENT ;;
 
-  dimension: fulfillment_id {
+  dimension: PK {
     primary_key: yes
+    hidden: yes
     type: number
-    sql: ${TABLE}."FULFILLMENT_ID" ;;
+    sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;
   }
 
   dimension: carrier {
@@ -33,7 +34,6 @@ view: fulfillment {
     hidden: yes
     type: time
     timeframes: [
-      raw,
       date,
       week,
       month,
