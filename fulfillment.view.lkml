@@ -121,7 +121,7 @@ view: fulfillment {
   measure: count {
     hidden: yes
     type: count
-    drill_fields: [fulfillment_id]
+    drill_fields: [PK]
   }
 
   measure: total_shipping {
