@@ -59,10 +59,45 @@ view: sales_order_line {
 #    sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;;
 #  }
 
+  measure: mf_fulfilled {
+    view_label: "Fulfillment details"
+    label: "MF SLA"
+    hidden: yes
+    description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
+    filters: {
+      field: sales_order.customer_id
+      value: "2662"
+    }
+    type: sum
+    sql:  case when ${fulfilled_date} < ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;;
+  }
+
+  measure: mf_units {
+    view_label: "Fulfillment details"
+    label: "MF SLA"
+    hidden: yes
+    description: "How many items are there on the order to be shipped?"
+    filters: {
+      field: sales_order.customer_id
+      value: "2662"
+    }
+    type: sum
+    sql: ${ordered_qty} ;;
+  }
+
+  measure: mf_on_time {
+    view_label: "Fulfillment details"
+    label: "MF shipped on-time"
+    description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
+    value_format_name: percent_0
+    type: number
+    sql: ${mf_fulfilled}/nullif(${mf_units},0) ;;
+  }
+
   measure: fulfilled_in_SLA {
     view_label: "Fulfillment details"
     label: "WEST - Fulfillment SLA"
-    hidden: no
+    hidden: yes
     description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
     filters: {
       field: item.manna_fulfilled
@@ -80,7 +115,7 @@ view: sales_order_line {
   measure: manna_fulfilled_in_SLA {
     view_label: "Fulfillment details"
     label: "Manna - Fulfillment SLA"
-    hidden: no
+    hidden: yes
     description: "Was this item fulfilled from Manna within 10 days of order (as per website)?"
     filters: {
       field: item.manna_fulfilled
@@ -138,7 +173,7 @@ view: sales_order_line {
   measure: SLA_eligible {
     view_label: "Fulfillment details"
     label: "WEST SLA eligible"
-    hidden: no
+    hidden: yes
     description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
      filters: {
       field: item.manna_fulfilled
@@ -155,7 +190,7 @@ view: sales_order_line {
   measure: manna_SLA_eligible {
     view_label: "Fulfillment details"
     label: "Manna SLA eligible"
-    hidden: no
+    hidden: yes
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
      filters: {
       field: item.manna_fulfilled
