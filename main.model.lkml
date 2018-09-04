@@ -205,12 +205,12 @@ explore: sales_order_line {
     relationship: one_to_one
   }
 
-  join: dtc_fulfill_sla {
-    view_label: "SLA achievement"
-    type: left_outer
-    sql_on: ${sales_order.order_id} = ${dtc_fulfill_sla.order_id} ;;
-    relationship: one_to_one
-  }
+#  join: dtc_fulfill_sla {
+#    view_label: "SLA achievement"
+#    type: left_outer
+#    sql_on: ${sales_order.order_id} = ${dtc_fulfill_sla.order_id} ;;
+#    relationship: one_to_one
+#  }
 }
 
 ### replicates DTC explore, with filters for wholesale
