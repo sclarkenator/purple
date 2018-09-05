@@ -186,7 +186,7 @@ view: item {
   }
 
   dimension: sku_id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.SKU_ID ;;
   }
