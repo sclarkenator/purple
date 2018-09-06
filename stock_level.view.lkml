@@ -31,6 +31,6 @@ view: stock_level {
   measure: Stock_Level_SUM {
     type: sum
     drill_fields: [item_id,location_id]
-    sql: ${TABLE}."TARGET_STOCKLEVEL" ;;
+    sql: ${TABLE}."TARGET_STOCKLEVEL";;
   }
 }
