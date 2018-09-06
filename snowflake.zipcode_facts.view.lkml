@@ -27,6 +27,7 @@ view: sf_zipcode_facts {
   }
 
   dimension: state {
+    group_label: "Customer address"
     type: string
     sql: ${TABLE}.state ;;
   }

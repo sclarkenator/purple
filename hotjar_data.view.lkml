@@ -14,7 +14,7 @@ view: hotjar_data {
           select checkout_token
                   ,name
           from analytics_stage.shopify_us_ft."ORDER"
-          where created_at > '2018-05-20') s
+          where created_at > '2018-05-22') s
           on h.token = s.checkout_token ;;
   }
 
@@ -41,8 +41,52 @@ view: hotjar_data {
   }
 
   dimension: first_heard {
-    type: string
-    sql: ${TABLE}."FIRST_HEARD" ;;
+    case: {
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Today' ;;
+        label: "Today"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 week ago' ;;
+        label: "<1 week"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 2 weeks ago' ;;
+        label: "<2 weeks"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 month ago' ;;
+        label: "<1 mo"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 2 months ago' ;;
+        label: "<2 mo"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 3 months ago' ;;
+        label: "<3 mo"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 6 months ago' ;;
+        label: "<6 mo"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 year ago' ;;
+        label: "<1 yr"
+      }
+
+      when: {
+        sql: ${TABLE}."FIRST_HEARD" = 'More than 1 year ago' ;;
+        label: "1+ yr"
+      }
+    }
   }
 
   dimension: how_heard {

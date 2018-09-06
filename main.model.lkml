@@ -25,6 +25,19 @@ explore: hotjar_data {
     sql_on: ${hotjar_data.related_tranid} = ${sales_order.related_tranid} ;;
     relationship: many_to_one
   }
+
+  join: sales_order_line {
+    type: left_outer
+    fields: []
+    sql_on: ${sales_order.order_system} = ${sales_order_line.order_system} ;;
+    relationship: one_to_many
+  }
+
+  join: item {
+    type: left_outer
+    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: shopify_orders {
@@ -106,6 +119,13 @@ explore: sales_order_line {
     relationship: many_to_one
   }
 
+  join: fulfillment {
+    view_label: "Fulfillment details"
+    type: left_outer
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+    relationship: many_to_many
+  }
+
   join: sales_order {
     view_label: "Order-level info"
     type: left_outer
@@ -114,8 +134,9 @@ explore: sales_order_line {
   }
 
   join: shopify_orders {
-    view_label: "Shopify-RAW"
+    view_label: "Sales info"
     type:  left_outer
+    fields: [shopify_orders.call_in_order_Flag]
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship:  one_to_one
   }
@@ -184,12 +205,12 @@ explore: sales_order_line {
     relationship: one_to_one
   }
 
-  join: dtc_fulfill_sla {
-    view_label: "SLA achievement"
-    type: left_outer
-    sql_on: ${sales_order.order_id} = ${dtc_fulfill_sla.order_id} ;;
-    relationship: one_to_one
-  }
+#  join: dtc_fulfill_sla {
+#    view_label: "SLA achievement"
+#    type: left_outer
+#    sql_on: ${sales_order.order_id} = ${dtc_fulfill_sla.order_id} ;;
+#    relationship: one_to_one
+#  }
 }
 
 ### replicates DTC explore, with filters for wholesale

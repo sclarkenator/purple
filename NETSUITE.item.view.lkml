@@ -104,6 +104,14 @@ view: item {
     }
   }
 
+  dimension: manna_fulfilled {
+    view_label: "Fulfillment details"
+    label: "Fulfilled by Manna?"
+    description: "Is item fulfilled by Manna (currently any new-model mattress)"
+    type: yesno
+    sql: ${is_original_New_mattress} = 'New' or ${TABLE}.model_name = 'POWERBASE' ;;
+  }
+
   dimension: is_mattress {
     label: "Mattress?"
     description: "Is this product a mattress"
@@ -182,7 +190,7 @@ view: item {
   }
 
   dimension: sku_id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.SKU_ID ;;
   }
