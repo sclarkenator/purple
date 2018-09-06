@@ -11,6 +11,10 @@ view: item {
     label:  "Product name"
     description: "Product name"
     type: string
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+    }
     sql: ${TABLE}.PRODUCT_DESCRIPTION ;;
   }
 
