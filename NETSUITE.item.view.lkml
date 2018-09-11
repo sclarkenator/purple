@@ -249,4 +249,10 @@ view: item {
       }
   }
 }
+    dimension: Product_Dimensions {
+      hidden: no
+      type: string
+      sql: ${TABLE}.DIMENSIONS ;;
+    }
+
 }
