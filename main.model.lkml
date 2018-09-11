@@ -16,28 +16,46 @@ persist_with: gross_to_net_sales_default_datagroup
 week_start_day: sunday
 
 explore: hotjar_data {
-  hidden:  yes
+  hidden:  no
   label: "Hotjar survey results"
   description: "Results form Hotjar post-purchase survey"
 
+  join: hotjar_whenheard {
+    type:  left_outer
+    sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
+    relationship: many_to_one
+  }
+
+  join: shopify_orders {
+    type: inner
+    sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
+    relationship: many_to_one
+  }
+
   join: sales_order {
     type:  left_outer
-    sql_on: ${hotjar_data.related_tranid} = ${sales_order.related_tranid} ;;
-    relationship: many_to_one
+    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    relationship: one_to_one
   }
 
-  join: sales_order_line {
+  join: order_flag {
     type: left_outer
-    fields: []
-    sql_on: ${sales_order.order_system} = ${sales_order_line.order_system} ;;
-    relationship: one_to_many
+    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship:  one_to_one
   }
 
-  join: item {
-    type: left_outer
-    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
+#  join: sales_order_line {
+#    type: left_outer
+#    fields: []
+#    sql_on: ${sales_order.order_system} = ${sales_order_line.order_system} ;;
+#    relationship: one_to_many
+#  }
+
+#  join: item {
+#    type: left_outer
+#    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+#    relationship: many_to_one
+#  }
 }
 
 explore: shopify_orders {
