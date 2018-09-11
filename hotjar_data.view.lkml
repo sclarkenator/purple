@@ -1,29 +1,19 @@
 view: hotjar_data {
-  derived_table: {
-    sql:
-          select created
-                  ,how_heard
-                  ,first_heard
-                  ,name related_tranid
-          from analytics.marketing.hotjar_data h
-          join
-          (select checkout_token
-                  ,name
-          from analytics_stage.shopify_ca_ft."ORDER"
-          union
-          select checkout_token
-                  ,name
-          from analytics_stage.shopify_us_ft."ORDER"
-          where created_at > '2018-05-22') s
-          on h.token = s.checkout_token ;;
-  }
+  sql_table_name: marketing.hotjar_data ;;
 
   dimension: pk_hotjar {
     label: "PK for Hotjar"
     description: "token combined with how heard"
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.related_tranid||${TABLE}.how_heard ;;
+    sql: ${TABLE}.token||${TABLE}.how_heard ;;
+  }
+
+  dimension: token {
+    label: "token"
+    description: "checkout token from shopify"
+    hidden:  yes
+    sql: ${TABLE}.token ;;
   }
 
   dimension_group: created {
@@ -38,55 +28,6 @@ view: hotjar_data {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."CREATED" ;;
-  }
-
-  dimension: first_heard {
-    case: {
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Today' ;;
-        label: "Today"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 week ago' ;;
-        label: "<1 week"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 2 weeks ago' ;;
-        label: "<2 weeks"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 month ago' ;;
-        label: "<1 mo"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 2 months ago' ;;
-        label: "<2 mo"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 3 months ago' ;;
-        label: "<3 mo"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 6 months ago' ;;
-        label: "<6 mo"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'Less than 1 year ago' ;;
-        label: "<1 yr"
-      }
-
-      when: {
-        sql: ${TABLE}."FIRST_HEARD" = 'More than 1 year ago' ;;
-        label: "1+ yr"
-      }
-    }
   }
 
   dimension: how_heard {
@@ -129,10 +70,15 @@ view: hotjar_data {
           label: "Review website"
         }
 
-        when: {
+      when: {
           sql: ${how_heard} like 'Website Ba%' ;;
           label: "Display ad"
         }
+
+      when: {
+        sql: ${how_heard} like 'Already own%' ;;
+        label: "Already own Purple"
+      }
 
         when: {
           sql: ${how_heard} = 'Instagram' ;;
@@ -158,12 +104,6 @@ view: hotjar_data {
     }
   }
 
-  dimension: related_tranid {
-    hidden:  yes
-    type: string
-    sql: ${TABLE}.related_tranid ;;
-  }
-
   measure: count {
     type: count
     drill_fields: []
@@ -172,7 +112,7 @@ view: hotjar_data {
   measure: respondents {
 #    hidden: yes
     type: count_distinct
-    sql: ${TABLE}.related_tranid ;;
+    sql: ${TABLE}.token ;;
   }
 
 }

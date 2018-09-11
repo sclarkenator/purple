@@ -30,6 +30,14 @@ view: shopify_orders {
     sql: ${TABLE}.name ;;
   }
 
+  dimension: checkout_token {
+    description: "checkout token linking shopify to heap, hotjar"
+    label: "Checkout token"
+    hidden:  yes
+    type: string
+    sql: ${TABLE}.checkout_token ;;
+  }
+
   dimension: call_in_order_Flag {
     label: "Draft order"
     description: "Draft orders created by call center agents"

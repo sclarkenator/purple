@@ -108,7 +108,7 @@ view: transfer_order {
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
-  dimension: memo {
+  dimension: Order_memo {
     type: string
     sql: ${TABLE}."MEMO" ;;
   }
@@ -163,7 +163,7 @@ view: transfer_order {
     sql: ${TABLE}."SALES_EFFECTIVE" ;;
   }
 
-  dimension: shipaddress {
+  dimension: ship_address {
     type: string
     sql: ${TABLE}."SHIPADDRESS" ;;
   }
@@ -198,7 +198,7 @@ view: transfer_order {
     sql: ${TABLE}."TRANDATE" ;;
   }
 
-  dimension: tranid {
+  dimension: Document_Number {
     type: string
     sql: ${TABLE}."TRANID" ;;
   }
@@ -222,7 +222,7 @@ view: transfer_order {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
-  measure: count {
+  measure: Order_count {
     type: count
     drill_fields: [transfer_order_id, transfer_order_line.count]
   }

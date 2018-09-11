@@ -88,7 +88,7 @@ view: transfer_order_line {
     sql: ${TABLE}."ITEM_UNIT_PRICE" ;;
   }
 
-  dimension: memo {
+  dimension: line_memo {
     type: string
     sql: ${TABLE}."MEMO" ;;
   }
@@ -140,7 +140,7 @@ view: transfer_order_line {
 
   dimension: transfer_order_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."TRANSFER_ORDER_ID" ;;
   }
 
@@ -156,6 +156,7 @@ view: transfer_order_line {
 
   dimension_group: update_ts {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -169,9 +170,9 @@ view: transfer_order_line {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
-  measure: count {
+  measure: line_count {
     type: count
-    drill_fields: [transfer_order.transfer_order_id]
+    drill_fields: [transfer_order_item_line]
   }
 
   measure: total_amount_received {
