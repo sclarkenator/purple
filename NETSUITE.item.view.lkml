@@ -14,6 +14,13 @@ view: item {
     sql: ${TABLE}.classification ;;
   }
 
+  dimension: merchandise {
+    description: "Is this a merchandising product for wholesale?"
+    label: "Merchandising flag"
+    type: yesno
+    sql: ${TABLE}.merchandise = 1 ;;
+  }
+
   dimension: finished_good_flg {
     description: "Is this item a finished good?"
     label: "Finished good flag"
