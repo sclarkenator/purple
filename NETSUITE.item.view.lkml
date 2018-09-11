@@ -7,6 +7,20 @@ view: item {
     sql: ${TABLE}.ITEM_ID ;;
   }
 
+  dimension: classification {
+    description: "What stage is this item in production?"
+    label: "Item classification"
+    type: string
+    sql: ${TABLE}.classification ;;
+  }
+
+  dimension: finished_good_flg {
+    description: "Is this item a finished good?"
+    label: "Finished good flag"
+    type: yesno
+    sql: ${classification} = 'FG' ;;
+  }
+
   dimension: product_description {
     label:  "Product name"
     description: "Product name"
