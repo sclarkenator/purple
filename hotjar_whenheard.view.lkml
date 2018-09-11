@@ -74,42 +74,42 @@ view: hotjar_whenheard {
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 1 week ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 1 week' ;;
         label: "<1 week"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 2 weeks ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 2 weeks' ;;
         label: "<2 weeks"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 1 month ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 1 month' ;;
         label: "<1 mo"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 2 months ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 2 months' ;;
         label: "<2 mo"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 3 months ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 3 months' ;;
         label: "<3 mo"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 6 months ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 6 months' ;;
         label: "<6 mo"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'Less than 1 year ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'Less than 1 year' ;;
         label: "<1 yr"
       }
 
       when: {
-        sql: ${TABLE}."HOW_TIME" = 'More than 1 year ago' ;;
+        sql: ${TABLE}."HOW_TIME" = 'More than 1 year' ;;
         label: "1+ yr"
       }
     }
