@@ -201,4 +201,38 @@ view: item {
     sql: ${TABLE}.UPDATE_TS ;;
   }
 
+  dimension: Classification_Groups{
+    type: string
+    sql: ${TABLE}.classification ;;
+    case: {
+      when: {
+        sql: ${TABLE}.classification = 'FG' ;;
+        label: "Finished Good"
+      }
+
+      when: {
+        sql: ${TABLE}.classification = 'FGC' ;;
+        label: "Finished Goods Component"
+      }
+
+      when: {
+        sql: ${TABLE}.classification = 'DSC' ;;
+        label: "Discounts"
+      }
+
+      when: {
+        sql: ${TABLE}.classification = 'SFG' ;;
+        label: "Semi Finished Goods"
+      }
+
+      when: {
+        sql: ${TABLE}.classification = 'RAW' ;;
+        label: "Raw Materials"
+      }
+      when: {
+        sql: ${TABLE}.classification = 'PRC' ;;
+        label: "Production Components"
+      }
+  }
+}
 }

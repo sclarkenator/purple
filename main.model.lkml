@@ -355,3 +355,53 @@ explore: warranty {
     relationship: many_to_one
   }
 }
+explore: item {
+  label: "Transfer and Purchase Orders"
+  description: "Netsuite data on Transfer and purchase orders"
+
+  join: purchase_order_line {
+    view_label: "Purchase Order"
+    type:  full_outer
+    sql_on: ${purchase_order_line.item_id} = ${item.item_id} ;;
+    relationship: one_to_many
+  }
+
+  join: purchase_order {
+    view_label: "Purchase Order"
+    type:  left_outer
+    required_joins: [purchase_order_line]
+    sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
+    relationship: many_to_one
+  }
+  join: transfer_order_line {
+    view_label: "Transfer Order"
+    type:  full_outer
+    sql_on: ${transfer_order_line.item_id} = ${item.item_id} ;;
+    relationship: one_to_many
+  }
+
+  join: transfer_order {
+    view_label: "Transfer Order"
+    type:  left_outer
+    required_joins: [transfer_order_line]
+    sql_on: ${transfer_order.transfer_order_id} = ${transfer_order_line.transfer_order_id} ;;
+    relationship: many_to_one
+  }
+join: Recieving_Location{
+  from:warehouse_location
+    type:  left_outer
+    sql_on: ${transfer_order.receiving_location_id} = ${Recieving_Location.location_id} and ${purchase_order.location_id} = ${Recieving_Location.location_id};;
+    relationship: many_to_one
+  }
+  join: Transfer_Fulfilling_Location{
+    from:warehouse_location
+    type:  left_outer
+    sql_on: ${transfer_order.receiving_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
+    relationship: many_to_one
+  }
+  join: vendor {
+    type:  left_outer
+    sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
+    relationship: many_to_one
+  }
+}
