@@ -254,7 +254,7 @@ measure: total_line_item {
     description: "Total units purchased, before returns and cancellations"
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
-    drill_fields: [sales_order.order_id, item.product_line_name]
+    drill_fields: [sales_order.order_id, created_date, item.product_line_name, total_units]
   }
 
   dimension: order_age_bucket {
@@ -350,6 +350,7 @@ measure: total_line_item {
       hour_of_day,
       day_of_month,
       month_name,
+      month_num,
       date,
       week,
       month,
