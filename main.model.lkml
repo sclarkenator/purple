@@ -397,6 +397,12 @@ explore: warranty {
     relationship: many_to_one
   }
 }
+
+explore: netsuite_orphaned_warranties {
+  label: "Orphaned Warranties"
+  description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"
+}
+
 explore: item {
   label: "Transfer and Purchase Orders"
   description: "Netsuite data on Transfer and purchase orders"
