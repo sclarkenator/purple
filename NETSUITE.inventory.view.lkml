@@ -30,9 +30,9 @@ view: inventory {
     sql: ${TABLE}."CREATED" ;;
   }
 
-  measure: in_transit {
+  measure: inbound {
     type: sum
-    sql: ${TABLE}."IN_TRANSIT" ;;
+    sql: ${TABLE}."INBOUND" ;;
   }
 
   dimension: item_id {
@@ -46,16 +46,35 @@ view: inventory {
     sql: ${TABLE}."LOCATION_ID" ;;
   }
 
+  dimension: OUTBOUND {
+    type: number
+    sql: ${TABLE}."OUTBOUND" ;;
+  }
+
+  dimension: ON_ORDER {
+    type: number
+    sql: ${TABLE}."ON_ORDER" ;;
+  }
+
   measure: on_hand {
     type: sum
     sql: ${TABLE}."ON_HAND" ;;
   }
 
-  measure: on_order {
+  measure: Total_on_order {
     type: sum
     sql: ${TABLE}."ON_ORDER" ;;
   }
 
+  measure: Total_INBOUND {
+    type: sum
+    sql: ${TABLE}."INBOUND" ;;
+  }
+
+  measure: TOTAL_OUTBOUND {
+    type: sum
+    sql: ${TABLE}."OUTBOUND" ;;
+  }
   measure: count {
     type: count
     drill_fields: []
