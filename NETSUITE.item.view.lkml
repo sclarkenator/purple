@@ -56,22 +56,22 @@ view: item {
     type: string
     case: {
       when: {
-        sql: ${TABLE}.model_name = 'ORIGINAL' ;;
+        sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;;
         label: "ORIGINAL"
       }
 
       when: {
-        sql: ${TABLE}.model_name = 'PURPLE.2' ;;
+        sql: ${TABLE}.model_name_lkr = 'PURPLE.2' ;;
         label: "PURPLE.2"
       }
 
       when: {
-        sql: ${TABLE}.model_name = 'PURPLE.3' ;;
+        sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;;
         label: "PURPLE.3"
       }
 
       when: {
-        sql: ${TABLE}.model_name = 'PURPLE.4' ;;
+        sql: ${TABLE}.model_name_lkr = 'PURPLE.4' ;;
         label: "PURPLE.4"
       }
     }
@@ -81,16 +81,16 @@ view: item {
     label: "Product type"
     description: "Type of product (mattress, pillow, cushion, etc.)"
     type: string
-    sql: ${TABLE}.PRODUCT_LINE_NAME ;;
+    sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;;
   }
 
   dimension: product_line_name_with_bases_breakout {
     label: "Product type with Bases Breakout"
     description: "Type of product (mattress, pillow, cushion, etc.)"
     type: string
-    sql: case when ${TABLE}.MODEL_NAME = 'POWERBASE' then 'POWERBASE'
-              when ${TABLE}.MODEL_NAME = 'PLATFORM' then 'PLATFORM'
-              else ${TABLE}.PRODUCT_LINE_NAME end;;
+    sql: case when ${TABLE}.MODEL_NAME_lkr = 'POWERBASE' then 'POWERBASE'
+              when ${TABLE}.MODEL_NAME_lkr = 'PLATFORM' then 'PLATFORM'
+              else ${TABLE}.PRODUCT_LINE_NAME_lkr end;;
   }
 
   dimension: product_line_model_name {
@@ -141,7 +141,7 @@ view: item {
     label: "Fulfilled by Manna?"
     description: "Is item fulfilled by Manna (currently any new-model mattress)"
     type: yesno
-    sql: ${is_original_New_mattress} = 'New' or ${TABLE}.model_name = 'POWERBASE' ;;
+    sql: ${is_original_New_mattress} = 'New' or ${TABLE}.model_name_lkr = 'POWERBASE' ;;
   }
 
   dimension: is_mattress {
@@ -162,14 +162,14 @@ view: item {
   dimension: sub_category_name {
     hidden: yes
     type: string
-    sql: ${TABLE}.SUB_CATEGORY_NAME ;;
+    sql: ${TABLE}.SUB_CATEGORY_NAME_lkr ;;
   }
   dimension: category_name {
     hidden: yes
     label: "Category"
     description:  "Sit / Sleep / Stand"
     type: string
-    sql: ${TABLE}.CATEGORY_NAME ;;
+    sql: ${TABLE}.CATEGORY_NAME_lkr ;;
   }
 
   dimension: color {
@@ -197,27 +197,27 @@ view: item {
     type: string
     case: {
             when: {
-              sql: ${TABLE}.SIZE = 'TWIN XL' ;;
+              sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;;
               label: "TWIN XL"
             }
 
             when: {
-              sql: ${TABLE}.SIZE = 'FULL' ;;
+              sql: ${TABLE}.SIZE_lkr = 'FULL' ;;
               label: "FULL"
             }
 
             when: {
-              sql: ${TABLE}.SIZE = 'QUEEN' ;;
+              sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;;
               label: "QUEEN"
             }
 
             when: {
-              sql: ${TABLE}.SIZE = 'KING' ;;
+              sql: ${TABLE}.SIZE_lkr = 'KING' ;;
               label: "KING"
             }
 
             when: {
-              sql: ${TABLE}.SIZE = 'CAL KING' ;;
+              sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;;
               label: "CAL KING"
             }
           }
