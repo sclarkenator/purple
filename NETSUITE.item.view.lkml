@@ -9,6 +9,7 @@ view: item {
 
   dimension: classification {
     description: "What stage is this item in production?"
+    hidden:  yes
     label: "Item classification"
     type: string
     sql: ${TABLE}.classification ;;
@@ -17,13 +18,23 @@ view: item {
   dimension: merchandise {
     description: "Is this a merchandising product for wholesale?"
     label: "Merchandising flag"
+    hidden:  yes
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;;
+  }
+
+  dimension: modified {
+    description: "Flag field indicating product attributes have been manually set"
+    label: "Modified flag"
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.bi_update = 1 ;;
   }
 
   dimension: finished_good_flg {
     description: "Is this item a finished good?"
     label: "Finished good flag"
+    hidden:  yes
     type: yesno
     sql: ${classification} = 'FG' ;;
   }
@@ -154,6 +165,7 @@ view: item {
     sql: ${TABLE}.SUB_CATEGORY_NAME ;;
   }
   dimension: category_name {
+    hidden: yes
     label: "Category"
     description:  "Sit / Sleep / Stand"
     type: string
@@ -162,6 +174,7 @@ view: item {
 
   dimension: color {
     description: "Only sheets have color assigned"
+    label: "Sheets color"
     type: string
     sql: ${TABLE}.COLOR ;;
   }
