@@ -253,6 +253,18 @@ explore: sales_order_line {
         field: sales_order.channel_id
         value: "2"
       }
+      filters: {
+        field: item.merchandise
+        value: "0"
+      }
+      filters: {
+        field: item.finished_good_flg
+        value: "1"
+      }
+      filters: {
+        field: item.modified
+        value: "1"
+      }
     }
 
     join: sf_zipcode_facts {
