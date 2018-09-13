@@ -76,11 +76,13 @@ explore: daily_adspend {
 }
 
 explore: refund {
+  group_label: "x - Accounting"
   label: "Accounting Refunds"
   description: "Refunds on sales at an order level, for accounting."
 }
 
 explore: inventory {
+  group_label: "Operations"
   label: "Inventory"
   description: "Inventory positions, by item by location"
 
@@ -103,7 +105,7 @@ explore: inventory {
 }
 
 explore: sales_targets {
-  hidden:  no
+  hidden:  yes
   label: "Finance targets"
   description: "Monthly finance targets, spread by day"
 }
@@ -246,6 +248,7 @@ explore: sales_order_line {
 ### replicates DTC explore, with filters for wholesale
   explore: wholesale {
     from: sales_order_line
+    group_label: "Wholesale"
     label:  "Wholesale"
     description:  "All sales orders for wholesale channel"
     always_filter: {
@@ -349,6 +352,7 @@ explore: sales_order_line {
 
 explore: Mattress_Firm {
   from: mattress_firm_store_details
+  group_label: "Wholesale"
 
   join: mattress_firm_sales {
     type: left_outer
@@ -399,17 +403,20 @@ explore: warranty {
 }
 
 explore: netsuite_orphaned_warranties {
+  group_label: "x - Accounting"
   label: "Orphaned Warranties"
   description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"
 }
 
 explore: netsuite_warranty_exceptions {
+  group_label: "x - Accounting"
   label: "Warranty ModCode Cleanup"
   description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"
 }
 
 explore: item {
   label: "Transfer and Purchase Orders"
+  group_label: "Operations"
   description: "Netsuite data on Transfer and purchase orders"
 
   join: purchase_order_line {
