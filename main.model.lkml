@@ -403,6 +403,11 @@ explore: netsuite_orphaned_warranties {
   description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"
 }
 
+explore: netsuite_warranty_exceptions {
+  label: "Warranty ModCode Cleanup"
+  description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"
+}
+
 explore: item {
   label: "Transfer and Purchase Orders"
   description: "Netsuite data on Transfer and purchase orders"
