@@ -62,7 +62,7 @@ view: sales_order_line {
   measure: mf_fulfilled {
     view_label: "Fulfillment details"
     label: "MF SLA"
-    hidden: yes
+    hidden: no
     description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
     filters: {
       field: sales_order.customer_id
@@ -75,7 +75,7 @@ view: sales_order_line {
   measure: mf_units {
     view_label: "Fulfillment details"
     label: "MF SLA"
-    hidden: yes
+    hidden: no
     description: "How many items are there on the order to be shipped?"
     filters: {
       field: sales_order.customer_id
@@ -107,6 +107,10 @@ view: sales_order_line {
       field: system
       value: "NETSUITE"
     }
+    filters: {
+      field: sales_order.channel_id
+      value: "1"
+    }
     drill_fields: [fulfill_details*]
     type: sum
     sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 5 then ${ordered_qty} else 0 end ;;
@@ -125,6 +129,10 @@ view: sales_order_line {
       field: system
       value: "NETSUITE"
       }
+    filters: {
+      field: sales_order.channel_id
+      value: "1"
+    }
     drill_fields: [fulfill_details*]
     type: sum
     sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 11 then ${ordered_qty} else 0 end ;;
@@ -183,6 +191,10 @@ view: sales_order_line {
       field: system
       value: "NETSUITE"
     }
+    filters: {
+      field: sales_order.channel_id
+      value: "1"
+    }
     type:  sum
     sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
   }
@@ -200,6 +212,10 @@ view: sales_order_line {
       field: system
       value: "NETSUITE"
     }
+    filters: {
+      field: sales_order.channel_id
+      value: "1"
+    }
     type:  sum
     sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,10,${created_date}) then ${ordered_qty} else 0 end ;;
   }
@@ -210,7 +226,7 @@ view: sales_order_line {
     description: "% of line items fulfilled by Purple West within 3 days of order"
     type: number
     value_format_name: percent_0
-    sql: case when datediff(day,${created_date},current_date) < 3 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;;
+    sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;;
   }
 
   measure: manna_sla_achieved{

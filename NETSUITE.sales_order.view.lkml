@@ -201,8 +201,10 @@ view: sales_order {
   }
 
   dimension: order_id {
+    hidden: no
     view_label: "Sales info"
-    ## hidden: yes
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
+    description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
     sql: ${TABLE}.ORDER_ID ;;
   }
