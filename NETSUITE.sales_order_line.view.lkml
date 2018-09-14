@@ -82,7 +82,7 @@ view: sales_order_line {
       value: "2662"
     }
     type: sum
-    sql: ${ordered_qty} ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or (${cancelled_order.cancelled_date} >  ${sales_order.ship_by_date}) then ${ordered_qty} else 0 end ;;
   }
 
   measure: mf_on_time {
@@ -277,7 +277,7 @@ measure: total_line_item {
     view_label: "Sales info"
     description: "Number of days between today and when order was placed"
     type:  tier
-    tiers: [4,6,10,15,20]
+    tiers: [3,4,6,10,15,20]
     style: integer
     sql: datediff(day,${created_date},current_date) ;;
   }
