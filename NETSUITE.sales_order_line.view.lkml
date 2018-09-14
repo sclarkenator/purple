@@ -69,7 +69,7 @@ view: sales_order_line {
       value: "2662"
     }
     type: sum
-    sql:  case when ${fulfilled_date} < ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;;
+    sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;;
   }
 
   measure: mf_units {
@@ -109,7 +109,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 4 then ${ordered_qty} else 0 end ;;
+    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 5 then ${ordered_qty} else 0 end ;;
   }
 
   measure: manna_fulfilled_in_SLA {
