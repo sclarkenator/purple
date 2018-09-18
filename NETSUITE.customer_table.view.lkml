@@ -19,4 +19,40 @@ view: customer_table {
       type: yesno
       sql: ${customer_id}=2662 ;;
     }
+
+    dimension: top_vendors {
+      label: "Top customers"
+      description: "List of top wholesale customers"
+      case: {
+        when: {
+          label: "Mattress Firm"
+          sql: lower(companyname) = 'mattress firm' ;;
+        }
+        when: {
+          label: "Sam's Club"
+          sql: lower(companyname) like 'sam%club%' ;;
+        }
+        when: {
+          label: "Bed Bath and Beyond"
+          sql: lower(companyname) like 'bed bath %' ;;
+        }
+        when: {
+          label: "Medline Industries"
+          sql: lower(companyname) = 'medline industries' ;;
+        }
+        when: {
+          label: "TA Operating"
+          sql: lower(companyname) = 'ta operating' ;;
+        }
+        when: {
+          label: "Access Health"
+          sql: lower(companyname) = 'access health' ;;
+        }
+        when: {
+          label: "Miracle Cushion"
+          sql: lower(companyname) like '%miracle cushion%' ;;
+        }
+      else: "Other"
+    }
+  }
 }
