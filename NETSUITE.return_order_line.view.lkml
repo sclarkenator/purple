@@ -14,6 +14,18 @@ view: return_order_line {
     sql: ${TABLE}.return_qty ;;
   }
 
+  measure: trial_units_returned {
+    label: "Trial returns (units)"
+    hidden:  yes
+    description: "Total individual items returned as a trial return"
+    type: sum
+    filters: {
+      field: return_order.rma_return_type
+      value: "Trial"
+    }
+    sql: ${TABLE}.return_qty ;;
+  }
+
   measure: average_gross_return {
     type: average
     sql: ${TABLE}.gross_amt ;;
