@@ -62,7 +62,7 @@ view: sales_order_line {
   measure: mf_fulfilled {
     view_label: "Fulfillment details"
     label: "MF SLA"
-    hidden: no
+    hidden: yes
     description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
     filters: {
       field: sales_order.customer_id
@@ -75,7 +75,7 @@ view: sales_order_line {
   measure: mf_units {
     view_label: "Fulfillment details"
     label: "MF SLA"
-    hidden: no
+    hidden: yes
     description: "How many items are there on the order to be shipped?"
     filters: {
       field: sales_order.customer_id
@@ -241,7 +241,7 @@ view: sales_order_line {
 measure: total_line_item {
     description: "Total line items to fulfill"
     view_label: "Sales info"
-    hidden: no
+    hidden: yes
     type: count_distinct
     sql:  ${item_order} ;;
   }
