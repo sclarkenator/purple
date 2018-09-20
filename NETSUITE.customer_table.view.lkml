@@ -52,6 +52,19 @@ view: customer_table {
           label: "Miracle Cushion"
           sql: lower(companyname) like '%miracle cushion%' ;;
         }
+        when: {
+          label: "Posture Works"
+          sql: lower(companyname) like '%posture works%' ;;
+        }
+        when: {
+          label: "Iowa 80 DC"
+          sql: lower(companyname) like '%iowa 80%' ;;
+        }
+        when: {
+          label: "Ace Hardware"
+          sql: lower(companyname) like '%ace hardware%' ;;
+        }
+
       else: "Other"
     }
   }
