@@ -15,3 +15,9 @@ datagroup: temp_ipad_database_default_datagroup {
 persist_with: temp_ipad_database_default_datagroup
 
 explore: production_report {}
+
+
+explore: oee {
+  label: "OEE Table"
+  description: "Static OEE Dataset in Snowflake"
+}
