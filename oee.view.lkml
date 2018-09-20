@@ -70,4 +70,34 @@ view: oee {
     type: count
     drill_fields: []
   }
+
+  measure: Total_Availble_Time{
+    type: sum
+    sql: ${TABLE}."TOTAL_AVAILABLE";;
+  }
+
+ measure: Total_Scheduled_Time {
+  type: sum
+  sql: ${TABLE}."SCHEDULED";;
+  }
+
+  measure: Total_Operating_Time {
+    type: sum
+    sql: ${TABLE}."OPERATING_TIME" ;;
+  }
+
+  measure: Total_Production_Sum {
+    type: sum
+    sql: ${TABLE}."TOTAL_PRODUCTION" ;;
+  }
+
+  measure: Average_Cycle_Time {
+    type: average
+    sql: ${TABLE}."CYCLE_TIME" ;;
+  }
+
+  measure: Total_Reject_Scrap{
+    type: sum
+    sql: ${TABLE}."REJECT_SCRAP" ;;
+  }
 }
