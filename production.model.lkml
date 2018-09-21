@@ -26,6 +26,18 @@ explore: assembly_build {
   label: "Production Assembly Data"
   description: "Main line assembly information"
 
+
+  always_filter: {
+    filters: {
+      field: scrap
+      value: "0"
+    }
+    filters: {
+      field: item.merchandise
+      value: "0"
+    }
+    }
+
    join: item {
     type: left_outer
     sql_on: ${assembly_build.item_id} = ${item.item_id} ;;
