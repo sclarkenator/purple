@@ -113,7 +113,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 5 then ${ordered_qty} else 0 end ;;
+    sql:  case when to_Date(${TABLE}.fulfilled) <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
   }
 
   measure: manna_fulfilled_in_SLA {
@@ -135,7 +135,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when datediff(day,${TABLE}.created,${TABLE}.fulfilled) < 11 then ${ordered_qty} else 0 end ;;
+    sql:  case when to_Date(${TABLE}.fulfilled) <= to_Date(dateadd(d,10,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
   }
 
   measure: amazon_ca_sales {
@@ -196,7 +196,7 @@ view: sales_order_line {
       value: "1"
     }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,3,${created_date}) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,3,${created_date})) then ${ordered_qty} else 0 end ;;
   }
 
   measure: manna_SLA_eligible {
@@ -217,7 +217,7 @@ view: sales_order_line {
       value: "1"
     }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or ${cancelled_order.cancelled_date} > dateadd(d,10,${created_date}) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,10,${created_date})) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
