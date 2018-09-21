@@ -18,7 +18,7 @@ view: oee {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."DATE" ;;
+    sql: to_timestamp_ntz(${TABLE}."DATE") ;;
   }
 
   dimension: ideal_production {
