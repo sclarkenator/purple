@@ -49,9 +49,9 @@ view: production_report {
       quarter,
       year
     ]
-    convert_tz: yes
+    convert_tz: no
     datatype: timestamp
-    sql: ${TABLE}.created ;;
+    sql: to_timestamp_ntz(${TABLE}.created) ;;
   }
 
   dimension: day_night_shift {
