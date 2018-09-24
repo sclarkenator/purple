@@ -4,17 +4,18 @@ view: orphan_orders {
             select s.name
                     ,o.id
                     ,o.financial_status
+                    ,o.total_price
             from analytics_stage.shopify_us_ft."ORDER" o
             join
               (select so.name
               from analytics_stage.shopify_us_ft."ORDER" so
-              where to_Date(convert_timezone('UTC','America/Denver',created_at::timestamp_ntz)) > '2018-07-01'
+              where to_Date(convert_timezone('UTC','America/Denver',created_at)) > '2018-07-01'
               and so.cancelled_at is not null
-              and to_Date(convert_timezone('UTC','America/Denver',created_at::timestamp_ntz)) < to_date(current_date)
+              and to_Date(convert_timezone('UTC','America/Denver',created_at)) < to_date(current_date)
               minus
               select o.related_tranid
               from sales_order o
-              where o.created > '2018-07-01'
+              where o.created > '2018-08-01'
               and o.channel_id = 1
               and o.source = 'Shopify - US'
               and o.created < to_date(current_date)) s
@@ -42,4 +43,10 @@ view: orphan_orders {
     sql: ${TABLE}.financial_status ;;
   }
 
+  measure: order_size {
+    label: "Order size"
+    description: "Total order size in USD"
+    type:  sum
+    sql: ${TABLE}.total_price ;;
+  }
 }
