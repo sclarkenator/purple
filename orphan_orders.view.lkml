@@ -4,29 +4,30 @@ view: orphan_orders {
             select s.name
                     ,o.id
                     ,o.financial_status
+                    ,to_Date(convert_timezone('America/Denver',o.created_at)) order_date
+                    ,o.total_price
             from analytics_stage.shopify_us_ft."ORDER" o
             join
               (select so.name
               from analytics_stage.shopify_us_ft."ORDER" so
-              where to_Date(convert_timezone('UTC','America/Denver',created_at::timestamp_ntz)) > '2018-07-01'
-              and so.cancelled_at is not null
-              and to_Date(convert_timezone('UTC','America/Denver',created_at::timestamp_ntz)) < to_date(current_date)
+              where to_Date(convert_timezone('America/Denver',created_at)) > '2018-08-01'
+              and to_Date(convert_timezone('America/Denver',created_at)) < to_date(current_date)
               minus
               select o.related_tranid
               from sales_order o
-              where o.created > '2018-07-01'
+              where o.created > '2018-08-01'
               and o.channel_id = 1
               and o.source = 'Shopify - US'
               and o.created < to_date(current_date)) s
             on s.name = o.name  ;;
     }
 
-    dimension: RELATED_TRANID {
-      label: "Order ID"
-      description:  "This is the 'name' field in Shopify, related_tranid in Netsuite "
-      type:  string
-      sql: ${TABLE}.name ;;
-    }
+  dimension: RELATED_TRANID {
+    label: "Netsuite order ID"
+    description:  "This is the 'name' field in Shopify, related_tranid in Netsuite "
+    type:  string
+    sql: ${TABLE}.name ;;
+  }
 
   dimension: ORDER_ID {
     label: "Order ID"
@@ -42,4 +43,17 @@ view: orphan_orders {
     sql: ${TABLE}.financial_status ;;
   }
 
+  dimension: order_date {
+    label: "Order date"
+    description: "Date order was placed in shopify (Mountain time zone)"
+    type:  date
+    sql: ${TABLE}.order_date ;;
+  }
+
+  measure: order_size {
+    label: "Order size"
+    description: "Total order size in USD"
+    type:  sum
+    sql: ${TABLE}.total_price ;;
+  }
 }

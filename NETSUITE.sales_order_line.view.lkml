@@ -113,7 +113,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when to_Date(${TABLE}.fulfilled) <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
+    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
   }
 
   measure: manna_fulfilled_in_SLA {
@@ -135,7 +135,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when to_Date(${TABLE}.fulfilled) <= to_Date(dateadd(d,10,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
+    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,10,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
   }
 
   measure: amazon_ca_sales {
@@ -579,8 +579,8 @@ measure: total_line_item {
       year
     ]
     convert_tz: no
-    datatype: timestamp
-    sql: to_timestamp_ntz(${TABLE}.FULFILLED) ;;
+    datatype: date
+    sql: ${TABLE}.FULFILLED ;;
   }
 
   dimension: fulfillment_method {

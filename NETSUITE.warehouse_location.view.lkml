@@ -1,5 +1,5 @@
 view: warehouse_location {
-  sql_table_name: ANALYTICS_STAGE.NETSUITE_STG.LOCATIONS ;;
+  sql_table_name: ANALYTICS_STAGE.netsuite.LOCATIONS ;;
 
     dimension: location_id {
       hidden: yes
