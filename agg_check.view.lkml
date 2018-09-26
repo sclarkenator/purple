@@ -4,8 +4,8 @@ view: agg_check {
 
 
 select CASE
-           when (abs(X.NETSUITE_AMOUNT - X.SHOPIFY_AMOUNT)/X.SHOPIFY_AMOUNT) * 100 > 10.00 then 1
-           else 0
+           when (abs(X.NETSUITE_AMOUNT - X.SHOPIFY_AMOUNT)/X.SHOPIFY_AMOUNT) * 100 > 10.00 then 'ERROR'
+           else 'NO ERROR'
        END as RAISE_ALERT
 from
    (select  date,
@@ -30,9 +30,5 @@ from
     sql: ${TABLE}.raise_alert ;;
   }
 
-  measure: count {
-    type: sum
-    sql: ${TABLE}.raise_alert ;;
-  }
 
-  }
+}
