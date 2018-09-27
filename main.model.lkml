@@ -16,8 +16,13 @@ persist_with: gross_to_net_sales_default_datagroup
 week_start_day: sunday
 
 explore: agg_check {
-  hidden: no
+  hidden: yes
   label: "data accuracy"
+}
+
+explore: cac {
+  hidden: yes
+  label: "CAC"
 }
 
 explore: hotjar_data {
