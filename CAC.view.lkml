@@ -4,6 +4,8 @@ view: cac {
         select spend.date
               ,new_cust.new_customers
               ,brand_spend + prospecting_spend + affiliate_spend + retargeting_spend + other_spend as allocated_spend
+              ,LTV
+              ,initial_purchase
         from
             (select date
                     ,sum(case when campaign_type = 'BRAND' then brand_search_spend else 0 end) brand_spend
@@ -34,11 +36,17 @@ view: cac {
             order by 1 desc) spend
         join
             (select date
+                    ,sum(LTV) LTV
+                    ,sum(dollars) initial_purchase
                     ,count(*) new_customers
             from
-            (select to_date(convert_timezone('America/Denver',time)) date
-                    ,row_number() over (partition by user_id order by time) purch_num
-            from heap.purchase)
+                (select user_id
+                        ,to_date(convert_timezone('America/Denver',time)) date
+                        ,sum(dollars) over (partition by user_id) LTV
+                        ,dollars
+                        ,row_number() over (partition by user_id order by time) purch_num
+                from purchase
+                )
             where purch_num = 1
             group by 1) new_cust
         on spend.date = new_cust.date
@@ -62,11 +70,42 @@ view: cac {
     sql: ${TABLE}.date ;;
   }
 
-  measure: CAC {
-    description: "Customer acquisition cost"
-    type: number
+  measure: new_customers {
+    description: "New customers"
+    type: sum
     value_format_name: decimal_0
-    sql: ${TABLE}.allocated_spend/nullif(${TABLE}.new_customers,0) ;;
+    sql: ${TABLE}.new_customers ;;
   }
+
+  measure: allocated_spend {
+    description: "allocated spend"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.allocated_spend ;;
+  }
+
+  measure: CAC {
+    description: "Customer acqusition cost"
+    label: "CAC"
+    type:  number
+    value_format_name: decimal_0
+    sql: ${allocated_spend}/${new_customers} ;;
+  }
+
+  measure: total_LTV {
+    description: "sum total of all sales based on first purchase day"
+    hidden:  yes
+    type: sum
+    sql:  ${TABLE}.LTV ;;
+  }
+
+  measure: LTV {
+    description: "sum total of all sales based on first purchase day"
+    hidden:  yes
+    type: sum
+    value_format_name: decimal_0
+    sql:  ${total_LTV}/${new_customers} ;;
+  }
+
 
 }

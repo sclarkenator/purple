@@ -40,17 +40,12 @@ view: sales_order {
       }
 
       when: {
-        sql: ${TABLE}.system = 'AMAZON.COM' ;;
+        sql: ${TABLE}.system = 'AMAZON.COM' or ${TABLE}.source = 'Amazon FBA - US' or ${TABLE}.system = 'AMAZON-US' ;;
         label: "AMAZON-US"
       }
 
       when: {
-        sql: ${TABLE}.system = 'AMAZON-US' ;;
-        label: "AMAZON-US"
-      }
-
-      when: {
-        sql: ${TABLE}.system = 'AMAZON-CA' ;;
+        sql: ${TABLE}.system = 'AMAZON-CA'  or ${TABLE}.source = 'Amazon FBA - CA';;
         label: "AMAZON-CA"
       }
 
