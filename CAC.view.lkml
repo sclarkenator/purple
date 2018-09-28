@@ -45,7 +45,7 @@ view: cac {
                         ,sum(dollars) over (partition by user_id) LTV
                         ,dollars
                         ,row_number() over (partition by user_id order by time) purch_num
-                from purchase
+                from analytics.heap.purchase
                 )
             where purch_num = 1
             group by 1) new_cust
@@ -101,8 +101,7 @@ view: cac {
 
   measure: LTV {
     description: "sum total of all sales based on first purchase day"
-    hidden:  yes
-    type: sum
+    type: number
     value_format_name: decimal_0
     sql:  ${total_LTV}/${new_customers} ;;
   }
