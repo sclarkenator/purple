@@ -191,11 +191,13 @@ view: assembly_build {
 
   measure: Total_Quantity {
     type: sum
+    description: "Number of items"
     sql: ${TABLE}."QUANTITY" ;;
   }
 
   measure: Total_amount {
     type: sum
+    description: "Dollar value of the items"
     sql: ${TABLE}."AMOUNT" ;;
   }
 }
