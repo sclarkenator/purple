@@ -421,7 +421,7 @@ explore: warranty {
   }
 }
 
-explore: netsuite_orphaned_warranties {
+explore: orphaned_shopify_warranties {
   group_label: "x - Accounting"
   label: "Orphaned Warranties"
   description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"

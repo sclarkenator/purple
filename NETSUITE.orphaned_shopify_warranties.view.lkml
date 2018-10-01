@@ -1,4 +1,4 @@
-view: netsuite_orphaned_warranties {
+view: orphaned_shopify_warranties {
   derived_table: {
     sql:
       with mc as (
