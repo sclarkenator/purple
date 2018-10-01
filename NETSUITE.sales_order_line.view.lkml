@@ -120,7 +120,7 @@ view: sales_order_line {
     view_label: "Fulfillment details"
     label: "Manna - Fulfillment SLA"
     hidden: yes
-    description: "Was this item fulfilled from Manna within 10 days of order (as per website)?"
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
     filters: {
       field: item.manna_fulfilled
       value: "Yes"
@@ -135,7 +135,7 @@ view: sales_order_line {
     }
     drill_fields: [fulfill_details*]
     type: sum
-    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,10,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
+    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;;
   }
 
   measure: amazon_ca_sales {
@@ -217,7 +217,7 @@ view: sales_order_line {
       value: "1"
     }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,10,${created_date})) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{

@@ -15,8 +15,26 @@ persist_with: gross_to_net_sales_default_datagroup
 
 week_start_day: sunday
 
+explore: agg_check {
+  hidden: yes
+  label: "data accuracy"
+}
+
+explore: cac {
+  group_label: "Marketing analytics"
+  hidden: no
+  label: "CAC"
+}
+
+explore: attribution {
+  hidden: no
+  label: "HEAP attribution"
+  group_label: "Marketing analytics"
+}
+
 explore: hotjar_data {
   hidden:  no
+  group_label: "Marketing analytics"
   label: "Hotjar survey results"
   description: "Results form Hotjar post-purchase survey"
 
@@ -71,6 +89,7 @@ explore: orphan_orders {
 }
 
 explore: daily_adspend {
+  group_label: "Marketing analytics"
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }

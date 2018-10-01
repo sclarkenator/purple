@@ -8,16 +8,19 @@ view: assembly_build {
   }
 
   dimension: accounting_period_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ACCOUNTING_PERIOD_ID" ;;
   }
 
   dimension: amount {
+    hidden: yes
     type: number
     sql: ${TABLE}."AMOUNT" ;;
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -32,6 +35,7 @@ view: assembly_build {
   }
 
   dimension_group: deleted {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -51,6 +55,7 @@ view: assembly_build {
   }
 
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -65,11 +70,13 @@ view: assembly_build {
   }
 
   dimension: item_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension: location_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."LOCATION_ID" ;;
   }
@@ -80,6 +87,7 @@ view: assembly_build {
   }
 
   dimension_group: modified {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -105,9 +113,10 @@ view: assembly_build {
       year
     ]
     sql: ${TABLE}."PRODUCED" ;;
-  }
+    }
 
   dimension: quantity {
+    hidden: yes
     type: number
     sql: ${TABLE}."QUANTITY" ;;
   }
@@ -128,11 +137,13 @@ view: assembly_build {
   }
 
   dimension: scrap {
+    hidden: yes
     type: number
     sql: ${TABLE}."SCRAP" ;;
   }
 
   dimension_group: trandate {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -159,6 +170,7 @@ view: assembly_build {
   }
 
   dimension_group: update_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -179,11 +191,13 @@ view: assembly_build {
 
   measure: Total_Quantity {
     type: sum
+    description: "Number of items"
     sql: ${TABLE}."QUANTITY" ;;
   }
 
   measure: Total_amount {
     type: sum
+    description: "Dollar value of the items"
     sql: ${TABLE}."AMOUNT" ;;
   }
 }
