@@ -9,10 +9,10 @@ view: netsuite_orphaned_warranties {
         where list_item_name like 'RPL%'
       ), nr as (
         select
-          replace(replace(REGEXP_SUBSTR(replace(upper(MEMO),' ',''),'O#?\\d{1,7}'),'O',''),'#','') as original_order_number,
+          replace(replace(REGEXP_SUBSTR(replace(upper(MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O',''),'#','') as original_order_number,
           o.etail_order_id as replacement_order_id, o.related_tranid, o.created as replaced, i.product_description as product_name,
           i.product_line_name_lkr as category, REGEXP_SUBSTR(replace(upper(MEMO),'RLP','RPL'),'RPL\\d{2}') as mod_code,
-          replace(o.memo,'\n',' ') as memo, o.tranid
+          replace(o.memo,'\n',' ') as memo, o.tranid, CASE WHEN REGEXP_SUBSTR(upper(MEMO),'#[ABCS]') is null THEN 'No' ELSE 'Yes' END wholesale
         from analytics.sales.sales_order o
             join analytics.sales.sales_order_line l on o.order_id = l.order_id
             join analytics.sales.item i on l.item_id = i.item_id
@@ -21,14 +21,18 @@ view: netsuite_orphaned_warranties {
             and replace(upper(memo),'RLP','RPL') like '%RPL%'
       )
       select
-          sr.customer_id, so.id as original_order_id, so.name as original_name, nr.replacement_order_id,
-          nr.related_tranid as replacement_name, nr.tranid as netsuite_transaction_number, nr.product_name,
-          nr.category, convert_timezone('America/Denver',so.created_at) as original_order_created,
-          nr.replaced as warranty_created, mc.mod_code, mc.description as warranty_reason, nr.memo
+          sr.customer_id, so.id as original_order_id, so.name as original_name,
+          convert_timezone('America/Denver',so.created_at) as original_order_created,
+          nr.replacement_order_id, nr.related_tranid as replacement_name,
+          nr.tranid as netsuite_transaction_number, nr.product_name,nr.category,
+          nr.replaced as warranty_created, mc.mod_code, mc.description as warranty_reason,
+          nr.memo, nr.wholesale
       from nr
         join analytics_stage.shopify_us_ft."ORDER" sr on nr.replacement_order_id = sr.id
         left join analytics_stage.shopify_us_ft."ORDER" so on nr.original_order_number = so.order_number
-        left join mc on nr.mod_code = mc.mod_code;;
+        left join mc on nr.mod_code = mc.mod_code
+      where original_order_id is null
+      ;;
   }
 
   dimension_group: warranty_created {
@@ -134,5 +138,12 @@ view: netsuite_orphaned_warranties {
     type: string
     sql: ${TABLE}.memo;;
     label: "Order Notes"
+  }
+
+  dimension: wholesale {
+    description: "Indicates whether the order was wholesale or not"
+    type: string
+    sql: ${TABLE}.wholesale;;
+    label: "Wholesale"
   }
 }
