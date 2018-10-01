@@ -25,8 +25,8 @@ view: netsuite_warranty_exceptions {
           WHEN memo like '%NSI%' THEN 0
           WHEN memo like '%APOLOG%' THEN 0
           WHEN memo like '%SQUISH%' THEN 0
-          WHEN REGEXP_SUBSTR(memo,'O#[NABCS]') is not null THEN 0
-          WHEN memo like '%RPL%' and nr.original_order_number is not null THEN 0
+          WHEN REGEXP_SUBSTR(upper(memo),'O#[ABCS]') is not null THEN 0
+          WHEN upper(memo) like '%RPL%' and nr.original_order_number is not null THEN 0
           ELSE 1
         END = 1;;
   }
