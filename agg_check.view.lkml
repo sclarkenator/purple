@@ -22,19 +22,21 @@ where a.source = 'Shopify - US' and to_date(a.date) = dateadd(day,-1,current_dat
 group by 1;;
     }
 
-  measure: DATE {
-    sql: ${TABLE}.DATE ;;
-  }
-
   measure:NETSUITE_AMOUNT   {
+    type: number
+    value_format: "0,\" K\""
     sql: ${TABLE}.NETSUITE_AMOUNT ;;
   }
 
   measure:ANALYTICS_AMOUNT   {
+    type: number
+    value_format: "0,\" K\""
     sql: ${TABLE}.ANALYTICS_AMOUNT ;;
   }
 
   measure:SHOPIFY_AMOUNT   {
+    type: number
+    value_format: "0,\" K\""
     sql: ${TABLE}.SHOPIFY_AMOUNT ;;
   }
 
