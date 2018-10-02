@@ -112,6 +112,7 @@ view: assembly_build {
       quarter,
       year
     ]
+    convert_tz: no
     sql: ${TABLE}."PRODUCED" ;;
     }
 
