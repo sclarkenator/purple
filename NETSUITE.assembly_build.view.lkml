@@ -113,7 +113,7 @@ view: assembly_build {
       year
     ]
     convert_tz: no
-    sql: ${TABLE}."PRODUCED" ;;
+    sql:to_timestamp_ntz(${TABLE}."PRODUCED") ;;
     }
 
   dimension: quantity {
