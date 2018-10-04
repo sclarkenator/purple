@@ -100,25 +100,25 @@ explore: refund {
   description: "Refunds on sales at an order level, for accounting."
 }
 
-explore: inventory {
+explore: inventory_snap {
   group_label: "Operations"
   label: "Inventory"
   description: "Inventory positions, by item by location"
 
   join: item {
     type: left_outer
-    sql_on: ${inventory.item_id} = ${item.item_id} ;;
+    sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
     relationship: many_to_one
   }
 
   join: warehouse_location {
-    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+    sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
     relationship: many_to_one
   }
 
   join: stock_level {
     type: full_outer
-    sql_on: ${inventory.item_id} = ${stock_level.item_id} and ${inventory.location_id} = ${stock_level.location_id} ;;
+    sql_on: ${inventory_snap.item_id} = ${stock_level.item_id} and ${inventory_snap.location_id} = ${stock_level.location_id} ;;
     relationship: many_to_one
   }
 }

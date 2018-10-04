@@ -1,5 +1,5 @@
-view: inventory {
-  sql_table_name: PRODUCTION.INVENTORY ;;
+view: inventory_snap {
+  sql_table_name: PRODUCTION.INVENTORY_SNAP ;;
 
   dimension: item_location_date {
     hidden:  yes
