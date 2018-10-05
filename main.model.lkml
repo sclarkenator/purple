@@ -22,12 +22,12 @@ explore: agg_check {
 
 explore: cac {
   group_label: "Marketing analytics"
-  hidden: no
+  hidden: yes
   label: "CAC"
 }
 
 explore: attribution {
-  hidden: no
+  hidden: yes
   label: "HEAP attribution"
   group_label: "Marketing analytics"
 }
@@ -62,18 +62,6 @@ explore: hotjar_data {
     relationship:  one_to_one
   }
 
-#  join: sales_order_line {
-#    type: left_outer
-#    fields: []
-#    sql_on: ${sales_order.order_system} = ${sales_order_line.order_system} ;;
-#    relationship: one_to_many
-#  }
-
-#  join: item {
-#    type: left_outer
-#    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
-#    relationship: many_to_one
-#  }
 }
 
 explore: shopify_orders {
