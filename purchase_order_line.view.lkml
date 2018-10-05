@@ -228,7 +228,7 @@ dimension: Primary_key{
   measure: Total_open_quantity {
     type: sum
     description: "Of the total item count, how many have not been received"
-    value_format: "#,##0.#"
+    value_format: "#,##0"
     sql: ${TABLE}."ITEM_COUNT" - ${TABLE}."QUANTITY_RECEIVED_IN_SHIPMENT" ;;
   }
 }
