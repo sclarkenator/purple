@@ -7,6 +7,8 @@ derived_table: {
             ,case when SHEETS_FLG >0 then 1 else 0 end sheets_flg
             ,case when PROTECTOR_FLG >0 then 1 else 0 end protector_flg
             ,case when BASE_FLG >0 then 1 else 0 end base_flg
+            ,case when POWERBASE_FLG >0 then 1 else 0 end powerbase_flg
+            ,case when PLATFORM_FLG >0 then 1 else 0 end platform_flg
             ,case when PILLOW_FLG >0 then 1 else 0 end pillow_flg
             ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
             ,case when split_king > 1 then 1 else 0 end sk_flg
@@ -17,6 +19,8 @@ derived_table: {
                   ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
                   ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'M.PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
                   ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
+                  ,SUM(CASE WHEN MODEL_NAME = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
+                  ,SUM(CASE WHEN MODEL_NAME = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
                   ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
                   ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
                   ,sum(case when product_line_name = 'MATTRESS' and SIZE = 'TWIN XL' then ordered_qty else 0 end) split_king
@@ -67,6 +71,20 @@ derived_table: {
     sql:  ${TABLE}.base_flg ;;
   }
 
+  measure: powerbase_orders {
+    label: "Total orders w/ a powerbase"
+    description: "Flag of there was a powerbase in the order"
+    type:  sum
+    sql:  ${TABLE}.powerbase_flg ;;
+  }
+
+  measure: platform_orders {
+    label: "Total orders w/ a platform base"
+    description: "Flag of there was a platform base in the order"
+    type:  sum
+    sql:  ${TABLE}.platform_flg ;;
+  }
+
   measure: mm_orders {
     label: "Total orders w/ multiple mattresses"
     description: "Flag of there was more than 1 mattress in the order"
@@ -114,6 +132,20 @@ derived_table: {
     description: "Was there a base in this order (1 = Yes)"
     type:  number
     sql: ${TABLE}.base_flg ;;
+  }
+
+  dimension: powerbase_flg {
+    label: "Powerbase order"
+    description: "Was there a powerbase in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.powerbase_flg ;;
+  }
+
+  dimension: platform_flg {
+    label: "Platform base order"
+    description: "Was there a platform base in this order (1 = Yes)"
+    type:  number
+    sql: ${TABLE}.platform_flg ;;
   }
 
   dimension: pillow_flg {
