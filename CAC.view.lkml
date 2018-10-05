@@ -5,7 +5,6 @@ view: cac {
               ,new_cust.new_customers
               ,brand_spend + prospecting_spend + affiliate_spend + retargeting_spend + other_spend as allocated_spend
               ,LTV
-              ,initial_purchase
         from
             (select date
                     ,sum(case when campaign_type = 'BRAND' then brand_search_spend else 0 end) brand_spend
@@ -36,22 +35,49 @@ view: cac {
             order by 1 desc) spend
         join
             (select date
+                    ,sum(new_customers) new_customers
                     ,sum(LTV) LTV
-                    ,sum(dollars) initial_purchase
-                    ,count(*) new_customers
             from
-                (select user_id
-                        ,to_date(convert_timezone('America/Denver',time)) date
-                        ,sum(dollars) over (partition by user_id) LTV
-                        ,dollars
-                        ,row_number() over (partition by user_id order by time) purch_num
-                from analytics.heap.purchase
-                )
-            where purch_num = 1
-            group by 1) new_cust
-        on spend.date = new_cust.date
-        where spend.date >= '2018-01-01'
-        order by 1 ;;
+              (select date
+                      ,count(*) new_customers
+                      ,sum(LTV) LTV
+                from
+                  (select to_date(convert_timezone('America/Denver',time)) date
+                      ,row_number() over (partition by user_id order by time) purch_num
+                      ,sum(dollars) over (partition by user_id) LTV
+                  from heap.purchase)
+                where purch_num = 1
+                group by 1
+
+            union all
+            select date
+                    ,count(*) new_customers
+                    ,sum(LTV) LTV
+            from
+                (select buyer_email
+                        ,to_date(convert_timezone('America/Denver',purchase_Date)) date
+                        ,row_number() over (partition by buyer_email order by purchase_date) order_num
+                        ,sum(item_price*quantity_shipped) over (partition by buyer_email) LTV
+                from analytics_stage.amazon_stg.amazon_shipping
+                where purchase_date > '2018-01-01')
+            where order_num = 1
+            group by 1
+
+            union all
+            select '2018-07-04' as "date"
+                ,1100 as "new_customers"
+                ,1320000 as "LTV"
+            from dual
+
+            union all
+            select '2018-07-05' as "date"
+                ,750 as "new_customers"
+                ,900000 as "LTV"
+            from dual )
+          group by 1) new_cust
+            on spend.date = new_cust.date
+            where spend.date >= '2018-01-01'
+            order by 1 ;;
   }
 
   dimension_group: date {
