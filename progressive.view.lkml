@@ -58,7 +58,7 @@ view: progressive {
     label:  "Approval Limit ($)"
     description:  "Total amount approved (but not necessarily funded)"
     type: sum
-    value_format: "$#,##0,\" K\""
+    value_format: "$#,##0"
     sql:  ${TABLE}.approval_limit ;;
   }
 
@@ -66,7 +66,7 @@ view: progressive {
     label:  "Funded Amount ($)"
     description:  "Total amount actually funded"
     type: sum
-    value_format: "$#,##0,\" K\""
+    value_format: "$#,##0"
     sql:  ${TABLE}.funded_amt ;;
   }
 }
