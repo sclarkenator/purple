@@ -2,6 +2,7 @@ view: oee {
   sql_table_name: PRODUCTION.OEE ;;
 
   dimension: cycle_time {
+    hidden: yes
     type: number
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
@@ -22,6 +23,7 @@ view: oee {
   }
 
   dimension: ideal_production {
+    hidden: yes
     type: number
     sql: ${TABLE}."IDEAL_PRODUCTION" ;;
   }
@@ -32,6 +34,7 @@ view: oee {
   }
 
   dimension: operating_time {
+    hidden: yes
     type: number
     sql: ${TABLE}."OPERATING_TIME" ;;
   }
@@ -42,26 +45,31 @@ view: oee {
   }
 
   dimension: reject_scrap {
+    hidden:  yes
     type: number
     sql: ${TABLE}."REJECT_SCRAP" ;;
   }
 
   dimension: scheduled {
+    hidden:  yes
     type: number
     sql: ${TABLE}."SCHEDULED" ;;
   }
 
   dimension: total_available {
+    hidden:  yes
     type: number
     sql: ${TABLE}."TOTAL_AVAILABLE" ;;
   }
 
   dimension: total_production {
+    hidden:  yes
     type: number
     sql: ${TABLE}."TOTAL_PRODUCTION" ;;
   }
 
   dimension: unscheduled_downtime {
+    hidden:  yes
     type: number
     sql: ${TABLE}."UNSCHEDULED_DOWNTIME" ;;
   }
@@ -100,4 +108,10 @@ view: oee {
     type: sum
     sql: ${TABLE}."REJECT_SCRAP" ;;
   }
+
+  measure: Total_unscheduled_downtime {
+    type: sum
+    sql: ${TABLE}."UNSCHEDULED_DOWNTIME" ;;
+  }
+
 }

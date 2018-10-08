@@ -32,6 +32,12 @@ explore: attribution {
   group_label: "Marketing analytics"
 }
 
+explore: progressive {
+  label: "Progressive"
+  group_label: "x - Accounting"
+  description: "Progressive lease information."
+}
+
 explore: hotjar_data {
   hidden:  no
   group_label: "Marketing analytics"
