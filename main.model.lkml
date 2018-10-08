@@ -458,13 +458,13 @@ explore: item {
 join: Receiving_Location{
   from:warehouse_location
     type:  left_outer
-    sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} and ${purchase_order.location_id} = ${Receiving_Location.location_id};;
+    sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} or ${purchase_order.location_id} = ${Receiving_Location.location_id};;
     relationship: many_to_one
   }
   join: Transfer_Fulfilling_Location{
     from:warehouse_location
     type:  left_outer
-    sql_on: ${transfer_order.receiving_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
+    sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
     relationship: many_to_one
   }
   join: vendor {
