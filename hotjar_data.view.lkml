@@ -31,7 +31,9 @@ view: hotjar_data {
   }
 
   dimension: how_heard {
-    hidden:  yes
+    label: "How heard (all responses)"
+    description: "Ungrouped responses for how did you hear questions"
+    hidden:  no
     type: string
     sql: ${TABLE}."HOW_HEARD" ;;
   }

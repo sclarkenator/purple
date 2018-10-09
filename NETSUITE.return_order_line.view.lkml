@@ -4,7 +4,7 @@ view: return_order_line {
   dimension: item_order{
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
+    sql: ${TABLE}.item_id||'-'||${TABLE}.return_order_id||'-'||${TABLE}.system ;;
     }
 
   measure: units_returned {
