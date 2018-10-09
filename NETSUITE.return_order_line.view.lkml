@@ -16,7 +16,7 @@ view: return_order_line {
 
   measure: trial_units_returned {
     label: "Trial returns (units)"
-    hidden:  yes
+    hidden:  no
     description: "Total individual items returned as a trial return"
     type: sum
     filters: {
@@ -58,6 +58,15 @@ view: return_order_line {
     type: tier
     style: integer
     tiers: [30,60,90,120]
+    sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
+  }
+
+  dimension: days_between_week_buckets{
+    label: "Return aging buckets"
+    description: "What aging bucket the order was returned in"
+    type: tier
+    style: integer
+    tiers: [7,14,21,28,35,42,49,56]
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;;
   }
 
