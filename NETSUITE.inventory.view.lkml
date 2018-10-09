@@ -21,6 +21,7 @@ view: inventory {
     type: time
     timeframes: [
       time,
+      hour_of_day,
       date,
       week,
       month,

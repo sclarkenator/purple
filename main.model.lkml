@@ -32,6 +32,12 @@ explore: attribution {
   group_label: "Marketing analytics"
 }
 
+explore: progressive {
+  label: "Progressive"
+  group_label: "x - Accounting"
+  description: "Progressive lease information."
+}
+
 explore: hotjar_data {
   hidden:  no
   group_label: "Marketing analytics"
@@ -440,6 +446,7 @@ explore: item {
     sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
     relationship: many_to_one
   }
+
   join: transfer_order_line {
     view_label: "Transfer Order"
     type:  full_outer
@@ -454,10 +461,10 @@ explore: item {
     sql_on: ${transfer_order.transfer_order_id} = ${transfer_order_line.transfer_order_id} ;;
     relationship: many_to_one
   }
-join: Recieving_Location{
+join: Receiving_Location{
   from:warehouse_location
     type:  left_outer
-    sql_on: ${transfer_order.receiving_location_id} = ${Recieving_Location.location_id} and ${purchase_order.location_id} = ${Recieving_Location.location_id};;
+    sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} and ${purchase_order.location_id} = ${Receiving_Location.location_id};;
     relationship: many_to_one
   }
   join: Transfer_Fulfilling_Location{
