@@ -15,6 +15,11 @@ persist_with: gross_to_net_sales_default_datagroup
 
 week_start_day: sunday
 
+explore: retail_stores {
+  hidden:  yes
+  label: "list of retail outlets as of Nov 1, 2018"
+}
+
 explore: agg_check {
   hidden: yes
   label: "data accuracy"
