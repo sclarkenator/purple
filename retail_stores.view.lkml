@@ -20,8 +20,22 @@ view: retail_stores {
   }
 
   dimension: retailer {
-    type: string
-    sql: ${TABLE}."RETAILER" ;;
+    case: {
+      when: {
+        label: "Mattress Firm"
+        sql: ${TABLE}.retailer = 'MF' ;;
+      }
+
+      when: {
+        label: "Furniture Row"
+        sql:   ${TABLE}.retailer = 'FR' ;;
+      }
+
+      when: {
+        label: "Macy's"
+        sql:   ${TABLE}.retailer = 'MA' ;;
+      }
+    }
   }
 
   dimension: state {
