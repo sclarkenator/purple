@@ -35,8 +35,26 @@ view: retail_stores {
     sql: ${TABLE}."ZIP" ;;
   }
 
-  measure: count {
+  measure: count_MF {
     type: count
-    drill_fields: []
+    filters: {
+      field: retailer
+      value: "MF"
+    }
+  }
+
+  measure: count_MA {
+      type: count
+      filters: {
+        field: retailer
+        value: "MA"
+      }
+  }
+  measure: count_FR {
+    type: count
+    filters: {
+      field: retailer
+      value: "FR"
+    }
   }
 }
