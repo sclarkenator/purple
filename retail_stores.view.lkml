@@ -57,4 +57,10 @@ view: retail_stores {
       value: "FR"
     }
   }
+
+  measure: count {
+    type: count
+  }
+
+
 }
