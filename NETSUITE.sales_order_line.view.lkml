@@ -118,7 +118,7 @@ view: sales_order_line {
     description: "Was the order shipped out by the required ship-by date to arrive on time"
     value_format_name: percent_0
     type: number
-    sql: ${whlsl_fulfilled}/nullif(${whlsl_units}_units},0) ;;
+    sql: ${whlsl_fulfilled}/nullif(${whlsl_units},0) ;;
   }
 
   measure: fulfilled_in_SLA {
