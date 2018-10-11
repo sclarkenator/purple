@@ -94,6 +94,33 @@ view: sales_order_line {
     sql: ${mf_fulfilled}/nullif(${mf_units},0) ;;
   }
 
+  measure: whlsl_fulfilled {
+    view_label: "Fulfillment details"
+    label: "Wholesale SLA"
+    hidden: yes
+    description: "Was the order shipped out by the required ship-by date to arrive on time"
+    type: sum
+    sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;;
+  }
+
+  measure: whlsl_units {
+    view_label: "Fulfillment details"
+    label: "Wholesale SLA"
+    hidden: yes
+    description: "How many items are there on the order to be shipped?"
+    type: sum
+    sql: case when ${cancelled_order.cancelled_date} is null or (${cancelled_order.cancelled_date} >  ${sales_order.ship_by_date}) then ${ordered_qty} else 0 end ;;
+  }
+
+  measure: whlsl_on_time {
+    view_label: "Fulfillment details"
+    label: "WHSL shipped on-time"
+    description: "Was the order shipped out by the required ship-by date to arrive on time"
+    value_format_name: percent_0
+    type: number
+    sql: ${whlsl_fulfilled}/nullif(${whlsl_units}_units},0) ;;
+  }
+
   measure: fulfilled_in_SLA {
     view_label: "Fulfillment details"
     label: "WEST - Fulfillment SLA"
@@ -176,6 +203,24 @@ view: sales_order_line {
     value_format: "$#,##0,\" K\""
     type: sum
     sql: case when ${sales_order.channel_source} = 'SHOPIFY-US' then ${TABLE}.gross_amt else 0 end ;;
+  }
+
+  measure: unfulfilled_orders {
+    view_label: "Sales info"
+    description: "Orders placed that have not been fulfilled"
+    label: "Unfulfilled orders"
+    hidden: no
+    type: sum
+    sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;;
+  }
+
+  measure: fulfilled_orders {
+    view_label: "Sales info"
+    description: "Orders placed that have been fulfilled"
+    label: "Fulfilled orders"
+    hidden: no
+    type: sum
+    sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;;
   }
 
   measure: SLA_eligible {
