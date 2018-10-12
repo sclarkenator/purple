@@ -420,10 +420,17 @@ explore: warranty {
   }
 }
 
-explore: orphaned_shopify_warranties {
+explore: shopify_warranties {
+  from: orphaned_shopify_warranties
   group_label: "x - Accounting"
-  label: "Orphaned Warranties"
-  description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"
+  label: "Shopify Warranties"
+  description: "Ties the original order data to NetSuite Warranty Orders where the original order does not exist in NetSuite"
+  always_filter: {
+    filters: {
+      field: warranty_created_date
+      value: "2018/09/01 to 2018/10/01"
+    }
+  }
 }
 
 explore: netsuite_warranty_exceptions {

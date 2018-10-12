@@ -1,4 +1,5 @@
 view: orphaned_shopify_warranties {
+  label: "Shopify Warranties"
   derived_table: {
     sql:
       with mc as (
