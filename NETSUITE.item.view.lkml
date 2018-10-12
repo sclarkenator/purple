@@ -3,6 +3,7 @@ view: item {
 
   dimension: item_id {
     primary_key: yes
+    description: "NetSuites internal Primary Key."
     type: number
     sql: ${TABLE}.ITEM_ID ;;
   }
@@ -237,6 +238,7 @@ view: item {
 
   dimension: Classification_Groups{
     type: string
+    description: "Designates the item type ex: 'Finished Good'"
     sql: ${TABLE}.classification ;;
     case: {
       when: {
@@ -270,6 +272,7 @@ view: item {
   }
 }
     dimension: Product_Dimensions {
+      description: "Product size dimensions for cushions. Ex: 24 inches x 18 Inches"
       hidden: no
       type: string
       sql: ${TABLE}.DIMENSIONS ;;

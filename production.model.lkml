@@ -14,7 +14,10 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
-explore: production_report {}
+explore: production_report {
+  label: "iPad Production Data"
+  description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
+}
 
 
 explore: oee {
@@ -24,7 +27,7 @@ explore: oee {
 
 explore: assembly_build {
   label: "Production Assembly Data"
-  description: "Main line assembly information"
+  description: "NetSuite Header Level Assembly Data"
 
 
   always_filter: {
