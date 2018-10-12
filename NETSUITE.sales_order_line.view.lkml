@@ -322,7 +322,7 @@ measure: total_line_item {
     view_label: "Sales info"
     description: "Number of days between today and when order was placed"
     type:  tier
-    tiers: [3,4,6,10,15,20]
+    tiers: [1,2,3,4,5,6,7,14]
     style: integer
     sql: datediff(day,${created_date},current_date) ;;
   }
