@@ -327,6 +327,17 @@ measure: total_line_item {
     sql: datediff(day,${created_date},current_date) ;;
   }
 
+
+  dimension: manna_order_age_bucket {
+    view_label: "Sales info"
+    description: "Number of days between today and when order was placed for Manna"
+    type:  tier
+    tiers: [7,14,21,28,35,42]
+    style: integer
+    sql: datediff(day,${created_date},current_date) ;;
+  }
+
+
   dimension: before_today_flag {
     label:  "before today flag"
     hidden: yes
