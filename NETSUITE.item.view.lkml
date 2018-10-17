@@ -75,6 +75,14 @@ view: item {
         sql: ${TABLE}.model_name_lkr = 'PURPLE.4' ;;
         label: "PURPLE.4"
       }
+
+      when: {
+        sql: ${TABLE}.model_name_lkr = 'POWERBASE' ;;
+        label: "POWERBASE"
+      }
+
+
+
     }
   }
 
@@ -124,10 +132,10 @@ view: item {
         label: "PILLOW"
       }
 
-#      when: {
-#        sql: ${product_line_name} = 'CUSHION' ;;
-#        label: "CUSHION"
-#      }
+      when: {
+        sql: ${product_line_name} = 'POWERBASE' ;;
+        label: "POWERBASE"
+      }
 
 #      when: {
 #        sql: ${product_line_name} = 'SHEETS' ;;
@@ -156,8 +164,8 @@ view: item {
     label: "Original or New Mattress?"
     description: "Is this product a mattress"
     type: string
-    sql: case when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name = 'ORIGINAL'  then 'Original'
-              when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then 'New' end;;
+    sql: case when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
+              when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then 'New' end;;
   }
 
   dimension: sub_category_name {
