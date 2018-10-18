@@ -14,7 +14,7 @@ view: fulfillment_dates {
           , MIN(fulfillment) first_ff
           , MAX(fulfillment) last_ff
         FROM sales_order_line sol
-        GROUP BY
+        GROUP BY order_id
       );;
     }
 
