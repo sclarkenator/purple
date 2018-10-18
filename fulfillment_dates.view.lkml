@@ -4,38 +4,39 @@ view: fulfillment_dates {
     sql: -- calculating the difference in fulfillment dates from each other and order date
       SELECT
         order_id
-        , datediff(day, order_date, first_ff) days_to_ff
-        , datediff(day, first_ff, last_ff) days_between_ff
-        , datediff(day, order_date, last_ff) days_to_last_ff
+        , nullif(datediff(day, order_date, first_ff),0) days_to_ff
+        , nullif(datediff(day, first_ff, last_ff),0) days_between_ff
+        , nullif(datediff(day, order_date, last_ff),0) days_to_last_ff
       FROM (
         -- aggregating sol to 1 row per order with dates
-        SELECT order_id
-          , MIN(order_date) order_date
-          , MIN(fulfillment) first_ff
-          , MAX(fulfillment) last_ff
-        FROM sales_order_line sol
-        GROUP BY order_id
+        SELECT sol.order_id
+          , MIN(sol.created) order_date
+          , MIN(coalesce(sol.fulfilled, co.cancelled, current_date())) first_ff
+          , MAX(coalesce(sol.fulfilled, co.cancelled, current_date())) last_ff
+        FROM sales.sales_order_line sol
+        LEFT JOIN sales.cancelled_order co on co.order_id = sol.order_id and co.item_id = sol.order_id and co.system = sol.system
+        GROUP BY sol.order_id
       );;
     }
 
   measure: days_to_ff {
     label: "Days to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
-    type:  sum   #sum??
+    type:  average   #sum??
     sql:${TABLE}.days_to_ff ;;
   }
 
   measure: days_between_ff {
     label: "Days between Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
-    type:  sum   #sum??
+    type:  average   #sum??
     sql:${TABLE}.days_between_ff ;;
   }
 
   measure: days_to_last_ff {
     label: "Days to the last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
-    type:  sum   #sum??
+    type:  average   #sum??
     sql:${TABLE}.days_to_last_ff ;;
   }
 
@@ -46,11 +47,46 @@ view: fulfillment_dates {
     sql: ${TABLE}.order_id ;;
   }
 
+  dimension: days_to_ff_dimension {
+    label: "Days to Fulfillment"
+    description: "A calculations between the order date and first item fulfilled"
+    type:  string
+    sql:${TABLE}.days_to_ff ;;
+  }
+
+  dimension: days_between_ff_dimension {
+    label: "Days between Fulfillment"
+    description: "A calculations between the first item and last item fulfilled"
+    type:  string
+    sql:${TABLE}.days_between_ff ;;
+  }
+
+  dimension: days_to_last_ff_dimension {
+    label: "Days to the last Fulfilled item"
+    description: "A calculations between the order date and last item fulfilled"
+    type:  string
+    sql:${TABLE}.days_to_last_ff ;;
+  }
+
+  dimension: days_between_ff_sla {
+    label: "Days between fulfillments SLA"
+    description: "More than 3 Days between fulfillment of first and last item"
+    type:  string
+    sql:case when NVL(${TABLE}.days_between_ff,0) >= 4 then '>3' else '=<3' end;;
+  }
+
+  dimension: days_to_ff_sla {
+    label: "Days to fulfillment SLA"
+    description: "More than 14 days between order date and the first fulfilled item"
+    type:  string
+    sql:case when NVL(${TABLE}.days_to_ff,0) >= 14 then '>=14' else '<14' end ;;
+  }
+
   dimension: days_to_ff_tier {
     label: "Tier for days between order date and first item fulfilled"
     description: "Bucketing the caclulation between order date and first item fulfilled"
     type: tier
-    #style: integer
+    style: integer
     tiers: [0,1,3,7,14,21,28]
     sql: ${TABLE}.days_to_ff;;
   }
@@ -59,18 +95,18 @@ view: fulfillment_dates {
     label: "Tier for days between first and last item fulfilled"
     description: "Bucketing the caclulation between the first and last item fulfilled"
     type: tier
-    #style: integer
+    style: integer
     tiers: [0,1,3,7,14,21,28]
-    sql: ${TABLE}.days_between_ff_tier;;
+    sql: ${TABLE}.days_to_ff;;
   }
 
   dimension: days_to_last_ff_tier {
     label: "Tier for days between order date and last item fulfilled"
     description: "Bucketing the caclulation between the order date and last item fulfilled"
     type: tier
-    #style: integer
+    style: integer
     tiers: [0,1,3,7,14,21,28]
-    sql: ${TABLE}.days_to_last_ff;;
+    sql: ${TABLE}.days_between_ff;;
   }
 
 }
