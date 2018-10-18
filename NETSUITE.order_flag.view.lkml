@@ -14,16 +14,16 @@ derived_table: {
             ,case when split_king > 1 then 1 else 0 end sk_flg
       FROM(
           select order_id
-                  ,sum(case when product_line_name = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'CUSHION' THEN 1 ELSE 0 END) CUSHION_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'M.PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
-                  ,SUM(CASE WHEN MODEL_NAME = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
-                  ,SUM(CASE WHEN MODEL_NAME = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
-                  ,SUM(CASE WHEN PRODUCT_LINE_NAME = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
-                  ,sum(case when product_line_name = 'MATTRESS' and SIZE = 'TWIN XL' then ordered_qty else 0 end) split_king
+                  ,sum(case when product_line_name_LKR = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'CUSHION' THEN 1 ELSE 0 END) CUSHION_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'M.PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
+                  ,SUM(CASE WHEN MODEL_NAME_LKR = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
+                  ,SUM(CASE WHEN MODEL_NAME_LKR = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
+                  ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+                  ,sum(case when product_line_name_LKR = 'MATTRESS' and SIZE = 'TWIN XL' then ordered_qty else 0 end) split_king
           from sales_order_line sol
           left join item on item.item_id = sol.item_id
           GROUP BY 1) ;;
