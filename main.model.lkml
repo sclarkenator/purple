@@ -255,6 +255,13 @@ explore: sales_order_line {
     relationship: one_to_one
   }
 
+  #join: fulfillment_dates {
+  #  view_label: "Fulfillment date calculations"
+  #  type: left_outer
+  #  sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
+  #  relationship: one_to_one
+  #}
+
 #  join: dtc_fulfill_sla {
 #    view_label: "SLA achievement"
 #    type: left_outer
