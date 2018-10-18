@@ -9,6 +9,16 @@ view: sales_order_line {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
+  measure: avg_cost {
+    view_label: "Sales info"
+    label:  "Avg cost ($)"
+    description:  "Average unit cost, only valid looking at item-level data"
+    type: average
+    value_format_name: decimal_2
+    sql:  ${TABLE}.estimated_Cost ;;
+  }
+
+
   measure: total_gross_Amt {
     view_label: "Sales info"
     label:  "Gross sales ($)"
