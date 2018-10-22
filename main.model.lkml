@@ -506,13 +506,13 @@ explore: inventory_valuation {
   description: "An exported shapshot of inventory by location from netsuite at the end of each month"
 
   join: item {
-    type:  inner
+    type:  left_outer
     sql_on: ${item.item_id} = ${inventory_valuation.item_id} ;;
     relationship: many_to_one
   }
 
   join: warehouse_location {
-    type: inner
+    type: left_outer
     sql_on: ${warehouse_location.location_id} = ${inventory_valuation.location_id} ;;
     relationship: many_to_one
   }
