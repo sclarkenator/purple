@@ -435,7 +435,7 @@ explore: shopify_warranties {
   always_filter: {
     filters: {
       field: warranty_created_date
-      value: "2018/09/01 to 2018/10/01"
+      value: "last month"
     }
   }
 }
