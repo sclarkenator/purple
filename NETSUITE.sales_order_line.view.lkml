@@ -18,6 +18,14 @@ view: sales_order_line {
     sql:  ${TABLE}.estimated_Cost ;;
   }
 
+  measure: total_estimated_cost {
+    view_label: "Sales info"
+    label: "Estimated Costs ($)"
+    description: "Estimated cost value from NetSuite for the cost of materials"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.estimated_Cost;;
+  }
 
   measure: total_gross_Amt {
     view_label: "Sales info"
