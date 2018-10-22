@@ -14,7 +14,7 @@ view: warehouse_location {
     }
 
   dimension: location_name_manna_grouped {
-    label: "Warehouse name"
+    label: "Warehouse name (manna grouped)"
     type: string
     sql: case when lower(${TABLE}.name) like ('%manna%') then 'Manna' else ${TABLE}.name ;;
   }
