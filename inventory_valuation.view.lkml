@@ -1,5 +1,5 @@
 view: inventory_valuation {
-  sql_table_name: production.inventory_valuatoin ;;
+  sql_table_name: production.inventory_valuation ;;
 
   dimension: report_date {
     type:  date
