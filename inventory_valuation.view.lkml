@@ -11,13 +11,13 @@ view: inventory_valuation {
     sql:  ${TABLE}.item_id ;;
   }
 
-  dimension: locatoin_id {
+  dimension: location_id {
     type:  string
     sql:  ${TABLE}.item_id ;;
   }
 
   dimension: asset_account_name {
-    type:  number
+    type:  string
     sql: ${TABLE}.asset_account_name ;;
   }
 
