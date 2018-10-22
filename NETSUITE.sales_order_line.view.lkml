@@ -404,6 +404,7 @@ measure: total_line_item {
   dimension: country {
     group_label: "Customer address"
     view_label: "Customer info"
+    hidden: yes
     type: string
     map_layer_name: countries
     sql: ${TABLE}.COUNTRY ;;
