@@ -12,8 +12,8 @@ view: inventory_valuation {
   }
 
   dimension: location_id {
-    type:  string
-    sql:  ${TABLE}.item_id ;;
+    type:  number
+    sql:  ${TABLE}.location_id ;;
   }
 
   dimension: asset_account_name {
