@@ -513,7 +513,7 @@ explore: inventory_valuation {
 
   join: warehouse_location {
     type: inner
-    sql_on: ${warehouse_location.location_id} = ${inventory_valuation.locatoin_id} ;;
+    sql_on: ${warehouse_location.location_id} = ${inventory_valuation.location_id} ;;
     relationship: many_to_one
   }
 }
