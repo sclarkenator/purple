@@ -498,3 +498,22 @@ join: Receiving_Location{
     relationship: many_to_one
   }
 }
+
+explore: inventory_valuation {
+  hidden:  no
+  group_label: "Operations"
+  label: "Inventory Valuation Snapshot"
+  description: "An exported shapshot of inventory by location from netsuite at the end of each month"
+
+  join: item {
+    type:  inner
+    sql_on: ${item.item_id} = ${inventory_valuation.item_id} ;;
+    relationship: many_to_one
+  }
+
+  join: warehouse_location {
+    type: inner
+    sql_on: ${warehouse_location.location_id} = ${inventory_valuation.locatoin_id} ;;
+    relationship: many_to_one
+  }
+}
