@@ -197,7 +197,7 @@ view: sales_order_line {
     view_label: "Sales info"
     description: "used to generate the sales by channel report"
     label: "Amazon-US gross"
-    hidden: yes
+#    hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
     sql: case when ${sales_order.channel_source} = 'AMAZON-US' then ${TABLE}.gross_amt else 0 end ;;
@@ -217,7 +217,7 @@ view: sales_order_line {
     view_label: "Sales info"
     description: "US Shopify gross sales as reported in Netsuite"
     label: "Shopify-US gross"
-    hidden: yes
+ #   hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
     sql: case when ${sales_order.channel_source} = 'SHOPIFY-US' then ${TABLE}.gross_amt else 0 end ;;
