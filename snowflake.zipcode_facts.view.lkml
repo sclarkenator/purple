@@ -6,7 +6,7 @@ view: sf_zipcode_facts {
     hidden: yes
     map_layer_name: us_zipcode_tabulation_areas
     type: zipcode
-    sql: RPAD(cast(${TABLE}.zip_code as string), 5, '0') ;;
+    sql: ${TABLE}.zip_code ;;
   }
 
   dimension: latitude {
@@ -22,6 +22,7 @@ view: sf_zipcode_facts {
   }
 
   dimension: city {
+    group_label: "Customer address"
     type: string
     sql: ${TABLE}.city ;;
   }
@@ -34,12 +35,14 @@ view: sf_zipcode_facts {
 
   dimension: county_name {
     group_label: "County"
+    hidden: yes
     type: string
     sql: ${TABLE}.county ;;
   }
 
   dimension: location {
     type: location
+    hidden: yes
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
   }

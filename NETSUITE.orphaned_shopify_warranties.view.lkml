@@ -1,4 +1,5 @@
 view: orphaned_shopify_warranties {
+  label: "Shopify Warranties"
   derived_table: {
     sql:
       with mc as (
@@ -31,7 +32,6 @@ view: orphaned_shopify_warranties {
         join analytics_stage.shopify_us_ft."ORDER" sr on nr.replacement_order_id = sr.id
         left join analytics_stage.shopify_us_ft."ORDER" so on nr.original_order_number = so.order_number
         left join mc on nr.mod_code = mc.mod_code
-      where original_order_id is null
       ;;
   }
 

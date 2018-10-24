@@ -223,7 +223,7 @@ view: sales_order {
 
   dimension: related_tranid {
     view_label: "Sales info"
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.RELATED_TRANID ;;
   }

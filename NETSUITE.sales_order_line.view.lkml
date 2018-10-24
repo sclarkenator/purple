@@ -9,6 +9,24 @@ view: sales_order_line {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
+  measure: avg_cost {
+    view_label: "Sales info"
+    label:  "Avg cost ($)"
+    description:  "Average unit cost, only valid looking at item-level data"
+    type: average
+    value_format_name: decimal_2
+    sql:  ${TABLE}.estimated_Cost ;;
+  }
+
+  measure: total_estimated_cost {
+    view_label: "Sales info"
+    label: "Estimated Costs ($)"
+    description: "Estimated cost value from NetSuite for the cost of materials"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.estimated_Cost;;
+  }
+
   measure: total_gross_Amt {
     view_label: "Sales info"
     label:  "Gross sales ($)"
@@ -179,7 +197,7 @@ view: sales_order_line {
     view_label: "Sales info"
     description: "used to generate the sales by channel report"
     label: "Amazon-US gross"
-    hidden: yes
+#    hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
     sql: case when ${sales_order.channel_source} = 'AMAZON-US' then ${TABLE}.gross_amt else 0 end ;;
@@ -199,7 +217,7 @@ view: sales_order_line {
     view_label: "Sales info"
     description: "US Shopify gross sales as reported in Netsuite"
     label: "Shopify-US gross"
-    hidden: yes
+ #   hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
     sql: case when ${sales_order.channel_source} = 'SHOPIFY-US' then ${TABLE}.gross_amt else 0 end ;;
@@ -315,7 +333,7 @@ measure: total_line_item {
     description: "Total units purchased, before returns and cancellations"
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
-    drill_fields: [sales_order.order_id, created_date, item.product_line_name, total_units]
+    drill_fields: [item.product_description, total_units]
   }
 
   dimension: order_age_bucket {
@@ -326,6 +344,17 @@ measure: total_line_item {
     style: integer
     sql: datediff(day,${created_date},current_date) ;;
   }
+
+
+  dimension: manna_order_age_bucket {
+    view_label: "Sales info"
+    description: "Number of days between today and when order was placed for Manna"
+    type:  tier
+    tiers: [7,14,21,28,35,42]
+    style: integer
+    sql: datediff(day,${created_date},current_date) ;;
+  }
+
 
   dimension: before_today_flag {
     label:  "before today flag"
@@ -383,6 +412,7 @@ measure: total_line_item {
   dimension: country {
     group_label: "Customer address"
     view_label: "Customer info"
+    hidden: yes
     type: string
     map_layer_name: countries
     sql: ${TABLE}.COUNTRY ;;

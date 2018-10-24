@@ -12,4 +12,10 @@ view: warehouse_location {
       type: string
       sql: ${TABLE}.name ;;
     }
+
+  dimension: location_name_manna_grouped {
+    label: "Warehouse name (manna grouped)"
+    type: string
+    sql: case when lower(${TABLE}.name) like ('%manna%') then 'Manna (all)' else ${TABLE}.name end;;
+  }
 }

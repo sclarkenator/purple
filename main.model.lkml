@@ -255,6 +255,13 @@ explore: sales_order_line {
     relationship: one_to_one
   }
 
+  join: fulfillment_dates {
+    view_label: "Fulfillment date calculations"
+    type: left_outer
+    sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
+    relationship: one_to_one
+  }
+
 #  join: dtc_fulfill_sla {
 #    view_label: "SLA achievement"
 #    type: left_outer
@@ -420,10 +427,17 @@ explore: warranty {
   }
 }
 
-explore: orphaned_shopify_warranties {
+explore: shopify_warranties {
+  from: orphaned_shopify_warranties
   group_label: "x - Accounting"
-  label: "Orphaned Warranties"
-  description: "Current warranty information for orphaned NetSuite warranty orders (i.e. warranty replacement orders placed in Shopify for orders that don't exist in NetSuite)"
+  label: "Shopify Warranties"
+  description: "Ties the original order data to NetSuite Warranty Orders where the original order does not exist in NetSuite"
+  always_filter: {
+    filters: {
+      field: warranty_created_date
+      value: "last month"
+    }
+  }
 }
 
 explore: netsuite_warranty_exceptions {
@@ -481,6 +495,25 @@ join: Receiving_Location{
   join: vendor {
     type:  left_outer
     sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: inventory_valuation {
+  hidden:  no
+  group_label: "Operations"
+  label: "Inventory Valuation Snapshot"
+  description: "An exported shapshot of inventory by location from netsuite at the end of each month"
+
+  join: item {
+    type:  left_outer
+    sql_on: ${item.item_id} = ${inventory_valuation.item_id} ;;
+    relationship: many_to_one
+  }
+
+  join: warehouse_location {
+    type: left_outer
+    sql_on: ${warehouse_location.location_id} = ${inventory_valuation.location_id} ;;
     relationship: many_to_one
   }
 }
