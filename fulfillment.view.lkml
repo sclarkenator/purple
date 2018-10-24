@@ -41,9 +41,31 @@ view: fulfillment {
       year
     ]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."FULFILLED" ;;
+    datatype: timestamp
+    sql:to_timestamp_ntz(${TABLE}.FULFILLED) ;;
   }
+
+  parameter: timeframe_picker{
+    label: "Date Granularity Fulfullment"
+    type: string
+    allowed_value: { value: "Date"}
+    allowed_value: { value: "Week"}
+    allowed_value: { value: "Month"}
+    default_value: "Date"
+  }
+
+  dimension: F_dynamic_timeframe {
+    type: date
+    allow_fill: no
+    sql:
+      CASE
+      When {% parameter timeframe_picker %} = 'Date' Then ${fulfilled_date}
+      When {% parameter timeframe_picker %} = 'Week' Then ${fulfilled_week}
+      When {% parameter timeframe_picker %} = 'Month' Then ${fulfilled_month}||'-01'
+      END;;
+  }
+
+
 
   dimension_group: insert_ts {
     hidden: yes

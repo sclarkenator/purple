@@ -417,7 +417,7 @@ measure: total_line_item {
       month,
       quarter,
       year,
-      day_of_week
+      day_of_week,
     ]
     convert_tz: no
     datatype: timestamp
@@ -466,6 +466,26 @@ measure: total_line_item {
         label: "Sat"
       }
     }
+  }
+
+  parameter: timeframe_picker{
+    label: "Date Granularity"
+    type: string
+    allowed_value: { value: "Date"}
+    allowed_value: { value: "Week"}
+    allowed_value: { value: "Month"}
+    default_value: "Date"
+  }
+
+  dimension: dynamic_timeframe {
+    type: date
+    allow_fill: no
+    sql:
+      CASE
+      When {% parameter timeframe_picker %} = 'Date' Then ${created_date}
+      When {% parameter timeframe_picker %} = 'Week' Then ${created_week}
+      When {% parameter timeframe_picker %} = 'Month'Then ${created_month}||'-01'
+      END;;
   }
 
   dimension: 7_day_window {
@@ -627,6 +647,7 @@ measure: total_line_item {
     datatype: date
     sql: ${TABLE}.FULFILLED ;;
   }
+
 
   dimension: fulfillment_method {
     view_label: "Fulfillment details"

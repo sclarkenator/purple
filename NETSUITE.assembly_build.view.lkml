@@ -110,11 +110,35 @@ view: assembly_build {
       week,
       month,
       quarter,
-      year
+      year,
+      month_num
+
     ]
     convert_tz: no
-    sql:to_timestamp_ntz(${TABLE}."PRODUCED") ;;
+    datatype: timestamp
+    sql:to_timestamp_ntz(${TABLE}.PRODUCED) ;;
     }
+
+  parameter: timeframe_picker{
+    label: "Date Granularity"
+    type: string
+    allowed_value: { value: "Date"}
+    allowed_value: { value: "Week"}
+    allowed_value: { value: "Month"}
+    default_value: "Date"
+  }
+
+  dimension: dynamic_timeframe {
+    type: date
+    allow_fill: no
+    sql:
+      CASE
+      When {% parameter timeframe_picker %} = 'Date' Then ${produced_date}
+      When {% parameter timeframe_picker %} = 'Week' Then ${produced_week}
+      When {% parameter timeframe_picker %} = 'Month' Then ${produced_month}||'-01'
+      END;;
+  }
+
 
   dimension: quantity {
     hidden: yes

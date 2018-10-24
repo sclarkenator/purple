@@ -14,6 +14,8 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
+week_start_day: sunday
+
 explore: production_report {
   label: "iPad Production Data"
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
