@@ -120,7 +120,7 @@ view: assembly_build {
     }
 
   parameter: timeframe_picker{
-    label: "Date Granularity"
+    label: "Date Granularity Assembly Build"
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}

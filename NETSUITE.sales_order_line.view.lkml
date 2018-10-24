@@ -499,7 +499,7 @@ measure: total_line_item {
   }
 
   parameter: timeframe_picker{
-    label: "Date Granularity"
+    label: "Date Granularity Sales"
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}

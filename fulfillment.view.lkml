@@ -46,7 +46,7 @@ view: fulfillment {
   }
 
   parameter: timeframe_picker{
-    label: "Date Granularity Fulfullment"
+    label: "Date Granularity Fulfillment"
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}
@@ -54,7 +54,7 @@ view: fulfillment {
     default_value: "Date"
   }
 
-  dimension: F_dynamic_timeframe {
+  dimension: dynamic_timeframe {
     type: date
     allow_fill: no
     sql:
