@@ -39,7 +39,7 @@ view: retail_stores {
   }
 
   dimension: state {
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}."STATE" ;;
   }
