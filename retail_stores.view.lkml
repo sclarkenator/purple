@@ -42,6 +42,7 @@ view: retail_stores {
     #hidden: yes
     type: string
     map_layer_name:  us_states
+    drill_fields: [zip]
     sql: ${TABLE}."STATE" ;;
   }
 
