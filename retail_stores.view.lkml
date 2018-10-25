@@ -48,6 +48,7 @@ view: retail_stores {
 
   dimension: zip {
     type: zipcode
+    drill_fields: [address]
     sql: ${TABLE}."ZIP" ;;
   }
 
