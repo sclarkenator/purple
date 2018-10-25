@@ -54,7 +54,7 @@ view: item {
   dimension: model_name {
     label:  "Model"
     description: "Model or style of item (model of cushion, mattress, etc)"
-    drill_fields: [product_line_name]
+    drill_fields: [product_description]
     type: string
     case: {
       when: {
