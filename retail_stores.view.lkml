@@ -41,6 +41,7 @@ view: retail_stores {
   dimension: state {
     #hidden: yes
     type: string
+    map_layer_name:  us_states
     sql: ${TABLE}."STATE" ;;
   }
 
