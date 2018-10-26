@@ -55,3 +55,8 @@ explore: assembly_build {
   }
 
 }
+
+explore: max_machine_capacity {
+  label: "Max Machine Capacity"
+  description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"
+}
