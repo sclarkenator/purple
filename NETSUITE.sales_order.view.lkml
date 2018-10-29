@@ -302,7 +302,7 @@ view: sales_order {
   dimension: status {
     label: "Status of order"
     view_label: "Sales info"
-    hidden:  yes
+    #hidden:  yes
     type: string
     sql: ${TABLE}.STATUS ;;
   }
