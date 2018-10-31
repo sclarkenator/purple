@@ -1,4 +1,4 @@
-view: inventory_history {
+view: inventory_snap {
   sql_table_name: PRODUCTION.INVENTORY_SNAP ;;
 
   measure: available {

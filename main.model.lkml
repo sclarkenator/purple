@@ -122,6 +122,30 @@ explore: inventory {
   }
 }
 
+
+explore: inventory_snap {
+  group_label: "Operations"
+  label: "Historical Inventory"
+  description: "Inventory positions, by item by location over time"
+
+  join: item {
+    type: left_outer
+    sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
+
+  join: warehouse_location {
+    sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one
+  }
+
+  join: stock_level {
+    type: full_outer
+    sql_on: ${inventory_snap.item_id} = ${stock_level.item_id} and ${inventory_snap.location_id} = ${stock_level.location_id} ;;
+    relationship: many_to_one
+  }
+}
+
 explore: sales_targets {
   hidden:  yes
   label: "Finance targets"
