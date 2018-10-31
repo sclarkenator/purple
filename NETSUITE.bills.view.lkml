@@ -96,7 +96,7 @@ view: bills {
     label: "Total Amount Paid"
     #description: "Summing the total amount"
     type:  sum
-    sql:case when ${TABLE}.status = "Paid In Full" then ${TABLE}.amount else 0 end;;
+    sql:case when ${TABLE}.status = 'Paid In Full' then ${TABLE}.amount else 0 end;;
   }
 
   measure: items {
