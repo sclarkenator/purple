@@ -466,7 +466,7 @@ explore: item {
     relationship: many_to_one
   }
 
-  join:  bills {
+  join: netsuite_bills {
     view_label: "Bills"
     type:  left_outer
     required_joins: [purchase_order]
