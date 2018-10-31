@@ -408,6 +408,7 @@ explore: sales_order_line {
 
 explore: Mattress_Firm {
   from: mattress_firm_store_details
+  hidden: yes
   group_label: "Wholesale"
 
   join: mattress_firm_sales {
@@ -484,8 +485,8 @@ explore: item {
 
   join: purchase_order_line {
     view_label: "Purchase Order"
-    type:  full_outer
-    sql_on: ${purchase_order_line.item_id} = ${item.item_id} ;;
+    type: full_outer
+    sql_on: ${item.item_id} = ${purchase_order_line.item_id} ;;
     relationship: one_to_many
   }
 
@@ -493,7 +494,7 @@ explore: item {
     view_label: "Purchase Order"
     type:  left_outer
     required_joins: [purchase_order_line]
-    sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
+    sql_on: ${purchase_order_line.purchase_order_id} = ${purchase_order.purchase_order_id}  ;;
     relationship: many_to_one
   }
 
@@ -502,7 +503,7 @@ explore: item {
     type:  left_outer
     required_joins: [purchase_order]
     sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
-    relationship: one_to_one
+    relationship: many_to_one
   }
 
   join: transfer_order_line {
@@ -519,18 +520,21 @@ explore: item {
     sql_on: ${transfer_order.transfer_order_id} = ${transfer_order_line.transfer_order_id} ;;
     relationship: many_to_one
   }
-join: Receiving_Location{
-  from:warehouse_location
+
+  join: Receiving_Location{
+    from:warehouse_location
     type:  left_outer
     sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} or ${purchase_order.location_id} = ${Receiving_Location.location_id};;
     relationship: many_to_one
   }
+
   join: Transfer_Fulfilling_Location{
     from:warehouse_location
     type:  left_outer
     sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
     relationship: many_to_one
   }
+
   join: vendor {
     type:  left_outer
     sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
