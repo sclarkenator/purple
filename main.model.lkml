@@ -470,7 +470,7 @@ explore: item {
     view_label: "Bills"
     type:  left_outer
     required_joins: [purchase_order]
-    sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order} ;;
+    sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
     relationship: one_to_one
   }
 

@@ -3,7 +3,7 @@ view: bills {
   derived_table: {
     sql: -- aggregating the bill line up to one per purchase order
       select a.bill_id
-          , a.purchase_order
+          , a.purchase_order_id
           , a.tranid
           , a.vendor
           , a.status
@@ -18,7 +18,7 @@ view: bills {
       from production.bill a
       left join production.bill_line b on b.bill_id = a.bill_id
       group by a.bill_id
-          , a.purchase_order
+          , a.purchase_order_id
           , a.tranid
           , a.vendor
           , a.status
@@ -32,10 +32,10 @@ view: bills {
     sql: ${TABLE}.bill_id ;;
   }
 
-  dimension: purchase_order {
+  dimension: purchase_order_id {
     hidden: yes
     type:  string
-    sql: ${TABLE}.purchase_order ;;
+    sql: ${TABLE}.purchase_order_id ;;
   }
 
   dimension: tranid {
