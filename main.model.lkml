@@ -466,13 +466,13 @@ explore: item {
     relationship: many_to_one
   }
 
-  join: netsuite_bills {
-    view_label: "Bills"
-    type:  left_outer
-    required_joins: [purchase_order]
-    sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order} ;;
-    relationship: one_to_one
-  }
+  #join: netsuite_bills {
+  #  view_label: "Bills"
+  #  type:  left_outer
+  #  required_joins: [purchase_order]
+  #  sql_on: ${purchase_order.purchase_order_id} = ${netsuite_bills.purchase_order} ;;
+  #  relationship: one_to_one
+  #}
 
   join: transfer_order_line {
     view_label: "Transfer Order"
