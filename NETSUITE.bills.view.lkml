@@ -28,19 +28,19 @@ view: bills {
   dimension: bill_id {
     primary_key: yes
     hidden: yes
-    type:  number
+    type:  string
     sql: ${TABLE}.bill_id ;;
   }
 
   dimension: purchase_order {
     hidden: yes
-    type:  number
+    type:  string
     sql: ${TABLE}.purchase_order ;;
   }
 
   dimension: tranid {
     hidden: yes
-    type:  number
+    type:  string
     sql: ${TABLE}.tranid ;;
   }
 
