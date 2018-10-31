@@ -1,4 +1,4 @@
-view: fulfillment_dates {
+view: bills {
 
   derived_table: {
     sql: -- aggregating the bill line up to one per purchase order
