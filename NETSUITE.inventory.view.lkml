@@ -20,6 +20,7 @@ view: inventory {
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
     description: "Date the Item was created in the table."
     timeframes: [
