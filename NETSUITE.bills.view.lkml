@@ -106,4 +106,11 @@ view: bills {
     sql:${TABLE}.items ;;
   }
 
+  measure: items_paid {
+    label: "Total Items Paid in Full"
+    #description: "Summing the total amount"
+    type:  sum
+    sql:case when ${TABLE}.status = "Paid In Full" then ${TABLE}.items else 0 end;;
+  }
+
 }
