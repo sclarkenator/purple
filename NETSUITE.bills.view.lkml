@@ -15,7 +15,7 @@ view: bills {
           , sum(b.amount) as amount
           , sum(b.item_count) as items
 
-      from ANALYTICS.production.bill a
+      from production.bill a
       left join analytics.production.bill_line b on b.bill_id = a.bill_id
       group by a.bill_id
           , a.purchase_order
