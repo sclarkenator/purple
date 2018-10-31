@@ -101,7 +101,7 @@ explore: refund {
 
 explore: inventory {
   group_label: "Operations"
-  label: "Inventory"
+  label: "Current Inventory"
   description: "Inventory positions, by item by location"
 
   join: item {
