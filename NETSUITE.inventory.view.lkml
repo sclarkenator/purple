@@ -1,5 +1,5 @@
 view: inventory {
-  sql_table_name: PRODUCTION.INVENTORY_SNAP ;;
+  sql_table_name: PRODUCTION.INVENTORY ;;
 
   dimension: item_location_date {
     hidden:  yes
@@ -20,8 +20,9 @@ view: inventory {
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
-    description: "Date the Inventory Snapshot was created. This happens every 12 hours at 0300 and 1500."
+    description: "Date the Item was created in the table."
     timeframes: [
       time,
       hour_of_day,
