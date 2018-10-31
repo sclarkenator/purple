@@ -1,4 +1,4 @@
-view: return_method {
+view: return_option {
   sql_table_name: analytics_stage.netsuite.return_option_list ;;
 
   dimension: list_id {
