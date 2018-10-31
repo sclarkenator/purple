@@ -204,6 +204,11 @@ dimension: Primary_key{
     drill_fields: [purchase_order_line_id, purchase_order.purchase_order_id]
   }
 
+  measure: total_amount {
+    type: sum
+    sql: ${TABLE}."AMOUNT" ;;
+  }
+
   measure: Total_quantity_received {
     type: sum
     value_format: "#,##0"
