@@ -213,6 +213,13 @@ explore: sales_order_line {
     relationship: many_to_one
   }
 
+  join: return_option {
+    view_label: "Returns info"
+    type: left_outer
+    sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+    relationship: many_to_one
+  }
+
   join: customer_table {
     view_label: "Customer info"
     type: left_outer
