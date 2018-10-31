@@ -22,7 +22,7 @@ view: bills {
           , a.tranid
           , a.vendor
           , a.status
-      );;
+      ;;
   }
 
   dimension: bill_id {
@@ -90,6 +90,13 @@ view: bills {
     #description: "Summing the total amount"
     type:  sum
     sql:${TABLE}.amount ;;
+  }
+
+  measure: amount_paid {
+    label: "Total Amount Paid"
+    #description: "Summing the total amount"
+    type:  sum
+    sql:case when ${TABLE}.status = "Paid In Full" then ${TABLE}.amount else 0 end;;
   }
 
   measure: items {
