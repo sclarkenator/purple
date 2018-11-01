@@ -493,7 +493,7 @@ explore: item {
   join: purchase_order {
     view_label: "Purchase Order"
     type:  left_outer
-    required_joins: [purchase_order_line]
+    #required_joins: [purchase_order_line]
     sql_on: ${purchase_order_line.purchase_order_id} = ${purchase_order.purchase_order_id}  ;;
     relationship: many_to_one
   }
@@ -501,7 +501,6 @@ explore: item {
   join: bills {
     view_label: "Bills"
     type:  left_outer
-    required_joins: [purchase_order]
     sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
     relationship: many_to_one
   }
