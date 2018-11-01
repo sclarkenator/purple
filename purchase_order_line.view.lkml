@@ -5,7 +5,7 @@ dimension: Primary_key{
   primary_key: yes
   hidden: yes
   type: string
-  sql: ${TABLE}."PURCHASE_ORDER_ID"||"L"||${TABLE}."PURCHASE_ORDER_LINE_ID" ;;
+  sql: ${TABLE}."PURCHASE_ORDER_ID"||'L'||${TABLE}."PURCHASE_ORDER_LINE_ID" ;;
 }
 
   dimension: purchase_order_line_id {
