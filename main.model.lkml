@@ -479,7 +479,7 @@ explore: netsuite_warranty_exceptions {
 }
 
  explore: item {
-   label: "Transfer and Purchase Orders"
+   label: "Transfer and Purchase Orders --old"
    group_label: "Operations"
    description: "Netsuite data on Transfer and purchase orders"
   hidden:  yes
