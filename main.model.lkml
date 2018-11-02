@@ -478,68 +478,69 @@ explore: netsuite_warranty_exceptions {
   description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"
 }
 
-# explore: item {
-#   label: "Transfer and Purchase Orders"
-#   group_label: "Operations"
-#   description: "Netsuite data on Transfer and purchase orders"
-#
-#   join: purchase_order_line {
-#     view_label: "Purchase Order"
-#     type: full_outer
-#     sql_on: ${item.item_id} = ${purchase_order_line.item_id} ;;
-#     relationship: one_to_many
-#   }
-#
-#   join: purchase_order {
-#     view_label: "Purchase Order"
-#     type:  left_outer
-#     #required_joins: [purchase_order_line]
-#     sql_on: ${purchase_order_line.purchase_order_id} = ${purchase_order.purchase_order_id}  ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: bills {
-#     view_label: "Bills"
-#     type:  left_outer
-#     sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: transfer_order_line {
-#     view_label: "Transfer Order"
-#     type:  full_outer
-#     sql_on: ${transfer_order_line.item_id} = ${item.item_id} ;;
-#     relationship: one_to_many
-#   }
-#
-#   join: transfer_order {
-#     view_label: "Transfer Order"
-#     type:  left_outer
-#     required_joins: [transfer_order_line]
-#     sql_on: ${transfer_order.transfer_order_id} = ${transfer_order_line.transfer_order_id} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: Receiving_Location{
-#     from:warehouse_location
-#     type:  left_outer
-#     sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} or ${purchase_order.location_id} = ${Receiving_Location.location_id};;
-#     relationship: many_to_one
-#   }
-#
-#   join: Transfer_Fulfilling_Location{
-#     from:warehouse_location
-#     type:  left_outer
-#     sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: vendor {
-#     type:  left_outer
-#     sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
-#     relationship: many_to_one
-#   }
-# }
+ explore: item {
+   label: "Transfer and Purchase Orders"
+   group_label: "Operations"
+   description: "Netsuite data on Transfer and purchase orders"
+  hidden:  yes
+
+   join: purchase_order_line {
+    view_label: "Purchase Order"
+    type: full_outer
+    sql_on: ${item.item_id} = ${purchase_order_line.item_id} ;;
+    relationship: one_to_many
+  }
+
+  join: purchase_order {
+    view_label: "Purchase Order"
+    type:  left_outer
+    #required_joins: [purchase_order_line]
+    sql_on: ${purchase_order_line.purchase_order_id} = ${purchase_order.purchase_order_id}  ;;
+    relationship: many_to_one
+  }
+
+  join: bills {
+    view_label: "Bills"
+    type:  left_outer
+    sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
+    relationship: many_to_one
+  }
+
+  join: transfer_order_line {
+    view_label: "Transfer Order"
+    type:  full_outer
+    sql_on: ${transfer_order_line.item_id} = ${item.item_id} ;;
+    relationship: one_to_many
+  }
+
+  join: transfer_order {
+    view_label: "Transfer Order"
+    type:  left_outer
+    required_joins: [transfer_order_line]
+    sql_on: ${transfer_order.transfer_order_id} = ${transfer_order_line.transfer_order_id} ;;
+    relationship: many_to_one
+  }
+
+  join: Receiving_Location{
+    from:warehouse_location
+    type:  left_outer
+    sql_on: ${transfer_order.receiving_location_id} = ${Receiving_Location.location_id} or ${purchase_order.location_id} = ${Receiving_Location.location_id};;
+    relationship: many_to_one
+  }
+
+  join: Transfer_Fulfilling_Location{
+    from:warehouse_location
+    type:  left_outer
+    sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
+    relationship: many_to_one
+  }
+
+  join: vendor {
+    type:  left_outer
+    sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
+    relationship: many_to_one
+  }
+}
 
 explore: inventory_valuation {
   hidden:  no
