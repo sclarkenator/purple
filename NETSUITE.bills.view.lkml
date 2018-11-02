@@ -33,6 +33,7 @@ view: bills {
   }
 
   dimension: purchase_order_id {
+    #primary_key: yes
     hidden: yes
     type:  string
     sql: ${TABLE}.purchase_order_id ;;
