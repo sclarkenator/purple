@@ -561,6 +561,15 @@ explore: inventory_valuation {
   }
 }
 
+#-------------------------------------------------------------------
+#                     transfers-----purchases
+#                        /            \      \
+#                   order_line    purchase    vendor
+#                 /      /    \      line
+#                /      /      \     /   \
+#       receiving  fulfilling   items    bills
+#        location    location
+#-------------------------------------------------------------------
 explore: purcahse_and_transfer_ids {
   label: "Transfer and Purchase Orders"
   group_label: "Operations"
