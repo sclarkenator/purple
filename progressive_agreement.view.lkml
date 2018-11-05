@@ -1,14 +1,14 @@
 view: progressive {
-  sql_table_name: FINANCE.PROGRESSIVE ;;
+  sql_table_name: FINANCE.progressive_agreement ;;
 
   dimension: lease_id {
     type: number
-    sql: ${TABLE}."LEASE_ID" ;;
+    sql: ${TABLE}.LEASE_ID ;;
   }
 
   dimension: store_id {
     type: number
-    sql: ${TABLE}."STORE_ID" ;;
+    sql: ${TABLE}.STORE_ID ;;
   }
 
   dimension_group: created {
@@ -22,7 +22,7 @@ view: progressive {
       quarter,
       year
     ]
-    sql: ${TABLE}."CREATED" ;;
+    sql: ${TABLE}.CREATED ;;
   }
 
   dimension_group: funded {
@@ -36,17 +36,17 @@ view: progressive {
       quarter,
       year
     ]
-    sql: ${TABLE}."FUNDED" ;;
+    sql: ${TABLE}.FUNDED ;;
   }
 
   dimension: identifier {
     type: string
-    sql: ${TABLE}."IDENTIFIER" ;;
+    sql: ${TABLE}.IDENTIFIER ;;
   }
 
   dimension: status {
     type: string
-    sql: ${TABLE}."STATUS" ;;
+    sql: ${TABLE}.STATUS ;;
   }
 
   measure: count {

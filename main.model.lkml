@@ -41,6 +41,12 @@ explore: progressive {
   label: "Progressive"
   group_label: "x - Accounting"
   description: "Progressive lease information."
+
+  join: progressive_funded_lease {
+    type:  left_outer
+    sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
+    relationship: one_to_one
+  }
 }
 
 explore: hotjar_data {
