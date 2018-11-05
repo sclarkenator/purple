@@ -256,6 +256,11 @@ view: item {
       }
 
       when: {
+        sql: ${TABLE}.classification = 'FS' ;;
+        label: "Factory Second"
+      }
+
+      when: {
         sql: ${TABLE}.classification = 'FGC' ;;
         label: "Finished Goods Component"
       }
