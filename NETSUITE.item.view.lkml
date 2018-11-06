@@ -19,7 +19,7 @@ view: item {
   dimension: merchandise {
     description: "Is this a merchandising product for wholesale?"
     label: "Merchandising flag"
-    hidden:  yes
+    #hidden:  yes
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;;
   }
