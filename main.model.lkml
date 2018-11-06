@@ -643,3 +643,22 @@ explore: purcahse_and_transfer_ids {
     relationship: many_to_one
   }
 }
+
+#-------------------------------------------------------------------
+# bom_demand_matrix
+#            \
+#           item
+#-------------------------------------------------------------------
+explore: bom_demand_matrix {
+  label: "Demand Matrix"
+  group_label: "Operations"
+  description: "Showing components in final products and what's available"
+
+  join: item {
+    view_label: "Item"
+    type: left_outer
+    sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;;
+    relationship: one_to_one
+  }
+
+}
