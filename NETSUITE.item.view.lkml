@@ -16,6 +16,13 @@ view: item {
     sql: ${TABLE}.classification ;;
   }
 
+  dimension: type {
+    #description: "What stage is this item in production?"
+    #label: "Item classification"
+    type: string
+    sql: ${TABLE}.type ;;
+  }
+
   dimension: merchandise {
     description: "Is this a merchandising product for wholesale?"
     label: "Merchandising flag"
