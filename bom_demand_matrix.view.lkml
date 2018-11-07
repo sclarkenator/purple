@@ -21,6 +21,7 @@ view: bom_demand_matrix {
   }
 
   dimension: INGREDIENT {
+    label: "Sub-Component Name"
     type: string
     sql: ${TABLE}.INGREDIENT ;;
   }
