@@ -23,6 +23,7 @@ explore: production_report {
 
 
 explore: oee {
+  hidden:  yes
   label: "OEE Table"
   description: "Static OEE Dataset in Snowflake"
 }
