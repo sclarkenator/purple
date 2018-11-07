@@ -38,6 +38,7 @@ explore: attribution {
 }
 
 explore: progressive {
+  hidden: yes
   label: "Progressive"
   group_label: "x - Accounting"
   description: "Progressive lease information."
@@ -100,6 +101,7 @@ explore: daily_adspend {
 }
 
 explore: refund {
+  hidden: yes
   group_label: "x - Accounting"
   label: "Accounting Refunds"
   description: "Refunds on sales at an order level, for accounting."
@@ -310,7 +312,7 @@ explore: sales_order_line {
 ### replicates DTC explore, with filters for wholesale
   explore: wholesale {
     from: sales_order_line
-    group_label: "Wholesale"
+    #group_label: "Main"
     label:  "Wholesale"
     description:  "All sales orders for wholesale channel"
     always_filter: {
@@ -467,6 +469,7 @@ explore: warranty {
 
 explore: shopify_warranties {
   from: orphaned_shopify_warranties
+  hidden: yes
   group_label: "x - Accounting"
   label: "Shopify Warranties"
   description: "Ties the original order data to NetSuite Warranty Orders where the original order does not exist in NetSuite"
@@ -479,6 +482,7 @@ explore: shopify_warranties {
 }
 
 explore: netsuite_warranty_exceptions {
+  hidden: yes
   group_label: "x - Accounting"
   label: "Warranty ModCode Cleanup"
   description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"
@@ -488,7 +492,7 @@ explore: netsuite_warranty_exceptions {
    label: "Transfer and Purchase Orders --old"
    group_label: "Operations"
    description: "Netsuite data on Transfer and purchase orders"
-  hidden:  yes
+   hidden:  yes
 
    join: purchase_order_line {
     view_label: "Purchase Order"
@@ -549,7 +553,7 @@ explore: netsuite_warranty_exceptions {
 }
 
 explore: inventory_valuation {
-  hidden:  no
+  hidden:  yes
   group_label: "Operations"
   label: "Inventory Valuation Snapshot"
   description: "An exported shapshot of inventory by location from netsuite at the end of each month"
@@ -650,6 +654,7 @@ explore: purcahse_and_transfer_ids {
 #           item
 #-------------------------------------------------------------------
 explore: bom_demand_matrix {
+  hidden:  yes
   label: "Demand Matrix"
   group_label: "Operations"
   description: "Showing components in final products and what's available"
