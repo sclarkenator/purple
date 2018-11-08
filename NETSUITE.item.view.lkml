@@ -154,7 +154,7 @@ view: item {
   }
 
   dimension: manna_fulfilled {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Fulfilled by Manna?"
     description: "Is item fulfilled by Manna (currently any new-model mattress)"
     type: yesno
