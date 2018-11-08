@@ -22,7 +22,7 @@
   #  Hotjar----------------------
   #       \           \          \
   #      Hotjar      Shopify     Order
-  #   When Heard      Orders      Flag
+  #    WhenHeard      Orders      Flag
   #-------------------------------------------------------------------
   explore: hotjar_data {
     group_label: "Marketing analytics"
