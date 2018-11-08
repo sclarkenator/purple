@@ -21,8 +21,14 @@ view: bom_demand_matrix {
   }
 
   dimension: INGREDIENT {
+    label: "Sub-Component Name"
     type: string
     sql: ${TABLE}.INGREDIENT ;;
+  }
+
+  dimension: base_unit {
+    type: string
+    sql: ${TABLE}.base_unit ;;
   }
 
   dimension: ROW_NUM_WEST {

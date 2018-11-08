@@ -786,6 +786,15 @@ measure: total_line_item {
     sql: substr(${TABLE}.ZIP,1,5) ;;
   }
 
+  dimension: carrier {
+    view_label: "Fulfillment details"
+    label: "Pre-fulfillment Expected Carrier"
+    description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
+    hidden: yes
+    type: string
+    sql: ${TABLE}.CARRIER ;;
+  }
+
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date]
   }

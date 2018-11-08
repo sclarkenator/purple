@@ -23,6 +23,7 @@ explore: production_report {
 
 
 explore: oee {
+  hidden:  yes
   label: "OEE Table"
   description: "Static OEE Dataset in Snowflake"
 }
@@ -57,6 +58,7 @@ explore: assembly_build {
 }
 
 explore: max_machine_capacity {
+  hidden: yes
   label: "Max Machine Capacity"
   description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"
 }
