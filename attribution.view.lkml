@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Bucketing touches from marketing channel through Heap
+#-------------------------------------------------------------------
+
 view: attribution {
   derived_table: {
     sql: select purch_date
@@ -58,50 +63,44 @@ view: attribution {
       left join heap.sessions s on p.user_id = s.user_id and s.time <= p.purch_time
       order by 1,10
     )
-    group by 1,2,3  ;;}
+    group by 1,2,3  ;; }
 
   dimension_group: date {
-    description:  "Date"
+    label: "Date"
+    description:  "Purch Date from Heap"
     type: time
-    timeframes: [
-      month_name,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.purch_date ;;  }
+    sql: ${TABLE}.purch_date ;; }
 
   dimension: referrer {
-    description: "Referrer website for any given session"
     label: "Referrer site"
+    description: "Referrer website for any given session"
     type: string
-    sql: ${TABLE}.referrer ;;  }
+    sql: ${TABLE}.referrer ;; }
 
   dimension: medium {
-    description: "UTM_MEDIUM for any given session"
-    label: "UTM_medium"
+    label: "UTM Medium"
+    description: "UTM medium for any given session"
     type: string
-    sql: ${TABLE}.medium ;;  }
+    sql: ${TABLE}.medium ;; }
 
   measure: first_touch {
+    label: "Total First Touch Revenue"
     description: "Attributable revenue based on first website session"
-    label: "First-touch revenue"
     type:  sum
-    sql: ${TABLE}.first_touch ;;  }
+    sql: ${TABLE}.first_touch ;; }
 
   measure: last_touch {
+    label: "Total Last Touch Revenue"
     description: "Attributable revenue based on initial purchase session"
-    label: "Last-touch revenue"
     type:  sum
-    sql: ${TABLE}.last_touch ;;  }
+    sql: ${TABLE}.last_touch ;; }
 
   measure: all_touch {
+    label: "Total All Touch Revenue"
     description: "Attributable revenue spread across all unique sessions"
-    label: "All-touch revenue"
     type:  sum
     sql: ${TABLE}.all_touch ;;  }
 

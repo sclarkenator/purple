@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Aditya Kannan
+# Use pulling the sales amounts from netsuite and shopify and comparing
+#   to our sales dataset
+#-------------------------------------------------------------------
 view: agg_check {
   derived_table: {
     sql: select  a.date as DATE,

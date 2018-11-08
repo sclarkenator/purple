@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Aditya Kannan
+# Use pulling the sales amounts from netsuite and comparing to our
+#   sales dataset
+#-------------------------------------------------------------------
 view: agg_check_wholesale {
   derived_table: {
     sql: select to_date(l.fulfilled) as DATE
