@@ -122,84 +122,84 @@
       filters: {field: item.finished_good_flg      value: "1"}
       filters: {field: item.modified               value: "1"}}
     join: sf_zipcode_facts {
-      view_label: "Customer info"
+      view_label: "Customer"
       type:  left_outer
       sql_on: ${sales_order_line.zip} = ${sf_zipcode_facts.zipcode} ;;
       relationship: many_to_one}
     join: item {
-      view_label: "Product info"
+      view_label: "Product"
       type: left_outer
       sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
       relationship: many_to_one}
     join: fulfillment {
-      view_label: "Fulfillment details"
+      view_label: "Fulfillment"
       type: left_outer
       sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
       relationship: many_to_many}
     join: sales_order {
-      view_label: "Order-level info"
+      view_label: "Order-Level"
       type: left_outer
       sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
       relationship: many_to_one}
     join: shopify_orders {
-      view_label: "Sales info"
+      view_label: "Sales"
       type:  left_outer
       fields: [shopify_orders.call_in_order_Flag]
       sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
       relationship:  one_to_one}
     join: return_order_line {
-      view_label: "Returns info"
+      view_label: "Returns"
       type: full_outer
       sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
       relationship: one_to_many}
     join: return_order {
-      view_label: "Returns info"
+      view_label: "Returns"
       type: full_outer
       required_joins: [return_order_line]
       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
       relationship: many_to_one}
     join: return_reason {
-      view_label: "Returns info"
+      view_label: "Returns"
       type: full_outer
       sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
       relationship: many_to_one}
     join: return_option {
-      view_label: "Returns info"
+      view_label: "Returns"
       type: left_outer
       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
       relationship: many_to_one}
     join: customer_table {
-      view_label: "Customer info"
+      view_label: "Customer"
       type: left_outer
       sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
       relationship: many_to_one}
     join: retroactive_discount {
-      view_label: "Retro discounts"
+      view_label: "Retro Discounts"
       type: left_outer
       sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
       relationship: one_to_many}
     join: discount_code {
-      view_label: "Retro discounts"
+      view_label: "Retro Discounts"
       type:  left_outer
       sql_on: ${retroactive_discount.discount_code_id} = ${discount_code.discount_code_id} ;;
       relationship: many_to_one}
     join: cancelled_order {
-      view_label: "Cancelled orders"
+      view_label: "Cancelled"
       type: left_outer
       sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
       relationship: one_to_many}
     join: NETSUITE_cancelled_reason {
-      view_label: "Cancelled orders"
+      view_label: "Cancelled"
       type: left_outer
       sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
       relationship: many_to_one}
     join: order_flag {
-      view_label: "Summary details"
+      view_label: "Summary"
       type: left_outer
       sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
     join: fulfillment_dates {
-      view_label: "Fulfillment date calculations"
+      view_label: "Fulfillment"
       type: left_outer
       sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}}
