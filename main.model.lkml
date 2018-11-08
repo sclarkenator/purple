@@ -107,8 +107,8 @@
   #                  Dates       Orders         Line            \         Reason
   #                            /   |   \          \           Discount
   #                      Shopify   |  Customer    Returns      Code
-  #                              Order            |      \
-  #                              Flag          Return    Return
+  #                              Order    \      |      \
+  #                              Flag     DMA  Return    Return
   #                                            Reason    Option
   #-------------------------------------------------------------------
 
@@ -126,6 +126,11 @@
       view_label: "Customer"
       type:  left_outer
       sql_on: ${sales_order_line.zip} = ${sf_zipcode_facts.zipcode} ;;
+      relationship: many_to_one}
+    join: dma {
+      view_label: "Customer"
+      type:  left_outer
+      sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
       relationship: many_to_one}
     join: item {
       view_label: "Product"
