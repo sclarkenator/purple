@@ -115,6 +115,7 @@
   explore: sales_order_line {
     label:  "DTC sales"
     group_label: "Sales"
+    view_label: "Sales"
     description:  "All sales orders for all channels"
     always_filter: {
       filters: {field: sales_order.channel_id      value: "1"}
