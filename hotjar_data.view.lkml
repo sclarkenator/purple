@@ -6,15 +6,13 @@ view: hotjar_data {
     description: "token combined with how heard"
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.token||${TABLE}.how_heard ;;
-  }
+    sql: ${TABLE}.token||${TABLE}.how_heard ;;  }
 
   dimension: token {
     label: "token"
     description: "checkout token from shopify"
     hidden:  yes
-    sql: ${TABLE}.token ;;
-  }
+    sql: ${TABLE}.token ;;  }
 
   dimension_group: created {
     type: time
@@ -23,98 +21,41 @@ view: hotjar_data {
       week,
       month,
       quarter,
-      year
-    ]
+      year ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."CREATED" ;;
-  }
+    sql: ${TABLE}."CREATED" ;;  }
 
   dimension: how_heard {
     label: "How heard (all responses)"
     description: "Ungrouped responses for how did you hear questions"
     hidden:  no
     type: string
-    sql: ${TABLE}."HOW_HEARD" ;;
-  }
+    sql: ${TABLE}."HOW_HEARD" ;;  }
 
   dimension: heard_group {
     label: "How did you hear?"
     description: "How did you hear about Purple?"
-    case: {
-        when: {
-          sql: ${how_heard} = 'YouTube' ;;
-          label: "YouTube"
-        }
-
-        when: {
-          sql: ${how_heard} like 'Referral%' ;;
-          label: "Word-of-mouth"
-        }
-
-        when: {
-          sql: ${how_heard} = 'Facebook' ;;
-          label: "Facebook"
-        }
-
-        when: {
-          sql: ${how_heard} = 'TV' ;;
-          label: "TV"
-        }
-
-        when: {
-          sql: ${how_heard} like 'Search Engine%' ;;
-          label: "Search engine"
-        }
-
-        when: {
-          sql: ${how_heard} like 'Review We%' ;;
-          label: "Review website"
-        }
-
-      when: {
-          sql: ${how_heard} like 'Website Ba%' ;;
-          label: "Display ad"
-        }
-
-      when: {
-        sql: ${how_heard} like 'Already own%' ;;
-        label: "Already own Purple"
-      }
-
-        when: {
-          sql: ${how_heard} = 'Instagram' ;;
-          label: "Instagram"
-        }
-
-        when: {
-          sql: ${how_heard} = 'Amazon' ;;
-          label: "Amazon"
-        }
-
-        when: {
-          sql: ${how_heard} like 'Sirius%' ;;
-          label: "Sirius XM"
-        }
-
-        when: {
-          sql: ${how_heard} = 'Podcast' ;;
-          label: "Podcast"
-        }
-
-        else: "Other"
-    }
-  }
+    case: { when: {sql: ${how_heard} = 'YouTube' ;; label: "YouTube" }
+      when: { sql: ${how_heard} like 'Referral%' ;; label: "Word-of-mouth" }
+      when: { sql: ${how_heard} = 'Facebook' ;; label: "Facebook" }
+      when: { sql: ${how_heard} = 'TV' ;; label: "TV" }
+      when: { sql: ${how_heard} like 'Search Engine%' ;; label: "Search engine" }
+      when: { sql: ${how_heard} like 'Review We%' ;; label: "Review website" }
+      when: { sql: ${how_heard} like 'Website Ba%' ;; label: "Display ad" }
+      when: { sql: ${how_heard} like 'Already own%' ;; label: "Already own Purple"}
+      when: { sql: ${how_heard} = 'Instagram' ;; label: "Instagram" }
+      when: { sql: ${how_heard} = 'Amazon' ;; label: "Amazon" }
+      when: { sql: ${how_heard} like 'Sirius%' ;; label: "Sirius XM" }
+      when: { sql: ${how_heard} = 'Podcast' ;; label: "Podcast" }
+      else: "Other" } }
 
   measure: count {
-    type: count
-    drill_fields: []
-  }
+    type: count }
 
   measure: respondents {
-#    hidden: yes
+    #hidden: yes
     type: count_distinct
-    sql: ${TABLE}.token ;;
-  }
+    sql: ${TABLE}.token ;;  }
 
 }

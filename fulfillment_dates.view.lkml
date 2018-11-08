@@ -23,64 +23,55 @@ view: fulfillment_dates {
     label: "Days to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  average   #sum??
-    sql:${TABLE}.days_to_ff ;;
-  }
+    sql:${TABLE}.days_to_ff ;;  }
 
   measure: days_between_ff {
     label: "Days between Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  average   #sum??
-    sql:${TABLE}.days_between_ff ;;
-  }
+    sql:${TABLE}.days_between_ff ;;  }
 
   measure: days_to_last_ff {
     label: "Days to the last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
     type:  average   #sum??
-    sql:${TABLE}.days_to_last_ff ;;
-  }
+    sql:${TABLE}.days_to_last_ff ;;  }
 
   dimension: order_id {
     primary_key: yes
     hidden: yes
     type:  number
-    sql: ${TABLE}.order_id ;;
-  }
+    sql: ${TABLE}.order_id ;;  }
 
   dimension: days_to_ff_dimension {
     label: "Days to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  string
-    sql:${TABLE}.days_to_ff ;;
-  }
+    sql:${TABLE}.days_to_ff ;;  }
 
   dimension: days_between_ff_dimension {
     label: "Days between Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  string
-    sql:${TABLE}.days_between_ff ;;
-  }
+    sql:${TABLE}.days_between_ff ;;  }
 
   dimension: days_to_last_ff_dimension {
     label: "Days to the last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
     type:  string
-    sql:${TABLE}.days_to_last_ff ;;
-  }
+    sql:${TABLE}.days_to_last_ff ;;  }
 
   dimension: days_between_ff_sla {
     label: "Days between fulfillments SLA"
     description: "More than 3 Days between fulfillment of first and last item"
     type:  string
-    sql:case when NVL(${TABLE}.days_between_ff,0) >= 4 then '>3' else '=<3' end;;
-  }
+    sql:case when NVL(${TABLE}.days_between_ff,0) >= 4 then '>3' else '=<3' end;;  }
 
   dimension: days_to_ff_sla {
     label: "Days to fulfillment SLA"
     description: "More than 14 days between order date and the first fulfilled item"
     type:  string
-    sql:case when NVL(${TABLE}.days_to_ff,0) >= 14 then '>=14' else '<14' end ;;
-  }
+    sql:case when NVL(${TABLE}.days_to_ff,0) >= 14 then '>=14' else '<14' end ;;  }
 
   dimension: days_to_ff_tier {
     label: "Tier for days between order date and first item fulfilled"
@@ -88,8 +79,7 @@ view: fulfillment_dates {
     type: tier
     style: integer
     tiers: [0,1,3,7,14,21,28]
-    sql: ${TABLE}.days_to_ff;;
-  }
+    sql: ${TABLE}.days_to_ff;;  }
 
   dimension: days_between_ff_tier {
     label: "Tier for days between first and last item fulfilled"
@@ -97,8 +87,7 @@ view: fulfillment_dates {
     type: tier
     style: integer
     tiers: [0,1,3,7,14,21,28]
-    sql: ${TABLE}.days_to_ff;;
-  }
+    sql: ${TABLE}.days_to_ff;;  }
 
   dimension: days_to_last_ff_tier {
     label: "Tier for days between order date and last item fulfilled"
@@ -106,7 +95,6 @@ view: fulfillment_dates {
     type: tier
     style: integer
     tiers: [0,1,3,7,14,21,28]
-    sql: ${TABLE}.days_between_ff;;
-  }
+    sql: ${TABLE}.days_between_ff;;  }
 
 }
