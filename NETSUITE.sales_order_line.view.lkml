@@ -768,7 +768,6 @@ measure: total_line_item {
 
   dimension: tax_amt {
     view_label: "Sales info"
-    hidden: yes
     type: number
     sql: ${TABLE}.TAX_AMT ;;
   }
