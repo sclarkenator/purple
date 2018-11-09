@@ -402,6 +402,7 @@
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
+  explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
   explore: retail_stores {hidden:  yes  label: "list of retail outlets as of Nov 1, 2018"}
   explore: agg_check {hidden: yes  label: "data accuracy"}
   explore: cac {hidden: yes  group_label: "Marketing analytics"  label: "CAC"}

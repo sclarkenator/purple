@@ -26,7 +26,7 @@ view: item {
   dimension: merchandise {
     description: "Is this a merchandising product for wholesale?"
     label: "Merchandising flag"
-    #hidden:  yes
+    hidden:  no
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;;
   }
@@ -34,7 +34,7 @@ view: item {
   dimension: modified {
     description: "Flag field indicating product attributes have been manually set"
     label: "Modified flag"
-    hidden: yes
+    hidden: no
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;
   }
