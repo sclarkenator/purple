@@ -2,7 +2,7 @@ view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
   dimension: item_order{
-    view_label: "Sales info"
+    #view_label: "Sales info"
     type: string
     primary_key:  yes
     hidden:  yes
@@ -10,7 +10,7 @@ view: sales_order_line {
   }
 
   measure: avg_cost {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Avg cost ($)"
     description:  "Average unit cost, only valid looking at item-level data"
     type: average
@@ -19,7 +19,7 @@ view: sales_order_line {
   }
 
   measure: total_estimated_cost {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label: "Estimated Costs ($)"
     description: "Estimated cost value from NetSuite for the cost of materials"
     type: sum
@@ -28,7 +28,7 @@ view: sales_order_line {
   }
 
   measure: total_gross_Amt {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Gross sales ($)"
     description:  "Total the customer paid, excluding tax and freight, in $K"
     type: sum
@@ -37,7 +37,7 @@ view: sales_order_line {
   }
 
   measure: total_gross_Amt_non_rounded {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Gross sales ($) Non-Rounded"
     description:  "Total the customer paid, excluding tax and freight, in $"
     type: sum
@@ -46,7 +46,7 @@ view: sales_order_line {
   }
 
   measure: gross_gross_Amt {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden:  yes
     label:  "Gross-gross sales ($)"
     description:  "Total the customer paid plus value of discounts they received, excluding tax and freight"
@@ -56,7 +56,7 @@ view: sales_order_line {
   }
 
   measure: total_discounts {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Total discounts ($)"
     description:  "Total of all applied discounts when order was placed"
     type: sum
@@ -64,7 +64,7 @@ view: sales_order_line {
   }
 
   measure: avg_days_to_fulfill {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     description: "Average number of days between order and fulfillment"
     type:  average
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;;
@@ -78,7 +78,7 @@ view: sales_order_line {
 #  }
 
   measure: mf_fulfilled {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "MF SLA"
     hidden: yes
     description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
@@ -91,7 +91,7 @@ view: sales_order_line {
   }
 
   measure: mf_units {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "MF SLA"
     hidden: yes
     description: "How many items are there on the order to be shipped?"
@@ -104,7 +104,7 @@ view: sales_order_line {
   }
 
   measure: mf_on_time {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "MF shipped on-time"
     description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
     value_format_name: percent_0
@@ -113,7 +113,7 @@ view: sales_order_line {
   }
 
   measure: whlsl_fulfilled {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Wholesale SLA"
     hidden: yes
     description: "Was the order shipped out by the required ship-by date to arrive on time"
@@ -122,7 +122,7 @@ view: sales_order_line {
   }
 
   measure: whlsl_units {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Wholesale SLA"
     hidden: yes
     description: "How many items are there on the order to be shipped?"
@@ -131,7 +131,7 @@ view: sales_order_line {
   }
 
   measure: whlsl_on_time {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "WHSL shipped on-time"
     description: "Was the order shipped out by the required ship-by date to arrive on time"
     value_format_name: percent_0
@@ -140,7 +140,7 @@ view: sales_order_line {
   }
 
   measure: fulfilled_in_SLA {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "WEST - Fulfillment SLA"
     hidden: yes
     description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
@@ -162,7 +162,7 @@ view: sales_order_line {
   }
 
   measure: manna_fulfilled_in_SLA {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Manna - Fulfillment SLA"
     hidden: yes
     description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
@@ -184,7 +184,7 @@ view: sales_order_line {
   }
 
   measure: amazon_ca_sales {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "used to generate the sales by channel report"
     label: "Amazon-CA gross"
     hidden: yes
@@ -194,7 +194,7 @@ view: sales_order_line {
   }
 
   measure: amazon_us_sales {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "used to generate the sales by channel report"
     label: "Amazon-US gross"
 #    hidden: yes
@@ -204,7 +204,7 @@ view: sales_order_line {
   }
 
   measure: shopify_ca_sales {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "used to generate the sales by channel report"
     label: "Shopify-CA sales"
     hidden: yes
@@ -214,7 +214,7 @@ view: sales_order_line {
   }
 
   measure: shopify_us_sales {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "US Shopify gross sales as reported in Netsuite"
     label: "Shopify-US gross"
  #   hidden: yes
@@ -224,7 +224,7 @@ view: sales_order_line {
   }
 
   measure: unfulfilled_orders {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "Orders placed that have not been fulfilled"
     label: "Unfulfilled orders"
     hidden: no
@@ -233,7 +233,7 @@ view: sales_order_line {
   }
 
   measure: fulfilled_orders {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "Orders placed that have been fulfilled"
     label: "Fulfilled orders"
     hidden: no
@@ -242,7 +242,7 @@ view: sales_order_line {
   }
 
   measure: SLA_eligible {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "WEST SLA eligible"
     hidden: yes
     description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
@@ -263,7 +263,7 @@ view: sales_order_line {
   }
 
   measure: manna_SLA_eligible {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Manna SLA eligible"
     hidden: yes
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
@@ -285,7 +285,7 @@ view: sales_order_line {
 
   measure: SLA_achieved{
     label: "West SLA achievement"
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     description: "% of line items fulfilled by Purple West within 3 days of order"
     type: number
     value_format_name: percent_0
@@ -294,7 +294,7 @@ view: sales_order_line {
 
   measure: manna_sla_achieved{
     label: "Manna SLA achievement"
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     description: "% of line items fulfilled by Manna within 10 days of order"
     type: number
     value_format_name: percent_0
@@ -303,14 +303,14 @@ view: sales_order_line {
 
 measure: total_line_item {
     description: "Total line items to fulfill"
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     type: count_distinct
     sql:  ${item_order} ;;
   }
 
   measure: return_rate_units {
-    view_label: "Returns info"
+    view_label: "Returns"
     label: "Return rate (units)"
     description: "Units returned/Units fulfilled"
     type: number
@@ -319,7 +319,7 @@ measure: total_line_item {
   }
 
   measure: return_rate_dollars {
-    view_label: "Returns info"
+    view_label: "Returns"
     label: "Return rate ($)"
     description: "Total $ returned / Total $ fulfilled"
     type: number
@@ -328,16 +328,16 @@ measure: total_line_item {
   }
 
   measure: total_units {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Gross sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
     sql:  ${TABLE}.ordered_qty ;;
-    drill_fields: [order_id,item.product_description, total_units]
+    drill_fields: [order_id, created_date,  item.product_description, total_units]
   }
 
   dimension: order_age_bucket {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "Number of days between today and when order was placed"
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
@@ -347,7 +347,7 @@ measure: total_line_item {
 
 
   dimension: manna_order_age_bucket {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "Number of days between today and when order was placed for Manna"
     type:  tier
     tiers: [7,14,21,28,35,42]
@@ -381,7 +381,7 @@ measure: total_line_item {
   }
 
   dimension: order_system {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     type: string
     primary_key:  no
     hidden:  yes
@@ -396,14 +396,14 @@ measure: total_line_item {
 
   dimension: city {
     group_label: "Customer address"
-    view_label: "Customer info"
+    view_label: "Customer"
     hidden: yes
     type: string
     sql: ${TABLE}.CITY ;;
   }
 
   dimension: company_id {
-    view_label: "Sales info"
+    #view_label: "Sales"
     hidden: yes
     type: number
     sql: ${TABLE}.COMPANY_ID ;;
@@ -411,7 +411,7 @@ measure: total_line_item {
 
   dimension: country {
     group_label: "Customer address"
-    view_label: "Customer info"
+    view_label: "Customer"
     hidden: yes
     type: string
     map_layer_name: countries
@@ -433,7 +433,7 @@ measure: total_line_item {
   }
 
   dimension_group: created {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label: "Order"
     description:  "Time and date order was placed"
     type: time
@@ -456,7 +456,7 @@ measure: total_line_item {
 
   dimension: day_of_week {
     hidden:  yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label:  "Day of week"
     description: "abbreviated day of week"
     type: string
@@ -615,7 +615,7 @@ measure: total_line_item {
         }
 
   dimension: department_id {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     description: "Internal department IDs (accounting)"
     type: number
@@ -623,7 +623,7 @@ measure: total_line_item {
   }
 
   dimension: discount_amt {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     description:  "Amount of discount to individual items applied at initial order"
     type: number
@@ -631,21 +631,21 @@ measure: total_line_item {
   }
 
   dimension: discount_cancel_type {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
       type: string
     sql: ${TABLE}.DISCOUNT_CANCEL_TYPE ;;
   }
 
   dimension: discount_code {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.DISCOUNT_CODE ;;
   }
 
   dimension: estimated_cost {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     label: "Estimated COGS"
     description: "Estimated COGS, excluding freight"
@@ -655,7 +655,7 @@ measure: total_line_item {
 
   dimension: etail_order_line_id {
     hidden:  yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label: "Shopify order line ID"
     description: "You can use this ID to look up orders in Shopify"
     type: string
@@ -663,7 +663,7 @@ measure: total_line_item {
   }
 
   dimension_group: fulfilled {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [
@@ -680,14 +680,14 @@ measure: total_line_item {
 
 
   dimension: fulfillment_method {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     hidden: no
     type: string
     sql: ${TABLE}.FULFILLMENT_METHOD ;;
   }
 
   dimension: insert_ts {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.INSERT_TS ;;
@@ -695,13 +695,13 @@ measure: total_line_item {
 
   dimension: item_id {
     hidden:  yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     type: number
     sql: ${TABLE}.ITEM_ID ;;
   }
 
   dimension: location {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label:  "Fulfillment warehouse"
     description:  "Warehouse that order was fulfilled out of"
     type: string
@@ -710,7 +710,7 @@ measure: total_line_item {
 
   dimension: gross_amt {
     hidden: no
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label: "Gross sales ($)"
     description: "Gross sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
     type: number
@@ -719,7 +719,7 @@ measure: total_line_item {
 
   dimension: order_id {
     hidden: yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
@@ -728,7 +728,7 @@ measure: total_line_item {
 
   dimension: ordered_qty {
     hidden: yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     description: "Gross sales (units)"
     type: number
     sql: ${TABLE}.ORDERED_QTY ;;
@@ -736,7 +736,7 @@ measure: total_line_item {
 
   dimension: pre_discount_amt {
     hidden:  yes
-    view_label: "Sales info"
+    #view_label: "Sales info"
     label: "Pre-discounted price"
     description: "Price of item before any discounts or promotions are applied"
     type: number
@@ -744,21 +744,21 @@ measure: total_line_item {
   }
 
   dimension: refund_link_id {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     type: number
     sql: ${TABLE}.REFUND_LINK_ID ;;
   }
 
   dimension: street_address {
-    view_label: "Customer info"
+    view_label: "Customer"
     group_label: "Customer address"
     type: string
     sql: ${TABLE}.STREET_ADDRESS ;;
   }
 
   dimension: system {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     label: "Source system"
     description: "This is the system the data came from"
@@ -767,24 +767,32 @@ measure: total_line_item {
   }
 
   dimension: tax_amt {
-    view_label: "Sales info"
-    hidden: yes
+    #view_label: "Sales info"
     type: number
     sql: ${TABLE}.TAX_AMT ;;
   }
 
   dimension: update_ts {
-    view_label: "Sales info"
+    #view_label: "Sales info"
     hidden: yes
     type: string
     sql: ${TABLE}.UPDATE_TS ;;
   }
 
   dimension: zip {
-    view_label: "Customer info"
+    view_label: "Customer"
     group_label: "Customer address"
     type: zipcode
     sql: substr(${TABLE}.ZIP,1,5) ;;
+  }
+
+  dimension: carrier {
+    view_label: "Fulfillment"
+    label: "Pre-fulfillment Expected Carrier"
+    description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
+    hidden: yes
+    type: string
+    sql: ${TABLE}.CARRIER ;;
   }
 
   set: fulfill_details {

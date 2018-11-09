@@ -126,6 +126,7 @@ view: return_order {
 
   dimension: return_option_id {
     description: "How customer chooses to dispose/return item"
+    #hidden:  yes
     type: number
     sql: ${TABLE}.RETURN_OPTION_ID ;;
   }

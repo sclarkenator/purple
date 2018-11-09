@@ -5,15 +5,13 @@ view: mattress_firm_sales {
     type: string
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.mf_sku || || ${TABLE}.store_id || ||  ${TABLE}.created_utc;;
-  }
+    sql: ${TABLE}.mf_sku || || ${TABLE}.store_id || ||  ${TABLE}.created_utc;; }
 
 
   dimension: mf_sku{
     hidden:  yes
     type:  string
-    sql:  ${TABLE}.mf_Sku ;;
-  }
+    sql:  ${TABLE}.mf_Sku ;; }
 
   dimension_group: finalized_date{
     type:  time
@@ -22,34 +20,28 @@ view: mattress_firm_sales {
       week,
       month,
       quarter,
-      year,
-    ]
+      year ]
     datatype: date
-    sql: ${TABLE}.finalized_date ;;
-  }
+    sql: ${TABLE}.finalized_date ;; }
 
   dimension: store_id {
     hidden:  yes
     type:  string
-    sql:  ${TABLE}.store_id ;;
-  }
+    sql:  ${TABLE}.store_id ;; }
 
   measure: final_units {
     label: "Total units sold"
     description: "Total units finalized to customer"
     type:  sum
-    sql:  ${TABLE}.final_units ;;
-  }
+    sql:  ${TABLE}.final_units ;; }
 
   measure: avg_units {
     label: "Average units sold"
     description: "Average units finalized to customer"
     type:  average
-    sql:  ${TABLE}.final_units ;;
-  }
+    sql:  ${TABLE}.final_units ;; }
 
   measure: transaction_count {
-    type: count
-  }
+    type: count }
 
 }

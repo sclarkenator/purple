@@ -2,7 +2,7 @@ view: retail_stores {
   sql_table_name: CSV_UPLOADS.RETAIL_STORES ;;
 
   dimension: address {
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}."ADDRESS" ;;
   }

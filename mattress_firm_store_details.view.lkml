@@ -4,51 +4,42 @@ view: mattress_firm_store_details {
   dimension: store_id {
     type:  string
     primary_key: yes
-    sql:  ${TABLE}.store_id ;;
-  }
+    sql:  ${TABLE}.store_id ;; }
 
   dimension: district {
     type:  string
-    sql:  ${TABLE}.district ;;
-  }
+    sql:  ${TABLE}.district ;; }
 
   dimension: market {
     type:  string
-    sql:  ${TABLE}.market ;;
-  }
+    sql:  ${TABLE}.market ;; }
 
   dimension: market_state {
     type:  string
-    sql:  ${TABLE}.market_state ;;
-  }
+    sql:  ${TABLE}.market_state ;; }
 
   dimension: coordinates {
     type:  location
     sql_latitude: ${TABLE}.latitude ;;
-    sql_longitude: ${TABLE}.longitude ;;
-  }
+    sql_longitude: ${TABLE}.longitude ;; }
 
   dimension: address {
     type:  string
-    sql:  ${TABLE}.address ;;
-  }
+    sql:  ${TABLE}.address ;; }
 
   dimension: city {
     type:  string
-    sql:  ${TABLE}.city ;;
-  }
+    sql:  ${TABLE}.city ;; }
 
   dimension: state {
     type:  string
-    sql:  ${TABLE}.state ;;
-  }
+    sql:  ${TABLE}.state ;; }
 
   dimension: zipcode {
     type:  zipcode
-    sql:  ${TABLE}.zip ;;
-  }
+    sql:  ${TABLE}.zip ;; }
 
-    dimension_group: start_date{
+  dimension_group: start_date{
     hidden:  yes
     description: "Date Mattress Firm started selling Purple in this location"
     type:  time
@@ -57,16 +48,11 @@ view: mattress_firm_store_details {
       week,
       month,
       quarter,
-      year
-    ]
+      year ]
     datatype: date
-    sql: ${TABLE}.start_date ;;
-  }
+    sql: ${TABLE}.start_date ;; }
 
   measure: store_count {
-    type:  count
+    type:  count }
 
-  }
-
-
- }
+}

@@ -5,7 +5,7 @@ dimension: Primary_key{
   primary_key: yes
   hidden: yes
   type: string
-  sql: ${TABLE}."PURCHASE_ORDER_ID"||"L"||${TABLE}."PURCHASE_ORDER_LINE_ID" ;;
+  sql: ${TABLE}."PURCHASE_ORDER_ID"||'L'||${TABLE}."PURCHASE_ORDER_LINE_ID" ;;
 }
 
   dimension: purchase_order_line_id {
@@ -202,6 +202,11 @@ dimension: Primary_key{
   measure: line_count {
     type: count
     drill_fields: [purchase_order_line_id, purchase_order.purchase_order_id]
+  }
+
+  measure: total_amount {
+    type: sum
+    sql: ${TABLE}."AMOUNT" ;;
   }
 
   measure: Total_quantity_received {

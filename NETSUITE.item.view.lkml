@@ -16,6 +16,13 @@ view: item {
     sql: ${TABLE}.classification ;;
   }
 
+  dimension: type {
+    #description: "What stage is this item in production?"
+    #label: "Item classification"
+    type: string
+    sql: ${TABLE}.type ;;
+  }
+
   dimension: merchandise {
     description: "Is this a merchandising product for wholesale?"
     label: "Merchandising flag"
@@ -147,7 +154,7 @@ view: item {
   }
 
   dimension: manna_fulfilled {
-    view_label: "Fulfillment details"
+    view_label: "Fulfillment"
     label: "Fulfilled by Manna?"
     description: "Is item fulfilled by Manna (currently any new-model mattress)"
     type: yesno
@@ -253,6 +260,11 @@ view: item {
       when: {
         sql: ${TABLE}.classification = 'FG' ;;
         label: "Finished Good"
+      }
+
+      when: {
+        sql: ${TABLE}.classification = 'FS' ;;
+        label: "Factory Second"
       }
 
       when: {
