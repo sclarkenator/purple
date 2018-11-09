@@ -444,6 +444,7 @@ measure: total_line_item {
       month_num,
       date,
       week,
+      week_of_year,
       month,
       quarter,
       year,
