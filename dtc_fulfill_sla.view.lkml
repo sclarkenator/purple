@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# DTC Fulfillment SLA
+#-------------------------------------------------------------------
+
 view: dtc_fulfill_sla {
   derived_table: {
     sql: select order_id
@@ -24,25 +29,19 @@ view: dtc_fulfill_sla {
     )  ;;}
 
   dimension_group: order {
-    view_label: "SLA achievement"
+    #view_label: "SLA achievement"
     label: "Order"
-    description:  "Date order was placed"
+    description: "Date order was placed"
     type: time
-    timeframes: [
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      day_of_week ]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}.order_date ;; }
 
   dimension: sla_filter {
-    label: "30-day SLA filter"
+    label: "30-day SLA Window"
     view_label: "x - report filters"
-    description: "Filter to keep days within SLA window suppressed in visualization"
+    description: "Filter to keep days within SLA window suppressed in visualization (30 days before 5 days ago)"
     type: yesno
     sql: ${order_date} > dateadd(day,-35,current_date) and ${order_date} < dateadd(day,-5,current_date) ;; }
 
@@ -53,15 +52,13 @@ view: dtc_fulfill_sla {
     sql: ${TABLE}.order_id ;; }
 
   dimension: sla_achieved {
-    view_label: "SLA achievement"
-    label: "SLA achieved (y/n)"
-    description: "Was this customer's entire order fulfilled in 5-day SLA window?"
+    label: "SLA Achieved"
+    description: "Yes/No - Was this customer's entire order fulfilled in 5-day SLA window?"
     type: yesno
     sql: ${TABLE}.sla_met = 1 ;;  }
 
   measure: SLA_MET {
-    view_label: "SLA achievement"
-    label: "SLA achieved"
+    label: "Total SLA Achieved"
     hidden:  yes
     type: sum
     sql: ${TABLE}.sla_met ;;  }
@@ -74,9 +71,8 @@ view: dtc_fulfill_sla {
     sql: ${TABLE}.eligible_order ;;  }
 
   measure: SLA_RATE {
-    label: "SLA achievement"
-    view_label: "SLA achievement"
-    description: "What percent of complete, eligible orders are fulfilled in 5-day window?"
+    label: "SLA Rate"
+    description: "What percent of complete, eligible orders are fulfilled in 5-day window? (SLA Met/Eligiable Orders)"
     type: number
     value_format_name: percent_0
     sql: ${SLA_MET}/nullif(${ELIGIBLE_ORDERS},0) ;;  }

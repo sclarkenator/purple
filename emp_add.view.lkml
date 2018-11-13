@@ -1,9 +1,14 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Employee Addresses
+#-------------------------------------------------------------------
+
 view: emp_add {
   sql_table_name: CSV_UPLOADS.EMP_ADD ;;
 
   dimension: emp_loc {
-    description: "lat and long for employee address"
-    label: "Lat. and long."
+    description: "Lattitude and Longitude for employee address"
+    label: "Lat & Long"
     type: location
     sql_latitude: ${lat} ;;
     sql_longitude: ${lat2} ;;
@@ -12,56 +17,61 @@ view: emp_add {
   dimension: lat {
     hidden: yes
     type: string
-    sql: ${TABLE}."LAT" ;;
+    sql: ${TABLE}.lat ;;
   }
 
   dimension: lat2 {
     hidden: yes
-    label: "longitude"
     type: string
-    sql: ${TABLE}."LAT2" ;;
+    sql: ${TABLE}.lat2 ;;
   }
 
   dimension: address {
+    label: "Address"
     type: string
-    sql: ${TABLE}."ADDRESS" ;;
+    sql: ${TABLE}.address ;;
   }
 
   dimension: city {
+    label: "City"
     type: string
-    sql: ${TABLE}."CITY" ;;
+    sql: ${TABLE}.city ;;
   }
 
   dimension: state {
+    label: "State"
     type: string
-    sql: ${TABLE}."STATE" ;;
+    sql: ${TABLE}.state ;;
   }
 
   dimension: zip {
+    label: "Zip"
     type: zipcode
-    sql: ${TABLE}."ZIP" ;;
+    sql: ${TABLE}.zip ;;
   }
 
   dimension: location {
+    label: "Location"
     description: "Main employment location"
     type: string
-    sql: ${TABLE}."LOCATION" ;;
+    sql: ${TABLE}.location ;;
   }
 
   dimension: title {
-    description: "Job title"
+    description: "Job Title"
     type: string
-    sql: ${TABLE}."TITLE" ;;
+    sql: ${TABLE}.title ;;
   }
 
   dimension: type {
+    label: "Type"
     description: "Employee type"
     type: string
-    sql: ${TABLE}."TYPE" ;;
+    sql: ${TABLE}.type ;;
   }
 
   measure: count {
     type: count
-    drill_fields: []
   }
+
 }

@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Fulfillment
+#-------------------------------------------------------------------
+
 view: fulfillment {
   sql_table_name: SALES.FULFILLMENT ;;
 
@@ -8,36 +13,24 @@ view: fulfillment {
     sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;  }
 
   dimension: carrier {
-    label: "Shipping provider"
+    label: "Shipping Provider"
     description: "What shipping provider was used to fulfill this part of the order?"
     type: string
-    sql: ${TABLE}."CARRIER" ;;  }
+    sql: ${TABLE}.carrier ;;  }
 
   dimension_group: created {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year  ]
-    sql: ${TABLE}."CREATED" ;;  }
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created ;; }
 
   dimension_group: fulfilled {
     hidden: yes
     type: time
-    timeframes: [
-      date,
-      week,
-      month,
-      quarter,
-      year  ]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
-    sql:to_timestamp_ntz(${TABLE}.FULFILLED) ;;  }
+    sql:to_timestamp_ntz(${TABLE}.fulfilled) ;;  }
 
   parameter: timeframe_picker{
     label: "Date Granularity Fulfillment"
@@ -59,64 +52,50 @@ view: fulfillment {
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year ]
-    sql: ${TABLE}."INSERT_TS" ;;  }
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.insert_ts ;; }
 
   dimension: item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."ITEM_ID" ;;  }
+    sql: ${TABLE}.item_id ;; }
 
   dimension: order_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."ORDER_ID" ;;  }
+    sql: ${TABLE}.order_id ;; }
 
   dimension: parent_item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."PARENT_ITEM_ID" ;;  }
+    sql: ${TABLE}.parent_item_id ;; }
 
   dimension: quantity {
     hidden: yes
     type: number
-    sql: ${TABLE}."QUANTITY" ;;  }
+    sql: ${TABLE}.quantity ;; }
 
   dimension: shipping {
     hidden: yes
     type: number
-    sql: ${TABLE}."SHIPPING" ;;  }
+    sql: ${TABLE}.shipping ;; }
 
   dimension: system {
     hidden: yes
     type: string
-    sql: ${TABLE}."SYSTEM" ;;  }
+    sql: ${TABLE}.system ;; }
 
   dimension: tranid {
     hidden: yes
     type: number
     value_format_name: id
-    sql: ${TABLE}."TRANID" ;;  }
+    sql: ${TABLE}.tranid ;; }
 
   dimension_group: update_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year  ]
-    sql: ${TABLE}."UPDATE_TS" ;;  }
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.update_ts ;; }
 
   measure: count {
     hidden: yes
@@ -124,8 +103,8 @@ view: fulfillment {
     drill_fields: [PK] }
 
   measure: total_shipping {
-    label: "Direct shipping costs"
+    label: "Total Direct Shipping Costs"
     description: "Direct shipping costs incurred, not including last-mile or other transfer costs"
     type: sum
-    sql: ${TABLE}.shipping ;;  }
+    sql: ${TABLE}.shipping ;; }
 }
