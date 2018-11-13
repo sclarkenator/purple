@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Customer Acquisition Cost
+#-------------------------------------------------------------------
+
 view: cac {
   derived_table: {
   sql: select spend.date
@@ -85,46 +90,45 @@ view: cac {
   order by 1 ;; }
 
   dimension_group: date {
-    description:  "Date"
+    #label: "Date" #Static?
+    description:  "A static date with the spend of that day and purchases from that day joined"
     type: time
-    timeframes: [
-      month_name,
-      date,
-      week,
-      month,
-      quarter,
-      year]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}.date ;;  }
 
   measure: new_customers {
-    description: "New customers"
+    label: "Total New Customers"
+    description: "Total New Customers from specified time period"
     type: sum
     value_format_name: decimal_0
     sql: ${TABLE}.new_customers ;;  }
 
   measure: allocated_spend {
-    description: "allocated spend"
+    label: "Total Allocated Spend"
+    description: "Total Allocated Spend from specified time period"
     type: sum
     value_format_name: decimal_0
     sql: ${TABLE}.allocated_spend ;;  }
 
   measure: CAC {
-    description: "Customer acqusition cost"
-    label: "CAC"
+    #label: "CAC"
+    description: "Customer Acqusition Cost - Spend/New Customers"
     type:  number
     value_format_name: decimal_0
     sql: ${allocated_spend}/${new_customers} ;;  }
 
   measure: total_LTV {
-    description: "sum total of all sales based on first purchase day"
+    label: "Total LVT"
+    description: "Total of all sales based on first purchase day"
     hidden:  yes
     type: sum
     sql:  ${TABLE}.LTV ;;  }
 
   measure: LTV {
-    description: "sum total of all sales based on first purchase day"
+    label: "LTV"
+    description: "Total of all sales based on first purchase day / total new customers"
     type: number
     value_format_name: decimal_0
     sql:  ${total_LTV}/${new_customers} ;;  }
