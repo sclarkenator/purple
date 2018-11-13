@@ -340,6 +340,7 @@ view: sales_order {
 
   dimension: tranid {
     view_label: "Sales"
+    description: "Netsuite's Sale Order Number"
     hidden: yes
     type: string
     sql: ${TABLE}.TRANID ;;
