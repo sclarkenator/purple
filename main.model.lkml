@@ -410,6 +410,7 @@
     #-------------------------------------------------------------------
 
   explore: all_events {
+    hidden: yes
     label: "All Events (heap)"
     group_label: "Marketing"
     description: "All Website Event Data from Heap Block"
