@@ -382,4 +382,11 @@ view: sales_order {
     sql: ${TABLE}.WARRANTY_CLAIM_ID is not null ;;
   }
 
+  dimension: manna_transmission {
+    label: "Manna Transmission"
+    description: "At the sales header level this is confirmation/acceptance from manna to netsuite that they will start the process of fulfillment"
+    type: date
+    sql: ${TABLE}.manna_transmission ;;
+  }
+
 }
