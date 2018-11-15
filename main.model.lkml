@@ -25,7 +25,7 @@
   #    WhenHeard      Orders      Flag
   #-------------------------------------------------------------------
   explore: hotjar_data {
-    group_label: "Marketing analytics"
+    group_label: "Marketing"
     label: "Hotjar survey results"
     description: "Results form Hotjar post-purchase survey"
     join: hotjar_whenheard {
@@ -50,7 +50,7 @@
   #-------------------------------------------------------------------
 
   explore: daily_adspend {
-    group_label: "Marketing analytics"
+    group_label: "Marketing"
     label: "Adspend"
     description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."}
 
@@ -439,11 +439,12 @@
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
+  explore: sessions {hidden: yes}
   explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
   explore: retail_stores {hidden:  yes  label: "list of retail outlets as of Nov 1, 2018"}
   explore: agg_check {hidden: yes  label: "data accuracy"}
-  explore: cac {hidden: yes  group_label: "Marketing analytics"  label: "CAC"}
-  explore: attribution {hidden: yes  label: "HEAP attribution"  group_label: "Marketing analytics"}
+  explore: cac {hidden: yes  group_label: "Marketing"  label: "CAC"}
+  explore: attribution {hidden: yes  label: "HEAP attribution"  group_label: "Marketing"}
   explore: progressive {hidden: yes  label: "Progressive"  group_label: "x - Accounting"  description: "Progressive lease information."
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
