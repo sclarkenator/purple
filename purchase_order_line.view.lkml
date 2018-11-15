@@ -234,6 +234,7 @@ dimension: Primary_key{
     type: sum
     description: "Of the total item count, how many have not been received"
     value_format: "#,##0"
-    sql: ${TABLE}."ITEM_COUNT" - ${TABLE}."QUANTITY_RECEIVED_IN_SHIPMENT" ;;
+    sql: case when ${TABLE}."QUANTITY_RECEIVED_IN_SHIPMENT" is null then ${TABLE}."ITEM_COUNT"
+          else ${TABLE}."ITEM_COUNT" - ${TABLE}."QUANTITY_RECEIVED_IN_SHIPMENT" end ;;
   }
 }
