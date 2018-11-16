@@ -399,7 +399,7 @@ view: sales_order {
     label: "Manna Transmission Success"
     description: "A yes/no dimension for if an order has successfully transmitted to Manna"
     type: yesno
-    sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS ;;
+    sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';;
   }
 
 
