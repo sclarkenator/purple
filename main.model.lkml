@@ -410,7 +410,7 @@
     #-------------------------------------------------------------------
 
   explore: all_events {
-    hidden: yes
+    #hidden: yes
     label: "All Events (heap)"
     group_label: "Marketing"
     description: "All Website Event Data from Heap Block"
@@ -427,7 +427,7 @@
 
     join: zip_codes_city {
       type: left_outer
-      sql_on: ${sessions.city} = ${zip_codes_city.city} ;;
+      sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
       relationship: one_to_one }
 
     join: dma {
