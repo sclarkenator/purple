@@ -6,7 +6,7 @@ view: zip_codes_city {
         , state_name
         , min(zip_string) as city_zip
       FROM analytics.csv_uploads.zip_codes
-      where city IS NOT NULL
+      where city IS NOT NULL and in_dma = TRUE
       GROUP BY city, state_name
       ;;
   }
