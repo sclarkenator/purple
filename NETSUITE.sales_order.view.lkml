@@ -341,7 +341,7 @@ view: sales_order {
   dimension: tranid {
     view_label: "Sales"
     description: "Netsuite's Sale Order Number"
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.TRANID ;;
   }
@@ -388,5 +388,19 @@ view: sales_order {
     type: date
     sql: ${TABLE}.manna_transmission ;;
   }
+
+  measure: manna_transmission_Average {
+    label: "Ave. Days to Manna Transmission"
+    description: "Finds the average time elapsed between Order Date and Manna Transmission Date"
+    type: average
+    sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;;
+  }
+  dimension: manna_transmission_succ {
+    label: "Manna Transmission Success"
+    description: "A yes/no dimension for if an order has successfully transmitted to Manna"
+    type: yesno
+    sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS ;;
+  }
+
 
 }
