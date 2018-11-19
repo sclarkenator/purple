@@ -25,7 +25,7 @@ view: inventory_snap {
   dimension_group: created {
     label: "Created"
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
   measure: inbound {
