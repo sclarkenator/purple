@@ -426,7 +426,7 @@
     join: session_facts {
       view_label: "Sessions"
       type: left_outer
-      sql_on: ${session_unique_id} = ${session_facts.session_unique_id} ;;
+      sql_on: ${sessions.session_id} = ${session_facts.session_unique_id} ;;
       relationship: one_to_one }
     join: event_flow {
       sql_on: ${all_events.event_id} = ${event_flow.unique_event_id} ;;
