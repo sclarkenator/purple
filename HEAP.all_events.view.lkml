@@ -1,46 +1,40 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+# Recreating the Heap Block so we can join addtional data
+#-------------------------------------------------------------------
+
 view: all_events {
   sql_table_name: heap.all_events ;;
 
   dimension: event_id {
+    hidden: yes
     type: number
-    sql: ${TABLE}.event_id ;;
-  }
+    sql: ${TABLE}.event_id ;; }
 
   dimension: event_table_name {
+    label: "Event Table Name"
     type: string
-    sql: ${TABLE}.event_table_name ;;
-  }
+    sql: ${TABLE}.event_table_name ;; }
 
   dimension: session_id {
+    hidden: yes
     type: number
-    # hidden: yes
-    sql: ${TABLE}.session_id ;;
-  }
+    sql: ${TABLE}.session_id ;; }
 
   dimension_group: time {
+    #label: "??"
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.time ;;
-  }
+    timeframes:  [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.time ;; }
 
   dimension: user_id {
+    hidden: yes
     type: number
-    # hidden: yes
-    sql: ${TABLE}.user_id ;;
-  }
+    sql: ${TABLE}.user_id ;; }
 
   measure: count {
     type: count
-    drill_fields: [detail*]
-  }
+    drill_fields: [detail*] }
 
   # ----- Sets of fields for drilling ------
   set: detail {
@@ -64,7 +58,5 @@ view: all_events {
       users.talkable_campaign_name,
       users.full_name,
       sessions.session_id,
-      sessions.app_name
-    ]
-  }
+      sessions.app_name] }
 }

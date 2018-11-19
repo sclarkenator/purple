@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+# Recreating the Heap Block so we can join addtional data
+#-------------------------------------------------------------------
+
 view: session_facts {
   derived_table: {
     sortkeys: ["session_start_time"]
@@ -18,66 +23,66 @@ view: session_facts {
   }
 
   dimension: session_unique_id {
-    type: string
     primary_key: yes
     hidden: yes
-    sql: ${TABLE}.session_unique_id ;;
-  }
+    type: string
+    sql: ${TABLE}.session_unique_id ;; }
 
   dimension: user_id {
-    type: number
     hidden: yes
-    sql: ${TABLE}.user_id ;;
-  }
+    type: number
+    sql: ${TABLE}.user_id ;; }
 
   dimension: session_sequence_number {
+    label: "Session Sequence Number"
     type: number
-    sql: ${TABLE}.session_sequence_number ;;
-  }
+    sql: ${TABLE}.session_sequence_number ;; }
 
   dimension: is_first_session {
+    label: "Is First Session"
+    description: "Yes/No value for if it is the first session"
     type: yesno
-    sql: ${session_sequence_number} = 1 ;;
-  }
+    sql: ${session_sequence_number} = 1 ;; }
 
   dimension_group: session_start_time {
+    label: "Session Start Time"
     type: time
-    timeframes: [time, date, week, month, hour_of_day, day_of_week_index]
-    sql: ${TABLE}.session_start_time ;;
-  }
+    timeframes: [time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.session_start_time ;; }
 
   dimension_group: session_end_time {
+    label: "Session End Time"
     type: time
-    timeframes: [time, date, week, month, hour_of_day, day_of_week_index]
-    sql: ${TABLE}.session_end_time ;;
-  }
+    timeframes: [time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.session_end_time ;; }
 
   dimension: session_duration_minutes {
+    label: "Session Durations (minutes)"
     type: number
     sql: extract(epoch from (${TABLE}.session_end_time - ${TABLE}.session_start_time))/60 ;;
-    value_format_name: decimal_2
-  }
+    value_format_name: decimal_2 }
 
   dimension: event_count {
+    label: "Event Count"
     type: number
-    sql: ${TABLE}."all_events.count" ;;
-  }
+    sql: ${TABLE}.all_events.count ;; }
 
   dimension: is_bounced {
+    label: "Bounced"
+    description: "Yes/No on if it bounced"
     type: yesno
-    # update to definition of bounced session relevant to Heap implementation
-    sql: ${event_count} = 1 ;;
-  }
+    sql: ${event_count} = 1 ;; }
 
   measure: average_events_per_session {
+    label: "Average Events per Session"
     type: average
     sql: ${event_count} ;;
-    value_format_name: decimal_1
-  }
+    value_format_name: decimal_1 }
 
   measure: average_session_duration_minutes {
+    label: "Average Session Duration (minutes)"
     type: average
     sql: ${session_duration_minutes} ;;
-    value_format_name: decimal_2
-  }
+    value_format_name: decimal_2 }
+
 }

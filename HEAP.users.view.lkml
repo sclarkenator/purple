@@ -1,146 +1,127 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+# Recreating the Heap Block so we can join addtional data
+#-------------------------------------------------------------------
+
 view: users {
   sql_table_name: heap.users ;;
 
   dimension: user_id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}.user_id ;;
   }
 
   dimension: _email {
+    label: "Email"
     type: string
     sql: ${TABLE}._email ;;
   }
 
   dimension: abandoned_cart_1st_conversion_did_not_use_incentive {
     type: string
-    sql: ${TABLE}.abandoned_cart_1st_conversion_did_not_use_incentive ;;
-  }
+    sql: ${TABLE}.abandoned_cart_1st_conversion_did_not_use_incentive ;; }
 
   dimension: abandoned_cart_active_last_clicked {
     type: string
-    sql: ${TABLE}.abandoned_cart_active_last_clicked ;;
-  }
+    sql: ${TABLE}.abandoned_cart_active_last_clicked ;; }
 
   dimension: abandoned_cart_active_last_opened {
     type: string
-    sql: ${TABLE}.abandoned_cart_active_last_opened ;;
-  }
+    sql: ${TABLE}.abandoned_cart_active_last_opened ;; }
 
   dimension: abandoned_cart_campaign_version {
     type: string
-    sql: ${TABLE}.abandoned_cart_campaign_version ;;
-  }
+    sql: ${TABLE}.abandoned_cart_campaign_version ;; }
 
   dimension: abandoned_cart_categories_bought {
     type: string
-    sql: ${TABLE}.abandoned_cart_categories_bought ;;
-  }
+    sql: ${TABLE}.abandoned_cart_categories_bought ;; }
 
   dimension: abandoned_cart_categories_text {
     type: string
-    sql: ${TABLE}.abandoned_cart_categories_text ;;
-  }
+    sql: ${TABLE}.abandoned_cart_categories_text ;; }
 
   dimension: abandoned_cart_conversion_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_conversion_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_conversion_date ;; }
 
   dimension: abandoned_cart_converted {
     type: string
-    sql: ${TABLE}.abandoned_cart_converted ;;
-  }
+    sql: ${TABLE}.abandoned_cart_converted ;; }
 
   dimension: abandoned_cart_counter {
     type: string
-    sql: ${TABLE}.abandoned_cart_counter ;;
-  }
+    sql: ${TABLE}.abandoned_cart_counter ;; }
 
   dimension: abandoned_cart_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_date ;; }
 
   dimension: abandoned_cart_first_start_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_first_start_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_first_start_date ;; }
 
   dimension: abandoned_cart_last_click_conversion_attribution {
     type: string
-    sql: ${TABLE}.abandoned_cart_last_click_conversion_attribution ;;
-  }
+    sql: ${TABLE}.abandoned_cart_last_click_conversion_attribution ;; }
 
   dimension: abandoned_cart_last_clicked_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_last_clicked_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_last_clicked_date ;; }
 
   dimension: abandoned_cart_last_open_conversion_attribution {
     type: string
-    sql: ${TABLE}.abandoned_cart_last_open_conversion_attribution ;;
-  }
+    sql: ${TABLE}.abandoned_cart_last_open_conversion_attribution ;; }
 
   dimension: abandoned_cart_last_opened_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_last_opened_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_last_opened_date ;; }
 
   dimension: abandoned_cart_number_of_products_bought {
     type: string
-    sql: ${TABLE}.abandoned_cart_number_of_products_bought ;;
-  }
+    sql: ${TABLE}.abandoned_cart_number_of_products_bought ;; }
 
   dimension: abandoned_cart_products {
     type: string
-    sql: ${TABLE}.abandoned_cart_products ;;
-  }
+    sql: ${TABLE}.abandoned_cart_products ;; }
 
   dimension: abandoned_cart_products_bought {
     type: string
-    sql: ${TABLE}.abandoned_cart_products_bought ;;
-  }
+    sql: ${TABLE}.abandoned_cart_products_bought ;; }
 
   dimension: abandoned_cart_products_html {
     type: string
-    sql: ${TABLE}.abandoned_cart_products_html ;;
-  }
+    sql: ${TABLE}.abandoned_cart_products_html ;; }
 
   dimension: abandoned_cart_products_text {
     type: string
-    sql: ${TABLE}.abandoned_cart_products_text ;;
-  }
+    sql: ${TABLE}.abandoned_cart_products_text ;; }
 
   dimension: abandoned_cart_recovery_workflow_conversion {
     type: string
-    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion ;;
-  }
+    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion ;; }
 
   dimension: abandoned_cart_recovery_workflow_conversion_amount {
     type: string
-    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion_amount ;;
-  }
+    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion_amount ;; }
 
   dimension: abandoned_cart_recovery_workflow_conversion_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_recovery_workflow_conversion_date ;; }
 
   dimension: abandoned_cart_recovery_workflow_start_date {
     type: string
-    sql: ${TABLE}.abandoned_cart_recovery_workflow_start_date ;;
-  }
+    sql: ${TABLE}.abandoned_cart_recovery_workflow_start_date ;; }
 
   dimension: abandoned_cart_roi {
     type: string
-    sql: ${TABLE}.abandoned_cart_roi ;;
-  }
+    sql: ${TABLE}.abandoned_cart_roi ;; }
 
   dimension: abandoned_cart_start_abandoned_cart_value {
     type: string
-    sql: ${TABLE}.abandoned_cart_start_abandoned_cart_value ;;
-  }
+    sql: ${TABLE}.abandoned_cart_start_abandoned_cart_value ;; }
 
   dimension: abandoned_cart_start_categories_abandoned {
     type: string

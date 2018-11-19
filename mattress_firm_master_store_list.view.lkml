@@ -1,104 +1,134 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Mattress firm master store list
+#-------------------------------------------------------------------
+
 view: mattress_firm_master_store_list {
   sql_table_name: mattress_firm.master_store_list ;;
 
   measure: count {
+    label: "Count"
     type: count
     drill_fields: [detail*] }
 
   dimension: store_id {
-    type: number
     primary_key: yes
-    sql: ${TABLE}."STORE_ID" ;; }
+    hidden: yes
+    type: number
+    sql: ${TABLE}.store_id ;; }
 
   dimension: market {
+    label: "Market"
     type: string
-    sql: ${TABLE}."MARKET" ;; }
+    sql: ${TABLE}.market ;; }
 
   dimension: store_name {
+    label: "Store Name"
     type: string
-    sql: ${TABLE}."STORE_NAME" ;; }
+    sql: ${TABLE}.store_name ;; }
 
   dimension: address {
+    label: "Address"
     type: string
-    sql: ${TABLE}."ADDRESS" ;; }
+    sql: ${TABLE}.address ;; }
 
   dimension: city {
+    label: "City"
     type: string
-    sql: ${TABLE}."CITY" ;; }
+    sql: ${TABLE}.city ;; }
 
   dimension: state_name {
+    label: "State Name"
+    map_layer_name: us_states
     type: string
-    sql: ${TABLE}."STATE_NAME" ;; }
+    sql: ${TABLE}.state_name ;; }
 
   dimension: city_state {
+    label: "City, State"
     type: string
-    sql: ${TABLE}."CITY" ||', ' ||  ${TABLE}."STATE_NAME";; }
+    sql: ${TABLE}.city ||', ' ||  ${TABLE}.state_name;; }
 
   dimension: zip {
+    label: "Zip"
+    map_layer_name: us_zipcode_tabulation_areas
     type: string
-    sql: ${TABLE}."ZIP" ;; }
+    sql: ${TABLE}.zip ;; }
 
   dimension: store_phone {
+    label: "Store Phone Number"
     type: string
-    sql: ${TABLE}."STORE_PHONE" ;; }
+    sql: ${TABLE}.store_phone ;; }
 
   dimension: number_of_beds {
+    label: "Number of Beds"
     type: string
-    sql: ${TABLE}."NUMBER_OF_BEDS" ;; }
+    sql: ${TABLE}.number_of_beds ;; }
 
   dimension: bed_type {
+    label: "Bed Type"
     type: string
-    sql: ${TABLE}."BED_TYPE" ;; }
+    sql: ${TABLE}.bed_type ;; }
 
   dimension: store_notes {
+    label: "Store Notes"
     type: string
-    sql: ${TABLE}."STORE_NOTES" ;; }
+    sql: ${TABLE}.store_notes ;; }
 
   dimension: store_dm {
+    label: "Store DM"
     type: string
-    sql: ${TABLE}."STORE_DM" ;; }
+    sql: ${TABLE}.store_dm ;; }
 
   dimension: store_rvp {
+    label: "Store RVP"
     type: string
-    sql: ${TABLE}."STORE_RVP" ;; }
+    sql: ${TABLE}.store_rvp ;; }
 
   dimension: store_phase {
+    label: "Store Phase"
     type: string
-    sql: ${TABLE}."STORE_PHASE" ;; }
+    sql: ${TABLE}.store_phase ;; }
 
   dimension: additional_items {
+    label: "Additional Items"
     type: string
-    sql: ${TABLE}."ADDITIONAL_ITEMS" ;; }
+    sql: ${TABLE}.additional_items ;; }
 
   dimension: open_date {
+    label: "Open"
     type: date
-    sql: ${TABLE}."OPEN_DATE" ;; }
+    sql: ${TABLE}.open_date ;; }
 
   dimension: end_date {
+    label: "End"
     type: date
-    sql: ${TABLE}."END_DATE" ;; }
+    sql: ${TABLE}.end_date ;; }
 
   dimension: open_weeks {
-    type: number
+    label: "Open Weeks"
     description: "Number of complete weeks the store has been open"
-    sql: case when ${TABLE}."END_DATE" is null then datediff('week' ,${TABLE}."OPEN_DATE", current_date())
-         else datediff('week' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;; }
+    type: number
+    sql: case when ${TABLE}.end_date is null then datediff('week' ,${TABLE}.open_date, current_date())
+         else datediff('week' ,${TABLE}.open_date, ${TABLE}.end_date) end ;; }
 
   dimension: open_days {
-    type: number
+    label: "Open Days"
     description: "Number of complete days the store has been open"
-    sql: case when ${TABLE}."END_DATE" is null then datediff('day' ,${TABLE}."OPEN_DATE", current_date())
-         else datediff('day' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end  ;; }
+    type: number
+    sql: case when ${TABLE}.end_date is null then datediff('day' ,${TABLE}.open_date, current_date())
+         else datediff('day' ,${TABLE}.open_date, ${TABLE}.end_date) end  ;; }
 
   dimension: open_months {
-    type: number
+    label: "Open Months"
     description: "Number of complete months the store has been open"
-    sql: case when ${TABLE}."END_DATE" is null then datediff('month' ,${TABLE}."OPEN_DATE", current_date())
-         else datediff('month' ,${TABLE}."OPEN_DATE", ${TABLE}."END_DATE") end ;; }
+    type: number
+    sql: case when ${TABLE}.end_date is null then datediff('month' ,${TABLE}.open_date, current_date())
+         else datediff('month' ,${TABLE}.open_date, ${TABLE}.end_date) end ;; }
 
   dimension: models {
+    label: "Models"
     type: number
-    sql: ${TABLE}."MODELS" ;; }
+    sql: ${TABLE}.models ;; }
 
   set: detail {
     fields: [

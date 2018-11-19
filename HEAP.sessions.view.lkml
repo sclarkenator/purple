@@ -1,142 +1,136 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+# Recreating the Heap Block so we can join addtional data
+#-------------------------------------------------------------------
+
 view: sessions {
   sql_table_name: heap.sessions ;;
 
   dimension: session_id {
     primary_key: yes
+    hidden: yes
     type: number
-    sql: ${TABLE}.session_id ;;
-  }
+    sql: ${TABLE}.session_id ;; }
 
   dimension: app_name {
+    label: "App Name"
     type: string
-    sql: ${TABLE}.app_name ;;
-  }
+    sql: ${TABLE}.app_name ;; }
 
   dimension: app_version {
+    label: "App Version"
     type: string
-    sql: ${TABLE}.app_version ;;
-  }
+    sql: ${TABLE}.app_version ;; }
 
   dimension: browser {
+    label: "Browser"
     type: string
-    sql: ${TABLE}.browser ;;
-  }
+    sql: ${TABLE}.browser ;; }
 
   dimension: carrier {
+    label: "Carrier"
     type: string
-    sql: ${TABLE}.carrier ;;
-  }
+    sql: ${TABLE}.carrier ;; }
 
   dimension: city {
+    label: "City"
     type: string
-    sql: ${TABLE}.city ;;
-  }
+    sql: ${TABLE}.city ;; }
 
   dimension: country {
-    type: string
+    label: "Country"
     map_layer_name: countries
-    sql: ${TABLE}.country ;;
-  }
+    type: string
+    sql: ${TABLE}.country ;; }
 
   dimension: device {
+    label: "Device"
     type: string
-    sql: ${TABLE}.device ;;
-  }
+    sql: ${TABLE}.device ;; }
 
   dimension: device_type {
+    label: "Device Type"
     type: string
-    sql: ${TABLE}.device_type ;;
-  }
+    sql: ${TABLE}.device_type ;; }
 
   dimension: event_id {
+    hidden: yes
     type: number
-    sql: ${TABLE}.event_id ;;
-  }
+    sql: ${TABLE}.event_id ;; }
 
   dimension: ip {
+    label: "IP"
     type: string
-    sql: ${TABLE}.ip ;;
-  }
+    sql: ${TABLE}.ip ;; }
 
   dimension: landing_page {
+    label: "Landing Page"
     type: string
-    sql: ${TABLE}.landing_page ;;
-  }
+    sql: ${TABLE}.landing_page ;; }
 
   dimension: library {
+    label: "Library"
     type: string
-    sql: ${TABLE}.library ;;
-  }
+    sql: ${TABLE}.library ;; }
 
   dimension: platform {
+    label: "Platform"
     type: string
-    sql: ${TABLE}.platform ;;
-  }
+    sql: ${TABLE}.platform ;; }
 
   dimension: referrer {
+    label: "Referrer"
     type: string
-    sql: ${TABLE}.referrer ;;
-  }
+    sql: ${TABLE}.referrer ;; }
 
   dimension: region {
+    label: "Region"
     type: string
-    sql: ${TABLE}.region ;;
-  }
+    sql: ${TABLE}.region ;; }
 
   dimension: search_keyword {
+    label: "Search Keyword"
     type: string
-    sql: ${TABLE}.search_keyword ;;
-  }
+    sql: ${TABLE}.search_keyword ;; }
 
   dimension_group: time {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.time ;;
-  }
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.time ;; }
 
   dimension: user_id {
     type: number
-    # hidden: yes
-    sql: ${TABLE}.user_id ;;
-  }
+    hidden: yes
+    sql: ${TABLE}.user_id ;; }
 
   dimension: utm_campaign {
+    label: "UTM Campaign"
     type: string
-    sql: ${TABLE}.utm_campaign ;;
-  }
+    sql: ${TABLE}.utm_campaign ;; }
 
   dimension: utm_content {
+    label: "UTM Content"
     type: string
-    sql: ${TABLE}.utm_content ;;
-  }
+    sql: ${TABLE}.utm_content ;; }
 
   dimension: utm_medium {
+    label: "UTM Medium"
     type: string
-    sql: ${TABLE}.utm_medium ;;
-  }
+    sql: ${TABLE}.utm_medium ;; }
 
   dimension: utm_source {
+    label: "UTM Source"
     type: string
-    sql: ${TABLE}.utm_source ;;
-  }
+    sql: ${TABLE}.utm_source ;; }
 
   dimension: utm_term {
+    label: "UTM Term"
     type: string
-    sql: ${TABLE}.utm_term ;;
-  }
+    sql: ${TABLE}.utm_term ;; }
 
   measure: count {
     type: count
-    drill_fields: [detail*]
-  }
+    drill_fields: [detail*] }
 
   # ----- Sets of fields for drilling ------
   set: detail {

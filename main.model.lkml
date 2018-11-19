@@ -402,11 +402,12 @@
 #-------------------------------------------------------------------
     #  All Events-----
     #     \           \
-    #     Users      Sessions
-    #                    \
-    #                   City to Zip
-    #                      \
-    #                      DMA
+    #     Users     Sessions
+    #               /   |   \
+    #           Session | City to Zip
+    #             Facts |     \
+    #                 Event   DMA
+    #                 Flow
     #-------------------------------------------------------------------
 
   explore: all_events {
@@ -414,22 +415,26 @@
     label: "All Events (heap)"
     group_label: "Marketing"
     description: "All Website Event Data from Heap Block"
-
     join: users {
       type: left_outer
       sql_on: ${all_events.user_id} = ${users.user_id} ;;
       relationship: many_to_one }
-
     join: sessions {
       type: left_outer
       sql_on: ${all_events.session_id} = ${sessions.session_id} ;;
       relationship: many_to_one }
-
+    join: session_facts {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${session_unique_id} = ${session_facts.session_unique_id} ;;
+      relationship: one_to_one }
+    join: event_flow {
+      sql_on: ${all_events.event_id} = ${event_flow.unique_event_id} ;;
+      relationship: one_to_one }
     join: zip_codes_city {
       type: left_outer
       sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
       relationship: one_to_one }
-
     join: dma {
       type:  left_outer
       sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;

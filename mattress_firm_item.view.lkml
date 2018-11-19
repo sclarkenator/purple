@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+# Mattress Firm Item - hidden table for linking data
+#-------------------------------------------------------------------
+
 view: mattress_firm_item {
   sql_table_name: mattress_firm.product ;;
 

@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Jonathan Stratton
+# Netsuite report, exported and saved as a snapshot.
+#-------------------------------------------------------------------
+
 view: production_report {
   derived_table: {
     sql:  select created
@@ -35,26 +40,18 @@ view: production_report {
 
   dimension_group: timestamp {
     type: time
-    timeframes: [
-      raw,
-      hour,
-      hour_of_day,
-      date,
-      day_of_week,
-      week,
-      month,
-      quarter,
-      year ]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.created) ;; }
 
   dimension: day_night_shift {
-    type: string
     label: "Day or Night Shift"
+    type: string
     sql: case when date_part('hour', ${TABLE}.created) between 7 and 18 then 'DAY' else 'NIGHT' end ;; }
 
   dimension: shift {
+    label: "Shift"
     type: string
     sql: case when DATE_PART('hour', ${TABLE}.created) between 7 and 18 and Dayname(${TABLE}.created) in ('Mon', 'Tue', 'Wed') then 'M-W Day'
       when DATE_PART('hour', ${TABLE}.created) between 7 and 18 and Dayname(${TABLE}.created) in ('Thu', 'Fri', 'Sat') then 'Th-Sa Day'
@@ -65,46 +62,58 @@ view: production_report {
       else 'Sunday' end ;; }
 
   dimension: machine {
+    label: "Machine"
     type: string
     sql: ${TABLE}.machine ;; }
 
   dimension: product {
+    label: "Product"
     type: string
     sql: ${TABLE}.product ;; }
 
   dimension: category {
+    label: "Category"
     type: string
     sql: ${TABLE}.category ;; }
 
   dimension: reason_code {
+    label: "Reason Code"
     type: string
     sql: ${TABLE}.reason_code ;; }
 
   dimension: reason_text {
+    label: "Reason Text"
     type: string
     sql: ${TABLE}.reason_text ;; }
 
   dimension: facility {
+    label: "Facility"
     type: string
     sql: ${TABLE}.facility ;; }
 
   measure: total {
+    label: "Total"
     type:  sum
     sql: ${TABLE}.total;; }
 
   measure: regrind_scrap {
+    label: "Total Regrind Scrap"
     type:  sum
     sql: ${TABLE}.regrind_scrap ;; }
 
   measure: scrap {
+    label: "Total Scrap"
     type:  sum
     sql: ${TABLE}.scrap ;; }
 
   measure: regrind {
+    label: "Total Regrind"
     type:  sum
     sql: ${TABLE}.regrind ;; }
 
   measure: finished {
+    label: "Finished"
+    description: "Total - Regrind Scrap"
     type: number
     sql:  ${total} - ${regrind_scrap} ;; }
 }
