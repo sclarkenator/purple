@@ -3,122 +3,73 @@ view: assembly_build {
 
   dimension: assembly_build_id {
     primary_key: yes
+    hidden:  yes
     type: number
-    sql: ${TABLE}."ASSEMBLY_BUILD_ID" ;;
-  }
+    sql: ${TABLE}.assembly_build_id ;;}
 
   dimension: accounting_period_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."ACCOUNTING_PERIOD_ID" ;;
-  }
+    sql: ${TABLE}.accounting_period_id ;; }
 
   dimension: amount {
     hidden: yes
     type: number
-    sql: ${TABLE}."AMOUNT" ;;
-  }
+    sql: ${TABLE}.amount ;; }
 
   dimension_group: created {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."CREATED" ;;
-  }
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created ;; }
 
   dimension_group: deleted {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."DELETED" ;;
-  }
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.deleted ;; }
 
   dimension: description {
+    label: "Description"
     type: string
-    sql: ${TABLE}."DESCRIPTION" ;;
-  }
+    sql: ${TABLE}.description ;; }
 
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
-  }
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.insert_ts ;; }
 
   dimension: item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."ITEM_ID" ;;
-  }
+    sql: ${TABLE}.item_id ;; }
 
   dimension: location_id {
     hidden: yes
     type: number
-    sql: ${TABLE}."LOCATION_ID" ;;
-  }
+    sql: ${TABLE}.location_id ;; }
 
   dimension: memo {
+    label: "Memo"
     type: string
-    sql: ${TABLE}."MEMO" ;;
-  }
+    sql: ${TABLE}.memo ;; }
 
   dimension_group: modified {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."MODIFIED" ;;
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.modified ;;
   }
 
   dimension_group: produced {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      month_num
-
-    ]
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
-    sql:to_timestamp_ntz(${TABLE}.PRODUCED) ;;
-    }
+    sql:to_timestamp_ntz(${TABLE}.PRODUCED) ;; }
 
+#---------------------------------------------------
   parameter: timeframe_picker{
     label: "Date Granularity Assembly Build"
     type: string
