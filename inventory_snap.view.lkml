@@ -17,6 +17,7 @@ view: inventory_snap {
     type: time
     timeframes: [
       raw,
+      hour_of_day,
       time,
       date,
       week,
