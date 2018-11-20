@@ -31,7 +31,7 @@ view: customer_table {
 
   dimension: mf_or_other {
     label: "Is Mattress Firm"
-    description: "Yes/No; Yes = Mattress Firm"
+    description: "Yes is Mattress Firm"
     type: yesno
     sql: ${customer_id}=2662 ;;}
 

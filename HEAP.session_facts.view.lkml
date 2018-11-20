@@ -69,7 +69,7 @@ view: session_facts {
 
   dimension: is_bounced {
     label: "Bounced"
-    description: "Yes/No on if it bounced"
+    description: "Yes if it bounced"
     type: yesno
     sql: ${event_count} = 1 ;; }
 

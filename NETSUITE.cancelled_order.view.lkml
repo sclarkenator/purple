@@ -22,7 +22,7 @@ view: cancelled_order {
   dimension: yesterday_flag {
     hidden: yes
     label:  "Cancelled Yesterday"
-    description: "Yes/No on if the order was cancelled yesterday"
+    description: "Yes if the order was cancelled yesterday"
     type: yesno
     sql: ${cancelled_date} = dateadd(d,-1,current_date) ;; }
 
@@ -124,7 +124,7 @@ view: cancelled_order {
 
   dimension: revenue_item {
     label:"Is Revenue Item"
-    description:  "Yes/No; Yes for all product-specific refunds. No to just capture non-product (recycle-fee, freight, etc)"
+    description:  "Yes for all product-specific refunds. No to just capture non-product (recycle-fee, freight, etc)"
     type: string
     sql: ${TABLE}.REVENUE_ITEM ;;
   }

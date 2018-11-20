@@ -5,13 +5,12 @@ view: return_reason {
     type: number
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.LIST_ID ;;
-  }
+    sql: ${TABLE}.LIST_ID ;; }
 
   dimension: return_reason {
-    label:"Return reason"
+    label:"Return Reason"
     description: "Reason customer gives for returning that item"
     type:  string
-    sql:  upper(${TABLE}.list_item_name) ;;
-  }
+    sql:  upper(${TABLE}.list_item_name) ;; }
+
 }

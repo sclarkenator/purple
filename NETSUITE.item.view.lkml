@@ -23,20 +23,19 @@ view: item {
 
   dimension: merchandise {
     label: "Is Merchandising"
-    description: "Yes/No; Yes is a merchandising product for wholesale"
+    description: "Yes is a merchandising product for wholesale"
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;; }
 
   dimension: modified {
     label: "Is Modified"
-    description: "Yes/No; Yes is indicating product attributes have been manually set by BI"
-    hidden: no
+    description: "Yes is indicating product attributes have been manually set by BI"
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;}
 
   dimension: finished_good_flg {
     label: " Is Finished Good"
-    description: "Yes/No; Yes is a finished good"
+    description: "Yes is a finished good"
     hidden:  yes
     type: yesno
     sql: ${classification} = 'FG' ;;}
@@ -97,14 +96,14 @@ view: item {
     hidden: yes
     view_label: "Fulfillment"
     label: "Is Fulfilled by Manna"
-    description: "Yes/No; Yes is an item normally fulfilled by Manna (new mattress or powerbase)"
+    description: "Yes is an item normally fulfilled by Manna (new mattress or powerbase)"
     type: yesno
     sql: ${is_original_New_mattress} = 'New Mattress' or ${TABLE}.model_name_lkr = 'POWERBASE' ;; }
 
   dimension: is_mattress {
     hidden: yes
     label: "Is Mattress"
-    description: "Yes/No; Yes is a mattress"
+    description: "Yes is a mattress"
     type: yesno
     sql: ${product_line_name} = 'MATTRESS' ;; }
 
