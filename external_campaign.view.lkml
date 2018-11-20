@@ -3,8 +3,8 @@
 # Created by Aditya in snowflake on an aggregation and calculations
 #-------------------------------------------------------------------
 
-view: external_campaigns {
-  sql_table_name: marketing.external_campaigns ;;
+view: external_campaign {
+  sql_table_name: marketing.external_campaign ;;
 
   dimension: campaign_id {
     hidden: yes
