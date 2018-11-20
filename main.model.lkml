@@ -450,7 +450,7 @@
     join: external_campaigns {
       type: left_outer
       sql_on: ${conversions_by_campaign.campaign_id} = ${external_campaigns.campaign_id} ;;
-      relationship: one_to_many }
+      relationship: many_to_one }
   }
 
 #-------------------------------------------------------------------
