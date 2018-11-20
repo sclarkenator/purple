@@ -69,15 +69,13 @@ view: assembly_build {
     datatype: timestamp
     sql:to_timestamp_ntz(${TABLE}.PRODUCED) ;; }
 
-#---------------------------------------------------
   parameter: timeframe_picker{
     label: "Date Granularity Assembly Build"
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}
     allowed_value: { value: "Month"}
-    default_value: "Date"
-  }
+    default_value: "Date" }
 
   dimension: dynamic_timeframe {
     type: date
@@ -87,93 +85,68 @@ view: assembly_build {
       When {% parameter timeframe_picker %} = 'Date' Then ${produced_date}
       When {% parameter timeframe_picker %} = 'Week' Then ${produced_week}
       When {% parameter timeframe_picker %} = 'Month' Then ${produced_month}||'-01'
-      END;;
-  }
+      END;; }
 
 
   dimension: quantity {
     hidden: yes
     type: number
-    sql: ${TABLE}."QUANTITY" ;;
-  }
+    sql: ${TABLE}.quantity ;; }
 
   dimension_group: sales_effective {
+    label: "Sales Effective"
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."SALES_EFFECTIVE" ;;
+    sql: ${TABLE}.sales_effective ;;
   }
 
   dimension: scrap {
     hidden: yes
     type: number
-    sql: ${TABLE}."SCRAP" ;;
+    sql: ${TABLE}.scrap ;;
   }
 
   dimension_group: trandate {
     hidden:  yes
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."TRANDATE" ;;
-  }
+    sql: ${TABLE}.trandate ;; }
 
   dimension: tranid {
+    label: "Transaction ID"
+    description: "Netsuites transaction ID, used to hyperlink directly to record"
     type: number
     value_format_name: id
-    sql: ${TABLE}."TRANID" ;;
-  }
+    sql: ${TABLE}.tranid ;; }
 
   dimension: transaction_number {
+    label: "Transaction Number"
     type: string
-    sql: ${TABLE}."TRANSACTION_NUMBER" ;;
-  }
+    sql: ${TABLE}.transaction_number ;; }
 
   dimension_group: update_ts {
     hidden:  yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
-  }
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.update_ts ;; }
 
   measure: count {
     type: count
-    drill_fields: [assembly_build_id]
-  }
+    drill_fields: [assembly_build_id] }
 
   measure: Total_Quantity {
+    label: "Total Quantity"
     type: sum
-    description: "Number of items"
-    sql: ${TABLE}."QUANTITY" ;;
+    sql: ${TABLE}.QUANTITY ;;
   }
 
   measure: Total_amount {
+    label: "Total Amount ($)"
     type: sum
-    description: "Dollar value of the items"
-    sql: ${TABLE}."AMOUNT" ;;
+    sql: ${TABLE}.AMOUNT ;;
   }
 }

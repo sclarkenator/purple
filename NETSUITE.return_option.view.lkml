@@ -5,13 +5,12 @@ view: return_option {
     type: number
     hidden: yes
     primary_key: yes
-    sql:${TABLE}.LIST_ID;;
-  }
+    sql:${TABLE}.LIST_ID;; }
 
   dimension: list_item_name {
     label:"Return Method"
     description: "Channel the customer used show proof and qualify for the refund"
     type:  string
-    sql:${TABLE}.list_item_name;;
-  }
+    sql:${TABLE}.list_item_name;; }
+
 }

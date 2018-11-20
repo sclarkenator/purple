@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+# Recreating the Heap Block so we can join addtional data
+#-------------------------------------------------------------------
+
 view: event_facts {
   derived_table: {
     # update trigger value to desired frequency and timezone
@@ -54,47 +59,45 @@ view: event_facts {
       LEFT JOIN events
         ON events.event_id = a.event_id
         AND events.event_name = a.event_table_name
-       ;;
-  }
+       ;;  }
 
   measure: count {
     type: count
-    drill_fields: [event_name, count]
-  }
+    drill_fields: [event_name, count] }
 
   dimension: unique_event_id {
+    hidden:  yes
     primary_key: yes
-    sql: ${TABLE}.unique_event_id ;;
-  }
+    sql: ${TABLE}.unique_event_id ;; }
 
   dimension: event_id {
+    hidden: yes
     type: number
-    sql: ${TABLE}.event_id ;;
-  }
+    sql: ${TABLE}.event_id ;; }
 
   dimension: event_name {
+    label: "Event Name"
     type: string
-    sql: ${TABLE}.event_name ;;
-  }
+    sql: ${TABLE}.event_name ;; }
 
   dimension: user_id {
+    hidden: yes
     type: number
-    sql: ${TABLE}.user_id ;;
-  }
+    sql: ${TABLE}.user_id ;; }
 
   dimension: session_id {
+    hidden: yes
     type: number
-    sql: ${TABLE}.session_id ;;
-  }
+    sql: ${TABLE}.session_id ;; }
 
   dimension: event_sequence_number {
+    label: "Event Sequence Number"
     type: number
-    sql: ${TABLE}.event_sequence_number ;;
-  }
+    sql: ${TABLE}.event_sequence_number ;; }
 
   dimension: sequence_number_for_event_flow {
-    type: number
     hidden: yes
-    sql: ${TABLE}.sequence_number_for_event_flow ;;
-  }
+    type: number
+    sql: ${TABLE}.sequence_number_for_event_flow ;; }
+
 }
