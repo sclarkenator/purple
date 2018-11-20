@@ -31,10 +31,10 @@ view: conversions_by_campaign {
     type: string
     sql: ${TABLE}.device ;; }
 
-  dimension: attribution_window {
+  dimension: attribution_window_days {
     label: "Attribution Window"
     type: string
-    sql: ${TABLE}.attribution_window ;; }
+    sql: ${TABLE}.attribution_window_days ;; }
 
 
   measure: conversions {
