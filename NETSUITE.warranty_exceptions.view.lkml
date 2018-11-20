@@ -32,51 +32,45 @@ view: netsuite_warranty_exceptions {
   }
 
   dimension: created {
+    label: "Warranty Created"
     description: "The created date of the warranty order."
     type: date
-    sql: to_date(${TABLE}.created);;
-    label: "Warranty Created"
-  }
+    sql: to_date(${TABLE}.created);; }
 
   dimension: transaction_number {
+    label: "Transaction Number"
     description: "The NetSuite transaction number for this warranty"
     type: string
-    sql: ${TABLE}.transaction_number ;;
-    label: "Transaction Number"
-  }
+    sql: ${TABLE}.transaction_number ;; }
 
   dimension: related_tranid {
+    label: "Shopify Order Number"
     description: "The Shopify order number for the warranty claim"
     type: string
-    sql: ${TABLE}.related_tranid;;
-    label: "Shopify Order Number"
-  }
+    sql: ${TABLE}.related_tranid;; }
 
   dimension: shopify_order_id {
+    label: "Shopify Order ID"
     description: "The Shopify order id for the warranty claim"
     type: string
-    sql: ${TABLE}.shopify_order_id;;
-    label: "Shopify Order ID"
-  }
+    sql: ${TABLE}.shopify_order_id;; }
 
   dimension: original_order_number {
+    label: "Original Order"
     description: "The Shopify order number associated with the original Shopify order that has a warranty claim"
     type: string
-    sql: ${TABLE}.original_order_number;;
-    label: "Original Order"
-  }
+    sql: ${TABLE}.original_order_number;; }
 
   dimension: memo {
+    label: "Replacement Order Notes"
     description: "The order level notes for the replacement order"
     type: string
-    sql: ${TABLE}.memo;;
-    label: "Replacement Order Notes"
-  }
+    sql: ${TABLE}.memo;; }
 
   dimension: category {
+    label: "Product Category"
     description: "The product category"
     type: string
-    sql: ${TABLE}.category;;
-    label: "Product category"
-  }
+    sql: ${TABLE}.category;; }
+
 }

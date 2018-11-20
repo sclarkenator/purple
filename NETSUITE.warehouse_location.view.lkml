@@ -4,18 +4,17 @@ view: warehouse_location {
     dimension: location_id {
       hidden: yes
       type:number
-      sql: ${TABLE}.location_id ;;
-    }
+      sql: ${TABLE}.location_id ;; }
 
     dimension: location_name {
-      label: "Warehouse name"
+      label: "Warehouse Name"
       type: string
-      sql: ${TABLE}.name ;;
-    }
+      sql: ${TABLE}.name ;; }
 
   dimension: location_name_manna_grouped {
-    label: "Warehouse name (manna grouped)"
+    label: "Warehouse Name (manna grouped)"
+    hidden: yes
     type: string
-    sql: case when lower(${TABLE}.name) like ('%manna%') then 'Manna (all)' else ${TABLE}.name end;;
-  }
+    sql: case when lower(${TABLE}.name) like ('%manna%') then 'Manna (all)' else ${TABLE}.name end;; }
+
 }

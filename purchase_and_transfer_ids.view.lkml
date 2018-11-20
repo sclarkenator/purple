@@ -1,7 +1,11 @@
+#-------------------------------------------------------------------
+# Owner - Tim Schultz
+#   Unioning Purchase and Transfer Order IDs to a single view
+#-------------------------------------------------------------------
 view: purcahse_and_transfer_ids {
 
   derived_table: {
-    sql: -- unioning purchase and transfer orders
+    sql:
       SELECT purchase_order_id as id
       FROM  production.purchase_order
       UNION
@@ -17,8 +21,6 @@ view: purcahse_and_transfer_ids {
     type:  string
     primary_key: yes
     hidden: yes
-    sql:${TABLE}.id ;;
-  }
-
+    sql:${TABLE}.id ;; }
 
 }

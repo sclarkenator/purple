@@ -1,89 +1,77 @@
+#-------------------------------------------------------------------
+# Owner - Scott Clark
+#-------------------------------------------------------------------
+
 view: progressive_funded_lease {
   sql_table_name: FINANCE.progressive_funded_lease ;;
 
   dimension: lease_id {
+    hidden: yes
     primary_key: yes
     type: number
-    sql: ${TABLE}.LEASE_ID ;;
-  }
+    sql: ${TABLE}.LEASE_ID ;; }
 
   dimension: first_name {
     type: string
-    sql: ${TABLE}.first_name ;;
-  }
+    sql: ${TABLE}.first_name ;; }
 
   dimension: last_name {
     type: string
-    sql: ${TABLE}.last_name ;;
-  }
+    sql: ${TABLE}.last_name ;; }
 
 
   dimension: invoice_number {
+    label: "Invoice Number"
     type: string
-    sql: ${TABLE}.invoice_number ;;
-  }
+    sql: ${TABLE}.invoice_number ;; }
 
   dimension: term_dim {
+    label: "Term"
     type: string
-    sql: ${TABLE}.term ;;
-  }
+    sql: ${TABLE}.term ;; }
 
   dimension: paid {
+    label: "Paid"
     type: date
-    sql: ${TABLE}.paid ;;
-  }
+    sql: ${TABLE}.paid ;; }
 
   dimension: delivery {
+    label: "Delivery"
     type: date
-    sql: ${TABLE}.delivery ;;
-  }
+    sql: ${TABLE}.delivery ;; }
 
 
   measure: count {
-    type: count
-    drill_fields: []
-  }
+    type: count }
 
   measure: invoice_amount {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Invoice Amount"
     type: sum
-    sql:  ${TABLE}.invoice_amount ;;
-  }
+    sql:  ${TABLE}.invoice_amount ;; }
 
   measure: initial_payment {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Intial Payment"
     type: sum
-    sql:  ${TABLE}.initial_payment ;;
-  }
+    sql:  ${TABLE}.initial_payment ;; }
 
   measure: initial_payment_tax {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Initial Payment Tax"
     type: sum
-    sql:  ${TABLE}.initial_payment_tax ;;
-  }
+    sql:  ${TABLE}.initial_payment_tax ;; }
 
   measure: discount {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Discount"
     type: sum
-    sql:  ${TABLE}.discount ;;
-  }
+    sql:  ${TABLE}.discount ;; }
 
   measure: net_funded {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Net Funded"
     type: sum
-    sql:  ${TABLE}.net_funded ;;
-  }
+    sql:  ${TABLE}.net_funded ;; }
 
   measure: term {
-    #label:  "?"
-    #description:  "?"
+    label:  "Total Term"
     type: sum
-    sql:  ${TABLE}.term ;;
-  }
+    sql:  ${TABLE}.term ;; }
 
 }
