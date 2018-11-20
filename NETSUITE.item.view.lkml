@@ -113,9 +113,9 @@ view: item {
     description: "Buckets with an option of Original, New Mattress or Other"
     type: string
     sql: case
-      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then "Original"
-      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then "New Mattress"
-      else "Other" end;; }
+      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
+      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then 'New Mattress'
+      else 'Other' end;; }
 
   dimension: sub_category_name {
     hidden: yes
