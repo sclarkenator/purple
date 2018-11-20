@@ -442,6 +442,17 @@
     }
   }
 
+  explore: conversions_by_campaign {
+    hidden:  yes
+    label: "Conversions by Campaign"
+    group_label: "Marketing"
+    description: "Aggregated campaign data by date and campaign"
+    join: external_campaigns {
+      type: left_outer
+      sql_on: ${conversions_by_campaign.campaign_id} = ${external_campaigns.campaign_id} ;;
+      relationship: one_to_many }
+  }
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
