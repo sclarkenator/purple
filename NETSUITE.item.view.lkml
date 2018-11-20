@@ -86,8 +86,8 @@ view: item {
     case: {
       when: { sql: ${model_name} = 'ORIGINAL' ;; label: "ORIGINAL" }
       when: { sql: ${model_name} = 'PURPLE.2' ;; label: "PURPLE.2" }
-      when: { sql:  ${model_name} = 'PURPLE.3' ;; label: "PURPLE.3" }
-      when: { sql:  ${model_name} = 'PURPLE.4' ;; label: "PURPLE.4" }
+      when: { sql: ${model_name} = 'PURPLE.3' ;; label: "PURPLE.3" }
+      when: { sql: ${model_name} = 'PURPLE.4' ;; label: "PURPLE.4" }
       when: { sql: ${product_line_name} = 'PILLOW' ;; label: "PILLOW" }
       when: { sql: ${product_line_name} = 'POWERBASE' ;; label: "POWERBASE" }
       #when: { sql: ${product_line_name} = 'SHEETS' ;; label: "SHEETS" }
@@ -99,7 +99,7 @@ view: item {
     label: "Is Fulfilled by Manna"
     description: "Yes/No; Yes is an item normally fulfilled by Manna (new mattress or powerbase)"
     type: yesno
-    sql: ${is_original_New_mattress} = 'New' or ${TABLE}.model_name_lkr = 'POWERBASE' ;; }
+    sql: ${is_original_New_mattress} = 'New Mattress' or ${TABLE}.model_name_lkr = 'POWERBASE' ;; }
 
   dimension: is_mattress {
     hidden: yes
