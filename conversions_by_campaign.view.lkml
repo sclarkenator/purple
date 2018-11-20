@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------
 
 view: conversions_by_campaign {
-  sql_table_name: marketing.conversions_by_campaign ;;
+  sql_table_name: marketing.conversions_by_campaign_history ;;
 
   dimension: campaign_id {
     hidden: yes
