@@ -40,7 +40,18 @@ view: production_report {
 
   dimension_group: timestamp {
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes:
+    [date,
+      day_of_week,
+      day_of_month,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      quarter_of_year,
+      year,
+      hour]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.created) ;; }
