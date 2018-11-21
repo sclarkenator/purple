@@ -279,7 +279,7 @@ measure: total_line_item {
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
-    drill_fields: [order_id, created_date,  item.product_description, location, total_units]
+    drill_fields: [order_id, so.tranid, created_date,  item.product_description, location, total_units]
     sql:  ${TABLE}.ordered_qty ;; }
 
   dimension: order_age_bucket {
@@ -637,15 +637,6 @@ measure: total_line_item {
     type: string
     sql: ${TABLE}.CARRIER ;; }
 
-   dimension: so_tranid {
-    view_label: "Sales order"
-    label: "Netsuite order ID"
-    description: "This is the netsuite order ID"
-    hidden:  yes
-    type: string
-    sql: ${sales_order.tranid} ;;
-  }
-
   set: fulfill_details {
-    fields: [order_id,so_tranid,item_id,created_date,fulfilled_date] }
+    fields: [order_id,item_id,created_date,fulfilled_date] }
 }
