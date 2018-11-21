@@ -3,7 +3,7 @@ view: sales_order_line {
   derived_table: {
     sql:
       select a.*
-        , b.minimum_ship
+        , b.ship_by
       from sales.sales_order_line a
      left join sales.sales_order b on b.order_id = a.order_id
       ;;
@@ -304,12 +304,12 @@ measure: total_line_item {
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
-    sql: datediff(day,coalesce(${minimum_ship},${created_date}),current_date) ;; }
+    sql: datediff(day,coalesce(${ship_by},${created_date}),current_date) ;; }
 
-  dimension: minimum_ship {
-    #hidden: yes
+  dimension: ship_by {
+    hidden: yes
     type: date
-    sql:  ${TABLE}.minimum_ship ;; }
+    sql:  ${TABLE}.ship_by ;; }
 
 
   dimension: manna_order_age_bucket {

@@ -5,10 +5,6 @@
 
 view: session_facts {
   derived_table: {
-    sortkeys: ["session_start_time"]
-    distribution: "session_unique_id"
-    # update trigger value to desired frequency and timezone
-    sql_trigger_value: select date(convert_timezone('pst', current_date() - interval '3 hours')) ;;
     sql: SELECT
         all_events.session_id || '-' || all_events.user_id AS session_unique_id,
         user_id,
@@ -17,9 +13,7 @@ view: session_facts {
         max(all_events.time) AS session_end_time,
         COUNT(*) AS "all_events.count"
       FROM heap.all_events AS all_events
-
-      GROUP BY 1,2
-       ;;
+      GROUP BY 1,2 ;;
   }
 
   dimension: session_unique_id {
