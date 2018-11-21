@@ -279,7 +279,7 @@ measure: total_line_item {
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
-    drill_fields: [order_id, so.tranid, created_date,  item.product_description, location, total_units]
+    drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, total_units]
     sql:  ${TABLE}.ordered_qty ;; }
 
   dimension: order_age_bucket {
