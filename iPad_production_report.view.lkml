@@ -123,7 +123,7 @@ view: production_report {
     sql: ${TABLE}.regrind ;; }
 
   measure: finished {
-    label: "Finished"
+    label: "Total Finished"
     description: "Total - Regrind Scrap"
     type: number
     sql:  ${total} - ${regrind_scrap} ;; }
