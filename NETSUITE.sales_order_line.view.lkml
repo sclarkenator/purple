@@ -304,13 +304,7 @@ measure: total_line_item {
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
-    sql: datediff(day,coalesce(${ship_by},${created_date}),current_date) ;; }
-
-  dimension: ship_by {
-    hidden: yes
-    type: date
-    sql:  ${TABLE}.ship_by ;; }
-
+    sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
   dimension: manna_order_age_bucket {
     label: "Manna Order Age (Bucket)"
