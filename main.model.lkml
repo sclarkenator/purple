@@ -442,14 +442,19 @@
     }
   }
 
-  explore: conversions_by_campaign {
+  explore: conversions_by_campaign_agg {
     hidden:  yes
     label: "Conversions by Campaign"
     group_label: "Marketing"
     description: "Aggregated campaign data by date and campaign"
+    join: adspend_by_campaign {
+      type: full_outer
+      sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign_agg.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign_agg.date}
+        and ${adspend_by_campaign.platform} = ${conversions_by_campaign_agg.platform};;
+      relationship:one_to_one}
     join: external_campaign {
       type: left_outer
-      sql_on: ${conversions_by_campaign.campaign_id} = ${external_campaign.campaign_id} ;;
+      sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign_agg.campaign_id}, ${adspend_by_campaign.campaign_id});;
       relationship: many_to_one }
   }
 

@@ -8,7 +8,7 @@ view: external_campaign {
 
   dimension: campaign_id {
     hidden: yes
-    type: string
+    type: number
     sql: ${TABLE}.campaign_id;; }
 
   dimension: campaign_name {
@@ -29,6 +29,6 @@ view: external_campaign {
   dimension: platform {
     label: "Platform"
     type: string
-    sql: ${TABLE}.source ;; }
+    sql: ${TABLE}.platform ;; }
 
 }

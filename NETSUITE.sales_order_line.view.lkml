@@ -1,5 +1,13 @@
 view: sales_order_line {
-  sql_table_name: SALES.SALES_ORDER_LINE ;;
+  #sql_table_name: SALES.SALES_ORDER_LINE ;;
+  derived_table: {
+    sql:
+      select a.*
+        , b.minimum_ship
+      from sales.sales_order_line a
+     left join sales.sales_order b on b.order_id = a.order_id
+      ;;
+  }
 
   dimension: item_order{
     type: string
@@ -289,6 +297,19 @@ measure: total_line_item {
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
     sql: datediff(day,${created_date},current_date) ;; }
+
+  dimension: order_age_bucket_2 {
+    label: "Order Age V2 (Bucket)"
+    description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,14]
+    style: integer
+    sql: datediff(day,coalesce(${minimum_ship},${created_date}),current_date) ;; }
+
+  dimension: minimum_ship {
+    #hidden: yes
+    type: date
+    sql:  ${TABLE}.minimum_ship ;; }
 
 
   dimension: manna_order_age_bucket {

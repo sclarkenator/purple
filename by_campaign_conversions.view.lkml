@@ -4,7 +4,13 @@
 #-------------------------------------------------------------------
 
 view: conversions_by_campaign {
-  sql_table_name: marketing.conversions_by_campaign_history ;;
+  derived_table: {
+    sql:
+      SELECT campaign_id, date, platform, source, device, attribution_window_days, conversions
+      FROM marketing.conversions_by_campaign_history
+      WHERE attribution_window_days = 1
+      );;
+  }
 
   dimension: campaign_id {
     label: "Campaign ID"
@@ -31,12 +37,6 @@ view: conversions_by_campaign {
     label: "Device"
     type: string
     sql: ${TABLE}.device ;; }
-
-  dimension: attribution_window_days {
-    label: "Attribution Window"
-    type: string
-    sql: ${TABLE}.attribution_window_days ;; }
-
 
   measure: conversions {
     label: "Total Conversions"
