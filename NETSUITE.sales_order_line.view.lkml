@@ -637,6 +637,15 @@ measure: total_line_item {
     type: string
     sql: ${TABLE}.CARRIER ;; }
 
+   dimension: so_tranid {
+    view_label: "Sales order"
+    label: "Netsuite order ID"
+    description: "This is the netsuite order ID"
+    hidden:  yes
+    type: string
+    sql: ${sales_order.tranid} ;;
+  }
+
   set: fulfill_details {
-    fields: [order_id,item_id,created_date,fulfilled_date] }
+    fields: [order_id,so_tranid,item_id,created_date,fulfilled_date] }
 }
