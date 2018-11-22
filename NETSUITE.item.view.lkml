@@ -49,8 +49,8 @@ view: item {
     sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;; }
 
   dimension: model_name {
-    hidden:  yes
-    label:  "Mattress Model (bucket)"
+    hidden:  no
+    label:  "Mattress Model"
     description: "Original, P2, P3, P4, Powerbase, or Other"
     drill_fields: [product_description]
     type: string
