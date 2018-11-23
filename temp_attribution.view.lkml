@@ -1,6 +1,11 @@
 view: temp_attribution {
   sql_table_name: MARKETING.TEMP_ATTRIBUTION ;;
 
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    sql:  ${TABLE}."AD_DATE"||${TABLE}."ATT_DATE"||${TABLE}."PARTNER" ;;
+  }
   dimension_group: ad {
     label: "Ad"
     type: time
