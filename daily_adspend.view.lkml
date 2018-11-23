@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------
 
 view: daily_adspend {
-  sql_table_name: marketing.adspend ;;
+  sql_table_name: marketing.adspend_by_campaign ;;
 
   dimension: ad_date_key {
     hidden: yes
@@ -80,15 +80,15 @@ view: daily_adspend {
     type:  string
     sql: ${TABLE}.source ;; }
 
-  dimension: campaign_type {
-    label: "Campaign Type"
-    description: "Bucketing the Campaign type into Prospecting, Retargeting, Brand, and Other"
-    type:  string
-    case: {
-      when: {sql:  ${TABLE}.campaign_type = 'BRAND' ;; label: "BRAND" }
-      when: { sql:  ${TABLE}.campaign_type = 'PROSPECTING' ;;  label: "PROSPECTING" }
-      when: { sql:  ${TABLE}.campaign_type = 'RETARGETING' ;;  label: "RETARGETING" }
-      else: "OTHER" } }
+##  dimension: campaign_type {
+##    label: "Campaign Type"
+##    description: "Bucketing the Campaign type into Prospecting, Retargeting, Brand, and Other"
+##    type:  string
+##    case: {
+##      when: {sql:  ${TABLE}.campaign_type = 'BRAND' ;; label: "BRAND" }
+##      when: { sql:  ${TABLE}.campaign_type = 'PROSPECTING' ;;  label: "PROSPECTING" }
+##      when: { sql:  ${TABLE}.campaign_type = 'RETARGETING' ;;  label: "RETARGETING" }
+##      else: "OTHER" } }
 
   dimension: ad_device {
     label: "Ad Device"
