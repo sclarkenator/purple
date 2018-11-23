@@ -52,7 +52,12 @@
   explore: daily_adspend {
     group_label: "Marketing"
     label: "Adspend"
-    description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."}
+    description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
+    join: temp_attribution {
+      type: left_outer
+      sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
+      relationship: many_to_many}
+    }
 
   #-------------------------------------------------------------------
   #  Invetory--------------------
