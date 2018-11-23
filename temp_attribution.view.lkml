@@ -46,7 +46,7 @@ view: temp_attribution {
 
   dimension: partner {
     type: string
-    sql: ${TABLE}."PARTNER" ;;
+    sql: upper(${TABLE}."PARTNER") ;;
   }
 
   measure: count {
