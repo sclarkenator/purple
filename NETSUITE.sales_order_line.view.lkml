@@ -62,10 +62,10 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;; }
 
   measure: avg_days_to_fulfill {
-    label: "Average Days to Fulfillment"
+    group_label: "Average Days:"
+    label: "to Fulfillment"
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
-    group_label: "Average Days to:"
     type:  average
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;; }
 
@@ -93,7 +93,7 @@ view: sales_order_line {
 
   measure: mf_on_time {
     view_label: "Fulfillment"
-    label: "Mattress Firm Shipped on Time (units%)"
+    label: "Mattress Firm Shipped on Time (% of units)"
     description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units)"
     value_format_name: percent_0
     type: number
@@ -117,7 +117,7 @@ view: sales_order_line {
 
   measure: whlsl_on_time {
     view_label: "Fulfillment"
-    label: "Wholesale Shipped on Time (unit%)"
+    label: "Wholesale Shipped on Time (% of units)"
     description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units)"
     value_format_name: percent_0
     type: number
@@ -254,7 +254,7 @@ view: sales_order_line {
     sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
 
   measure: SLA_achieved{
-    label: "West SLA Achievement (3 day %)"
+    label: "West SLA Achievement (% in 3 days)"
     description: "Percent of line items fulfilled by Purple West within 3 days of order"
     view_label: "Fulfillment"
     type: number
@@ -262,7 +262,7 @@ view: sales_order_line {
     sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;; }
 
   measure: manna_sla_achieved{
-    label: "Manna SLA Achievement (10 day %)"
+    label: "Manna SLA Achievement (% in 10 days)"
     view_label: "Fulfillment"
     description: "Percent of line items fulfilled by Manna within 10 days of order"
     type: number
@@ -278,7 +278,7 @@ measure: total_line_item {
 
   measure: return_rate_units {
     group_label: "Return Rates"
-    label: "Return Rate (units%)"
+    label: "Return Rate (% of units)"
     description: "Units returned/Units fulfilled"
     view_label: "Returns"
     type: number
@@ -287,7 +287,7 @@ measure: total_line_item {
 
   measure: return_rate_dollars {
     group_label: "Return Rates"
-    label: "Return Rate ($ %)"
+    label: "Return Rate (% of $)"
     description: "Total $ returned / Total $ fulfilled"
     view_label: "Returns"
     type: number
@@ -579,7 +579,9 @@ measure: total_line_item {
 
   dimension: fulfillment_method {
     label: "Fulfillment Method"
+    description: "Use Shipping Provider instead"
     view_label: "Fulfillment"
+    hidden:  yes
     type: string
     sql: ${TABLE}.FULFILLMENT_METHOD ;; }
 
@@ -646,6 +648,9 @@ measure: total_line_item {
     sql: ${TABLE}.SYSTEM ;; }
 
   dimension: tax_amt {
+    label: "Tax ($)"
+    description: "Tax Amount from Sales Line"
+    hidden: yes
     type: number
     sql: ${TABLE}.TAX_AMT ;; }
 

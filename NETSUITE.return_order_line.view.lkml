@@ -49,7 +49,8 @@ view: return_order_line {
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_buckets {
-    label: "Return Aging Buckets (30)"
+    group_label: "Return Aging Buckets"
+    label: "30"
     description: "What aging bucket the order was returned in (30,60,90,120)"
     type: tier
     style: integer
@@ -57,7 +58,8 @@ view: return_order_line {
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_week_buckets{
-    label: "Return Aging Buckets (7)"
+    group_label: "Return Aging Buckets"
+    label: "07"
     description: "What aging bucket the order was returned in (7,14,21,28,35,42,49,56)"
     type: tier
     style: integer

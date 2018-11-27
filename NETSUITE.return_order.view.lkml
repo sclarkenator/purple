@@ -135,7 +135,7 @@ view: return_order {
     sql: ${TABLE}.RMA_RETURN_FORM_SENT ;; }
 
   dimension: rma_return_type {
-    label:  "Trial Return Type"
+    label:  "Return Type"
     description: "Return type: Trial / Non-trial"
     type: string
     sql: ${TABLE}.RMA_RETURN_TYPE ;; }

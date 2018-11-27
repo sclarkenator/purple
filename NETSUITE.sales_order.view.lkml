@@ -33,8 +33,14 @@ view: sales_order {
   dimension: channel_id {
     label: "Channel ID"
     description:  "1 = DTC, 2 = Wholesale"
-    type:number
+    type: number
     sql: ${TABLE}.CHANNEL_id ;; }
+
+  dimension: channel {
+    label: "Channel"
+    description:  "DTC or Wholesale"
+    type: string
+    sql:  case when ${channel_id} = 2 then 'Wholesale' else 'DTC' end  ;; }
 
   dimension: created {
     hidden: yes
@@ -146,7 +152,8 @@ view: sales_order {
     sql: ${TABLE}.RECYCLE_FEE_AMT ;; }
 
   dimension: related_tranid {
-    hidden: no
+    label: "Related Transaction ID"
+    description: "Netsuite's internal related transaction id"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
@@ -258,8 +265,8 @@ view: sales_order {
 
   measure: manna_transmission_Average {
     view_label: "Fulfillment"
-    group_label: "Average Days to:"
-    label: "Average Days to Manna Transmission"
+    group_label: "Average Days:"
+    label: "to Manna Transmission"
     description: "Finds the average time elapsed between Order Date and Manna Transmission Date"
     type: average
     sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;; }

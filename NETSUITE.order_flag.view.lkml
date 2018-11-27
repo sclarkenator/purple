@@ -37,121 +37,141 @@ derived_table: {
     sql: ${TABLE}.order_id ;; }
 
   measure: mattress_orders {
-    label: "Total Orders with a Mattress"
+    group_label: "Total Orders with:"
+    label: "a Mattress"
     description: "1/0 per order; 1 if there was a mattress in the order"
     type:  sum
     sql:  ${TABLE}.mattress_flg ;; }
 
   measure: cushion_orders {
-    label: "Total Orders with a Cushion"
+    group_label: "Total Orders with:"
+    label: "a Cushion"
     description: "1/0 per order; 1 if there was a cushion in the order"
     type:  sum
     sql:  ${TABLE}.cushion_flg ;; }
 
   measure: sheets_orders {
-    label: "Total Orders with Sheets"
+    group_label: "Total Orders with:"
+    label: "Sheets"
     description: "1/0 per order; 1 if there were sheets in the order"
     type:  sum
     sql:  ${TABLE}.sheets_flg ;; }
 
   measure: protector_orders {
-    label: "Total Orders with a Mattress Protector"
+    group_label: "Total Orders with:"
+    label: "a Mattress Protector"
     description: "1/0 per order; 1 if there was a mattress protector in the order"
     type:  sum
     sql:  ${TABLE}.protector_flg ;; }
 
   measure: pillow_orders {
-    label: "Total Orders with a Pillow"
+    group_label: "Total Orders with:"
+    label: "a Pillow"
     description: "1/0 per order; 1 if there was a pillow in the order"
     type:  sum
     sql:  ${TABLE}.pillow_flg ;; }
 
   measure: base_orders {
-    label: "Total Orders with a Base"
+    group_label: "Total Orders with:"
+    label: "a Base"
     description: "1/0 per order; 1 if there was a base in the order"
     type:  sum
     sql:  ${TABLE}.base_flg ;; }
 
   measure: powerbase_orders {
-    label: "Total Orders with a Powerbase"
+    group_label: "Total Orders with:"
+    label: "a Powerbase"
     description: "1/0 per order; 1 if there was a powerbase in the order"
     type:  sum
     sql:  ${TABLE}.powerbase_flg ;; }
 
   measure: platform_orders {
-    label: "Total Orders with a Platform Base"
+    group_label: "Total Orders with:"
+    label: "a Platform Base"
     description: "1/0 per order; 1 if there was a platform base in the order"
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
 
   measure: mm_orders {
-    label: "Total Orders with Multiple Mattresses"
+    group_label: "Total Orders with:"
+    label: "Multiple Mattresses"
     description: "1/0 per order; 1 if there was more than 1 mattress in the order"
     type:  sum
     sql:  ${TABLE}.mm_flg ;; }
 
   measure: split_king_orders {
-    label: "Total Orders with a Split King"
+    group_label: "Total Orders with:"
+    label: "a Split King"
     description: "1/0 per order; 1 if multiple twin XL mattresses purchased in this order"
     type: sum
     sql: ${TABLE}.sk_flg ;; }
 
   dimension: mattress_flg {
-    label: "Order has a Mattress"
+    group_label: "Orders has:"
+    label: "a Mattress"
     description: "1/0; 1 if there is a mattress in this order"
     type:  number
     sql: ${TABLE}.mattress_flg ;; }
 
   dimension: cushion_flg {
-    label: "Order has a Cushion"
+    group_label: "Orders has:"
+    label: "a Cushion"
     description: "1/0; 1 if there is a cushion in this order"
     type:  number
     sql: ${TABLE}.cushion_flg ;; }
 
   dimension: sheets_flg {
-    label: "Order has Sheets"
+    group_label: "Orders has:"
+    label: "Sheets"
     description: "1/0; 1 if there are sheets in this order"
     type:  number
     sql: ${TABLE}.sheets_flg ;; }
 
   dimension: protector_flg {
-    label: "Order has a Mattress Protector"
+    group_label: "Orders has:"
+    label: "a Mattress Protector"
     description: "1/0; 1 if there is a mattress protector in this order"
     type:  number
     sql: ${TABLE}.protector_flg ;; }
 
   dimension: base_flg {
-    label: "Order has a Base"
+    group_label: "Orders has:"
+    label: "a Base"
     description: "1/0; 1 if there is a base in this order"
     type:  number
     sql: ${TABLE}.base_flg ;; }
 
   dimension: powerbase_flg {
-    label: "Order has a Powerbase"
+    group_label: "Orders has:"
+    label: "a Powerbase"
     description: "1/0; 1 if there is a powerbase in this order"
     type:  number
     sql: ${TABLE}.powerbase_flg ;; }
 
   dimension: platform_flg {
-    label: "Order has a Platform Base"
+    group_label: "Orders has:"
+    label: "a Platform Base"
     description: "1/0; 1 if there is a platform base in this order"
     type:  number
     sql: ${TABLE}.platform_flg ;; }
 
   dimension: pillow_flg {
-    label: "Order has a Pillow"
+    group_label: "Orders has:"
+    label: "a Pillow"
     description: "1/0; 1 if there is a pillow in this order"
     type:  number
     sql: ${TABLE}.pillow_flg ;; }
 
   dimension: split_flg {
-    label: "Order has a Split King"
+    group_label: "Orders has:"
+    label: "a Split King"
     description: "1/0; 1 if there is are multiple twin XL mattresses purchased in this order"
     type: yesno
     sql: ${TABLE}.sk_flg > 0 ;; }
 
   dimension: mm_orders_flg {
-    label: "Order has Multiple Mattresses"
+    group_label: "Orders has:"
+    label: "Multiple Mattresses"
     description: "1/0; 1 if there is more than 1 mattress in the order"
     type:  number
     sql:  ${TABLE}.mm_flg ;; }

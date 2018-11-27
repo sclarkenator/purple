@@ -28,7 +28,7 @@ view: item {
     sql: ${TABLE}.merchandise = 1 ;; }
 
   dimension: modified {
-    label: "Is Modified"
+    label: "Includes Modifications"
     description: "Yes is indicating product attributes have been manually set by BI"
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;}
@@ -42,6 +42,7 @@ view: item {
 
   dimension: product_description {
     label:  "Product Name"
+    description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
       label: "NetSuite"
@@ -130,7 +131,7 @@ view: item {
 
   dimension: color {
     label: "Sheets Color"
-    #description: "Only sheets have color assigned"
+    description: "Only sheets have color assigned"
     type: string
     sql: ${TABLE}.COLOR ;; }
 

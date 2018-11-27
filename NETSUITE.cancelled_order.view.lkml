@@ -8,7 +8,7 @@ view: cancelled_order {
     sql:  ${TABLE}.cancelled_qty  ;; }
 
   measure: orders_cancelled {
-    label: "Cancelled Orders (Count)"
+    label: "Cancelled Orders (count)"
     description: "Count (#) of distinct orders with at least 1 item cancelled"
     type: count_distinct
     sql: ${order_id} ;; }

@@ -3,11 +3,10 @@ view: customer_table {
 
   dimension: customer_id {
     label: "Customer ID"
-    description: "Hyperlink to customer record in netsuite"
-    #hidden: yes
-    type:number
-    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
-    sql: ${TABLE}.customer_id ;; }
+    description: "Hyperlink to customer record in netsuite by internal id"
+    type: string
+    html: <a href = "https://system.na2.netsuite.com/app/common/entity/custjob.nl?id={{value}}" target="_blank"> {{value}} </a> ;;
+    sql: ${TABLE}.customer_id::int ;; }
 
   dimension: companyname {
     label: "Wholesale Customer Name"
