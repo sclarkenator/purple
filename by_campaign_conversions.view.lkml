@@ -41,7 +41,7 @@ view: conversions_by_campaign {
   measure: conversions {
     label: "Total Conversions"
     type: sum
-    sql: ${TABLE}.conversions ;;  }
+    sql: ${TABLE}.conversion_value ;;  }
 
 
 }

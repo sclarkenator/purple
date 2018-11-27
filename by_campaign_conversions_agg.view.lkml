@@ -3,8 +3,8 @@ view: conversions_by_campaign_agg {
   derived_table: {
     sql: -- selecting the lowest zip code per city
       SELECT campaign_id, date, platform
-      , sum (conversions) as conversions
-      FROM marketing.conversions_by_campaign_history
+      , sum (conversion_value) as conversions
+      FROM marketing.conversions_by_campaign
       WHERE attribution_window_days = 1
       group by campaign_id, date, platform
       ;;

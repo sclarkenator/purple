@@ -2,19 +2,19 @@ view: cancelled_order {
   sql_table_name: SALES.CANCELLED_ORDER ;;
 
   measure: units_cancelled {
-    label: "Total cancelled (units)"
+    label: "Total Cancelled (units)"
     description: "Total individual units cancelled"
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;; }
 
   measure: orders_cancelled {
-    label: "Count of Orders Cancelled"
+    label: "Cancelled Orders (Count)"
     description: "Count (#) of distinct orders with at least 1 item cancelled"
     type: count_distinct
     sql: ${order_id} ;; }
 
   measure: amt_cancelled {
-    label:  "Total cancelled ($)"
+    label:  "Total Cancelled ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
     sql: ${TABLE}.gross_amt ;; }
@@ -107,9 +107,10 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
-    label:  "Total Cancelled ($)"
-    description: "Total $ returned to customer (excluding shipping and freight)"
+    label:  "Total Cancelled (Bucket)"
+    description: "Total $ returned to customer, excluding shipping and freight(0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
     type: number
+    tiers: [0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: order_id {

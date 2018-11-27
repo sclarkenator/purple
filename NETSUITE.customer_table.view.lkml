@@ -2,17 +2,22 @@ view: customer_table {
   sql_table_name: ANALYTICS_STAGE.netsuite.CUSTOMERS ;;
 
   dimension: customer_id {
-    hidden: yes
+    label: "Customer ID"
+    description: "Hyperlink to customer record in netsuite"
+    #hidden: yes
     type:number
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.customer_id ;; }
 
   dimension: companyname {
     label: "Wholesale Customer Name"
+    description: "Company Name from netsuite"
     type: string
     sql: ${TABLE}.companyname ;; }
 
   dimension: full_name {
     label: "DTC Customer Name"
+    description: "Merging first and last name from netsuite"
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));; }
 
@@ -36,7 +41,7 @@ view: customer_table {
     sql: ${customer_id}=2662 ;;}
 
   dimension: top_vendors {
-    label: "Top Customers"
+    label: "Wholesale Top Customers"
     description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace)"
     case: {
       when: { label: "Mattress Firm" sql: lower(companyname) = 'mattress firm' ;; }

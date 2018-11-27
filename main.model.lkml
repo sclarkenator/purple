@@ -106,11 +106,11 @@
   #-------------------------------------------------------------------
   #  DTC
   #Sales Order Line ------------------------------------------------------
-  #     \   \        \           \          \               \           \
-  #     Zip  \   Fulfillment      \          Return        Retro      Cancellations
-  #         Item      \          Sales         Order       Discount        \
-  #                  Dates       Orders         Line            \         Reason
-  #                            /   |   \          \           Discount
+  # \   \   \        \           \          \               \           \
+  #  \  Zip  \   Fulfillment      \          Return        Retro      Cancellations
+  #   \     Item      \          Sales         Order       Discount        \
+  #    \             Dates       Orders         Line            \         Reason
+  # Contributions              /   |   \          \           Discount
   #                      Shopify   |  Customer    Returns      Code
   #                              Order    \      |      \
   #                              Flag     DMA  Return    Return
