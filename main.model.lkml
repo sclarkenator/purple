@@ -448,7 +448,7 @@
     group_label: "Marketing"
     description: "Aggregated campaign data by date and campaign"
     join: adspend_by_campaign {
-      type: full_outer
+      type: left_outer
       sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign_agg.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign_agg.date}
         and ${adspend_by_campaign.platform} = ${conversions_by_campaign_agg.platform};;
       relationship:one_to_one}
