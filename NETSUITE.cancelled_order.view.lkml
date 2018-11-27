@@ -107,9 +107,10 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
-    label:  "Total Cancelled (Bucket)"
-    description: "Total $ returned to customer, excluding shipping and freight(0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
-    type: number
+    label:  "Total Cancelled (bucket)"
+    description: "Total $ returned to customer, excluding shipping and freight (0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
+    type: tier
+    style:  integer
     tiers: [0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     sql: ${TABLE}.gross_amt ;;}
 
