@@ -26,18 +26,21 @@ view: fulfillment_dates {
     }
 
   measure: days_to_ff {
+    group_label: "Average Days to:"
     label: "Average Days to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  average   #sum??
     sql:${TABLE}.days_to_ff ;; }
 
   measure: days_between_ff {
+    group_label: "Average Days to:"
     label: "Average Days between Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  average   #sum??
     sql:${TABLE}.days_between_ff ;; }
 
   measure: days_to_last_ff {
+    group_label: "Average Days to:"
     label: "Average  Days to the Last Fulfilled Item"
     description: "A calculations between the order date and last item fulfilled"
     type:  average   #sum??

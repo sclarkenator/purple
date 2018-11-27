@@ -33,6 +33,7 @@ view: fulfillment {
     sql:to_timestamp_ntz(${TABLE}.fulfilled) ;;  }
 
   parameter: timeframe_picker{
+    hidden: yes
     label: "Date Granularity Fulfillment"
     type: string
     allowed_value: { value: "Date"}
@@ -41,6 +42,7 @@ view: fulfillment {
     default_value: "Date"  }
 
   dimension: dynamic_timeframe {
+    hidden:yes
     type: date
     allow_fill: no
     sql:

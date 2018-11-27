@@ -22,13 +22,13 @@ view: sf_zipcode_facts {
   }
 
   dimension: city {
-    group_label: "Customer address"
+    group_label: "Customer Address"
     type: string
     sql: ${TABLE}.city ;;
   }
 
   dimension: state {
-    group_label: "Customer address"
+    group_label: "Customer Address"
     type: string
     sql: ${TABLE}.state ;;
   }
