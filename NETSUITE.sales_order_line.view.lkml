@@ -16,6 +16,7 @@ view: sales_order_line {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   measure: avg_cost {
+    hidden: yes
     label:  "Avgerage Cost ($)"
     description:  "Average unit cost, only valid looking at item-level data"
     type: average
@@ -23,6 +24,7 @@ view: sales_order_line {
     sql:  ${TABLE}.estimated_Cost ;; }
 
   measure: total_estimated_cost {
+    hidden: yes
     label: "Estimated Costs ($)"
     description: "Estimated cost value from NetSuite for the cost of materials"
     type: sum
@@ -30,6 +32,7 @@ view: sales_order_line {
     sql: ${TABLE}.estimated_Cost;; }
 
   measure: total_gross_Amt {
+    group_label: "Gross Sales"
     label:  "Gross Sales ($0.k)"
     description:  "Total the customer paid, excluding tax and freight, in $K"
     type: sum
@@ -37,6 +40,7 @@ view: sales_order_line {
     sql:  ${TABLE}.gross_amt ;; }
 
   measure: total_gross_Amt_non_rounded {
+    group_label: "Gross Sales"
     label:  "Gross Sales ($)"
     description:  "Total the customer paid, excluding tax and freight, in $"
     type: sum
@@ -61,6 +65,7 @@ view: sales_order_line {
     label: "Average Days to Fulfillment"
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
+    group_label: "Average Days to:"
     type:  average
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;; }
 
@@ -187,24 +192,28 @@ view: sales_order_line {
     sql: case when ${sales_order.channel_source} = 'SHOPIFY-US' then ${TABLE}.gross_amt else 0 end ;; }
 
   measure: unfulfilled_orders {
+    group_label: "Gross Sales Unfulfilled"
     label: "Unfulfilled Orders ($)"
     description: "Orders placed that have not been fulfilled"
     type: sum
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;; }
 
   measure: unfulfilled_orders_units {
+    group_label: "Gross Sales Unfulfilled"
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
     type: sum
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
 
   measure: fulfilled_orders {
+    group_label: "Gross Sales Fulfilled"
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
     type: sum
     sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;; }
 
   measure: fulfilled_orders_units {
+    group_label: "Gross Sales Fulfilled"
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
     type: sum
@@ -268,6 +277,7 @@ measure: total_line_item {
     sql:  ${item_order} ;; }
 
   measure: return_rate_units {
+    group_label: "Return Rates"
     label: "Return Rate (units%)"
     description: "Units returned/Units fulfilled"
     view_label: "Returns"
@@ -276,6 +286,7 @@ measure: total_line_item {
     value_format_name: "percent_1" }
 
   measure: return_rate_dollars {
+    group_label: "Return Rates"
     label: "Return Rate ($ %)"
     description: "Total $ returned / Total $ fulfilled"
     view_label: "Returns"
@@ -284,6 +295,7 @@ measure: total_line_item {
     value_format_name: "percent_1" }
 
   measure: total_units {
+    group_label: "Gross Sales"
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
@@ -307,6 +319,7 @@ measure: total_line_item {
     sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
   dimension: manna_order_age_bucket {
+    view_label: "Fulfillment"
     label: "Manna Order Age (Bucket)"
     description: "Number of days between today and when order was placed for Manna (7,14,21,28,35,42)"
     type:  tier
@@ -370,6 +383,7 @@ measure: total_line_item {
 
   dimension: MTD_flg{
     label: "Is Before Today (mtd)"
+    hidden:  yes
     #view_label:  "x - report filters"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
@@ -377,6 +391,7 @@ measure: total_line_item {
 
   dimension: MTD_fulfilled_flg{
     label: "Is Before Today (mtd)"
+    hidden:  yes
     view_label: "Fulfillment"
     #view_label:  "x - report filters"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
@@ -408,6 +423,7 @@ measure: total_line_item {
 
   parameter: timeframe_picker{
     label: "Date Granularity Sales"
+    hidden: yes
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}
@@ -417,6 +433,7 @@ measure: total_line_item {
   dimension: dynamic_timeframe {
     type: date
     allow_fill: no
+    hidden: yes
     sql:
       CASE
       When {% parameter timeframe_picker %} = 'Date' Then ${created_date}

@@ -39,6 +39,7 @@ view: shopify_orders {
   }
 
   dimension: call_in_order_Flag {
+    view_label: "Order-Level"
     label: "Draft order"
     description: "Draft orders created by call center agents"
     type: yesno

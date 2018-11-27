@@ -252,10 +252,13 @@ view: sales_order {
   dimension: manna_transmission {
     label: "Manna Transmission"
     description: "At the sales header level this is confirmation/acceptance from manna to netsuite that they will start the process of fulfillment"
+    view_label: "Fulfillment"
     type: date
     sql: ${TABLE}.manna_transmission ;; }
 
   measure: manna_transmission_Average {
+    view_label: "Fulfillment"
+    group_label: "Average Days to:"
     label: "Average Days to Manna Transmission"
     description: "Finds the average time elapsed between Order Date and Manna Transmission Date"
     type: average
@@ -264,6 +267,7 @@ view: sales_order {
   dimension: manna_transmission_succ {
     label: "Is Manna Transmission Success"
     description: "Yes if an order has successfully transmitted to Manna"
+    view_label: "Fulfillment"
     type: yesno
     sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';; }
 

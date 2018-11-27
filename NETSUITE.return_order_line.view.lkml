@@ -7,12 +7,14 @@ view: return_order_line {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   measure: units_returned {
+    group_label: "Return Amounts"
     label: "Total Returns (units)"
     description: "Total individual items returned"
     type: sum
     sql: ${TABLE}.return_qty ;; }
 
   measure: trial_units_returned {
+    group_label: "Return Amounts"
     label: "Total Trial Returns (units)"
     description: "Total individual items returned as a trial return"
     type: sum
@@ -27,6 +29,7 @@ view: return_order_line {
     sql: ${TABLE}.gross_amt ;; }
 
   measure: total_gross_amt {
+    group_label: "Return Amounts"
     label:  "Total Returns ($0.k)"
     description: "Total $ returned, excluding tax and freight"
     type: sum
