@@ -213,6 +213,10 @@
       view_label: "Fulfillment"
       type: left_outer
       sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
+      relationship: one_to_one}
+    join: contribution {
+      type: left_outer
+      sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
       relationship: one_to_one}}
 
   #-------------------------------------------------------------------
