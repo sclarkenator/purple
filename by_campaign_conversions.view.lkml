@@ -7,7 +7,7 @@ view: conversions_by_campaign {
   derived_table: {
     sql:
       SELECT campaign_id, date, platform, source, device, attribution_window_days, conversions
-      FROM marketing.conversions_by_campaign_history
+      FROM marketing.conversions_by_campaign
       WHERE attribution_window_days = 1
       );;
   }
