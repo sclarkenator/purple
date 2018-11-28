@@ -28,6 +28,7 @@ view: cm_pivot {
   measure: amount {
     label: "$ amount"
     description: "Dollar amount of each category"
+    value_format: "#,##0"
     type: sum
     sql: ${TABLE}."AMOUNT" ;;
   }
@@ -41,7 +42,6 @@ view: cm_pivot {
       when: { sql: lower(${TABLE}."CATEGORY") = 'cancelled_amt' ;; label: "cancellations" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'return_amt' ;; label: "returns" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'retro_discount_amt' ;; label: "retro discounts" }
-      when: { sql: lower(${TABLE}."CATEGORY") = 'net_sales' ;; label: "net sales" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'cogs' ;; label: "cogs" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'labor' ;; label: "direct labor" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'freight_in' ;; label: "freight-in" }
@@ -49,7 +49,6 @@ view: cm_pivot {
       when: { sql: lower(${TABLE}."CATEGORY") = 'merchant_fees' ;; label: "merchant fees" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'freight' ;; label: "shipping" }
       when: { sql: lower(${TABLE}."CATEGORY") = 'affiliate_fees' ;; label: "affiliate fees" }
-      when: { sql: lower(${TABLE}."CATEGORY") = 'contribution' ;; label: "contribution margin" }
       else: "other"
       }
   }
