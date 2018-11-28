@@ -216,7 +216,12 @@
     join: contribution {
       type: left_outer
       sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
-      relationship: one_to_one} }
+      relationship: one_to_one}
+    join: cm_pivot {
+      view_label: "x-CM waterfall"
+      type: left_outer
+      sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
+      relationship: one_to_many}}
 
 
     explore: wholesale {
