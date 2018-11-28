@@ -382,18 +382,18 @@ measure: total_line_item {
     sql: ${TABLE}.COUNTRY ;; }
 
   dimension: MTD_flg{
-    label: "Is Before Today (mtd)"
-    hidden:  yes
-    #view_label:  "x - report filters"
+    group_label: "Order Date"
+    label: "z - Is Before Today (mtd)"
+    #hidden:  yes
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;; }
 
   dimension: MTD_fulfilled_flg{
-    label: "Is Before Today (mtd)"
-    hidden:  yes
+    group_label: "Fulfilled Date"
+    label: "z - Is Before Today (mtd)"
+    #hidden:  yes
     view_label: "Fulfillment"
-    #view_label:  "x - report filters"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;; }
