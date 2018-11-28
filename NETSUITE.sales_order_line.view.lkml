@@ -650,7 +650,7 @@ measure: total_line_item {
   dimension: tax_amt {
     label: "Tax ($)"
     description: "Tax Amount from Sales Line"
-    hidden: yes
+    #hidden: yes
     type: number
     sql: ${TABLE}.TAX_AMT ;; }
 
