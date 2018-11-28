@@ -28,7 +28,7 @@ view: contribution {
   measure: affiliate_fees {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "12 - Affiliate Fees"
+    label: "7 - Affiliate Fees"
     description: "Affiliate fees directly tied to an order"
     value_format: "#,##0"
     type: sum
@@ -38,7 +38,7 @@ view: contribution {
   measure: cancelled_amt {
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
-    label: "2 - Cancelled ($)"
+    label: "1 - Cancelled ($)"
     description: "Gross $ value of cancelled items/orders"
     value_format: "#,##0"
     type: sum
@@ -48,17 +48,25 @@ view: contribution {
   measure: cogs {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "6 - COGS"
+    label: "1 - COGS"
     description: "Item-specific COGS based on Apr/May estimated costs in NS"
     value_format: "#,##0"
     type: sum
     sql: ${TABLE}."COGS" ;;
   }
 
+  measure: contribution {
+    view_label: "Contribution Margin"
+    label: "Contribution ($)"
+    description: "Contribution margin, what is left after netting out all item-level costs"
+    value_format: "#,##0"
+    type: sum
+    sql: ${TABLE}."CONTRIBUTION" ;;
+  }
   measure: freight {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "11 - Shipping"
+    label: "6 - Shipping"
     description: "All shipping expenses tied to fulfilling an item"
     value_format: "#,##0"
     type: sum
@@ -68,7 +76,7 @@ view: contribution {
   measure: freight_in {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "8 - Freight In"
+    label: "3 - Freight In"
     description: "In-bound freight, assumed at 8.9% of COGS"
     value_format: "#,##0"
     type: sum
@@ -76,19 +84,27 @@ view: contribution {
   }
 
   measure: gross_amt {
-    group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
-    label: "1 - Gross Sales ($)"
+    label: "Gross Sales ($)"
     description: "Gross sales"
     value_format: "#,##0"
     type: sum
-    sql: ${TABLE}."GROSS_AMT" ;;
+    sql: ${TABLE}."GROSS_SALES" ;;
+  }
+
+  measure: net_amt {
+    view_label: "Contribution Margin"
+    label: "Net Sales ($)"
+    description: "Net sales (gross - cancellations - returns - retro discounts"
+    value_format: "#,##0"
+    type: sum
+    sql: ${TABLE}."NET_SALES" ;;
   }
 
   measure: labor {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "7 - Labor"
+    label: "2 - Labor"
     description: "Per unit labor costs, based on October time studies"
     value_format: "#,##0"
     type: sum
@@ -98,7 +114,7 @@ view: contribution {
   measure: merchant_fees {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "9 - Merchant Fees"
+    label: "4 - Merchant Fees"
     description: "Merchant fees tied to order. 15% for Amazon, 6% for Affirm, 3% for all other DTC. 0% for Wholesale"
     value_format: "#,##0"
     type: sum
@@ -113,7 +129,10 @@ view: contribution {
   }
 
   measure: ordered_qty {
-    hidden:  yes
+    view_label: "Contribution Margin"
+    label: "Gross units"
+    description: "Gross units ordered"
+    hidden:  no
     value_format: "#,##0"
     type: sum
     sql: ${TABLE}."ORDERED_QTY" ;;
@@ -122,7 +141,7 @@ view: contribution {
   measure: retro_discount_amt {
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
-    label: "4 - Retro Discount"
+    label: "3 - Retro Discount"
     description: "Discounts applied after the order is initially placed. These are handled by Customer Care."
     value_format: "#,##0"
     type: sum
@@ -132,8 +151,8 @@ view: contribution {
   measure: return_amt {
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
-    label: "3 - Returns"
-    description: "Opened trial/non-trial returns for DTC"
+    label: "2 - Returns"
+    description: "Refunded trial/non-trial returns for DTC"
     value_format: "#,##0"
     type: sum
     sql: ${TABLE}."RETURN_AMT" ;;
@@ -142,7 +161,7 @@ view: contribution {
   measure: warranty {
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
-    label: "10 - Warranty"
+    label: "5 - Warranty"
     description: "Budgeted warranty allowance, based on 3.1% of COGS"
     value_format: "#,##0"
     type: sum
