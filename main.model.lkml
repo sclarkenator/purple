@@ -223,7 +223,6 @@
       sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
       relationship: one_to_many}}
 
-
   explore: wholesale {
     #-------------------------------------------------------------------
     #  Wholesale - for details see DTC ^
