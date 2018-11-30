@@ -71,9 +71,9 @@ view: sales_order_line {
 
   measure: mf_fulfilled {
     view_label: "Fulfillment"
-    label: "Mattress Firm SLA (old)"
+    label: "Mattress Firm SLA (numerator)"
     hidden: yes
-    description: "Was the order shipped out by the required ship-by date to arrive to Mattress Firm on time"
+    description: "Total units successfully fulfilled before the ship by date"
     filters: {
       field: sales_order.customer_id
       value: "2662" }
@@ -82,9 +82,9 @@ view: sales_order_line {
 
   measure: mf_units {
     view_label: "Fulfillment"
-    label: "Mattress Firm SLA (units)"
+    label: "Mattress Firm SLA (denominator)"
     hidden: yes
-    description: "How many items are there on the order to be shipped?"
+    description: "Total units not cancelled before the ship by date"
     filters: {
       field: sales_order.customer_id
       value: "2662" }
