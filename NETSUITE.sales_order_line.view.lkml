@@ -123,43 +123,7 @@ view: sales_order_line {
     type: number
     sql: ${whlsl_fulfilled}/nullif(${whlsl_units},0) ;; }
 
-  measure: fulfilled_in_SLA {
-    view_label: "Fulfillment"
-    label: "West Fulfillment SLA"
-    hidden: yes
-    description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
-    filters: {
-      field: item.manna_fulfilled
-      value: "No" }
-    filters: {
-      field: system
-      value: "NETSUITE" }
-    filters: {
-      field: sales_order.channel_id
-      value: "1" }
-    drill_fields: [fulfill_details*]
-    type: sum
-    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
-
-  measure: manna_fulfilled_in_SLA {
-    view_label: "Fulfillment"
-    label: "Manna Fulfillment SLA"
-    hidden: yes
-    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
-    filters: {
-      field: item.manna_fulfilled
-      value: "Yes" }
-    filters: {
-      field: system
-      value: "NETSUITE" }
-    filters: {
-      field: sales_order.channel_id
-      value: "1" }
-    drill_fields: [fulfill_details*]
-    type: sum
-    sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
-
-  measure: amazon_ca_sales {
+    measure: amazon_ca_sales {
     label: "Amazon-CA Gross Amount ($0.k)"
     description: "used to generate the sales by channel report"
     hidden: yes
@@ -219,39 +183,40 @@ view: sales_order_line {
     type: sum
     sql: case when ${fulfilled_date} is not null then ${ordered_qty} else 0 end ;; }
 
+  measure: fulfilled_in_SLA {
+    view_label: "Fulfillment"
+    label: "West Fulfillment SLA"
+    hidden: yes
+    description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
+    filters: {
+      field: carrier
+      value: "-Manna,-XPO" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      drill_fields: [fulfill_details*]
+      type: sum
+      sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
+
   measure: SLA_eligible {
     label: "WEST SLA Eligible (3)"
     description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
     hidden: yes
     filters: {
-      field: item.manna_fulfilled
-      value: "No" }
+      field: carrier
+      value: "-Manna,-XPO" }
     filters: {
-      field: system
-      value: "NETSUITE" }
-    filters: {
-      field: sales_order.channel_id
-      value: "1" }
-    type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,3,${created_date})) then ${ordered_qty} else 0 end ;; }
-
-  measure: manna_SLA_eligible {
-    label: "Manna SLA Eligible (14)"
-    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
-    view_label: "Fulfillment"
-    hidden: yes
-    filters: {
-      field: item.manna_fulfilled
-      value: "Yes" }
-    filters: {
-      field: system
-      value: "NETSUITE" }
-    filters: {
-      field: sales_order.channel_id
-      value: "1" }
-    type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      type:  sum
+      sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,3,${created_date})) then ${ordered_qty} else 0 end ;; }
 
   measure: SLA_achieved{
     label: "West SLA Achievement (% in 3 days)"
@@ -261,15 +226,93 @@ view: sales_order_line {
     value_format_name: percent_0
     sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;; }
 
-  measure: manna_sla_achieved{
-    label: "Manna SLA Achievement (% in 10 days)"
+  measure: manna_fulfilled_in_SLA {
+      view_label: "Fulfillment"
+      label: "Manna Fulfillment SLA"
+      hidden: yes
+      description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+      filters: {
+        field: carrier
+        value: "Manna" }
+      filters: {
+        field: sales_order.channel_source
+        value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+        drill_fields: [fulfill_details*]
+        type: sum
+        sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
+
+  measure: manna_SLA_eligible {
+    label: "Manna SLA Eligible (14)"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
-    description: "Percent of line items fulfilled by Manna within 10 days of order"
+    hidden: yes
+    filters: {
+      field: carrier
+      value: "Manna" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      type:  sum
+      sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) >= to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
+
+  measure: manna_sla_achieved{
+    label: "Manna SLA Achievement (% in 14 days)"
+    view_label: "Fulfillment"
+    description: "Percent of line items fulfilled by Manna within 14 days of order"
     type: number
     value_format_name: percent_0
-    sql: case when datediff(day,${created_date},current_date) > 10 then ${manna_fulfilled_in_SLA}/nullif(${manna_SLA_eligible},0) else null end ;; }
+    sql: case when datediff(day,${created_date},current_date) > 14 then ${manna_fulfilled_in_SLA}/nullif(${manna_SLA_eligible},0) else null end ;; }
 
-measure: total_line_item {
+  measure: XPO_fulfilled_in_SLA {
+    view_label: "Fulfillment"
+    label: "XPO Fulfillment SLA"
+    hidden: yes
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+    filters: {
+      field: carrier
+      value: "XPO" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      drill_fields: [fulfill_details*]
+      type: sum
+      sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
+
+  measure: XPO_SLA_eligible {
+    label: "Manna SLA Eligible (14)"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+    view_label: "Fulfillment"
+    hidden: yes
+    filters: {
+      field: carrier
+      value: "XPO" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      type:  sum
+      sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
+
+  measure: xpo_sla_achieved{
+    label: "XPO SLA Achievement (% in 14 days)"
+    view_label: "Fulfillment"
+    description: "Percent of line items fulfilled by Manna within 1 days of order"
+    type: number
+    value_format_name: percent_0
+    sql: case when datediff(day,${created_date},current_date) > 14 then ${XPO_fulfilled_in_SLA}/nullif(${XPO_SLA_eligible},0) else null end ;; }
+
+  measure: total_line_item {
   label: "Total Line Items"
     description: "Total line items to fulfill"
     hidden: yes
@@ -668,9 +711,9 @@ measure: total_line_item {
 
   dimension: carrier {
     view_label: "Fulfillment"
-    label: "Pre-Fulfillment Expected Carrier"
+    label: "Expected Carrier"
     description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.CARRIER ;; }
 
