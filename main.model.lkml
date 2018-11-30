@@ -224,7 +224,7 @@
       relationship: one_to_many}}
 
 
-    explore: wholesale {
+  explore: wholesale {
     #-------------------------------------------------------------------
     #  Wholesale - for details see DTC ^
     #-------------------------------------------------------------------
@@ -449,9 +449,21 @@
     }
   }
 
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
+
+    explore: sales_test {
+      extends: [wholesale]
+      group_label: "Sales"
+      label: "Sales - TEST"
+      hidden:  yes
+      always_filter: {
+        filters: {field: sales_order.channel      value: "DTC,Wholesale"}
+        filters: {field: item.merchandise         value: "No"}
+        filters: {field: item.finished_good_flg   value: "Yes"}
+        filters: {field: item.modified            value: "Yes"}} }
 
     explore: conversions_by_campaign_agg {
       hidden:  yes
