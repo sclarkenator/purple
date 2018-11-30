@@ -216,6 +216,12 @@ view: sales_order {
     type: number
     sql: ${TABLE}.TAX_AMT ;; }
 
+  measure: tax_amt_total {
+    label: "Total Tax ($)"
+    #hidden: yes
+    type: sum
+    sql: ${TABLE}.TAX_AMT ;; }
+
   dimension_group: trandate {
     hidden: yes
     type: time

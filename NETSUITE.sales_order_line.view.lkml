@@ -641,18 +641,18 @@ measure: total_line_item {
     sql: ${TABLE}.STREET_ADDRESS ;; }
 
   dimension: system {
-    hidden: yes
+    #hidden: yes
     label: "Source System"
     description: "This is the system the data came from"
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 
-  dimension: tax_amt {
-    label: "Tax ($)"
-    description: "Tax Amount from Sales Line"
+ #dimension: tax_amt {
+    #label: "Tax ($)"
+    #description: "Tax Amount from Sales Line"
     #hidden: yes
-    type: number
-    sql: ${TABLE}.TAX_AMT ;; }
+    #type: number
+    #sql: ${sales_order.TAX_AMT} ;; }
 
   dimension: update_ts {
     hidden: yes
