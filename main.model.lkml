@@ -27,7 +27,7 @@
   #    WhenHeard      Orders      Flag
   #-------------------------------------------------------------------
     group_label: "Marketing"
-    label: "Hotjar survey results"
+    label: "Hotjar Survey Results"
     description: "Results form Hotjar post-purchase survey"
     join: hotjar_whenheard {
       type:  left_outer
