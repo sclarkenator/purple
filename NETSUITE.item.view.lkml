@@ -69,6 +69,16 @@ view: item {
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;; }
 
+  dimension: product_bucket {
+    label: "Product Type (bucket)"
+    description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
+    type: string
+        case: {
+          when: { sql:  ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' ;; label: "Mattress" }
+          when: { sql:  ${TABLE}.PRODUCT_LINE_NAME_lkr in ('PILLOW','SHEETS','PROTECTOR') ;; label: "Top of Bed" }
+          when: { sql:  ${TABLE}.PRODUCT_LINE_NAME_lkr in ('PLATFORM','POWERBASE') ;; label: "Bottom of Bed" }
+          else: "Other" } }
+
   dimension: product_line_name_with_bases_breakout {
     hidden: yes
     label: "Product Type with Bases Breakout"
