@@ -351,15 +351,16 @@ view: sales_order_line {
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
-    sql: datediff(day,${created_date},current_date) ;; }
+    sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
   dimension: order_age_bucket_2 {
-    label: "Order Age V2 (Bucket)"
+    label: "Order Age Orginal (Bucket)"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
+    hidden: yes
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
-    sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+    sql: datediff(day,${created_date},current_date) ;; }
 
   dimension: manna_order_age_bucket {
     view_label: "Fulfillment"
