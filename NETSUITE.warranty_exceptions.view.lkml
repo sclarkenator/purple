@@ -19,7 +19,7 @@ view: netsuite_warranty_exceptions {
       select
           nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.category, nr.memo
       from nr
-          join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id
+          join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
           WHEN memo like '%DSC%' THEN 0
           WHEN memo like '%NSI%' THEN 0

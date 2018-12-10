@@ -478,7 +478,8 @@
         type: left_outer
         sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign_agg.campaign_id}, ${adspend_by_campaign.campaign_id});;
         relationship: many_to_one } }
-
+  explore: tim_forecast {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
   explore: sessions {hidden: yes}
   explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
   explore: retail_stores {hidden:  yes  label: "list of retail outlets as of Nov 1, 2018"}
