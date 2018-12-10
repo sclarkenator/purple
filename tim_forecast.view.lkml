@@ -9,6 +9,7 @@ view: tim_forecast {
           , a.item_id
           , a.amount as monthly_goal
           , a.amount/c.days_in_month as daily_goal
+          , a.units/c.days_in_month as total_units
       from analytics.csv_uploads.forecasted_targets a
       left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
       left join (
@@ -46,6 +47,16 @@ view: tim_forecast {
     label: "Total Forecast Amount"
     type:  sum
     sql:round(${TABLE}.daily_goal,2) ;; }
+
+  measure: total_units {
+    label: "Total Units"
+    type:  sum
+    sql:round(${TABLE}.total_units,2) ;; }
+
+  measure: avg_units {
+    label: "Average Units"
+    type:  average
+    sql:round(${TABLE}.total_units,2) ;; }
 
   measure: to_date {
     label: "Total Goal to Date"

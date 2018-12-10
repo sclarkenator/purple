@@ -346,7 +346,7 @@ view: sales_order_line {
     sql:  ${TABLE}.ordered_qty ;; }
 
   dimension: order_age_bucket {
-    label: "Order Age (Bucket)"
+    label: "Order Age (bucket)"
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,14)"
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
@@ -354,7 +354,7 @@ view: sales_order_line {
     sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
   dimension: order_age_bucket_2 {
-    label: "Order Age Orginal (Bucket)"
+    label: "Order Age Orginal (bucket)"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
     hidden: yes
     type:  tier
