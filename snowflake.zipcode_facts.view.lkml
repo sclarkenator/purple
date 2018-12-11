@@ -33,6 +33,26 @@ view: sf_zipcode_facts {
     sql: ${TABLE}.state ;;
   }
 
+  dimension: fulfillment_region {
+    label: "US Fulfillment Region"
+    group_label: "Customer Address"
+    type: string
+    sql: case when ${TABLE}.state = 'CA'
+              then 'California'
+          when ${TABLE}.state in ('TX', 'FL', 'NY', 'OH', 'IL', 'PA', 'VA', 'NC', 'GA', 'MI',
+                                  'MN', 'MD', 'TN', 'IN', 'MO', 'WI', 'OK', 'SC', 'AL', 'LA',
+                                  'KY', 'KS', 'IA', 'AR', 'NE', 'MS', 'ND', 'WV', 'DE', 'DC',
+                                  'SD', 'MA', 'NJ', 'NH', 'ME', 'VT', 'CT', 'RI')
+              then 'East'
+          when ${TABLE}.state in ('UT', 'CO', 'AZ', 'NV', 'ID', 'NM', 'MT', 'WY')
+              then 'Mountain West'
+          when ${TABLE}.state in ('WA', 'OR')
+              then 'Northwest'
+          when ${TABLE}.state is null
+              then 'Unknown'
+          else 'Other' END ;;
+  }
+
   dimension: county_name {
     group_label: "County"
     hidden: yes
