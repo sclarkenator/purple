@@ -77,7 +77,7 @@ view: sales_order {
     sql: ${TABLE}.IN_HAND ;; }
 
   dimension_group: minimum_ship {
-    label: "Minimum Ship by Date"
+    label: "Minimum Ship by"
     description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay"
     view_label: "Fulfillment"
     #hidden: yes
@@ -96,6 +96,17 @@ view: sales_order {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.SHIP_BY ;; }
+
+  dimension_group: ship_by_2 {
+    label: "Ship by and Minimum Ship"
+    description: "Picking the date in the future of the created date"
+    view_label: "Fulfillment"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: case when ${sales_order.minimum_ship_date} > ${sales_order.ship_by_date} then ${sales_order.minimum_ship_date}
+      else dateadd(d,-3,${sales_order.ship_by_date}) end ;; }
 
   dimension: insert_ts {
     hidden: yes
