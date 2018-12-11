@@ -48,6 +48,7 @@ view: manna_data_pull {
 
   dimension: manna_bol {
     type: string
+    primary_key: yes
     sql: ${TABLE}."MANNA_BOL" ;;
   }
 
