@@ -2,21 +2,30 @@ view: tim_forecast {
 
   derived_table: {
     sql:
-      select b.date
-          --, c.days_in_month
-          --, a.date as goal_month
-          , a.sku_id
-          , a.item_id
-          , a.amount as monthly_goal
-          , a.amount/c.days_in_month as daily_goal
-          , a.units/c.days_in_month as total_units
-      from analytics.csv_uploads.forecasted_targets a
-      left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
-      left join (
-        select year, month, count (date) as days_in_month
-        from analytics.util.warehouse_date
-        group by year, month
-      ) c on c.year = b.year and c.month = b.month ;;
+      select z.date
+        , z.sku_id
+        , z.item_id
+        , z.monthly_goal
+        , z.daily_goal+coalesce(a.amount,0) as daily_goal
+        , z.total_units+coalesce(a.units,0) as total_units
+      from (
+        select b.date
+            --, c.days_in_month
+            --, a.date as goal_month
+            , a.sku_id
+            , a.item_id
+            , a.amount as monthly_goal
+            , a.amount/c.days_in_month as daily_goal
+            , a.units/c.days_in_month as total_units
+        from analytics.csv_uploads.forecasted_targets a
+        left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
+        left join (
+          select year, month, count (date) as days_in_month
+          from analytics.util.warehouse_date
+          group by year, month
+        ) c on c.year = b.year and c.month = b.month
+      ) z
+      left join analytics.csv_uploads.forecasted_holidays a on a.date = z.date and z.sku_id = a.sku_id and z.item_id = a.item_id;;
   }
 
   dimension_group: date {
