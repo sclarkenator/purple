@@ -1,13 +1,13 @@
 view: sales_order_line {
-  #sql_table_name: SALES.SALES_ORDER_LINE ;;
-  derived_table: {
-    sql:
-      select a.*
-        , b.ship_by
-      from sales.sales_order_line a
-     left join sales.sales_order b on b.order_id = a.order_id
-      ;;
-  }
+  sql_table_name: SALES.SALES_ORDER_LINE ;;
+  #derived_table: {
+  #  sql:
+  #    select a.*
+  #      , b.ship_by
+  #    from sales.sales_order_line a
+  #   left join sales.sales_order b on b.order_id = a.order_id
+  #    ;;
+  #}
 
   dimension: item_order{
     type: string
@@ -351,7 +351,12 @@ view: sales_order_line {
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
     style: integer
-    sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+    sql: datediff(day,
+      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
+        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
+        else ${created_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
