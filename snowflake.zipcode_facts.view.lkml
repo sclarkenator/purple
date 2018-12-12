@@ -48,9 +48,9 @@ view: sf_zipcode_facts {
               then 'Mountain West'
           when ${TABLE}.state in ('WA', 'OR')
               then 'Northwest'
-          when ${TABLE}.state is null
-              then 'Unknown'
-          else 'Other' END ;;
+          --when ${TABLE}.state is null
+              --then 'Unknown'
+          else 'Other/Unknown' END ;;
   }
 
   dimension: county_name {
