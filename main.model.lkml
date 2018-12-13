@@ -469,19 +469,19 @@
 #         filters: {field: item.finished_good_flg   value: "Yes"}
 #         filters: {field: item.modified            value: "Yes"}} }
 
-    explore: conversions_by_campaign_agg {
+    explore: conversions_by_campaign {
       hidden:  yes
       label: "Conversions by Campaign"
       group_label: "Marketing"
       description: "Aggregated campaign data by date and campaign"
       join: adspend_by_campaign {
         type: left_outer
-        sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign_agg.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign_agg.date}
-          and ${adspend_by_campaign.platform} = ${conversions_by_campaign_agg.platform};;
+        sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
+          and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};;
         relationship:one_to_one}
       join: external_campaign {
         type: left_outer
-        sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign_agg.campaign_id}, ${adspend_by_campaign.campaign_id});;
+        sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
         relationship: many_to_one } }
   explore: tim_forecast {hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
@@ -495,7 +495,8 @@
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-  explore: shopify_orders { hidden:  yes  label: "Shopify sales simple"  description: "Shopify header level information"}
+  explore: shopify_orders { hidden:  yes  label: "Shopify sales simple"  description: "Shopify header level information"
+    join: sales_order{type:left_outer sql_on: ${sales_order.etail_order_id}::text = ${shopify_orders.id}::text ;; relationship: one_to_one }}
   explore: orphan_orders {hidden:  yes  label: "Orphan orders"  description: "Orders that exist in Shopify that aren't yet in Netsuite"}
   explore: refund {hidden: yes  group_label: "x - Accounting"  label: "Accounting Refunds"  description: "Refunds on sales at an order level, for accounting."}
   explore: shopify_warranties {hidden: yes  from: orphaned_shopify_warranties  group_label: "x - Accounting"
