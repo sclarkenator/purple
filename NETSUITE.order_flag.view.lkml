@@ -11,6 +11,7 @@ derived_table: {
       ,case when POWERBASE_FLG >0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG >0 then 1 else 0 end platform_flg
       ,case when PILLOW_FLG >0 then 1 else 0 end pillow_flg
+      ,case when BLANKET_FLG >0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
       ,case when split_king > 0 then 1 else 0 end sk_flg
     FROM(
@@ -23,6 +24,7 @@ derived_table: {
         ,SUM(CASE WHEN MODEL_NAME_LKR = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
         ,SUM(CASE WHEN MODEL_NAME_LKR = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
+        ,SUM(CASE WHEN PRODUCT_description_LKR like '%BLANKET%' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when product_description_LKR like '%POWERBASE - SPLIT KING%' then 1 else 0 end) split_king
       from sales_order_line sol
@@ -91,6 +93,13 @@ derived_table: {
     description: "1/0 per order; 1 if there was a platform base in the order"
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
+
+  measure: blanket_orders {
+    group_label: "Total Orders with:"
+    label: "a Blanket"
+    description: "1/0 per order; 1 if there was a blanket in the order"
+    type:  sum
+    sql:  ${TABLE}.blanket_flg ;; }
 
   measure: mm_orders {
     group_label: "Total Orders with:"
@@ -161,6 +170,13 @@ derived_table: {
     description: "1/0; 1 if there is a pillow in this order"
     type:  number
     sql: ${TABLE}.pillow_flg ;; }
+
+  dimension: blanket_flg {
+    group_label: "Orders has:"
+    label: "a Blanket"
+    description: "1/0; 1 if there is a blanket in this order"
+    type:  number
+    sql: ${TABLE}.blanket_flg ;; }
 
   dimension: split_flg {
     group_label: "Orders has:"
