@@ -17,8 +17,7 @@ view: conversions_by_campaign {
           , zz.max_window, zz.count_window
       from marketing.conversions_by_campaign a
       left join zz on zz.campaign_id = a.campaign_id and zz.date = a.date and zz.platform = a.platform
-          and zz.source = a.source and zz.device = a.device ;;
-  }
+          and zz.source = a.source and zz.device = a.device ;; }
 
   dimension: campaign_id {
     label: "Campaign ID"
