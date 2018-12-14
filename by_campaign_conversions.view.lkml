@@ -19,8 +19,6 @@ view: conversions_by_campaign {
       left join zz on zz.campaign_id = a.campaign_id and zz.date = a.date and zz.platform = a.platform
           and zz.source = a.source and zz.device = a.device ;;
   }
-  #measure for max attribution window days with a cap at 7
-  #window = max (max is only to 7)
 
   dimension: campaign_id {
     label: "Campaign ID"
