@@ -1,9 +1,9 @@
 view: current_oee {
   sql_table_name: PRODUCTION.OEE ;;
 
-  dimension: available_rate {
-    type: string
-    sql: ${TABLE}."AVAILABLE_RATE" ;;
+  measure: available_rate {
+    type: sum
+    sql: ${TABLE}."OPERATING_TIME"/${TABLE}."MINUTES_AVAILABLE" ;;
   }
 
   dimension_group: insert_ts {
@@ -57,13 +57,15 @@ view: current_oee {
   }
 
   measure: performance_pcnt {
-    type: average
-    sql: ${TABLE}."PERFORMANCE_PCNT" ;;
+    type: sum
+    value_format: "0.0%"
+    sql: (${TABLE}."TOTAL_PRODUCED"/${TABLE}."OPERATING_TIME")/.5 ;;
   }
 
   measure: quality_pcnt {
-    type: average
-    sql: ${TABLE}."QUALITY_PCNT" ;;
+    type: sum
+    value_format: "0.0%"
+    sql: ${TABLE}."TOTAL_PRODUCED"/${TABLE}."SCRAP_REGRIND_PRODUCED" ;;
   }
 
   measure: scrap_regrind_produced {
