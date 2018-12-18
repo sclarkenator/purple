@@ -21,10 +21,16 @@ explore: production_report {
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
 }
 
+explore: current_oee {
+  hidden:  yes
+  label: "Current OEE Table"
+  description: "Automatic OEE Dataset in Snowflake"
+}
+
 
 explore: oee {
   hidden:  yes
-  label: "OEE Table"
+  label: "Historical OEE Table"
   description: "Static OEE Dataset in Snowflake"
 }
 
