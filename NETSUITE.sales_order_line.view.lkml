@@ -44,7 +44,7 @@ view: sales_order_line {
     label:  "Gross Sales ($)"
     description:  "Total the customer paid, excluding tax and freight, in $"
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
     sql:  ${TABLE}.gross_amt ;; }
 
   measure: gross_gross_Amt {
@@ -159,6 +159,7 @@ view: sales_order_line {
     group_label: "Gross Sales Unfulfilled"
     label: "Unfulfilled Orders ($)"
     description: "Orders placed that have not been fulfilled"
+    value_format: "$#,##0"
     type: sum
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;; }
 
