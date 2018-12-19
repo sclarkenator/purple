@@ -83,7 +83,7 @@ view: item {
     label: "Product Type V2"
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
-    sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Orginal'
+    sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
      when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL'  then 'New Mattress'
      else ${TABLE}.PRODUCT_LINE_NAME_lkr end;; }
 
