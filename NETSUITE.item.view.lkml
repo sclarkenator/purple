@@ -79,6 +79,14 @@ view: item {
           when: { sql:  ${TABLE}.PRODUCT_LINE_NAME_lkr in ('PLATFORM','POWERBASE') ;; label: "Bottom of Bed" }
           else: "Other" } }
 
+  dimension: type_2 {
+    label: "Product Type V2"
+    description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
+    type: string
+    sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
+     when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL'  then 'New Mattress'
+     else ${TABLE}.PRODUCT_LINE_NAME_lkr end;; }
+
   dimension: product_line_name_with_bases_breakout {
     hidden: yes
     label: "Product Type with Bases Breakout"
