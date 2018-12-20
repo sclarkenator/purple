@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
-# Owner - Jonathan Stratton
-# Netsuite report, exported and saved as a snapshot.
+# Owner - Derek Foreman
+# iPad data, pulled directly from IT Database.
 #-------------------------------------------------------------------
 
 view: production_report {

@@ -25,6 +25,11 @@ explore: current_oee {
   hidden:  no
   label: "Current OEE Table"
   description: "Automatic OEE Dataset in Snowflake"
+
+  join: iPad_Machine_Table {
+    sql_on: ${iPad_Machine_Table.machine_id} = ${current_oee.machine_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
