@@ -57,6 +57,11 @@ view: current_oee {
     sql: ${TABLE}."OPERATING_TIME" ;;
   }
 
+  measure: Overall_OEE {
+    type: sum
+    value_format: "0.0%"
+    sql: (${quality_pcnt}*${available_pcnt}*${performance_pcnt} ;;}
+
   measure: performance_pcnt {
     type: sum
     value_format: "0.0%"
