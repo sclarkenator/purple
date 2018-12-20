@@ -2,7 +2,7 @@ view: current_oee {
   sql_table_name: PRODUCTION.OEE ;;
 
   measure: available_pcnt {
-    type: sum
+    type: average
     value_format: "0.0%"
     sql: ${TABLE}."OPERATING_TIME"/${TABLE}."MINUTES_AVAILABLE" ;;
   }
@@ -58,18 +58,18 @@ view: current_oee {
   }
 
   measure: Overall_OEE {
-    type: sum
+    type: average
     value_format: "0.0%"
     sql: (${quality_pcnt}*${available_pcnt}*${performance_pcnt} ;;}
 
   measure: performance_pcnt {
-    type: sum
+    type: average
     value_format: "0.0%"
     sql: (${TABLE}."TOTAL_PRODUCED"/nullif(${TABLE}."OPERATING_TIME",0))/${TABLE}."CYCLE_TIME" ;;
   }
 
   measure: quality_pcnt {
-    type: sum
+    type: average
     value_format: "0.0%"
     sql: (${TABLE}."TOTAL_PRODUCED"-${TABLE}."SCRAP_REGRIND_PRODUCED")/${TABLE}."TOTAL_PRODUCED" ;;
   }
