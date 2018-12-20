@@ -2,9 +2,9 @@ view: current_oee {
   sql_table_name: PRODUCTION.OEE ;;
 
   measure: available_pcnt {
-    type: average
+    type: number
     value_format: "0.0%"
-    sql: ${TABLE}."OPERATING_TIME"/${TABLE}."MINUTES_AVAILABLE" ;;
+    sql: sum(${TABLE}."OPERATING_TIME")/sum(${TABLE}."MINUTES_AVAILABLE") ;;
   }
 
   dimension_group: insert_ts {
@@ -58,20 +58,20 @@ view: current_oee {
   }
 
   measure: Overall_OEE {
-    type: average
+    type: number
     value_format: "0.0%"
-    sql: (${quality_pcnt}*${available_pcnt}*${performance_pcnt} ;;}
+    sql: (${quality_pcnt}*${available_pcnt}*${performance_pcnt}) ;;}
 
   measure: performance_pcnt {
-    type: average
+    type: number
     value_format: "0.0%"
-    sql: (${TABLE}."TOTAL_PRODUCED"/nullif(${TABLE}."OPERATING_TIME",0))/${TABLE}."CYCLE_TIME" ;;
+    sql: coalesce(sum(${TABLE}."TOTAL_PRODUCED")/nullif(sum(${TABLE}."OPERATING_TIME"),0)/avg(${TABLE}."CYCLE_TIME"),0) ;;
   }
 
   measure: quality_pcnt {
-    type: average
+    type: number
     value_format: "0.0%"
-    sql: (${TABLE}."TOTAL_PRODUCED"-${TABLE}."SCRAP_REGRIND_PRODUCED")/${TABLE}."TOTAL_PRODUCED" ;;
+    sql: coalesce((sum(${TABLE}."TOTAL_PRODUCED")-sum(${TABLE}."SCRAP_REGRIND_PRODUCED"))/nullif(sum(${TABLE}."TOTAL_PRODUCED"),0),0) ;;
   }
 
   measure: cycle_time {
