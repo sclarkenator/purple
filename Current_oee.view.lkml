@@ -1,7 +1,7 @@
 view: current_oee {
   sql_table_name: PRODUCTION.OEE ;;
 
-  measure: available_rate {
+  measure: available_pcnt {
     type: sum
     sql: ${TABLE}."OPERATING_TIME"/${TABLE}."MINUTES_AVAILABLE" ;;
   }
@@ -59,13 +59,18 @@ view: current_oee {
   measure: performance_pcnt {
     type: sum
     value_format: "0.0%"
-    sql: (${TABLE}."TOTAL_PRODUCED"/${TABLE}."OPERATING_TIME")/.5 ;;
+    sql: (${TABLE}."TOTAL_PRODUCED"/nullif(${TABLE}."OPERATING_TIME"))/${cycle_time} ;;
   }
 
   measure: quality_pcnt {
     type: sum
     value_format: "0.0%"
-    sql: ${TABLE}."TOTAL_PRODUCED"/${TABLE}."SCRAP_REGRIND_PRODUCED" ;;
+    sql: (${TABLE}."TOTAL_PRODUCED"-${TABLE}."SCRAP_REGRIND_PRODUCED")/${TABLE}."TOTAL_PRODUCED" ;;
+  }
+
+  measure: cycle_time {
+    type: sum
+    sql: ${cycle_time} ;;
   }
 
   measure: scrap_regrind_produced {
