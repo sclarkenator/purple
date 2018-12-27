@@ -61,7 +61,7 @@ view: contribution {
     description: "Contribution margin, what is left after netting out all item-level costs"
     value_format: "#,##0"
     type: sum
-    sql: ${TABLE}."CONTRIBUTION" ;;
+    sql: ${TABLE}."CONTRIBUTION_MARGIN" ;;
   }
   measure: freight {
     group_label: "Net-to-CM"
