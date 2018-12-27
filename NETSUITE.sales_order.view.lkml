@@ -138,9 +138,18 @@ view: sales_order {
   dimension: Order_size_buckets{
     label: "Order Size (Buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
+    hidden:   yes
     type:  tier
     style: integer
     tiers: [150,600,1000,1500,2500]
+    sql: ${TABLE}.gross_amt ;; }
+
+  dimension: Order_size_buckets_v2{
+    label: "Order Size (Buckets)"
+    description: "$500 price buckets"
+    type:  tier
+    style: integer
+    tiers: [500,1000,1500,2000,2500,3000,3500,4000]
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: order_id {
