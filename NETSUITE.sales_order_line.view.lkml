@@ -358,7 +358,7 @@ view: sales_order_line {
 
   dimension: order_age_bucket {
     label: "Order Age (bucket)"
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,14)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
     type:  tier
     tiers: [1,2,3,4,5,6,7,11,15,21]
     style: integer
