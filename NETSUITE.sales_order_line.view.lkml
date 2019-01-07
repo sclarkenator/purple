@@ -350,7 +350,7 @@ view: sales_order_line {
     label: "Order Age (bucket)"
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,14)"
     type:  tier
-    tiers: [1,2,3,4,5,6,7,14]
+    tiers: [1,2,3,4,5,6,7,11,15,21]
     style: integer
     sql: datediff(day,
       case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
