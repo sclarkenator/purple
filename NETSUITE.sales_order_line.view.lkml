@@ -343,14 +343,24 @@ view: sales_order_line {
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units]
+    drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
+
+
+  dimension: days_to_cancel {
+    view_label: "Cancellations"
+    label: "# days from order"
+    description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
+    type: tier
+    style: integer
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
+    sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
   dimension: order_age_bucket {
     label: "Order Age (bucket)"
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,14)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
     type:  tier
-    tiers: [1,2,3,4,5,6,7,14]
+    tiers: [1,2,3,4,5,6,7,11,15,21]
     style: integer
     sql: datediff(day,
       case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
