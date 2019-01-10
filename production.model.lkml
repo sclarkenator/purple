@@ -77,4 +77,10 @@ explore: max_machine_capacity {
 explore: project_config {
   label: "Engineering Projects"
   description: "Status of engineering projects"
+
+  join: project_report {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${project_config.project_id} = ${project_report.project_id} ;;
+  }
 }

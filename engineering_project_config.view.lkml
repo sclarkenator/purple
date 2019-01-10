@@ -14,8 +14,13 @@ view: project_config {
     sql: ${TABLE}."BUDGET_AMT" ;;
   }
 
-  dimension: duration_in_days {
+  dimension: duration_in_days_dimension {
     type: number
+    sql: ${TABLE}."DURATION_IN_DAYS" ;;
+  }
+
+  measure: duration_in_days {
+    type: sum
     sql: ${TABLE}."DURATION_IN_DAYS" ;;
   }
 
