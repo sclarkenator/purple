@@ -39,7 +39,8 @@ view: tim_forecast {
         , aa.total_amount
         , aa.total_units
         , c.promo
-        , y.mattresses * (s.percent*.9) as promo_units
+        , y.mattresses * s.percent as promo_units
+        --, y.mattresses * (s.percent*.9) as promo_units
       from aa
       left join analytics.csv_uploads.promo_calendar c on c.start_date <= aa.date and c.end_date >= aa.date
       left join analytics.csv_uploads.promo_skus s on s.promo = c.promo and s.sku = aa.sku_id
@@ -59,6 +60,13 @@ view: tim_forecast {
     datatype: date
     sql: ${TABLE}.date ;; }
 
+  dimension: Before_today{
+    group_label: "Forecast Date"
+    label: "z - Is Before Today (mtd)"
+    #hidden:  yes
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
 
   dimension: sku_id {
     type:  string
