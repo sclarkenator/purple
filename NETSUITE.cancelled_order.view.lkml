@@ -126,7 +126,7 @@ view: cancelled_order {
     sql: ${TABLE}.ORDER_ID ;; }
 
   dimension: refunded {
-    hidden: yes
+    ##hidden: yes
     type: string
     sql: ${TABLE}.REFUNDED ;; }
 

@@ -398,6 +398,12 @@ view: sales_order_line {
     type: yesno
     sql: ((${gross_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
+  dimension: discounted_item {
+    label: "Is Discounted Item"
+    description: "Yes if this item had any discount, including if free"
+    type: yesno
+    sql: (${discount_amt} > 0)  ;; }
+
   dimension: order_system {
         type: string
     primary_key:  no
