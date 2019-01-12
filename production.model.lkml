@@ -84,3 +84,26 @@ explore: project_config {
     sql_on: ${project_config.project_id} = ${project_report.project_id} ;;
   }
 }
+
+explore: warehouse_transfer {
+  label: "Wharehouse Transactions"
+  description: "Transactions by warehousing for bin and inventory transfers"
+
+  join: warehouse_transfer_line {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${warehouse_transfer.warehouse_transfer_id} = ${warehouse_transfer_line.warehouse_transfer_id} ;;
+  }
+
+  join: warehouse_location {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${warehouse_transfer.location_id} = ${warehouse_location.location_id} ;;
+  }
+
+  join: item {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${warehouse_transfer_line.item_id} = ${item.item_id} ;;
+  }
+}
