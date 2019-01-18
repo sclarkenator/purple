@@ -2,7 +2,7 @@ view: return_order_line {
   sql_table_name: SALES.RETURN_ORDER_LINE ;;
 
   dimension: item_order{
-    primary_key:  yes
+    #primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
@@ -190,6 +190,7 @@ view: return_order_line {
     sql: ${TABLE}.QUANTITY_RECEIVED_IN_SHIPMENT ;; }
 
   dimension: return_order_id {
+    primary_key: yes
     hidden: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;; }

@@ -15,7 +15,7 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: order_system {
-    primary_key:  yes
+    #primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 

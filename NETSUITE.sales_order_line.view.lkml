@@ -1,13 +1,5 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
-  #derived_table: {
-  #  sql:
-  #    select a.*
-  #      , b.ship_by
-  #    from sales.sales_order_line a
-  #   left join sales.sales_order b on b.order_id = a.order_id
-  #    ;;
-  #}
 
   dimension: item_order{
     type: string

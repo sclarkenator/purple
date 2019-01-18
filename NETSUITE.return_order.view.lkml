@@ -6,7 +6,7 @@ view: return_order {
     #label: "Return Order ID"
     #description:  "This is the return_order_id to search on in Netsuite"
     hidden: yes
-    primary_key: yes
+    #primary_key: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;; }
 
