@@ -52,6 +52,11 @@ view: sales_order {
     type: number
     sql: ${TABLE}.CREATED_BY_ID ;; }
 
+  dimension: Showroom_Order {
+    description: "Flag for orders made in the Alpine Showroom"
+    type: yesno
+    sql: ${TABLE}.Showroom ;; }
+
   dimension: customer_id {
     hidden: yes
     type: number
