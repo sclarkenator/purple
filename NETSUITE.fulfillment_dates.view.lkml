@@ -56,21 +56,21 @@ view: fulfillment_dates {
     group_label: "Days:"
     label: "to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
-    type:  string
+    type:  number
     sql:${TABLE}.days_to_ff ;; }
 
   dimension: days_between_ff_dimension {
     group_label: "Days:"
     label: "between Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
-    type:  string
+    type:  number
     sql:${TABLE}.days_between_ff ;; }
 
   dimension: days_to_last_ff_dimension {
     group_label: "Days:"
     label: "to the last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
-    type:  string
+    type:  number
     sql:${TABLE}.days_to_last_ff ;; }
 
   dimension: days_between_ff_sla {
