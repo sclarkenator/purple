@@ -4,6 +4,9 @@ view: vendor {
   dimension: vendor_id {
     primary_key: yes
     type: number
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/entity/vendor.nl?id={{ vendor.vendor_id._value }}"}
     sql: ${TABLE}."VENDOR_ID" ;;
   }
 
@@ -23,6 +26,9 @@ view: vendor {
   }
 
   dimension: companyname {
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/entity/vendor.nl?id={{ vendor.vendor_id._value }}"}
     type: string
     sql: ${TABLE}."COMPANYNAME" ;;
   }

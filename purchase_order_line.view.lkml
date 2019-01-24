@@ -111,6 +111,7 @@ dimension: Primary_key{
     label: "Order ID"
     description: "Internal Netsuite ID"
     type: number
+    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/accounting/transactions/purchord.nl?id={{ purchase_order_line.purchase_order_id._value }}" }
     sql: ${TABLE}.PURCHASE_ORDER_ID ;; }
 
   dimension: quantity_received {
@@ -133,6 +134,8 @@ dimension: Primary_key{
 
   dimension_group: shipped {
     label: "Shipped"
+    hidden: yes
+    #This is the transaction date
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no

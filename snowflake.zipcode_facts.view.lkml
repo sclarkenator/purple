@@ -30,6 +30,7 @@ view: sf_zipcode_facts {
   dimension: state {
     group_label: "Customer Address"
     type: string
+    map_layer_name: us_states
     sql: ${TABLE}.state ;;
   }
 

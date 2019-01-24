@@ -15,7 +15,7 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: order_system {
-    #primary_key:  yes
+    primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
@@ -51,6 +51,11 @@ view: sales_order {
     hidden: yes
     type: number
     sql: ${TABLE}.CREATED_BY_ID ;; }
+
+  dimension: Showroom_Order {
+    description: "Flag for orders made in the Alpine Showroom"
+    type: yesno
+    sql: ${TABLE}.Showroom ;; }
 
   dimension: customer_id {
     hidden: yes
@@ -243,7 +248,7 @@ view: sales_order {
     sql: ${TABLE}.TAX_AMT ;; }
 
   dimension_group: trandate {
-    hidden: yes
+    #hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no

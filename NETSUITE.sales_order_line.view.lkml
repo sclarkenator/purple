@@ -412,6 +412,7 @@ view: sales_order_line {
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
+
   dimension: item_order_refund{
     type:  string
     hidden:  yes
@@ -454,6 +455,11 @@ view: sales_order_line {
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.Created < current_date;; }
+
+  dimension: Shipping_Addresee{
+    description: "The name on the shipping address"
+    type: string
+    sql: ${TABLE}.Ship_company;; }
 
   dimension: MTD_fulfilled_flg{
     group_label: "Fulfilled Date"
