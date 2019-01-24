@@ -134,6 +134,8 @@ dimension: Primary_key{
 
   dimension_group: shipped {
     label: "Shipped"
+    hidden: yes
+    #Temporary until date can be fixed
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
