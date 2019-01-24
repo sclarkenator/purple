@@ -109,7 +109,7 @@ view: purchase_order {
     label: "Document Number"
     description: "Transaction ID in Netsuite"
     type: string
-    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/accounting/transactions/purchord.nl?id={{ purchase_order_line.purchase_order_id }}" }
+    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/accounting/transactions/purchord.nl?id={{ purchase_order_line.purchase_order_id._value }}" }
     sql: ${TABLE}.TRANID ;; }
 
   dimension: transaction_number {
