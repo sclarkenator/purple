@@ -5,6 +5,7 @@ view: item {
     primary_key: yes
     label: "Item ID"
     description: "Internal Netsuite ID"
+    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     type: number
     sql: ${TABLE}.ITEM_ID ;; }
 
