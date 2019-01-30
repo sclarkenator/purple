@@ -67,15 +67,15 @@ where cancel_amt +return_amt > 0    ;;
 
   measure: cancel_amt {
     description: "Current net order amount (less cancellations and returns"
-    label: "Current order amt"
+    label: "Cancel amt"
     type: sum
-    sql: ${TABLE}.current_net_amt ;; }
+    sql: ${TABLE}.cancel_amt ;; }
 
   measure: return_amt {
     description: "Current net order amount (less cancellations and returns"
-    label: "Current order amt"
+    label: "Return amt"
     type: sum
-    sql: ${TABLE}.current_net_amt ;; }
+    sql: ${TABLE}.return_amt ;; }
 }
 #   measure: total_lifetime_orders {
 #     description: "Use this for counting lifetime orders across many users"
