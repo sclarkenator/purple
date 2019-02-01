@@ -48,8 +48,9 @@ where cancel_amt +return_amt > 0    ;;
   dimension_group: actiondate {
     description: "Order date"
     label: "Date"
+    type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
+    #convert_tz: no
     datatype: date
     sql: ${TABLE}.actiondate ;; }
 
