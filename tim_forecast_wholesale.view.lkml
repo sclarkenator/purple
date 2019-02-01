@@ -37,7 +37,7 @@ view: tim_forecast_wholesale {
       measure: total_units {
         label: "Total Units"
         type:  sum
-        sql:round(${TABLE}.total_unit,2) ;; }
+        sql:round(${TABLE}.total_units,2) ;; }
 
 
       measure: avg_units {
