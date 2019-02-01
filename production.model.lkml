@@ -84,7 +84,11 @@ explore: project_config {
     sql_on: ${project_config.project_id} = ${project_report.project_id} ;;
   }
 }
+explore: workorder_reconciliation {
+  label: "Assembly Build Reconcilation"
+  description: "NetSuite Assembly Build consumed parts checked against the ideal consumption"
 
+  }
 explore: warehouse_transfer {
   label: "Wharehouse Transactions"
   description: "Transactions by warehousing for bin and inventory transfers"
