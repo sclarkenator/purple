@@ -169,6 +169,7 @@ view: item {
     description:  "TwinXL, Full, Queen, King, Cal-King or Other"
     type: string
     case: {
+        when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
         when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
         when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
         when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
