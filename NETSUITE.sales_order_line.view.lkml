@@ -409,7 +409,7 @@ view: sales_order_line {
     label: "Is Promo Free Item"
     description: "Yes if this item is free" #with purchase of mattress
     type: yesno
-    sql: ((${gross_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
+    sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
   dimension: discounted_item {
     label: "Is Discounted Item"
