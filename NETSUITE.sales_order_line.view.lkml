@@ -361,6 +361,17 @@ view: sales_order_line {
       , current_date) ;; }
     #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
 
+  dimension: order_age_raw {
+    label: "Order Age Raw"
+    description: "Number of days between today and when order was placed"
+    hidden:  yes
+    type:  number
+    sql: datediff(day,
+      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
+        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
+        else ${created_date} end
+      , current_date) ;; }
+
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
@@ -398,7 +409,7 @@ view: sales_order_line {
     label: "Is Promo Free Item"
     description: "Yes if this item is free" #with purchase of mattress
     type: yesno
-    sql: ((${gross_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
+    sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
   dimension: discounted_item {
     label: "Is Discounted Item"
