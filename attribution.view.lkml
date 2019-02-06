@@ -65,13 +65,13 @@ view: attribution {
                     ,LTV
             from
               (select user_id
-                      ,row_number() over (partition by user_id order by time) order_number
-                      ,session_id
-                      ,time
-                      ,dollars
-                      ,sum(dollars) over (partition by user_id) LTV
-              from heap.purchase
-              order by 1,6)
+        ,row_number() over (partition by user_id order by time) order_number
+        ,session_id
+        ,time
+        ,subtotal_price
+        ,sum(subtotal_price) over (partition by user_id) LTV
+from ANALYTICS.HEAP.CART_ORDERS_SHOPIFY_CONFIRMED_ORDER
+order by 1,6)
             where order_number = 1) p
         left join heap.sessions s on p.user_id = s.user_id and s.time <= p.purch_time
         left join analytics.utm_lookup.UTM_SOURCE us on us.source_code = s.utm_source
