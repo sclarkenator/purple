@@ -7,7 +7,7 @@ view: deleted_fulfillment {
   sql_table_name: analytics.sales.deleted_fulfillment ;;
 
   dimension: fulfillment_id {
-    label: "FF ID"
+    hidden: yes
     primary_key: yes
     type: string
     sql: ${TABLE}.fulfillment_id ;;
@@ -17,6 +17,18 @@ view: deleted_fulfillment {
     type: string
     hidden: yes
     sql: ${TABLE}.item_id ;;
+  }
+
+  dimension: transaction_type {
+    label: "Order Transaction Type"
+    type: string
+    sql: ${TABLE}.transaction_type ;;
+  }
+
+  dimension: order_transaction_number {
+    label: "Order TranID"
+    type: string
+    sql: ${TABLE}.order_transaction_number ;;
   }
 
   dimension: carrier {
@@ -40,7 +52,7 @@ view: deleted_fulfillment {
   dimension_group: created {
     label: "Created"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, month, month_name, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.created) ;; }
@@ -48,7 +60,7 @@ view: deleted_fulfillment {
   dimension_group: fulfilled {
     label: "Fulfilled"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, month, month_name, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.fulfilled) ;; }
@@ -56,7 +68,7 @@ view: deleted_fulfillment {
   dimension_group: deleted {
     label: "Deleted"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, month, month_name, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.deleted) ;; }
