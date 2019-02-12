@@ -64,7 +64,7 @@ view: assembly_build {
 
   dimension_group: produced {
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql:to_timestamp_ntz(${TABLE}.PRODUCED) ;; }
