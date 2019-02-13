@@ -180,6 +180,7 @@ view: item {
   dimension: sku_id {
     label: "SKU ID"
     description: "SKU ID for item (XX-XX-XXXXXX)"
+    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     type: string
     sql: ${TABLE}.SKU_ID ;; }
 
