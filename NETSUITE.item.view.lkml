@@ -22,6 +22,12 @@ view: item {
     type: string
     sql: ${TABLE}.type ;; }
 
+  dimension: BASE_UNIT {
+    label: "NetSuite Base Unit"
+    description: "Used to show what unit non-each items are stored in"
+    type: string
+    sql: ${TABLE}.base_unit ;; }
+
   dimension: merchandise {
     label: "Is Merchandising"
     description: "Yes is a merchandising product for wholesale"
