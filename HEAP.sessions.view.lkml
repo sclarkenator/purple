@@ -132,6 +132,12 @@ view: sessions {
     type: count
     drill_fields: [detail*] }
 
+  measure: distinct_users {
+    label: "Distinct Users"
+    type: count_distinct
+    sql:  ${TABLE}.user_id ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
