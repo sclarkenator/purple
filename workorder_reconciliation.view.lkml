@@ -18,12 +18,14 @@ view: workorder_reconciliation {
   }
 
   dimension: component {
+    label: "Built Item"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.component_item_id._value }}" }
     sql: ${TABLE}."COMPONENT" ;;
   }
 
   dimension: component_item_id {
+    label: "Built Item ID"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.component_item_id._value }}" }
     sql: ${TABLE}."COMPONENT_ITEM_ID" ;;
@@ -71,20 +73,21 @@ view: workorder_reconciliation {
   }
 
   dimension: part {
-    label: "Part Name"
+    label: "Component Item ID"
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.part_item_id._value }}" }
     type: string
     sql: ${TABLE}."PART" ;;
   }
 
   dimension: part_item_id {
-    label: "Part Internal ID"
+    label: "Component Item Internal ID"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.part_item_id._value }}" }
     sql: ${TABLE}."PART_ITEM_ID" ;;
   }
 
   dimension: part_sku {
+    label: "Component Item Sku ID"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.part_item_id._value }}" }
     sql: ${TABLE}."PART_SKU" ;;
