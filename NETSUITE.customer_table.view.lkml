@@ -64,20 +64,20 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'macy%' ;; label: "Macy's" }
       when: { sql: lower(${TABLE}.companyname) like 'sleep country%' ;; label: "Sleep Country" }
       when: { sql: lower(${TABLE}.companyname) like 'bed bath%' ;; label: "Bed Bath and Beyond" }
-      when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
-      when: { sql: lower(${TABLE}.companyname) like 'access%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like 'medline%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like '%miracle cushion%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like '%posture works%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like 'my elder%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like '%medical%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like '%therapy%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like '%posture%' ;; label: "Medical Cushions" }
-      when: { sql: lower(${TABLE}.companyname) like 'ta operating%' ;; label: "Trucking" }
-      when: { sql: lower(${TABLE}.companyname) like '%iowa 80%' ;; label: "Trucking" }
-      when: { sql: lower(${TABLE}.companyname) like 'das %' ;; label: "Trucking" }
-      when: { sql: lower(${TABLE}.companyname) like '%little america%' ;; label: "Trucking" }
-      when: { sql: lower(${TABLE}.companyname) like '%trucka%' ;; label: "Trucking" }
+      #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
+      when: { sql: lower(${TABLE}.companyname) like 'access%'
+        or lower(${TABLE}.companyname) like 'medline%'
+        or lower(${TABLE}.companyname) like '%miracle cushion%'
+        or lower(${TABLE}.companyname) like '%posture works%'
+        or lower(${TABLE}.companyname) like 'my elder%'
+        or lower(${TABLE}.companyname) like '%medical%'
+        or lower(${TABLE}.companyname) like '%therapy%'
+        or lower(${TABLE}.companyname) like '%posture%' ;; label: "Medical Cushions" }
+      when: { sql: lower(${TABLE}.companyname) like 'ta operating%'
+        or lower(${TABLE}.companyname) like '%iowa 80%'
+        or lower(${TABLE}.companyname) like 'das %'
+        or lower(${TABLE}.companyname) like '%little america%'
+        or lower(${TABLE}.companyname) like '%truck%' ;; label: "Trucking" }
       else: "Other" } }
 
 }
