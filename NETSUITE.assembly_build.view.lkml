@@ -34,6 +34,13 @@ view: assembly_build {
     type: string
     sql: ${TABLE}.description ;; }
 
+  dimension: created_by {
+    label: "Created By"
+    description: "What NetSuite account created the Transaction"
+    type: string
+    sql: ${TABLE}.CREATED_BY ;; }
+
+
   dimension_group: insert_ts {
     hidden: yes
     type: time

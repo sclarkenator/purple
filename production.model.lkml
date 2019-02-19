@@ -88,10 +88,23 @@ explore: workorder_reconciliation {
   label: "Assembly Build Reconcilation"
   description: "NetSuite Assembly Build consumed parts checked against the ideal consumption"
 
+  join: item {
+    type: left_outer
+    view_label: "Part Item Information"
+    relationship: many_to_one
+    sql_on: ${workorder_reconciliation.part_item_id} = ${item.item_id} ;;
+  }
+
+  join: assembly_build {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${workorder_reconciliation.assembly_build_id} = ${assembly_build.assembly_build_id} ;;
+  }
+
 
   }
 explore: warehouse_transfer {
-  label: "Wharehouse Transactions"
+  label: "Warehouse Transactions"
   description: "Transactions by warehousing for bin and inventory transfers"
 
   join: warehouse_transfer_line {
