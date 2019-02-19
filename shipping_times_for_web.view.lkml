@@ -2,7 +2,7 @@ view: shipping_times_for_web {
 
   derived_table: {
     sql:
-      with day_values as (select a.item_id, a.product_description_lkr, a.shipper, a.days, a.fulfilled_quantity, b.unfulfilled_quantity
+with day_values as (select a.item_id, a.product_description_lkr, a.shipper, a.days, a.fulfilled_quantity, b.unfulfilled_quantity
             , (coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0))) weighted_quantity
             , sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days) running_sum
             , sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper) item_sum
@@ -66,9 +66,9 @@ select item_id, product_description_lkr, shipper fulfillment_location, Max(days)
 from (
     select dv.*
     from day_values dv
-    join (select item_id, min(distance_from_95) the_smallest
+    join (select item_id, shipper, min(distance_from_95) the_smallest
           from day_values
-          group by item_id) dv2 on dv.item_id = dv2.item_id and dv.distance_from_95 = dv2.the_smallest
+          group by item_id, shipper) dv2 on dv.item_id = dv2.item_id and dv.distance_from_95 = dv2.the_smallest and dv.shipper = dv2.shipper
 ) group by item_id, product_description_lkr, fulfillment_location
 order by item_id, fulfillment_location
   ;; }
