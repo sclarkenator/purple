@@ -159,9 +159,8 @@
     join: wholesale_customer_warehouses {
       view_label: "Wholesale Warehouses"
       type: left_outer
-      sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} ;;
-      relationship: many_to_one
-    }
+      sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
+      relationship: many_to_one}
     join: shopify_orders {
       view_label: "Sales Line"
       type:  left_outer
