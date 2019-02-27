@@ -77,7 +77,7 @@ view: workorder_reconciliation {
   }
 
   dimension: part {
-    label: "Component Item ID"
+    label: "Component Item Name"
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.part_item_id._value }}" }
     type: string
     sql: ${TABLE}."PART" ;;
