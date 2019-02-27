@@ -742,6 +742,14 @@ view: sales_order_line {
     type: string
     sql: ${TABLE}.UPDATE_TS ;; }
 
+  measure: Qty_Picked {
+    type: sum
+    sql: ${TABLE}.PICKED ;; }
+
+  measure: Qty_Packed {
+    type: sum
+    sql: ${TABLE}.PACKED ;; }
+
   dimension: zip {
     view_label: "Customer"
     group_label: "Customer Address"

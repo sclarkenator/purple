@@ -2,6 +2,7 @@ view: workorder_reconciliation {
   sql_table_name: PRODUCTION.WORKORDER_RECONCILIATION ;;
 
   measure: amt_required_for_one {
+    label: "Component QTY Per (Expected)"
     type: sum
     sql: ${TABLE}."AMT_REQUIRED_FOR_ONE" ;;
   }
@@ -13,12 +14,13 @@ view: workorder_reconciliation {
   }
 
   measure: build_quantity {
+    label: "FG Build QTY"
     type: sum
     sql: ${TABLE}."BUILD_QUANTITY" ;;
   }
 
   dimension: component {
-    label: "Built Item"
+    label: "Item Built"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ workorder_reconciliation.component_item_id._value }}" }
     sql: ${TABLE}."COMPONENT" ;;
@@ -48,6 +50,7 @@ view: workorder_reconciliation {
   }
 
   measure: expected_amt {
+    label: "QTY Consumed (Expected)"
     type: sum
     sql: ${TABLE}."EXPECTED_AMT" ;;
   }
@@ -68,6 +71,7 @@ view: workorder_reconciliation {
   }
 
   measure: ordered_amt {
+    label: "QTY Consumed (Actual)"
     type: sum
     sql: ${TABLE}."ORDERED_AMT" ;;
   }
@@ -94,7 +98,7 @@ view: workorder_reconciliation {
   }
 
   dimension: tranid {
-    label: "Document Number"
+    label: "Assembly Build Number"
     type: string
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{ workorder_reconciliation.assembly_build_id._value }}"  }
     sql: ${TABLE}."TRANID" ;;
