@@ -475,9 +475,12 @@
 #         filters: {field: item.modified            value: "Yes"}} }
 
 
-    explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  #hidden: yes
+    explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
       join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
       join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
+
+    explore: tim_forecast_combined {label: "Combined Forecast V2" group_label: "Sales"  #hidden: yes
+      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
 
     explore: conversions_by_campaign {
       hidden:  yes

@@ -1,0 +1,189 @@
+view: tim_forecast_combined {
+
+  derived_table: {
+    sql:
+      with zz as (
+        --wholesale forecast merged with dates to get a count/day
+        select b.date
+            , a.sku_id
+            , coalesce(a.total_units/c.days_in_week,0) as total_units
+            , coalesce(a.total_amount/c.days_in_week,0) as total_amount
+            , coalesce(a.MF_Instore_Units/c.days_in_week,0) as MF_Instore_Units
+            , coalesce(a.MF_Online_Units/c.days_in_week,0) as MF_Online_Units
+            , coalesce(a.FR_Units/c.days_in_week,0) as FR_Units
+            , coalesce(a.Macys_Instore_Units/c.days_in_week,0) as Macys_Instore_Units
+            , coalesce(a.Macys_Online_Units/c.days_in_week,0) as Macys_Online_Units
+            , coalesce(a.SCC_Units/c.days_in_week,0) as SCC_Units
+            , coalesce(a.BBB_Units/c.days_in_week,0) as BBB_Units
+            , coalesce(a.Medical_Units/c.days_in_week,0) as Medical_Units
+            , coalesce(a.Trucking_Units/c.days_in_week,0) as Trucking_Units
+            , coalesce(a.MF_Instore_Amount/c.days_in_week,0) as MF_Instore_Amount
+            , coalesce(a.MF_Online_Amount/c.days_in_week,0) as MF_Online_Amount
+            , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount
+            , coalesce(a.Macys_Instore_Amount/c.days_in_week,0) as Macys_Instore_Amount
+            , coalesce(a.Macys_Online_Amount/c.days_in_week,0) as Macys_Online_Amount
+            , coalesce(a.SCC_Amount/c.days_in_week,0) as SCC_Amount
+            , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
+            , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
+            , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
+        left join (
+          select
+              year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week
+              , year
+              , week_of_year
+              , count (date) as days_in_week
+              , min(date) as start_date
+              , max(date) as end_date
+          from analytics.util.warehouse_date
+          where year > 2018
+          group by year, week_of_year
+          order by 1
+        ) c on c.year_week = a.week
+        left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
+        order by 2, 1
+      ), yy as (
+        --DTC forecast merged with dates to get a count/day
+        with aa as(
+          select z.date
+            , z.sku_id
+            , z.item_id
+            , z.monthly_goal
+            , case when z.sku_id in ('10-21-12618','10-21-12620','10-21-12625','10-21-12632',
+              '10-21-12960','10-21-60005','10-21-60006','10-21-60007','10-21-60008','10-21-60009',
+              '10-21-60010','10-21-60011','10-21-60012','10-21-60013','10-21-60014','10-21-60015',
+              '10-21-60016','10-21-60018','10-21-60019','10-21-60020') then 1 else 0 end as is_mattress
+            , z.daily_goal+coalesce(a.amount,0) as total_amount
+            , z.total_units+coalesce(a.units,0) as total_units
+          from (
+            select b.date
+                --, c.days_in_month
+                --, a.date as goal_month
+                , a.sku_id
+                , a.item_id
+                , a.amount as monthly_goal
+                , a.amount/c.days_in_month as daily_goal
+                , a.units/c.days_in_month as total_units
+            from analytics.csv_uploads.forecasted_targets a
+            left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
+            left join (
+              select year, month, count (date) as days_in_month
+              from analytics.util.warehouse_date
+              group by year, month
+            ) c on c.year = b.year and c.month = b.month
+          ) z
+          left join analytics.csv_uploads.forecasted_holidays a on a.date = z.date and z.sku_id = a.sku_id and z.item_id = a.item_id
+        )
+        select aa.date
+          , aa.sku_id
+          , aa.item_id
+          --, aa.is_mattress
+          , aa.total_amount
+          , aa.total_units
+          , c.promo
+          , y.mattresses * s.percent as promo_units
+          --, y.mattresses * (s.percent*.9) as promo_units
+        from aa
+        left join analytics.csv_uploads.promo_calendar c on c.start_date <= aa.date and c.end_date >= aa.date
+        left join analytics.csv_uploads.promo_skus s on s.promo = c.promo and s.sku = aa.sku_id
+        left join (
+          select aa.date, sum(aa.total_units) as mattresses
+          from aa
+          where is_mattress = 1
+          group by aa.date
+        ) y on y.date = aa.date
+      )
+      select coalesce(zz.date, yy.date) as date
+          , coalesce(zz.sku_id, yy.sku_id) as sku_id
+
+          , coalesce(zz.total_units, 0) + coalesce(yy.total_units,0) as total_units
+          , coalesce(zz.total_amount, 0) + coalesce(yy.total_amount,0) as total_amount
+
+          , coalesce(zz.total_units, 0) as wholesale_units
+          , coalesce(yy.total_units,0) as dtc_units
+          , coalesce(zz.total_amount, 0)  as wholesale_amount
+          , coalesce(yy.total_amount,0) as dtc_amount
+
+          , yy.promo
+          , yy.promo_units
+
+          , zz.MF_Instore_Units
+          , zz.MF_Online_Units
+          , zz.FR_Units
+          , zz.Macys_Instore_Units
+          , zz.Macys_Online_Units
+          , zz.SCC_Units
+          , zz.BBB_Units
+          , zz.Medical_Units
+          , zz.Trucking_Units
+          , zz.MF_Instore_Amount
+          , zz.MF_Online_Amount
+          , zz.FR_Amount
+          , zz.Macys_Instore_Amount
+          , zz.Macys_Online_Amount
+          , zz.SCC_Amount
+          , zz.BBB_Amount
+          , zz.Medical_Amount
+          , zz.Trucking_Amount
+      from zz
+      full outer join yy on yy.sku_id = zz.sku_id and yy.date = zz.date
+  ;; }
+
+      dimension_group: date {
+        label: "Forecast"
+        type: time
+        timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+        convert_tz: no
+        datatype: date
+        sql: ${TABLE}.date ;; }
+
+      dimension: Before_today{
+        group_label: "Forecast Date"
+        label: "z - Is Before Today (mtd)"
+        #hidden:  yes
+        description: "This field is for formatting on (week/month/quarter/year) to date reports"
+        type: yesno
+        sql: ${TABLE}.date < current_date;; }
+
+      dimension: sku_id {
+        type:  string
+        sql:${TABLE}.sku_id ;; }
+
+      measure: total_units {
+        label: "Total Units"
+        type:  sum
+        sql:round(${TABLE}.total_units,2) ;; }
+
+      measure: total_amount {
+        label: "Total Amount"
+        type:  sum
+        sql:round(${TABLE}.total_amount,2) ;; }
+
+  measure: dtc_units {
+    label: "Total DTC Units"
+    type:  sum
+    sql:round(${TABLE}.dtc_units,2) ;; }
+
+  measure: dtc_amount {
+    label: "DTC Amount"
+    type:  sum
+    sql:round(${TABLE}.dtc_amount,2) ;; }
+
+  measure: wholesale_units {
+    label: "Wholesale Units"
+    type:  sum
+    sql:round(${TABLE}.wholesale_units,2) ;; }
+
+  measure: wholesale_amount {
+    label: "Wholesale Amount"
+    type:  sum
+    sql:round(${TABLE}.wholesale_amount,2) ;; }
+
+
+      measure: to_date {
+        label: "Total Goal to Date"
+        description: "This field is for formatting on (week/month/quarter/year) to date reports"
+        type: sum
+        sql: round(case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end,2);; }
+
+    }
