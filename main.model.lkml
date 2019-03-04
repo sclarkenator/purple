@@ -491,9 +491,9 @@
   explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  #hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  #hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku} = ${item.sku_id} ;;  relationship: many_to_one}}
+      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
     explore: tim_forecast_merged { from: tim_forecast label: "Combined Forecast" group_label: "In Testing"  #hidden: yes
-      join: tim_forecast_wholesale {sql_on: ${tim_forecast_merged.sku_id} = ${tim_forecast_wholesale.sku} and ${tim_forecast_merged.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
+      join: tim_forecast_wholesale {sql_on: ${tim_forecast_merged.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_merged.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_merged.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: deleted_fulfillment {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}
