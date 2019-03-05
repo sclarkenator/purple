@@ -96,11 +96,11 @@ view: tim_forecast_combined {
       select coalesce(zz.date, yy.date) as date
           , coalesce(zz.sku_id, yy.sku_id) as sku_id
 
-          , coalesce(zz.total_units, 0) + coalesce(yy.total_units,0) as total_units
+          , coalesce(zz.total_units, 0) + coalesce(yy.total_units,0) + coalesce(yy.promo_units, 0) as total_units
           , coalesce(zz.total_amount, 0) + coalesce(yy.total_amount,0) as total_amount
 
           , coalesce(zz.total_units, 0) as wholesale_units
-          , coalesce(yy.total_units,0) as dtc_units
+          , coalesce(yy.total_units,0) + coalesce(yy.promo_units, 0) as dtc_units
           , coalesce(zz.total_amount, 0)  as wholesale_amount
           , coalesce(yy.total_amount,0) as dtc_amount
 
