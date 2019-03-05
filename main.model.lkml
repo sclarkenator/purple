@@ -231,7 +231,12 @@
       view_label: "x-CM waterfall"
       type: left_outer
       sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
-      relationship: one_to_many}}
+      relationship: one_to_many}
+    join: state_tax_reconciliation {
+      view_label: "State Tax Reconciliation"
+      type: left_outer
+      sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
+      relationship: one_to_one}}
 
   explore: wholesale {
     #-------------------------------------------------------------------
