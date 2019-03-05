@@ -685,6 +685,12 @@ view: sales_order_line {
     type: string
     sql: ${TABLE}.LOCATION ;; }
 
+  dimension: memo {
+    label:  "Memo"
+    description:  "Notes field from the Shopify Draft Order Line"
+    type: string
+    sql: ${TABLE}.memo ;; }
+
   dimension: gross_amt {
     label: "Gross Sales ($)"
     description: "Gross sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
