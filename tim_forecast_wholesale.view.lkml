@@ -3,15 +3,43 @@ view: tim_forecast_wholesale {
   derived_table: {
     sql:
       select b.date
-          , a.sku
-          , a.units/c.days_in_month as total_units
+          , a.sku_id
+          , coalesce(a.total_units/c.days_in_week,0) as total_units
+          , coalesce(a.total_amount/c.days_in_week,0) as total_amount
+          , coalesce(a.MF_Instore_Units/c.days_in_week,0) as MF_Instore_Units
+          , coalesce(a.MF_Online_Units/c.days_in_week,0) as MF_Online_Units
+          , coalesce(a.FR_Units/c.days_in_week,0) as FR_Units
+          , coalesce(a.Macys_Instore_Units/c.days_in_week,0) as Macys_Instore_Units
+          , coalesce(a.Macys_Online_Units/c.days_in_week,0) as Macys_Online_Units
+          , coalesce(a.SCC_Units/c.days_in_week,0) as SCC_Units
+          , coalesce(a.BBB_Units/c.days_in_week,0) as BBB_Units
+          , coalesce(a.Medical_Units/c.days_in_week,0) as Medical_Units
+          , coalesce(a.Trucking_Units/c.days_in_week,0) as Trucking_Units
+          , coalesce(a.MF_Instore_Amount/c.days_in_week,0) as MF_Instore_Amount
+          , coalesce(a.MF_Online_Amount/c.days_in_week,0) as MF_Online_Amount
+          , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount
+          , coalesce(a.Macys_Instore_Amount/c.days_in_week,0) as Macys_Instore_Amount
+          , coalesce(a.Macys_Online_Amount/c.days_in_week,0) as Macys_Online_Amount
+          , coalesce(a.SCC_Amount/c.days_in_week,0) as SCC_Amount
+          , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
+          , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
+          , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
       from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
-      left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
       left join (
-        select year, month, count (date) as days_in_month
+        select
+            year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week
+            , year
+            , week_of_year
+            , count (date) as days_in_week
+            , min(date) as start_date
+            , max(date) as end_date
         from analytics.util.warehouse_date
-        group by year, month
-      ) c on c.year = b.year and c.month = b.month
+        where year > 2018
+        group by year, week_of_year
+        order by 1
+      ) c on c.year_week = a.week
+      left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
+      order by 2, 1
   ;; }
 
       dimension_group: date {
@@ -30,14 +58,19 @@ view: tim_forecast_wholesale {
         type: yesno
         sql: ${TABLE}.date < current_date;; }
 
-      dimension: sku {
+      dimension: sku_id {
         type:  string
-        sql:${TABLE}.sku ;; }
+        sql:${TABLE}.sku_id ;; }
 
       measure: total_units {
         label: "Total Units"
         type:  sum
         sql:round(${TABLE}.total_units,2) ;; }
+
+  measure: total_amount {
+    label: "Total Amount"
+    type:  sum
+    sql:round(${TABLE}.total_amount,2) ;; }
 
 
       measure: avg_units {
