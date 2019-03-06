@@ -4,29 +4,30 @@ view: netsuite_warranty_exceptions {
       with tmp as (
         select
           o.created, o.order_id as netsuite_order_id, o.tranid as transaction_number, o.related_tranid, o.etail_order_id as shopify_order_id,
-          replace(replace(REGEXP_SUBSTR(replace(upper(MEMO),' ',''),'O#?\\d{4,7}'),'O',''),'#','') as original_order_number,upper(i.product_line_name_lkr) as category,
-          replace(replace(replace(replace(upper(COALESCE(memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as memo
+          replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'O#?\\d{4,7}'),'O',''),'#','') as original_order_number,upper(i.product_line_name_lkr) as category,
+          replace(replace(replace(replace(upper(COALESCE(o.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as order_memo,
+          replace(replace(replace(replace(upper(COALESCE(l.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as line_memo
         from analytics.sales.sales_order o
           join analytics.sales.sales_order_line l on o.order_id = l.order_id
           join analytics.sales.item i on l.item_id = i.item_id
         where o.gross_amt = 0
             and source = 'Shopify - US'
       ), nr as (
-        select created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, memo
+        select created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, order_memo, line_memo
         from tmp
-        group by created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, memo
+        group by created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, order_memo, line_memo
       )
       select
-          nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.category, nr.memo
+          nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
       from nr
           join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
-          WHEN memo like '%DSC%' THEN 0
-          WHEN memo like '%NSI%' THEN 0
-          WHEN memo like '%APOLOG%' THEN 0
-          WHEN memo like '%SQUISH%' THEN 0
-          WHEN REGEXP_SUBSTR(upper(memo),'O#[ABCS]') is not null THEN 0
-          WHEN upper(memo) like '%RPL%' and nr.original_order_number is not null THEN 0
+          WHEN nr.order_memo like '%DSC%' THEN 0
+          WHEN nr.order_memo like '%NSI%' THEN 0
+          WHEN nr.order_memo like '%APOLOG%' THEN 0
+          WHEN nr.order_memo like '%SQUISH%' THEN 0
+          WHEN REGEXP_SUBSTR(upper(nr.order_memo),'O#[ABCS]') is not null THEN 0
+          WHEN upper(nr.order_memo) like '%RPL%' and nr.original_order_number is not null THEN 0
           ELSE 1
         END = 1;;
   }
@@ -61,11 +62,17 @@ view: netsuite_warranty_exceptions {
     type: string
     sql: ${TABLE}.original_order_number;; }
 
-  dimension: memo {
+  dimension: order_memo {
     label: "Replacement Order Notes"
     description: "The order level notes for the replacement order"
     type: string
-    sql: ${TABLE}.memo;; }
+    sql: ${TABLE}.order_memo;; }
+
+  dimension: line_memo {
+    label: "Replacement Order Line Notes"
+    description: "The line, or item, level notes for the item"
+    type: string
+    sql: ${TABLE}.line_memo;; }
 
   dimension: category {
     label: "Product Category"
