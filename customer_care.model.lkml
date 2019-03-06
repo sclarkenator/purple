@@ -13,3 +13,5 @@ week_start_day: sunday
 
 
 explore: customer_satisfaction_survey {group_label: "Customer Care"  label: "CSAT"  description: "Details for Customer Satisfaction Surveys."}
+
+explore: return_form_entry {group_label: "Customer Care"  label: "Return Form Entry"  description: "Compiled result of all online return forms."}
