@@ -72,7 +72,7 @@ view: customer_satisfaction_survey {
   }
 
   measure: count {
-    description: "Survey Count"
+    label: "Survey Count"
     type: count
     drill_fields: []
   }
