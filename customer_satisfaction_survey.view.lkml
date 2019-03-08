@@ -104,4 +104,12 @@ view: customer_satisfaction_survey {
     value_format: "0.0%"
     sql: sum(case when  ${TABLE}."SATISFIED_WITH_REP" = 10 then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
   }
+
+  measure: percent_questions_answered_by_rep {
+    label: "Percent Questions Answered"
+    description: "Percent of respondents who said yes, that their questions had been answered by the rep"
+    type: number
+    value_format: "0.0%"
+    sql: sum(case when lower(${TABLE}."QUESTIONS_ANSWERED_BY_REP") = 'yes' then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
+  }
 }
