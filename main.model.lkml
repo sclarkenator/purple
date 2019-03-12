@@ -485,7 +485,7 @@
       join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
 
     explore: tim_forecast_combined {label: "Combined Forecast V2" group_label: "Sales"  #hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
 
     explore: conversions_by_campaign {
       hidden:  yes

@@ -95,6 +95,7 @@ view: tim_forecast_combined {
       )
       select coalesce(zz.date, yy.date) as date
           , coalesce(zz.sku_id, yy.sku_id) as sku_id
+          , i.item_id
 
           , coalesce(zz.total_units, 0) + coalesce(yy.total_units,0) + coalesce(yy.promo_units, 0) as total_units
           , coalesce(zz.total_amount, 0) + coalesce(yy.total_amount,0) as total_amount
@@ -127,6 +128,19 @@ view: tim_forecast_combined {
           , zz.Trucking_Amount
       from zz
       full outer join yy on yy.sku_id = zz.sku_id and yy.date = zz.date
+      left join (
+        select item_id, sku_id
+          from (
+            select item_id
+              , sku_id
+              , type
+              , row_number () over (partition by sku_id order by type) as row_num
+            from analytics.sales.item i
+            order by 2,1
+          ) a
+          where a.row_num = 1
+        order by 2,1
+      ) i on i.sku_id = coalesce(yy.sku_id, zz.sku_id)
   ;; }
 
       dimension_group: date {
@@ -148,6 +162,10 @@ view: tim_forecast_combined {
       dimension: sku_id {
         type:  string
         sql:${TABLE}.sku_id ;; }
+
+  dimension: item_id {
+    type:  string
+    sql:${TABLE}.item_id ;; }
 
       measure: total_units {
         label: "Total Units"
