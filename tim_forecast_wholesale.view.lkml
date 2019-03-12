@@ -67,6 +67,11 @@ view: tim_forecast_wholesale {
         type:  sum
         sql:round(${TABLE}.total_units,2) ;; }
 
+  measure: total_units_2 {
+    label: "Total Units (not rounded)"
+    type:  sum
+    sql:${TABLE}.total_units ;; }
+
   measure: total_amount {
     label: "Total Amount"
     type:  sum
