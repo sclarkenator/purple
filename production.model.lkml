@@ -86,6 +86,7 @@ explore: project_config {
 }
 explore: workorder_reconciliation {
   label: "Assembly Build Reconcilation"
+  hidden: yes
   description: "NetSuite Assembly Build consumed parts checked against the ideal consumption"
 
   join: item {
