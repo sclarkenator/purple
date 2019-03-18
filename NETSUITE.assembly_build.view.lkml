@@ -90,6 +90,7 @@ view: assembly_build {
 
   parameter: timeframe_picker{
     label: "Date Granularity Assembly Build"
+    hidden: yes
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}
@@ -97,6 +98,7 @@ view: assembly_build {
     default_value: "Date" }
 
   dimension: dynamic_timeframe {
+    hidden: yes
     type: date
     allow_fill: no
     sql:
@@ -114,6 +116,7 @@ view: assembly_build {
 
   dimension_group: sales_effective {
     label: "Sales Effective"
+   hidden: yes
     type: time
     timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
