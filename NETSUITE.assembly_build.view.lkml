@@ -19,6 +19,7 @@ view: assembly_build {
 
   dimension_group: created {
     hidden: no
+    description: "When in NetSuite the Transaction was created"
     type: time
     timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
@@ -31,6 +32,7 @@ view: assembly_build {
 
   dimension: description {
     label: "Description"
+    hidden: yes
     type: string
     sql: ${TABLE}.description ;; }
 
@@ -59,6 +61,7 @@ view: assembly_build {
 
   dimension: memo {
     label: "Memo"
+    description: "Notes on the Assembly Transaction"
     type: string
     sql: ${TABLE}.memo ;; }
 
@@ -71,6 +74,7 @@ view: assembly_build {
 
   dimension_group: produced {
     type: time
+    description: "A mixed timestamp between created and when the iPad reported it created. iPad first then if no data created timestamp"
     timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
@@ -90,6 +94,7 @@ view: assembly_build {
 
   parameter: timeframe_picker{
     label: "Date Granularity Assembly Build"
+    hidden: yes
     type: string
     allowed_value: { value: "Date"}
     allowed_value: { value: "Week"}
@@ -97,6 +102,7 @@ view: assembly_build {
     default_value: "Date" }
 
   dimension: dynamic_timeframe {
+    hidden: yes
     type: date
     allow_fill: no
     sql:
@@ -114,6 +120,7 @@ view: assembly_build {
 
   dimension_group: sales_effective {
     label: "Sales Effective"
+   hidden: yes
     type: time
     timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
