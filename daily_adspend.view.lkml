@@ -80,6 +80,11 @@ view: daily_adspend {
     type:  string
     sql: ${TABLE}.source ;; }
 
+  dimension: campaign_name {
+    label: "Campaign Name"
+    type:  string
+    sql: ${TABLE}.campaign_name ;; }
+
   dimension: campaign_type {
     label: "Campaign Type"
     description: "Bucketing the Campaign type into Prospecting, Retargeting, Brand, and Other"
@@ -102,5 +107,20 @@ view: daily_adspend {
         label: "TABLET" }
       when: { sql: upper(${TABLE}.device) in ('COMPUTER','COMPUTERS','DESKTOP') ;;  label: "DESKTOP" }
       else: "OTHER"  } }
+
+  dimension: platform_source_group {
+    hidden:  no
+    label:  "Platform Source Group"
+    description: "Grouping of source, platform, and if the name has shop"
+    type: string
+    case: {
+      when: { sql: ${TABLE}.platform = 'GOOGLE' and lower(${TABLE}.campaign_name) like '%shop%' ;; label: "Google-Shopping" }
+      when: { sql: ${TABLE}.platform = 'GOOGLE' and lower(${TABLE}.SOURCE) = 'search network' ;; label: "Google-Search" }
+      when: { sql: ${TABLE}.platform = 'GOOGLE' and lower(${TABLE}.SOURCE) = 'display network' ;; label: "Google-Display" }
+      when: { sql: ${TABLE}.platform = 'GOOGLE' and lower(${TABLE}.SOURCE) like '%youtube%' ;; label: "Youtube" }
+      when: { sql: ${TABLE}.platform = 'BING' ;; label: "BING" }
+      when: { sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' ;; label: "Amazon Media Group" }
+      when: { sql: ${TABLE}.platform = 'YAHOO' ;; label: "Verizon Media Group" }
+      else: "Other" } }
 
 }

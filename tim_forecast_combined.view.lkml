@@ -26,6 +26,8 @@ view: tim_forecast_combined {
             , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
             , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
             , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
+            , coalesce(a.CATCH_ALL_Units/c.days_in_week,0) as Other_Units
+            , coalesce(a.CATCH_ALL_Amount/c.days_in_week,0) as Other_Amount
         from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         left join (
           select
@@ -126,6 +128,8 @@ view: tim_forecast_combined {
           , zz.BBB_Amount
           , zz.Medical_Amount
           , zz.Trucking_Amount
+          , zz.Other_Units
+          , zz.Other_Amount
       from zz
       full outer join yy on yy.sku_id = zz.sku_id and yy.date = zz.date
       left join (
@@ -143,39 +147,49 @@ view: tim_forecast_combined {
       ) i on i.sku_id = coalesce(yy.sku_id, zz.sku_id)
   ;; }
 
-      dimension_group: date {
-        label: "Forecast"
-        type: time
-        timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-        convert_tz: no
-        datatype: date
-        sql: ${TABLE}.date ;; }
+  dimension_group: date {
+    label: "Forecast"
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;; }
 
-      dimension: Before_today{
-        group_label: "Forecast Date"
-        label: "z - Is Before Today (mtd)"
-        #hidden:  yes
-        description: "This field is for formatting on (week/month/quarter/year) to date reports"
-        type: yesno
-        sql: ${TABLE}.date < current_date;; }
+  dimension: Before_today{
+    group_label: "Forecast Date"
+    label: "z - Is Before Today (mtd)"
+    #hidden:  yes
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
 
-      dimension: sku_id {
-        type:  string
-        sql:${TABLE}.sku_id ;; }
+  dimension: sku_id {
+    type:  string
+    sql:${TABLE}.sku_id ;; }
 
   dimension: item_id {
     type:  string
     sql:${TABLE}.item_id ;; }
 
-      measure: total_units {
-        label: "Total Units"
-        type:  sum
-        sql:round(${TABLE}.total_units,2) ;; }
+  measure: total_units {
+    label: "Total Units"
+    type:  sum
+    sql:round(${TABLE}.total_units,2) ;; }
 
-      measure: total_amount {
-        label: "Total Amount"
-        type:  sum
-        sql:round(${TABLE}.total_amount,2) ;; }
+  measure: total_amount {
+    label: "Total Amount"
+    type:  sum
+    sql:round(${TABLE}.total_amount,2) ;; }
+
+  measure: wholesale_units {
+    label: "Total Wholesale Units"
+    type:  sum
+    sql:round(${TABLE}.wholesale_units,2) ;; }
+
+  measure: wholesale_amount {
+    label: "Total Wholesale Amount"
+    type:  sum
+    sql:round(${TABLE}.wholesale_amount,2) ;; }
 
   measure: dtc_units {
     label: "Total DTC Units"
@@ -183,25 +197,114 @@ view: tim_forecast_combined {
     sql:round(${TABLE}.dtc_units,2) ;; }
 
   measure: dtc_amount {
-    label: "DTC Amount"
+    label: "Total DTC Amount"
     type:  sum
     sql:round(${TABLE}.dtc_amount,2) ;; }
 
-  measure: wholesale_units {
-    label: "Wholesale Units"
+  measure: MF_Instore_Units {
+    label: "Wholesale MF Instore Units"
     type:  sum
-    sql:round(${TABLE}.wholesale_units,2) ;; }
+    sql:round(${TABLE}.MF_Instore_Units,2) ;; }
 
-  measure: wholesale_amount {
-    label: "Wholesale Amount"
+  measure: MF_Instore_Amount {
+    label: "Wholesale MF Instore Amount"
     type:  sum
-    sql:round(${TABLE}.wholesale_amount,2) ;; }
+    sql:round(${TABLE}.MF_Instore_Amount,2) ;; }
 
+  measure: MF_Online_Units {
+    label: "Wholesale MF Online Units"
+    type:  sum
+    sql:round(${TABLE}.MF_Online_Units,2) ;; }
 
-      measure: to_date {
-        label: "Total Goal to Date"
-        description: "This field is for formatting on (week/month/quarter/year) to date reports"
-        type: sum
-        sql: round(case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end,2);; }
+  measure: MF_Online_Amount {
+    label: "Wholesale MF Online Amount"
+    type:  sum
+    sql:round(${TABLE}.MF_Online_Amount,2) ;; }
 
-    }
+  measure: FR_Units {
+    label: "Wholesale FR Units"
+    type:  sum
+    sql:round(${TABLE}.FR_Units,2) ;; }
+
+  measure: FR_Amount {
+    label: "Wholesale FR Amount"
+    type:  sum
+    sql:round(${TABLE}.FR_Amount,2) ;; }
+
+  measure: Macys_Instore_Units {
+    label: "Wholesale Macys Instore Units"
+    type:  sum
+    sql:round(${TABLE}.Macys_Instore_Units,2) ;; }
+
+  measure: Macys_Instore_Amount {
+    label: "Wholesale Macys Instore Amount"
+    type:  sum
+    sql:round(${TABLE}.Macys_Instore_Amount,2) ;; }
+
+  measure: Macys_Online_Units {
+    label: "Wholesale Macys Online Units"
+    type:  sum
+    sql:round(${TABLE}.Macys_Online_Units,2) ;; }
+
+  measure: Macys_Online_Amount {
+    label: "Wholesale Macy Online Amount"
+    type:  sum
+    sql:round(${TABLE}.Macys_Online_Amount,2) ;; }
+
+  measure: SCC_Units {
+    label: "Wholesale SCC Units"
+    type:  sum
+    sql:round(${TABLE}.SCC_Units,2) ;; }
+
+  measure: SCC_Amount {
+    label: "Wholesale SCC Amount"
+    type:  sum
+    sql:round(${TABLE}.SCC_Amount,2) ;; }
+
+  measure: BBB_Units {
+    label: "Wholesale BBB Units"
+    type:  sum
+    sql:round(${TABLE}.BBB_Units,2) ;; }
+
+  measure: BBB_Amount {
+    label: "Wholesale BBB Amount"
+    type:  sum
+    sql:round(${TABLE}.BBB_Amount,2) ;; }
+
+  measure: Medical_Units {
+    label: "Wholesale Medical Units"
+    type:  sum
+    sql:round(${TABLE}.Medical_Units,2) ;; }
+
+  measure: Medical_Amount {
+    label: "Wholesale Medical Amount"
+    type:  sum
+    sql:round(${TABLE}.Medical_Amount,2) ;; }
+
+  measure: Trucking_Units {
+    label: "Wholesale Trucking Units"
+    type:  sum
+    sql:round(${TABLE}.Trucking_Units,2) ;; }
+
+  measure: Trucking_Amount {
+    label: "Wholesale Trucking Amount"
+    type:  sum
+    sql:round(${TABLE}.Trucking_Amount,2) ;; }
+
+  measure: Other_Units {
+    label: "Wholesale Other Units"
+    type:  sum
+    sql:round(${TABLE}.Other_Units,2) ;; }
+
+  measure: Other_Amount {
+    label: "Wholesale Other Amount"
+    type:  sum
+    sql:round(${TABLE}.Other_Amount,2) ;; }
+
+  measure: to_date {
+    label: "Total Goal to Date"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: sum
+    sql: round(case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end,2);; }
+
+}
