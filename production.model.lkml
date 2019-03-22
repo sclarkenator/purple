@@ -22,7 +22,7 @@ explore: production_report {
 }
 
 explore: current_oee {
-  hidden:  no
+  hidden:  yes
   label: "Current OEE Table"
   description: "Automatic OEE Dataset in Snowflake"
 
