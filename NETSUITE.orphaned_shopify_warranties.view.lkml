@@ -10,16 +10,16 @@ view: orphaned_shopify_warranties {
         where list_item_name like 'RPL%'
       ), nr as (
         select
-          replace(replace(REGEXP_SUBSTR(replace(upper(MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O',''),'#','') as original_order_number,
+          replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O',''),'#','') as original_order_number,
           o.etail_order_id as replacement_order_id, o.related_tranid, o.created as replaced, i.product_description as product_name,
-          i.product_line_name_lkr as category, REGEXP_SUBSTR(replace(upper(MEMO),'RLP','RPL'),'RPL\\d{2}') as mod_code,
-          replace(o.memo,'\n',' ') as memo, o.tranid, CASE WHEN REGEXP_SUBSTR(upper(MEMO),'#[ABCS]') is null THEN 'No' ELSE 'Yes' END wholesale
+          i.product_line_name_lkr as category, REGEXP_SUBSTR(replace(upper(o.MEMO),'RLP','RPL'),'RPL\\d{2}') as mod_code,
+          replace(o.memo,'\n',' ') as memo, o.tranid, CASE WHEN REGEXP_SUBSTR(upper(o.MEMO),'#[ABCS]') is null THEN 'No' ELSE 'Yes' END wholesale
         from analytics.sales.sales_order o
             join analytics.sales.sales_order_line l on o.order_id = l.order_id
             join analytics.sales.item i on l.item_id = i.item_id
         where o.gross_amt = 0
             and source = 'Shopify - US'
-            and replace(upper(memo),'RLP','RPL') like '%RPL%'
+            and replace(upper(o.memo),'RLP','RPL') like '%RPL%'
       )
       select
           sr.customer_id, so.id as original_order_id, so.name as original_name,
