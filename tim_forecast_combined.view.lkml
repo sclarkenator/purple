@@ -174,137 +174,171 @@ view: tim_forecast_combined {
   measure: total_units {
     label: "Total Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.total_units ;; }
 
   measure: total_amount {
     label: "Total Amount"
     type:  sum
+    value_format: "$#,##0.00"
+    sql:${TABLE}.total_amount ;; }
+
+
+  measure: total_amount_million {
+    label: "Total Amount (millions)"
+    type:  sum
+    value_format: "$#,##0.00,,\" M\""
     sql:${TABLE}.total_amount ;; }
 
   measure: wholesale_units {
     label: "Total Wholesale Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.wholesale_units ;; }
 
   measure: wholesale_amount {
     label: "Total Wholesale Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.wholesale_amount ;; }
 
   measure: dtc_units {
     label: "Total DTC Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.dtc_units ;; }
 
   measure: dtc_amount {
     label: "Total DTC Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.dtc_amount ;; }
 
   measure: MF_Instore_Units {
     label: "Wholesale MF Instore Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.MF_Instore_Units ;; }
 
   measure: MF_Instore_Amount {
     label: "Wholesale MF Instore Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.MF_Instore_Amount ;; }
 
   measure: MF_Online_Units {
     label: "Wholesale MF Online Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.MF_Online_Units ;; }
 
   measure: MF_Online_Amount {
     label: "Wholesale MF Online Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.MF_Online_Amount ;; }
 
   measure: FR_Units {
     label: "Wholesale FR Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.FR_Units ;; }
 
   measure: FR_Amount {
     label: "Wholesale FR Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.FR_Amount ;; }
 
   measure: Macys_Instore_Units {
     label: "Wholesale Macys Instore Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.Macys_Instore_Units ;; }
 
   measure: Macys_Instore_Amount {
     label: "Wholesale Macys Instore Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.Macys_Instore_Amount ;; }
 
   measure: Macys_Online_Units {
     label: "Wholesale Macys Online Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.Macys_Online_Units ;; }
 
   measure: Macys_Online_Amount {
     label: "Wholesale Macy Online Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.Macys_Online_Amount ;; }
 
   measure: SCC_Units {
     label: "Wholesale SCC Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.SCC_Units ;; }
 
   measure: SCC_Amount {
     label: "Wholesale SCC Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.SCC_Amount ;; }
 
   measure: BBB_Units {
     label: "Wholesale BBB Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.BBB_Units ;; }
 
   measure: BBB_Amount {
     label: "Wholesale BBB Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.BBB_Amount ;; }
 
   measure: Medical_Units {
     label: "Wholesale Medical Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.Medical_Units ;; }
 
   measure: Medical_Amount {
     label: "Wholesale Medical Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.Medical_Amount ;; }
 
   measure: Trucking_Units {
     label: "Wholesale Trucking Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.Trucking_Units ;; }
 
   measure: Trucking_Amount {
     label: "Wholesale Trucking Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.Trucking_Amount ;; }
 
   measure: Other_Units {
     label: "Wholesale Other Units"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.Other_Units ;; }
 
   measure: Other_Amount {
     label: "Wholesale Other Amount"
     type:  sum
+    value_format: "$#,##0.00"
     sql:${TABLE}.Other_Amount ;; }
 
   measure: to_date {
     label: "Total Goal to Date"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: sum
+    value_format: "#,##0"
     sql: case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end;; }
 
 }
