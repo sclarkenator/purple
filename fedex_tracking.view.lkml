@@ -32,6 +32,8 @@ view: fedex_tracking {
 
   dimension_group: status_ts {
     label: "Last Scan"
+    view_label: "Fulfillment"
+    group_label: "FedEx Details"
     type: time
     timeframes: [
       raw,
