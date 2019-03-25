@@ -223,6 +223,11 @@
       type: left_outer
       sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
+    join: fedex_tracking {
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+      relationship: one_to_one}
     join: contribution {
       type: left_outer
       sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
