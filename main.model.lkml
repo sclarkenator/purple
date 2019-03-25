@@ -236,7 +236,17 @@
       view_label: "State Tax Reconciliation"
       type: left_outer
       sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one}}
+      relationship: one_to_one}
+    join: marketing_sms_codes {
+      type: left_outer
+      sql_on: ${sales_order.shopify_discount_code} = ${marketing_sms_codes.sms} ;;
+      relationship:many_to_one}
+    join: marketing_promo_codes {
+      view_label: "Promo Information"
+      type: left_outer
+      sql_on: ${marketing_promo_codes.promo} = coalesce(${sales_order.shopify_discount_code},${marketing_sms_codes.promo}) ;;
+      relationship: many_to_one}
+    }
 
   explore: wholesale {
     #-------------------------------------------------------------------
