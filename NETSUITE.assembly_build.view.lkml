@@ -183,6 +183,7 @@ view: assembly_build {
   }
 
   measure: Ave_Quantity {
+    hidden: yes
     label: "Average Quantity"
     type: average
     sql: ${TABLE}.QUANTITY ;;
