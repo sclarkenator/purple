@@ -243,13 +243,14 @@
       sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
     join: marketing_sms_codes {
+      view_label: "Promo Information"
       type: left_outer
-      sql_on: ${sales_order.shopify_discount_code} = ${marketing_sms_codes.sms} ;;
+      sql_on: lower(${sales_order.shopify_discount_code}) = lower(${marketing_sms_codes.sms}) ;;
       relationship:many_to_one}
     join: marketing_promo_codes {
       view_label: "Promo Information"
       type: left_outer
-      sql_on: ${marketing_promo_codes.promo} = coalesce(${sales_order.shopify_discount_code},${marketing_sms_codes.promo}) ;;
+      sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})) ;;
       relationship: many_to_one}
     }
 

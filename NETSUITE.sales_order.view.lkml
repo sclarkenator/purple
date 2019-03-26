@@ -204,7 +204,8 @@ view: sales_order {
     sql: ${TABLE}.SHIPPING_AMT ;; }
 
   dimension: shopify_discount_code {
-    hidden: yes
+    label: "Shopify Discount Code"
+    #hidden: yes
     type: string
     sql: ${TABLE}.SHOPIFY_DISCOUNT_CODE ;; }
 
