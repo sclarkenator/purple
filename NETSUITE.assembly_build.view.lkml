@@ -182,6 +182,13 @@ view: assembly_build {
     sql: ${TABLE}.QUANTITY ;;
   }
 
+  measure: Ave_Quantity {
+    label: "Average Quantity"
+    type: average
+    sql: ${TABLE}.QUANTITY ;;
+  }
+
+
   measure: Total_amount {
     label: "Total Amount ($)"
     type: sum
