@@ -81,15 +81,27 @@ view: assembly_build {
     sql:  to_timestamp_ntz(${TABLE}.PRODUCED);;
  }
 
+
   dimension_group: shift_time{
     label: "Shift Timescale"
     description: "Adjusts the Produced time to make 0700 to 0000. This sets the beginning of the day as the beginning of the shift. 0000 - 0100 is the first hour of the AM shift."
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(Dateadd(hour,-7,${TABLE}.created));;
  }
+
+  dimension: shifts {
+    label: "Shifts"
+    description: "Buckets the Shift time into shift buckets"
+    type: string
+    sql: case
+    when DATE_PART('hour', ${shift_time_raw}) < 13 and Dayname(${shift_time_raw}) in ('Mon', 'Tue', 'Wed') then 'M-W Day'
+    when DATE_PART('hour', ${shift_time_raw}) < 13 and Dayname(${shift_time_raw}) in ('Thu', 'Fri', 'Sat') then 'Th-Sa Day'
+    when DATE_PART('hour', ${shift_time_raw}) > 12 and Dayname(${shift_time_raw}) in ('Mon', 'Tue', 'Wed') then 'M-W Night'
+    when DATE_PART('hour', ${shift_time_raw}) > 12 and Dayname(${shift_time_raw}) in ('Thu', 'Fri', 'Sat') then 'Th-Sa Night'
+    else 'Sunday' end ;; }
 
 
   parameter: timeframe_picker{
