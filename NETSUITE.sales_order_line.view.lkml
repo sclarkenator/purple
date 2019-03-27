@@ -16,7 +16,7 @@ view: sales_order_line {
     sql:  ${TABLE}.estimated_Cost ;; }
 
   measure: total_estimated_cost {
-    hidden: yes
+    hidden: no
     label: "Estimated Costs ($)"
     description: "Estimated cost value from NetSuite for the cost of materials"
     type: sum
