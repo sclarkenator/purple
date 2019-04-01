@@ -242,15 +242,21 @@
       type: left_outer
       sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
+    join: shopify_discount_codes {
+      view_label: "Promo Information"
+      type: left_outer
+      sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+      relationship: many_to_one
+    }
     join: marketing_sms_codes {
       view_label: "Promo Information"
       type: left_outer
-      sql_on: lower(${sales_order.shopify_discount_code}) = lower(${marketing_sms_codes.sms}) ;;
+      sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
       relationship:many_to_one}
     join: marketing_promo_codes {
       view_label: "Promo Information"
       type: left_outer
-      sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})) ;;
+      sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
               #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
               #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
