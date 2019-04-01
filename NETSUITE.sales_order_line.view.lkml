@@ -748,12 +748,19 @@ view: sales_order_line {
     type: string
     sql: ${TABLE}.UPDATE_TS ;; }
 
+  measure: Total_Average_Cost{
+    type: sum
+    description: "The average cost of the item at time of order creation."
+    sql: ${TABLE}.AVERAGE_COST ;; }
+
   measure: Qty_Picked {
     type: sum
+    description: "The Qty of items that are in the picked state"
     sql: ${TABLE}.PICKED ;; }
 
   measure: Qty_Packed {
     type: sum
+    description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
 
   dimension: zip {
