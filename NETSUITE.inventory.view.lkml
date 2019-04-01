@@ -32,6 +32,16 @@ view: inventory {
     description: "The aggregation of all items on Transfer Orders commited or fulfilled headed to the warehouse."
     sql: ${TABLE}.inbound ;; }
 
+  dimension: Average_Cost {
+    hidden: no
+    type: number
+    sql: ${TABLE}.AVERAGE_COST ;; }
+
+  measure: Total_Average_Cost {
+    hidden: no
+    type: sum
+    sql: ${TABLE}.AVERAGE_COST ;; }
+
   dimension: item_id {
     hidden: yes
     type: number
