@@ -251,6 +251,8 @@
       view_label: "Promo Information"
       type: left_outer
       sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})) ;;
+              #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
+              #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
     }
 
@@ -420,7 +422,7 @@
     join: Receiving_Location{
       from:warehouse_location
       type:  left_outer
-      sql_on:  ${Receiving_Location.location_id} = coalese(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
+      sql_on:  ${Receiving_Location.location_id} = coalesce(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
       relationship: many_to_one}
     join: Transfer_Fulfilling_Location{
       from:warehouse_location

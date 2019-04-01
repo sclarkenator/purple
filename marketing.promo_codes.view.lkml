@@ -5,25 +5,29 @@ view: marketing_promo_codes {
     type: string
     sql: ${TABLE}.promo ;;}
 
-  dimension: promo_code {
+  dimension: keyword {
     type: string
+    sql: ${TABLE}.keyword ;;}
+
+  dimension: source {
     hidden: yes
-    sql: ${TABLE}.promo_code ;;  }
-
-  dimension: show_station {
     type: string
-    #hidden: yes
-    sql: ${TABLE}.show_station ;; }
+    sql: Lower(${TABLE}.media_type) ;;}
 
-  dimension: channel {
+  dimension: media_type {
     type: string
-    #hidden: yes
-    sql: ${TABLE}.channel ;; }
+    sql: ${TABLE}.media_type ;;}
+
+  dimension: station {
+    type: string
+    sql: ${TABLE}.station ;;}
 
   dimension: offer {
     type: string
-    #hidden: yes
-    sql: ${TABLE}.offer ;;
-  }
+    sql: ${TABLE}.offer ;;}
+
+  dimension: start_date {
+    type: date
+    sql: ${TABLE}.start_date ;;}
 
 }
