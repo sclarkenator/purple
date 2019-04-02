@@ -1,5 +1,14 @@
 view: problem_order {
-  sql_table_name: CUSTOMER_CARE.PROBLEM_ORDER ;;
+  derived_table: {
+    sql:
+      select
+        created, order_id, order_name, reason,
+        case
+          when order_name ilike '%ca%' then 'https://purple-ca.myshopify.com/admin/orders/' || order_id::varchar(100)
+          else 'https://onpurple.myshopify.com/admin/orders/' || order_id::varchar(100)
+        end as hyper_link
+      from analytics.customer_care.problem_order;;
+  }
 
   dimension_group: created {
     type: time
@@ -18,7 +27,7 @@ view: problem_order {
   dimension: order_id {
     type: string
     sql: ${TABLE}."ORDER_ID" ;;
-    html: <a href = "https://onpurple.myshopify.com/admin/orders/{{value}}" target="_blank"> {{value}} </a> ;;
+    html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
   }
 
   dimension: order_name {
