@@ -42,6 +42,7 @@ view: production_report {
     type: time
     timeframes:
     [date,
+      raw,
       day_of_week,
       day_of_month,
       week,
