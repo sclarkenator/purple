@@ -146,6 +146,11 @@
       type: left_outer
       sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
       relationship: many_to_many}
+    join: visible {
+      view_label: "Visible"
+      type: left_outer
+      sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
+      relationship: many_to_one}
     join: sales_order {
       view_label: "Sales Header"
       type: left_outer
