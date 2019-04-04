@@ -1,5 +1,20 @@
 view: fraud_warning_list {
-  sql_table_name: CUSTOMER_CARE.FRAUD_WARNING_LIST ;;
+  derived_table: {
+    sql:
+      select
+        order_id, reason, order_created, order_name, shipped_to, billing_address,
+        shipping_address, shipping_zip, address_count, financial_status, order_price,
+        case
+          when order_name ilike '%ca%' then 'https://purple-ca.myshopify.com/admin/orders/' || order_id
+          else 'https://onpurple.myshopify.com/admin/orders/' || order_id
+        end as hyper_link
+      from analytics.customer_care.fraud_warning_list;;
+  }
+
+  dimension: hyper_link {
+    type: string
+    sql: ${TABLE}."HYPER_LINK" ;;
+  }
 
   dimension: address_count {
     type: string
@@ -33,12 +48,13 @@ view: fraud_warning_list {
   dimension: order_id {
     type: string
     sql: ${TABLE}."ORDER_ID" ;;
-    html: <a href = "https://onpurple.myshopify.com/admin/orders/{{value}}" target="_blank"> {{value}} </a> ;;
+    html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
   }
 
   dimension: order_name {
     type: string
     sql: ${TABLE}."ORDER_NAME" ;;
+    html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
   }
 
   dimension: order_price {

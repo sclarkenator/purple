@@ -2,7 +2,7 @@ view: problem_order {
   derived_table: {
     sql:
       select
-        created, order_id, order_name, reason,
+        created, customer, order_id, order_name, reason, financial_status,
         case
           when order_name ilike '%ca%' then 'https://purple-ca.myshopify.com/admin/orders/' || order_id::varchar(100)
           else 'https://onpurple.myshopify.com/admin/orders/' || order_id::varchar(100)
@@ -24,6 +24,12 @@ view: problem_order {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: hyper_link {
+    type: string
+    sql: ${TABLE}."HYPER_LINK" ;;
+    hidden: yes
+  }
+
   dimension: order_id {
     type: string
     sql: ${TABLE}."ORDER_ID" ;;
@@ -33,11 +39,22 @@ view: problem_order {
   dimension: order_name {
     type: string
     sql: ${TABLE}."ORDER_NAME" ;;
+    html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
   }
 
   dimension: reason {
     type: string
     sql: ${TABLE}."REASON" ;;
+  }
+
+  dimension: customer {
+    type: string
+    sql: ${TABLE}."CUSTOMER" ;;
+  }
+
+  dimension: financial_status {
+    type: string
+    sql: ${TABLE}."FINANCIAL_STATUS" ;;
   }
 
 }
