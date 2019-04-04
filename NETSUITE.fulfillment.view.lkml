@@ -24,7 +24,7 @@ view: fulfillment {
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
-  dimension_group: fulfilled {
+  dimension_group: fulfilled_F {
     hidden: yes
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -46,9 +46,9 @@ view: fulfillment {
     type: date
     allow_fill: no
     sql:
-      CASE When {% parameter timeframe_picker %} = 'Date' Then ${fulfilled_date}
-        When {% parameter timeframe_picker %} = 'Week' Then ${fulfilled_week}
-        When {% parameter timeframe_picker %} = 'Month' Then ${fulfilled_month}||'-01'
+      CASE When {% parameter timeframe_picker %} = 'Date' Then ${fulfilled_F_date}
+        When {% parameter timeframe_picker %} = 'Week' Then ${fulfilled_F_week}
+        When {% parameter timeframe_picker %} = 'Month' Then ${fulfilled_F_month}||'-01'
       END;;  }
 
   dimension_group: insert_ts {
