@@ -30,6 +30,16 @@ view: sales_order {
       when: { sql: ${TABLE}.system = 'AMAZON-CA'  or ${TABLE}.source = 'Amazon FBA - CA';; label: "AMAZON-CA" }
       else: "OTHER" } }
 
+  dimension: channel_source_2 {
+    label: "Order Source 2"
+    description: "Where was the order placed? (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
+  case: {
+    when: { sql: lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.source) like ('%us%')  ;;  label: "SHOPIFY-US" }
+    when: { sql: lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.source) like ('%ca%')  ;; label: "SHOPIFY-CA" }
+    when: { sql: lower(${TABLE}.system) like ('%amazon%') and lower(${TABLE}.source) like ('%us%')  ;; label: "AMAZON-US" }
+    when: { sql: lower(${TABLE}.system) like ('%amazon%') and lower(${TABLE}.source) like ('%ca%');; label: "AMAZON-CA" }
+    else: "OTHER" } }
+
   dimension: channel_id {
     label: "Channel ID"
     description:  "1 = DTC, 2 = Wholesale"
