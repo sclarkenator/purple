@@ -9,8 +9,9 @@ view: marketing_sms_codes {
   }
 
   dimension: sms {
+    label: "SMS Code"
     type: string
-    hidden: yes
+    #hidden: yes
     sql: ${TABLE}.sms ;;
   }
 

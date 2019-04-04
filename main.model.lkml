@@ -521,6 +521,7 @@
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: deleted_fulfillment {hidden: yes}
+  explore: marketing_magazine {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}
   explore: sessions {hidden: yes}
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
