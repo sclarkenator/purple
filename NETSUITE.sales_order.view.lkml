@@ -23,22 +23,27 @@ view: sales_order {
     label: "Order Source"
     description: "Where was the order placed? (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
     case: {
-      when: { sql: ${TABLE}.system = 'SHOPIFY-US' or ${TABLE}.source = 'Shopify - US' or ${TABLE}.source is null or ${TABLE}.source = 'Direct Entry' ;;
+      when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
+              or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%us%'))
+              or (lower(${TABLE}.source) like ('%direct entry%')) or (${TABLE}.source is null);;
         label: "SHOPIFY-US" }
-      when: { sql: ${TABLE}.system = 'SHOPIFY-CA' or ${TABLE}.source = 'Shopify - CA' ;; label: "SHOPIFY-CA" }
-      when: { sql: ${TABLE}.system = 'AMAZON.COM' or ${TABLE}.source = 'Amazon FBA - US' or ${TABLE}.system = 'AMAZON-US' ;; label: "AMAZON-US" }
-      when: { sql: ${TABLE}.system = 'AMAZON-CA'  or ${TABLE}.source = 'Amazon FBA - CA';; label: "AMAZON-CA" }
+      when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%ca%'))
+          or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%ca%')) ;;
+        label: "SHOPIFY-CA" }
+      when: { sql: (lower(${TABLE}.system) like ('%amazon%')  and lower(${TABLE}.system) like ('%ca%'))
+          or (lower(${TABLE}.source) like ('%amazon%')  and lower(${TABLE}.source) like ('%ca%')) ;;
+        label: "AMAZON-CA"  }
+      when: { sql: (lower(${TABLE}.source) like ('%amazon%')) or  (lower(${TABLE}.system) like ('%amazon%')) ;;
+        label: "AMAZON-US" }
       else: "OTHER" } }
 
-  dimension: channel_source_2 {
-    label: "Order Source 2"
-    description: "Where was the order placed? (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
-  case: {
-    when: { sql: lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.source) like ('%us%')  ;;  label: "SHOPIFY-US" }
-    when: { sql: lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.source) like ('%ca%')  ;; label: "SHOPIFY-CA" }
-    when: { sql: lower(${TABLE}.system) like ('%amazon%') and lower(${TABLE}.source) like ('%us%')  ;; label: "AMAZON-US" }
-    when: { sql: lower(${TABLE}.system) like ('%amazon%') and lower(${TABLE}.source) like ('%ca%');; label: "AMAZON-CA" }
-    else: "OTHER" } }
+  dimension: Amazon_fulfillment{
+    label: "Amazon Fulfillment"
+    description: "Whether the purchase from amazon was deliverd by amazon or purple"
+    case: {
+      when: { sql: lower(${TABLE}.source) like ('%fbm%') ;;  label: "Purple" }
+      when: { sql: lower(${TABLE}.source) like ('%fba%') ;;  label: "Amazon" }
+      else: "Not Amazon" } }
 
   dimension: channel_id {
     label: "Channel ID"
@@ -232,7 +237,7 @@ view: sales_order {
   dimension: source {
     label:  "Order Source"
     description: "System where order was placed"
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}.SOURCE ;; }
 
@@ -243,7 +248,7 @@ view: sales_order {
     sql: ${TABLE}.STATUS ;; }
 
   dimension: system {
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 
