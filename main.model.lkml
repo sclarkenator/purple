@@ -146,6 +146,11 @@
       type: left_outer
       sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
       relationship: many_to_many}
+    join: visible {
+      view_label: "Visible"
+      type: left_outer
+      sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
+      relationship: many_to_one}
     join: sales_order {
       view_label: "Sales Header"
       type: left_outer
@@ -242,14 +247,23 @@
       type: left_outer
       sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
-    join: marketing_sms_codes {
+    join: shopify_discount_codes {
+      view_label: "Promo Information"
       type: left_outer
-      sql_on: ${sales_order.shopify_discount_code} = ${marketing_sms_codes.sms} ;;
+      sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+      relationship: many_to_one
+    }
+    join: marketing_sms_codes {
+      view_label: "Promo Information"
+      type: left_outer
+      sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
       relationship:many_to_one}
     join: marketing_promo_codes {
       view_label: "Promo Information"
       type: left_outer
-      sql_on: ${marketing_promo_codes.promo} = coalesce(${sales_order.shopify_discount_code},${marketing_sms_codes.promo}) ;;
+      sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
+              #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
+              #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
     }
 
@@ -419,7 +433,7 @@
     join: Receiving_Location{
       from:warehouse_location
       type:  left_outer
-      sql_on:  ${Receiving_Location.location_id} = coalese(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
+      sql_on:  ${Receiving_Location.location_id} = coalesce(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
       relationship: many_to_one}
     join: Transfer_Fulfilling_Location{
       from:warehouse_location
@@ -507,8 +521,11 @@
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: deleted_fulfillment {hidden: yes}
+  explore: marketing_magazine {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}
   explore: sessions {hidden: yes}
+  explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
+  explore: fraud_warning_list {hidden: yes label: "List of orders that could be fraud, and should be checked manually"}
   explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
   explore: retail_stores {hidden:  yes  label: "list of retail outlets as of Nov 1, 2018"}
   explore: agg_check {hidden: yes  label: "data accuracy"}

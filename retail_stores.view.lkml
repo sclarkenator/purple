@@ -21,20 +21,11 @@ view: retail_stores {
 
   dimension: retailer {
     case: {
-      when: {
-        label: "Mattress Firm"
-        sql: ${TABLE}.retailer = 'MF' ;;
-      }
-
-      when: {
-        label: "Furniture Row"
-        sql:   ${TABLE}.retailer = 'FR' ;;
-      }
-
-      when: {
-        label: "Macy's"
-        sql:   ${TABLE}.retailer = 'MA' ;;
-      }
+      when: { label: "Mattress Firm" sql: ${TABLE}.retailer = 'MF' ;;}
+      when: { label: "Furniture Row" sql:   ${TABLE}.retailer = 'FR' ;;}
+      when: { label: "Macy's" sql:   ${TABLE}.retailer = 'MA' ;;}
+      when: { label: "Slep Experts" sql:   ${TABLE}.retailer = 'SE' ;;}
+      when: { label: "Rest & Relax" sql:   ${TABLE}.retailer = 'RR' ;;}
     }
   }
 
