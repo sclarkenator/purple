@@ -52,6 +52,13 @@ view: sales_order {
     sql: ${TABLE}.CHANNEL_id ;; }
 
   dimension: channel {
+    label: "Channel Filter"
+    hidden: yes
+    view_label: "Filters"
+    type: string
+    sql:  case when ${channel_id} = 2 then 'Wholesale' else 'DTC' end  ;; }
+
+  dimension: channel2 {
     label: "Channel"
     description:  "DTC or Wholesale"
     type: string

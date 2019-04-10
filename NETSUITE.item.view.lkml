@@ -29,20 +29,34 @@ view: item {
     sql: ${TABLE}.base_unit ;; }
 
   dimension: merchandise {
+    label: "Is Merchandising Filter"
+    view_label: "Filters"
+    hidden:  yes
+    type: yesno
+    sql: ${TABLE}.merchandise = 1 ;; }
+
+  dimension: merchandise2 {
     label: "Is Merchandising"
     description: "Yes is a merchandising product for wholesale"
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;; }
 
   dimension: modified {
+    label: "Includes Modifications Filter"
+    view_label: "Filters"
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.bi_update = 1 ;;}
+
+  dimension: modified2 {
     label: "Includes Modifications"
     description: "Yes is indicating product attributes have been manually set by BI"
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;}
 
   dimension: finished_good_flg {
-    label: " Is Finished Good"
-    description: "Yes is a finished good"
+    label: " Is Finished Good Filter"
+    view_label: "Filters"
     hidden:  yes
     type: yesno
     sql: ${classification} = 'FG' ;;}

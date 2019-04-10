@@ -117,10 +117,10 @@
   #                              Flag     DMA  Return    Return
   #                                            Reason    Option
   #-------------------------------------------------------------------
-    label:  "DTC sales"
+    label:  "DTC Sales"
     group_label: "Sales"
     view_label: "Sales Line"
-    description:  "All sales orders for all channels"
+    description:  "All sales orders for DTC channel"
     always_filter: {
       filters: {field: sales_order.channel      value: "DTC"}
       filters: {field: item.merchandise         value: "No"}
@@ -274,6 +274,7 @@
       from: sales_order_line
       label:  "Wholesale"
       group_label: "Sales"
+      view_label: "Sales Line"
       description:  "All sales orders for wholesale channel"
       always_filter: {
         filters: {field: sales_order.channel      value: "Wholesale"}
@@ -490,6 +491,20 @@
       sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
       relationship: one_to_one
     }
+  }
+
+  explore: sales_test {
+    extends: [sales_order_line]
+    from:  sales_order_line
+    label:  "Sales Test"
+    group_label: "Sales"
+    view_label: "Sales Line"
+    description:  "All sales orders for all channels.  Change default filter to limit to DTC or Wholesale"
+    always_filter: {
+      filters: {field: sales_order.channel      value: "DTC,Wholesale"}
+      filters: {field: item.merchandise         value: "No" }
+      filters: {field: item.finished_good_flg   value: "Yes"}
+      filters: {field: item.modified            value: "Yes"}}
   }
 
 
