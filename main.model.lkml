@@ -508,28 +508,28 @@
   }
 
 
+    explore: tim_forecast_combined {
+      label: "Combined Forecast"
+      group_label: "Sales"
+      #hidden: yes
+      join: item {
+        view_label: "Product"
+        type: left_outer
+        sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;
+        relationship: many_to_one}}
+
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
 
-    explore: tim_forecast_combined {label: "Combined Forecast V2" group_label: "Sales"  #hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
     explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
       join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
       join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
-    explore: conversions_by_campaign {
-      hidden:  yes
-      label: "Conversions by Campaign"
-      group_label: "Marketing"
-      description: "Aggregated campaign data by date and campaign"
-      join: adspend_by_campaign {
-        type: left_outer
-        sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
-          and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};;
-        relationship:one_to_one}
-      join: external_campaign {
-        type: left_outer
-        sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
+    explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign" group_label: "Marketing" description: "Aggregated campaign data by date and campaign"
+      join: adspend_by_campaign {type: left_outer sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
+          and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};; relationship:one_to_one}
+      join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
         relationship: many_to_one } }
   explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
@@ -592,14 +592,5 @@
   explore: bom_demand_matrix {hidden:  yes  label: "Demand Matrix"  group_label: "Operations"
     description: "Showing components in final products and what's available"
     join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
-
-
-  explore: shipping_times_for_web {
-    hidden: yes
-    group_label: "In Testing"
-    label: "Estimated Fulfillment Times for Web"
-    description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
-    join: item {
-      type: inner
-      sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;;
-      relationship: one_to_one}}
+  explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
+    join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
