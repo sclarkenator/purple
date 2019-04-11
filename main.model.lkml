@@ -117,7 +117,7 @@
   #                              Flag     DMA  Return    Return
   #                                            Reason    Option
   #-------------------------------------------------------------------
-    label:  "DTC Sales"
+    label:  "DTC"
     group_label: "Sales"
     view_label: "Sales Line"
     description:  "All sales orders for DTC channel"
@@ -406,6 +406,7 @@
     label: "Transfer and Purchase Orders"
     group_label: "Operations"
     description: "Netsuite data on Transfer and purchase orders"
+    hidden: yes
     join: purchase_order {
       view_label: "Purchase Order"
       type: left_outer
@@ -462,7 +463,7 @@
   #                 Event   DMA
   #                 Flow
     #-------------------------------------------------------------------
-    #hidden: yes
+    hidden: yes
     label: "All Events (heap)"
     group_label: "Marketing"
     description: "All Website Event Data from Heap Block"
@@ -493,23 +494,24 @@
     }
   }
 
-  explore: sales_test {
-    extends: [sales_order_line]
-    from:  sales_order_line
-    label:  "Sales Test"
-    group_label: "Sales"
-    view_label: "Sales Line"
-    description:  "All sales orders for all channels.  Change default filter to limit to DTC or Wholesale"
-    always_filter: {
-      filters: {field: sales_order.channel      value: "DTC,Wholesale"}
-      filters: {field: item.merchandise         value: "No" }
-      filters: {field: item.finished_good_flg   value: "Yes"}
-      filters: {field: item.modified            value: "Yes"}}
-  }
+#  explore: sales_all {
+#    from:  sales_order_line
+#    extends: [sales_order_line]
+#    label:  "All Sales"
+#    group_label: "Sales"
+#    view_label: "Sales Line"
+#    description:  "All sales orders for all channels."
+#    always_filter: {
+#      filters: {field: sales_order.channel      value: "DTC,Wholesale"}
+#      filters: {field: item.merchandise         value: "No" }
+#      filters: {field: item.finished_good_flg   value: "Yes"}
+#      filters: {field: item.modified            value: "Yes"}}
+#  }
 
 
-    explore: tim_forecast_combined {
-      label: "Combined Forecast"
+  explore: tim_forecast_combined {
+      label: "Forecast"
+      description: "Combined wholesale and dtc forecast of units and dollars."
       group_label: "Sales"
       #hidden: yes
       join: item {

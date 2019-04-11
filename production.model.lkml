@@ -40,6 +40,7 @@ explore: oee {
 }
 
 explore: assembly_build {
+  hidden: yes
   label: "Production Assembly Data"
   description: "NetSuite Header Level Assembly Data"
 
@@ -77,6 +78,7 @@ explore: max_machine_capacity {
 explore: project_config {
   label: "Engineering Projects"
   description: "Status of engineering projects"
+  hidden: yes
 
   join: project_report {
     type: inner
