@@ -132,6 +132,7 @@ view: cancelled_order {
 
   dimension: revenue_item {
     label:"Is Revenue Item"
+    hidden: yes
     description:  "Yes for all product-specific refunds. No to just capture non-product (recycle-fee, freight, etc)"
     type: string
     sql: ${TABLE}.REVENUE_ITEM ;;

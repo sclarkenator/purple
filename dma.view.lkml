@@ -11,8 +11,8 @@ view: dma {
     label: "DMA"
     description: "Designated Marketing Area - derived from zipcode"
     type: string
-    #view_label: "Customer"
-    #group_label: "Customer address"
+    view_label: "Customer"
+    group_label: "Customer Address"
     sql: ${TABLE}.dma_name ;;
   }
 

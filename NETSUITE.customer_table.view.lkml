@@ -35,12 +35,14 @@ view: customer_table {
 
   dimension: mf_or_other {
     label: "Is Mattress Firm"
+    hidden: yes
     description: "Yes is Mattress Firm"
     type: yesno
     sql: ${customer_id}=2662 ;;}
 
   dimension: top_vendors {
     label: "Wholesale Top Customers"
+    hidden: yes
     description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace)"
     case: {
       when: { label: "Mattress Firm" sql: lower(companyname) = 'mattress firm' ;; }
@@ -56,7 +58,7 @@ view: customer_table {
       else: "Other" } }
 
   dimension: wholesale_type {
-    label: "Wholesale Top Customers 2"
+    label: "Top Wholesale Customers"
     description: "List of top wholesale customers for forecasting"
     case: {
       when: { sql: lower(${TABLE}.companyname) like 'mattress%firm%' ;;  label: "Mattress Firm" }

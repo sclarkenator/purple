@@ -66,7 +66,7 @@
   #      Item      Warehouse     Stock
   #                 Locatoin     Level
   #-------------------------------------------------------------------
-    group_label: "Operations"
+    group_label: "Production"
     label: "Current Inventory"
     description: "Inventory positions, by item by location"
     join: item {
@@ -88,7 +88,7 @@
   #              Item        Warehouse      Stock
   #                           Location      Level
   #-------------------------------------------------------------------
-    group_label: "Operations"
+    group_label: "Production"
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     join: item {

@@ -54,44 +54,44 @@ view: fulfillment_dates {
 
   dimension: days_to_ff_dimension {
     group_label: "Days:"
-    label: "to Fulfillment"
+    label: "Order to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  number
     sql:${TABLE}.days_to_ff ;; }
 
   dimension: days_between_ff_dimension {
-    group_label: "Days:"
-    label: "between Fulfillment"
+    group_label: "Difference in Days"
+    label: "First to Last Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  number
     sql:${TABLE}.days_between_ff ;; }
 
   dimension: days_to_last_ff_dimension {
-    group_label: "Days:"
-    label: "to the last Fulfilled item"
+    group_label: "Difference in Days"
+    label: "Order to last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
     type:  number
     sql:${TABLE}.days_to_last_ff ;; }
 
   dimension: days_between_ff_sla {
-    group_label: "Days:"
-    label: "between Fulfillments SLA"
+    group_label: "Difference in Days"
+    label: "3 Day Fulfillment SLA"
     description: "More than 3 Days between fulfillment of first and last item"
     type:  yesno
     sql: NVL(${TABLE}.days_between_ff,0) <= 3 ;; }
 
 
   dimension: days_to_ff_sla {
-    group_label: "Days:"
-    label: "to fulfillment SLA"
+    group_label: "Difference in Days"
+    label: "14 Day Fulfillment SLA"
     description: "More than 14 days between order date and the first fulfilled item"
     hidden: yes
     type:  yesno
     sql: NVL(${TABLE}.days_to_ff,0) <= 14 ;; }
 
   dimension: days_to_ff_tier {
-    group_label: "Days:"
-    label: "between Order and First Item Fulfilled (buckets)"
+    group_label: "Difference in Days"
+    label: "Order and First Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between order date and first item fulfilled (0,1,3,7,14,21,28)"
     type: tier
     style: integer
@@ -99,8 +99,8 @@ view: fulfillment_dates {
     sql: ${TABLE}.days_to_ff;; }
 
   dimension: days_between_ff_tier {
-    group_label: "Days:"
-    label: "between First and Last Item Fulfilled (buckets)"
+    group_label: "Difference in Days"
+    label: "First and Last Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between the first and last item fulfilled (0,1,3,7,14,21,28)"
     type: tier
     style: integer
@@ -108,8 +108,8 @@ view: fulfillment_dates {
     sql: ${TABLE}.days_to_ff;;  }
 
   dimension: days_to_last_ff_tier {
-    group_label: "Days:"
-    label: "between Order and Last Item Fulfilled (buckets)"
+    group_label: "Difference in Days"
+    label: "Order and Last Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between the order date and last item fulfilled (0,1,3,7,14,21,28)"
     type: tier
     style: integer

@@ -108,7 +108,7 @@ explore: workorder_reconciliation {
   }
 explore: warehouse_transfer {
   label: "Warehouse Transactions"
-  description: "Transactions by warehousing for bin and inventory transfers"
+    description: "Transactions by warehousing for bin and inventory transfers"
 
   join: warehouse_transfer_line {
     type: inner
