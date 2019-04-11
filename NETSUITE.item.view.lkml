@@ -18,6 +18,7 @@ view: item {
 
   dimension: type {
     label: "Type"
+    hidden: yes
     description: "Item Type"
     type: string
     sql: ${TABLE}.type ;; }
@@ -50,6 +51,7 @@ view: item {
 
   dimension: modified2 {
     label: "Includes Modifications"
+    hidden: yes
     description: "Yes is indicating product attributes have been manually set by BI"
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;}
@@ -63,6 +65,16 @@ view: item {
 
   dimension: product_description {
     label:  "Product Name"
+    description: "from Netsuite, with a hyperlink to the product"
+    type: string
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+    sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;; }
+
+  dimension: product_name {
+    label:  "3. Name"
+    group_label: "Forecast Tier"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
@@ -86,13 +98,14 @@ view: item {
       else: "Other" } }
 
   dimension: product_line_name {
-    label: "Product Type"
+    label: "Production buckets"
     description: "Type of product (mattress, pillow, cushion, etc.)"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;; }
 
   dimension: product_bucket {
-    label: "Product Type (bucket)"
+    label: "1 Buckets"
+    group_label: "Forecast Tier"
     description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
     type: string
         case: {
@@ -102,7 +115,8 @@ view: item {
           else: "Other" } }
 
   dimension: type_2 {
-    label: "Product Type V2"
+    label: "2. Type"
+    group_label: "Forecast Tier"
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
     sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
@@ -150,6 +164,7 @@ view: item {
 
   dimension: is_original_New_mattress {
     label: "Original or New Mattress"
+    hidden: yes
     description: "Buckets with an option of Original, New Mattress or Other"
     type: string
     sql: case

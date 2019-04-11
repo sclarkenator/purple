@@ -13,8 +13,8 @@ view: discount_code {
     sql: ${TABLE}.CREATED ;; }
 
   dimension: discount_reason {
-    label: "Discount Reason (buckets)"
-    description: "Reason for retroactive discount (Issue, Military, Promo, Change, Other)"
+    label: "Discount Reason"
+    description: "Reason for retroactive discount bucketed (Issue, Military, Promo, Change, Other)"
     case: {
       when: { sql:  ${TABLE}.discount_code_id in (5,13) ;; label: "APOLOGY/ISSUE" }
       when: { sql: ${TABLE}.discount_code_id in (2,10) ;; label: "MILITARY DISCOUNT" }

@@ -85,6 +85,7 @@ view: sales_order_line {
 
   measure: mf_on_time {
     view_label: "Fulfillment"
+    group_label: "SLA"
     label: "Mattress Firm Shipped on Time (% of units)"
     description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units)"
     value_format_name: percent_0
@@ -109,6 +110,7 @@ view: sales_order_line {
 
   measure: whlsl_on_time {
     view_label: "Fulfillment"
+    group_label: "SLA"
     label: "Wholesale Shipped on Time (% of units)"
     description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units)"
     value_format_name: percent_0
@@ -215,6 +217,7 @@ view: sales_order_line {
     label: "West SLA Achievement (% in 3 days)"
     description: "Percent of line items fulfilled by Purple West within 3 days of order"
     view_label: "Fulfillment"
+    group_label: "SLA"
     type: number
     value_format_name: percent_0
     sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;; }
@@ -257,6 +260,8 @@ view: sales_order_line {
   measure: manna_sla_achieved{
     label: "Manna SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
+    group_label: "SLA"
+    hidden: yes
     description: "Percent of line items fulfilled by Manna within 14 days of order"
     type: number
     value_format_name: percent_0
@@ -300,6 +305,7 @@ view: sales_order_line {
   measure: xpo_sla_achieved{
     label: "XPO SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
+    group_label: "SLA"
     description: "Percent of line items fulfilled by Manna within 1 days of order"
     type: number
     value_format_name: percent_0
@@ -384,6 +390,7 @@ view: sales_order_line {
   dimension: manna_order_age_bucket {
     view_label: "Fulfillment"
     label: "Manna Order Age (Bucket)"
+    hidden: yes
     description: "Number of days between today and when order was placed for Manna (7,14,21,28,35,42)"
     type:  tier
     tiers: [7,14,21,28,35,42]
@@ -406,13 +413,13 @@ view: sales_order_line {
     sql: ${created_date} = dateadd(d,-1,current_date) ;; }
 
   dimension: free_item {
-    label: "Is Promo Free Item"
+    label: "Is Promo Item (free)"
     description: "Yes if this item is free" #with purchase of mattress
     type: yesno
     sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
   dimension: discounted_item {
-    label: "Is Discounted Item"
+    label: "Is Discounted"
     description: "Yes if this item had any discount, including if free"
     type: yesno
     sql: (${discount_amt} > 0)  ;; }
@@ -730,7 +737,7 @@ view: sales_order_line {
     sql: ${TABLE}.STREET_ADDRESS ;; }
 
   dimension: system {
-    #hidden: yes
+    hidden: yes
     label: "Source System"
     description: "This is the system the data came from"
     type: string
@@ -772,7 +779,7 @@ view: sales_order_line {
 
   dimension: carrier {
     view_label: "Fulfillment"
-    label: "Expected Carrier"
+    label: "Carrier (expected)"
     description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
     hidden: no
     type: string

@@ -62,7 +62,7 @@ view: shopify_orders {
 
   dimension: call_in_order_Flag {
     view_label: "Sales Header"
-    label: "Draft order"
+    label: "Is Draft Order"
     description: "Draft orders created by call center agents"
     type: yesno
     sql: ${TABLE}.source_name = 'shopify_draft_order' ;;

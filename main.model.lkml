@@ -156,11 +156,11 @@
       type: left_outer
       sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
       relationship: many_to_one}
-    join: manna_data_pull {
-      view_label: "Mike Shultz Project Data"
-      type: left_outer
-      sql_on: ${sales_order.tranid} = ${manna_data_pull.transaction_id} ;;
-      relationship: one_to_many}
+    #join: manna_data_pull {
+    #  view_label: "Mike Shultz Project Data"
+    #  type: left_outer
+    #  sql_on: ${sales_order.tranid} = ${manna_data_pull.transaction_id} ;;
+    #  relationship: one_to_many}
     join: wholesale_customer_warehouses {
       view_label: "Wholesale Warehouses"
       type: left_outer
@@ -248,18 +248,18 @@
       sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
     join: shopify_discount_codes {
-      view_label: "Promo Information"
+      view_label: "Promo"
       type: left_outer
       sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
       relationship: many_to_one
     }
     join: marketing_sms_codes {
-      view_label: "Promo Information"
+      view_label: "Promo"
       type: left_outer
       sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
       relationship:many_to_one}
     join: marketing_promo_codes {
-      view_label: "Promo Information"
+      view_label: "Promo"
       type: left_outer
       sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
               #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))

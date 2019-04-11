@@ -13,8 +13,8 @@ view: fulfillment {
     sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;  }
 
   dimension: carrier {
-    label: "Shipping Provider"
-    description: "What shipping provider was used to fulfill this part of the order?"
+    label: "Carrier (actual)"
+    description: "Shipping provider was used to fulfill this part of the order"
     type: string
     sql: ${TABLE}.carrier ;;  }
 
@@ -104,13 +104,16 @@ view: fulfillment {
     sql: ${TABLE}.tracking_numbers ;;}
 
   measure: count {
-    hidden: yes
-    type: count
-    drill_fields: [PK] }
+    label: "Fulfilled Count"
+    description: "Count of unique items fulfilled"
+    #hidden: yes
+    type: count}
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
+    hidden: yes
     description: "Direct shipping costs incurred, not including last-mile or other transfer costs"
     type: sum
     sql: ${TABLE}.shipping ;; }
+
 }

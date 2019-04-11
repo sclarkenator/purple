@@ -20,8 +20,8 @@ view: sales_order {
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: channel_source {
-    label: "Order Source"
-    description: "Where was the order placed? (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
+    label: "Order Source (buckets)"
+    description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
               or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%us%'))
@@ -47,6 +47,7 @@ view: sales_order {
 
   dimension: channel_id {
     label: "Channel ID"
+    hidden: yes
     description:  "1 = DTC, 2 = Wholesale"
     type: number
     sql: ${TABLE}.CHANNEL_id ;; }
@@ -143,8 +144,10 @@ view: sales_order {
   dimension: is_upgrade {
     label: "Is Order Upgrade"
     description: "Yes - this order an upgrade on a previous order"
-    type: string
-    sql: ${TABLE}.IS_UPGRADE ;; }
+    #type: string
+    #sql: ${TABLE}.IS_UPGRADE ;; }
+    type: yesno
+    sql: ${TABLE}.IS_UPGRADE = 'T' ;; }
 
   dimension: memo {
     hidden: yes
@@ -163,7 +166,7 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;;  }
 
   dimension: Order_size_buckets{
-    label: "Order Size (Buckets)"
+    label: "Order Size (buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
     hidden:   yes
     type:  tier
@@ -172,8 +175,8 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: Order_size_buckets_v2{
-    label: "Order Size (Buckets)"
-    description: "$500 price buckets"
+    label: "Order Size (buckets)"
+    description: "$500 price  (500/1000/1500/etc)"
     type:  tier
     style: integer
     tiers: [500,1000,1500,2000,2500,3000,3500,4000]
@@ -255,6 +258,8 @@ view: sales_order {
     sql: ${TABLE}.STATUS ;; }
 
   dimension: system {
+    label: "System"
+    description: "System the order originated in."
     #hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
@@ -312,6 +317,7 @@ view: sales_order {
 
   dimension: manna_transmission {
     label: "Manna Transmission"
+    hidden: yes
     description: "At the sales header level this is confirmation/acceptance from manna to netsuite that they will start the process of fulfillment"
     view_label: "Fulfillment"
     type: date
@@ -327,6 +333,7 @@ view: sales_order {
 
   dimension: manna_transmission_succ {
     label: "Is Manna Transmission Success"
+    hidden: yes
     description: "Yes if an order has successfully transmitted to Manna"
     view_label: "Fulfillment"
     type: yesno
