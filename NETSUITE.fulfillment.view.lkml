@@ -72,9 +72,9 @@ view: fulfillment {
     type: number
     sql: ${TABLE}.parent_item_id ;; }
 
-  dimension: quantity {
-    hidden: yes
-    type: number
+  measure: Fulfillment_record_quantity {
+    hidden: no
+    type: sum
     sql: ${TABLE}.quantity ;; }
 
   dimension: shipping {
