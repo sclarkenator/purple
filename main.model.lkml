@@ -494,19 +494,19 @@
     }
   }
 
-#  explore: sales_all {
-#    from:  sales_order_line
-#    extends: [sales_order_line]
-#    label:  "All Sales"
-#    group_label: "Sales"
-#    view_label: "Sales Line"
-#    description:  "All sales orders for all channels."
-#    always_filter: {
-#      filters: {field: sales_order.channel      value: "DTC,Wholesale"}
-#      filters: {field: item.merchandise         value: "No" }
-#      filters: {field: item.finished_good_flg   value: "Yes"}
-#      filters: {field: item.modified            value: "Yes"}}
-#  }
+  #explore: sales_all {
+  #  extends: [sales_order_line,daily_adspend]
+  #  label:  "All Sales"
+  #  group_label: "Sales"
+  #  view_label: "Sales Line"
+  #  description:  "All sales orders for all channels."
+  #  always_filter: {
+  #    filters: {field: sales_order.channel      value: "DTC,Wholesale"}
+  #    filters: {field: item.merchandise         value: "No" }
+  #    filters: {field: item.finished_good_flg   value: "Yes"}
+  #    filters: {field: item.modified            value: "Yes"}}
+  #  from:  sales_order_line
+  #}
 
 
   explore: tim_forecast_combined {
