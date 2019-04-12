@@ -23,6 +23,12 @@ view: item {
     type: string
     sql: ${TABLE}.type ;; }
 
+  measure: Weight {
+    label: "Item Weight"
+    hidden: no
+    type: sum
+    sql: ${TABLE}.WEIGHT ;; }
+
   dimension: BASE_UNIT {
     label: "NetSuite Base Unit"
     description: "Used to show what unit non-each items are stored in"
