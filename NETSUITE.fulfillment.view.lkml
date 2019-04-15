@@ -73,7 +73,7 @@ view: fulfillment {
     sql: ${TABLE}.parent_item_id ;; }
 
   measure: Fulfillment_record_quantity {
-    hidden: yes
+    hidden: no
     type: sum
     sql: ${TABLE}.quantity ;; }
 
