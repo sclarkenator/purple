@@ -537,6 +537,7 @@
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: wholesale_stores {hidden: no}
   explore: deleted_fulfillment {hidden: yes}
   explore: marketing_magazine {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}
