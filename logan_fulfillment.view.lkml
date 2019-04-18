@@ -35,7 +35,7 @@ view: logan_fulfillment {
     type: string
     description: "The tranid, or transaction number, for the originating sales order transaction in NetSuite.  Can be used to search for the Sales Order within the NetSuite app"
     group_label: "Fulfillments"
-    sql: ${TABLE}."TRANID" ;;  }
+    sql: ${TABLE}."ORDER_TRANID" ;;  }
 
   dimension: item_id {
     label: "Item ID"
