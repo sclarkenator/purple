@@ -10,7 +10,7 @@
   },
   "name": "Purple: Executive Dashboards",
   "home": {
-    "name": "Executive ",
+    "name": "Metric Explorer",
     "type": "dashboardCollection",
     "permalink": "overview",
     "dashboardCollection": {
