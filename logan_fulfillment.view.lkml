@@ -2,7 +2,7 @@ view: logan_fulfillment {
   derived_table: {
     sql:
     select
-      f.fulfillment_id, f.tranid, f.item_id, i.sku_id, i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
+      f.fulfillment_id, f.tranid, f.item_id, i.classification as item_class, i.sku_id, i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
       o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity, o.source
     from analytics.sales.fulfillment f
       join analytics.sales.item i on f.item_id = i.item_id
@@ -43,6 +43,13 @@ view: logan_fulfillment {
     description: "The internal ID for the product that was fulfilled"
     group_label: "Fulfillments"
     sql: ${TABLE}."ITEM_ID" ;;  }
+
+  dimension: item_class {
+    label: "Item Classification"
+    type: string
+    description: "The classification of the product (e.g. Finished Good)"
+    group_label: "Fulfillments"
+    sql: ${TABLE}."ITEM_CLASS" ;;  }
 
   dimension: sku_id {
     label: "SKU"
