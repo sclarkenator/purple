@@ -3,7 +3,7 @@ view: logan_fulfillment {
     sql:
     select
       f.fulfillment_id, f.tranid, f.item_id, i.sku_id, i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
-      o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity
+      o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity, o.source
     from analytics.sales.fulfillment f
       join analytics.sales.item i on f.item_id = i.item_id
       join analytics.sales.sales_order o on f.order_id = o.order_id
@@ -71,6 +71,13 @@ view: logan_fulfillment {
     description: "The sales channel that this fulfillment applies to"
     group_label: "Fulfillments"
     sql: ${TABLE}."CHANNEL" ;;  }
+
+  dimension: source {
+    label: "Source"
+    type: string
+    description: "The source of the sales order (e.g. Shopify vs Amazon)"
+    group_label: "Fulfillments"
+    sql: ${TABLE}."SOURCE" ;;  }
 
   dimension_group: fulfilled {
     label: "Fulfilled"
