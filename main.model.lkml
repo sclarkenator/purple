@@ -527,6 +527,11 @@
     description: "Customer satisfaction of interactions with Customer Care"
   }
 
+  explore: logan_fulfillment {
+    description: "Stop gap on fulfillment data"
+    hidden: yes
+  }
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------

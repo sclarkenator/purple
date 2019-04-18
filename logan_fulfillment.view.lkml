@@ -91,6 +91,7 @@ view: logan_fulfillment {
     label: "Bundles Fulfilled"
     description: "The quantity, or count, of this bundle on this fulfillment, or zero if the item is not part of a bundle"
     type: sum
-    sql: ${TABLE}.quantity ;; }
+    sql: ${TABLE}.bundle_quantity ;; }
+
 
 }
