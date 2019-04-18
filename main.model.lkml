@@ -521,6 +521,12 @@
         relationship: many_to_one}}
 
 
+  explore: customer_satisfaction_survey {
+    label: "Agent CSAT"
+    group_label: "Customer Care"
+    description: "Customer satisfaction of interactions with Customer Care"
+  }
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
