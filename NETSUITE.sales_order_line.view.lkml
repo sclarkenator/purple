@@ -113,7 +113,7 @@ view: sales_order_line {
                         sales_order.Ship_By
                       Else dateadd(d,3,${created_date})
                   END
-               Else dateadd(d,3,${created_date})
+               Else dateadd(d,14,${created_date})
             END
           WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,3,${created_date}) END
           Else dateadd(d,3,${created_date})
