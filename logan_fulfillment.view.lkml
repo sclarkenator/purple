@@ -1,13 +1,16 @@
 view: logan_fulfillment {
   derived_table: {
     sql:
-    select
-      f.fulfillment_id, f.tranid, f.item_id, i.sku_id, i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
-      o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity
-    from analytics.sales.fulfillment f
-      join analytics.sales.item i on f.item_id = i.item_id
-      join analytics.sales.sales_order o on f.order_id = o.order_id
-      join analytics_stage.netsuite.channel ch on o.channel_id = ch.channel_id ;;  }
+      select
+    f.fulfillment_id, f.tranid, f.item_id, i.classification as item_class, i.sku_id,
+    i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
+    o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity, o.source, sum(ol.gross_amt) as amount
+  from analytics.sales.fulfillment f
+    join analytics.sales.item i on f.item_id = i.item_id
+    join analytics.sales.sales_order o on f.order_id = o.order_id
+    join analytics.sales.sales_order_line ol on o.order_id = ol.order_id and f.item_id = ol.item_id
+    join analytics_stage.netsuite.channel ch on o.channel_id = ch.channel_id
+  group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14 ;;  }
 
   dimension: fulfillment_id {
     label: "Fulfillment Internal ID"
@@ -35,7 +38,7 @@ view: logan_fulfillment {
     type: string
     description: "The tranid, or transaction number, for the originating sales order transaction in NetSuite.  Can be used to search for the Sales Order within the NetSuite app"
     group_label: "Fulfillments"
-    sql: ${TABLE}."TRANID" ;;  }
+    sql: ${TABLE}."ORDER_TRANID" ;;  }
 
   dimension: item_id {
     label: "Item ID"
@@ -43,6 +46,13 @@ view: logan_fulfillment {
     description: "The internal ID for the product that was fulfilled"
     group_label: "Fulfillments"
     sql: ${TABLE}."ITEM_ID" ;;  }
+
+  dimension: item_class {
+    label: "Item Classification"
+    type: string
+    description: "The classification of the product (e.g. Finished Good)"
+    group_label: "Fulfillments"
+    sql: ${TABLE}."ITEM_CLASS" ;;  }
 
   dimension: sku_id {
     label: "SKU"
@@ -72,6 +82,13 @@ view: logan_fulfillment {
     group_label: "Fulfillments"
     sql: ${TABLE}."CHANNEL" ;;  }
 
+  dimension: source {
+    label: "Source"
+    type: string
+    description: "The source of the sales order (e.g. Shopify vs Amazon)"
+    group_label: "Fulfillments"
+    sql: ${TABLE}."SOURCE" ;;  }
+
   dimension_group: fulfilled {
     label: "Fulfilled"
     description: "The date the item was fulfilled"
@@ -91,6 +108,12 @@ view: logan_fulfillment {
     label: "Bundles Fulfilled"
     description: "The quantity, or count, of this bundle on this fulfillment, or zero if the item is not part of a bundle"
     type: sum
-    sql: ${TABLE}.quantity ;; }
+    sql: ${TABLE}.bundle_quantity ;; }
+
+  measure: amount {
+    label: "Amount"
+    description: "The amount of the item"
+    type: sum
+    sql: ${TABLE}.amount ;; }
 
 }
