@@ -115,7 +115,7 @@ view: sales_order_line {
                   END
                Else dateadd(d,3,${created_date})
             END
-          WHEN sales_order.channel_id = 2 THEN sales_order.SHIP_BY
+          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,3,${created_date}) END
           Else dateadd(d,3,${created_date})
         END
               ;;
@@ -133,7 +133,7 @@ dimension_group: SLA_Target {
 }
 
 measure: Qty_Fulfilled_in_SLA{
-  label: "Qty_Fulfilled_in_SLA"
+  label: "Qty Fulfilled in SLA"
   view_label: "Fulfillment"
   type: sum
   sql: Case when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty} Else 0 END ;;
