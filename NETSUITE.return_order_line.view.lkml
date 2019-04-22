@@ -36,6 +36,14 @@ view: return_order_line {
     value_format: "0,\" K\""
     sql: ${TABLE}.gross_amt ;; }
 
+  measure: total_gross_amt_1 {
+    group_label: "Return Amounts"
+    label:  "Total Returns ($)"
+    description: "Total $ returned, excluding tax and freight"
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.gross_amt ;; }
+
   measure: days_between {
     label: "Average Days Between"
     description: "Average number of days between fulfillment and return"
@@ -193,7 +201,7 @@ view: return_order_line {
     primary_key: yes
     hidden: yes
     type: number
-    sql: ${TABLE}.RETURN_ORDER_ID ;; }
+    sql: ${TABLE}.RETURN_ORDER_ID||${TABLE}.item_id ;; }
 
   dimension: return_qty {
     label: "Quantity Returned (units)"
