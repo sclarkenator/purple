@@ -145,6 +145,7 @@ measure: SLA_Achievement_prct {
   hidden: no
   value_format_name: percent_1
   type: number
+  drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units,gross_amt]
   sql: Case when ${total_units} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${total_units} End ;;
 }
 
