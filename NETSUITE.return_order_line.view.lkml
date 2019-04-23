@@ -201,7 +201,7 @@ view: return_order_line {
     primary_key: yes
     hidden: yes
     type: number
-    sql: ${TABLE}.RETURN_ORDER_ID||${TABLE}.item_id ;; }
+    sql: ${TABLE}.RETURN_ORDER_ID ;; }
 
   dimension: return_qty {
     label: "Quantity Returned (units)"
