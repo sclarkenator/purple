@@ -37,9 +37,10 @@
           "permalink": "returns"
         },
         {
-          "id": "212",
+          "id": "221",
           "name": "Production",
-          "permalink": "production"
+          "permalink": "production",
+          "singleValueReference": "production"
         },
         {
           "id": "213",
@@ -58,15 +59,26 @@
         }
       ]
     },
-    "singleValuesSources": [
-      {
-        "model": "main",
-        "view": "sales_order_line",
-        "params": "&sorts=sales_order_line.created_year+desc&fields=sales_order_line.created_year&f[sales_order.channel]=DTC%2CWholesale&f[item.merchandise]=No&f[item.finished_good_flg]=Yes&f[item.modified]=Yes&f[sales_order_line.created_date]=2+years&f[sales_order_line.free_item]=No&f[sales_order_line.Before_today]=Yes&f[year_to_date]=Yes&dynamic_fields=%5B%7B%22dimension%22%3A%22year_to_date%22%2C%22label%22%3A%22Year+to+Date%22%2C%22expression%22%3A%22extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3C+extract_months%28now%28%29%29%5CnOR%5Cn%28+%5Cn++extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3D+extract_months%28now%28%29%29%5Cn++AND%5Cn++extract_days%28%24%7Bsales_order_line.created_date%7D%29+%3C%3D+extract_days%28now%28%29%29%5Cn++%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22yesno%22%7D%2C%7B%22measure%22%3A%22gross_sales%22%2C%22based_on%22%3A%22sales_order_line.total_gross_Amt_non_rounded%22%2C%22label%22%3A%22Gross+Sales%22%2C%22value_format%22%3A%22%240.00%2C%2C%5C%22M%5C%22%22%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%2C%22filter_expression%22%3A%221%3D1%22%7D%5D",
+  "singleValuesSources": [
+    {
+      "model": "main",
+      "view": "sales_order_line",
+      "params": "&sorts=sales_order_line.created_year+desc&fields=sales_order_line.created_year&f[sales_order.channel]=DTC%2CWholesale&f[item.merchandise]=No&f[item.finished_good_flg]=Yes&f[item.modified]=Yes&f[sales_order_line.created_date]=2+years&f[sales_order_line.free_item]=No&f[sales_order_line.Before_today]=Yes&f[year_to_date]=Yes&dynamic_fields=%5B%7B%22dimension%22%3A%22year_to_date%22%2C%22label%22%3A%22Year+to+Date%22%2C%22expression%22%3A%22extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3C+extract_months%28now%28%29%29%5CnOR%5Cn%28+%5Cn++extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3D+extract_months%28now%28%29%29%5Cn++AND%5Cn++extract_days%28%24%7Bsales_order_line.created_date%7D%29+%3C%3D+extract_days%28now%28%29%29%5Cn++%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22yesno%22%7D%2C%7B%22measure%22%3A%22gross_sales%22%2C%22based_on%22%3A%22sales_order_line.total_gross_Amt_non_rounded%22%2C%22label%22%3A%22Gross+Sales%22%2C%22value_format%22%3A%22%240.00%2C%2C%5C%22M%5C%22%22%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%2C%22filter_expression%22%3A%221%3D1%22%7D%5D",
         "fields": {
           "sales" : {
-            "inverseChange": false,
-            "field": "gross_sales"
+          "inverseChange": false,
+          "field": "gross_sales"
+          }
+        }
+      },
+      {
+      "model": "production",
+      "view": "assembly_build",
+      "params": "",
+        "fields": {
+          "production" : {
+          "inverseChange": false,
+          "field": "Total_Quantity"
           }
         }
       }
