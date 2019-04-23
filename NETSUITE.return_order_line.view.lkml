@@ -198,10 +198,15 @@ view: return_order_line {
     sql: ${TABLE}.QUANTITY_RECEIVED_IN_SHIPMENT ;; }
 
   dimension: return_order_id {
-    primary_key: yes
     hidden: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;; }
+
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    type: number
+    sql: ${TABLE}.RETURN_ORDER_ID||${TABLE}.item_id ;; }
 
   dimension: return_qty {
     label: "Quantity Returned (units)"
