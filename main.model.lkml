@@ -532,6 +532,16 @@
     hidden: yes
   }
 
+  explore: return_form_entry {
+    hidden: yes
+    label: "Return Form"
+    description: "Entries from Customer Care Return Forms"
+    join: return_form_reason {
+      type: left_outer
+      sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
+      relationship: one_to_many}
+  }
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
