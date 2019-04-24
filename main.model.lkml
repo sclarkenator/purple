@@ -265,6 +265,12 @@
               #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
               #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
+    join: first_order_flag {
+      view_label: "Sales Header"
+      type: left_outer
+      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+      relationship: one_to_one
+    }
     }
 
   explore: wholesale {
