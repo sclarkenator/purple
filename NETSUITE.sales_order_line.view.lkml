@@ -145,6 +145,7 @@ measure: SLA_Achievement_prct {
   hidden: no
   value_format_name: percent_1
   type: number
+  drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units,gross_amt]
   sql: Case when ${total_units} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${total_units} End ;;
 }
 
@@ -521,6 +522,14 @@ measure: SLA_Achievement_prct {
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.Created < current_date;; }
+
+  dimension: last_30{
+    group_label: "Order Date"
+    label: "z - Last 30 Days"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.Created > dateadd(day,-30,current_date);; }
 
   dimension: Shipping_Addresee{
     description: "The name on the shipping address"

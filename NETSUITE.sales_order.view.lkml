@@ -57,13 +57,23 @@ view: sales_order {
     hidden: yes
     view_label: "Filters"
     type: string
-    sql:  case when ${channel_id} = 2 then 'Wholesale' else 'DTC' end  ;; }
+    sql:  case when ${channel_id} = 1 then 'DTC'
+               when ${channel_id} = 2 then 'Wholesale'
+               when ${channel_id} = 3 then 'General'
+               when ${channel_id} = 4 then 'Employee Store'
+               when ${channel_id} = 5 then 'Owned Retail'
+              else 'Other' end  ;; }
 
   dimension: channel2 {
     label: "Channel"
-    description:  "DTC or Wholesale"
+    description:  "Which Netsuite Channel was the order processed through"
     type: string
-    sql:  case when ${channel_id} = 2 then 'Wholesale' else 'DTC' end  ;; }
+    sql:  case when ${channel_id} = 1 then 'DTC'
+               when ${channel_id} = 2 then 'Wholesale'
+               when ${channel_id} = 3 then 'General'
+               when ${channel_id} = 4 then 'Employee Store'
+               when ${channel_id} = 5 then 'Owned Retail'
+              else 'Other' end  ;; }
 
   dimension: created {
     hidden: yes
