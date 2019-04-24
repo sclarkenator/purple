@@ -13,6 +13,8 @@ view: tim_forecast {
             '10-21-60016','10-21-60018','10-21-60019','10-21-60020') then 1 else 0 end as is_mattress
           , z.daily_goal+coalesce(a.amount,0) as total_amount
           , z.total_units+coalesce(a.units,0) as total_units
+          , coalesce(a.amount,0) as holiday_amount
+          , coalesce(a.units,0) as holiday_units
         from (
           select b.date
               --, c.days_in_month
@@ -38,6 +40,8 @@ view: tim_forecast {
         --, aa.is_mattress
         , aa.total_amount
         , aa.total_units
+        , aa.holiday_amount
+        , aa.holiday_units
         , c.promo
         , y.mattresses * s.percent as promo_units
         --, y.mattresses * (s.percent*.9) as promo_units
@@ -82,6 +86,12 @@ view: tim_forecast {
     type:  sum
     sql:round(${TABLE}.total_amount,2) ;; }
 
+  measure: holiday_amount {
+    label: "Holiday Amount"
+    type:  sum
+    value_format: "$#,##0.00"
+    sql:round(${TABLE}.holiday_amount,2) ;; }
+
   measure: total_units {
     label: "Total Units"
     type:  sum
@@ -91,7 +101,6 @@ view: tim_forecast {
     label: "Total Paid Units"
     type:  sum
     sql:round(${TABLE}.total_units,2) ;; }
-
 
   measure: total_promo_units {
     label: "Total Promo Units"

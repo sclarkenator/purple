@@ -27,6 +27,13 @@ view: all_events {
     timeframes:  [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.time ;; }
 
+  dimension: last_30{
+    label: "z - Last 30 Days"
+    group_label: "Time Date"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.time > dateadd(day,-30,current_date);; }
+
   dimension: user_id {
     hidden: yes
     type: number
