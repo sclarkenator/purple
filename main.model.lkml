@@ -265,6 +265,12 @@
               #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
               #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
+    join: first_order_flag {
+      view_label: "Sales Header"
+      type: left_outer
+      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+      relationship: one_to_one
+    }
     }
 
   explore: wholesale {
@@ -530,6 +536,16 @@
   explore: logan_fulfillment {
     description: "Stop gap on fulfillment data"
     hidden: yes
+  }
+
+  explore: return_form_entry {
+    hidden: yes
+    label: "Return Form"
+    description: "Entries from Customer Care Return Forms"
+    join: return_form_reason {
+      type: left_outer
+      sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
+      relationship: one_to_many}
   }
 
 #-------------------------------------------------------------------
