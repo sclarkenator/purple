@@ -100,6 +100,55 @@ view: sales_order_line {
     type: sum
     sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;; }
 
+  dimension: Due_Date{
+    view_label: "Fulfillment"
+    hidden: yes
+    type: date
+    sql: Case
+          When sales_order.channel_id = 1 THEN
+            Case
+              When upper(${carrier}) not in ('XPO','MANNA','Pilot') THEN
+                 Case
+                     When sales_order.SHIP_BY is not null THEN
+                        sales_order.Ship_By
+                      Else dateadd(d,3,${created_date})
+                  END
+               Else dateadd(d,14,${created_date})
+            END
+          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,3,${created_date}) END
+          Else dateadd(d,3,${created_date})
+        END
+              ;;
+
+  }
+
+dimension_group: SLA_Target {
+  label: "SLA Target"
+  view_label: "Fulfillment"
+  type: time
+  timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+  convert_tz: no
+  datatype: timestamp
+  sql: to_timestamp_ntz(${Due_Date}) ;;
+}
+
+measure: Qty_Fulfilled_in_SLA{
+  label: "Qty Fulfilled in SLA"
+  view_label: "Fulfillment"
+  type: sum
+  sql: Case when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty} Else 0 END ;;
+}
+
+measure: SLA_Achievement_prct {
+  view_label: "Fulfillment"
+  label: "SLA Achievement %"
+  hidden: no
+  value_format_name: percent_1
+  type: number
+  drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+  sql: Case when ${total_units} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${total_units} End ;;
+}
+
   measure: whlsl_units {
     view_label: "Fulfillment"
     label: "Wholesale SLA (units)"
@@ -473,6 +522,14 @@ view: sales_order_line {
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.Created < current_date;; }
+
+  dimension: last_30{
+    group_label: "Order Date"
+    label: "z - Last 30 Days"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.Created > dateadd(day,-30,current_date);; }
 
   dimension: Shipping_Addresee{
     description: "The name on the shipping address"

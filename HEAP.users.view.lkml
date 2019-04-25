@@ -2259,6 +2259,7 @@ view: users {
 
   dimension: zip {
     type: zipcode
+    map_layer_name: us_zipcode_tabulation_areas
     sql: ${TABLE}.zip ;;
   }
 

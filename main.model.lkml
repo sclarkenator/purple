@@ -265,6 +265,12 @@
               #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
               #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
+    join: first_order_flag {
+      view_label: "Sales Header"
+      type: left_outer
+      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+      relationship: one_to_one
+    }
     }
 
   explore: wholesale {
@@ -463,7 +469,7 @@
   #                 Event   DMA
   #                 Flow
     #-------------------------------------------------------------------
-    hidden: yes
+    #hidden: yes
     label: "All Events (heap)"
     group_label: "Marketing"
     description: "All Website Event Data from Heap Block"
@@ -532,6 +538,16 @@
     hidden: yes
   }
 
+  explore: return_form_entry {
+    hidden: yes
+    label: "Return Form"
+    description: "Entries from Customer Care Return Forms"
+    join: return_form_reason {
+      type: left_outer
+      sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
+      relationship: one_to_many}
+  }
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
@@ -548,7 +564,7 @@
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.item_id} = ${item.item_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: wholesale_stores {hidden: no}
+  explore: wholesale_stores {hidden: yes}
   explore: deleted_fulfillment {hidden: yes}
   explore: marketing_magazine {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}

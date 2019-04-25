@@ -24,6 +24,12 @@ view: daily_adspend {
     type: yesno
     sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;  }
 
+  dimension: last_30{
+    label: "Last 30 Days"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.date > dateadd(day,-30,current_date);; }
+
   dimension: rolling_7day {
     label: "Rolling 7 Day Filter"
     description: "Yes = 7 most recent days ONLY"

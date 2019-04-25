@@ -28,4 +28,11 @@ view: shopify_discount_codes {
       sql: ${TABLE}.promo ;;
     }
 
+  dimension: promo_2 {
+    #hidden:  yes
+    label: "Promo - email test"
+    type: string
+    sql: left(${TABLE}.promo,6) ;;
+  }
+
   }
