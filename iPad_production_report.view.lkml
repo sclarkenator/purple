@@ -61,7 +61,6 @@ view: production_report {
 
   measure: First_item_on_shift_timestamp {
     type: string
-    convert_tz: no
     sql: min(${shift_time_time});; }
 
   dimension_group: shift_time{
