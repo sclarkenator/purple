@@ -123,6 +123,41 @@
           }
         }
       ]
+    },
+    {
+      "name": "test2",
+      "permalink": "test2",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "test3",
+          "permalink": "test3",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "208",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "test4",
+          "permalink": "test4",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "208",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
