@@ -116,7 +116,7 @@ view: fulfillment_dates {
     description: "Bucketing the caclulation between the order date and last item fulfilled (0,1,3,7,14,21,28)"
     type: tier
     style: integer
-    tiers: [0,1,3,7,14,21,28]
+    tiers: [0,1,2,3,4,7,14,21,28]
     sql: ${TABLE}.days_between_ff;;  }
 
 }
