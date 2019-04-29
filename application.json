@@ -82,7 +82,7 @@
           },
           "count" : {
           "inverseChange": false,
-          "field": "assembly_build.count"
+          "field": "assembly_build.Total_Quantity"
           }
         }
       }
