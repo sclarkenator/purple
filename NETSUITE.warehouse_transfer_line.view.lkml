@@ -50,6 +50,11 @@ view: warehouse_transfer_line {
     sql: ${TABLE}."ITEM_COUNT" ;;
   }
 
+  measure: Total_items {
+    type: sum
+    sql: ${TABLE}."ITEM_COUNT" ;;
+  }
+
   dimension: item_id {
     type: string
     sql: ${TABLE}."ITEM_ID" ;;
