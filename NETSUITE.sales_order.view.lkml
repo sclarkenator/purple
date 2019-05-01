@@ -296,6 +296,9 @@ view: sales_order {
   dimension: tranid {
     label: "Transaction ID"
     description: "Netsuite's Sale Order Number"
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="}
     type: string
     sql: ${TABLE}.TRANID ;; }
 

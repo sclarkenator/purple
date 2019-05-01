@@ -32,6 +32,13 @@ view: inventory {
     description: "The aggregation of all items on Transfer Orders commited or fulfilled headed to the warehouse."
     sql: ${TABLE}.inbound ;; }
 
+  measure: NetSuite_Stocklevel {
+    label: "NetSuite preferred Stock Level"
+    type: sum
+    hidden:  yes
+    description: "The aggregation of item stock levels per item per warehouse."
+    sql: ${TABLE}.PREFERRED_STOCK_LEVEL ;; }
+
   dimension: Average_Cost {
     hidden: no
     type: number

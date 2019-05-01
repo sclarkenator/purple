@@ -10,9 +10,12 @@ view: fulfillment_dates {
     sql: -- calculating the difference in fulfillment dates from each other and order date
       SELECT
         order_id
-        , nullif(datediff(day, order_date, first_ff),0) days_to_ff
-        , nullif(datediff(day, first_ff, last_ff),0) days_between_ff
-        , nullif(datediff(day, order_date, last_ff),0) days_to_last_ff
+        --, nullif(datediff(day, order_date, first_ff),0) days_to_ff
+        --, nullif(datediff(day, first_ff, last_ff),0) days_between_ff
+        --, nullif(datediff(day, order_date, last_ff),0) days_to_last_ff
+        , datediff(day, order_date, first_ff) days_to_ff
+        , datediff(day, first_ff, last_ff) days_between_ff
+        , datediff(day, order_date, last_ff) days_to_last_ff
       FROM (
         -- aggregating sol to 1 row per order with dates
         SELECT sol.order_id
@@ -113,7 +116,7 @@ view: fulfillment_dates {
     description: "Bucketing the caclulation between the order date and last item fulfilled (0,1,3,7,14,21,28)"
     type: tier
     style: integer
-    tiers: [0,1,3,7,14,21,28]
+    tiers: [0,1,2,3,4,7,14,21,28]
     sql: ${TABLE}.days_between_ff;;  }
 
 }
