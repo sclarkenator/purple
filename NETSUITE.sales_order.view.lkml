@@ -178,7 +178,7 @@ view: sales_order {
   dimension: Order_size_buckets{
     label: "Order Size (buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
-    hidden:   yes
+    hidden:   no
     type:  tier
     style: integer
     tiers: [150,600,1000,1500,2500]
@@ -187,6 +187,7 @@ view: sales_order {
   dimension: Order_size_buckets_v2{
     label: "Order Size (buckets)"
     description: "$500 price  (500/1000/1500/etc)"
+    hidden:  yes
     type:  tier
     style: integer
     tiers: [500,1000,1500,2000,2500,3000,3500,4000]
