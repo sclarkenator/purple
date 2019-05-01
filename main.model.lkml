@@ -530,7 +530,14 @@
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
     group_label: "Customer Care"
-    description: "Customer satisfaction of interactions with Customer Care"
+    description: "Customer satisfaction of interactions with Customer Care agents"
+  }
+
+  explore: ticket {
+    hidden: yes
+    group_label: "Customer Care"
+    label: "Zendesk Tickets"
+    description: "Customer ticket details from Zendesk"
   }
 
   explore: logan_fulfillment {

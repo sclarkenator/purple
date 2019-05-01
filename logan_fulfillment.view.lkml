@@ -4,13 +4,14 @@ view: logan_fulfillment {
       select
     f.fulfillment_id, f.tranid, f.item_id, i.classification as item_class, i.sku_id,
     i.product_description, f.order_id, ch.channel_name as channel, i.product_line_name,
-    o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity, o.source, sum(ol.gross_amt) as amount
+    o.tranid as order_tranid, f.fulfilled, f.quantity, f.bundle_quantity, o.source, sum(ol.gross_amt) as amount,
+    o.WARRANTY_CLAIM_ID
   from analytics.sales.fulfillment f
     join analytics.sales.item i on f.item_id = i.item_id
     join analytics.sales.sales_order o on f.order_id = o.order_id
     join analytics.sales.sales_order_line ol on o.order_id = ol.order_id and f.item_id = ol.item_id
     join analytics_stage.netsuite.channel ch on o.channel_id = ch.channel_id
-  group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14 ;;  }
+  group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,o.warranty_claim_id ;;  }
 
   dimension: fulfillment_id {
     label: "Fulfillment Internal ID"
@@ -115,5 +116,11 @@ view: logan_fulfillment {
     description: "The amount of the item"
     type: sum
     sql: ${TABLE}.amount ;; }
+
+  dimension: warranty_order_flg {
+    label: "Is Warranty Order"
+    description: "Yes if this order has a warranty replacement"
+    type: yesno
+    sql: ${TABLE}.WARRANTY_CLAIM_ID is not null ;; }
 
 }

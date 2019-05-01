@@ -24,6 +24,18 @@ view: return_form_entry {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: date_bins {
+    description: "Rolling date bins, to compare last 30 days with last 60 and greater"
+    sql: case when ${TABLE}."CREATED" <= dateadd('day', -1, current_date()) and ${TABLE}."CREATED" > dateadd('day', -31, current_date())
+            then '30 Days'
+          when ${TABLE}."CREATED" <= dateadd('day', -31, current_date()) and ${TABLE}."CREATED" > dateadd('day', -61, current_date())
+            then '30-60 Days'
+          when ${TABLE}."CREATED" <= dateadd('day', -61, current_date())
+            then '60+ Days'
+          else 'Today' end
+        ;;
+  }
+
   dimension: customer {
     type: string
     sql: ${TABLE}."CUSTOMER" ;;
