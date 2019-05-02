@@ -19,6 +19,7 @@ view: return_form_reason {
   dimension: pk {
     type: string
     primary_key: yes
+    hidden: yes
     sql: ${category} || ${entry_id} || ${reason} ;;
   }
 

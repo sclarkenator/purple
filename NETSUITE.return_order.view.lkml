@@ -179,6 +179,13 @@ view: return_order {
     type: string
     sql: ${TABLE}.STATUS ;; }
 
+  dimension: was_returned {
+    label: "Was Returned - Trial Return"
+    description: "Indicates if a trial return was completed and refunded"
+    type: yesno
+    sql: ${TABLE}.STATUS = 'Refunded' and ${TABLE}.RMA_RETURN_TYPE = 'Trial' ;;
+  }
+
   dimension: tracking_number {
     hidden: yes
     type: string
@@ -199,4 +206,36 @@ view: return_order {
     type: string
     sql: ${TABLE}.WARRANTY_ORDER ;; }
 
+  dimension_group: return_completed {
+    type: time
+    hidden: yes
+    description: "Date the return was reimbused and fully completed"
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.return_completed ;; }
+
+  measure: days_from_order_to_complete_return {
+    type: average
+    hidden: yes
+    description: "Days from when the customer ordered to when a return was completed (refunded)"
+    sql: date_diff('day', sales_order_line.created, ${return_completed_date} ;;
+  }
+
+  measure: days_from_fulfillment_to_complete_return {
+    type: average
+    hidden: yes
+    description: "Days from when the item was fulfilled to when a return was completed (refunded)"
+    sql: date_diff('day', sales_order_line.fulfilled, ${return_completed_date} ;;
+  }
+
+  dimension: days_from_fulfillment_to_complete_return_buckets  {
+    type: string
+    hidden: yes
+    sql: case when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 30 then "Within 30 Days"
+            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 60 then "31-60 Days"
+            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 100 then "61-100 Days"
+            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} > 100 then "Over 100"
+            end;;
+  }
 }
