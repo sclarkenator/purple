@@ -4,6 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "*.view"
+    include: "main.model.lkml"
     #include: "*.dashboard"
 
   datagroup: gross_to_net_sales_default_datagroup {
@@ -552,6 +553,7 @@
 # Hidden Explores
 #-------------------------------------------------------------------
 
+    explore: day_aggregations { from: day_aggregations hidden:yes }
     explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
       join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
       join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
