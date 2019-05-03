@@ -106,7 +106,8 @@ view: sales_order {
     sql: ${TABLE}.ETAIL_ORDER_ID ;; }
 
   dimension_group: in_hand {
-    label: "In Hand"
+    label: "NetSuite In Hand"
+    view_label: "Fulfillment"
     type: time
     hidden: no
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
