@@ -822,6 +822,11 @@ measure: SLA_Achievement_prct {
     description: "The Qty of items that are in the picked state"
     sql: ${TABLE}.PICKED ;; }
 
+  measure: Qty_Committed {
+    type: sum
+    description: "The Qty of items that are in the committed state"
+    sql: ${TABLE}.QUANTITY_COMMITTED ;; }
+
   measure: Qty_Packed {
     type: sum
     description: "The Qty of items that are in the packed state"

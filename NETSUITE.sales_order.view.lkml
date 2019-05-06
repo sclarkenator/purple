@@ -80,6 +80,11 @@ view: sales_order {
     type: date_time
     sql: ${TABLE}.CREATED ;; }
 
+  dimension: shipping_hold {
+    label: "Shipping Hold? (Y/N)"
+    type: yesno
+    sql: ${TABLE}.SHIPPING_HOLD ;; }
+
   dimension: created_by_id {
     hidden: yes
     type: number
