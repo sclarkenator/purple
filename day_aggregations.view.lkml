@@ -71,10 +71,10 @@ view: day_aggregations_forecast {
 #   Merging Forecast and Actuals by Day
 ######################################################
 view: day_aggregations {
-  derived_table: {
-    sql: select created_date, total_gross_Amt_non_rounded
-      from ${day_aggregations_dtc_sales.??} as sales;;
-  }
-  dimension: created-date {type: date}
-  measure: total_gross_Amt_non_rounded {type:sum}
+  #derived_table: {
+    #sql: select created_date, total_gross_Amt_non_rounded
+    #  from ${day_aggregations_dtc_sales.??} as sales;;
+ # }
+ # dimension: created_date {type: date}
+ # measure: total_gross_Amt_non_rounded {type:sum}
 }
