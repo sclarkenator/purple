@@ -1,6 +1,25 @@
 view: bills {
   derived_table: {
     sql:
+      -- OLD BILL QUERY --
+        --select a.bill_id,
+            --a.purchase_order_id,
+            --a.tranid,
+            --a.vendor,
+            --a.status,
+            --min(a.created) as created,
+            --max(a.due) as due,
+            --max(b.bill_row_number) as row_count,
+            --sum(b.amount) as amount,
+            --sum(b.item_count) as items
+        --from production.bill a
+        --left join production.bill_line b on b.bill_id = a.bill_id
+        --group by a.bill_id,
+            --a.purchase_order_id,
+            --a.tranid,
+            --a.vendor,
+            --a.status
+      -- END OF OLD BILL QUERY --
       -- aggregating the bill line up to one per purchase order
       with a as (
         select
