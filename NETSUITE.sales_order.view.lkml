@@ -90,6 +90,12 @@ view: sales_order {
     type: number
     sql: ${TABLE}.CREATED_BY_ID ;; }
 
+  dimension: Pilot_MSFID {
+    description: "The Pilot Order ID"
+    hidden: no
+    type: number
+    sql: ${TABLE}.MANNA_MSFID_ESONUS ;; }
+
   dimension: Showroom_Order {
     description: "Flag for orders made in the Alpine Showroom"
     type: yesno
