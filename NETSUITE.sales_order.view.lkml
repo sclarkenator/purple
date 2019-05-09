@@ -94,7 +94,7 @@ view: sales_order {
     label: "Pilot MSFID"
     description: "The Pilot Order ID"
     hidden: no
-    type: number
+    type: string
     sql: ${TABLE}.MANNA_MSFID_ESONUS ;; }
 
   dimension: Showroom_Order {
