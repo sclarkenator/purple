@@ -91,6 +91,7 @@ view: sales_order {
     sql: ${TABLE}.CREATED_BY_ID ;; }
 
   dimension: Pilot_MSFID {
+    label: "Pilot MSFID"
     description: "The Pilot Order ID"
     hidden: no
     type: number
