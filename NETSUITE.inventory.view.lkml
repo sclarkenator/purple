@@ -35,7 +35,7 @@ view: inventory {
   measure: NetSuite_Stocklevel {
     label: "NetSuite preferred Stock Level"
     type: sum
-    hidden:  yes
+    hidden:  no
     description: "The aggregation of item stock levels per item per warehouse."
     sql: ${TABLE}.PREFERRED_STOCK_LEVEL ;; }
 
