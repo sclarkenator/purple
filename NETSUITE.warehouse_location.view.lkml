@@ -11,6 +11,11 @@ view: warehouse_location {
       type: string
       sql: ${TABLE}.name ;; }
 
+  dimension: location_Active {
+    label: "Active Locations"
+    type: yesno
+    sql: ${TABLE}.ISINACTIVE ;; }
+
   dimension: location_name_manna_grouped {
     label: "Warehouse Name (manna grouped)"
     hidden: yes
