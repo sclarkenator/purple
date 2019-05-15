@@ -3,7 +3,9 @@ view: assembly_build {
 
   dimension: assembly_build_id {
     primary_key: yes
-    hidden:  yes
+    description: "Netsuites transaction ID, used to hyperlink directly to record"
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
+    hidden:  no
     type: number
     sql: ${TABLE}.assembly_build_id ;;}
 
@@ -156,13 +158,19 @@ view: assembly_build {
 
   dimension: tranid {
     label: "Transaction ID"
-    description: "Netsuites transaction ID, used to hyperlink directly to record"
+    hidden: yes
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{assembly_build_id._value}}&whence="}
     type: number
     value_format_name: id
     sql: ${TABLE}.tranid ;; }
 
   dimension: transaction_number {
     label: "Transaction Number"
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{assembly_build_id._value}}&whence="}
     type: string
     sql: ${TABLE}.transaction_number ;; }
 
@@ -179,6 +187,7 @@ view: assembly_build {
   measure: Total_Quantity {
     label: "Total Quantity"
     type: sum
+    drill_fields: [transaction_number, sales_order.tranid, created_date,  item.product_description, sales_order.source, Total_Quantity,Total_amount]
     sql: ${TABLE}.QUANTITY ;;
   }
 
