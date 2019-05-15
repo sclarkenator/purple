@@ -538,6 +538,12 @@
     description: "Customer satisfaction of interactions with Customer Care agents"
   }
 
+  explore: refund_mismatch {
+    label: "Refund Mismatch"
+    group_label: "Customer Care"
+    description: "NetSuite refunds missing in Shopify"
+  }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
