@@ -100,8 +100,14 @@ view: day_aggregations {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
-    sql: to_timestamp_ntz(${date}) ;;
-  }
+    sql: to_timestamp_ntz(${date}) ;; }
+
+  dimension: MTD_flg{
+    group_label: "Created Date"
+    label: "z - Is Before Today (mtd)"
+    type: yesno
+    sql: ${TABLE}.Created < current_date ;; }
+
 
   measure: dtc_amount {
     label: "DTC Amount"
