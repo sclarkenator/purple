@@ -70,6 +70,8 @@
     group_label: "Production"
     label: "Current Inventory"
     description: "Inventory positions, by item by location"
+    always_filter: {
+      filters: {field: warehouse_location.location_Active      value: "No"}}
     join: item {
       type: left_outer
       sql_on: ${inventory.item_id} = ${item.item_id} ;;
@@ -92,6 +94,8 @@
     group_label: "Production"
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
+    always_filter: {
+      filters: {field: warehouse_location.location_Active      value: "No"}}
     join: item {
       type: left_outer
       sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
@@ -532,6 +536,12 @@
     label: "Agent CSAT"
     group_label: "Customer Care"
     description: "Customer satisfaction of interactions with Customer Care agents"
+  }
+
+  explore: refund_mismatch {
+    label: "Refund Mismatch"
+    group_label: "Customer Care"
+    description: "NetSuite refunds missing in Shopify"
   }
 
   explore: ticket {
