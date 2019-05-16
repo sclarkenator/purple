@@ -6,7 +6,7 @@ view: refund_mismatch {
     sql: ${TABLE}."AMOUNT_DIFF" ;;
   }
 
-  dimension_group: date {
+  dimension_group: created {
     type: time
     timeframes: [
       raw,
@@ -52,6 +52,7 @@ view: refund_mismatch {
 
   dimension: refund_number {
     type: number
+    value_format: "0"
     sql: ${TABLE}."REFUND_NUMBER" ;;
   }
 
