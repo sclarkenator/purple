@@ -106,7 +106,7 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Is Before Today (mtd)"
     type: yesno
-    sql: ${TABLE}.Created < current_date ;; }
+    sql: ${TABLE}.date < current_date ;; }
 
 
   measure: dtc_amount {

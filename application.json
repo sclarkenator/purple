@@ -24,7 +24,8 @@
         {
           "id": "209",
           "name": "DTC",
-          "permalink": "dtc"
+          "permalink": "dtc",
+          "singleValueReference": "dtc"
         },
         {
           "id": "210",
@@ -91,6 +92,17 @@
           "production" : {
           "inverseChange": false,
           "field": "assembly_build.Total_Quantity"
+          }
+        }
+      },
+      {
+      "model": "main",
+      "view": "day_aggregations",
+      "params": "fields=day_aggregations.forecast_dtc_amount,day_aggregations.dtc_amount,day_aggregations.date_year&fill_fields=day_aggregations.date_year&f[day_aggregations.MTD_flg]=Yes&f[day_aggregations.date_date]=2+years&sorts=day_aggregations.date_year+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3Anull%7D&filter_config=%7B%22day_aggregations.MTD_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22to_goal%22%2C%22label%22%3A%22to+Goal%22%2C%22expression%22%3A%22if%28%5Cn++to_string%28%24%7Bday_aggregations.date_year%7D%29%3D%5Cn++++%5C%222019%5C%22%5Cn++%2C%24%7Bday_aggregations.dtc_amount%7D%5Cn++++%2F%24%7Bday_aggregations.forecast_dtc_amount%7D%5Cn++%2C1%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "fields": {
+          "dtc" : {
+          "inverseChange": false,
+          "field": "to_goal"
           }
         }
       }
