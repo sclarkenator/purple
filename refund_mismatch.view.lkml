@@ -18,7 +18,7 @@ view: refund_mismatch {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."DATE" ;;
+    sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: etail_refund_exported {
