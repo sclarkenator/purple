@@ -71,10 +71,119 @@ view: day_aggregations_forecast {
 #   Merging Forecast and Actuals by Day
 ######################################################
 view: day_aggregations {
-  #derived_table: {
-    #sql: select created_date, total_gross_Amt_non_rounded
-    #  from ${day_aggregations_dtc_sales.??} as sales;;
- # }
- # dimension: created_date {type: date}
- # measure: total_gross_Amt_non_rounded {type:sum}
+  derived_table: {
+    sql:
+      select d.date
+        , dtc.total_gross_Amt_non_rounded as dtc_amount
+        , dtc.total_units as dtc_units
+        , wholesale.total_gross_Amt_non_rounded as wholesale_amount
+        , wholesale.total_units as wholesale_units
+        , forecast.total_amount as forecast_total_amount
+        , forecast.total_units as forecast_total_units
+        , forecast.dtc_amount as forecast_dtc_amount
+        , forecast.dtc_units as forecast_dtc_units
+        , forecast.wholesale_amount as forecast_wholesale_amount
+        , forecast.wholesale_units as forecast_wholesale_units
+      from analytics.util.warehouse_date d
+      left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
+      left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
+      left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
+      where date >= '2018-01-01' and date < current_date
+
+
+      ;;
+  }
+  dimension: date {type: date hidden:yes}
+  dimension_group: date {
+    label: "Created"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${date}) ;;
+  }
+
+  measure: dtc_amount {
+    label: "DTC Amount"
+    description: "Total DTC sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.dtc_amount;; }
+
+  measure: dtc_units {
+    label: "DTC Units"
+    description: "Total DTC units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.dtc_units;; }
+
+  measure: wholesale_amount {
+    label: "Wholesale Amount"
+    description: "Total wholesale sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.wholesale_amount;; }
+
+  measure: wholesale_units {
+    label: "Wholesale Units"
+    description: "Total wholesale units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.wholesale_units;; }
+
+  measure: total_amount {
+    label: "Total Amount"
+    description: "Total sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
+
+  measure: total_units {
+    label: "Total Units"
+    description: "Total DTC units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.dtc_units + ${TABLE}.wholesale_units;; }
+
+  measure: forecast_total_amount {
+    label: "Forecast Amount"
+    description: "Total forecast amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.forecast_total_amount;; }
+
+  measure: forecast_total_units {
+    label: "Forecast Units"
+    description: "Total forecast units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.forecast_total_units;; }
+
+  measure: forecast_dtc_amount {
+    label: "Forecast DTC Amount"
+    description: "Total DTC forecast amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.forecast_dtc_amount;; }
+
+  measure: forecast_dtc_units {
+    label: "Forecast DTC Units"
+    description: "Total DTC forecast units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.forecast_dtc_units;; }
+
+  measure: forecast_wholesale_amount {
+    label: "Forecast Wholesale Amount"
+    description: "Total wholesale forecast amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.forecast_wholesale_amount;; }
+
+  measure: forecast_wholesale_units {
+    label: "Forecast Wholesale Units"
+    description: "Total wholesale forecast units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.forecast_wholesale_units;; }
 }
