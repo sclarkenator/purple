@@ -1,6 +1,6 @@
 {
   "requirementsFile": "requirements.json",
-  "description": "Executive Dashboards",
+  "description": "Executive Dashboard",
   "descriptionExtended": "",
   "exploreConfig": {
     "data": true,
@@ -63,6 +63,17 @@
     },
   "singleValuesSources": [
     {
+    "model": "main",
+    "view": "day_aggregations",
+    "params": "fields=day_aggregations.forecast_dtc_amount,day_aggregations.dtc_amount,day_aggregations.date_year&fill_fields=day_aggregations.date_year&f[day_aggregations.MTD_flg]=Yes&f[day_aggregations.date_date]=2+years&sorts=day_aggregations.date_year+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3Anull%7D&filter_config=%7B%22day_aggregations.MTD_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22to_goal%22%2C%22label%22%3A%22to+Goal%22%2C%22expression%22%3A%22if%28%5Cn++to_string%28%24%7Bday_aggregations.date_year%7D%29%3D%5Cn++++%5C%222019%5C%22%5Cn++%2C%24%7Bday_aggregations.dtc_amount%7D%5Cn++++%2F%24%7Bday_aggregations.forecast_dtc_amount%7D%5Cn++%2C1%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+      "fields": {
+        "dtc" : {
+        "inverseChange": false,
+        "field": "day_aggregations.dtc_amount"
+        }
+      }
+    },
+    {
       "model": "main",
       "view": "sales_order_line",
       "params": "&sorts=sales_order_line.created_year+desc&fields=sales_order_line.created_year&f[sales_order.channel]=DTC%2CWholesale&f[item.merchandise]=No&f[item.finished_good_flg]=Yes&f[item.modified]=Yes&f[sales_order_line.created_date]=2+years&f[sales_order_line.free_item]=No&f[sales_order_line.Before_today]=Yes&f[year_to_date]=Yes&dynamic_fields=%5B%7B%22dimension%22%3A%22year_to_date%22%2C%22label%22%3A%22Year+to+Date%22%2C%22expression%22%3A%22extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3C+extract_months%28now%28%29%29%5CnOR%5Cn%28+%5Cn++extract_months%28%24%7Bsales_order_line.created_date%7D%29+%3D+extract_months%28now%28%29%29%5Cn++AND%5Cn++extract_days%28%24%7Bsales_order_line.created_date%7D%29+%3C%3D+extract_days%28now%28%29%29%5Cn++%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22yesno%22%7D%2C%7B%22measure%22%3A%22gross_sales%22%2C%22based_on%22%3A%22sales_order_line.total_gross_Amt_non_rounded%22%2C%22label%22%3A%22Gross+Sales%22%2C%22value_format%22%3A%22%240.00%2C%2C%5C%22M%5C%22%22%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%2C%22filter_expression%22%3A%221%3D1%22%7D%5D",
@@ -83,29 +94,18 @@
           "field": "assembly_build.Total_Quantity"
           }
         }
-      },
-      {
-      "model": "main",
-      "view": "day_aggregations",
-      "params": "fields=day_aggregations.forecast_dtc_amount,day_aggregations.dtc_amount,day_aggregations.date_year&fill_fields=day_aggregations.date_year&f[day_aggregations.MTD_flg]=Yes&f[day_aggregations.date_date]=2+years&sorts=day_aggregations.date_year+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3Anull%7D&filter_config=%7B%22day_aggregations.MTD_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22to_goal%22%2C%22label%22%3A%22to+Goal%22%2C%22expression%22%3A%22if%28%5Cn++to_string%28%24%7Bday_aggregations.date_year%7D%29%3D%5Cn++++%5C%222019%5C%22%5Cn++%2C%24%7Bday_aggregations.dtc_amount%7D%5Cn++++%2F%24%7Bday_aggregations.forecast_dtc_amount%7D%5Cn++%2C1%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
-        "fields": {
-          "dtc" : {
-          "inverseChange": false,
-          "field": "day_aggregations.forecast_dtc_amount"
-          }
-        }
       }
     ]
   },
   "sections": [
     {
-      "name": "test",
+      "name": "Production",
       "permalink": "search",
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "test3",
-          "permalink": "test3",
+          "name": "Something Fun",
+          "permalink": "test2",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
@@ -118,8 +118,8 @@
           }
         },
         {
-          "name": "test4",
-          "permalink": "test4",
+          "name": "Something Fun 2",
+          "permalink": "test3",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
@@ -134,12 +134,12 @@
       ]
     },
     {
-      "name": "test2",
+      "name": "Sales",
       "permalink": "test2",
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "test3",
+          "name": "Daily Dashboard",
           "permalink": "test3",
           "type": "dashboardCollection",
           "dashboardCollection": {
@@ -153,7 +153,7 @@
           }
         },
         {
-          "name": "test4",
+          "name": "Wholesale",
           "permalink": "test4",
           "type": "dashboardCollection",
           "dashboardCollection": {
