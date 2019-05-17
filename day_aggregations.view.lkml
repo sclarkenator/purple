@@ -68,6 +68,20 @@ view: day_aggregations_forecast {
 }
 
 ######################################################
+#   Adspend
+######################################################
+view: day_aggregations_adspend {
+  derived_table: {
+    explore_source: daily_adspend {
+      column: ad_date {}
+      column: adspend {}
+    }
+  }
+  dimension: ad_date { type: date }
+  measure: adspend { type: sum }
+}
+
+######################################################
 #   Merging Forecast and Actuals by Day
 ######################################################
 view: day_aggregations {
@@ -84,10 +98,12 @@ view: day_aggregations {
         , forecast.dtc_units as forecast_dtc_units
         , forecast.wholesale_amount as forecast_wholesale_amount
         , forecast.wholesale_units as forecast_wholesale_units
+        , adspend.adspend
       from analytics.util.warehouse_date d
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
+      left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       where date >= '2018-01-01' and date < current_date
 
 
@@ -192,4 +208,11 @@ view: day_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.forecast_wholesale_units;; }
+
+  measure: adspend {
+    label: "Total Adspend"
+    description: "Total adspend aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.adspend;; }
 }
