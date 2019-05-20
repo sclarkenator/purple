@@ -21,6 +21,11 @@ view: refund_mismatch {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: created_from_type {
+    type: string
+    sql: ${TABLE}."CREATED_FROM_TYPE" ;;
+  }
+
   dimension: etail_refund_exported {
     type: string
     sql: ${TABLE}."ETAIL_REFUND_EXPORTED" ;;
@@ -44,6 +49,12 @@ view: refund_mismatch {
     type: number
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
+
+  dimension: n_3pl_cancelkatuib_status {
+    type: string
+    sql: ${TABLE}."N_3PL_CANCELLATION_STATUS" ;;
+  }
+
 
   dimension: quantity {
     type: string
