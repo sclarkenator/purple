@@ -1,23 +1,79 @@
 view: bills {
   derived_table: {
-    sql: -- aggregating the bill line up to one per purchase order
-      select a.bill_id
-          , a.purchase_order_id
-          , a.tranid
-          , a.vendor
-          , a.status
-          , min(a.created) as created
-          , max(a.due) as due
-          , max(b.bill_row_number) as row_count
-          , sum(b.amount) as amount
-          , sum(b.item_count) as items
-      from production.bill a
-      left join production.bill_line b on b.bill_id = a.bill_id
-      group by a.bill_id
-          , a.purchase_order_id
-          , a.tranid
-          , a.vendor
-          , a.status ;; }
+    sql:
+      -- OLD BILL QUERY --
+        --select a.bill_id,
+            --a.purchase_order_id,
+            --a.tranid,
+            --a.vendor,
+            --a.status,
+            --min(a.created) as created,
+            --max(a.due) as due,
+            --max(b.bill_row_number) as row_count,
+            --sum(b.amount) as amount,
+            --sum(b.item_count) as items
+        --from production.bill a
+        --left join production.bill_line b on b.bill_id = a.bill_id
+        --group by a.bill_id,
+            --a.purchase_order_id,
+            --a.tranid,
+            --a.vendor,
+            --a.status
+      -- END OF OLD BILL QUERY --
+      -- aggregating the bill line up to one per purchase order
+      with a as (
+        select
+            b.bill_id,
+            l.account_id,
+            b.entity_id,
+            o.purchase_order_id,
+            b.tranid,
+            convert_timezone('America/Denver',b.created) as CREATED,
+            b.trandate,
+            convert_timezone('America/Denver',b.modified) as MODIFIED,
+            b.due,
+            b.actual_invoice,
+            b.tax_point,
+            b.status,
+            p.name as accounting_period,
+            e.full_name as VENDOR,
+            b.vendor_email,
+            b.billaddress,
+            l.amount,
+            l.quantity,
+            c.name as CLASS_NAME,
+            l.product_line,
+            a.name as ACCOUNT_NAME,
+            l.department,
+            l.location
+        from analytics.finance.bill b
+            left join analytics.finance.bill_line l on b.bill_id = l.bill_id
+            left join analytics_stage.netsuite.accounts a on l.account_id = a.account_id
+            left join analytics_stage.netsuite.entity e on b.entity_id = e.entity_id
+            left join analytics.finance.accounting_period p on b.accounting_period_id = p.accounting_period_id
+            left join analytics_stage.netsuite.classes c on l.class_id = c.class_id
+            left join analytics.production.purchase_order o on b.purchase_order_id = o.purchase_order_id
+      ), t1 as (
+        select
+            a.bill_id,
+            a.purchase_order_id,
+            a.tranid,
+            a.vendor,
+            a.status,
+            min(a.created) as created,
+            max(a.due) as due,
+            count(*) as row_count,
+            sum(a.amount) as amount,
+            sum(a.quantity) as items
+        from a
+        group by
+            a.bill_id,
+            a.purchase_order_id,
+            a.tranid,
+            a.vendor,
+            a.status
+      )
+      select * from t1  ;; }
 
   dimension: bill_id {
     primary_key: yes

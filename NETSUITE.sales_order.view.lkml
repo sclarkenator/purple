@@ -80,10 +80,22 @@ view: sales_order {
     type: date_time
     sql: ${TABLE}.CREATED ;; }
 
+  dimension: shipping_hold {
+    label: "Shipping Hold? (Y/N)"
+    type: yesno
+    sql: ${TABLE}.SHIPPING_HOLD ;; }
+
   dimension: created_by_id {
     hidden: yes
     type: number
     sql: ${TABLE}.CREATED_BY_ID ;; }
+
+  dimension: Pilot_MSFID {
+    label: "Pilot MSFID"
+    description: "The Pilot Order ID"
+    hidden: no
+    type: string
+    sql: ${TABLE}.MANNA_MSFID_ESONUS ;; }
 
   dimension: Showroom_Order {
     description: "Flag for orders made in the Alpine Showroom"
@@ -106,9 +118,10 @@ view: sales_order {
     sql: ${TABLE}.ETAIL_ORDER_ID ;; }
 
   dimension_group: in_hand {
-    label: "In Hand"
+    label: "NetSuite In Hand"
+    view_label: "Fulfillment"
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
@@ -178,7 +191,7 @@ view: sales_order {
   dimension: Order_size_buckets{
     label: "Order Size (buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
-    hidden:   yes
+    hidden:   no
     type:  tier
     style: integer
     tiers: [150,600,1000,1500,2500]
@@ -187,6 +200,7 @@ view: sales_order {
   dimension: Order_size_buckets_v2{
     label: "Order Size (buckets)"
     description: "$500 price  (500/1000/1500/etc)"
+    hidden:  yes
     type:  tier
     style: integer
     tiers: [500,1000,1500,2000,2500,3000,3500,4000]
