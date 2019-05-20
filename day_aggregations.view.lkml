@@ -81,6 +81,23 @@ view: day_aggregations_adspend {
   measure: adspend { type: sum }
 }
 
+
+######################################################
+#   Daily Curve Target
+######################################################
+view: day_aggregations_targets {
+  derived_table: {
+    explore_source: sales_targets {
+      column: date_date {}
+      column: dtc_target {}
+      column: whlsl_target {}
+    }
+  }
+  dimension: date_date { type: date }
+  measure: dtc_target { type: sum }
+  measure: whlsl_target { type: sum }
+}
+
 ######################################################
 #   Merging Forecast and Actuals by Day
 ######################################################
@@ -99,15 +116,15 @@ view: day_aggregations {
         , forecast.wholesale_amount as forecast_wholesale_amount
         , forecast.wholesale_units as forecast_wholesale_units
         , adspend.adspend
+        , targets.dtc_target as target_dtc_amount
+        , targets.whlsl_target as target_wholesale_amount
       from analytics.util.warehouse_date d
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
-      where date >= '2018-01-01' and date < current_date
-
-
-      ;;
+      left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
+      where date >= '2018-01-01' and date < current_date ;;
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
@@ -215,4 +232,18 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.adspend;; }
+
+  measure: target_dtc_amount {
+    label: "Target DTC Amount"
+    description: "Total DTC target from Daily Curve amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.target_dtc_amount;; }
+
+  measure: target_wholesale_amount {
+    label: "Target Wholesale Amount"
+    description: "Total wholesale target from Daily Curve amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.target_wholesale_amount;; }
 }
