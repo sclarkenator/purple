@@ -21,6 +21,11 @@ view: refund_mismatch {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: created_from_type {
+    type: string
+    sql: ${TABLE}."CREATED_FROM_TYPE" ;;
+  }
+
   dimension: etail_refund_exported {
     type: string
     sql: ${TABLE}."ETAIL_REFUND_EXPORTED" ;;
