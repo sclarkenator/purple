@@ -10,15 +10,32 @@ view: customer_table {
 
   dimension: companyname {
     label: "Wholesale Customer Name"
+    group_label: "Wholesale"
     description: "Company Name from netsuite"
     type: string
     sql: ${TABLE}.companyname ;; }
 
   dimension: full_name {
-    label: "DTC Customer Name"
+    label: "Customer Name"
     description: "Merging first and last name from netsuite"
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));; }
+
+  dimension: account_manager {
+    label: "Account Manager"
+    group_label: "Wholesale"
+    #hidden: yes
+    description: "Wholesale - Taking the account manager from the customer account"
+    type: string
+    sql:  ${account_manager.full_name};; }
+
+  dimension: sales_manager {
+    label: "Sales Manager"
+    group_label: "Wholesale"
+    #hidden: yes
+    description: "Wholesale - Taking the sales manager from the customer account"
+    type: string
+    sql:  ${sales_manager.full_name};; }
 
   dimension: email {
     hidden:  yes
@@ -42,6 +59,7 @@ view: customer_table {
 
   dimension: top_vendors {
     label: "Wholesale Top Customers"
+    group_label: "Wholesale"
     hidden: yes
     description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace)"
     case: {
@@ -59,6 +77,7 @@ view: customer_table {
 
   dimension: wholesale_type {
     label: "Top Wholesale Customers"
+    group_label: "Wholesale"
     description: "List of top wholesale customers for forecasting"
     case: {
       when: { sql: lower(${TABLE}.companyname) like 'mattress%firm%' ;;  label: "Mattress Firm" }
@@ -81,5 +100,13 @@ view: customer_table {
         or lower(${TABLE}.companyname) like '%little america%'
         or lower(${TABLE}.companyname) like '%truck%' ;; label: "Trucking" }
       else: "Other" } }
+
+  dimension: account_manager_id {
+    hidden: yes
+    sql: ${TABLE}.account_manager_id ;;}
+
+  dimension: sales_manager_id {
+    hidden: yes
+    sql: ${TABLE}.sales_manager_id ;;}
 
 }

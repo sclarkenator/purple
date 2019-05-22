@@ -256,8 +256,7 @@
       view_label: "Promo"
       type: left_outer
       sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
-      relationship: many_to_one
-    }
+      relationship: many_to_one}
     join: marketing_sms_codes {
       view_label: "Promo"
       type: left_outer
@@ -267,15 +266,16 @@
       view_label: "Promo"
       type: left_outer
       sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
-              #or (lower(${marketing_promo_codes.keyword}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code}))
-              #  and lower(${marketing_promo_codes.promo}) != lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code})))  ;;
       relationship: many_to_one}
     join: first_order_flag {
       view_label: "Sales Header"
       type: left_outer
       sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
-      relationship: one_to_one
-    }
+      relationship: one_to_one}
+    join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+      sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+      join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+        sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
     }
 
   explore: wholesale {
@@ -378,7 +378,12 @@
       view_label: "Fulfillment"
       type: left_outer
       sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one} }
+      relationship: one_to_one}
+        join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+          sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+        join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+          sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+    }
 
   explore: warranty {
   #-------------------------------------------------------------------
