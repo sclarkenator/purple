@@ -78,7 +78,7 @@ view: inventory {
     sql: ${TABLE}.ON_HAND ;; }
 
   measure: Total_on_order {
-    label: "Totan On Order"
+    label: "Total On Order"
     description: "Items en route to the warehouse"
     type: sum
     sql: ${TABLE}.ON_ORDER ;; }
