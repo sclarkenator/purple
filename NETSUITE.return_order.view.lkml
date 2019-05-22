@@ -219,23 +219,31 @@ view: return_order {
     type: average
     hidden: yes
     description: "Days from when the customer ordered to when a return was completed (refunded)"
-    sql: date_diff('day', sales_order_line.created, ${return_completed_date} ;;
+    sql: datediff('day', sales_order_line.created, ${TABLE}.return_completed) ;;
   }
 
   measure: days_from_fulfillment_to_complete_return {
     type: average
     hidden: yes
     description: "Days from when the item was fulfilled to when a return was completed (refunded)"
-    sql: date_diff('day', sales_order_line.fulfilled, ${return_completed_date} ;;
+    sql: datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) ;;
   }
 
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
-    hidden: yes
-    sql: case when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 30 then "Within 30 Days"
-            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 60 then "31-60 Days"
-            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} <= 100 then "61-100 Days"
-            when date_diff("day", sales_order_line.fulfilled, ${return_completed_date} > 100 then "Over 100"
+    hidden: no
+    sql: case when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
+            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 60 then '31-60 Days'
+            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 100 then '61-100 Days'
+            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) > 100 then 'Over 100'
             end;;
+  }
+
+  measure: total_trial_returns_completed_within_60_days {
+    type: sum
+    hidden: yes
+    description: "Trial returns completed within 60 days of fulfillment"
+    sql: case when ${status} = 'Refunded' and ${rma_return_type} = 'Trial'  and ${days_from_fulfillment_to_complete_return} <=60 then 1
+      else 0 end;;
   }
 }
