@@ -36,7 +36,7 @@
 
         {
           "id": "221",
-          "name": "Production",
+          "name": "Production to target",
           "permalink": "production",
           "singleValueReference": "prod"
         },
@@ -189,7 +189,7 @@
           "dashboardCollection": {
             "dashboards": [
               {
-                "id": "208",
+                "id": "4",
                 "name": "Sales",
                 "permalink": "sales"
               }
