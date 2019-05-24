@@ -33,6 +33,7 @@ view: fulfillment_dates {
     label: "Order to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  average   #sum??
+    value_format: "#,##0.00"
     sql:${TABLE}.days_to_ff ;; }
 
   measure: days_between_ff {

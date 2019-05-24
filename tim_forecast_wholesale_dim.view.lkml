@@ -133,6 +133,24 @@ view: tim_forecast_wholesale_dim {
       when: { sql: ${TABLE}.account in ('Trucking') ;; label: "Trucking" }
       else: "Other" } }
 
+  dimension: account_manager {
+    label: "Accout Manager"
+    type:  string
+    case: {
+      when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online') ;;  label: "Jordan Petersen" }
+      when: { sql: ${TABLE}.account in ('Furniture Row','Bed, Bath & Beyond') ;;  label: "Jodee Blue" }
+      when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online','Medical','Trucking') ;;  label: "Taylor Brown" }
+      else: "Other" } }
+
+  dimension: sales_manager {
+    label: "Sales Manager"
+    type:  string
+    case: {
+      when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online','Medical') ;;  label: "Daniel Hill" }
+      when: { sql: ${TABLE}.account in ('Furniture Row','Bed, Bath & Beyond') ;;  label: "Mike Hessing" }
+      when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online','Trucking') ;;  label: "Mike Riley" }
+      else: "Other" } }
+
 
   measure: units {
     label: "Total Units"
