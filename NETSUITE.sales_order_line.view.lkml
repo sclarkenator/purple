@@ -108,7 +108,7 @@ view: sales_order_line {
     sql: Case
           When sales_order.channel_id = 1 THEN
             Case
-              When upper(${carrier}) not in ('XPO','MANNA','Pilot') THEN
+              When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
                  Case
                      When sales_order.SHIP_BY is not null THEN
                         sales_order.Ship_By
