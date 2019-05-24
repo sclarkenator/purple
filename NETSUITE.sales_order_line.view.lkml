@@ -540,6 +540,14 @@ measure: SLA_Achievement_prct {
     type: yesno
     sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);; }
 
+  dimension: prev_week{
+    group_label: "Order Date"
+    label: "z - Previous Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
+
   dimension: Shipping_Addresee{
     description: "The name on the shipping address"
     type: string
