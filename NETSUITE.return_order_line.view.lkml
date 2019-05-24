@@ -23,6 +23,21 @@ view: return_order_line {
       value: "Trial" }
     sql: ${TABLE}.return_qty ;; }
 
+  measure: total_trial_returns_completed {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Trial Returns Completed (units)"
+    description: "Trial returns completed and reimbursed"
+    filters: {
+      field: return_order.rma_return_type
+      value: "Trial"}
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    sql: ${TABLE}.return_qty ;;
+    drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
   measure: total_trial_returns_completed_within_60_days {
     type: sum
     hidden: no
