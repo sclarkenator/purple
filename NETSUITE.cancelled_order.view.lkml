@@ -13,10 +13,30 @@ view: cancelled_order {
     type: count_distinct
     sql: ${order_id} ;; }
 
+  measure: orders_cancelled_and_refunded {
+    label: "Cancelled and Refunded Orders (count)"
+    description: "Count (#) of distinct orders with at least 1 item cancelled where a refund has been given"
+    type: count_distinct
+    filters: {
+      field: refunded
+      value: "Yes"
+    }
+    sql: ${order_id} ;; }
+
   measure: amt_cancelled {
     label:  "Total Cancelled ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
+    sql: ${TABLE}.gross_amt ;; }
+
+  measure: amt_cancelled_and_refunded {
+    label:  "Total Cancelled and Refunded ($)"
+    description: "Total USD amount of cancelled order, excluding taxes, where a refund has been given"
+    type: sum
+    filters: {
+      field: refunded
+      value: "Yes"
+    }
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: yesterday_flag {

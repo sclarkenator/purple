@@ -222,8 +222,8 @@ view: return_order {
     sql: datediff('day', sales_order_line.created, ${TABLE}.return_completed) ;;
   }
 
-  measure: days_from_fulfillment_to_complete_return {
-    type: average
+  dimension: days_from_fulfillment_to_complete_return {
+    type: number
     hidden: yes
     description: "Days from when the item was fulfilled to when a return was completed (refunded)"
     sql: datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) ;;
@@ -239,11 +239,5 @@ view: return_order {
             end;;
   }
 
-  measure: total_trial_returns_completed_within_60_days {
-    type: sum
-    hidden: yes
-    description: "Trial returns completed within 60 days of fulfillment"
-    sql: case when ${status} = 'Refunded' and ${rma_return_type} = 'Trial'  and ${days_from_fulfillment_to_complete_return} <=60 then 1
-      else 0 end;;
-  }
+
 }

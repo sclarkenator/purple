@@ -23,6 +23,28 @@ view: return_order_line {
       value: "Trial" }
     sql: ${TABLE}.return_qty ;; }
 
+  measure: total_trial_returns_completed_within_60_days {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Trial Returns Completed within 60 Days (units)"
+    description: "Trial returns completed within 60 days of fulfillment"
+    ##sql: case when ${return_order.status} = "Refunded"
+    ##      and ${return_order.rma_return_type} = "Trial"
+    ##      and ${return_order.days_from_fulfillment_to_complete_return} <=60 then ${TABLE}.return_qty
+    ##    else 0 end;;
+    filters: {
+      field: return_order.rma_return_type
+      value: "Trial"}
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    filters: {
+      field: return_order.days_from_fulfillment_to_complete_return
+      value: "<=60"}
+    sql: ${TABLE}.return_qty ;;
+  }
+
   measure: average_gross_return {
     label: "Average Gross Returns"
     type: average
