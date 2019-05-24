@@ -50,7 +50,7 @@ view: refund_mismatch {
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
 
-  dimension: n_3pl_cancelkatuib_status {
+  dimension: n_3pl_cancellation_status {
     type: string
     sql: ${TABLE}."N_3PL_CANCELLATION_STATUS" ;;
   }

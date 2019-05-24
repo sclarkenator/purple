@@ -59,6 +59,7 @@ view: sales_order_line {
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
     type:  average
+    value_format: "#,##0.0"
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;; }
 
   measure: mf_fulfilled {
@@ -723,6 +724,19 @@ measure: SLA_Achievement_prct {
     datatype: date
     sql: ${TABLE}.FULFILLED ;; }
 
+  dimension: fulfilled_status {
+    view_label: "Fulfillment"
+    #hidden: yes
+    label: "Status"
+    description: "Fulfillment status - On Time, Late, Open, Late (open)"
+    type: string
+    sql:
+    CASE
+    When coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date},dateadd('day',30,${sales_order.created})) >= ${TABLE}.FULFILLED then 'On Time'
+    When coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date},dateadd('day',30,${sales_order.created})) < ${TABLE}.FULFILLED then 'Late'
+    When ${TABLE}.FULFILLED is null and ${TABLE}.FULFILLED < ${sales_order.minimum_ship_date} Then 'Late (open)'
+    else 'Open'
+    END;; }
 
   dimension: fulfillment_method {
     label: "Fulfillment Method"
