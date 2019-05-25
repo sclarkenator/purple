@@ -135,12 +135,33 @@ view: day_aggregations {
     datatype: timestamp
     sql: to_timestamp_ntz(${date}) ;; }
 
-  dimension: MTD_flg{
+  dimension: Before_today{
     group_label: "Created Date"
     label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${TABLE}.date < current_date ;; }
+    sql: ${TABLE}.date < current_date;; }
 
+  dimension: last_30{
+    group_label: "Created Date"
+    label: "z - Last 30 Days"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.date > dateadd(day,-30,current_date);; }
+
+  dimension: current_week_num{
+    group_label: "Created Date"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Created Date"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
 
   measure: dtc_amount {
     label: "DTC Amount"
