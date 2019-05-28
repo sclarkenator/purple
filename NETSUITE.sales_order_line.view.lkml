@@ -108,7 +108,7 @@ view: sales_order_line {
     sql: Case
           When sales_order.channel_id = 1 THEN
             Case
-              When upper(${carrier}) not in ('XPO','MANNA','Pilot') THEN
+              When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
                  Case
                      When sales_order.SHIP_BY is not null THEN
                         sales_order.Ship_By
@@ -531,6 +531,22 @@ measure: SLA_Achievement_prct {
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: ${TABLE}.Created > dateadd(day,-30,current_date);; }
+
+  dimension: current_week_num{
+    group_label: "Order Date"
+    label: "z - Before Current Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Order Date"
+    label: "z - Previous Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
 
   dimension: Shipping_Addresee{
     description: "The name on the shipping address"
