@@ -142,6 +142,13 @@ view: day_aggregations {
     type: yesno
     sql: ${TABLE}.date < current_date;; }
 
+  dimension: start_date {
+    group_label: "Created Date"
+    label: "z - Start Date"
+    description: "This field will show the start date of an interval that is normally a bucket (week 1, august)"
+    type: yesno
+    sql: min(${TABLE}.date) ;; }
+
   dimension: last_30{
     group_label: "Created Date"
     label: "z - Last 30 Days"
