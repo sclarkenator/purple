@@ -276,6 +276,23 @@
       sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
       join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
         sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+    join: warranty_order_line {
+      view_label: "Warranties"
+      type:  full_outer
+      sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
+      relationship: one_to_many}
+    join: warranty_order {
+      view_label: "Warranties"
+      type: full_outer
+      required_joins: [warranty_order_line]
+      sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+      relationship: many_to_one}
+    join: warranty_reason {
+      view_label: "Warranties"
+      type: left_outer
+      sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+      relationship: many_to_one}
+
     }
 
   explore: wholesale {

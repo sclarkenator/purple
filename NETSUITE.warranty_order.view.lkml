@@ -14,12 +14,14 @@ view: warranty_order {
 
   dimension: channel_id {
     label: "Channel ID"
+    hidden: yes
     description: "1 = DTC, 2 = Wholesale"
     type: number
     sql: ${TABLE}.CHANNEL_ID ;; }
 
   dimension_group: created {
     type: time
+    label: "Warranty Created"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -32,8 +34,9 @@ view: warranty_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: memo {
-    label: "Memo"
-    description: "The order level notes on the warranty order"
+    group_label: "Memos"
+    label: "Header Memo"
+    description: "The header level notes on the warranty order"
     type: string
     sql: ${TABLE}.MEMO ;; }
 
@@ -43,12 +46,13 @@ view: warranty_order {
     sql: ${TABLE}.ORDER_ID ;; }
 
   dimension: related_tranid {
-    hidden: yes
+    hidden: no
+    label: "Related Transaction ID"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
   dimension: replacement_order_id {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}.REPLACEMENT_ORDER_ID ;; }
 
@@ -59,7 +63,7 @@ view: warranty_order {
 
   dimension: status {
     label: "Status"
-    description: "Warrenty status (Cancelled, Closed, Refunded, etc)"
+    description: "Warrenty status (Cancelled, Closed, Refunded, etc). Closed means the warranty was completed."
     type: string
     sql: ${TABLE}.STATUS ;; }
 
@@ -75,6 +79,7 @@ view: warranty_order {
 
   dimension_group: update_ts {
     type: time
+    hidden: yes
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.UPDATE_TS ;; }
 
@@ -84,7 +89,8 @@ view: warranty_order {
     sql: ${TABLE}.WARRANTY_REASON_CODE_ID ;; }
 
   dimension: warranty_ref_id {
-    hidden: yes
+    label: "RMA Number"
+    description: "RMA number for warranty"
     type: string
     sql: ${TABLE}.WARRANTY_REF_ID ;; }
 

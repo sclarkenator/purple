@@ -1,6 +1,12 @@
 view: warranty_order_line {
   sql_table_name: sales.warranty_order_line ;;
 
+  dimension: item_order{
+    type: string
+    primary_key:  yes
+    hidden:  yes
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
+
   dimension_group: closed {
     hidden: yes
     type: time
@@ -27,8 +33,9 @@ view: warranty_order_line {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: memo {
-    label: "Memo"
-    description: "The order level notes on the warranty order"
+    group_label: "Memos"
+    label: "Line Memo"
+    description: "The line level notes on the warranty order"
     type: string
     sql: ${TABLE}.MEMO ;; }
 
@@ -38,9 +45,21 @@ view: warranty_order_line {
     sql: ${TABLE}.ORDER_ID ;; }
 
   measure: quantity {
-    label: "Total Units"
+    label: "Total Warranties Initiated (units)"
+    description: "Units for which a warranty was created"
     type: sum
     sql: ${TABLE}.QUANTITY ;; }
+
+  measure: quantity_complete {
+    label: "Total Warranties Completed (units)"
+    description: "Units from warranties where the warranty has been completed"
+    type: sum
+    filters: {
+      field: warranty_order.status
+      value: "Closed"
+    }
+    sql: ${TABLE}.QUANTITY ;;
+  }
 
   dimension: system {
     hidden: yes
@@ -55,7 +74,7 @@ view: warranty_order_line {
 
   dimension: warranty_order_id {
     hidden: yes
-    primary_key: yes
+    #primary_key: yes
     type: number
     # hidden: yes
     sql: ${TABLE}.WARRANTY_ORDER_ID ;; }
