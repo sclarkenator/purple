@@ -8,7 +8,7 @@ view: customer_table {
     html: <a href = "https://system.na2.netsuite.com/app/common/entity/custjob.nl?id={{value}}" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.customer_id::int ;; }
 
-  dimension: companyname {
+  dimension: companynameapfkj {
     label: "Wholesale Customer Name"
     group_label: "Wholesale"
     description: "Company Name from netsuite"
