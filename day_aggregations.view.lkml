@@ -202,7 +202,7 @@ view: day_aggregations {
     label: "Total Amount"
     description: "Total sales aggregated to the day."
     type: sum
-    value_format: "$#,##0,\" K\""
+    value_format: "$#,##0.00"
     sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
 
   measure: total_amount_format {
