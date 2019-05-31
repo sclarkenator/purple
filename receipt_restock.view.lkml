@@ -5,7 +5,7 @@ view: receipt_restock {
     type: string
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}."RECEIPT_ID" || ${TABLE}."ITEM_ID" ;;
+    sql: ${TABLE}."RECEIPT_ID" ||'-'|| ${TABLE}."ITEM_ID" ||'-'|| ${TABLE}."CREATED"::STRING ||'-'|| ;;
   }
 
   dimension: amount {
@@ -50,8 +50,26 @@ view: receipt_restock {
 
   dimension: do_restock {
     type: yesno
+    hidden: yes
     description: "Indicates if the item has been restocked"
     sql: ${TABLE}."DO_RESTOCK" ;;
+  }
+
+#   measure: total_restocked {
+#     type: sum
+#     label: "Total Restocked (units)"
+#     description: "Number of units returned and added back to inventory"
+#     filters: {
+#       field: do_restock
+#       value: "Yes"
+#     }
+#     sql: ${TABLE}."ITEM_COUNT" ;;
+#   }
+
+  dimension: return_order_id {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.return_order_id ;;
   }
 
   dimension_group: insert_ts {

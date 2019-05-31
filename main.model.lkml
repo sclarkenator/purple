@@ -198,6 +198,13 @@
       type: left_outer
       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
       relationship: many_to_one}
+    join: restocked_returns {
+      view_label: "Returns"
+      type: left_outer
+      relationship: one_to_one
+      required_joins: [return_order_line]
+      sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;
+    }
     join: customer_table {
       view_label: "Customer"
       type: left_outer
@@ -290,6 +297,7 @@
     join: warranty_reason {
       view_label: "Warranties"
       type: left_outer
+      required_joins: [warranty_order]
       sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
       relationship: many_to_one}
 
@@ -361,6 +369,13 @@
       type: left_outer
       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
       relationship: many_to_one}
+    join: restocked_returns {
+      view_label: "Returns"
+      type: left_outer
+      relationship: one_to_one
+      required_joins: [return_order_line]
+      sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;
+    }
     join: customer_table {
       view_label: "Customer"
       type: left_outer
