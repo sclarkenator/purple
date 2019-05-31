@@ -27,12 +27,14 @@ view: cancelled_order {
     label:  "Total Cancelled ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
+    value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancelled and Refunded ($)"
     description: "Total USD amount of cancelled order, excluding taxes, where a refund has been given"
     type: sum
+    value_format: "$#,##0.00"
     filters: {
       field: refunded
       value: "Yes"

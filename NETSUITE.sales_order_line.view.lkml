@@ -235,7 +235,7 @@ measure: SLA_Achievement_prct {
     description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
     filters: {
       field: carrier
-      value: "-Manna,-XPO" }
+      value: "-Pilot,-XPO" }
     filters: {
       field: sales_order.channel_source
       value: "SHOPIFY%" }
@@ -253,7 +253,7 @@ measure: SLA_Achievement_prct {
     hidden: yes
     filters: {
       field: carrier
-      value: "-Manna,-XPO" }
+      value: "-Pilot,-XPO" }
     filters: {
       field: sales_order.channel_source
       value: "SHOPIFY%" }
@@ -274,12 +274,12 @@ measure: SLA_Achievement_prct {
 
   measure: manna_fulfilled_in_SLA {
       view_label: "Fulfillment"
-      label: "Manna Fulfillment SLA"
+      label: "Pilot Fulfillment SLA"
       hidden: yes
       description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
       filters: {
         field: carrier
-        value: "Manna" }
+        value: "Pilot" }
       filters: {
         field: sales_order.channel_source
         value: "SHOPIFY%" }
@@ -291,13 +291,13 @@ measure: SLA_Achievement_prct {
         sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
 
   measure: manna_SLA_eligible {
-    label: "Manna SLA Eligible (14)"
+    label: "Pilot SLA Eligible (14)"
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
     hidden: yes
     filters: {
       field: carrier
-      value: "Manna" }
+      value: "Pilot" }
     filters: {
       field: sales_order.channel_source
       value: "SHOPIFY%" }
@@ -308,7 +308,7 @@ measure: SLA_Achievement_prct {
       sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) >= to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
 
   measure: manna_sla_achieved{
-    label: "Manna SLA Achievement (% in 14 days)"
+    label: "Pilot SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
     group_label: "SLA"
     hidden: yes

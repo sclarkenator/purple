@@ -27,17 +27,17 @@ view: day_aggregations_dtc_sales {
 view: day_aggregations_wholesale_sales {
   derived_table: {
     explore_source: sales_order_line {
-      column: created_date {}
+      column: fulfilled_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
-      filters: { field: sales_order.channel value: "Wholesale" }
+      filters: { field: sales_order.channel value: "Wholesale"}
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line.created_date value: "2 years" }
+      filters: { field: sales_order_line.fulfilled_date value: "2 years" }
     }
   }
-  dimension: created_date { type: date }
+  dimension: fulfilled_date { type: date }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
 }
@@ -120,7 +120,7 @@ view: day_aggregations {
         , targets.whlsl_target as target_wholesale_amount
       from analytics.util.warehouse_date d
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
-      left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
+      left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.fulfilled_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
@@ -141,6 +141,13 @@ view: day_aggregations {
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.date < current_date;; }
+
+  dimension: start_date {
+    group_label: "Created Date"
+    label: "z - Start Date"
+    description: "This field will show the start date of an interval that is normally a bucket (week 1, august)"
+    type: date
+    sql: min(${TABLE}.date)::date ;; }
 
   dimension: last_30{
     group_label: "Created Date"
@@ -167,7 +174,7 @@ view: day_aggregations {
     label: "DTC Amount"
     description: "Total DTC sales aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_amount;; }
 
   measure: dtc_units {
@@ -181,7 +188,7 @@ view: day_aggregations {
     label: "Wholesale Amount"
     description: "Total wholesale sales aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.wholesale_amount;; }
 
   measure: wholesale_units {
@@ -198,6 +205,13 @@ view: day_aggregations {
     value_format: "$#,##0.00"
     sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
 
+  measure: total_amount_format {
+    label: "Total Amount ($0k)"
+    description: "Total sales aggregated to the day."
+    type: sum
+    value_format:  "$#,##0,\" K\""
+    sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
+
   measure: total_units {
     label: "Total Units"
     description: "Total DTC units aggregated to the day."
@@ -209,7 +223,7 @@ view: day_aggregations {
     label: "Forecast Amount"
     description: "Total forecast amount aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.forecast_total_amount;; }
 
   measure: forecast_total_units {
@@ -223,7 +237,7 @@ view: day_aggregations {
     label: "Forecast DTC Amount"
     description: "Total DTC forecast amount aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.forecast_dtc_amount;; }
 
   measure: forecast_dtc_units {
@@ -237,7 +251,7 @@ view: day_aggregations {
     label: "Forecast Wholesale Amount"
     description: "Total wholesale forecast amount aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.forecast_wholesale_amount;; }
 
   measure: forecast_wholesale_units {
@@ -251,20 +265,20 @@ view: day_aggregations {
     label: "Total Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend;; }
 
   measure: target_dtc_amount {
     label: "Target DTC Amount"
     description: "Total DTC target from Daily Curve amount aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_dtc_amount;; }
 
   measure: target_wholesale_amount {
     label: "Target Wholesale Amount"
     description: "Total wholesale target from Daily Curve amount aggregated to the day."
     type: sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
 }
