@@ -425,6 +425,7 @@
   #       Reason     Order Line
   #-------------------------------------------------------------------
     from: warranty_order
+    fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
     label: "Warranty"
     group_label: "Sales"
     description: "Current warranty information (not tied back to original sales orders yet)"
@@ -439,6 +440,7 @@
     join: item {
       type:  left_outer
       sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
+      required_joins: [warranty_order_line]
       relationship: many_to_one}}
 
   explore: purcahse_and_transfer_ids {
