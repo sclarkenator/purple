@@ -456,7 +456,7 @@
     label: "Transfer and Purchase Orders"
     group_label: "Operations"
     description: "Netsuite data on Transfer and purchase orders"
-    hidden: yes
+    hidden: no
     join: purchase_order {
       view_label: "Purchase Order"
       type: left_outer
