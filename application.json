@@ -28,7 +28,7 @@
           "singleValueReference": "dtc"
         },
         {
-          "id": "210",
+          "id": "244",
           "name": "Wholesale Sales",
           "permalink": "wholesale",
           "singleValueReference": "wholesale"
@@ -64,12 +64,12 @@
 
     {
     "model": "main",
-    "view": "sales_order_line",
-    "params": "fields=sales_order_line.created_year,sales_order_line.total_gross_Amt_non_rounded&f[sales_order.channel]=DTC%2CWholesale&f[item.merchandise]=No&f[item.finished_good_flg]=Yes&f[item.modified]=Yes&f[sales_order_line.created_date]=2+years&f[sales_order_line.free_item]=No&f[sales_order_line.prev_week]=Yes&sorts=sales_order_line.created_year+desc&limit=100&column_limit=60&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22custom_color%22%3A%22%22%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22change%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Afalse%2C%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3Anull%7D&filter_config=%7B%22sales_order.channel%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22DTC%2CWholesale%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22item.merchandise%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22No%22%7D%2C%7B%7D%5D%2C%22id%22%3A1%2C%22error%22%3Afalse%7D%5D%2C%22item.finished_good_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22item.modified%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%2C%22sales_order_line.created_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%2C%22sales_order_line.free_item%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22No%22%7D%2C%7B%7D%5D%2C%22id%22%3A5%2C%22error%22%3Afalse%7D%5D%2C%22sales_order_line.prev_week%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded",
+    "view": "day_aggregations",
+    "params": "fields=day_aggregations.date_year,day_aggregations.wholesale_amount,day_aggregations.dtc_amount&f[day_aggregations.date_date]=2+years&f[day_aggregations.prev_week]=Yes&sorts=day_aggregations.date_year+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3A%5B%22day_aggregations.wholesale_amount%22%2C%22day_aggregations.dtc_amount%22%2C%22day_aggregations.total_amount%22%5D%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.prev_week%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A11%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22amount%22%2C%22label%22%3A%22Amount%22%2C%22expression%22%3A%22%24%7Bday_aggregations.dtc_amount%7D%2B%24%7Bday_aggregations.wholesale_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
       "fields": {
         "sales" : {
         "inverseChange": false,
-        "field": "sales_order_line.total_gross_Amt_non_rounded"
+        "field": "amount"
         }
       }
     },

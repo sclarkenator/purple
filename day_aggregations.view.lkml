@@ -198,27 +198,6 @@ view: day_aggregations {
     value_format: "#,##0"
     sql: ${TABLE}.wholesale_units;; }
 
-  measure: total_amount {
-    label: "Total Amount"
-    description: "Total sales aggregated to the day."
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
-
-  measure: total_amount_format {
-    label: "Total Amount ($0k)"
-    description: "Total sales aggregated to the day."
-    type: sum
-    value_format:  "$#,##0,\" K\""
-    sql: ${TABLE}.dtc_amount + ${TABLE}.wholesale_amount;; }
-
-  measure: total_units {
-    label: "Total Units"
-    description: "Total DTC units aggregated to the day."
-    type: sum
-    value_format: "#,##0"
-    sql: ${TABLE}.dtc_units + ${TABLE}.wholesale_units;; }
-
   measure: forecast_total_amount {
     label: "Forecast Amount"
     description: "Total forecast amount aggregated to the day."
