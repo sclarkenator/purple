@@ -340,7 +340,7 @@ view: sales_order {
     label: "Is Warranty Order"
     description: "Yes if this order has a warranty replacement"
     type: yesno
-    sql: ${TABLE}.WARRANTY_CLAIM_ID is not null ;; }
+    sql: ${TABLE}.WARRANTY_CLAIM_ID is not null or ${TABLE}.warranty = 'T' ;; }
 
   dimension: manna_transmission {
     label: "Manna Transmission"
