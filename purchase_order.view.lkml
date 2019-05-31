@@ -27,6 +27,12 @@ view: purchase_order {
     type: string
     sql: ${TABLE}.CURRENCY ;; }
 
+  dimension: Container_count{
+    type: string
+    sql: ${TABLE}."container_count" ;;
+    hidden: no
+  }
+
   dimension: entity_id {
     hidden: yes
     type: number
