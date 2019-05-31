@@ -232,10 +232,10 @@ view: item {
     sql: ${TABLE}.UPDATE_TS ;; }
 
   dimension: Inactive {
-    label: "Inactive Items"
+    label: "Inactive Item?"
     hidden: no
     type: yesno
-    sql: ${TABLE}.inactive ;; }
+    sql: Case when ${TABLE}.inactive = 1 Then true else false End ;; }
 
   dimension: Classification_Groups{
     label: "Classification (buckets)"
