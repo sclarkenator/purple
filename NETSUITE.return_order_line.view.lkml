@@ -277,6 +277,18 @@ view: return_order_line {
     type: string
     sql: ${TABLE}.UPDATE_TS ;;  }
 
+#   measure: total_restocked {
+#     type: sum
+#     label: "Total Restocked (units)"
+#     description: "Number of units returned and added back to inventory"
+# #     filters: {
+# #       field: receipt_restock.do_restock
+# #       value: "Yes"
+# #     }
+#     sql: case when ${receipt_restock.do_restock} = 'Yes' then ${receipt_restock.item_count}
+#           else 0 end;;
+#   }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

@@ -61,6 +61,11 @@ view: warranty_order_line {
     sql: ${TABLE}.QUANTITY ;;
   }
 
+#   measure: status_test {
+#     label: "Warranty_order.status test"
+#     sql: ${warranty_order.status} ;;
+#   }
+
   dimension: system {
     hidden: yes
     type: string
