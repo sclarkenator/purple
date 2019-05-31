@@ -231,6 +231,12 @@ view: item {
     type: string
     sql: ${TABLE}.UPDATE_TS ;; }
 
+  dimension: Inactive {
+    label: "Inactive Item?"
+    hidden: no
+    type: yesno
+    sql: Case when ${TABLE}.inactive = 1 Then true else false End ;; }
+
   dimension: Classification_Groups{
     label: "Classification (buckets)"
     description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other)"

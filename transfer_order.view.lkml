@@ -17,6 +17,12 @@ view: transfer_order {
     sql: ${TABLE}."AMAZON_SHIPMENT_ID" ;;
   }
 
+  dimension: Container_count{
+    type: string
+    sql: ${TABLE}."container_count" ;;
+    hidden: no
+  }
+
   dimension: amount_unbilled {
     type: number
     hidden: yes
