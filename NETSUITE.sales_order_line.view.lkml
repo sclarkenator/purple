@@ -133,11 +133,30 @@ dimension_group: SLA_Target {
   sql: to_timestamp_ntz(${Due_Date}) ;;
 }
 
+  measure: Qty_eligable_for_SLA{
+    label: "Qty Eligable SLA"
+    view_label: "Fulfillment"
+    type: sum
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN
+              ${TABLE}.ordered_qty
+                Else
+              Case
+                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN
+                ${TABLE}.ordered_qty
+                  Else
+                0
+                END
+                END;;
+  }
+
 measure: Qty_Fulfilled_in_SLA{
   label: "Qty Fulfilled in SLA"
   view_label: "Fulfillment"
   type: sum
-  sql: Case when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty} Else 0 END ;;
+  sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
+        case when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0 END END;;
 }
 
 measure: SLA_Achievement_prct {
@@ -147,7 +166,7 @@ measure: SLA_Achievement_prct {
   value_format_name: percent_1
   type: number
   drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
-  sql: Case when ${total_units} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${total_units} End ;;
+  sql: Case when ${Qty_eligable_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligable_for_SLA} End ;;
 }
 
   measure: whlsl_units {
@@ -269,7 +288,8 @@ measure: SLA_Achievement_prct {
     view_label: "Fulfillment"
     group_label: "SLA"
     type: number
-    value_format_name: percent_0
+    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    value_format_name: percent_1
     sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;; }
 
   measure: manna_fulfilled_in_SLA {
@@ -279,7 +299,7 @@ measure: SLA_Achievement_prct {
       description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
       filters: {
         field: carrier
-        value: "Pilot" }
+        value: "Pilot,Manna" }
       filters: {
         field: sales_order.channel_source
         value: "SHOPIFY%" }
@@ -297,7 +317,7 @@ measure: SLA_Achievement_prct {
     hidden: yes
     filters: {
       field: carrier
-      value: "Pilot" }
+      value: "Pilot,Manna" }
     filters: {
       field: sales_order.channel_source
       value: "SHOPIFY%" }
@@ -311,10 +331,11 @@ measure: SLA_Achievement_prct {
     label: "Pilot SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
     group_label: "SLA"
-    hidden: yes
+    hidden: no
     description: "Percent of line items fulfilled by Manna within 14 days of order"
     type: number
-    value_format_name: percent_0
+    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    value_format_name: percent_1
     sql: case when datediff(day,${created_date},current_date) > 14 then ${manna_fulfilled_in_SLA}/nullif(${manna_SLA_eligible},0) else null end ;; }
 
   measure: XPO_fulfilled_in_SLA {
@@ -358,7 +379,8 @@ measure: SLA_Achievement_prct {
     group_label: "SLA"
     description: "Percent of line items fulfilled by Manna within 1 days of order"
     type: number
-    value_format_name: percent_0
+    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    value_format_name: percent_1
     sql: case when datediff(day,${created_date},current_date) > 14 then ${XPO_fulfilled_in_SLA}/nullif(${XPO_SLA_eligible},0) else null end ;; }
 
   measure: total_line_item {
