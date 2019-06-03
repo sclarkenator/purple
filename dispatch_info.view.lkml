@@ -25,6 +25,7 @@ view: dispatch_info {
   }
 
   dimension_group: created {
+    hidden: yes
     label: "Created Time"
     description: "When was the dispactch created in L2L"
     type: time
