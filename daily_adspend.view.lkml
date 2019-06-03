@@ -73,12 +73,26 @@ view: daily_adspend {
     description: "What platform for spend, grouping smaller platforms into all other (Facebook,Google,TV,Amazon,Yahoo,Other)"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform = 'FACEBOOK' ;; label: "FACEBOOK" }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT') ;; label: "SOCIAL" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "GOOGLE"}
-      when: {sql: ${TABLE}.platform = 'TV' ;; label: "TV" }
-      when: {sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' ;;  label: "AMAZON" }
-      when: {sql: ${TABLE}.platform = 'YAHOO' ;; label: "YAHOO" }
-      else: "ALL OTHERS" } }
+      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA') ;; label: "TRADITIONAL" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA') ;;  label: "AMAZON" }
+      when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "YAHOO/BING" }
+      when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "AFFILIATE"}
+      when: {sql: ${TABLE}.platform in ('EXPONENTIAL','ACUITY') ;; label: "EXPONENTIAL/ACUITY" }
+      else: "OTHER" } }
+
+  dimension: medium {
+    label: "Medium"
+    description: "Calculated based on source and platform"
+    type: string
+    case: {
+      when: {sql: ${TABLE}.source ilike ('%earc%') ;; label:"Search"}
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' ;; label:"Video"}
+      when: {sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') ;; label:"Display"}
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"Social"}
+      when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST') OR ${TABLE}.source = 'CINEMA' ;; label:"OOH"}
+      else: "Other" } }
 
   dimension: ad_display_type {
     label: "Ad Display Type"
