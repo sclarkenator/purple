@@ -46,6 +46,17 @@ view: dispatch_info {
     sql: ${TABLE}."CREATED_BY" ;;
   }
 
+  dimension: machine_name {
+    type: string
+    sql: ${TABLE}."machine_name" ;;
+  }
+
+  dimension: location {
+    description: "What warehouse the machine is in"
+    type: string
+    sql: ${TABLE}."location" ;;
+  }
+
   dimension: description {
     label: "Dispatch Description"
     description: "Description of the problem being addressed"
