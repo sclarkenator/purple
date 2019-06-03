@@ -40,11 +40,6 @@ view: shopify_net_payment {
     sql: ${TABLE}."RELATED_TRANID" ;;
   }
 
-  dimension: transaction_id {
-    type: number
-    sql: ${TABLE}."TRANSACTION_ID" ;;
-  }
-
   measure: count {
     type: count
     drill_fields: []
