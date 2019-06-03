@@ -583,6 +583,18 @@
     description: "NetSuite refunds missing in Shopify"
   }
 
+  explore: shopify_coupon_code {
+    label: "Shopify Coupon Code"
+    group_label: "Customer Care"
+    description: "Shopify Orders with Coupon Code"
+  }
+
+  explore: shopify_net_payment {
+    label: "Shopify Net Payment"
+    group_label: "Customer Care"
+    description: "Shopify Orders with Customer's Net Payment Under $10"
+  }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
