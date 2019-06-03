@@ -95,7 +95,7 @@ view: sales_order {
     description: "The Pilot Order ID"
     hidden: no
     type: string
-    sql: ${TABLE}.3PL_MSFID_ESONUS ;; }
+    sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
   dimension: Showroom_Order {
     description: "Flag for orders made in the Alpine Showroom"
