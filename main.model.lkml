@@ -583,6 +583,18 @@
     description: "NetSuite refunds missing in Shopify"
   }
 
+  explore: shopify_coupon_code {
+    label: "Shopify Coupon Code"
+    group_label: "Customer Care"
+    description: "Shopify Orders with Coupon Code"
+  }
+
+  explore: shopify_net_payment {
+    label: "Shopify Net Payment"
+    group_label: "Customer Care"
+    description: "Shopify Orders with Customer's Net Payment Under $10"
+  }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
@@ -593,6 +605,12 @@
   explore: logan_fulfillment {
     description: "Stop gap on fulfillment data"
     hidden: yes
+
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${logan_fulfillment.item_id} = ${item.item_id} ;;
+      relationship: many_to_one}
   }
 
   explore: return_form_entry {

@@ -27,9 +27,9 @@ view: purchase_order {
     type: string
     sql: ${TABLE}.CURRENCY ;; }
 
-  dimension: Container_count{
+  dimension: container_count{
     type: string
-    sql: ${TABLE}."container_count" ;;
+    sql: ${TABLE}."CONTAINER_COUNT" ;;
     hidden: no
   }
 

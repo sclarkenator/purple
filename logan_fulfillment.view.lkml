@@ -41,6 +41,7 @@ view: logan_fulfillment {
 
   dimension: item_class {
     label: "Item Classification"
+    hidden:  yes
     type: string
     description: "The classification of the product (e.g. Finished Good)"
     group_label: "Fulfillments"
@@ -48,6 +49,7 @@ view: logan_fulfillment {
 
   dimension: sku_id {
     label: "SKU"
+    hidden: yes
     type: string
     description: "The product SKU that was fulfilled"
     group_label: "Fulfillments"
@@ -55,6 +57,7 @@ view: logan_fulfillment {
 
   dimension: product_description {
     label: "Product"
+    hidden: yes
     type: string
     description: "The product description for the SKU that was fulfilled"
     group_label: "Fulfillments"
@@ -63,6 +66,7 @@ view: logan_fulfillment {
   dimension: product_line_name {
     label: "Product Line"
     type: string
+    hidden: yes
     description: "The product line for the product that was fulfilled"
     group_label: "Fulfillments"
     sql: ${TABLE}."PRODUCT_LINE_NAME" ;;  }
