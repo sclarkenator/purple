@@ -79,7 +79,7 @@ view: dispatch_info {
   }
 
   dimension: dispatch_impact {
-    hidden: yes
+    hidden: no
     description: "The level of impact a dispatch Type has"
     type: number
     sql: ${TABLE}."DISPATCH_IMPACT" ;;
