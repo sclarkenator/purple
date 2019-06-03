@@ -48,13 +48,13 @@ view: dispatch_info {
 
   dimension: machine_name {
     type: string
-    sql: ${TABLE}."machine_name" ;;
+    sql: ${TABLE}."MACHINE_NAME" ;;
   }
 
   dimension: location {
     description: "What warehouse the machine is in"
     type: string
-    sql: ${TABLE}."location" ;;
+    sql: ${TABLE}."LOCATION" ;;
   }
 
   dimension: description {

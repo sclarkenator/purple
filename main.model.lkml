@@ -605,6 +605,12 @@
   explore: logan_fulfillment {
     description: "Stop gap on fulfillment data"
     hidden: yes
+
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${logan_fulfillment.item_id} = ${item.item_id} ;;
+      relationship: many_to_one}
   }
 
   explore: return_form_entry {
