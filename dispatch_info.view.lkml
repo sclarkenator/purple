@@ -87,7 +87,7 @@ view: dispatch_info {
 
   dimension: dispatch_number {
     description: "The L2L ID for the dispatch"
-    type: number
+    type: string
     sql: ${TABLE}."DISPATCH_NUMBER" ;;
   }
 
