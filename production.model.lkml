@@ -40,7 +40,7 @@ explore: oee {
 }
 
 explore: assembly_build {
-  hidden: yes
+  hidden: no
   label: "Production Assembly Data"
   description: "NetSuite Header Level Assembly Data"
 
