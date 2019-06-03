@@ -39,6 +39,14 @@ explore: oee {
   description: "Static OEE Dataset in Snowflake"
 }
 
+explore: dispatch_info{
+  hidden:  no
+  group_label: "Production"
+  label: "L2L Dispatch Data"
+  description: "The log of all L2L dispatches"
+}
+
+
 explore: assembly_build {
   hidden: no
   label: "Production Assembly Data"
