@@ -577,12 +577,36 @@ measure: SLA_Achievement_prct {
 
   dimension: MTD_fulfilled_flg{
     group_label: "Fulfilled Date"
-    label: "z - Is Before Today (mtd)"
+    label: "z - Month to Date (current year)"
     #hidden:  yes
     view_label: "Fulfillment"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;; }
+
+  dimension: ff_Before_today{
+    group_label: "Fulfilled Date"
+    view_label: "Fulfillment"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.fulfilled < current_date;; }
+
+  dimension: ff_current_week_num{
+    group_label: "Fulfilled Date"
+    view_label: "Fulfillment"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.fulfilled) < date_part('week',current_date);; }
+
+  dimension: ff_prev_week{
+    group_label: "Fulfilled Date"
+    view_label: "Fulfillment"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.fulfilled) = date_part('week',current_date)-1;; }
 
   dimension_group: created {
     label: "Order"
