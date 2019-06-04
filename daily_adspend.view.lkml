@@ -73,14 +73,15 @@ view: daily_adspend {
     description: "What platform for spend, grouping smaller platforms into all other (Facebook,Google,TV,Amazon,Yahoo,Other)"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT') ;; label: "SOCIAL" }
-      when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "GOOGLE"}
-      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA') ;; label: "TRADITIONAL" }
-      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA') ;;  label: "AMAZON" }
-      when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "YAHOO/BING" }
-      when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "AFFILIATE"}
-      when: {sql: ${TABLE}.platform in ('EXPONENTIAL','ACUITY') ;; label: "EXPONENTIAL/ACUITY" }
-      else: "OTHER" } }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER') ;; label: "Social" }
+      when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
+      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','') ;; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
+      when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
+      when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
+      when: {sql: ${TABLE}.platform in ('EXPONENTIAL','ACUITY','ADROLL','HIVEWIRE','HARMON') ;; label: "Partners" }
+      #when: {sql: ${TABLE}.platform = 'HARMON' ;; label: "HARMON"}
+      else: "Other" } }
 
   dimension: medium {
     label: "Medium"
