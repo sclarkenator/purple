@@ -175,50 +175,15 @@
         }
     ]
   },
-  "sections": [
+   "sections": [
     {
-      "name": "Production",
+      "name": "Top Dashboards",
       "permalink": "search",
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "Something Fun",
-          "permalink": "test2",
-          "type": "dashboardCollection",
-          "dashboardCollection": {
-            "dashboards": [
-              {
-                "id": "208",
-                "name": "Sales",
-                "permalink": "sales"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Something Fun 2",
-          "permalink": "test3",
-          "type": "dashboardCollection",
-          "dashboardCollection": {
-            "dashboards": [
-              {
-                "id": "208",
-                "name": "Sales",
-                "permalink": "sales"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Sales",
-      "permalink": "test2",
-      "enabledByDefault": true,
-      "pages": [
-        {
           "name": "Daily Dashboard",
-          "permalink": "test3",
+          "permalink": "dash1",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
@@ -231,8 +196,92 @@
           }
         },
         {
+          "name": "Daily Sales",
+          "permalink": "dash2",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "35",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Weekly Mattresses",
+          "permalink": "dash3",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "232",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
+    },
+  {
+      "name": "Production",
+      "permalink": "search",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "Mattress Stock Level and Build Plan",
+          "permalink": "dash4",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "62",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Hourly Operations Throughput",
+          "permalink": "dash5",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "30",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Other",
+      "permalink": "dash6",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "Tactical",
+          "permalink": "dash7",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "106",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
           "name": "Wholesale",
-          "permalink": "test4",
+          "permalink": "dash8",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
@@ -243,8 +292,44 @@
               }
             ]
           }
+        },
+        {
+          "name": "DTC Fulfillment",
+          "permalink": "dash9",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "58",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documentation",
+      "permalink": "dash10",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "Tactical",
+          "permalink": "dash11",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "248",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
         }
       ]
     }
   ]
+
 }
