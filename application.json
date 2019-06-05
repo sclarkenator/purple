@@ -175,9 +175,9 @@
         }
     ]
   },
-   "sections": [
+  "sections": [
     {
-      "name": "Top Dashboards",
+      "name": "Sales Dashboards",
       "permalink": "search",
       "enabledByDefault": true,
       "pages": [
@@ -217,6 +217,20 @@
             "dashboards": [
               {
                 "id": "232",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Wholesale",
+          "permalink": "dash8",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "208",
                 "name": "Sales",
                 "permalink": "sales"
               }
@@ -273,20 +287,6 @@
             "dashboards": [
               {
                 "id": "106",
-                "name": "Sales",
-                "permalink": "sales"
-              }
-            ]
-          }
-        },
-        {
-          "name": "Wholesale",
-          "permalink": "dash8",
-          "type": "dashboardCollection",
-          "dashboardCollection": {
-            "dashboards": [
-              {
-                "id": "208",
                 "name": "Sales",
                 "permalink": "sales"
               }

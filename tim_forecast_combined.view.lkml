@@ -163,6 +163,31 @@ view: tim_forecast_combined {
     type: yesno
     sql: ${TABLE}.date < current_date;; }
 
+  dimension: current_week_num{
+    group_label: "Forecast Date"
+    label: "z - Before Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+
+  dimension: week_offset{
+    group_label: "Forecast Date"
+    label: "z - Week Offset"
+    type: number
+    sql: date_part('week',current_date) - date_part('week',${TABLE}.date) ;; }
+
+  dimension: 6_weeks{
+    group_label: "Forecast Date"
+    label: "z - Before 6 Weeks Later"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) < (date_part('week',current_date)+6);; }
+
+  dimension: prev_week{
+    group_label: "Forecast Date"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+
   dimension: sku_id {
     type:  string
     sql:${TABLE}.sku_id ;; }
