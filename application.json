@@ -315,7 +315,7 @@
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "Tactical",
+          "name": "Information",
           "permalink": "dash11",
           "type": "dashboardCollection",
           "dashboardCollection": {
