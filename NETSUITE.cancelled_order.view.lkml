@@ -41,6 +41,28 @@ view: cancelled_order {
     }
     sql: ${TABLE}.gross_amt ;; }
 
+  measure: qty_cancelled_and_refunded {
+    label:  "Total Cancelled and Refunded (units)"
+    description: "Total quantity of cancelled units where a refund has been given"
+    type: sum
+    filters: {
+      field: refunded
+      value: "Yes"
+    }
+    sql: ${TABLE}.cancelled_qty ;; }
+
+  dimension: days_since_cancellation_buckets {
+    description: "Rolling date bins, to compare cancellations at different time intervals"
+    sql: case when ${cancelled_date} <= dateadd('day', -1, current_date()) and ${cancelled_date} > dateadd('day', -31, current_date())
+            then '30 Days'
+          when ${cancelled_date} <= dateadd('day', -31, current_date()) and ${cancelled_date} > dateadd('day', -61, current_date())
+            then '30-60 Days'
+          when ${cancelled_date} <= dateadd('day', -61, current_date())
+            then '60+ Days'
+          else 'Today' end
+        ;;
+  }
+
   dimension: yesterday_flag {
     hidden: yes
     label:  "Cancelled Yesterday"

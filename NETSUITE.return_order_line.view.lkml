@@ -1,5 +1,5 @@
 view: return_order_line {
-  sql_table_name: SALES.RETURN_ORDER_LINE ;;
+  sql_table_name: (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US') ;;
 
   dimension: item_order{
     #primary_key:  yes
@@ -36,6 +36,30 @@ view: return_order_line {
       field: return_order.status
       value: "Refunded"}
     sql: ${TABLE}.return_qty ;;
+    drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
+  measure: total_returns_completed_units {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Returns Completed (units)"
+    description: "Trial returns completed and reimbursed"
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    sql: ${TABLE}.return_qty ;;
+    drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
+  measure: total_returns_completed_dollars {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Returns Completed ($)"
+    description: "Trial returns completed and reimbursed"
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    sql: ${TABLE}.gross_amt ;;
     drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
 
   measure: total_trial_returns_completed_within_60_days {
