@@ -124,7 +124,7 @@ view: day_aggregations {
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
-      where date >= '2018-01-01' and date < current_date ;;
+      where date >= '2018-01-01' and date < '2020-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
@@ -152,23 +152,32 @@ view: day_aggregations {
   dimension: last_30{
     group_label: "Created Date"
     label: "z - Last 30 Days"
-    description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: ${TABLE}.date > dateadd(day,-30,current_date);; }
 
   dimension: current_week_num{
     group_label: "Created Date"
     label: "z - Before Current Week"
-    description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+
+  dimension: 6_weeks{
+    group_label: "Created Date"
+    label: "z - Before 6 Weeks Later"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) < (date_part('week',current_date)+6);; }
 
   dimension: prev_week{
     group_label: "Created Date"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+
+  dimension: cur_week{
+    group_label: "Created Date"
+    label: "z - Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
 
   measure: dtc_amount {
     label: "DTC Amount"
@@ -244,7 +253,7 @@ view: day_aggregations {
     label: "Total Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
-    value_format: "$#,##0,\" K\""
+    value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
   measure: target_dtc_amount {

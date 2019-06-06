@@ -23,7 +23,7 @@
         },
         {
           "id": "241",
-          "name": "DTC Sales to Target",
+          "name": "DTC Sales",
           "permalink": "dtc",
           "singleValueReference": "dtc"
         },
@@ -36,7 +36,7 @@
 
         {
           "id": "221",
-          "name": "Production to target",
+          "name": "Production",
           "permalink": "production",
           "singleValueReference": "prod"
         },
@@ -48,15 +48,27 @@
         },
         {
           "id": "215",
-          "name": "Marketing (ROA)",
+          "name": "Marketing",
           "permalink": "marketing",
           "singleValueReference": "roa"
+        },
+        {
+          "id": "246",
+          "name": "Site (Sessions)",
+          "permalink": "site",
+          "singleValueReference": "site"
         },
         {
           "id": "211",
           "name": "Returns and Cancellations",
           "permalink": "returns",
           "singleValueReference": "returns"
+        },
+        {
+          "id": "247",
+          "name": "Forecast",
+          "permalink": "plan",
+          "singleValueReference": "plan"
         }
       ]
     },
@@ -98,11 +110,11 @@
         {
         "model": "production",
         "view": "assembly_build",
-        "params": "fields=assembly_build.Total_Quantity,assembly_build.produced_date,assembly_build.produced_day_of_week&f[assembly_build.scrap]=0&f[item.merchandise]=0&f[item.product_line_name_with_bases_breakout]=MATTRESS&f[assembly_build.produced_date]=30+days+ago+for+30+days&sorts=assembly_build.produced_date+desc&limit=500&column_limit=50&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22custom_color%22%3A%22%22%2C%22show_single_value_title%22%3Atrue%2C%22single_value_title%22%3A%22Mattresses+Produced%22%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22change%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22comparison_label%22%3A%22%22%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22normal%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22legend_position%22%3A%22center%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22point_style%22%3A%22none%22%2C%22series_colors%22%3A%7B%22Original+-+assembly_build.Total_Quantity%22%3A%22%23EA8A2F%22%2C%22Other+-+assembly_build.Total_Quantity%22%3A%22%238D7FB9%22%7D%2C%22series_types%22%3A%7B%7D%2C%22limit_displayed_rows%22%3Afalse%2C%22y_axis_combined%22%3Atrue%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22ordering%22%3A%22none%22%2C%22label_rotation%22%3A-90%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Atrue%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23494C52%22%2C%22totals_rotation%22%3A-90%2C%22show_null_points%22%3Atrue%2C%22interpolation%22%3A%22linear%22%2C%22type%22%3A%22table%22%2C%22hidden_fields%22%3A%5B%22production_goal%22%2C%22assembly_build.produced_day_of_week%22%2C%22previous_day%22%5D%7D&filter_config=%7B%22assembly_build.scrap%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%220%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22item.merchandise%22%3A%5B%7B%22type%22%3A%22advanced%22%2C%22values%22%3A%5B%7B%22constant%22%3A%220%22%7D%2C%7B%7D%5D%2C%22id%22%3A1%2C%22error%22%3Afalse%7D%5D%2C%22item.product_line_name_with_bases_breakout%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22MATTRESS%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22assembly_build.produced_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2230%22%2C%22unit%22%3A%22c_day%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22production_goal%22%2C%22label%22%3A%22Production+Goal%22%2C%22expression%22%3A%22if%28%24%7Bassembly_build.produced_day_of_week%7D+%3D+%5C%22Sunday%5C%22%2C379%2C%5Cn++if%28%24%7Bassembly_build.produced_day_of_week%7D+%3D+%5C%22Monday%5C%22%2C900%2C1300%29+%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22pct_of_goal%22%2C%22label%22%3A%22Pct.+of+Goal%22%2C%22expression%22%3A%22%24%7Bassembly_build.Total_Quantity%7D%2F%24%7Bproduction_goal%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22previous_day%22%2C%22label%22%3A%22Previous+Day%22%2C%22expression%22%3A%22%28%24%7Bassembly_build.Total_Quantity%7D%2Foffset%28%24%7Bassembly_build.Total_Quantity%7D%2C1%29%29+-1%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22pct_to_goal_change%22%2C%22label%22%3A%22pct+to+goal+change%22%2C%22expression%22%3A%22if%28%24%7Bassembly_build.produced_date%7D%3Eadd_days%28-2%2Cnow%28%29%29%2C%24%7Bassembly_build.Total_Quantity%7D%2Coffset%28%24%7Bproduction_goal%7D%2C-1%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "params": "fields=assembly_build.Total_Quantity,assembly_build.produced_week_of_year,assembly_build.prev_week&f[assembly_build.scrap]=0&f[item.merchandise]=0&f[item.product_line_name_with_bases_breakout]=MATTRESS&f[assembly_build.produced_date]=30+days+ago+for+30+days&f[assembly_build.current_week_num]=Yes&sorts=assembly_build.produced_week_of_year+desc&limit=500&column_limit=50&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22custom_color%22%3A%22%22%2C%22show_single_value_title%22%3Atrue%2C%22single_value_title%22%3A%22Mattresses+Produced%22%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22change%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22comparison_label%22%3A%22%22%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22normal%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22legend_position%22%3A%22center%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22point_style%22%3A%22none%22%2C%22series_colors%22%3A%7B%22Original+-+assembly_build.Total_Quantity%22%3A%22%23EA8A2F%22%2C%22Other+-+assembly_build.Total_Quantity%22%3A%22%238D7FB9%22%7D%2C%22series_types%22%3A%7B%7D%2C%22limit_displayed_rows%22%3Afalse%2C%22y_axis_combined%22%3Atrue%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22ordering%22%3A%22none%22%2C%22label_rotation%22%3A-90%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Atrue%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23494C52%22%2C%22totals_rotation%22%3A-90%2C%22show_null_points%22%3Atrue%2C%22interpolation%22%3A%22linear%22%2C%22type%22%3A%22table%22%2C%22hidden_fields%22%3A%5B%22production_goal%22%2C%22previous_day%22%2C%22assembly_build.Total_Quantity%22%2C%22assembly_build.prev_week%22%5D%7D&filter_config=%7B%22assembly_build.scrap%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%220%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22item.merchandise%22%3A%5B%7B%22type%22%3A%22advanced%22%2C%22values%22%3A%5B%7B%22constant%22%3A%220%22%7D%2C%7B%7D%5D%2C%22id%22%3A1%2C%22error%22%3Afalse%7D%5D%2C%22item.product_line_name_with_bases_breakout%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22MATTRESS%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22assembly_build.produced_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2230%22%2C%22unit%22%3A%22c_day%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%2C%22assembly_build.current_week_num%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A7%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22to_target%22%2C%22label%22%3A%22to+target%22%2C%22expression%22%3A%22if%28%24%7Bassembly_build.prev_week%7D%2C%24%7Bassembly_build.Total_Quantity%7D%2C7800%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22decimal_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
           "fields": {
             "prod" : {
             "inverseChange": false,
-            "field": "pct_to_goal_change"
+            "field": "to_target"
             }
           }
         },
@@ -120,11 +132,33 @@
         {
         "model": "main",
         "view": "day_aggregations",
-        "params": "fields=day_aggregations.adspend,day_aggregations.total_amount,day_aggregations.dtc_amount,day_aggregations.date_month&f[day_aggregations.MTD_flg]=Yes&f[day_aggregations.date_date]=2+years&sorts=day_aggregations.date_month+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3Anull%7D&filter_config=%7B%22day_aggregations.MTD_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22roa%22%2C%22label%22%3A%22roa%22%2C%22expression%22%3A%22%24%7Bday_aggregations.dtc_amount%7D%5Cn++++%2F%24%7Bday_aggregations.adspend%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "params": "fields=day_aggregations.adspend,day_aggregations.dtc_amount,day_aggregations.date_week_of_year&f[day_aggregations.date_date]=1+years&f[day_aggregations.current_week_num]=Yes&sorts=day_aggregations.date_week_of_year+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3A%5B%22day_aggregations.adspend%22%2C%22day_aggregations.dtc_amount%22%5D%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%221%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.current_week_num%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22roa%22%2C%22label%22%3A%22roa%22%2C%22expression%22%3A%22%24%7Bday_aggregations.dtc_amount%7D%5Cn++++%2F%24%7Bday_aggregations.adspend%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
           "fields": {
             "roa" : {
+            "inverseChange": true,
+            "field": "day_aggregations.adspend"
+          }
+        }
+        },
+        {
+        "model": "main",
+        "view": "day_aggregations",
+        "params": "fields=day_aggregations.dtc_amount,day_aggregations.wholesale_amount,day_aggregations.forecast_dtc_amount,day_aggregations.forecast_wholesale_amount,day_aggregations.target_dtc_amount,day_aggregations.target_wholesale_amount,day_aggregations.date_week_of_year&f[day_aggregations.date_date]=1+years&f[day_aggregations.cur_week]=Yes&sorts=forecast+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22y_axes%22%3A%5B%7B%22label%22%3A%22%22%2C%22orientation%22%3A%22left%22%2C%22series%22%3A%5B%7B%22axisId%22%3A%22plan%22%2C%22id%22%3A%22plan%22%2C%22name%22%3A%22Plan%22%7D%2C%7B%22axisId%22%3A%22forecast%22%2C%22id%22%3A%22forecast%22%2C%22name%22%3A%22Forecast%22%7D%2C%7B%22axisId%22%3A%22actuals%22%2C%22id%22%3A%22actuals%22%2C%22name%22%3A%22Actuals%22%7D%5D%2C%22showLabels%22%3Afalse%2C%22showValues%22%3Atrue%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22tickDensityCustom%22%3A5%2C%22type%22%3A%22linear%22%7D%5D%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Afalse%2C%22show_x_axis_ticks%22%3Atrue%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22normal%22%2C%22limit_displayed_rows%22%3Afalse%2C%22legend_position%22%3A%22left%22%2C%22series_types%22%3A%7B%7D%2C%22point_style%22%3A%22none%22%2C%22series_labels%22%3A%7B%22actuals%22%3A%22Gross+Sales%22%7D%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_combined%22%3Atrue%2C%22ordering%22%3A%22none%22%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Afalse%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23808080%22%2C%22show_null_points%22%3Atrue%2C%22interpolation%22%3A%22linear%22%2C%22type%22%3A%22table%22%2C%22hidden_fields%22%3A%5B%22day_aggregations.forecast_dtc_amount%22%2C%22day_aggregations.forecast_wholesale_amount%22%2C%22day_aggregations.target_dtc_amount%22%2C%22day_aggregations.target_wholesale_amount%22%2C%22day_aggregations.dtc_amount%22%2C%22day_aggregations.wholesale_amount%22%2C%22plan%22%2C%22actuals%22%2C%22accuracy%22%5D%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%221%22%2C%22unit%22%3A%22yr%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.cur_week%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A6%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22plan%22%2C%22label%22%3A%22Plan%22%2C%22expression%22%3A%22%24%7Bday_aggregations.target_dtc_amount%7D%2B%24%7Bday_aggregations.target_wholesale_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22forecast%22%2C%22label%22%3A%22Forecast%22%2C%22expression%22%3A%22%24%7Bday_aggregations.forecast_dtc_amount%7D%2B%24%7Bday_aggregations.forecast_wholesale_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22actuals%22%2C%22label%22%3A%22Actuals%22%2C%22expression%22%3A%22%24%7Bday_aggregations.dtc_amount%7D%2B%24%7Bday_aggregations.wholesale_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22accuracy%22%2C%22label%22%3A%22accuracy%22%2C%22expression%22%3A%22if%28%24%7Bforecast%7D%2F%24%7Bactuals%7D%3E1%2C%24%7Bactuals%7D%2F%24%7Bforecast%7D%2C%24%7Bforecast%7D%2F%24%7Bactuals%7D%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+          "fields": {
+            "plan" : {
             "inverseChange": false,
-            "field": "roa"
+            "field": "forecast"
+          }
+        }
+        },
+        {
+        "model": "main",
+        "view": "all_events",
+        "params": "fields=sessions.count,all_events.time_week&f[all_events.time_date]=2+weeks+ago+for+2+weeks&sorts=sessions.count+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22custom_color%22%3A%22%22%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22change%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22type%22%3A%22table%22%2C%22series_types%22%3A%7B%7D%7D&filter_config=%7B%22all_events.time_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%222%22%2C%22unit%22%3A%22c_wk%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded",
+          "fields": {
+            "site" : {
+            "inverseChange": false,
+            "field": "sessions.count"
           }
         }
         },
@@ -143,18 +177,18 @@
   },
   "sections": [
     {
-      "name": "Production",
+      "name": "Sales Dashboards",
       "permalink": "search",
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "Something Fun",
-          "permalink": "test2",
+          "name": "Daily Dashboard",
+          "permalink": "dash1",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
               {
-                "id": "208",
+                "id": "4",
                 "name": "Sales",
                 "permalink": "sales"
               }
@@ -162,8 +196,36 @@
           }
         },
         {
-          "name": "Something Fun 2",
-          "permalink": "test3",
+          "name": "Daily Sales",
+          "permalink": "dash2",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "35",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Weekly Mattresses",
+          "permalink": "dash3",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "232",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Wholesale",
+          "permalink": "dash8",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
@@ -177,19 +239,19 @@
         }
       ]
     },
-    {
-      "name": "Sales",
-      "permalink": "test2",
+  {
+      "name": "Production",
+      "permalink": "search",
       "enabledByDefault": true,
       "pages": [
         {
-          "name": "Daily Dashboard",
-          "permalink": "test3",
+          "name": "Mattress Stock Level and Build Plan",
+          "permalink": "dash4",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
               {
-                "id": "4",
+                "id": "62",
                 "name": "Sales",
                 "permalink": "sales"
               }
@@ -197,13 +259,69 @@
           }
         },
         {
-          "name": "Wholesale",
-          "permalink": "test4",
+          "name": "Hourly Operations Throughput",
+          "permalink": "dash5",
           "type": "dashboardCollection",
           "dashboardCollection": {
             "dashboards": [
               {
-                "id": "208",
+                "id": "30",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Other",
+      "permalink": "dash6",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "Tactical",
+          "permalink": "dash7",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "106",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
+        {
+          "name": "DTC Fulfillment",
+          "permalink": "dash9",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "58",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documentation",
+      "permalink": "dash10",
+      "enabledByDefault": true,
+      "pages": [
+        {
+          "name": "Information",
+          "permalink": "dash11",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "248",
                 "name": "Sales",
                 "permalink": "sales"
               }
@@ -213,4 +331,5 @@
       ]
     }
   ]
+
 }

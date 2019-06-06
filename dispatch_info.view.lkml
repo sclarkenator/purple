@@ -25,6 +25,7 @@ view: dispatch_info {
   }
 
   dimension_group: created {
+    hidden: yes
     label: "Created Time"
     description: "When was the dispactch created in L2L"
     type: time
@@ -44,6 +45,17 @@ view: dispatch_info {
     description: "What user created the dispatch"
     type: string
     sql: ${TABLE}."CREATED_BY" ;;
+  }
+
+  dimension: machine_name {
+    type: string
+    sql: ${TABLE}."MACHINE_NAME" ;;
+  }
+
+  dimension: location {
+    description: "What warehouse the machine is in"
+    type: string
+    sql: ${TABLE}."LOCATION" ;;
   }
 
   dimension: description {
@@ -68,7 +80,7 @@ view: dispatch_info {
   }
 
   dimension: dispatch_impact {
-    hidden: yes
+    hidden: no
     description: "The level of impact a dispatch Type has"
     type: number
     sql: ${TABLE}."DISPATCH_IMPACT" ;;
@@ -76,7 +88,7 @@ view: dispatch_info {
 
   dimension: dispatch_number {
     description: "The L2L ID for the dispatch"
-    type: number
+    type: string
     sql: ${TABLE}."DISPATCH_NUMBER" ;;
   }
 

@@ -83,6 +83,30 @@ view: assembly_build {
     sql:  to_timestamp_ntz(${TABLE}.PRODUCED);;
  }
 
+  dimension: Before_today{
+    group_label: "Produced Date"
+    label: "z - Is Before Today (mtd)"
+    type: yesno
+    sql: ${TABLE}.PRODUCED < current_date;; }
+
+  dimension: last_30{
+    group_label: "Produced Date"
+    label: "z - Last 30 Days"
+    type: yesno
+    sql: ${TABLE}.PRODUCED > dateadd(day,-30,current_date);; }
+
+  dimension: current_week_num{
+    group_label: "Produced Date"
+    label: "z - Before Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.PRODUCED) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Produced Date"
+    label: "z - Previous Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.PRODUCED) = date_part('week',current_date)-1;; }
+
 
   dimension_group: shift_time{
     label: "Shift Timescale"

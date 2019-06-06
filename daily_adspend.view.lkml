@@ -19,22 +19,46 @@ view: daily_adspend {
     sql: ${TABLE}.date ;; }
 
   dimension: MTD_flg{
-    label: "MTD Flag"
+    label: "z - MTD Flag"
+    group_label: "Ad Date"
     description: "This field is for formatting on MTD (month to date) reports"
     type: yesno
     sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;  }
 
   dimension: last_30{
-    label: "Last 30 Days"
+    label: "z - Last 30 Days"
+    group_label: "Ad Date"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: ${TABLE}.date > dateadd(day,-30,current_date);; }
 
   dimension: rolling_7day {
-    label: "Rolling 7 Day Filter"
+    label: "z - Rolling 7 Day Filter"
+    group_label: "Ad Date"
     description: "Yes = 7 most recent days ONLY"
     type: yesno
     sql: ${ad_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+
+  dimension: Before_today{
+    group_label: "Ad Date"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
+
+  dimension: current_week_num{
+    group_label: "Ad Date"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Ad Date"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
 
   measure: adspend {
     label: "Total Adspend ($)"
@@ -66,19 +90,36 @@ view: daily_adspend {
     label: "Spend Platform"
     description: "What platform for spend (google, facebook, TV, etc.)"
     type:  string
-    sql: ${TABLE}.platform ;; }
+    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE'
+        when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
+        else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
     label: "Major Spend Platform"
     description: "What platform for spend, grouping smaller platforms into all other (Facebook,Google,TV,Amazon,Yahoo,Other)"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform = 'FACEBOOK' ;; label: "FACEBOOK" }
-      when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "GOOGLE"}
-      when: {sql: ${TABLE}.platform = 'TV' ;; label: "TV" }
-      when: {sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' ;;  label: "AMAZON" }
-      when: {sql: ${TABLE}.platform = 'YAHOO' ;; label: "YAHOO" }
-      else: "ALL OTHERS" } }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER') ;; label: "Social" }
+      when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
+      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','') ;; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
+      when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
+      when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
+      when: {sql: ${TABLE}.platform in ('EXPONENTIAL','ACUITY','ADROLL','HIVEWIRE','HARMON') ;; label: "Partners" }
+      #when: {sql: ${TABLE}.platform = 'HARMON' ;; label: "HARMON"}
+      else: "Other" } }
+
+  dimension: medium {
+    label: "Medium"
+    description: "Calculated based on source and platform"
+    type: string
+    case: {
+      when: {sql: ${TABLE}.source ilike ('%earc%') ;; label:"Search"}
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' ;; label:"Video"}
+      when: {sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') ;; label:"Display"}
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"Social"}
+      when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST') OR ${TABLE}.source = 'CINEMA' ;; label:"OOH"}
+      else: "Other" } }
 
   dimension: ad_display_type {
     label: "Ad Display Type"

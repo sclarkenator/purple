@@ -19,7 +19,7 @@ view: transfer_order {
 
   dimension: Container_count{
     type: string
-    sql: ${TABLE}."container_count" ;;
+    sql: ${TABLE}."CONTAINER_COUNT" ;;
     hidden: no
   }
 
