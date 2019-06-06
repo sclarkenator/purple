@@ -170,9 +170,14 @@ view: day_aggregations {
   dimension: prev_week{
     group_label: "Created Date"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+
+  dimension: cur_week{
+    group_label: "Created Date"
+    label: "z - Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
 
   measure: dtc_amount {
     label: "DTC Amount"
