@@ -48,13 +48,13 @@
         },
         {
           "id": "215",
-          "name": "Marketing (ROA)",
+          "name": "Marketing",
           "permalink": "marketing",
           "singleValueReference": "roa"
         },
         {
           "id": "247",
-          "name": "Plan and Forecast",
+          "name": "Forecast",
           "permalink": "plan",
           "singleValueReference": "plan"
         },
