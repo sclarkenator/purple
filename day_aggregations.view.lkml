@@ -248,7 +248,7 @@ view: day_aggregations {
     label: "Total Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
-    value_format: "$#,##0,\" K\""
+    value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
   measure: target_dtc_amount {
