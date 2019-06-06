@@ -133,6 +133,28 @@ dimension_group: SLA_Target {
   sql: to_timestamp_ntz(${Due_Date}) ;;
 }
 
+  dimension: sla_Before_today{
+    group_label: "SLA Target Date"
+    view_label: "Fulfillment"
+    label: "z - Is Before Today (mtd)"
+    type: yesno
+    sql: ${Due_Date}::date < current_date;; }
+
+  dimension: sla_current_week_num{
+    group_label: "SLA Target Date"
+    view_label: "Fulfillment"
+    label: "z - Before Current Week"
+    type: yesno
+    sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
+
+  dimension: sla_prev_week{
+    group_label: "SLA Target Date"
+    view_label: "Fulfillment"
+    label: "z - Previous Week"
+    type: yesno
+    sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
+
+
   measure: Qty_eligable_for_SLA{
     label: "Qty Eligable SLA"
     view_label: "Fulfillment"
