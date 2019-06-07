@@ -55,12 +55,46 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Returns Completed ($)"
-    description: "Trial returns completed and reimbursed"
+    description: "Returns completed and reimbursed, Trial and Non-trial"
+    value_format: "$#,##0"
     filters: {
       field: return_order.status
       value: "Refunded"}
     sql: ${TABLE}.gross_amt ;;
     drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
+  measure: total_trial_returns_completed_dollars {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Trial Returns Completed ($)"
+    description: "Trial returns completed and reimbursed"
+    value_format: "$#,##0"
+    filters: {
+      field: return_order.rma_return_type
+      value: "Trial"}
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    sql: ${TABLE}.gross_amt ;;
+    drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
+  measure: total_non_trial_returns_completed_dollars {
+    type: sum
+    hidden: no
+    group_label: "Return Amounts"
+    label: "Total Non-trial Returns Completed ($)"
+    description: "Non-trial returns completed and reimbursed"
+    value_format: "$#,##0"
+    filters: {
+      field: return_order.rma_return_type
+      value: "Non Trial"}
+    filters: {
+      field: return_order.status
+      value: "Refunded"}
+    sql: ${TABLE}.gross_amt ;;
+    drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
+
 
   measure: total_trial_returns_completed_within_60_days {
     type: sum

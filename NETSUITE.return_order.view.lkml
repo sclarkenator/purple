@@ -113,8 +113,9 @@ view: return_order {
     sql: ${TABLE}.RETURN_REF_ID ;; }
 
   dimension_group: return_trial_expiry {
-    #description: "100 days from when customer RECEIVED order for mattresses"
-    hidden: yes
+    label: "Return Trial Expiration"
+    description: "When the trial return period expires. Generally 100 days from when customer RECEIVED order for mattresses"
+    hidden: no
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
