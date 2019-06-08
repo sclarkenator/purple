@@ -206,6 +206,16 @@ view: sales_order {
     tiers: [500,1000,1500,2000,2500,3000,3500,4000]
     sql: ${TABLE}.gross_amt ;; }
 
+  dimension: Order_size_buckets_v3{
+    label: "Order Size (buckets by 100)"
+    description: "Different price buckets for total gross order amount, by 100 increments"
+    hidden:   yes
+    type:  tier
+    style: integer
+    tiers: [150,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3100]
+    sql: ${TABLE}.gross_amt ;; }
+
+
   dimension: order_id {
     label: "Order ID"
     hidden: no
