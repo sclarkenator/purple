@@ -27,6 +27,38 @@ view: hotjar_data {
     datatype: date
     sql: ${TABLE}.created ;;  }
 
+  dimension: Before_today{
+    group_label: "Created Date"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.created < current_date;; }
+
+  dimension: last_30{
+    group_label: "Created Date"
+    label: "z - Last 30 Days"
+    type: yesno
+    sql: ${TABLE}.created > dateadd(day,-30,current_date);; }
+
+  dimension: current_week_num{
+    group_label: "Created Date"
+    label: "z - Before Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.created) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Created Date"
+    label: "z - Previous Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
+
+  dimension: cur_week{
+    group_label: "Created Date"
+    label: "z - Current Week"
+    type: yesno
+    sql: date_part('week',${TABLE}.created) = date_part('week',current_date);; }
+
+
   dimension: how_heard {
     label: "How did you hear? (all)"
     description: "Ungrouped responses for how did you hear questions"
