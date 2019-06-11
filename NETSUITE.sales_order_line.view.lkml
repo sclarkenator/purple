@@ -133,6 +133,17 @@ dimension_group: SLA_Target {
   sql: to_timestamp_ntz(${Due_Date}) ;;
 }
 
+dimension: SLA_Buckets {
+  label: "Days Past SLA Target Buckets"
+  view_label: "Fulfillment"
+  description: "# days in realtion to Target date"
+  type: tier
+  style: integer
+  tiers: [1,2,3,4,5,6,7,11,15,21]
+  sql: datediff(d,${SLA_Target_date},current_date) ;;
+
+}
+
   dimension: sla_Before_today{
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
@@ -435,7 +446,7 @@ measure: SLA_Achievement_prct {
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
 
 
