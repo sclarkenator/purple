@@ -627,6 +627,7 @@
 # Hidden Explores
 #-------------------------------------------------------------------
 
+  explore: conversions {hidden: yes}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" #hidden:yes
