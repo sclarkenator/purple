@@ -9,7 +9,7 @@ view: sessions {
   dimension: session_id {
     primary_key: yes
     hidden: yes
-    type: number
+    type: string
     sql: ${TABLE}.session_id ;; }
 
   dimension: app_name {
@@ -130,6 +130,7 @@ view: sessions {
 
   measure: count {
     type: count
+    value_format: "#,##0,\" K\""
     drill_fields: [detail*] }
 
   measure: distinct_users {
