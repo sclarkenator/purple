@@ -3,46 +3,24 @@ view: conversions {
   derived_table: {
     sql:
     with facebook_campaigns as(
-      select  campaign_id,
-              campaign_name,
-              source as platform
-      from    analytics.marketing.adspend a
-      where platform = 'FACEBOOK'
-      group by 1,2,3
+    select  id as campaign_id,
+            name as campaign_name
+    from    ANALYTICS_STAGE.FACEBOOK.CAMPAIGN a
+    group by 1,2
     )
-    select  X.DATE,
-            X.CAMPAIGN_NAME,
-            X.DEVICE,
-            X.PLATFORM,
-            X.ATTRIBUTION_WINDOW_DAYS,
-            X.CONVERSION_VALUE
-    from
-    (
-        select
-                to_date(h.date) as DATE,
-                f.campaign_name as CAMPAIGN_NAME,
-                h.DEVICE_PLATFORM as DEVICE,
-                f.platform as PLATFORM,
-                1 as ATTRIBUTION_WINDOW_DAYS,
-                sum(coalesce(value,0)) as CONVERSION_VALUE
-        from analytics_stage.FACEBOOK.FB_CONVERSIONS_ACTION_VALUES h join facebook_campaigns f
-                    on h.campaign_id = f.campaign_id
-        where h.action_type = 'offsite_conversion.fb_pixel_purchase'
-                and to_date(h.date) < '2018-11-03'
-        group by 1,2,3,4,5
-        union all
-        select DATE as DATE,
-               f.campaign_name as CAMPAIGN_NAME,
-               DEVICE as DEVICE,
-               f.platform as PLATFORM,
-               ATTRIBUTION_WINDOW_DAYS,
-               sum(CONVERSION_VALUE) as CONVERSION_VALUE
-        from analytics.marketing.CONVERSIONS_BY_CAMPAIGN c join facebook_campaigns f
-                    on c.campaign_id = f.campaign_id
-        where to_date(date) >= '2018-11-03'
-        and c.platform = 'FACEBOOK'
-        group by 1,2,3,4,5
-    ) X
+    select
+            date as DATE,
+            f.campaign_name as CAMPAIGN_NAME,
+            publisher_platform as PLATFORM,
+            DEVICE_PLATFORM,
+            IMPRESSION_DEVICE,
+            round(sum(coalesce(value,0)),2) as WEBSITE_PURCHASE_CONVERSION_VALUE
+    from ANALYTICS_STAGE.FACEBOOK.FB_CONVERSIONS_ACTION_VALUES a join facebook_campaigns f
+                    on a.campaign_id = f.campaign_id
+    where action_type in ( 'offsite_conversion.fb_pixel_purchase','offsite_conversion','offline_conversion.purchase')
+      and date < current_date
+    group by 1,2,3,4,5
+    order by 1 desc
       ;;
   }
 
@@ -58,17 +36,13 @@ view: conversions {
     type:  string
     sql:${TABLE}.platform ;; }
 
-  dimension: DEVICE {
+  dimension: IMPRESSION_DEVICE {
     type:  string
-    sql:${TABLE}.DEVICE ;; }
-
-  dimension: ATTRIBUTION_WINDOW_DAYS {
-    type:  string
-    sql:${TABLE}.ATTRIBUTION_WINDOW_DAYS ;; }
+    sql:${TABLE}.IMPRESSION_DEVICE ;; }
 
   measure: CONVERSION_VALUE {
     type:  sum
-    sql:${TABLE}.CONVERSION_VALUE ;; }
+    sql:${TABLE}.WEBSITE_PURCHASE_CONVERSION_VALUE ;; }
 
 
 }
