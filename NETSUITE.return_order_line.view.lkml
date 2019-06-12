@@ -158,7 +158,7 @@ view: return_order_line {
     type: tier
     style: integer
     tiers: [30,60,90,120]
-    sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
+    sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_week_buckets{
     group_label: "Return Aging Buckets"
