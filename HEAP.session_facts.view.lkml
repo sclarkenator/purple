@@ -63,6 +63,15 @@ view: session_facts {
     sql: extract(epoch from (${TABLE}.session_end_time - ${TABLE}.session_start_time))/60 ;;
     value_format_name: decimal_2 }
 
+  dimension: duration_tier {
+    label:  "Session Durations (minutes bucket)"
+    description: "Minutes spent on site (0,1,5,10,15,20,25,30)"
+    type: tier
+    style:  integer
+    tiers: [0,1,5,10,15,20,25,30]
+    sql: case when datediff('seconds',session_start_time,session_end_time) < 10 then '-1'::int
+          else datediff('minutes',session_start_time,session_end_time)::int  end;;}
+
   dimension: event_count {
     label: "Event Count"
     type: number
