@@ -1,9 +1,10 @@
 view: ticket {
 
-  sql_table_name: analytics_stage.zendesk.custom_role ;;
+  sql_table_name: analytics_stage.zendesk.ticket ;;
 
   measure: count {
     type: count
+    label: "Ticket Count"
     drill_fields: [detail*]
   }
 
@@ -15,6 +16,7 @@ view: ticket {
 
   dimension: url {
     type: string
+    hidden: yes
     sql: ${TABLE}."URL" ;;
   }
 
@@ -30,11 +32,13 @@ view: ticket {
 
   dimension: via_source_from_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."VIA_SOURCE_FROM_ID" ;;
   }
 
   dimension: via_source_from_title {
     type: string
+    hidden: yes
     sql: ${TABLE}."VIA_SOURCE_FROM_TITLE" ;;
   }
 
@@ -105,6 +109,7 @@ view: ticket {
 
   dimension: assignee_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."ASSIGNEE_ID" ;;
   }
 
@@ -115,16 +120,19 @@ view: ticket {
 
   dimension: group_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."GROUP_ID" ;;
   }
 
   dimension: forum_topic_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."FORUM_TOPIC_ID" ;;
   }
 
   dimension: problem_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."PROBLEM_ID" ;;
   }
 
@@ -150,6 +158,7 @@ view: ticket {
 
   dimension: brand_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."BRAND_ID" ;;
   }
 
@@ -180,6 +189,7 @@ view: ticket {
 
   dimension: custom_sync_to_net_suite {
     type: string
+    hidden: yes
     sql: ${TABLE}."CUSTOM_SYNC_TO_NET_SUITE" ;;
   }
 
@@ -190,6 +200,7 @@ view: ticket {
 
   dimension_group: _fivetran_synced {
     type: time
+    hidden: yes
     sql: ${TABLE}."_FIVETRAN_SYNCED" ;;
   }
 

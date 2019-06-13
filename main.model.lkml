@@ -600,6 +600,22 @@
     group_label: "Customer Care"
     label: "Zendesk Tickets"
     description: "Customer ticket details from Zendesk"
+    join: group {
+      type: full_outer
+      sql_on: ${group.id} = ${ticket.group_id} ;;
+      relationship: many_to_one
+    }
+    join: user {
+      view_label: "Assignee"
+      type: left_outer
+      sql_on: ${user.id} = ${ticket.assignee_id} ;;
+      relationship: many_to_one
+    }
+#     join: ticket_form_history {
+#       type: full_outer
+#       sql_on: ${group.id} = ${ticket.group_id} ;;
+#       relationship: many_to_one
+#     }
   }
 
   explore: logan_fulfillment {
