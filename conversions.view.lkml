@@ -57,7 +57,14 @@ view: conversions {
 
   dimension: date {
     type:  date
+    hidden:  yes
     sql:${TABLE}.date ;; }
+
+  dimension_group: created {
+    label: "Created"
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.date ;; }
 
   dimension: CAMPAIGN_NAME {
     type:  string
