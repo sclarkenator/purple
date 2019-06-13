@@ -9,7 +9,7 @@ view: sessions {
   dimension: session_id {
     primary_key: yes
     hidden: yes
-    type: number
+    type: string
     sql: ${TABLE}.session_id ;; }
 
   dimension: app_name {
@@ -98,6 +98,41 @@ view: sessions {
     timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.time ;; }
 
+  dimension: last_30{
+    label: "z - Last 30 Days"
+    group_label: "Time Date"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: ${TABLE}.time::date > dateadd(day,-30,current_date);; }
+
+  dimension: rolling_7day {
+    label: "z - Rolling 7 Day Filter"
+    group_label: "Time Date"
+    description: "Yes = 7 most recent days ONLY"
+    type: yesno
+    sql: ${TABLE}time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+
+  dimension: Before_today{
+    group_label: "Time Date"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.time::date < current_date;; }
+
+  dimension: current_week_num{
+    group_label: "Time Date"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.time::date) < date_part('week',current_date);; }
+
+  dimension: prev_week{
+    group_label: "Time Date"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is in the last 30 days"
+    type: yesno
+    sql: date_part('week',${TABLE}.time::date) = date_part('week',current_date)-1;; }
+
   dimension: user_id {
     type: number
     hidden: yes
@@ -129,7 +164,9 @@ view: sessions {
     sql: ${TABLE}.utm_term ;; }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${TABLE}.session_id ;;
+    value_format: "#,##0,\" K\""
     drill_fields: [detail*] }
 
   measure: distinct_users {

@@ -99,6 +99,70 @@ view: day_aggregations_targets {
 }
 
 ######################################################
+#   DTC Returns
+######################################################
+
+view: day_aggregations_dtc_returns {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: total_trial_returns_completed_dollars { field: return_order_line.total_trial_returns_completed_dollars }
+      column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
+      column: return_completed_date { field: return_order.return_completed_date }
+      filters: { field: sales_order.channel value: "DTC" }
+      filters: { field: item.merchandise value: "No" }
+      filters: { field: item.finished_good_flg value: "Yes" }
+      filters: { field: item.modified value: "Yes" }
+      filters: { field: return_order.return_completed_date value: "2 years" }
+    }
+  }
+  dimension: total_trial_returns_completed_dollars { type: number }
+  dimension: total_non_trial_returns_completed_dollars { type: number }
+  dimension: return_completed_date { type: date }
+}
+
+######################################################
+#   Wholesale Returns
+######################################################
+
+view: day_aggregations_wholesale_returns {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: total_trial_returns_completed_dollars { field: return_order_line.total_trial_returns_completed_dollars }
+      column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
+      column: return_completed_date { field: return_order.return_completed_date }
+      filters: { field: sales_order.channel value: "Wholesale" }
+      filters: { field: item.merchandise value: "No" }
+      filters: { field: item.finished_good_flg value: "Yes" }
+      filters: { field: item.modified value: "Yes" }
+      filters: { field: return_order.return_completed_date value: "2 years" }
+    }
+  }
+  dimension: total_trial_returns_completed_dollars { type: number }
+  dimension: total_non_trial_returns_completed_dollars { type: number }
+  dimension: return_completed_date { type: date }
+}
+
+######################################################
+#   DTC Cancellations
+######################################################
+
+view: day_aggregations_dtc_cancels {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: amt_cancelled_and_refunded { field: cancelled_order.amt_cancelled_and_refunded }
+      column: cancelled_date { field: cancelled_order.cancelled_date }
+      filters: { field: sales_order.channel value: "DTC" }
+      filters: { field: item.merchandise value: "No" }
+      filters: { field: item.finished_good_flg value: "Yes" }
+      filters: { field: item.modified value: "Yes" }
+      filters: { field: cancelled_order.cancelled_date value: "2 years" }
+    }
+  }
+  dimension: amt_cancelled_and_refunded { type: number }
+  dimension: cancelled_date { type: date }
+}
+
+######################################################
 #   Merging Forecast and Actuals by Day
 ######################################################
 view: day_aggregations {
@@ -118,13 +182,18 @@ view: day_aggregations {
         , adspend.adspend
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
+        , dtc_returns.total_trial_returns_completed_dollars as dtc_trial_returns
+        , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
+        , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
       from analytics.util.warehouse_date d
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.fulfilled_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
-      where date >= '2018-01-01' and date < '2020-01-01' ;;
+      left join ${day_aggregations_dtc_returns.SQL_TABLE_NAME} dtc_returns on dtc_returns.return_completed_date::date = d.date
+      left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
+      where date::date >= '2018-01-01' and date::date < '2020-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
@@ -269,4 +338,23 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
+
+  measure: dtc_nontrial_returns {
+    label: "DTC Non-Trial Returns"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.dtc_nontrial_returns;; }
+
+  measure: dtc_trial_returns {
+    label: "DTC Trial Returns"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.dtc_trial_returns;; }
+
+  measure: dtc_refunds {
+    label: "DTC Refunds"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.dtc_refunds;; }
+
 }

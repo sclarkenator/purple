@@ -20,6 +20,7 @@ view: sales_order_line {
     label: "Estimated Costs ($)"
     description: "Estimated cost value from NetSuite for the cost of materials"
     type: sum
+  drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     value_format: "$#,##0.00"
     sql: ${TABLE}.estimated_Cost;; }
 
@@ -28,6 +29,7 @@ view: sales_order_line {
     label:  "Gross Sales ($0.k)"
     description:  "Total the customer paid, excluding tax and freight, in $K"
     type: sum
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     value_format: "$#,##0,\" K\""
     sql:  ${TABLE}.gross_amt ;; }
 
@@ -36,6 +38,7 @@ view: sales_order_line {
     label:  "Gross Sales ($)"
     description:  "Total the customer paid, excluding tax and freight, in $"
     type: sum
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     value_format: "$#,##0"
     sql:  ${TABLE}.gross_amt ;; }
 
@@ -44,6 +47,7 @@ view: sales_order_line {
     label:  "Gross-Gross Sales ($0.k)"
     description:  "Total the customer paid plus value of discounts they received, excluding tax and freight"
     type: sum
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     value_format: "$#,##0,\" K\""
     sql:  ${TABLE}.gross_amt + ${TABLE}.discount_amt ;; }
 
@@ -110,8 +114,8 @@ view: sales_order_line {
             Case
               When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
                  Case
-                     When sales_order.SHIP_BY is not null THEN
-                        sales_order.Ship_By
+                     When sales_order.minimum_ship is not null THEN
+                        sales_order.minimum_ship
                       Else dateadd(d,3,${created_date})
                   END
                Else dateadd(d,14,${created_date})
@@ -131,6 +135,17 @@ dimension_group: SLA_Target {
   convert_tz: no
   datatype: timestamp
   sql: to_timestamp_ntz(${Due_Date}) ;;
+}
+
+dimension: SLA_Buckets {
+  label: "Days Past SLA Target Buckets"
+  view_label: "Fulfillment"
+  description: "# days in realtion to Target date"
+  type: tier
+  style: integer
+  tiers: [1,2,3,4,5,6,7,11,15,21]
+  sql: datediff(d,${SLA_Target_date},current_date) ;;
+
 }
 
   dimension: sla_Before_today{
@@ -246,6 +261,7 @@ measure: SLA_Achievement_prct {
     description: "Orders placed that have not been fulfilled"
     value_format: "$#,##0"
     type: sum
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;; }
 
   measure: unfulfilled_orders_units {
@@ -253,6 +269,7 @@ measure: SLA_Achievement_prct {
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
     type: sum
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
 
   measure: fulfilled_orders {
@@ -260,6 +277,7 @@ measure: SLA_Achievement_prct {
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
     type: sum
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;; }
 
   measure: fulfilled_orders_units {
@@ -267,6 +285,7 @@ measure: SLA_Achievement_prct {
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
     type: sum
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql: case when ${fulfilled_date} is not null then ${ordered_qty} else 0 end ;; }
 
   measure: fulfilled_in_SLA {
@@ -435,7 +454,7 @@ measure: SLA_Achievement_prct {
     label:  "Gross Sales (units)"
     description: "Total units purchased, before returns and cancellations"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date,  item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
 
 
@@ -917,16 +936,19 @@ measure: SLA_Achievement_prct {
 
   measure: Qty_Picked {
     type: sum
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the picked state"
     sql: ${TABLE}.PICKED ;; }
 
   measure: Qty_Committed {
     type: sum
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the committed state"
     sql: ${TABLE}.QUANTITY_COMMITTED ;; }
 
   measure: Qty_Packed {
     type: sum
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
 

@@ -519,19 +519,19 @@
     description: "All Website Event Data from Heap Block"
     join: users {
       type: left_outer
-      sql_on: ${all_events.user_id} = ${users.user_id} ;;
+      sql_on: ${all_events.user_id}::string = ${users.user_id}::string ;;
       relationship: many_to_one }
     join: sessions {
       type: left_outer
-      sql_on: ${all_events.session_id} = ${sessions.session_id} ;;
+      sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
       relationship: many_to_one }
     join: session_facts {
       view_label: "Sessions"
       type: left_outer
-      sql_on: ${sessions.session_id} = ${session_facts.session_unique_id} ;;
+      sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
       relationship: one_to_one }
     join: event_flow {
-      sql_on: ${all_events.event_id} = ${event_flow.unique_event_id} ;;
+      sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
       relationship: one_to_one }
     join: zip_codes_city {
       type: left_outer
@@ -643,9 +643,10 @@
 # Hidden Explores
 #-------------------------------------------------------------------
 
+  explore: conversions {hidden: yes}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: day_aggregations { from: day_aggregations #hidden:yes
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" #hidden:yes
     }
   explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
     join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}

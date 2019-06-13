@@ -7,24 +7,31 @@ view: session_facts {
   derived_table: {
     sql: SELECT
         all_events.session_id || '-' || all_events.user_id AS session_unique_id,
+        all_events.session_id,
         user_id,
         row_number() over( partition by user_id order by min(all_events.time)) as session_sequence_number,
         min(all_events.time) AS session_start_time,
         max(all_events.time) AS session_end_time,
-        COUNT(*) AS "all_events.count"
+        COUNT(distinct(all_events.session_id || '-' || all_events.user_id)) AS all_events_count
       FROM heap.all_events AS all_events
-      GROUP BY 1,2 ;;
+      GROUP BY 1,2,3  ;;
   }
 
   dimension: session_unique_id {
-    primary_key: yes
+    #primary_key: yes
     hidden: yes
     type: string
     sql: ${TABLE}.session_unique_id ;; }
 
+
+  dimension: session_id {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.session_id ;; }
+
   dimension: user_id {
     hidden: yes
-    type: number
+    type: string
     sql: ${TABLE}.user_id ;; }
 
   dimension: session_sequence_number {
@@ -56,16 +63,25 @@ view: session_facts {
     sql: extract(epoch from (${TABLE}.session_end_time - ${TABLE}.session_start_time))/60 ;;
     value_format_name: decimal_2 }
 
+  dimension: duration_tier {
+    label:  "Session Durations (minutes bucket)"
+    description: "Minutes spent on site (0,1,5,10,15,20,25,30)"
+    type: tier
+    style:  integer
+    tiers: [0,1,5,10,15,20,25,30]
+    sql: case when datediff('seconds',session_start_time,session_end_time) < 10 then '-1'::int
+          else datediff('minutes',session_start_time,session_end_time)::int  end;;}
+
   dimension: event_count {
     label: "Event Count"
     type: number
-    sql: ${TABLE}.all_events.count ;; }
+    sql: ${TABLE}.all_events_count ;; }
 
   dimension: is_bounced {
     label: "Bounced"
     description: "Yes if it bounced"
     type: yesno
-    sql: ${event_count} = 1 ;; }
+    sql: datediff('seconds',session_start_time,session_end_time) < 10 ;; }
 
   measure: average_events_per_session {
     label: "Average Events per Session"
