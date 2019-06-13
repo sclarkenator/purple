@@ -25,7 +25,9 @@ view: conversions {
               round(sum(coalesce(value,0)),2) as WEBSITE_PURCHASE_CONVERSION_VALUE
       from ANALYTICS_STAGE.FACEBOOK.FB_CONVERSIONS_ACTION_VALUES a join facebook_campaigns f
                       on a.campaign_id = f.campaign_id
-      where action_type in ( 'offsite_conversion.fb_pixel_purchase','offsite_conversion','offline_conversion.purchase')
+      where CASE when extract(year from date) <> '2019' then action_type in ( 'offsite_conversion.fb_pixel_purchase')
+              else action_type in ( 'offsite_conversion.fb_pixel_purchase','offsite_conversion','offline_conversion.purchase')
+            END
         and date < current_date
       group by 1,2,3,4,5
 
