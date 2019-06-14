@@ -114,9 +114,8 @@ view: sales_order_line {
             Case
               When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
                  Case
-                     When sales_order.minimum_ship is not null THEN
-                        sales_order.minimum_ship
-                      Else dateadd(d,3,${created_date})
+                     When sales_order.minimum_ship = ${created_date} THEN dateadd(d,3,sales_order.minimum_ship)
+                      Else sales_order.minimum_ship
                   END
                Else dateadd(d,14,${created_date})
             END
@@ -202,7 +201,7 @@ measure: SLA_Achievement_prct {
   hidden: no
   value_format_name: percent_1
   type: number
-  drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+  drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
   sql: Case when ${Qty_eligable_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligable_for_SLA} End ;;
 }
 
