@@ -5,7 +5,7 @@
 #-------------------------------------------------------------------
 
 view: dma {
-  sql_table_name: PUBLIC.DMA ;;
+  sql_table_name: analytics.marketing.DMA ;;
 
   dimension: dma_name {
     label: "DMA"
