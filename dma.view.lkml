@@ -56,6 +56,7 @@ view: dma {
     group_label: "Customer Address"
     description: "The County FIPS number (combination of a state ID and County ID"
     type: string
+    map_layer_name: us_counties_fips
     hidden: no
     sql: ${TABLE}.FIPS ;;
   }
