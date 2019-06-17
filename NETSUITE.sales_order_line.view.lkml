@@ -966,6 +966,14 @@ measure: SLA_Achievement_prct {
     type: string
     sql: ${TABLE}.CARRIER ;; }
 
+  dimension: DTC_carrier {
+    view_label: "Fulfillment"
+    label: "Carrier (Grouping)"
+    description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
+    hidden: no
+    type: string
+    sql:  CASE WHEN upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
+
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }
 }
