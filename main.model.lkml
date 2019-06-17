@@ -300,7 +300,6 @@
       required_joins: [warranty_order]
       sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
       relationship: many_to_one}
-
     }
 
   explore: wholesale {
@@ -646,8 +645,7 @@
   explore: conversions {hidden: yes}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" #hidden:yes
-    }
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
   explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
     join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
