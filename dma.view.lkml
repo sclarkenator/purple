@@ -5,7 +5,7 @@
 #-------------------------------------------------------------------
 
 view: dma {
-  sql_table_name: PUBLIC.DMA ;;
+  sql_table_name: analytics.marketing.DMA_FIPS_LKP ;;
 
   dimension: dma_name {
     label: "DMA"
@@ -27,21 +27,47 @@ view: dma {
   dimension: dma {
     type: string
     hidden: yes
-    sql: ${TABLE}.dma ;;
+    sql: ${TABLE}.dma_ID ;;
   }
 
   dimension: dma_name2 {
     type: string
     hidden: yes
-    sql: ${TABLE}.dma_name2 ;;
+    sql: ${TABLE}.dma_full_name ;;
   }
 
   dimension: zip {
     type: zipcode
     primary_key: yes
     hidden: yes
-    sql: ${TABLE}.zip ;;
+    sql: ${TABLE}.zipcode ;;
   }
+
+  dimension: County {
+    group_label: "Customer Address"
+    description:"Name of the County the Zipcode is in"
+    type: string
+    hidden: no
+    sql: ${TABLE}.county ;;
+  }
+
+  dimension: FIPS {
+    label: "FIPS Code"
+    group_label: "Customer Address"
+    description: "The County FIPS number (combination of a state ID and County ID"
+    type: string
+    map_layer_name: us_counties_fips
+    hidden: no
+    sql: ${TABLE}.FIPS ;;
+  }
+
+  dimension: Class {
+    description: "A technical classification of the county see more here https://www2.census.gov/geo/pdfs/reference/ClassCodes.pdf"
+    type: string
+    hidden: yes
+    sql: ${TABLE}.Class ;;
+  }
+
 
   measure: count {
     type: count
