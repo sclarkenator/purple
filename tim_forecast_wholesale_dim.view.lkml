@@ -52,7 +52,7 @@ view: tim_forecast_wholesale_dim {
         union all
         select a.week
           , a.sku_id
-          , 'Bed, Bath & Beyond'
+          , 'Bed Bath & Beyond'
           , a.BBB_Units
           , a.BBB_Amount
         from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
