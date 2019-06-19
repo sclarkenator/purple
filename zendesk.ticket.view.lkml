@@ -1,6 +1,12 @@
 view: ticket {
 
-  sql_table_name: analytics_stage.zendesk.ticket ;;
+  sql_table_name: (select * from analytics_stage.zendesk.ticket
+                    --filtering out channels that are not meaningful to customer care. Will need to be added back if other groups need them.
+                    where (lower(via_channel) != 'api'
+                            or lower(via_channel) != 'chats'
+                            or lower(via_channel) != 'sample_ticket'
+                            or lower(via_channel) != 'voice'))
+                    ;;
 
   measure: count {
     type: count
@@ -59,7 +65,17 @@ view: ticket {
 
   dimension_group: created_at {
     type: time
+    hidden: yes
     sql: ${TABLE}."CREATED_AT" ;;
+  }
+
+  dimension_group: ticket_created {
+    ## at some point this should probably be moved into snowflake.
+    type: time
+    description: "Date the ticket came in to Purple"
+    sql: case when lower(${TABLE}."CUSTOM_FRESHDESK_CREATED_DATE") = 'x' then null
+          when ${TABLE}."CUSTOM_FRESHDESK_CREATED_DATE" is null then ${TABLE}."CREATED_AT"
+          else ${TABLE}."CUSTOM_FRESHDESK_CREATED_DATE" end  ;;
   }
 
   dimension_group: updated_at {
@@ -184,6 +200,7 @@ view: ticket {
 
   dimension: custom_freshdesk_created_date {
     type: string
+    hidden: yes
     sql: ${TABLE}."CUSTOM_FRESHDESK_CREATED_DATE" ;;
   }
 

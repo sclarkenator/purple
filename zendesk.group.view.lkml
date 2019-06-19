@@ -1,5 +1,9 @@
 view: group {
-  sql_table_name: "ANALYTICS_STAGE"."ZENDESK"."GROUP" ;;
+  sql_table_name: (select * from "ANALYTICS_STAGE"."ZENDESK"."GROUP"
+                    --filtering out groups that are not meaningful to customer care. Will need to be added back if other groups need them.
+                    where lower(name) != 'comms dept'
+                      or lower(name) != 'leadership'
+                      or lower(name) != 'chat' ) ;;
 
 
   measure: count {
@@ -15,6 +19,7 @@ view: group {
 
   dimension: name {
     type: string
+    label: "Group Name"
     sql: ${TABLE}."NAME" ;;
   }
 
