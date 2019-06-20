@@ -165,9 +165,13 @@ view: sessions {
 
   measure: count {
     type: count_distinct
+    sql: ${TABLE}.session_id ;;}
+
+  measure: count_k {
+    label: "Count (0.K)"
+    type: count_distinct
     sql: ${TABLE}.session_id ;;
-    value_format: "#,##0,\" K\""
-    drill_fields: [detail*] }
+    value_format: "#,##0,\" K\""}
 
   measure: distinct_users {
     label: "Distinct Users"
