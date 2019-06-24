@@ -80,6 +80,14 @@ view: daily_adspend {
     type: sum
     sql: ${TABLE}.impressions ;; }
 
+  measure: impressions_mil {
+    label: "Total Impressions (Millions)"
+    description: "Total impressions for selected channels (online only)"
+    type: sum
+    value_format: "#,##0,\" K\""
+    sql: ${TABLE}.impressions ;; }
+
+
   measure: clicks {
     label: "Total Clicks"
     description: "Total clicks for selected channels (online only)"
