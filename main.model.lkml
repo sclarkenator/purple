@@ -594,6 +594,12 @@
     description: "Shopify Orders with Customer's Net Payment Under $10"
   }
 
+    explore: amazon_orphan_orders {
+      label: "Amazon Orphan Orders"
+      group_label: "Customer Care"
+      description: "Amazon orders not showing up in Netsuite"
+    }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
