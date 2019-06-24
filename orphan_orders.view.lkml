@@ -23,10 +23,20 @@ view: orphan_orders {
     type:  string
     sql: ${TABLE}.financial_status ;; }
 
-  dimension: order_date {
+  dimension_group: order_date {
     label: "Order Date"
     description: "Date order was placed in shopify (Mountain time zone)"
-    type:  date
+    type:  time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
     sql: ${TABLE}.order_date ;; }
 
   measure: order_size {
