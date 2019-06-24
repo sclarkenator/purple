@@ -44,11 +44,13 @@ view: warehouse_transfer {
   }
 
   dimension: SHIPPING_LOCATION_ID {
+    hidden: yes
     type: string
     sql: ${TABLE}."SHIPPING_LOCATION_ID" ;;
   }
 
   dimension: RECEIVING_LOCATION_ID {
+    hidden:  yes
     type: string
     sql: ${TABLE}."RECEIVING_LOCATION_ID" ;;
   }
