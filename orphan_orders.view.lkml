@@ -3,27 +3,7 @@
 #-------------------------------------------------------------------
 
 view: orphan_orders {
-    derived_table: {
-      sql:
-        select s.name
-          ,o.id
-          ,o.financial_status
-          ,to_Date(convert_timezone('America/Denver',o.created_at)) order_date
-          ,o.total_price
-        from analytics_stage.shopify_us_ft."ORDER" o
-        join (
-          select so.name
-          from analytics_stage.shopify_us_ft."ORDER" so
-          where to_Date(convert_timezone('America/Denver',created_at)) > '2018-08-01'
-            and to_Date(convert_timezone('America/Denver',created_at)) < to_date(current_date)
-              minus
-                select o.related_tranid
-                from sales_order o
-                where o.created > '2018-08-01'
-                  and o.channel_id = 1
-                  and o.source = 'Shopify - US'
-                  and o.created < to_date(current_date)
-        ) s on s.name = o.name  ;; }
+    sql_table_name: customer_care.shopify_orphan_orders;;
 
   dimension: RELATED_TRANID {
     label: "Order ID (netsuite)"
@@ -43,10 +23,20 @@ view: orphan_orders {
     type:  string
     sql: ${TABLE}.financial_status ;; }
 
-  dimension: order_date {
+  dimension_group: order_date {
     label: "Order Date"
     description: "Date order was placed in shopify (Mountain time zone)"
-    type:  date
+    type:  time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
     sql: ${TABLE}.order_date ;; }
 
   measure: order_size {

@@ -127,7 +127,7 @@ explore: warehouse_transfer {
   join: warehouse_location {
     type: left_outer
     relationship: many_to_one
-    sql_on: ${warehouse_transfer.location_id} = ${warehouse_location.location_id} ;;
+    sql_on: ${warehouse_transfer.SHIPPING_LOCATION_ID} = ${warehouse_location.location_id} ;;
   }
 
   join: item {

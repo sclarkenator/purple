@@ -594,6 +594,13 @@
     description: "Shopify Orders with Customer's Net Payment Under $10"
   }
 
+    explore: amazon_orphan_orders {
+      label: "Amazon Orphan Orders"
+      group_label: "Customer Care"
+      hidden: yes
+      description: "Amazon orders not showing up in Netsuite"
+    }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
@@ -678,7 +685,11 @@
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: shopify_orders { hidden:  yes  label: "Shopify sales simple"  description: "Shopify header level information"
     join: sales_order{type:left_outer sql_on: ${sales_order.etail_order_id}::text = ${shopify_orders.id}::text ;; relationship: one_to_one }}
-  explore: orphan_orders {hidden:  yes  label: "Orphan orders"  description: "Orders that exist in Shopify that aren't yet in Netsuite"}
+  explore: orphan_orders {
+    hidden:  yes
+    group_label: "Customer Care"
+    label: "Orphan orders"
+    description: "Orders that exist in Shopify that aren't yet in Netsuite"}
   explore: refund {hidden: yes  group_label: "x - Accounting"  label: "Accounting Refunds"  description: "Refunds on sales at an order level, for accounting."}
   explore: shopify_warranties {hidden: yes  from: orphaned_shopify_warranties  group_label: "x - Accounting"
     label: "Shopify Warranties"  description: "Ties the original order data to NetSuite Warranty Orders where the original order does not exist in NetSuite"
