@@ -834,9 +834,9 @@ measure: SLA_Achievement_prct {
     type: string
     sql:
     CASE
-    When coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date},dateadd('day',30,${sales_order.created})) >= ${TABLE}.FULFILLED then 'On Time'
-    When coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date},dateadd('day',30,${sales_order.created})) < ${TABLE}.FULFILLED then 'Late'
-    When ${TABLE}.FULFILLED is null and ${TABLE}.FULFILLED < ${sales_order.minimum_ship_date} Then 'Late (open)'
+    When ${SLA_Target_date} >= ${TABLE}.FULFILLED then 'On Time'
+    When ${SLA_Target_date} < ${TABLE}.FULFILLED then 'Late'
+    When ${TABLE}.FULFILLED is null and current_date() > ${SLA_Target_date} Then 'Late (open)'
     else 'Open'
     END;; }
 
