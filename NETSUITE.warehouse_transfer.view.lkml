@@ -43,9 +43,14 @@ view: warehouse_transfer {
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
-  dimension: location_id {
+  dimension: SHIPPING_LOCATION_ID {
     type: string
-    sql: ${TABLE}."LOCATION_ID" ;;
+    sql: ${TABLE}."SHIPPING_LOCATION_ID" ;;
+  }
+
+  dimension: RECEIVING_LOCATION_ID {
+    type: string
+    sql: ${TABLE}."RECEIVING_LOCATION_ID" ;;
   }
 
   dimension: memo {
