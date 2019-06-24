@@ -129,6 +129,15 @@ view: daily_adspend {
       when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST') OR ${TABLE}.source = 'CINEMA' ;; label:"Traditional"}
       else: "Other" } }
 
+  dimension: agency_within {
+    label: "Agency Within"
+    description: "A Channel Managed by Agency Within"
+    type: yesno
+    sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'Display')
+      or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK'
+       ;;
+  }
+
   dimension: ad_display_type {
     label: "Ad Display Type"
     description: "How ad was presented (Search, Display, Video, TV, etc.)"
