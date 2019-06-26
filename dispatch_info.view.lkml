@@ -173,6 +173,16 @@ view: dispatch_info {
     sql: ${TABLE}."REPORTED" ;;
   }
 
+  dimension_group: shift_time{
+    label: "Shift Timescale"
+    description: "Adjusts the Reported time to make 0700 to 0000. This sets the beginning of the day as the beginning of the shift. 0000 - 0100 is the first hour of the AM shift."
+    type: time
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(Dateadd(hour,-7,${TABLE}.reported));;
+  }
+
   measure: reported_to_completed {
     description: "How long from reported time until the dispatch was marked closed"
     type: sum
