@@ -81,7 +81,7 @@ view: dispatch_info {
 
   dimension: dispatch_impact {
     hidden: no
-    description: "The level of impact a dispatch Type has"
+    description: "The level of impact a dispatch Type has. 0 highest"
     type: number
     sql: ${TABLE}."DISPATCH_IMPACT" ;;
   }
@@ -127,13 +127,14 @@ view: dispatch_info {
   }
 
   measure: downtime {
-    label: "Downtime Total"
+    label: "Downtime Total (Min.)"
     description: "How long was the dispatch open"
     type: sum
     sql: ${TABLE}."DOWNTIME" ;;
   }
 
   measure: downtime_until_dispatch {
+    label: "Downtime Until Dispatched (Min.)"
     description: "How long was the Dispatch Reported until it was reported dispatched"
     type: sum
     sql: ${TABLE}."DOWNTIME_UNTIL_DISPATCHED" ;;
@@ -152,6 +153,7 @@ view: dispatch_info {
   }
 
   measure: DISPATCHED_UNTIL_COMPLETED {
+    label: "Dispatched Until Completed (Min.)"
     description: "How long from the time the dispatch was dispatched to the completed time was reported"
     type: sum
     sql: ${TABLE}."DISPATCHED_UNTIL_COMPLETED" ;;
@@ -173,6 +175,16 @@ view: dispatch_info {
     sql: ${TABLE}."REPORTED" ;;
   }
 
+  dimension_group: shift_time{
+    label: "Shift Timescale"
+    description: "Adjusts the Reported time to make 0700 to 0000. This sets the beginning of the day as the beginning of the shift. 0000 - 0100 is the first hour of the AM shift."
+    type: time
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(Dateadd(hour,-7,${TABLE}.reported));;
+  }
+
   measure: reported_to_completed {
     description: "How long from reported time until the dispatch was marked closed"
     type: sum
@@ -186,7 +198,7 @@ view: dispatch_info {
   }
 
   measure: count {
-    hidden:  yes
+    hidden:  no
     type: count
     drill_fields: []
   }
