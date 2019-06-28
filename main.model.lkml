@@ -539,6 +539,10 @@
     join: dma {
       type:  left_outer
       sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+      relationship: one_to_one }
+    join: heap_page_views {
+      type: left_outer
+      sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
       relationship: one_to_one
     }
   }
