@@ -80,6 +80,7 @@ view: session_facts {
   dimension: is_bounced {
     label: "Bounced - time"
     description: "Bounced (yes) if total time on site is < 2 seconds"
+    hidden:  yes
     type: yesno
     sql: datediff('seconds',session_start_time,session_end_time) < 2 ;; }
 
