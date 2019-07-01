@@ -660,7 +660,7 @@
 #-------------------------------------------------------------------
 
   explore: conversions {hidden: yes}
-  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: yes
+  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: no
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
