@@ -7,6 +7,13 @@ view: sales_order {
     type: count_distinct
     sql: ${order_id} ;; }
 
+  measure: unique_customers {
+    label: "Distinct Emails"
+    view_label: "Customer"
+    type: count_distinct
+    hidden: no
+    sql: ${TABLE}.email ;; }
+
   measure: average_order_size {
     label: "Average Order Size ($)"
     description: "Average total order amount, excluding tax"

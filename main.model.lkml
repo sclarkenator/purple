@@ -539,6 +539,10 @@
     join: dma {
       type:  left_outer
       sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+      relationship: one_to_one }
+    join: heap_page_views {
+      type: left_outer
+      sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
       relationship: one_to_one
     }
   }
@@ -594,6 +598,19 @@
     description: "Shopify Orders with Customer's Net Payment Under $10"
   }
 
+    explore: amazon_orphan_orders {
+      label: "Amazon Orphan Orders"
+      group_label: "Customer Care"
+      hidden: yes
+      description: "Amazon orders not showing up in Netsuite"
+    }
+
+    explore: rma_status_log {
+      label: "RMA Status Log"
+      group_label: "Customer Care"
+      description: "Log of RMA status change"
+    }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
@@ -643,11 +660,11 @@
 #-------------------------------------------------------------------
 
   explore: conversions {hidden: yes}
-  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: yes
+  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: no
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:no }
   explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
     join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
@@ -661,6 +678,7 @@
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: wholesale_stores {hidden: yes}
+  explore: target_adspend {hidden: yes}
   explore: deleted_fulfillment {hidden: yes}
   explore: marketing_magazine {hidden: yes}
   explore: impact_radius_autosend {hidden: yes}
@@ -678,7 +696,11 @@
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: shopify_orders { hidden:  yes  label: "Shopify sales simple"  description: "Shopify header level information"
     join: sales_order{type:left_outer sql_on: ${sales_order.etail_order_id}::text = ${shopify_orders.id}::text ;; relationship: one_to_one }}
-  explore: orphan_orders {hidden:  yes  label: "Orphan orders"  description: "Orders that exist in Shopify that aren't yet in Netsuite"}
+  explore: orphan_orders {
+    hidden:  yes
+    group_label: "Customer Care"
+    label: "Orphan orders"
+    description: "Orders that exist in Shopify that aren't yet in Netsuite"}
   explore: refund {hidden: yes  group_label: "x - Accounting"  label: "Accounting Refunds"  description: "Refunds on sales at an order level, for accounting."}
   explore: shopify_warranties {hidden: yes  from: orphaned_shopify_warranties  group_label: "x - Accounting"
     label: "Shopify Warranties"  description: "Ties the original order data to NetSuite Warranty Orders where the original order does not exist in NetSuite"
@@ -720,3 +742,4 @@
     join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
+  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}

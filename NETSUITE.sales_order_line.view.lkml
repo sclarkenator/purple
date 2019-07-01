@@ -456,6 +456,12 @@ measure: SLA_Achievement_prct {
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
 
+  measure: dates{
+    label: "Count of Days"
+    #hidden:  yes
+    type: count_distinct
+    sql: ${TABLE}.Created::date ;; }
+
 
   dimension: days_to_cancel {
     view_label: "Cancellations"
