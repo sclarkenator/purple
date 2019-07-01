@@ -605,6 +605,12 @@
       description: "Amazon orders not showing up in Netsuite"
     }
 
+    explore: rma_status_log {
+      label: "RMA Status Log"
+      group_label: "Customer Care"
+      description: "Log of RMA status change"
+    }
+
   explore: ticket {
     hidden: yes
     group_label: "Customer Care"
