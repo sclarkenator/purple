@@ -165,6 +165,11 @@ view: rma_status_log {
     sql: ${TABLE}."RETURN_ORDER_ID" ;;
   }
 
+  dimension: rma_return_type {
+    type: string
+    sql: ${TABLE}."RMA_RETURN_TYPE" ;;
+  }
+
   dimension: tranid {
     type: string
     sql: ${TABLE}."TRANID" ;;
