@@ -577,24 +577,28 @@
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
     group_label: "Customer Care"
+    hidden: yes
     description: "Customer satisfaction of interactions with Customer Care agents"
   }
 
   explore: refund_mismatch {
     label: "Refund Mismatch"
     group_label: "Customer Care"
+    hidden: yes
     description: "NetSuite refunds missing in Shopify"
   }
 
   explore: shopify_coupon_code {
     label: "Shopify Coupon Code"
     group_label: "Customer Care"
+    hidden: yes
     description: "Shopify Orders with Coupon Code"
   }
 
   explore: shopify_net_payment {
     label: "Shopify Net Payment"
     group_label: "Customer Care"
+    hidden: yes
     description: "Shopify Orders with Customer's Net Payment Under $10"
   }
 
@@ -608,6 +612,7 @@
     explore: rma_status_log {
       label: "RMA Status Log"
       group_label: "Customer Care"
+      hidden: yes
       description: "Log of RMA status change"
     join: item {
       type: left_outer
