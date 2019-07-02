@@ -1,6 +1,11 @@
 view: rma_status_log {
   sql_table_name: CUSTOMER_CARE.RMA_STATUS_LOG ;;
 
+  dimension: amount {
+    type: number
+    sql: ${TABLE}."AMOUNT" ;;
+  }
+
   dimension_group: cancelled {
     type: time
     timeframes: [
@@ -31,6 +36,27 @@ view: rma_status_log {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."CLOSED" ;;
+  }
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CREATED" ;;
+  }
+
+  dimension: item_id {
+    type: string
+    sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension_group: partially_received {
