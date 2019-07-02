@@ -54,11 +54,6 @@ view: rma_status_log {
     sql: ${TABLE}."CREATED" ;;
   }
 
-  dimension: item_id {
-    type: string
-    sql: ${TABLE}."ITEM_ID" ;;
-  }
-
   dimension_group: partially_received {
     type: time
     timeframes: [
@@ -137,6 +132,11 @@ view: rma_status_log {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."PENDING_REFUND_PARTIALLY_RECEIVED" ;;
+  }
+
+  dimension: product_description {
+    type: string
+    sql: ${TABLE}."PRODUCT_DESCRIPTION" ;;
   }
 
   dimension_group: refunded {
