@@ -134,9 +134,9 @@ view: rma_status_log {
     sql: ${TABLE}."PENDING_REFUND_PARTIALLY_RECEIVED" ;;
   }
 
-  dimension: product_description {
+  dimension: item_id {
     type: string
-    sql: ${TABLE}."PRODUCT_DESCRIPTION" ;;
+    sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension_group: refunded {

@@ -609,6 +609,10 @@
       label: "RMA Status Log"
       group_label: "Customer Care"
       description: "Log of RMA status change"
+    join: item {
+      type: left_outer
+      sql_on: ${rma_status_log.item_id} = ${item.item_id} ;;
+      relationship: many_to_one}
     }
 
   explore: ticket {
