@@ -70,6 +70,12 @@ view: refund_mismatch {
   dimension: related_tranid {
     type: string
     label: "Check #"
+    link: {
+      label: "Netsuite - Cash Refund"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/cashrfnd.nl?id={{transaction_id._value}}&whence="}
+    link: {
+      label: "Netsuite - Customer Refund"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/custrfnd.nl?id={{transaction_id._value}}&whence="}
     sql: ${TABLE}."RELATED_TRANID";;
   }
 
@@ -101,6 +107,9 @@ view: refund_mismatch {
 
   dimension: transaction_number {
     type: string
+    link: {
+    label: "Shopify - US"
+    url: "https://onpurple.myshopify.com/admin/orders/{{shopify_order_id._value}}"}
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
   }
 
