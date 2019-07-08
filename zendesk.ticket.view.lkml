@@ -195,7 +195,7 @@ view: ticket {
 
   dimension: custom_disposition {
     type: string
-    sql: ${TABLE}."CUSTOM_DISPOSITION" ;;
+    sql: lower(replace(${TABLE}."CUSTOM_DISPOSITION",'_',' ')) ;;
   }
 
   dimension: custom_freshdesk_created_date {
