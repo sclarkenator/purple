@@ -151,6 +151,10 @@ view: tim_forecast_wholesale_dim {
       when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online','Trucking') ;;  label: "Mike Riley" }
       else: "Other" } }
 
+  dimension: not_zero {
+    label: "Not Zero (units/amount)"
+    type:  yesno
+    sql: (${TABLE}.units+${TABLE}.amount)>0 ;; }
 
   measure: units {
     label: "Total Units"

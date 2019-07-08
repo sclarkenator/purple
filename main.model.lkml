@@ -416,6 +416,219 @@
           sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
     }
 
+    explore: sales_order_line_unfiltered {
+      view_name: sales_order_line
+      description:  "All sales orders for all channels"
+      hidden: yes
+      #-------------------------------------------------------------------
+      #Sales Order Line ------------------------------------------------------
+      # \   \   \        \           \          \               \           \
+      #  \  Zip  \   Fulfillment      \          Return        Retro      Cancellations
+      #   \     Item      \          Sales         Order       Discount        \
+      #    \             Dates       Orders         Line            \         Reason
+      # Contributions              /   |   \          \           Discount
+      #                      Shopify   |  Customer    Returns      Code
+      #                              Order    \      |      \
+      #                              Flag     DMA  Return    Return
+      #                                            Reason    Option
+      #-------------------------------------------------------------------"
+      always_filter: {
+        #filters: {field: sales_order.channel      value: "DTC"}
+        filters: {field: item.merchandise         value: "No"}
+        filters: {field: item.finished_good_flg   value: "Yes"}
+        filters: {field: item.modified            value: "Yes"}}
+      join: sf_zipcode_facts {
+        view_label: "Customer"
+        type:  left_outer
+        sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+        relationship: many_to_one}
+      join: dma {
+        view_label: "Customer"
+        type:  left_outer
+        sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+        relationship: many_to_one}
+      join: item {
+        view_label: "Product"
+        type: left_outer
+        sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+        relationship: many_to_one}
+      join: fulfillment {
+        view_label: "Fulfillment"
+        type: left_outer
+        sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+        relationship: many_to_many}
+      join: visible {
+        view_label: "Visible"
+        type: left_outer
+        sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
+        relationship: many_to_one}
+      join: sales_order {
+        view_label: "Sales Header"
+        type: left_outer
+        sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
+        relationship: many_to_one}
+      #join: manna_data_pull {
+      #  view_label: "Mike Shultz Project Data"
+      #  type: left_outer
+      #  sql_on: ${sales_order.tranid} = ${manna_data_pull.transaction_id} ;;
+      #  relationship: one_to_many}
+      join: wholesale_customer_warehouses {
+        view_label: "Wholesale Warehouses"
+        type: left_outer
+        sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
+        relationship: many_to_one}
+      join: shopify_orders {
+        view_label: "Sales Line"
+        type:  left_outer
+        fields: [shopify_orders.call_in_order_Flag]
+        sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+        relationship:  one_to_one}
+      join: return_order_line {
+        view_label: "Returns"
+        type: full_outer
+        sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
+        relationship: one_to_many}
+      join: return_order {
+        view_label: "Returns"
+        type: full_outer
+        required_joins: [return_order_line]
+        sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+        relationship: many_to_one}
+      join: return_reason {
+        view_label: "Returns"
+        type: full_outer
+        sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+        relationship: many_to_one}
+      join: return_option {
+        view_label: "Returns"
+        type: left_outer
+        sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+        relationship: many_to_one}
+      join: restocked_returns {
+        view_label: "Returns"
+        type: left_outer
+        relationship: one_to_one
+        required_joins: [return_order_line]
+        sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;}
+      join: customer_table {
+        view_label: "Customer"
+        type: left_outer
+        sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
+        relationship: many_to_one}
+      join: retroactive_discount {
+        view_label: "Retro Discounts"
+        type: left_outer
+        sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
+        relationship: one_to_many}
+      join: discount_code {
+        view_label: "Retro Discounts"
+        type:  left_outer
+        sql_on: ${retroactive_discount.discount_code_id} = ${discount_code.discount_code_id} ;;
+        relationship: many_to_one}
+      join: cancelled_order {
+        view_label: "Cancellations"
+        type: left_outer
+        sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
+        relationship: one_to_many}
+      join: NETSUITE_cancelled_reason {
+        view_label: "Cancellations"
+        type: left_outer
+        sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
+        relationship: many_to_one}
+      join: order_flag {
+        view_label: "Sales Header"
+        type: left_outer
+        sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+        relationship: one_to_one}
+      join: fulfillment_dates {
+        view_label: "Fulfillment"
+        type: left_outer
+        sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
+        relationship: one_to_one}
+      join: fedex_tracking {
+        view_label: "Fulfillment"
+        type: full_outer
+        sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+        relationship: one_to_one}
+      join: contribution {
+        type: left_outer
+        sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
+        relationship: one_to_one}
+      join: cm_pivot {
+        view_label: "x-CM waterfall"
+        type: left_outer
+        sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
+        relationship: one_to_many}
+      join: state_tax_reconciliation {
+        view_label: "State Tax Reconciliation"
+        type: left_outer
+        sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
+        relationship: one_to_one}
+      join: shopify_discount_codes {
+        view_label: "Promo"
+        type: left_outer
+        sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one}
+      join: marketing_sms_codes {
+        view_label: "Promo"
+        type: left_outer
+        sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
+        relationship:many_to_one}
+      join: marketing_promo_codes {
+        view_label: "Promo"
+        type: left_outer
+        sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
+        relationship: many_to_one}
+      join: first_order_flag {
+        view_label: "Sales Header"
+        type: left_outer
+        sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+        relationship: one_to_one}
+      join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+        sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+      join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+        sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+      join: warranty_order_line {
+        view_label: "Warranties"
+        type:  full_outer
+        sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
+        relationship: one_to_many}
+      join: warranty_order {
+        view_label: "Warranties"
+        type: full_outer
+        required_joins: [warranty_order_line]
+        sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+        relationship: many_to_one}
+      join: warranty_reason {
+        view_label: "Warranties"
+        type: left_outer
+        required_joins: [warranty_order]
+        sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+        relationship: many_to_one}
+    }
+
+    explore: wholesale_sales {
+      extends: [sales_order_line_unfiltered]
+      label:  "Wholesale Extended"
+      group_label: "Sales"
+      description:  "All sales orders for wholesale channel"
+      hidden: yes
+      always_filter: {
+        filters: {field: sales_order.channel      value: "Wholesale"}
+      }
+    }
+
+    explore: dtc_sales {
+      extends: [sales_order_line_unfiltered]
+      label:  "DTC Extended"
+      group_label: "Sales"
+      description:  "All sales orders for DTC channel"
+      hidden: yes
+      always_filter: {
+        filters: {field: sales_order.channel      value: "DTC"}
+      }
+    }
+
   explore: warranty {
   #-------------------------------------------------------------------
   #  Warranty--------------------
@@ -701,11 +914,11 @@
 #-------------------------------------------------------------------
 
   explore: conversions {hidden: yes}
-  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: no
+  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:no }
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
   explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
     join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
@@ -784,3 +997,4 @@
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
+  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
