@@ -67,15 +67,23 @@ view: refund_mismatch {
     sql: ${TABLE}."REFUND_NUMBER" ;;
   }
 
+  dimension: url_type {
+    hidden: yes
+    type: string
+    sql:
+        CASE
+            WHEN ${TABLE}."TYPE" = 'Cash Refund' THEN ('cash')
+            WHEN ${TABLE}."TYPE" = 'Customer Refund' THEN ('cust')
+            ELSE Null
+        END ;;
+  }
+
   dimension: related_tranid {
     type: string
     label: "Check #"
     link: {
-      label: "Netsuite - Cash Refund"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/cashrfnd.nl?id={{transaction_id._value}}&whence="}
-    link: {
-      label: "Netsuite - Customer Refund"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/custrfnd.nl?id={{transaction_id._value}}&whence="}
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{url_type._value}}rfnd.nl?id={{transaction_id._value}}&whence="}
     sql: ${TABLE}."RELATED_TRANID";;
   }
 
