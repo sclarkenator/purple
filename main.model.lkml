@@ -998,3 +998,4 @@
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
   explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
