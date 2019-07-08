@@ -794,6 +794,12 @@
     description: "Customer satisfaction of interactions with Customer Care agents"
   }
 
+  explore: rpt_agent_stats {
+    label: "InContact Agent Stats"
+    group_label: "Customer Care"
+    description: "From InContact Agent Stats Daily. Needs to be updated and combined to overall agent explore."
+  }
+
   explore: refund_mismatch {
     label: "Refund Mismatch"
     group_label: "Customer Care"
@@ -855,6 +861,32 @@
 #       relationship: many_to_one
 #     }
   }
+
+  explore: daily_disposition_counts {
+    group_label: "Customer Care"
+    description: "Count of tickets and calls by disposition"
+    hidden: yes
+  }
+
+
+#    explore: rpt_skill_with_disposition_count {
+#      #hidden: yes
+#      group_label: "Customer Care"
+#      label: "Disposition Volume"
+#      description: "Call and ticket volume by disposition from Zendesk and InContact"
+#      join: ticket {
+#        type: full_outer
+#        relationship: many_to_many
+#        sql_on: lower(${rpt_skill_with_disposition_count.disposition}) = lower(${ticket.custom_disposition})
+#                and ${rpt_skill_with_disposition_count.reported_date} = ${ticket.created_at_date};;
+#      }
+#      join: group {
+#        type: full_outer
+#        required_joins: [ticket]
+#        sql_on: ${group.id} = ${ticket.group_id} ;;
+#        relationship: many_to_one
+#      }
+#    }
 
   explore: logan_fulfillment {
     description: "Stop gap on fulfillment data"
@@ -967,3 +999,4 @@
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
   explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
