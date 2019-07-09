@@ -78,6 +78,17 @@ view: refund_mismatch {
         END ;;
   }
 
+  dimension: url_shopify {
+    hidden: yes
+    type: string
+    sql:
+        CASE
+            WHEN ${TABLE}."SOURCE" = 'Shopify - US' THEN ('onpurple')
+            WHEN ${TABLE}."SOURCE" = 'Shopify - Canada' THEN ('purple-ca')
+            ELSE Null
+        END ;;
+  }
+
   dimension: related_tranid {
     type: string
     label: "Check #"
@@ -121,8 +132,8 @@ view: refund_mismatch {
   dimension: transaction_number {
     type: string
     link: {
-    label: "Shopify - US"
-    url: "https://onpurple.myshopify.com/admin/orders/{{shopify_order_id._value}}"}
+    label: "Shopify"
+    url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{shopify_order_id._value}}"}
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
   }
 
