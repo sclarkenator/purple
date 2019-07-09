@@ -831,7 +831,6 @@
     explore: rma_status_log {
       label: "RMA Status Log"
       group_label: "Customer Care"
-      hidden: yes
       description: "Log of RMA status change"
     join: item {
       type: left_outer
