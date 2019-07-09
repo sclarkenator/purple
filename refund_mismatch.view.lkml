@@ -108,6 +108,11 @@ view: refund_mismatch {
     sql: ${TABLE}."SHOPIFY_TOTAL_REFUNDED" ;;
   }
 
+  dimension: source {
+    type: string
+    sql: ${TABLE}."SOURCE" ;;
+  }
+
   dimension: transaction_id {
     type: number
     sql: ${TABLE}."TRANSACTION_ID" ;;
