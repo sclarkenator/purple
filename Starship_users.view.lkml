@@ -1,4 +1,4 @@
-view: user {
+view: starship_users {
   sql_table_name: STARSHIP."USER" ;;
 
   dimension: id {
@@ -117,6 +117,7 @@ view: user {
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: [id, display_name, username]
   }

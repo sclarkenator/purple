@@ -794,6 +794,49 @@
     description: "Customer satisfaction of interactions with Customer Care agents"
   }
 
+    explore: starship_fulfillment {
+      label: "Starship Fulfillments"
+      group_label: "Operations"
+      hidden: no
+      description: "Starship fulfillment data with user logs"
+
+      join: Created_user {
+        from: starship_users
+        view_label: "Created By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.createdbyid} = ${Created_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: Processed_user {
+        from: starship_users
+        view_label: "Processed By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.processedbyid} = ${Processed_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: Deleted_user {
+        from: starship_users
+        view_label: "Deleted By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.deletedbyid} = ${Deleted_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: shippedby_user {
+        from: starship_users
+        view_label: "Shipped By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.shippedbyid} = ${shippedby_user.id};;
+        relationship: many_to_one
+
+      }
+    }
+
   explore: rpt_agent_stats {
     label: "InContact Agent Stats"
     group_label: "Customer Care"

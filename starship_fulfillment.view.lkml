@@ -125,7 +125,7 @@ view: starship_fulfillment {
     label: "Record Created by"
     description: "The primary key for the user table of who created the record"
     hidden: yes
-    type: number
+    type: string
     value_format_name: id
     sql: ${TABLE}."CREATEDBYID" ;;
   }
@@ -157,6 +157,7 @@ view: starship_fulfillment {
   }
 
   dimension: deletedbyid {
+    hidden: yes
     label: "Record deleted by"
     description: "The primary key for the user table of who deleted the record"
     type: number
@@ -230,9 +231,10 @@ view: starship_fulfillment {
   }
 
   dimension: processedbyid {
+    hidden: yes
     label: "Record Processed by"
     description: "The primary key for the user table of who processed the record"
-    type: number
+    type: string
     value_format_name: id
     sql: ${TABLE}."PROCESSEDBYID" ;;
   }
@@ -360,7 +362,7 @@ view: starship_fulfillment {
     sql: ${TABLE}."WAREHOUSEID" ;;
   }
 
-  measure: count {
+  measure: count_of_orders {
     type: count
     drill_fields: [id]
   }
