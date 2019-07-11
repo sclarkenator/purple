@@ -34,6 +34,13 @@ view: sf_zipcode_facts {
     sql: ${TABLE}.state ;;
   }
 
+  dimension: price_test_state {
+    group_label: "Customer Address"
+    type: string
+    sql: case when ${TABLE}.state in ('NC','OH','WA','CO','FL','WI') then 'test'
+        else 'control' end ;;
+      }
+
   dimension: fulfillment_region {
     label: "US Fulfillment Region"
     group_label: "Customer Address"
