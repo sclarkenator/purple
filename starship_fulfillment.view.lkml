@@ -112,6 +112,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -147,6 +148,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -171,6 +173,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -193,6 +196,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -221,6 +225,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -264,6 +269,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -331,6 +337,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
@@ -346,6 +353,7 @@ view: starship_fulfillment {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
