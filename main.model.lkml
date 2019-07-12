@@ -760,21 +760,6 @@
     }
   }
 
-  #explore: sales_all {
-  #  extends: [sales_order_line,daily_adspend]
-  #  label:  "All Sales"
-  #  group_label: "Sales"
-  #  view_label: "Sales Line"
-  #  description:  "All sales orders for all channels."
-  #  always_filter: {
-  #    filters: {field: sales_order.channel      value: "DTC,Wholesale"}
-  #    filters: {field: item.merchandise         value: "No" }
-  #    filters: {field: item.finished_good_flg   value: "Yes"}
-  #    filters: {field: item.modified            value: "Yes"}}
-  #  from:  sales_order_line
-  #}
-
-
   explore: tim_forecast_combined {
       label: "Forecast"
       description: "Combined wholesale and dtc forecast of units and dollars."
@@ -785,7 +770,6 @@
         type: left_outer
         sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;
         relationship: many_to_one}}
-
 
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
@@ -951,6 +935,10 @@
       relationship: one_to_many}
   }
 
+  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
+  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
@@ -1039,6 +1027,3 @@
     join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
-  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
-  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
-  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
