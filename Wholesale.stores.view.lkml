@@ -1,5 +1,5 @@
 view: wholesale_stores {
-  sql_table_name: analytics.csv_uploads.retail_store_date ;;
+  sql_table_name: analytics.sales.WHOLESALE_STORE ;;
 
   dimension: Customer {
     label: "Customer"
@@ -10,14 +10,14 @@ view: wholesale_stores {
   dimension: Store_name {
     label: "Store Name"
     type: string
-    sql: ${TABLE}.store_name ;;
+    sql: ${TABLE}.location ;;
   }
 
   dimension: Address {
-    label: "Address"
+    label: "Street Address"
     group_label: "Location"
     type: string
-    sql: ${TABLE}.address ;;
+    sql: ${TABLE}.Street ;;
   }
 
   dimension: City {
@@ -38,7 +38,7 @@ view: wholesale_stores {
   dimension: zip {
     label: "Zip Code"
     group_label: "Location"
-    type: string
+    type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: ${TABLE}.zip ;;
   }
@@ -57,6 +57,11 @@ view: wholesale_stores {
   sql: ${TABLE}.open_date ;;
   }
 
+  dimension: beds {
+    label: "Bed in Store"
+    type: string
+    sql: ${TABLE}.beds ;;
+  }
   measure: count {
     type: count
   }

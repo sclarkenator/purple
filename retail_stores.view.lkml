@@ -1,25 +1,25 @@
 view: retail_stores {
   sql_table_name: CSV_UPLOADS.RETAIL_STORES ;;
 
-  dimension: address {
+  dimension: addressfake {
     #hidden: yes
     type: string
     sql: ${TABLE}."ADDRESS" ;;
   }
 
-  dimension: beds {
+  dimension: bedfakes {
     hidden: yes
     type: string
     sql: ${TABLE}."BEDS" ;;
   }
 
-  dimension: city {
+  dimension: citfakey {
     hidden: yes
     type: string
     sql: ${TABLE}."CITY" ;;
   }
 
-  dimension: retailer {
+  dimension: retailefaker {
     case: {
       when: { label: "Mattress Firm" sql: ${TABLE}.retailer = 'MF' ;;}
       when: { label: "Furniture Row" sql:   ${TABLE}.retailer = 'FR' ;;}
@@ -29,39 +29,39 @@ view: retail_stores {
     }
   }
 
-  dimension: state {
+  dimension: statfakee {
     #hidden: yes
     type: string
     map_layer_name:  us_states
-    drill_fields: [zip,address]
+    drill_fields: [zipfake,addressfake]
     sql: ${TABLE}."STATE" ;;
   }
 
-  dimension: zip {
+  dimension: zipfake {
     type: zipcode
-    drill_fields: [address]
+    drill_fields: [addressfake]
     sql: ${TABLE}."ZIP" ;;
   }
 
-  measure: count_MF {
+  measure: count_MFfake {
     type: count
     filters: {
-      field: retailer
+      field: retailefaker
       value: "MF"
     }
   }
 
-  measure: count_MA {
+  measure: count_MAfake {
       type: count
       filters: {
-        field: retailer
+        field: retailefaker
         value: "MA"
       }
   }
-  measure: count_FR {
+  measure: count_FRfake {
     type: count
     filters: {
-      field: retailer
+      field: retailefaker
       value: "FR"
     }
   }
