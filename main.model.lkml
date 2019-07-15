@@ -971,7 +971,6 @@
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
   explore: fraud_warning_list {hidden: yes label: "List of orders that could be fraud, and should be checked manually"}
   explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
-  explore: retail_stores {hidden:  yes  label: "list of retail outlets as of Nov 1, 2018"}
   explore: agg_check {hidden: yes  label: "data accuracy"}
   explore: cac {hidden: yes  group_label: "Marketing"  label: "CAC"}
   explore: attribution {hidden: yes  label: "HEAP attribution"  group_label: "Marketing"}
