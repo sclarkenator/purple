@@ -98,6 +98,11 @@ view: refund_mismatch {
     sql: ${TABLE}."RELATED_TRANID";;
   }
 
+  dimension: shopify_calculated_refund {
+    type: string
+    sql: ${TABLE}."SHOPIFY_CALCULATED_REFUND" ;;
+  }
+
   dimension: shopify_order_id {
     type: number
     sql: ${TABLE}."SHOPIFY_ORDER_ID" ;;

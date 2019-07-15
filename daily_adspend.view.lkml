@@ -61,10 +61,17 @@ view: daily_adspend {
     sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
 
   measure: adspend {
-    label: "Total Adspend ($)"
+    label: "Total Adspend ($k)"
     description: "Total adspend for selected channels"
     type: sum
     value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.spend ;;  }
+
+  measure: adspend_raw {
+    label: "Total Adspend ($)"
+    description: "Total adspend for selected channels"
+    type: sum
+    value_format: "$#,##0"
     sql: ${TABLE}.spend ;;  }
 
   measure: avg_adspend {
