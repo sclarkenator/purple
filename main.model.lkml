@@ -760,21 +760,6 @@
     }
   }
 
-  #explore: sales_all {
-  #  extends: [sales_order_line,daily_adspend]
-  #  label:  "All Sales"
-  #  group_label: "Sales"
-  #  view_label: "Sales Line"
-  #  description:  "All sales orders for all channels."
-  #  always_filter: {
-  #    filters: {field: sales_order.channel      value: "DTC,Wholesale"}
-  #    filters: {field: item.merchandise         value: "No" }
-  #    filters: {field: item.finished_good_flg   value: "Yes"}
-  #    filters: {field: item.modified            value: "Yes"}}
-  #  from:  sales_order_line
-  #}
-
-
   explore: tim_forecast_combined {
       label: "Forecast"
       description: "Combined wholesale and dtc forecast of units and dollars."
@@ -786,13 +771,55 @@
         sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;
         relationship: many_to_one}}
 
-
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
     group_label: "Customer Care"
     hidden: yes
     description: "Customer satisfaction of interactions with Customer Care agents"
   }
+
+    explore: starship_fulfillment {
+      label: "Starship Fulfillments"
+      group_label: "Operations"
+      hidden: no
+      description: "Starship fulfillment data with user logs"
+
+      join: Created_user {
+        from: starship_users
+        view_label: "Created By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.createdbyid} = ${Created_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: Processed_user {
+        from: starship_users
+        view_label: "Processed By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.processedbyid} = ${Processed_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: Deleted_user {
+        from: starship_users
+        view_label: "Deleted By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.deletedbyid} = ${Deleted_user.id};;
+        relationship: many_to_one
+
+      }
+
+      join: shippedby_user {
+        from: starship_users
+        view_label: "Shipped By User"
+        type: left_outer
+        sql_on: ${starship_fulfillment.shippedbyid} = ${shippedby_user.id};;
+        relationship: many_to_one
+
+      }
+    }
 
   explore: rpt_agent_stats {
     label: "InContact Agent Stats"
@@ -908,6 +935,10 @@
       relationship: one_to_many}
   }
 
+  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
+  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
+
 #-------------------------------------------------------------------
 # Hidden Explores
 #-------------------------------------------------------------------
@@ -996,6 +1027,3 @@
     join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
-  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
-  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
-  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
