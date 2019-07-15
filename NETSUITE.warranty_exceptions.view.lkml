@@ -18,7 +18,7 @@ view: netsuite_warranty_exceptions {
         group by created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, order_memo, line_memo
       )
       select
-          nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
+          nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.netsuite_order_id, nr.category, nr.order_memo, nr.line_memo
       from nr
           join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
@@ -61,6 +61,12 @@ view: netsuite_warranty_exceptions {
     description: "The Shopify order number associated with the original Shopify order that has a warranty claim"
     type: string
     sql: ${TABLE}.original_order_number;; }
+
+  dimension: netsuite_order_id {
+    label: "NetSuite Internal Order ID"
+    description: "The NetSuite Internal Order ID associated with the original Shopify order for that warranty claim"
+    type: string
+    sql: ${TABLE}.netsuite_order_id;; }
 
   dimension: order_memo {
     label: "Replacement Order Notes"
