@@ -899,16 +899,20 @@
     label: "Agents"
     group_label: "Customer Care"
     join: agent_company_value {
-      type: left_outer
+      type: full_outer
       sql_on: ${agent_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
       relationship: one_to_many}
     join: agent_evaluation {
-      type: left_outer
+      type: full_outer
       sql_on: ${agent_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
       relationship: one_to_many}
     join: rpt_agent_stats {
-      type: left_outer
+      type: full_outer
       sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+      relationship: one_to_many}
+    join: agent_attendance{
+      type: full_outer
+      sql_on: ${agent_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
       relationship: one_to_many}
   }
 
@@ -921,6 +925,12 @@
   explore: agent_evaluation {
     hidden: yes
     label: "Agent Evaluation"
+    group_label: "Customer Care"
+  }
+
+  explore: agent_attendance {
+    hidden: yes
+    label: "Agent Attendance"
     group_label: "Customer Care"
   }
 
