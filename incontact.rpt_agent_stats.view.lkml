@@ -13,6 +13,11 @@ view: rpt_agent_stats {
     sql: ${TABLE}."AGENT" ;;
   }
 
+  dimension: agent_id {
+    type: number
+    sql: ${TABLE}."AGENT_ID" ;;
+  }
+
   dimension: avg_acw_dim {
     type: number
     hidden: yes

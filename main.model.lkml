@@ -822,9 +822,10 @@
     }
 
   explore: rpt_agent_stats {
+    hidden: yes
     label: "InContact Agent Stats"
     group_label: "Customer Care"
-    description: "From InContact Agent Stats Daily. Needs to be updated and combined to overall agent explore."
+    description: "From InContact Agent Stats Daily."
   }
 
   explore: refund_mismatch {
@@ -894,6 +895,34 @@
     hidden: yes
   }
 
+  explore: agent_lkp {
+    label: "Agents"
+    group_label: "Customer Care"
+    join: agent_company_value {
+      type: left_outer
+      sql_on: ${agent_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
+      relationship: one_to_many}
+    join: agent_evaluation {
+      type: left_outer
+      sql_on: ${agent_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
+      relationship: one_to_many}
+    join: rpt_agent_stats {
+      type: left_outer
+      sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+      relationship: one_to_many}
+  }
+
+  explore: agent_company_value {
+    hidden: yes
+    label: "Agent Company Value"
+    group_label: "Customer Care"
+  }
+
+  explore: agent_evaluation {
+    hidden: yes
+    label: "Agent Evaluation"
+    group_label: "Customer Care"
+  }
 
 #    explore: rpt_skill_with_disposition_count {
 #      #hidden: yes
@@ -935,7 +964,6 @@
       relationship: one_to_many}
   }
 
-  explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
   explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
   explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
   explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting"}
