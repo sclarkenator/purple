@@ -938,6 +938,7 @@
   explore: agent_lkp {label: "Agents" group_label: "Customer Care"}
   explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting"}
   explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
+  explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting"}
 
 #-------------------------------------------------------------------
 # Hidden Explores
