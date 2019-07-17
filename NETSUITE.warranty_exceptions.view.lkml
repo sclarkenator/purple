@@ -64,6 +64,12 @@ view: netsuite_warranty_exceptions {
     type: string
     sql: ${TABLE}.related_tranid;; }
 
+  dimension: source {
+    label: "Source"
+    description: "Order source (US versus Canada)"
+    type: string
+    sql: ${TABLE}.source;; }
+
   dimension: shopify_order_id {
     label: "Shopify Order ID"
     description: "The Shopify order id for the warranty claim"
