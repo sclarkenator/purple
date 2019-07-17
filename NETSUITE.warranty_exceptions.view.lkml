@@ -3,7 +3,7 @@ view: netsuite_warranty_exceptions {
     sql:
       with tmp as (
         select
-          o.created, o.order_id as netsuite_order_id, o.tranid as transaction_number, o.related_tranid, o.etail_order_id as shopify_order_id,
+          o.created, o.order_id as netsuite_order_id, o.tranid as transaction_number, o.related_tranid, o.source, o.etail_order_id as shopify_order_id,
           replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'O#?\\d{4,7}'),'O',''),'#','') as original_order_number,upper(i.product_line_name_lkr) as category,
           replace(replace(replace(replace(upper(COALESCE(o.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as order_memo,
           replace(replace(replace(replace(upper(COALESCE(l.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as line_memo
@@ -11,16 +11,30 @@ view: netsuite_warranty_exceptions {
           join analytics.sales.sales_order_line l on o.order_id = l.order_id
           join analytics.sales.item i on l.item_id = i.item_id
         where o.gross_amt = 0
-            and source = 'Shopify - US'
+            and source in ('Shopify - US','Shopify - Canada')
       ), nr as (
-        select created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, order_memo, line_memo
+        select created, netsuite_order_id, transaction_number, related_tranid, source, shopify_order_id, original_order_number, category, order_memo, line_memo
         from tmp
-        group by created, netsuite_order_id, transaction_number, related_tranid, shopify_order_id, original_order_number, category, order_memo, line_memo
+        group by created, netsuite_order_id, transaction_number, related_tranid, source, shopify_order_id, original_order_number, category, order_memo, line_memo
       )
       select
-          nr.created, nr.transaction_number, nr.related_tranid, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
+          nr.created, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
       from nr
           join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
+      where CASE
+          WHEN nr.order_memo like '%DSC%' THEN 0
+          WHEN nr.order_memo like '%NSI%' THEN 0
+          WHEN nr.order_memo like '%APOLOG%' THEN 0
+          WHEN nr.order_memo like '%SQUISH%' THEN 0
+          WHEN REGEXP_SUBSTR(upper(nr.order_memo),'O#[ABCS]') is not null THEN 0
+          WHEN upper(nr.order_memo) like '%RPL%' and nr.original_order_number is not null THEN 0
+          ELSE 1
+        END = 1
+      UNION
+      select
+          nr.created, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
+      from nr
+          join analytics_stage.shopify_ca_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
           WHEN nr.order_memo like '%DSC%' THEN 0
           WHEN nr.order_memo like '%NSI%' THEN 0
