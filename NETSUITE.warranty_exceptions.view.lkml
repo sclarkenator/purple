@@ -18,7 +18,7 @@ view: netsuite_warranty_exceptions {
         group by created, netsuite_order_id, transaction_number, related_tranid, source, shopify_order_id, original_order_number, category, order_memo, line_memo
       )
       select
-          nr.created, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
+          nr.created, nr.netsuite_order_id, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
       from nr
           join analytics_stage.shopify_us_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
@@ -32,7 +32,7 @@ view: netsuite_warranty_exceptions {
         END = 1
       UNION
       select
-          nr.created, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
+          nr.created, nr.netsuite_order_id, nr.transaction_number, nr.related_tranid, nr.source, nr.shopify_order_id, nr.original_order_number, nr.category, nr.order_memo, nr.line_memo
       from nr
           join analytics_stage.shopify_ca_ft."ORDER" sr on nr.shopify_order_id = sr.id::text
       where CASE
