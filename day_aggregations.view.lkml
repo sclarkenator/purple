@@ -163,7 +163,21 @@ view: day_aggregations_dtc_cancels {
 }
 
 ######################################################
-#   Merging Forecast and Actuals by Day
+#   Adspend Target
+######################################################
+view: day_aggregations_adspend_target {
+  derived_table: {
+    explore_source: target_adspend {
+      column: date_date {}
+      column: amount {}
+    }
+  }
+  dimension: date_date { type: date }
+  dimension: amount { type: number }
+}
+
+######################################################
+#   CREATING FINAL TABLE
 ######################################################
 view: day_aggregations {
   derived_table: {
@@ -185,6 +199,7 @@ view: day_aggregations {
         , dtc_returns.total_trial_returns_completed_dollars as dtc_trial_returns
         , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
+        , adspend_target.amount as adspend_target
       from analytics.util.warehouse_date d
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.fulfilled_date::date = d.date
@@ -193,6 +208,7 @@ view: day_aggregations {
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
       left join ${day_aggregations_dtc_returns.SQL_TABLE_NAME} dtc_returns on dtc_returns.return_completed_date::date = d.date
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
+      left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
       where date::date >= '2018-01-01' and date::date < '2020-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
@@ -356,5 +372,11 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_refunds;; }
+
+  measure: adspend_target {
+    label: "Adspend Target"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.adspend_target;; }
 
 }

@@ -29,7 +29,7 @@ view: sales_order_line {
     label:  "Gross Sales ($0.k)"
     description:  "Total the customer paid, excluding tax and freight, in $K"
     type: sum
-   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+   drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description,carrier, location, sales_order.source, total_units,gross_amt]
     value_format: "$#,##0,\" K\""
     sql:  ${TABLE}.gross_amt ;; }
 

@@ -67,10 +67,40 @@ view: refund_mismatch {
     sql: ${TABLE}."REFUND_NUMBER" ;;
   }
 
+  dimension: url_type {
+    hidden: yes
+    type: string
+    sql:
+        CASE
+            WHEN ${TABLE}."TYPE" = 'Cash Refund' THEN ('cash')
+            WHEN ${TABLE}."TYPE" = 'Customer Refund' THEN ('cust')
+            ELSE Null
+        END ;;
+  }
+
+  dimension: url_shopify {
+    hidden: yes
+    type: string
+    sql:
+        CASE
+            WHEN ${TABLE}."SOURCE" = 'Shopify - US' THEN ('onpurple')
+            WHEN ${TABLE}."SOURCE" = 'Shopify - Canada' THEN ('purple-ca')
+            ELSE Null
+        END ;;
+  }
+
   dimension: related_tranid {
     type: string
     label: "Check #"
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{url_type._value}}rfnd.nl?id={{transaction_id._value}}&whence="}
     sql: ${TABLE}."RELATED_TRANID";;
+  }
+
+  dimension: shopify_calculated_refund {
+    type: string
+    sql: ${TABLE}."SHOPIFY_CALCULATED_REFUND" ;;
   }
 
   dimension: shopify_order_id {
@@ -94,6 +124,11 @@ view: refund_mismatch {
     sql: ${TABLE}."SHOPIFY_TOTAL_REFUNDED" ;;
   }
 
+  dimension: source {
+    type: string
+    sql: ${TABLE}."SOURCE" ;;
+  }
+
   dimension: transaction_id {
     type: number
     sql: ${TABLE}."TRANSACTION_ID" ;;
@@ -101,6 +136,9 @@ view: refund_mismatch {
 
   dimension: transaction_number {
     type: string
+    link: {
+    label: "Shopify"
+    url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{shopify_order_id._value}}"}
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
   }
 

@@ -82,7 +82,7 @@ view: session_facts {
     description: "Bounced (yes) if total time on site is < 2 seconds"
     hidden:  yes
     type: yesno
-    sql: datediff('seconds',session_start_time,session_end_time) < 2 ;; }
+    sql: datediff('seconds',session_start_time,session_end_time) < 1 ;; }
 
   measure: average_events_per_session {
     label: "Average Events per Session"

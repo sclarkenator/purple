@@ -83,6 +83,18 @@ view: sessions {
     type: string
     sql: ${TABLE}.referrer ;; }
 
+  dimension: referrer_2 {
+    label: "Referrer (grouped)"
+    type: string
+    sql: case when ${TABLE}.referrer ilike ('%purple.com%') then 'https://purple.com/*'
+          when ${TABLE}.referrer ilike ('%google.%') then 'https://google.com/*'
+          when ${TABLE}.referrer ilike ('%facebook%') then 'https://facebook.com/*'
+          when ${TABLE}.referrer ilike ('%youtube%') then 'https://youtube.com/*'
+          when ${TABLE}.referrer ilike ('%msn.%') then 'https://msn.com/*'
+          when ${TABLE}.referrer ilike ('%yahoo.%') then 'https://yahoo.com/*'
+          else ${TABLE}.referrer end ;; }
+  #https://purple.com
+
   dimension: region {
     label: "Region"
     type: string

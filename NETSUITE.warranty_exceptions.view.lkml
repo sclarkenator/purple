@@ -76,6 +76,12 @@ view: netsuite_warranty_exceptions {
     type: string
     sql: ${TABLE}.original_order_number;; }
 
+  dimension: netsuite_order_id {
+    label: "NetSuite Internal Order ID"
+    description: "The NetSuite Internal Order ID associated with the original Shopify order for that warranty claim"
+    type: string
+    sql: ${TABLE}.netsuite_order_id;; }
+
   dimension: order_memo {
     label: "Replacement Order Notes"
     description: "The order level notes for the replacement order"
