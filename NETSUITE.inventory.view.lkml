@@ -32,6 +32,20 @@ view: inventory {
     description: "The aggregation of all items on Transfer Orders commited or fulfilled headed to the warehouse."
     sql: ${TABLE}.inbound ;; }
 
+  measure: PENDING_RECEIPT {
+    label: "Total Pending Receipt"
+    type: sum
+    hidden:  no
+    description: "The aggregation of all items on Transfer Orders commited or fulfilled headed to the warehouse."
+    sql: ${TABLE}.PENDING_RECEIPT ;; }
+
+  measure: PENDING_FULFILLMENT {
+    label: "Total Total Pending Fulfillment"
+    type: sum
+    hidden:  no
+    description: "The aggregation of all items on Transfer Orders commited or fulfilled headed to the warehouse."
+    sql: ${TABLE}.PENDING_FULFILLMENT ;; }
+
   measure: NetSuite_Stocklevel {
     label: "NetSuite preferred Stock Level"
     type: sum
