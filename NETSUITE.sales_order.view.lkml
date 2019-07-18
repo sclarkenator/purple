@@ -4,6 +4,7 @@ view: sales_order {
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
+    drill_fields: [order_id, sales_order_line.sales_order.tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,minimum_ship_date ,item.product_description, sales_order_line.location, source, sales_order_line.total_units,sales_order_line.gross_amt]
     type: count_distinct
     sql: ${order_id} ;; }
 
