@@ -141,7 +141,7 @@ view: daily_adspend {
     description: "A Channel Managed by Agency Within"
     type: yesno
     sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'Display')
-      or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK'
+      or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
        ;;
   }
 
