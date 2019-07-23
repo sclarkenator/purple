@@ -26,8 +26,12 @@ view: tim_forecast_combined {
             , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
             , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
             , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
-            , coalesce(a.CATCH_ALL_Units/c.days_in_week,0) as Other_Units
-            , coalesce(a.CATCH_ALL_Amount/c.days_in_week,0) as Other_Amount
+            , coalesce(a.Other_Units/c.days_in_week,0) as Other_Units
+            , coalesce(a.Other_Amount/c.days_in_week,0) as Other_Amount
+            , coalesce(a.HOM_Units/c.days_in_week,0) as HOM_Units
+            , coalesce(a.HOM_Amount/c.days_in_week,0) as HOM_Amount
+            , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
+            , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
         from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         left join (
           select
@@ -360,6 +364,30 @@ view: tim_forecast_combined {
 
   measure: Other_Amount {
     label: "Wholesale Other Amount"
+    type:  sum
+    value_format: "$#,##0.00"
+    sql:${TABLE}.Other_Amount ;; }
+
+  measure: BD_Units {
+    label: "Wholesale Bloomingdales Units"
+    type:  sum
+    value_format: "#,##0"
+    sql:${TABLE}.Other_Units ;; }
+
+  measure: BD_Amount {
+    label: "Wholesale Bloomingdales Amount"
+    type:  sum
+    value_format: "$#,##0.00"
+    sql:${TABLE}.Other_Amount ;; }
+
+  measure: HOM_Units {
+    label: "Wholesale HOM Units"
+    type:  sum
+    value_format: "#,##0"
+    sql:${TABLE}.Other_Units ;; }
+
+  measure: hom_Amount {
+    label: "Wholesale HOM Amount"
     type:  sum
     value_format: "$#,##0.00"
     sql:${TABLE}.Other_Amount ;; }
