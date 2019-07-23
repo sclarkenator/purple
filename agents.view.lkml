@@ -7,6 +7,12 @@ view: agent_lkp {
     sql: ${TABLE}.incontact_id ;;
   }
 
+  dimension: incontact_team_id {
+    description: "The InContact team ID for this agent"
+    type:  number
+    sql: ${TABLE}.incontact_team_id ;;
+  }
+
   dimension: zendesk_id {
     description: "The ZenDesk ID for this agent"
     type:  number
@@ -25,6 +31,12 @@ view: agent_lkp {
     sql: ${TABLE}.team_id ;;
   }
 
+  dimension: team_lead_id {
+    description: "The ID for this agent's team lead"
+    type:  number
+    sql: ${TABLE}.team_lead_id ;;
+  }
+
   dimension: email {
     description: "The email address for this agent"
     type:  string
@@ -37,10 +49,18 @@ view: agent_lkp {
     sql: ${TABLE}.name ;;
   }
 
-  dimension: is_super {
+  dimension: is_supervisor {
     description: "Whether or not this agent is a supervisor"
     type: yesno
     sql: ${TABLE}.supervisor ;;
+  }
+
+  dimension_group: inactive {
+    description: "Date agent became inactive"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    datatype: timestamp
+    sql: ${TABLE}.inactive ;;
   }
 
   dimension_group: created {
@@ -49,6 +69,12 @@ view: agent_lkp {
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.created ;; }
+
+  dimension: insert_ts {
+    hidden: yes
+    type:  date_time
+    sql: ${TABLE}.insert_ts ;;
+  }
 
 
   #
