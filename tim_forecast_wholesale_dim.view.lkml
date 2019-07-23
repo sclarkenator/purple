@@ -73,9 +73,23 @@ view: tim_forecast_wholesale_dim {
         union all
         select a.week
           , a.sku_id
+          , 'HOM'
+          , a.HOM_units
+          , a.HOM_AMOUNT
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
+        union all
+        select a.week
+          , a.sku_id
+          , 'Bloomingdales'
+          , a.BD_Units
+          , a.BD_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
+        union all
+        select a.week
+          , a.sku_id
           , 'Other'
-          , a.CATCH_ALL_units
-          , a.CATCH_ALL_AMOUNT
+          , a.Other_Units
+          , a.Other_Amount
         from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
       ) a
       left join (

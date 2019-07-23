@@ -12,18 +12,25 @@ view: tim_forecast_wholesale {
           , coalesce(a.Macys_Instore_Units/c.days_in_week,0) as Macys_Instore_Units
           , coalesce(a.Macys_Online_Units/c.days_in_week,0) as Macys_Online_Units
           , coalesce(a.SCC_Units/c.days_in_week,0) as SCC_Units
+          , coalesce(a.HOM_Units/c.days_in_week,0) as HOM_Units
           , coalesce(a.BBB_Units/c.days_in_week,0) as BBB_Units
           , coalesce(a.Medical_Units/c.days_in_week,0) as Medical_Units
           , coalesce(a.Trucking_Units/c.days_in_week,0) as Trucking_Units
+          , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
+          , coalesce(a.BD_Units/c.days_in_week,0) as Other_Units
           , coalesce(a.MF_Instore_Amount/c.days_in_week,0) as MF_Instore_Amount
           , coalesce(a.MF_Online_Amount/c.days_in_week,0) as MF_Online_Amount
           , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount
           , coalesce(a.Macys_Instore_Amount/c.days_in_week,0) as Macys_Instore_Amount
           , coalesce(a.Macys_Online_Amount/c.days_in_week,0) as Macys_Online_Amount
           , coalesce(a.SCC_Amount/c.days_in_week,0) as SCC_Amount
+          , coalesce(a.HOM_Amount/c.days_in_week,0) as HOM_Amount
           , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
           , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
           , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
+          , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
+          , coalesce(a.Other_Amount/c.days_in_week,0) as Other_Amount
+
       from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
       left join (
         select
