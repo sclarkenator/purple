@@ -914,6 +914,10 @@
       type: full_outer
       sql_on: ${agent_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
       relationship: one_to_many}
+    join: agent_draft_orders {
+      type: left_outer
+      sql_on: ${agent_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
+    }
   }
 
   explore: agent_company_value {
