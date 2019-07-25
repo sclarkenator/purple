@@ -50,68 +50,30 @@ view: tim_forecast_combined {
         order by 2, 1
       ), yy as (
         --DTC forecast merged with dates to get a count/day
-        with aa as(
-          select z.date
-            , z.sku_id
-            , z.item_id
-            , z.monthly_goal
-            , case when z.sku_id in ('10-21-12618','10-21-12620','10-21-12625','10-21-12632',
-              '10-21-12960','10-21-60005','10-21-60006','10-21-60007','10-21-60008','10-21-60009',
-              '10-21-60010','10-21-60011','10-21-60012','10-21-60013','10-21-60014','10-21-60015',
-              '10-21-60016','10-21-60018','10-21-60019','10-21-60020') then 1 else 0 end as is_mattress
-            , z.daily_goal+coalesce(a.amount,0) as total_amount
-            , z.total_units+coalesce(a.units,0) as total_units
-          from (
-            select b.date
-                --, c.days_in_month
-                --, a.date as goal_month
-                , a.sku_id
-                , a.item_id
-                , a.amount as monthly_goal
-                , a.amount/c.days_in_month as daily_goal
-                , a.units/c.days_in_month as total_units
-            from analytics.csv_uploads.forecasted_targets a
-            left join analytics.util.warehouse_date b on b.month = month(a.date) and b.year = year(a.date)
-            left join (
-              select year, month, count (date) as days_in_month
-              from analytics.util.warehouse_date
-              group by year, month
-            ) c on c.year = b.year and c.month = b.month
-          ) z
-          left join analytics.csv_uploads.forecasted_holidays a on a.date = z.date and z.sku_id = a.sku_id and z.item_id = a.item_id
-        )
-        select aa.date
-          , aa.sku_id
-          , aa.item_id
-          --, aa.is_mattress
-          , aa.total_amount
-          , aa.total_units
-          , c.promo
-          , y.mattresses * s.percent as promo_units
-          --, y.mattresses * (s.percent*.9) as promo_units
-        from aa
-        left join analytics.csv_uploads.promo_calendar c on c.start_date <= aa.date and c.end_date >= aa.date
-        left join analytics.csv_uploads.promo_skus s on s.promo = c.promo and s.sku = aa.sku_id
+        select b.date
+            , a.sku_id
+            , a.amount/c.days_in_month as amount
+            , a.units/c.days_in_month as paid_units
+            , a.promo_units/c.days_in_month as promo_units
+        from analytics.csv_uploads.forecasted_targets a
+        left join analytics.util.warehouse_date b on b.month = month(a.date::date) and b.year = year(a.date::date)
         left join (
-          select aa.date, sum(aa.total_units) as mattresses
-          from aa
-          where is_mattress = 1
-          group by aa.date
-        ) y on y.date = aa.date
+          select year, month, count (date) as days_in_month
+          from analytics.util.warehouse_date
+          group by year, month
+        ) c on c.year = b.year and c.month = b.month
       )
       select coalesce(zz.date, yy.date) as date
           , coalesce(zz.sku_id, yy.sku_id) as sku_id
-          , i.item_id
 
-          , coalesce(zz.total_units, 0) + coalesce(yy.total_units,0) + coalesce(yy.promo_units, 0) as total_units
+          , coalesce(zz.total_units, 0) + coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as total_units
           , coalesce(zz.total_amount, 0) + coalesce(yy.total_amount,0) as total_amount
 
           , coalesce(zz.total_units, 0) as wholesale_units
-          , coalesce(yy.total_units,0) + coalesce(yy.promo_units, 0) as dtc_units
+          , coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as dtc_units
           , coalesce(zz.total_amount, 0)  as wholesale_amount
-          , coalesce(yy.total_amount,0) as dtc_amount
+          , coalesce(yy.amount,0) as dtc_amount
 
-          , yy.promo
           , yy.promo_units
 
           , zz.MF_Instore_Units
@@ -200,10 +162,6 @@ view: tim_forecast_combined {
   dimension: sku_id {
     type:  string
     sql:${TABLE}.sku_id ;; }
-
-  dimension: item_id {
-    type:  string
-    sql:${TABLE}.item_id ;; }
 
   measure: total_units {
     label: "Total Units"

@@ -768,7 +768,7 @@
       join: item {
         view_label: "Product"
         type: left_outer
-        sql_on: ${tim_forecast_combined.item_id} = ${item.item_id} ;;
+        sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;
         relationship: many_to_one}}
 
   explore: customer_satisfaction_survey {
