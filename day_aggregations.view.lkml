@@ -268,6 +268,13 @@ view: day_aggregations {
     label: "DTC Amount"
     description: "Total DTC sales aggregated to the day."
     type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.dtc_amount;; }
+
+  measure: dtc_amount_k {
+    label: "DTC Amount ($.k)"
+    description: "Total DTC sales aggregated to the day."
+    type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_amount;; }
 
@@ -280,6 +287,13 @@ view: day_aggregations {
 
   measure: wholesale_amount {
     label: "Wholesale Amount"
+    description: "Total wholesale sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.wholesale_amount;; }
+
+  measure: wholesale_amount_k {
+    label: "Wholesale Amount ($.k)"
     description: "Total wholesale sales aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
