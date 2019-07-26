@@ -96,6 +96,7 @@ view: item {
     type: string
     case: {
       when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "ORIGINAL" }
+      when: { sql: ${TABLE}.model_name_lkr = 'NEW ORIGINAL' ;; label: "NEW ORIGINAL" }
       when: { sql: ${TABLE}.model_name_lkr = 'SCC' ;; label: "SCC" }
       when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.2' ;; label: "PURPLE.2" }
       when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;; label: "PURPLE.3" }
@@ -125,7 +126,7 @@ view: item {
     group_label: "Forecast Tier"
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
-    sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
+    sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = '%ORIGINAL%'  then 'Original'
      when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL'  then 'New Mattress'
      else ${TABLE}.PRODUCT_LINE_NAME_lkr end;; }
 
