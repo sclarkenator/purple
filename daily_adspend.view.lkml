@@ -74,6 +74,31 @@ view: daily_adspend {
     value_format: "$#,##0"
     sql: ${TABLE}.spend ;;  }
 
+  measure: agency_cost {
+    label: "Agency Cost ($)"
+    description: "Total cost to Agency Within and Modus for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'Display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('YOUTUBE') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.06
+      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      end ;;
+    }
+
+  measure: adspend_no_agency {
+    label: "Adspend without Agency Cost ($)"
+    description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      else ${TABLE}.spend
+      end ;;
+  }
+
   measure: avg_adspend {
     label: "Average Daily Spend"
     hidden:  yes
