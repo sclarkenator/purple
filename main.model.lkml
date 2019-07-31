@@ -917,6 +917,7 @@
     join: agent_draft_orders {
       type: left_outer
       sql_on: ${agent_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
+      relationship: one_to_many
     }
   }
 
@@ -987,6 +988,8 @@
 # Hidden Explores
 #-------------------------------------------------------------------
 
+    explore: adspend_yesterday {hidden: yes group_label: "Marketing" label: "Adspend Yesterday" description: "Platform daily Adspend out of the normal range."
+    }
   explore: conversions {hidden: yes}
   explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: no
