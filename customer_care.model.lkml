@@ -144,7 +144,11 @@ explore: agent_attendance {
   group_label: "Customer Care"
 }
 
-
+explore: v_agent_state  {
+  hidden:  yes
+  label: "Agent Time States"
+  group_label: "Customer Care"
+}
 
 
 #    explore: rpt_skill_with_disposition_count {
