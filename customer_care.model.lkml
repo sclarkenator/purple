@@ -159,7 +159,7 @@ explore: cc_agent_data {
     relationship: one_to_many}
   join: v_agent_state {
     type: full_outer
-    sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.AGENT_ID};;
+    sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.agent_id};;
     relationship:  one_to_many
   }
   required_access_grants: [is_customer_care_manager]
