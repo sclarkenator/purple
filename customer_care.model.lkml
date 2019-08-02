@@ -124,7 +124,14 @@ explore: agent_lkp {
     sql_on: ${agent_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
     relationship: one_to_many
   }
+  required_access_grants: [is_customer_care_manager]
 }
+
+access_grant: is_customer_care_manager{
+  user_attribute: is_customer_care_manager
+  allowed_values: [ "yes" ]
+}
+
 
 explore: agent_company_value {
   hidden: yes
