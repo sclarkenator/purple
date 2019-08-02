@@ -1,5 +1,5 @@
-view: adspend_yesterday {
-  sql_table_name: MARKETING.ADSPEND_YESTERDAY ;;
+view: adspend_out_of_range_yesterday {
+  sql_table_name: MARKETING.ADSPEND_OUT_OF_RANGE_YESTERDAY ;;
 
   dimension_group: ad {
     type: time
@@ -19,6 +19,11 @@ view: adspend_yesterday {
   dimension: average {
     type: number
     sql: ${TABLE}."AVERAGE" ;;
+  }
+
+  dimension: lower_percentile {
+    type: number
+    sql: ${TABLE}."LOWER_PERCENTILE" ;;
   }
 
   dimension: maximum {
@@ -49,6 +54,11 @@ view: adspend_yesterday {
   dimension: total_impressions {
     type: number
     sql: ${TABLE}."TOTAL_IMPRESSIONS" ;;
+  }
+
+  dimension: upper_percentile {
+    type: number
+    sql: ${TABLE}."UPPER_PERCENTILE" ;;
   }
 
   measure: count {

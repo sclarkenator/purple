@@ -866,8 +866,7 @@
 # Hidden Explores
 #-------------------------------------------------------------------
 
-    explore: adspend_yesterday {hidden: yes group_label: "Marketing" label: "Adspend Yesterday" description: "Platform daily Adspend out of the normal range."
-    }
+  explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval."}
   explore: conversions {hidden: yes}
   explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: no
