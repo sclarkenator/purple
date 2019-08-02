@@ -122,8 +122,7 @@ explore: agent_lkp {
   join: agent_draft_orders {
     type: left_outer
     sql_on: ${agent_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
-    relationship: one_to_many
-  }
+    relationship: one_to_many}
   required_access_grants: [is_customer_care_manager]
 }
 
@@ -132,6 +131,39 @@ access_grant: is_customer_care_manager{
   allowed_values: [ "yes" ]
 }
 
+
+explore: cc_agent_data {
+  from:  agent_lkp
+  label: "CC Agent Data"
+  group_label: "Customer Care"
+
+  join: agent_company_value {
+    type: full_outer
+    sql_on: ${cc_agent_data.incontact_id} = ${agent_company_value.agent_id} ;;
+    relationship: one_to_many}
+  join: agent_evaluation {
+    type: full_outer
+    sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id} ;;
+    relationship: one_to_many}
+  join: rpt_agent_stats {
+    type: full_outer
+    sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+    relationship: one_to_many}
+  join: agent_attendance{
+    type: full_outer
+    sql_on: ${cc_agent_data.incontact_id} = ${agent_attendance.agent_id} ;;
+    relationship: one_to_many}
+  join: agent_draft_orders {
+    type: left_outer
+    sql_on: ${cc_agent_data.shopify_id} = ${agent_draft_orders.user_id} ;;
+    relationship: one_to_many}
+  join: v_agent_state {
+    type: full_outer
+    sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.AGENT_ID};;
+    relationship:  one_to_many
+  }
+  required_access_grants: [is_customer_care_manager]
+}
 
 explore: agent_company_value {
   hidden: yes
