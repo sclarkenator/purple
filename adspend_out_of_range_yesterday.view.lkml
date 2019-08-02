@@ -21,6 +21,11 @@ view: adspend_out_of_range_yesterday {
     sql: ${TABLE}."AVERAGE" ;;
   }
 
+  dimension: date_range {
+    type: string
+    sql: ${TABLE}."DATE_RANGE" ;;
+  }
+
   dimension: lower_percentile {
     type: number
     sql: ${TABLE}."LOWER_PERCENTILE" ;;
