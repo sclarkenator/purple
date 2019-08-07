@@ -66,4 +66,9 @@ view: rpt_skill_with_disposition {
     sql: ${TABLE}."acw_time" ;;
   }
 
+  measure: count {
+    type: count
+    drill_fields: []
+  }
+
 }
