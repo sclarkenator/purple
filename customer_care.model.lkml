@@ -100,9 +100,9 @@ explore: daily_disposition_counts {
   hidden: yes
 }
 explore: rpt_skill_with_disposition {
-  group_label: "Customer_Care"
+  group_label: "Customer Care"
   description: "Calls with skill and disposition"
-  required_access_grants: [is_customer_care_manager]
+
 
 }
 
