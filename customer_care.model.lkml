@@ -99,7 +99,7 @@ explore: daily_disposition_counts {
   description: "Count of tickets and calls by disposition"
   hidden: yes
 }
-explore: rpt_skill_with_disposition {
+explore: rpt_skill_with_disposition_count {
   group_label: "Customer Care"
   description: "Calls with skill and disposition"
 
