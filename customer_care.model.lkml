@@ -99,6 +99,12 @@ explore: daily_disposition_counts {
   description: "Count of tickets and calls by disposition"
   hidden: yes
 }
+explore: rpt_skill_with_disposition {
+  group_label: "Customer_Care"
+  description: "Calls with skill and disposition"
+  required_access_grants: [is_customer_care_manager]
+
+}
 
 explore: agent_lkp {
   label: "Agents"
