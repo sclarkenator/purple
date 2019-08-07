@@ -1,5 +1,5 @@
 view: rpt_skill_with_disposition {
-  sql_table_name: CUSTOMER_CARE.rpt_skill_disposition ;;
+  sql_table_name: CUSTOMER_CARE.rpt_skill_with_disposition ;;
 
   dimension: reported {
     type: date
