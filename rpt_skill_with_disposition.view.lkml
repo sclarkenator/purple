@@ -1,4 +1,4 @@
-view: rpt_skill_with_disposition {
+view: rpt_skill_with_disposition_count {
   sql_table_name: CUSTOMER_CARE.rpt_skill_with_disposition_count ;;
 
   dimension: reported {
