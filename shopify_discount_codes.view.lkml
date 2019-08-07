@@ -28,14 +28,6 @@ view: shopify_discount_codes {
       sql: ${TABLE}.promo ;;
     }
 
-  dimension: promo_lower {
-    #hidden:  yes
-    label: "Promo (shopify - Filter)"
-    description: "Lowered for filtering reasons"
-    type: string
-    sql: lower(${TABLE}.promo) ;;
-  }
-
   dimension: promo_2 {
     #hidden:  yes
     label: "Promo - email test"
