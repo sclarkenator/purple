@@ -161,6 +161,11 @@
       type: left_outer
       sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
       relationship: many_to_one}
+    join: xpo_data_3_pl{
+      view_label: "XPO Hub Data"
+      type: left_outer
+      sql_on: substring(${sales_order_line.zip},1,5) = ${xpo_data_3_pl.destinationzip} ;;
+      relationship: many_to_one}
     #join: manna_data_pull {
     #  view_label: "Mike Shultz Project Data"
     #  type: left_outer
