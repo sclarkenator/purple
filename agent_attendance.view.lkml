@@ -4,6 +4,7 @@ view: agent_attendance {
   dimension: agent_id {
     type: number
     sql: ${TABLE}."AGENT_ID" ;;
+    primary_key: yes
   }
 
   dimension: agent_name {
