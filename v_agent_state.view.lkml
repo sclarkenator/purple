@@ -14,7 +14,7 @@
 
     dimension: total {
       type: number
-      value_format_name: USD
+      value_format_name: "usd"
       sql: ${TABLE}."total" ;;
     }
 
@@ -151,5 +151,3 @@
       drill_fields: [agent_id]
     }
   }
-
-
