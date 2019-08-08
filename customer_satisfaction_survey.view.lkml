@@ -81,7 +81,7 @@ view: customer_satisfaction_survey {
   measure : sum_of_yes
   {
    label: "Count of Yes of First Call Resolution"
-    type:  sum
+    type:  count
    filters:{
       field: questions_answered_by_rep
       value: "Yes"
@@ -90,13 +90,9 @@ view: customer_satisfaction_survey {
 
   measure: percentage_yes {
     label: "Percentage of First Calls Resolved"
-    sql: ${sum_of_yes}/${count} ;;
+    sql: (round(CASE WHEN coalesce(${count},0) != 0 THEN ${sum_of_yes}/${count} else NULL END , 2)*100)  ;;
+    value_format: "0.00\%"
   }
-
-
-
-
-
 
   measure: count {
     label: "Survey Count"
@@ -121,7 +117,7 @@ view: customer_satisfaction_survey {
   measure: average_statisfied_with_rep {
     label: "Average CSAT"
     type: average
-    #value_format: "0.##"
+    value_format: "0.##"
     sql: ${TABLE}."SATISFIED_WITH_REP" ;;
   }
 

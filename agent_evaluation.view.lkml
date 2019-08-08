@@ -41,6 +41,13 @@ view: agent_evaluation {
     sql: ${TABLE}."SCORE" ;;
   }
 
+  measure: average_eval_score {
+    label: "Average Evaluation Score"
+    type: average
+    value_format: "0.##"
+    sql: ${TABLE}."SCORE" ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [agent_evaluation_id, form_name]

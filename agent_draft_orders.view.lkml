@@ -15,6 +15,19 @@ view: agent_draft_orders {
     sql: ${TABLE}."ID" ;;
   }
 
+  measure: shopify_count{
+    type: count
+    sql: ${TABLE}."ID";;
+  }
+
+  measure: dollars_sold{
+    type: sum
+    sql: ${TABLE}."TOTAL_PRICE";;
+    value_format: "$#,##0.00"
+  }
+
+
+
   dimension: billing_address_id {
     type: number
     hidden: yes

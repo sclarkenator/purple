@@ -174,7 +174,7 @@ explore: cc_agent_data {
     relationship:  one_to_many}
   join: customer_satisfaction_survey {
     type: left_outer
-    sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
 
   required_access_grants: [is_customer_care_manager]
