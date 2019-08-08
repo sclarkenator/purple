@@ -4,6 +4,7 @@ view: customer_satisfaction_survey {
   dimension: agent {
     type: string
     sql: ${TABLE}."AGENT" ;;
+    primary_key: yes
   }
 
   dimension: comments {
@@ -28,6 +29,12 @@ view: customer_satisfaction_survey {
     type: string
     sql: ${TABLE}."EMAIL" ;;
   }
+
+  dimension: agent_id {
+    type: number
+    sql: ${TABLE}."agent_id" ;;
+  }
+
 
   dimension: ip_address {
     type: string
