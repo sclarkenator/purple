@@ -178,6 +178,9 @@ explore: cc_agent_data {
     relationship:  one_to_many}
 
   required_access_grants: [is_customer_care_manager]
+
+
+
 }
 
 explore: agent_company_value {

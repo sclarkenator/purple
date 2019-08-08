@@ -78,6 +78,26 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."TICKET_ID" ;;
   }
 
+  measure : sum_of_yes
+  {
+   label: "Count of Yes of First Call Resolution"
+    type:  sum
+   filters:{
+      field: questions_answered_by_rep
+      value: "Yes"
+    }
+  }
+
+  measure: percentage_yes {
+    label: "Percentage of First Calls Resolved"
+    sql: ${sum_of_yes}/${count} ;;
+  }
+
+
+
+
+
+
   measure: count {
     label: "Survey Count"
     type: count
