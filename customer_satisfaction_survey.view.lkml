@@ -4,7 +4,7 @@ view: customer_satisfaction_survey {
   dimension: agent {
     type: string
     sql: ${TABLE}."AGENT" ;;
-    primary_key: yes
+
   }
 
   dimension: comments {
