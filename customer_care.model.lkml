@@ -171,8 +171,12 @@ explore: cc_agent_data {
   join: v_agent_state {
     type: full_outer
     sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.agent_id};;
-    relationship:  one_to_many
-  }
+    relationship:  one_to_many}
+  join: customer_satisfaction_survey {
+    type: full_outer
+    sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    relationship:  one_to_many}
+
   required_access_grants: [is_customer_care_manager]
 }
 
