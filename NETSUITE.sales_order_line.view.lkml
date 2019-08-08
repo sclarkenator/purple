@@ -937,6 +937,7 @@ measure: SLA_Achievement_prct {
   measure: Total_Average_Cost{
     type: sum
     description: "The average cost of the item at time of order creation."
+    value_format: "$#,##0"
     sql: ${TABLE}.AVERAGE_COST ;; }
 
   measure: Qty_Picked {
