@@ -32,7 +32,7 @@ view: customer_satisfaction_survey {
 
   dimension: agent_id {
     type: number
-    sql: ${TABLE}."agent_id" ;;
+    sql: ${TABLE}."AGENT_ID" ;;
   }
 
 
