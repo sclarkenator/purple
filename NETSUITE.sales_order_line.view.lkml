@@ -979,7 +979,7 @@ measure: SLA_Achievement_prct {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
+    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
 
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }
