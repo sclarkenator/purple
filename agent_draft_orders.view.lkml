@@ -17,7 +17,6 @@ view: agent_draft_orders {
 
   measure: shopify_count{
     type: count
-    sql: ${TABLE}."ID";;
   }
 
   measure: dollars_sold{
