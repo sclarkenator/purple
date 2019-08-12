@@ -209,6 +209,18 @@ explore: v_agent_state  {
 }
 
 
+
+#  explore: sales_order_line  {
+#   hidden:  yes
+#   label: "Sales Order Line"
+#  group_label: "Customer Care"
+# }
+
+
+
+
+
+
 #    explore: rpt_skill_with_disposition_count {
 #      #hidden: yes
 #      group_label: "Customer Care"
