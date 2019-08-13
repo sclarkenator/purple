@@ -117,19 +117,19 @@ explore: hotjar_data {
   }
   explore: narvar_dashboard_clicks_by_campaign {
     group_label: "Marketing"
-    label: "Narvar Track Metrics"
+    label: "Narvar clicks by campaign"
   }
   explore: narvar_dashboard_emails_accepted_by_campaign {
     group_label: "Marketing"
-    label: "Narvar Track Metrics"
+    label: "Narvar emails accepted by campaign"
   }
   explore: narvar_dashboard_notification_clicks_by_category {
     group_label: "Marketing"
-    label: "Narvar Track Metrics"
+    label: "Narvar clicks by category"
   }
   explore: narvar_dashboard_notify_metrics {
     group_label: "Marketing"
-    label: "Narvar Track Metrics"
+    label: "Narvar notify metrics"
   }
 
 
