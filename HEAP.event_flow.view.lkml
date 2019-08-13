@@ -105,4 +105,6 @@ and a.session_id = e.session_id
   set: detail {
     fields: [unique_event_id, session_id, sequence_number_for_event_flow, event_name, user_id, event_2, event_3, event_4, event_5] }
 
+
+
 }

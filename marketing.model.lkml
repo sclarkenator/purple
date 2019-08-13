@@ -10,7 +10,7 @@ include: "marketing.model.lkml"
 include: "main.model.lkml"
 
 week_start_day: sunday
-
+case_sensitive:  no
 
 #-------------------------------------------------------------------
 # Marketing explores
@@ -105,6 +105,7 @@ explore: hotjar_data {
       relationship: one_to_one
     }
   }
+
 
 
 

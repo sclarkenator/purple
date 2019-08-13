@@ -50,7 +50,7 @@ view: event_facts {
             , a.user_id
             , a.session_id
             , events.sequence_number_for_event_flow AS sequence_number_for_event_flow
-            , ROW_NUMBER() OVER(PARTITION BY a.session_id, a.user_id ORDER BY a."time") AS event_sequence_number
+            , ROW_NUMBER() OVER(PARTITION BY a.session_id, a.user_id ORDER BY a."TIME") AS event_sequence_number
       FROM heap.all_events AS a
       LEFT JOIN events
         ON events.event_id = a.event_id
