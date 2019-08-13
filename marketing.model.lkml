@@ -132,6 +132,10 @@ explore: hotjar_data {
     label: "Narvar notify metrics"
   }
 
+  explore: narvar_customer_feedback {
+    group_label: "Marketing"
+    label: "Narvar customer feedback"
+  }
 
 
 #-------------------------------------------------------------------
