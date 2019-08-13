@@ -6,7 +6,6 @@ view: narvar_customer_feedback {
   dimension: tracking_id {
     type: number
     sql: ${TABLE}."TRACKING_ID" ;;
-    primary_key: yes
 
   }
 
@@ -16,10 +15,23 @@ view: narvar_customer_feedback {
     primary_key: yes
   }
 
-  dimension: created {
-    type: date
+
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
+
 
   dimension: ship {
     type: date
