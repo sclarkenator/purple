@@ -8,7 +8,7 @@ connection: "analytics_warehouse"
 
 include: "*.view.lkml"                       # include all views in this project
 include: "marketing.model.lkml"
-
+include: "main.model.lkml"
 
 week_start_day: sunday
 
@@ -117,3 +117,13 @@ explore: hotjar_data {
   explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval."}
   explore: marketing_magazine {hidden: yes}
   explore: sessions {hidden: yes}
+  explore: impact_radius_autosend {hidden: yes}
+  explore: conversions {hidden: yes}
+  explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign" group_label: "Marketing" description: "Aggregated campaign data by date and campaign"
+    join: adspend_by_campaign {type: left_outer sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
+        and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};; relationship:one_to_one}
+    join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
+      relationship: many_to_one } }
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
+  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+  explore: target_adspend {hidden: yes}

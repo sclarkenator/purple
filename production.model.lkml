@@ -3,6 +3,7 @@ connection: "analytics_warehouse"
 # include all the views
 
 include: "*.view"
+include: "main.model.lkml"
 
 # include all the dashboards
 #include: "*.dashboard"
@@ -136,3 +137,131 @@ explore: warehouse_transfer {
     sql_on: ${warehouse_transfer_line.item_id} = ${item.item_id} ;;
   }
 }
+
+explore: inventory {
+  #-------------------------------------------------------------------
+  #  Invetory--------------------
+  #       \           \          \
+  #      Item      Warehouse     Stock
+  #                 Locatoin     Level
+  #-------------------------------------------------------------------
+  group_label: "Production"
+  label: "Current Inventory"
+  description: "Inventory positions, by item by location"
+  always_filter: {
+    filters: {field: warehouse_location.location_Active      value: "No"}}
+  join: item {
+    type: left_outer
+    sql_on: ${inventory.item_id} = ${item.item_id} ;;
+    relationship: many_to_one}
+  join: warehouse_location {
+    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one}
+}
+
+explore: inventory_snap {
+  #-------------------------------------------------------------------
+  #  Invetory Snaphot-----------------------
+  #               \             \            \
+  #              Item        Warehouse      Stock
+  #                           Location      Level
+  #-------------------------------------------------------------------
+  group_label: "Production"
+  label: "Historical Inventory"
+  description: "Inventory positions, by item by location over time"
+  always_filter: {
+    filters: {field: warehouse_location.location_Active      value: "No"}}
+  join: item {
+    type: left_outer
+    sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
+    relationship: many_to_one}
+  join: warehouse_location {
+    sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one}
+}
+
+  explore: warranty {
+    #-------------------------------------------------------------------
+    # ALSO EXISTS IN MAIN
+    #  Warranty--------------------
+    #       \           \          \
+    #      Warranty   Warranty     Item
+    #       Reason     Order Line
+    #-------------------------------------------------------------------
+    from: warranty_order
+    fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
+    label: "Warranty"
+    group_label: "Sales"
+    description: "Current warranty information (not tied back to original sales orders yet)"
+    join: warranty_reason {
+      type: left_outer
+      sql_on: ${warranty.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+      relationship: many_to_one}
+    join: warranty_order_line {
+      type:  left_outer
+      sql_on: ${warranty.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
+      relationship: one_to_many}
+    join: item {
+      type:  left_outer
+      sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
+      required_joins: [warranty_order_line]
+      relationship: many_to_one}}
+
+    explore: purcahse_and_transfer_ids {
+      #-------------------------------------------------------------------
+      #                     transfers-----purchases
+      #                        /            \      \
+      #                   order_line    purchase    vendor
+      #                 /      /    \      line
+      #                /      /      \     /   \
+      #       receiving  fulfilling   items    bills
+      #        location    location
+      #-------------------------------------------------------------------
+      label: "Transfer and Purchase Orders"
+      group_label: "Operations"
+      description: "Netsuite data on Transfer and purchase orders"
+      hidden: no
+      join: purchase_order {
+        view_label: "Purchase Order"
+        type: left_outer
+        sql_on: ${purchase_order.purchase_order_id} = ${purcahse_and_transfer_ids.id} ;;
+        relationship: one_to_one}
+      join: purchase_order_line {
+        view_label: "Purchase Order"
+        type: left_outer
+        sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
+        relationship: one_to_many}
+      join: bills {
+        view_label: "Bills"
+        type:  left_outer
+        sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
+        relationship: one_to_many}
+      join: transfer_order {
+        view_label: "Transfer Order"
+        type:  left_outer
+        sql_on: ${transfer_order.transfer_order_id} = ${purcahse_and_transfer_ids.id} ;;
+        relationship: one_to_one}
+      join: transfer_order_line {
+        view_label: "Transfer Order"
+        type:  full_outer
+        sql_on: ${transfer_order_line.transfer_order_id} = ${transfer_order.transfer_order_id} ;;
+        relationship: one_to_many}
+      join: Receiving_Location{
+        from:warehouse_location
+        type:  left_outer
+        sql_on:  ${Receiving_Location.location_id} = coalesce(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
+        relationship: many_to_one}
+      join: Transfer_Fulfilling_Location{
+        from:warehouse_location
+        type:  left_outer
+        sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
+        relationship: many_to_one}
+      join: item {
+        view_label: "Item"
+        type:  left_outer
+        sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id});;
+        relationship: many_to_one}
+      join: vendor {
+        type:  left_outer
+        sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
+        relationship: many_to_one}}

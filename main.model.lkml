@@ -6,6 +6,7 @@
     include: "*.view"
     include: "main.model.lkml"
     #include: "*.dashboard"
+    include: "marketing.daily_adspend"
 
   datagroup: gross_to_net_sales_default_datagroup {
     # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -22,47 +23,6 @@
 
 
 
-  explore: inventory {
-  #-------------------------------------------------------------------
-  #  Invetory--------------------
-  #       \           \          \
-  #      Item      Warehouse     Stock
-  #                 Locatoin     Level
-  #-------------------------------------------------------------------
-    group_label: "Production"
-    label: "Current Inventory"
-    description: "Inventory positions, by item by location"
-    always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
-    join: item {
-      type: left_outer
-      sql_on: ${inventory.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: warehouse_location {
-      sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one}
-    }
-
-  explore: inventory_snap {
-  #-------------------------------------------------------------------
-  #  Invetory Snaphot-----------------------
-  #               \             \            \
-  #              Item        Warehouse      Stock
-  #                           Location      Level
-  #-------------------------------------------------------------------
-    group_label: "Production"
-    label: "Historical Inventory"
-    description: "Inventory positions, by item by location over time"
-    always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
-    join: item {
-      type: left_outer
-      sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: warehouse_location {
-      sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one}
-   }
 
   explore: sales_order_line {
   #-------------------------------------------------------------------
@@ -616,64 +576,6 @@
       required_joins: [warranty_order_line]
       relationship: many_to_one}}
 
-  explore: purcahse_and_transfer_ids {
-  #-------------------------------------------------------------------
-  #                     transfers-----purchases
-  #                        /            \      \
-  #                   order_line    purchase    vendor
-  #                 /      /    \      line
-  #                /      /      \     /   \
-  #       receiving  fulfilling   items    bills
-  #        location    location
-  #-------------------------------------------------------------------
-    label: "Transfer and Purchase Orders"
-    group_label: "Operations"
-    description: "Netsuite data on Transfer and purchase orders"
-    hidden: no
-    join: purchase_order {
-      view_label: "Purchase Order"
-      type: left_outer
-      sql_on: ${purchase_order.purchase_order_id} = ${purcahse_and_transfer_ids.id} ;;
-      relationship: one_to_one}
-    join: purchase_order_line {
-      view_label: "Purchase Order"
-      type: left_outer
-      sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
-      relationship: one_to_many}
-    join: bills {
-      view_label: "Bills"
-      type:  left_outer
-      sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;;
-      relationship: one_to_many}
-    join: transfer_order {
-      view_label: "Transfer Order"
-      type:  left_outer
-      sql_on: ${transfer_order.transfer_order_id} = ${purcahse_and_transfer_ids.id} ;;
-      relationship: one_to_one}
-    join: transfer_order_line {
-      view_label: "Transfer Order"
-      type:  full_outer
-      sql_on: ${transfer_order_line.transfer_order_id} = ${transfer_order.transfer_order_id} ;;
-      relationship: one_to_many}
-    join: Receiving_Location{
-      from:warehouse_location
-      type:  left_outer
-      sql_on:  ${Receiving_Location.location_id} = coalesce(${transfer_order.receiving_location_id},${purchase_order.location_id}) ;;
-      relationship: many_to_one}
-    join: Transfer_Fulfilling_Location{
-      from:warehouse_location
-      type:  left_outer
-      sql_on: ${transfer_order.shipping_location_id} = ${Transfer_Fulfilling_Location.location_id} ;;
-      relationship: many_to_one}
-    join: item {
-      view_label: "Item"
-      type:  left_outer
-      sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id});;
-      relationship: many_to_one}
-    join: vendor {
-      type:  left_outer
-      sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
-      relationship: many_to_one}}
 
 
   explore: tim_forecast_combined {
@@ -783,30 +685,24 @@
 #-------------------------------------------------------------------
 
 
-  explore: conversions {hidden: yes}
+
   explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: no
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
+
   explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
     join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign" group_label: "Marketing" description: "Aggregated campaign data by date and campaign"
-    join: adspend_by_campaign {type: left_outer sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
-      and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};; relationship:one_to_one}
-    join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
-      relationship: many_to_one } }
+  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
   explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
       join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: wholesale_stores {hidden: yes}
-  explore: target_adspend {hidden: yes}
-  explore: deleted_fulfillment {hidden: yes}
-  explore: impact_radius_autosend {hidden: yes}
 
+  explore: deleted_fulfillment {hidden: yes}
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
   explore: fraud_warning_list {hidden: yes label: "List of orders that could be fraud, and should be checked manually"}
   explore: emp_add {hidden: yes label: "List of employee addresses for mapping purposes"}
