@@ -11,7 +11,7 @@ include: "customer_care.model.lkml"
 #include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 week_start_day: sunday
-case_sensitive:  no
+
 
 
 #-------------------------------------------------------------------

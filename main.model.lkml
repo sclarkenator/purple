@@ -14,7 +14,7 @@
 
   persist_with: gross_to_net_sales_default_datagroup
   week_start_day: sunday
- case_sensitive:  no
+
 
 #-------------------------------------------------------------------
 # Production Explores

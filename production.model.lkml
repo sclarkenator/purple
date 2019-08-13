@@ -3,7 +3,7 @@
 
 include: "*.view"
 include: "main.model.lkml"
-case_sensitive:  no
+
 # include all the dashboards
 #include: "*.dashboard"
 
