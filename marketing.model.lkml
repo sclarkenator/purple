@@ -4,7 +4,6 @@
 
 
 
-connection: "analytics_warehouse"
 
 include: "*.view.lkml"                       # include all views in this project
 include: "marketing.model.lkml"

@@ -1,4 +1,3 @@
-connection: "analytics_warehouse"
 
 # include all the views
 
