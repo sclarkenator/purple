@@ -180,32 +180,7 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
-  explore: warranty {
-    #-------------------------------------------------------------------
-    # ALSO EXISTS IN MAIN
-    #  Warranty--------------------
-    #       \           \          \
-    #      Warranty   Warranty     Item
-    #       Reason     Order Line
-    #-------------------------------------------------------------------
-    from: warranty_order
-    fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
-    label: "Warranty"
-    group_label: "Sales"
-    description: "Current warranty information (not tied back to original sales orders yet)"
-    join: warranty_reason {
-      type: left_outer
-      sql_on: ${warranty.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
-      relationship: many_to_one}
-    join: warranty_order_line {
-      type:  left_outer
-      sql_on: ${warranty.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
-      relationship: one_to_many}
-    join: item {
-      type:  left_outer
-      sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
-      required_joins: [warranty_order_line]
-      relationship: many_to_one}}
+
 
     explore: purcahse_and_transfer_ids {
       #-------------------------------------------------------------------

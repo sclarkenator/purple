@@ -124,6 +124,5 @@ explore: hotjar_data {
         and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};; relationship:one_to_one}
     join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
       relationship: many_to_one } }
-  explore: day_aggregations { from: day_aggregations  group_label: "z - In Testing" hidden:yes }
-  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+
   explore: target_adspend {hidden: yes}

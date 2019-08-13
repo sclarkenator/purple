@@ -6,7 +6,7 @@
     include: "*.view"
     include: "main.model.lkml"
     #include: "*.dashboard"
-    include: "marketing.daily_adspend"
+    include: "marketing.model.lkml"
 
   datagroup: gross_to_net_sales_default_datagroup {
     # sql_trigger: SELECT MAX(id) FROM etl_log;;
