@@ -592,6 +592,13 @@ measure: SLA_Achievement_prct {
     type: yesno
     sql: ${TABLE}.Created < current_date;; }
 
+  dimension: Before_today_ly{
+    group_label: "Order Date"
+    label: "z - Is Before Today Last Year (mtd)"
+    hidden:  yes
+    type: yesno
+    sql: ${TABLE}.Created < dateadd('year',-1,current_date);; }
+
   dimension: last_30{
     group_label: "Order Date"
     label: "z - Last 30 Days"
