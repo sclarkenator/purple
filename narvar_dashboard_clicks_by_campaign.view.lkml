@@ -52,4 +52,23 @@ view: narvar_dashboard_clicks_by_campaign {
   }
 
 
+
+  measure: sum_delay_overdue {
+    type: sum
+    sql: ${delay_overdue};;
+  }
+  measure: sum_delivered_standard {
+    type: sum
+    sql: ${delivered_standard};;
+  }
+  measure: sum_delivery_anticipation {
+    type: sum
+    sql: ${delivery_anticipation_standard};;
+  }
+  measure: sum_shipment_confirmation {
+    type: sum
+    sql: ${shipment_confirmation_standard};;
+  }
+
+
  }
