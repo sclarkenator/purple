@@ -1,5 +1,6 @@
 
 # include all the views
+connection: "analytics_warehouse"
 
 include: "*.view"
 #include: "main.model.lkml"
