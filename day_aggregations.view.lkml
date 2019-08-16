@@ -1,4 +1,3 @@
-include: "main.model.lkml"
 include: "marketing.model.lkml"
 
 ######################################################
