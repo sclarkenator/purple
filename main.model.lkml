@@ -4,9 +4,10 @@
 
   connection: "analytics_warehouse"
     include: "*.view"
-    include: "main.model.lkml"
+    #include: "main.model.lkml"
+    #include: "marketing.model.lkml"
+
     #include: "*.dashboard"
-    include: "marketing.model.lkml"
 
   datagroup: gross_to_net_sales_default_datagroup {
     # sql_trigger: SELECT MAX(id) FROM etl_log;;

@@ -1,3 +1,6 @@
+include: "main.model.lkml"
+include: "marketing.model.lkml"
+
 ######################################################
 #   DTC Sales and Units
 ######################################################

@@ -6,8 +6,8 @@
 
 
 include: "*.view.lkml"                       # include all views in this project
-include: "marketing.model.lkml"
-include: "main.model.lkml"
+#include: "marketing.model.lkml"
+#include: "main.model.lkml"
 
 week_start_day: sunday
 

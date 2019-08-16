@@ -2,7 +2,7 @@
 # include all the views
 
 include: "*.view"
-include: "main.model.lkml"
+#include: "main.model.lkml"
 
 # include all the dashboards
 #include: "*.dashboard"
