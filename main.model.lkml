@@ -4,7 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "*.view"
-    include: "base.model.lkml"
+    #include: "base.model.lkml"
     #include: "main.model.lkml"
     #include: "marketing.model.lkml"
 
@@ -255,16 +255,17 @@ explore: purcahse_and_transfer_ids {
 #-------------------------------------------------------------------
 
 
-explore: daily_adspend {
-  #-------------------------------------------------------------------
-  # Daily Spend
-  #-------------------------------------------------------------------
-  group_label: "Marketing"
-  label: "Adspend"
-  description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
-  extends: [daily_adspend_base]
-  hidden: no
-}
+  explore: daily_adspend {
+    #-------------------------------------------------------------------
+    # Daily Spend
+    #-------------------------------------------------------------------
+    from:  daily_adspend
+    hidden: yes
+    join: temp_attribution {
+      type: left_outer
+      sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
+      relationship: many_to_one}
+  }
 
 
 
