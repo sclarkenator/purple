@@ -4,7 +4,7 @@
 connection: "analytics_warehouse"
 
 include: "*.view.lkml"                       # include all views in this project
-#include: "marketing.model.lkml"
+include: "base.model.lkml"
 #include: "main.model.lkml"
 
 week_start_day: sunday
@@ -21,10 +21,8 @@ explore: daily_adspend {
   group_label: "Marketing"
   label: "Adspend"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
-  join: temp_attribution {
-    type: left_outer
-    sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
-    relationship: many_to_one}
+  extends: [daily_adspend_base]
+  hidden: no
 }
 
 
