@@ -183,6 +183,7 @@ view: day_aggregations {
   derived_table: {
     sql:
       select d.date
+        , week.start_2019 as week_start_2019
         , dtc.total_gross_Amt_non_rounded as dtc_amount
         , dtc.total_units as dtc_units
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
@@ -201,6 +202,17 @@ view: day_aggregations {
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
         , adspend_target.amount as adspend_target
       from analytics.util.warehouse_date d
+      left join (
+        select date_part('week',d.date) as week_num
+            , min (case when year > 2018 then date end) start_2019
+            , max (case when year < 2020 then date end) end_2019
+            , min (case when year > 2017 then date end) start_2018
+            , max (case when year < 2019 then date end) end_2018
+            , min (case when year > 2016 then date end) start_2017
+            , max (case when year < 2018 then date end) end_2017
+        from analytics.util.warehouse_date d
+        group by date_part('week',d.date)
+      ) week on week.week_num = date_part('week',d.date)
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.fulfilled_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
@@ -209,7 +221,7 @@ view: day_aggregations {
       left join ${day_aggregations_dtc_returns.SQL_TABLE_NAME} dtc_returns on dtc_returns.return_completed_date::date = d.date
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
-      where date::date >= '2018-01-01' and date::date < '2020-01-01' ;;
+      where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
@@ -263,6 +275,13 @@ view: day_aggregations {
     label: "z - Current Week"
     type: yesno
     sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
+
+  dimension: week_2019_start {
+    group_label: "Created Date"
+    label: "z - Week Start 2019"
+    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
+    type: string
+    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
 
   measure: dtc_amount {
     label: "DTC Amount"
