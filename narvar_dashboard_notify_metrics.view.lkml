@@ -89,23 +89,23 @@ view: narvar_dashboard_notify_metrics {
     sql: ${TABLE}."EMAILS_ACCEPTED" ;;
   }
 
-  dimension: open_rate_delay_overdue {
-    type: number
+  measure: open_rate_delay_overdue {
+    type: average
     sql: ${TABLE}."OPEN_RATE_DELAY_OVERDUE" ;;
   }
 
-  dimension: open_rate_shipment_confirmation {
-    type: number
+  measure: open_rate_shipment_confirmation {
+    type: average
     sql: ${TABLE}."OPEN_RATE_SHIPMENT_CONFIRMATION" ;;
   }
 
-  dimension: open_rate_delivery_anticipation{
-    type: number
+  measure: open_rate_delivery_anticipation{
+    type: average
     sql: ${TABLE}."OPEN_RATE_DELIVERY_ANTICIPATION" ;;
   }
 
-  dimension: open_rate_delivered {
-    type: number
+  measure: open_rate_delivered {
+    type: average
     sql: ${TABLE}."OPEN_RATE_DELIVERED" ;;
   }
 
