@@ -260,7 +260,7 @@ measure: SLA_Achievement_prct {
     description: "Orders placed that have not been fulfilled"
     value_format: "$#,##0"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;; }
 
   measure: unfulfilled_orders_units {
@@ -268,7 +268,7 @@ measure: SLA_Achievement_prct {
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
     sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
 
   measure: fulfilled_orders {
@@ -276,7 +276,7 @@ measure: SLA_Achievement_prct {
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
     sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;; }
 
   measure: fulfilled_orders_units {
@@ -284,7 +284,7 @@ measure: SLA_Achievement_prct {
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
     type: sum
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
     sql: case when ${fulfilled_date} is not null then ${ordered_qty} else 0 end ;; }
 
   measure: fulfilled_in_SLA {
