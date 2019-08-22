@@ -33,4 +33,9 @@ view: agg_check_wholesale {
   measure:NETSUITE_FULFILLED_WHOLESALE   {
     sql: ${TABLE}.NETSUITE_FULFILLED_WHOLESALE ;;  }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${DATE}, ${ANALYTICS_FULFILLED_WHOLESALE}, ${NETSUITE_FULFILLED_WHOLESALE}) ;;
+  }
+
  }

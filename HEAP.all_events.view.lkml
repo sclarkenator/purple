@@ -9,7 +9,8 @@ view: all_events {
   dimension: event_id {
     hidden: yes
     type: number
-    sql: ${TABLE}.event_id ;; }
+    sql: ${TABLE}.event_id ;;
+    }
 
   dimension: event_table_name {
     label: "Event Table Name"
@@ -40,5 +41,11 @@ view: all_events {
 
   measure: count {
     type: count }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${session_id},${event_table_name}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 
 }

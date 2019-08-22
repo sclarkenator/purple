@@ -70,4 +70,11 @@ view: adspend_out_of_range_yesterday {
     type: count
     drill_fields: []
   }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${ad_date}, ${spend_platform}) ;;
+  }
+
+
 }

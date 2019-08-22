@@ -63,4 +63,9 @@ view: agg_check {
     value_format: "0,\" K\""
     sql: ${TABLE}.SHOPIFY_AMOUNT ;;  }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${NETSUITE_AMOUNT}, ${ANALYTICS_AMOUNT},${SHOPIFY_AMOUNT}) ;;
+  }
+
 }

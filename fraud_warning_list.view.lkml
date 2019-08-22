@@ -49,6 +49,7 @@ view: fraud_warning_list {
     type: string
     sql: ${TABLE}."ORDER_ID" ;;
     html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
+    primary_key: yes
   }
 
   dimension: order_name {
@@ -80,6 +81,8 @@ view: fraud_warning_list {
   dimension: shipping_zip {
     type: string
     sql: ${TABLE}."SHIPPING_ZIP" ;;
+
+
   }
 
 

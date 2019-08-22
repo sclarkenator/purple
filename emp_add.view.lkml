@@ -12,6 +12,7 @@ view: emp_add {
     type: location
     sql_latitude: ${lat} ;;
     sql_longitude: ${lat2} ;;
+    primary_key: yes
   }
 
   dimension: lat {
@@ -69,6 +70,8 @@ view: emp_add {
     type: string
     sql: ${TABLE}.type ;;
   }
+
+
 
   measure: count {
     type: count

@@ -79,4 +79,14 @@ view: rpt_monthly_awards {
     type: count
     drill_fields: []
   }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${working_rate},${agent},${longest_talk_time}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
+
+
 }

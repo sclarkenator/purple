@@ -85,5 +85,12 @@ view: conversions {
     value_format: "$#,##0,\" K\""
     sql:${TABLE}.WEBSITE_PURCHASE_CONVERSION_VALUE ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${created_date}, ${CONVERSION_VALUE}, ${CAMPAIGN_NAME}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
 
 }

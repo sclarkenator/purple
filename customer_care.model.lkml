@@ -174,11 +174,11 @@ explore: cc_agent_data {
     type: left_outer
     sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
-
+  join: team_lead {
+    type:  full_outer
+    sql_on:  ${cc_agent_data.incontact_id} = ${team_lead.incontact_id}  ;;
+  }
   required_access_grants: [is_customer_care_manager]
-
-
-
 }
 
 explore: agent_company_value {

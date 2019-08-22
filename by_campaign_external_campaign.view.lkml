@@ -31,4 +31,10 @@ view: external_campaign {
     type: string
     sql: ${TABLE}.platform ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${campaign_id}, ${start_date_date}, ${campaign_name}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

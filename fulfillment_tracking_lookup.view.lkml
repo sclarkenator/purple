@@ -10,6 +10,7 @@ view: fulfillment_tracking_lookup {
   dimension: order_id {
     type: string
     sql: ${TABLE}.order_id ;;
+    primary_key: yes
   }
 
   dimension: item_id {

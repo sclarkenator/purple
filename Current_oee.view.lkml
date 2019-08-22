@@ -104,6 +104,14 @@ view: current_oee {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${insert_ts_date}, ${start_date_date}, ${campaign_name}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
+
   measure: count {
     type: count
     hidden: yes

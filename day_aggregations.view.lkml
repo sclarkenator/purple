@@ -20,6 +20,12 @@ view: day_aggregations_dtc_sales {
     convert_tz: no datatype: timestamp }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${created_date_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }
 ######################################################
 #   Wholesale Sales and Units
@@ -40,6 +46,11 @@ view: day_aggregations_wholesale_sales {
   dimension: fulfilled_date { type: date }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${fulfilled_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################
@@ -65,6 +76,11 @@ view: day_aggregations_forecast {
   measure: total_units { type: sum }
   measure: dtc_units { type: sum }
   measure: wholesale_units { type: sum }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${date_date}, ${total_amount}, ${dtc_amount}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################
@@ -78,6 +94,11 @@ view: day_aggregations_adspend {
     }
   }
   dimension: ad_date { type: date }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${ad_date}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
   measure: adspend { type: sum }
 }
 
@@ -96,6 +117,11 @@ view: day_aggregations_targets {
   dimension: date_date { type: date }
   measure: dtc_target { type: sum }
   measure: whlsl_target { type: sum }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${date_date}, ${dtc_target}, ${whlsl_target}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################
@@ -118,6 +144,11 @@ view: day_aggregations_dtc_returns {
   dimension: total_trial_returns_completed_dollars { type: number }
   dimension: total_non_trial_returns_completed_dollars { type: number }
   dimension: return_completed_date { type: date }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${total_non_trial_returns_completed_dollars},${total_non_trial_returns_completed_dollars},${return_completed_date}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################
@@ -140,6 +171,11 @@ view: day_aggregations_wholesale_returns {
   dimension: total_trial_returns_completed_dollars { type: number }
   dimension: total_non_trial_returns_completed_dollars { type: number }
   dimension: return_completed_date { type: date }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${total_trial_returns_completed_dollars},${total_non_trial_returns_completed_dollars},${return_completed_date}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################
@@ -160,6 +196,11 @@ view: day_aggregations_dtc_cancels {
   }
   dimension: amt_cancelled_and_refunded { type: number }
   dimension: cancelled_date { type: date }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${amt_cancelled_and_refunded},${cancelled_date}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }
 
 ######################################################

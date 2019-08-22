@@ -60,4 +60,10 @@ view: adspend_by_campaign {
     type:  sum
     sql:${TABLE}.impressions/${conversions_by_campaign.count_window} ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${campaign_id}, ${date},${impressions}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

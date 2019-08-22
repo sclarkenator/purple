@@ -133,4 +133,13 @@ view: cac {
     value_format_name: decimal_0
     sql:  ${total_LTV}/${new_customers} ;;  }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: ${date_date} ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
+
+
 }
