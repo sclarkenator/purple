@@ -661,12 +661,6 @@ measure: SLA_Achievement_prct {
     type: yesno
     sql: date_part('week',${TABLE}.fulfilled) = date_part('week',current_date)-1;; }
 
-  dimension: week_2019_start {
-    group_label: "Created Date"
-    label: "z - Week Start 2019"
-    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
-    type: string
-    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
 
   dimension_group: created {
     label: "Order"
@@ -994,6 +988,13 @@ measure: SLA_Achievement_prct {
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
+
+  dimension: week_2019_start {
+    group_label: "Created Date"
+    label: "z - Week Start 2019"
+    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
+    type: string
+    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
 
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }
