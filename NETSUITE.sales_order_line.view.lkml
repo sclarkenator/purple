@@ -113,9 +113,12 @@ view: sales_order_line {
           When sales_order.channel_id = 1 THEN
             Case
               When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
+              Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
+               Else
                  Case
                      When sales_order.minimum_ship = ${created_date} THEN dateadd(d,3,sales_order.minimum_ship)
                       Else sales_order.minimum_ship
+                  END
                   END
                Else dateadd(d,14,${created_date})
             END
