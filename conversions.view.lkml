@@ -87,7 +87,8 @@ view: conversions {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${created_date}, ${CONVERSION_VALUE}, ${CAMPAIGN_NAME}) ;;
+    type: string
+    sql: ${TABLE}.date||${TABLE}.campaign_name ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 

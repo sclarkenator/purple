@@ -65,7 +65,7 @@ view: agg_check {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${NETSUITE_AMOUNT}, ${ANALYTICS_AMOUNT},${SHOPIFY_AMOUNT}) ;;
+    sql: CONCAT(${TABLE}.NETSUITE_AMOUNT, ${TABLE}.ANALYTICS_AMOUNT,${TABLE}.SHOPIFY_AMOUNT) ;;
   }
 
 }

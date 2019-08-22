@@ -12,7 +12,7 @@ view: emp_add {
     type: location
     sql_latitude: ${lat} ;;
     sql_longitude: ${lat2} ;;
-    primary_key: yes
+
   }
 
   dimension: lat {
@@ -56,6 +56,7 @@ view: emp_add {
     description: "Main employment location"
     type: string
     sql: ${TABLE}.location ;;
+    primary_key: yes
   }
 
   dimension: title {

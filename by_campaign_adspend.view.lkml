@@ -62,7 +62,7 @@ view: adspend_by_campaign {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${campaign_id}, ${date},${impressions}) ;;
+    sql: CONCAT(${TABLE}.campaign_id, ${TABLE}.date,${TABLE}.impressions) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 

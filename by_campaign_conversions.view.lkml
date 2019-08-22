@@ -80,7 +80,7 @@ view: conversions_by_campaign {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${campaign_id}, ${date_date},${conversions}) ;;
+    sql: CONCAT(${TABLE}.campaign_id, ${TABLE}.date_date,${TABLE}.conversions) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 

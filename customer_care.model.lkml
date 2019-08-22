@@ -177,6 +177,7 @@ explore: cc_agent_data {
   join: team_lead {
     type:  full_outer
     sql_on:  ${cc_agent_data.incontact_id} = ${team_lead.incontact_id}  ;;
+    relationship: many_to_one
   }
   required_access_grants: [is_customer_care_manager]
 }

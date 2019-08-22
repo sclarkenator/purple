@@ -66,7 +66,7 @@ view: inventory_snap {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${location_id},${item_id},${on_hand}, ${available}) ;;
+    sql: CONCAT(${TABLE}.location_id,${TABLE}.item_id,${TABLE}.on_hand, ${TABLE}.available) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 

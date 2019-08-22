@@ -106,7 +106,7 @@ view: current_oee {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${insert_ts_date}, ${start_date_date}, ${campaign_name}) ;;
+    sql: CONCAT(${TABLE}.insert_ts_date, ${TABLE}.cycle_time, ${TABLE}.scrap_regrind_produced) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 

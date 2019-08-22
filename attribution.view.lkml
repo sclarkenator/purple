@@ -140,7 +140,7 @@ order by 1,6)
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${date_date},${ch_so},${all_touch}) ;;
+    sql: CONCAT(${TABLE}.date_date,${TABLE}.ch_so,${TABLE}.all_touch) ;;
   }
 
 }
