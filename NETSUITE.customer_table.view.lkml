@@ -21,6 +21,16 @@ view: customer_table {
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));; }
 
+  dimension: first_name {
+    label: "First Name"
+    type: string
+    sql:  ${TABLE}.firstname;; }
+
+  dimension: last_name {
+    label: "Last Name"
+    type: string
+    sql:  ${TABLE}.lastname ;; }
+
   dimension: account_manager {
     label: "Account Manager"
     group_label: "Wholesale"
@@ -38,13 +48,13 @@ view: customer_table {
     sql:  ${sales_manager.full_name};; }
 
   dimension: email {
-    hidden:  yes
+    hidden:  no
     label: "Customer Email"
     type: string
     sql: ${TABLE}.email ;; }
 
   dimension: phone {
-    hidden:  yes
+    hidden:  no
     label: "Customer Phone"
     description: "Looking first at Home Phone, then at Mobile"
     type: string
