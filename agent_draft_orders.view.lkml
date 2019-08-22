@@ -1,6 +1,6 @@
 view: agent_draft_orders {
   derived_table: {
-    sql: select * from analytics_stage.shopify_us_ft."ORDER"  where source_name = 'shopify_draft_order'
+    sql: select * from analytics_stage.shopify_us_ft."ORDER"
       ;;
   }
 
