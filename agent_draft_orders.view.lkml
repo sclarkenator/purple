@@ -1,6 +1,8 @@
 view: agent_draft_orders {
   derived_table: {
     sql: select * from analytics_stage.shopify_us_ft."ORDER"
+    union
+    select * from analytics_stage.shopify_ca_ft."ORDER"
       ;;
   }
 
