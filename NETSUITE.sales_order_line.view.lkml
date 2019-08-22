@@ -168,6 +168,43 @@ dimension: SLA_Buckets {
     type: yesno
     sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
 
+  measure: zQty_eligable_for_SLA{
+    label: "zQty Eligable SLA"
+    hidden:  yes
+    view_label: "Fulfillment"
+    type: sum
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN
+              ${TABLE}.gross_amt
+                Else
+              Case
+                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN
+                ${TABLE}.gross_amt
+                  Else
+                0
+                END
+                END;;
+  }
+
+  measure: zQty_Fulfilled_in_SLA{
+    label: "zQty Fulfilled in SLA"
+    view_label: "Fulfillment"
+    hidden:  yes
+    type: sum
+    sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
+        case when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
+        Else 0 END END;;
+  }
+
+  measure: zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "SLA $ Achievement %"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    sql: Case when ${zQty_eligable_for_SLA} = 0 then 0 Else ${zQty_Fulfilled_in_SLA}/${zQty_eligable_for_SLA} End ;;
+  }
 
   measure: Qty_eligable_for_SLA{
     label: "Qty Eligable SLA"
