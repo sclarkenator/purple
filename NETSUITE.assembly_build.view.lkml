@@ -95,6 +95,13 @@ view: assembly_build {
     type: yesno
     sql: ${TABLE}.PRODUCED > dateadd(day,-30,current_date);; }
 
+  dimension: week_2019_start {
+    group_label: "Created Date"
+    label: "z - Week Start 2019"
+    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
+    type: string
+    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
+
   dimension: current_week_num{
     group_label: "Produced Date"
     label: "z - Before Current Week"

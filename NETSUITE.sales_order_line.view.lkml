@@ -1,6 +1,8 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
+
+
   dimension: item_order{
     type: string
     primary_key:  yes
@@ -824,7 +826,7 @@ measure: SLA_Achievement_prct {
     type: number
     sql: ${TABLE}.ESTIMATED_COST ;; }
 
-  dimension: etail_order_line_id {
+  dimension: retail_order_line_id {
     hidden:  yes
     label: "Shopify Order Line ID"
     description: "You can use this ID to look up orders in Shopify"
@@ -989,12 +991,19 @@ measure: SLA_Achievement_prct {
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
 
+  dimension: week_start_2019_date {
+
+  }
+
+
   dimension: week_2019_start {
     group_label: "Created Date"
     label: "z - Week Start 2019"
     description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
     type: string
-    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
+    sql: to_char( ${TABLE}.created,'MON-DD');; }
+
+
 
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }
