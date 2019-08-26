@@ -78,5 +78,11 @@ view: conversions_by_campaign {
     type: sum
     sql: ${TABLE}.conversion_value ;;  }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.campaign_id, ${TABLE}.date_date,${TABLE}.conversions) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 
 }

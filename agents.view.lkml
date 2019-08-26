@@ -5,6 +5,7 @@ view: agent_lkp {
     description: "The InContact ID for this agent"
     type:  number
     sql: ${TABLE}.incontact_id ;;
+    primary_key: yes
   }
 
   dimension: incontact_team_id {

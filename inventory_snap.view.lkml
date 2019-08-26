@@ -64,4 +64,10 @@ view: inventory_snap {
     type: number
     sql: ${TABLE}.preferred_stock_level ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.location_id,${TABLE}.item_id,${TABLE}.on_hand, ${TABLE}.available) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

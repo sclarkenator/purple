@@ -85,5 +85,13 @@ view: conversions {
     value_format: "$#,##0,\" K\""
     sql:${TABLE}.WEBSITE_PURCHASE_CONVERSION_VALUE ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    type: string
+    sql: ${TABLE}.date||${TABLE}.campaign_name ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
 
 }

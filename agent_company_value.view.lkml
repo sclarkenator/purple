@@ -33,6 +33,7 @@ view: agent_company_value {
   dimension: entry_id {
     type: number
     sql: ${TABLE}."ENTRY_ID" ;;
+    primary_key: yes
   }
 
   dimension: hustle {

@@ -115,4 +115,11 @@ view: oee {
     type: sum
     sql: ${TABLE}.UNSCHEDULED_DOWNTIME ;; }
 
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${operating_time}, ${total_production}, ${reject_scrap}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

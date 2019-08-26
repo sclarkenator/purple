@@ -38,7 +38,9 @@ where cancel_amt +return_amt > 0    ;;
   dimension: oid {
     description: "OrderID or related_tranid"
     label: "OrderID"
-    sql: ${TABLE}.oid ;;  }
+    sql: ${TABLE}.oid ;;
+    primary_key: yes
+    }
 
   dimension: currency {
     description: "USD or CAD"

@@ -260,7 +260,7 @@ explore: purcahse_and_transfer_ids {
     # Daily Spend
     #-------------------------------------------------------------------
     from:  daily_adspend
-    hidden: yes
+    hidden: no
     join: temp_attribution {
       type: left_outer
       sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
@@ -351,27 +351,33 @@ explore: all_events {
 
 explore: narvar_dashboard_track_metrics {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar Track Metrics"
 }
 explore: narvar_dashboard_clicks_by_campaign {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar clicks by campaign"
 }
 explore: narvar_dashboard_emails_accepted_by_campaign {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar emails accepted by campaign"
 }
 explore: narvar_dashboard_notification_clicks_by_category {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar clicks by category"
 }
 explore: narvar_dashboard_notify_metrics {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar notify metrics"
 }
 
 explore: narvar_customer_feedback {
   group_label: "Marketing"
+  hidden: yes
   label: "Narvar customer feedback"
 }
 
@@ -380,7 +386,7 @@ explore: narvar_customer_feedback {
 # Hidden Explores
 #-------------------------------------------------------------------
 
-explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval."}
+explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
 explore: marketing_magazine {hidden: yes}
 explore: sessions {hidden: yes}
 explore: impact_radius_autosend {hidden: yes}
@@ -1049,6 +1055,7 @@ explore: target_adspend {hidden: yes}
   explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"}
   explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting"}
   explore: v_paypal_order_num {label: "Paypal Order Numbers" group_label: "Accounting"}
+  explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting"}
 
 #-------------------------------------------------------------------
 # Hidden Explores

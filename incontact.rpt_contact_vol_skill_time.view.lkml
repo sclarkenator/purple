@@ -58,4 +58,14 @@ view: rpt_contact_vol_skill_time {
     type: count
     drill_fields: []
   }
+
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${report_ts_date},${campaign},${skill},${inbound}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
+
 }

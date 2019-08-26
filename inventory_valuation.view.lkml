@@ -42,4 +42,10 @@ view: inventory_valuation {
     type:  sum
     sql: ${TABLE}.on_hand ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${report_date},${item_id},${asset_account_name}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

@@ -5,7 +5,9 @@ view: cm_pivot {
     type: string
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
+
+    }
 
   dimension: item_id {
     hidden: yes

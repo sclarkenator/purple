@@ -18,7 +18,7 @@ view: session_facts {
   }
 
   dimension: session_unique_id {
-    #primary_key: yes
+    primary_key: yes
     hidden: yes
     type: string
     sql: ${TABLE}.session_unique_id ;; }

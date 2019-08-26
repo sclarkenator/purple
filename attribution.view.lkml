@@ -138,4 +138,9 @@ order by 1,6)
     type:  sum
     sql: ${TABLE}.all_touch ;;  }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.date_date,${TABLE}.ch_so,${TABLE}.all_touch) ;;
+  }
+
 }

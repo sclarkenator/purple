@@ -104,6 +104,14 @@ view: current_oee {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.insert_ts_date, ${TABLE}.cycle_time, ${TABLE}.scrap_regrind_produced) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
+
   measure: count {
     type: count
     hidden: yes

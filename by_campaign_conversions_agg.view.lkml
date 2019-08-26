@@ -28,4 +28,10 @@ view: conversions_by_campaign_agg {
     type:  sum
     sql:${TABLE}.conversions ;; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${campaign_id}, ${date},${conversions}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

@@ -230,6 +230,11 @@ view: return_order {
     sql: datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) ;;
   }
 
+  dimension: law_tag {
+    type: date
+    sql: ${TABLE}.LAW_TAG ;;
+  }
+
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
     hidden: no
