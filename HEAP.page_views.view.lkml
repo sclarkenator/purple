@@ -32,4 +32,13 @@ view: heap_page_views {
     view_label: "Sessions"
     type: yesno
     sql: ${TABLE}.pages_viewed < 2 ;;}
+
+  dimension: query {
+    label: "Query - tag string"
+    description: "The whole tag string after purple.com."
+    view_label: "Sessions"
+    type: string
+    sql: ${TABLE}.query;;}
+
+#query
 }
