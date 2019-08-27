@@ -145,4 +145,13 @@ view: production_report {
     description: "Total - Regrind Scrap"
     type: number
     sql:  ${total} - ${regrind_scrap} ;; }
+
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.machine,${TABLE}.reason_code,${TABLE}.regrind) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+
 }

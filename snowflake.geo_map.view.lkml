@@ -53,6 +53,7 @@ view: sf_logrecno_bg_map {
   dimension: row_id {sql: ${TABLE}.row_id;;
     primary_key:yes
     hidden: yes
+
   }
   dimension: geoid11 {hidden:yes}
   dimension: logrecno  {hidden:yes}

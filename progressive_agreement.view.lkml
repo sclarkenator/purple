@@ -8,6 +8,7 @@ view: progressive {
   dimension: lease_id {
     hidden: yes
     type: number
+    primary_key: yes
     sql: ${TABLE}.LEASE_ID ;; }
 
   dimension: store_id {

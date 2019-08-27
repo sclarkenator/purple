@@ -157,11 +157,13 @@ view: rma_status_log {
 
   dimension: related_tranid {
     type: string
+    primary_key: yes
     sql: ${TABLE}."RELATED_TRANID" ;;
   }
 
   dimension: return_order_id {
     type: number
+
     sql: ${TABLE}."RETURN_ORDER_ID" ;;
   }
 

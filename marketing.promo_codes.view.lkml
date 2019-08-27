@@ -30,4 +30,10 @@ view: marketing_promo_codes {
     type: date
     sql: ${TABLE}.start_date ;;}
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${promo},${source},${start_date}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

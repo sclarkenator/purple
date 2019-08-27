@@ -42,4 +42,11 @@ view: max_machine_capacity {
     description: "Total Capacity of all Max machines"
     sql: ${TABLE}.max_1_capacity + ${TABLE}.max_2_capacity + ${TABLE}.max_3_capacity  +${TABLE}.max_4_capacity ;; }
 
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.date_date,${TABLE}.total_max_machine_capacity,${TABLE}.max_1_capacity,${TABLE}.max_2_capacity) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

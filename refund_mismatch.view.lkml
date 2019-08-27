@@ -3,7 +3,7 @@ view: refund_mismatch {
 
   dimension: amount_diff {
     type: number
-    sql: ${TABLE}."AMOUNT_DIFF" ;;
+    sql: ${TABLE}."AMOUNT_DIFF";;
   }
 
   dimension_group: created {
@@ -92,6 +92,7 @@ view: refund_mismatch {
   dimension: related_tranid {
     type: string
     label: "Check #"
+    primary_key: yes
     link: {
       label: "Netsuite"
       url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{url_type._value}}rfnd.nl?id={{transaction_id._value}}&whence="}

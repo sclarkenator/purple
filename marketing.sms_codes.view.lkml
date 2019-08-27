@@ -15,4 +15,10 @@ view: marketing_sms_codes {
     sql: ${TABLE}.sms ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${sms},${promo}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

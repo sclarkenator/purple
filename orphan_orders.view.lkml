@@ -15,6 +15,7 @@ view: orphan_orders {
     label: "Order ID (shopify)"
     description:  "This is the 'ID' field in Shopify"
     type:  string
+    primary_key: yes
     sql: ${TABLE}.id ;; }
 
   dimension: status {

@@ -22,4 +22,11 @@ view: warehouse_location {
     type: string
     sql: case when lower(${TABLE}.name) like ('%manna%') then 'Manna (all)' else ${TABLE}.name end;; }
 
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.location_id,${TABLE}.ISINACTIVE) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
 }

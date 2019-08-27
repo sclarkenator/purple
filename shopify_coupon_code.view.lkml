@@ -33,6 +33,7 @@ view: shopify_coupon_code {
   dimension: tranid {
     type: string
     sql: ${TABLE}."TRANID" ;;
+    primary_key: yes
   }
 
   measure: count {

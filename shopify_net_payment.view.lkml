@@ -26,6 +26,7 @@ view: shopify_net_payment {
       label: "Shopify"
       url: "https://onpurple.myshopify.com/admin/orders/{{order_id._value}}"}
     sql: ${TABLE}."ORDER_ID" ;;
+    primary_key: yes
   }
 
   dimension: original_amount {

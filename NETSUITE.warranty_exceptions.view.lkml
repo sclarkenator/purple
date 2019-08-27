@@ -84,6 +84,7 @@ view: netsuite_warranty_exceptions {
 
   dimension: netsuite_order_id {
     label: "NetSuite Internal Order ID"
+    primary_key: yes
     description: "The NetSuite Internal Order ID associated with the original Shopify order for that warranty claim"
     type: string
     sql: ${TABLE}.netsuite_order_id;; }
@@ -102,6 +103,7 @@ view: netsuite_warranty_exceptions {
 
   dimension: category {
     label: "Product Category"
+
     description: "The product category"
     type: string
     sql: ${TABLE}.category;; }

@@ -245,5 +245,13 @@ view: return_order {
             end;;
   }
 
+  dimension: primary_key
+  {
+    primary_key:  yes
+    sql: ${TABLE}.return_order_id ;;
+
+  }
+
+
 
 }

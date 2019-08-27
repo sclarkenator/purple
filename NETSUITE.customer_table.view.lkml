@@ -5,6 +5,7 @@ view: customer_table {
     label: "Customer ID"
     description: "Hyperlink to customer record in netsuite by internal id"
     type: string
+    primary_key: yes
     html: <a href = "https://system.na2.netsuite.com/app/common/entity/custjob.nl?id={{value}}" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.customer_id::int ;; }
 
@@ -119,5 +120,7 @@ view: customer_table {
   dimension: sales_manager_id {
     hidden: yes
     sql: ${TABLE}.sales_manager_id ;;}
+
+
 
 }

@@ -33,6 +33,7 @@ view: problem_order {
   dimension: order_id {
     type: string
     sql: ${TABLE}."ORDER_ID" ;;
+    primary_key: yes
     html: <a href = "{{hyper_link}}" target="_blank"> {{value}} </a> ;;
   }
 
