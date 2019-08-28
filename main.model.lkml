@@ -1069,7 +1069,7 @@ explore: target_adspend {hidden: yes}
   explore: v_paypal_order_num {label: "Paypal Order Numbers" group_label: "Accounting"}
   explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting"}
   explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting"}
-
+  explore: v_affirm_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting"}
 
 #-------------------------------------------------------------------
 # Hidden Explores
