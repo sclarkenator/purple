@@ -147,14 +147,14 @@ explore: warehouse_transfer {
   }
 }
 
-explore: finance {
+explore: finance_bills{
   from:  finance_bill
   group_label: "Production"
   label: "Finance Bill Items"
   description: "A joined view of finance bill headers and bill line items"
   join: finance_bill_line {
     type: left_outer
-    sql_on: ${finance.bill_id}=${finance_bill_line.bill_id} ;;
+    sql_on: ${finance_bills.bill_id}=${finance_bill_line.bill_id} ;;
     relationship: one_to_one
   }
 }
