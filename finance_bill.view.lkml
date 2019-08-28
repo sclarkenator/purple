@@ -25,7 +25,7 @@ view: finance_bill {
   }
   dimension: purchase_order_id {
     type:  number
-    sql: ${TABLE}.purchase_order_id;
+    sql: ${TABLE}.purchase_order_id;;
   }
 
   dimension: prepayment_po_id {
@@ -344,5 +344,7 @@ view: finance_bill {
     ]
     sql: ${TABLE}."UPDATE_TS" ;;
   }
+  measure: count {
+    type: count }
 
 }

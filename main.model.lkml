@@ -147,6 +147,17 @@ explore: warehouse_transfer {
   }
 }
 
+explore: finance {
+  group_label: "Production"
+  label: "Finance Bill Items"
+  description: "A joined view of finance bill headers and bill line items"
+  join: finance_bill {
+    type: left_outer
+    sql_on: ${finance_bill.bill_id} = ${finance_bill_line.bill_id} ;;
+    relationship: one_to_one
+  }
+}
+
 explore: inventory {
   #-------------------------------------------------------------------
   #  Invetory--------------------
