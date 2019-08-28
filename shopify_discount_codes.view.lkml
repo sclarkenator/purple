@@ -13,6 +13,7 @@ view: shopify_discount_codes {
       hidden:  yes
       type: string
       sql: ${TABLE}.shopify_order_id ;;
+      primary_key: yes
     }
 
     dimension: shopify_order_name {

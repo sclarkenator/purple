@@ -4,6 +4,7 @@ view: sf_block_group_facts {
   dimension: logrecno_bg_map_block_group {
     hidden: yes
     type: string
+    primary_key: yes
     sql: ${TABLE}.LOGRECNO_BG_MAP_BLOCK_GROUP ;;
   }
 

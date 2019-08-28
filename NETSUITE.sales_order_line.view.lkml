@@ -1,6 +1,8 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
+
+
   dimension: item_order{
     type: string
     primary_key:  yes
@@ -113,9 +115,12 @@ view: sales_order_line {
           When sales_order.channel_id = 1 THEN
             Case
               When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
+              Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
+               Else
                  Case
                      When sales_order.minimum_ship = ${created_date} THEN dateadd(d,3,sales_order.minimum_ship)
                       Else sales_order.minimum_ship
+                  END
                   END
                Else dateadd(d,14,${created_date})
             END
@@ -168,6 +173,43 @@ dimension: SLA_Buckets {
     type: yesno
     sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
 
+  measure: zQty_eligable_for_SLA{
+    label: "zQty Eligable SLA"
+    hidden:  yes
+    view_label: "Fulfillment"
+    type: sum
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN
+              ${TABLE}.gross_amt
+                Else
+              Case
+                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN
+                ${TABLE}.gross_amt
+                  Else
+                0
+                END
+                END;;
+  }
+
+  measure: zQty_Fulfilled_in_SLA{
+    label: "zQty Fulfilled in SLA"
+    view_label: "Fulfillment"
+    hidden:  yes
+    type: sum
+    sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
+        case when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
+        Else 0 END END;;
+  }
+
+  measure: zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "SLA $ Achievement %"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    sql: Case when ${zQty_eligable_for_SLA} = 0 then 0 Else ${zQty_Fulfilled_in_SLA}/${zQty_eligable_for_SLA} End ;;
+  }
 
   measure: Qty_eligable_for_SLA{
     label: "Qty Eligable SLA"
@@ -824,7 +866,7 @@ measure: SLA_Achievement_prct {
     type: number
     sql: ${TABLE}.ESTIMATED_COST ;; }
 
-  dimension: etail_order_line_id {
+  dimension: retail_order_line_id {
     hidden:  yes
     label: "Shopify Order Line ID"
     description: "You can use this ID to look up orders in Shopify"
@@ -989,12 +1031,19 @@ measure: SLA_Achievement_prct {
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
 
+  dimension: week_start_2019_date {
+
+  }
+
+
   dimension: week_2019_start {
     group_label: "Created Date"
     label: "z - Week Start 2019"
     description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
     type: string
-    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
+    sql: to_char( ${TABLE}.created,'MON-DD');; }
+
+
 
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }

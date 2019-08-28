@@ -297,7 +297,7 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+    sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
 
   dimension: 6_weeks{
     group_label: "Created Date"

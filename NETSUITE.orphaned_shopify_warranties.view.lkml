@@ -87,6 +87,7 @@ view: orphaned_shopify_warranties {
     label: "Transaction Number"
     description: "The NetSuite transaction number for the warranty replacement order"
     type: string
+    primary_key: yes
     sql: ${TABLE}.netsuite_transaction_number;; }
 
   dimension: category {

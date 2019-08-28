@@ -118,4 +118,10 @@ view: logan_fulfillment {
     type: yesno
     sql: ${TABLE}.WARRANTY_CLAIM_ID is not null ;; }
 
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${source},${order_id},${item_id}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 }

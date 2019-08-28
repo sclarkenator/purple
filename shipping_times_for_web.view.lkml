@@ -77,16 +77,25 @@ order by item_id, fulfillment_location
       dimension: item_id {
         hidden: yes
         type: number
+
         sql: ${TABLE}.item_id;; }
 
       dimension: fulfillment_source {
         type:  string
         sql: ${TABLE}.fulfillment_location ;; }
 
+
       measure: estimated_fulfillment_days {
         type:  max
         label: "Estimated Days to Fulfill"
         description: "Estimatest the number of days it will take new orders to fulfill"
         sql: ${TABLE}.days_to_fulfill ;; }
+
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.item_id,${TABLE}.fulfillment_location) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 
     }

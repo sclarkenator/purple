@@ -62,5 +62,10 @@ view: marketing_magazine {
   measure: count {
     type:  count
   }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${TABLE}.captured_date,${TABLE}.contact_info_from,${TABLE}.HOLD_TIME) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 
 }

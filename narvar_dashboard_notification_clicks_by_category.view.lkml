@@ -49,6 +49,10 @@ view: narvar_dashboard_notification_clicks_by_category {
     type: count
   }
 
-
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${week_of},${campaign}) ;;
+    #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
 
 }
