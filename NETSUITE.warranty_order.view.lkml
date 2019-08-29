@@ -54,6 +54,7 @@ view: warranty_order {
   dimension: replacement_order_id {
     hidden: no
     type: number
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.REPLACEMENT_ORDER_ID ;; }
 
   dimension: rmawarranty_ticket_number {
