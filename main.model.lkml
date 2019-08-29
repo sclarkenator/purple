@@ -28,6 +28,7 @@ week_start_day: sunday
 
 explore: production_report {
   label: "iPad Production Data"
+  group_label: "Production"
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
 }
 
@@ -59,6 +60,7 @@ explore: dispatch_info{
 
 explore: assembly_build {
   hidden: no
+  group_label: "Production"
   label: "Production Assembly Data"
   description: "NetSuite Header Level Assembly Data"
 
@@ -126,6 +128,7 @@ explore: workorder_reconciliation {
 }
 explore: warehouse_transfer {
   label: "Warehouse Transactions"
+  group_label: "Production"
   description: "Transactions by warehousing for bin and inventory transfers"
 
   join: warehouse_transfer_line {
@@ -148,7 +151,7 @@ explore: warehouse_transfer {
 }
 
 explore: finance_bill{
-  group_label: "Production"
+  group_label: "Main"
   label: "Finance Bill Items"
   description: "A joined view of finance bill headers and bill line items"
   join: finance_bill_line {
