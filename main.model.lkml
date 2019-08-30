@@ -157,9 +157,20 @@ explore: finance_bill{
   join: finance_bill_line {
     type: left_outer
     sql_on: ${finance_bill.bill_id}=${finance_bill_line.bill_id} ;;
+    relationship: one_to_many
+    }
+  join: finance_bill_payment {
+    type:  inner
+    sql_on: ${finance_bill.bill_id}=${finance_bill_payment.bill_payment_id} ;;
     relationship: one_to_one
   }
+  join: finance_bill_payment_line {
+    type: full_outer
+    sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
+    relationship:  one_to_many
+  }
 }
+
 
 explore: inventory {
   #-------------------------------------------------------------------
