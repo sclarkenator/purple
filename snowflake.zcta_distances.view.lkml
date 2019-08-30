@@ -42,4 +42,9 @@ view: sf_zcta_distances {
       sql: ${TABLE}.zip2 ;;
       hidden: yes
     }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${zip2}, ${zip1}) ;;
+  }
   }

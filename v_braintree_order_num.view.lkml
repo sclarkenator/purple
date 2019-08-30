@@ -75,6 +75,12 @@ view: v_braintree_order_num {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${created_date}, ${order_id}) ;;
+    hidden: yes
+  }
+
   measure: count {
     type: count
     drill_fields: []

@@ -10,7 +10,7 @@ view: sf_tract_zcta_map {
     persist_for: "10000 hours"
   }
   view_label: "Geography"
-  dimension: geoid11 {sql: ${TABLE}.geoid;; hidden:yes}
+  dimension: geoid11 {sql: ${TABLE}.geoid;; hidden:yes primary_key:yes}
   dimension: ZCTA5 {
     sql: LPAD(CAST(${TABLE}.ZCTA5 as STRING), 5, '0');;
     type: zipcode

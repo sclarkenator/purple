@@ -62,6 +62,13 @@ view: wholesale_stores {
     type: string
     sql: ${TABLE}.beds ;;
   }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${open_date_date}, ${Customer}) ;;
+    hidden: yes
+  }
+
   measure: count {
     type: count
   }

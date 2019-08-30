@@ -43,4 +43,10 @@ view: sales_targets {
     sql: ${TABLE}.date <= dateadd(day,-1,current_date) ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden: yes
+   sql: CONCAT(${date_date}, ${dtc_target}) ;;
+  }
+
 }

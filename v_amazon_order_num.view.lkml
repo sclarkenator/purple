@@ -104,6 +104,12 @@ view: v_amazon_order_num {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${amazon_order_reference_id}, ${insert_ts_date}) ;;
+    hidden: yes
+  }
+
   measure: count {
     type: count
     drill_fields: [store_name, name]

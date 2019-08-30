@@ -27,6 +27,10 @@ view: state_year {
     type: string
     sql: ${TABLE}.state ;;
   }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${state}, ${year}) ;;
+  }
 
 }
 

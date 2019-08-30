@@ -68,6 +68,7 @@ view: v_affirm_to_netsuite {
   dimension: tranid {
     type: string
     sql: ${TABLE}."TRANID" ;;
+    primary_key: yes
   }
 
   dimension: transaction_type {

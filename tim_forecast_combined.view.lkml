@@ -357,4 +357,11 @@ view: tim_forecast_combined {
     value_format: "#,##0"
     sql: case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end;; }
 
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${sku_id}, ${date_date}) ;;
+    hidden: yes
+  }
+
 }
