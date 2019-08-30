@@ -24,7 +24,7 @@ view: target_adspend {
   dimension: primary_key {
     primary_key: yes
     hidden:  yes
-    sql: CONCAT(${date_date}, ${amount}) ;;
+    sql: ${date_date} ;;
   }
 
 }
