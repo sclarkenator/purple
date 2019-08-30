@@ -10,11 +10,6 @@ view: finance_bill_payment {
   }
 
 
-  dimension: company {
-    type:  string
-    sql: ${TABLE}.company;;
-  }
-
   dimension_group: trandate{
     type: time
     timeframes: [
