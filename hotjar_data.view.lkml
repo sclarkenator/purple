@@ -79,6 +79,7 @@ view: hotjar_data {
       when: { sql: ${how_heard} = 'Amazon' ;; label: "Amazon" }
       when: { sql: ${how_heard} like 'Sirius%' ;; label: "Sirius XM" }
       when: { sql: ${how_heard} = 'Podcast' ;; label: "Podcast" }
+      when: { sql: ${how_heard} ilike 'Saw in %' ;; label: "Store" }
       else: "Other" } }
 
   measure: count {
