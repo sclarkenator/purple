@@ -90,13 +90,12 @@ from analytics_stage.shopify_ca_ft."ORDER" ;;
 
   dimension: order_number {
     type: number
-    hidden: yes
     sql: ${TABLE}."ORDER_NUMBER" ;;
   }
 
   dimension: name {
     type: string
-    label: "Netsuite Reference ID"
+    label: "Shopify Reference ID"
     sql: ${TABLE}."NAME" ;;
   }
 
@@ -456,6 +455,8 @@ from analytics_stage.shopify_ca_ft."ORDER" ;;
     type: string
     sql: ${TABLE}."LANDING_SITE_BASE_URL" ;;
   }
+
+
 
 #   set: detail {
 #     fields: [
