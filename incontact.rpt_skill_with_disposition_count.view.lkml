@@ -16,6 +16,7 @@ view: rpt_skill_with_disposition_count {
   dimension: agent {
     type: string
     hidden: yes #unhide this for agent based tables, I'm just using this view for disposition things right now
+    primary_key: yes
     sql: ${TABLE}."AGENT" ;;
   }
 
@@ -82,11 +83,7 @@ view: rpt_skill_with_disposition_count {
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
-  dimension: master_contact_id {
-    type: number
-    primary_key: yes
-    sql: ${TABLE}."MASTER_CONTACT_ID" ;;
-  }
+
 
   dimension_group: reported {
     type: time
