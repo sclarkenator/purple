@@ -60,7 +60,7 @@ view: v_paypal_order_num {
     sql: ${TABLE}."TRANSACTION_STATUS" ;;
   }
 
-  dimension_group: transaction_ts {
+  dimension_group: created {
     type: time
     timeframes: [
       raw,
@@ -71,7 +71,7 @@ view: v_paypal_order_num {
       quarter,
       year
     ]
-    sql: ${TABLE}."TRANSACTION_TS" ;;
+    sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: transaction_type {
