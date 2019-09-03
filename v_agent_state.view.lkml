@@ -142,7 +142,11 @@
       sql: ${TABLE}."working_rate" ;;
     }
 
-
+    dimension: primary_key {
+      primary_key: yes
+      sql: CONCAT(${agent_id}, ${reported}) ;;
+      hidden: yes
+    }
 
 
 

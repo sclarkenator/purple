@@ -64,4 +64,10 @@ view: tim_forecast_historical {
         type:  sum
         value_format: "$#,##0.00,,\" M\""
         sql:${TABLE}.total_amount ;; }
+
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${sku_id}, ${forecasted_date_date}) ;;
+    hidden: yes
+  }
 }

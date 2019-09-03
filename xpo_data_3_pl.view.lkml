@@ -42,6 +42,13 @@ view: xpo_data_3_pl {
     sql: ${TABLE}."ST" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${lmhid}, ${destinationzip}) ;;
+    hidden: yes
+  }
+
+
   measure: count {
     type: count
     drill_fields: []

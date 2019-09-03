@@ -160,7 +160,7 @@ view: finance_bill_line {
   }
   dimension: amount {
     type:  number
-    sql: ${TABLE}."amount";;
+    sql: ${TABLE}.amount;;
   }
   dimension: amount_foreign {
     type:  number

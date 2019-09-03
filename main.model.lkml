@@ -28,6 +28,7 @@ week_start_day: sunday
 
 explore: production_report {
   label: "iPad Production Data"
+  group_label: "Production"
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
 }
 
@@ -59,6 +60,7 @@ explore: dispatch_info{
 
 explore: assembly_build {
   hidden: no
+  group_label: "Production"
   label: "Production Assembly Data"
   description: "NetSuite Header Level Assembly Data"
 
@@ -126,6 +128,7 @@ explore: workorder_reconciliation {
 }
 explore: warehouse_transfer {
   label: "Warehouse Transactions"
+  group_label: "Production"
   description: "Transactions by warehousing for bin and inventory transfers"
 
   join: warehouse_transfer_line {
@@ -147,17 +150,27 @@ explore: warehouse_transfer {
   }
 }
 
-explore: finance_bills{
-  from:  finance_bill
-  group_label: "Production"
+explore: finance_bill{
+  group_label: "Main"
   label: "Finance Bill Items"
   description: "A joined view of finance bill headers and bill line items"
   join: finance_bill_line {
     type: left_outer
-    sql_on: ${finance_bills.bill_id}=${finance_bill_line.bill_id} ;;
+    sql_on: ${finance_bill.bill_id}=${finance_bill_line.bill_id} ;;
+    relationship: one_to_many
+    }
+  join: finance_bill_payment {
+    type:  inner
+    sql_on: ${finance_bill.bill_id}=${finance_bill_payment.bill_payment_id} ;;
     relationship: one_to_one
   }
+  join: finance_bill_payment_line {
+    type: full_outer
+    sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
+    relationship:  one_to_many
+  }
 }
+
 
 explore: inventory {
   #-------------------------------------------------------------------

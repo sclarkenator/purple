@@ -80,6 +80,13 @@ view: v_shopify_payment_to_netsuite {
     sql: ${TABLE}."TYPE" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${order_id}, ${created_date}) ;;
+    hidden: yes
+  }
+
+
   measure: count {
     type: count
     drill_fields: []

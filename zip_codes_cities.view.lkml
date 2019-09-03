@@ -28,6 +28,8 @@ view: zip_codes_city {
     description: "The first zip code per city"
     hidden:  yes
     type:  string
-    sql:${TABLE}.city_zip ;; }
+    sql:${TABLE}.city_zip ;;
+    primary_key: yes
+    }
 
 }

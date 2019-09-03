@@ -119,6 +119,12 @@ view: workorder_reconciliation {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${component_item_id}, ${tranid},${component_item_id}) ;;
+    hidden: yes
+  }
+
   measure: count {
     hidden: yes
     type: count
