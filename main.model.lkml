@@ -1035,6 +1035,11 @@ explore: target_adspend {hidden: yes}
       }
     }
 
+  explore: DTC_prices{
+    from:  item_price
+    group_label: "Sales"
+  }
+
 
 #    explore: rpt_skill_with_disposition_count {
 #      #hidden: yes
