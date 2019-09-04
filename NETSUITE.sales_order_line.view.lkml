@@ -317,6 +317,7 @@ measure: SLA_Achievement_prct {
     group_label: "Gross Sales Fulfilled"
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
+    value_format: "$#,##0"
     type: sum
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
     sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;; }
