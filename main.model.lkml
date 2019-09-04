@@ -1037,7 +1037,7 @@ explore: target_adspend {hidden: yes}
 
   explore: DTC_prices{
     from:  item_price
-    view_label: "DTC Prices"
+    label: "DTC Prices"
     group_label: "Sales"
   }
 
