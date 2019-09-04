@@ -8,11 +8,11 @@ view: agent_lkp {
     primary_key: yes
   }
 
-  dimension: incontact_team_id {
-    description: "The InContact team ID for this agent"
-    type:  number
-    sql: ${TABLE}.incontact_team_id ;;
-  }
+  #dimension: incontact_team_id {
+  #  description: "The InContact team ID for this agent"
+  #  type:  number
+  #  sql: ${TABLE}.incontact_team_id ;;
+  #}
 
   dimension: zendesk_id {
     description: "The ZenDesk ID for this agent"
@@ -26,17 +26,17 @@ view: agent_lkp {
     sql: ${TABLE}.shopify_id ;;
   }
 
-  dimension: team_id {
-    description: "The Team ID for this agent"
-    type:  number
-    sql: ${TABLE}.team_id ;;
-  }
+  #dimension: team_id {
+  #  description: "The Team ID for this agent"
+  #  type:  number
+  #  sql: ${TABLE}.team_id ;;
+  #}
 
-  dimension: team_lead_id {
-    description: "The ID for this agent's team lead"
-    type:  number
-    sql: ${TABLE}.team_lead_id ;;
-  }
+  #dimension: team_lead_id {
+  #  description: "The ID for this agent's team lead"
+  #  type:  number
+  #  sql: ${TABLE}.team_lead_id ;;
+  #}
 
   dimension: email {
     description: "The email address for this agent"
