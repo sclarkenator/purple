@@ -567,15 +567,15 @@ explore: target_adspend {hidden: yes}
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
       relationship: one_to_one}
-    join: contribution {
-      type: left_outer
-      sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
-      relationship: one_to_one}
-    join: cm_pivot {
-      view_label: "x-CM waterfall"
-      type: left_outer
-      sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
-      relationship: one_to_many}
+#    join: contribution {
+#      type: left_outer
+#      sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
+#      relationship: one_to_one}
+#    join: cm_pivot {
+#      view_label: "x-CM waterfall"
+#      type: left_outer
+#      sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
+#      relationship: one_to_many}
     join: state_tax_reconciliation {
       view_label: "State Tax Reconciliation"
       type: left_outer
