@@ -9,6 +9,7 @@ view: v_affirm_order_num {
   dimension: deposit_id {
     type: string
     sql: ${TABLE}."DEPOSIT_ID" ;;
+    primary_key: yes
   }
 
   dimension_group: deposited {

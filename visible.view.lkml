@@ -127,6 +127,12 @@ view: visible {
     sql: ${TABLE}."WEIGHT" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${update_ts_date}, ${item_id}, ${order_id}) ;;
+    hidden: yes
+  }
+
   measure: count {
     hidden: yes
     type: count

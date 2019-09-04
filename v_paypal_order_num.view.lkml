@@ -33,6 +33,7 @@ view: v_paypal_order_num {
   dimension: invoice_number {
     type: string
     sql: ${TABLE}."INVOICE_NUMBER" ;;
+    primary_key: yes
   }
 
   dimension: net_amount {

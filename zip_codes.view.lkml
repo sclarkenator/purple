@@ -20,6 +20,7 @@ view: zip_codes {
     hidden:  yes
     type: string
     sql: ${TABLE}.zip ;;
+    primary_key: yes
   }
 
   dimension: city {
@@ -37,6 +38,7 @@ view: zip_codes {
     type: string
     sql: ${TABLE}.state ;;
   }
+
 
   measure: count {
     type: count

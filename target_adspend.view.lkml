@@ -21,4 +21,10 @@ view: target_adspend {
     sql:  ${TABLE}.date ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden:  yes
+    sql: ${date_date} ;;
+  }
+
 }

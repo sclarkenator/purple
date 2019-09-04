@@ -94,6 +94,12 @@ view: v_first_data_order_num {
     sql: ${TABLE}."TRANSACTION_STATUS" ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${order_number}, ${created_date}) ;;
+    hidden: yes
+  }
+
   measure: count {
     type: count
     drill_fields: [customer_name]

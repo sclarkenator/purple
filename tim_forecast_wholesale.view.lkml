@@ -96,4 +96,10 @@ view: tim_forecast_wholesale {
         type: sum
         sql: round(case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end,2);; }
 
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${sku_id}, ${date_date}) ;;
+    hidden: yes
+  }
+
     }

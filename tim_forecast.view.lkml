@@ -34,7 +34,9 @@ view: tim_forecast {
 
   dimension: sku_id {
     type:  string
-    sql:${TABLE}.sku_id ;; }
+    sql:${TABLE}.sku_id ;;
+    primary_key:yes
+    }
 
   measure: amount {
     label: "Total Forecast Amount"

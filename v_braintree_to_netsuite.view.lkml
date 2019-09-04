@@ -4,6 +4,7 @@ view: v_braintree_to_netsuite {
   dimension: braintree_order_id {
     type: string
     sql: ${TABLE}."BRAINTREE_ORDER_ID" ;;
+    primary_key: yes
   }
 
   dimension_group: created {
