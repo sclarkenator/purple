@@ -79,6 +79,12 @@ view: dispatch_info {
     sql: ${TABLE}."DISPATCH_ID" ;;
   }
 
+  dimension: MACHINE_LINE_ID {
+    type: number
+    hidden: yes
+    sql: ${TABLE}."MACHINE_LINE_ID" ;;
+  }
+
   dimension: dispatch_impact {
     hidden: no
     description: "The level of impact a dispatch Type has. 0 highest"

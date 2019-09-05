@@ -55,7 +55,25 @@ explore: dispatch_info{
   group_label: "Production"
   label: "L2L Dispatch Data"
   description: "The log of all L2L dispatches"
+
+  join: ltol_line {
+    type: left_outer
+    sql_on: ${ltol_line.line_id} = ${dispatch_info.MACHINE_LINE_ID} ;;
+    relationship: many_to_one
+  }
 }
+
+explore: ltol_pitch {
+  label: "L2L Production Pitch Data"
+  description: "The Pitch hourly data from L2L"
+
+  join: ltol_line {
+    type: left_outer
+    sql_on: ${ltol_line.line_id} = ${ltol_pitch.line} ;;
+    relationship: many_to_one
+  }
+}
+
 
 
 explore: assembly_build {
