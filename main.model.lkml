@@ -65,6 +65,7 @@ explore: dispatch_info{
 
 explore: ltol_pitch {
   label: "L2L Production Pitch Data"
+  group_label: "Production"
   description: "The Pitch hourly data from L2L"
 
   join: ltol_line {
