@@ -1,4 +1,5 @@
 view: ltol_line {
+  label: "L2L Line Information"
   sql_table_name: PRODUCTION.L2L_LINE ;;
 
   dimension: line_id {
@@ -20,8 +21,9 @@ view: ltol_line {
   }
 
   dimension: areacode {
+    label: "Area Name"
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."AREACODE" ;;
   }
 

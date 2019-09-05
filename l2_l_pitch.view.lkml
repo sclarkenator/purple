@@ -1,4 +1,5 @@
 view: ltol_pitch {
+  label: "L2L Pitch Data"
   sql_table_name: PRODUCTION.L2L_PITCH ;;
 
   dimension: pitch_id {
