@@ -1058,6 +1058,7 @@ explore: target_adspend {hidden: yes}
     from:  item_price
     label: "DTC Prices"
     group_label: "Sales"
+    hidden:  yes
   }
 
 
