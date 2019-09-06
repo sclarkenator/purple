@@ -192,6 +192,7 @@ view: ltol_pitch {
       raw,
       time,
       date,
+      hour,
       week,
       month,
       quarter,
