@@ -81,7 +81,7 @@ explore: assembly_build {
   hidden: no
   group_label: "Production"
   label: "Production Assembly Data"
-  description: "NetSuite Header Level Assembly Data"
+  description: "NetSuite Header Level Assembly and Unbuild Data. Adding in the Unbuilds provides a better final number of what is produced."
 
 
   always_filter: {
