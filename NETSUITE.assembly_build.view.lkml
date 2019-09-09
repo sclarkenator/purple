@@ -1,5 +1,5 @@
 view: assembly_build {
-  sql_table_name: PRODUCTION.ASSEMBLY_BUILD ;;
+  sql_table_name: PRODUCTION.BUILD ;;
 
   dimension: assembly_build_id {
     primary_key: yes
@@ -7,7 +7,7 @@ view: assembly_build {
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     hidden:  no
     type: number
-    sql: ${TABLE}.assembly_build_id ;;}
+    sql: ${TABLE}.build_id ;;}
 
   dimension: accounting_period_id {
     hidden: yes
@@ -37,6 +37,13 @@ view: assembly_build {
     hidden: yes
     type: string
     sql: ${TABLE}.description ;; }
+
+  dimension: type {
+    label: "Transaction Type"
+    description: "The build type. Assembly builds are positive and unbuilds are negative"
+    hidden: no
+    type: string
+    sql: ${TABLE}.type ;; }
 
   dimension: created_by {
     label: "Created By"
