@@ -18,6 +18,11 @@ view: heap_page_views {
     hidden: yes
     sql: ${TABLE}.session_id ;; }
 
+  measure: Sum_bounced_session {
+    type: sum_distinct
+    sql:
+    Case
+      When ${TABLE}.pages_viewed < 2 THEN 1 Else 0 End;; }
 
   dimension: pages_viewed {
     label: "Pages Viewed"
