@@ -1,5 +1,5 @@
-view: team_lead {
-  sql_table_name: CUSTOMER_CARE.team_lead ;;
+view: team_lead_name {
+  sql_table_name: CUSTOMER_CARE.team_lead_name ;;
 
   dimension: incontact_id {
     type:  number
@@ -19,6 +19,11 @@ view: team_lead {
   dimension: end_date {
     type:  number
     sql: ${TABLE}."END_DATE" ;;
+  }
+
+  dimension: Name {
+    type:  string
+    sql: ${TABLE}.name ;;
   }
 
   measure: count {
