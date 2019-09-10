@@ -30,7 +30,7 @@ view: orphaned_shopify_warranties {
           nr.memo, nr.wholesale
       from nr
         join analytics_stage.shopify_us_ft."ORDER" sr on nr.replacement_order_id = sr.id
-        left join analytics_stage.shopify_us_ft."ORDER" so on nr.original_order_number = so.order_number
+        join analytics_stage.shopify_us_ft."ORDER" so on nr.original_order_number = so.order_number
         left join mc on nr.mod_code = mc.mod_code
       ;;
   }
