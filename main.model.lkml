@@ -1103,14 +1103,14 @@ explore: target_adspend {hidden: yes}
   }
 
   explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
-  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting"hidden:yes}
-  explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting"hidden:yes}
-  explore: v_paypal_order_num {label: "Paypal Order Numbers" group_label: "Accounting"hidden:yes}
-  explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting"hidden:yes}
-  explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting"hidden:yes}
-  explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting"hidden:yes}
-  explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting"hidden:yes}
-  explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting"hidden:yes}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_paypal_order_num {label: "Paypal Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 
 #-------------------------------------------------------------------
 # Hidden Explores
