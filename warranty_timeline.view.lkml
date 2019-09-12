@@ -53,6 +53,7 @@ view: warranty_timeline {
 
   dimension: original_order_id {
     type: number
+    value_format: "0"
     sql: ${TABLE}."ORIGINAL_ORDER_ID" ;;
     hidden:  yes
   }
