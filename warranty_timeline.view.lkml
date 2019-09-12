@@ -24,8 +24,12 @@ view: warranty_timeline {
   dimension: fulfillment_tranid {
     type: number
     value_format_name: id
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/itemship.nl?id={{fulfillment_tranid._value}}&whence="}
     sql: ${TABLE}."FULFILLMENT_TRANID" ;;
   }
+
 
   dimension: item_id {
     type: number
@@ -118,8 +122,26 @@ view: warranty_timeline {
 
   dimension: warranty_tranid {
     type: string
+    link: {
+      label: "Netsuite"
+      url: "https://{{url_type._value}}/{{warranty_tranid._value}}"}
     sql: ${TABLE}."WARRANTY_TRANID" ;;
   }
+
+
+
+  dimension: url_type {
+    hidden: yes
+    type: string
+    sql:
+        CASE
+            WHEN ${TABLE}."SOURCE" = 'Netsuite' THEN ('4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=')
+            WHEN ${TABLE}."SOURCE" = 'Shopify - US' THEN ('purple-ca.myshopify.com/admin/orders/')
+            WHEN ${TABLE}."SOURCE" = 'Shopify - CA' THEN ('onpurple.myshopify.com/admin/orders/')
+            ELSE Null
+        END ;;
+  }
+
 
   measure: count {
     type: count
