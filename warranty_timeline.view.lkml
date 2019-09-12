@@ -61,7 +61,7 @@ view: warranty_timeline {
     type: string
     link: {
       label: "Netsuite"
-      url: "https://{{url_type._value}}/{{original_order_id._value}}"}
+      url: "https://{{url_type._value}} {{original_order_id._value}}"}
     sql: ${TABLE}."ORIGINAL_TRANID" ;;
   }
 
@@ -92,6 +92,9 @@ view: warranty_timeline {
 
   dimension: rma_ref_id {
     type: string
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/rtnauth.nl?id={{rma_order_id._value}}&whence="}
     sql: ${TABLE}."RMA_REF_ID" ;;
   }
 
