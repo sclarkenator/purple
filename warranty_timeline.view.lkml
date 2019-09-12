@@ -19,6 +19,7 @@ view: warranty_timeline {
   dimension: fulfillment_id {
     type: number
     sql: ${TABLE}."FULFILLMENT_ID" ;;
+    hidden:  yes
   }
 
   dimension: fulfillment_tranid {
@@ -26,7 +27,7 @@ view: warranty_timeline {
     value_format_name: id
     link: {
       label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/itemship.nl?id={{fulfillment_tranid._value}}&whence="}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/itemship.nl?id={{fulfillment_id._value}}&whence="}
     sql: ${TABLE}."FULFILLMENT_TRANID" ;;
   }
 
@@ -53,10 +54,14 @@ view: warranty_timeline {
   dimension: original_order_id {
     type: number
     sql: ${TABLE}."ORIGINAL_ORDER_ID" ;;
+    hidden:  yes
   }
 
   dimension: original_tranid {
     type: string
+    link: {
+      label: "Netsuite"
+      url: "https://{{url_type._value}}/{{original_order_id._value}}"}
     sql: ${TABLE}."ORIGINAL_TRANID" ;;
   }
 
@@ -124,7 +129,7 @@ view: warranty_timeline {
     type: string
     link: {
       label: "Netsuite"
-      url: "https://{{url_type._value}}/{{warranty_tranid._value}}"}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id={{warranty_order_id._value}}&whence="}
     sql: ${TABLE}."WARRANTY_TRANID" ;;
   }
 
