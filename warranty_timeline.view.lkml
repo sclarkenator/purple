@@ -123,6 +123,7 @@ view: warranty_timeline {
   dimension: warranty_order_id {
     type: number
     sql: ${TABLE}."WARRANTY_ORDER_ID" ;;
+    hidden:  yes
   }
 
   dimension: warranty_tranid {
