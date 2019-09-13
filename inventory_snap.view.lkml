@@ -28,6 +28,19 @@ view: inventory_snap {
     timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
+  dimension: week_bucket{
+    group_label: "Created Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+    sql: case when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -1 then 'Last Week'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -1 then 'Last Week LY'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
+
   measure: inbound {
     label: "Total Inbound"
     type: sum

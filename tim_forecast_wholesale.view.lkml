@@ -49,25 +49,38 @@ view: tim_forecast_wholesale {
       order by 2, 1
   ;; }
 
-      dimension_group: date {
-        label: "Forecast"
-        type: time
-        timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-        convert_tz: no
-        datatype: date
-        sql: ${TABLE}.date ;; }
+  dimension_group: date {
+    label: "Forecast"
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;; }
 
-      dimension: Before_today{
-        group_label: "Forecast Date"
-        label: "z - Is Before Today (mtd)"
-        #hidden:  yes
-        description: "This field is for formatting on (week/month/quarter/year) to date reports"
-        type: yesno
-        sql: ${TABLE}.date < current_date;; }
+  dimension: Before_today{
+    group_label: "Forecast Date"
+    label: "z - Is Before Today (mtd)"
+    #hidden:  yes
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
 
-      dimension: sku_id {
-        type:  string
-        sql:${TABLE}.sku_id ;; }
+  dimension: sku_id {
+    type:  string
+    sql:${TABLE}.sku_id ;; }
+
+  dimension: week_bucket{
+    group_label: "Forecast Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+    sql: case when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week LY'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
 
       measure: total_units {
         label: "Total Units"

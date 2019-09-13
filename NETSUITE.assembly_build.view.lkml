@@ -121,6 +121,19 @@ view: assembly_build {
     type: yesno
     sql: date_part('week',${TABLE}.PRODUCED) = date_part('week',current_date)-1;; }
 
+  dimension: week_bucket{
+    group_label: "Produced Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+    sql: case when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) -1 then 'Last Week'
+        when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) -1 then 'Last Week LY'
+        when date_part('year', ${TABLE}.PRODUCED::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.PRODUCED::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
+
 
   dimension_group: shift_time{
     label: "Shift Timescale"
