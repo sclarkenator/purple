@@ -637,6 +637,14 @@ explore: v_agent_state  {
 #-------------------------------------------------------------------
 
 
+#explore: sales_simplified{
+#  from: sales_order_line
+#  label: "Sales Simplified"
+#  hidden: yes
+#}
+
+
+
 
 explore: sales_order_line {
   label:  "DTC"
