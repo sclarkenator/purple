@@ -384,5 +384,11 @@ view: sales_order {
     type: yesno
     sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';; }
 
+  dimension: bill_of_lading_number {
+    label: "Bill Of Landing Number"
+    type: string
+    sql: ${TABLE}.bill_of_lading_number ;;
+  }
+
 
 }
