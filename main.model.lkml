@@ -138,7 +138,7 @@ explore: warehouse_transfer {
   label: "Warehouse Transactions"
   group_label: "Production"
   description: "Transactions by warehousing for bin and inventory transfers"
-
+  hidden: yes
   join: warehouse_transfer_line {
     type: inner
     relationship: one_to_many
