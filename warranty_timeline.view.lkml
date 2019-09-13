@@ -130,6 +130,11 @@ view: warranty_timeline {
     hidden:  yes
   }
 
+  dimension: warranty_reason_code{
+    type: string
+    sql: ${TABLE}."WARRANTY_REASON_CODE" ;;
+  }
+
   dimension: warranty_tranid {
     type: string
     link: {
