@@ -643,8 +643,11 @@ explore: v_agent_state  {
 #  hidden: yes
 #}
 
-
-
+explore: wholesale_mfrm_manual_asn  {
+  hidden:  no
+  label: "Wholesale Mattress Firm Manual ASN"
+  group_label: "Wholesale"
+}
 
 explore: sales_order_line {
   label:  "DTC"
