@@ -644,7 +644,7 @@ explore: v_agent_state  {
 #}
 
 explore: wholesale_mfrm_manual_asn  {
-  hidden:  no
+  hidden:  yes
   label: "Wholesale Mattress Firm Manual ASN"
   group_label: "Wholesale"
 }
@@ -832,7 +832,14 @@ explore: sales_order_line {
     required_joins: [warranty_order]
     sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
     relationship: many_to_one}
+  join: item_price {
+    view_label: "Item Prices"
+    type:  full_outer
+    sql_on: ${sales_order_line.item_id}=${item_price.item_id} ;;
+    relationship: one_to_one}
 }
+
+
 
 explore: wholesale {
   from: sales_order_line
@@ -977,12 +984,6 @@ join: item {
   required_joins: [warranty_order_line]
   relationship: many_to_one}}
 
-explore: DTC_prices {
-  from:  item_price
-  label: "DTC Prices"
-  group_label: "Sales"
-  hidden:  yes
-}
 
 explore: logan_fulfillment {
   description: "Stop gap on fulfillment data"
