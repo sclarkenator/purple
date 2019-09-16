@@ -138,19 +138,17 @@ explore: warehouse_transfer {
   label: "Warehouse Transactions"
   group_label: "Production"
   description: "Transactions by warehousing for bin and inventory transfers"
-
+  hidden: yes
   join: warehouse_transfer_line {
     type: inner
     relationship: one_to_many
     sql_on: ${warehouse_transfer.warehouse_transfer_id} = ${warehouse_transfer_line.warehouse_transfer_id} ;;
   }
-
   join: warehouse_location {
     type: left_outer
     relationship: many_to_one
     sql_on: ${warehouse_transfer.SHIPPING_LOCATION_ID} = ${warehouse_location.location_id} ;;
   }
-
   join: item {
     type: left_outer
     relationship: many_to_one
@@ -639,6 +637,17 @@ explore: v_agent_state  {
 #-------------------------------------------------------------------
 
 
+#explore: sales_simplified{
+#  from: sales_order_line
+#  label: "Sales Simplified"
+#  hidden: yes
+#}
+
+explore: wholesale_mfrm_manual_asn  {
+  hidden:  no
+  label: "Wholesale Mattress Firm Manual ASN"
+  group_label: "Wholesale"
+}
 
 explore: sales_order_line {
   label:  "DTC"
@@ -1004,7 +1013,16 @@ explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "A
 explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
-explore: warranty_timeline {label: "Warranty Timeline" group_label: "Accounting" hidden:yes}
+explore: warranty_timeline {
+  label: "Warranty Timeline"
+  group_label: "Accounting"
+  hidden:yes
+  join: item {
+    view_label: "Item"
+    type:  left_outer
+    sql_on: ${item.item_id} = ${warranty_timeline.item_id};;
+    relationship: many_to_one}
+  }
 
 
 explore: day_aggregations {
