@@ -136,7 +136,7 @@ view: ff_exec {
 #######################################################################################################################
 #   CREATING FINAL TABLE
 #######################################################################################################################
-view: executive_report{
+view: executive_report {
   derived_table: {
     sql:
       with aa as(
@@ -167,7 +167,7 @@ view: executive_report{
         , inv.available as inv
         , prod.Total_Quantity as prod
         , ff.fulfilled_orders as ff_amt
-        , ff.fulfilled_orders as ff_units
+        , ff.fulfilled_orders_units as ff_units
       from ${sales_exec.SQL_TABLE_NAME} sales
       full outer join aa on aa.sku_id = sales.sku_id and aa.channel = sales.channel2 and aa.state = sales.state
       full outer join (select sku_id
@@ -221,54 +221,322 @@ view: executive_report{
 
   dimension: week_bucket {
     label: "Week Bucket"
+    hidden: yes
     type: string
     sql: ${TABLE}.week_bucket;; }
 
-   measure: sales {
-     label: "Gross Sales ($)"
-     type: sum
-     value_format: "$#,##0"
-     sql: ${TABLE}.sales_amt;; }
+  measure: sales_amt {
+    label: "Gross Sales ($)"
+    hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.sales_amt;; }
 
   measure: sales_units {
     label: "Gross Sales (#)"
+    hidden: yes
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.sales_units;; }
 
   measure: forecast_amt {
     label: "Forecast ($)"
+    hidden: yes
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.forecast_amt;; }
 
   measure: forecast_units {
     label: "Forecast (#)"
+    hidden: yes
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.forecast_units;; }
 
   measure: inv {
     label: "Inventory (#)"
+    hidden: yes
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.inv;; }
 
   measure: prod {
     label: "Produced (#)"
+    hidden: yes
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.prod;; }
 
   measure: ff_units {
     label: "Fulfilled (#)"
+    hidden: yes
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.ff_units;; }
 
   measure: ff_amt {
     label: "Fulfilled ($)"
+    hidden: yes
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.ff_amt;; }
+
+##########################   Last Week
+  measure: sales_amt_lw {
+    label: "Gross Sales ($) LW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.sales_amt else 0 end;; }
+
+  measure: sales_units_lw {
+    label: "Gross Sales (#) LW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.sales_units else 0 end;; }
+
+  measure: forecast_amt_lw {
+    label: "Forecast ($) LW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.forecast_amt else 0 end;; }
+
+  measure: forecast_units_lw {
+    label: "Forecast (#) LW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.forecast_units else 0 end;; }
+
+  measure: inv_lw {
+    label: "Inventory (#) LW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.inv else 0 end;; }
+
+  measure: prod_lw {
+    label: "Produced (#) LW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.prod else 0 end;; }
+
+  measure: ff_units_lw {
+    label: "Fulfilled (#) LW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.ff_units else 0 end;; }
+
+  measure: ff_amt_lw {
+    label: "Fulfilled ($) LW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.ff_amt else 0 end;; }
+
+##########################   Previous Week (Two Weeks Ago)
+  measure: sales_amt_pw {
+    label: "Gross Sales ($) PW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.sales_amt else 0 end;; }
+
+  measure: sales_units_pw {
+    label: "Gross Sales (#) PW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.sales_units else 0 end;; }
+
+  measure: forecast_amt_pw {
+    label: "Forecast ($) PW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.forecast_amt else 0 end;; }
+
+  measure: forecast_units_pw {
+    label: "Forecast (#) PW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.forecast_units else 0 end;; }
+
+  measure: inv_pw {
+    label: "Inventory (#) PW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.inv else 0 end;; }
+
+  measure: prod_pw {
+    label: "Produced (#) PW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.prod else 0 end;; }
+
+  measure: ff_units_pw {
+    label: "Fulfilled (#) PW"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.ff_amt else 0 end;; }
+
+  measure: ff_amt_pw {
+    label: "Fulfilled ($) PW"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.ff_amt else 0 end;; }
+
+##########################   Last Year (last week)
+  measure: sales_amt_ly {
+    label: "Gross Sales ($) LY"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.sales_amt else 0 end;; }
+
+  measure: sales_units_ly {
+    label: "Gross Sales (#) LY"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.sales_units else 0 end;; }
+
+  measure: forecast_amt_ly {
+    label: "Forecast ($) LY"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.forecast_amt else 0 end;; }
+
+  measure: forecast_units_ly {
+    label: "Forecast (#) LY"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.forecast_units else 0 end;; }
+
+  measure: inv_ly {
+    label: "Inventory (#) LY"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.inv else 0 end;; }
+
+  measure: prod_ly {
+    label: "Produced (#) LY"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.prod else 0 end;; }
+
+  measure: ff_units_ly {
+    label: "Fulfilled (#) LY"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.ff_units else 0 end;; }
+
+  measure: ff_amt_ly {
+    label: "Fulfilled ($) LY"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.week_bucket = 'Last Week LY' then ${TABLE}.ff_amt else 0 end;; }
+
+##########################   Week over Week
+  measure: sales_amt_ww {
+    label: "Gross Sales ($) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_amt_lw}/${sales_amt_pw}*100;; }
+
+  measure: sales_units_ww {
+    label: "Gross Sales (#) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_units_lw}/${sales_units_pw}*100;; }
+
+  measure: forecast_amt_ww {
+    label: "Forecast ($) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${forecast_amt_lw}/$forecast_amt_pw}*100;; }
+
+  measure: forecast_units_ww {
+    label: "Forecast (#) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${forecast_units_lw}/${forecast_units_pw}*100;; }
+
+  measure: inv_ww {
+    label: "Inventory (#) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${inv_lw}/$inv_pw}*100;; }
+
+  measure: prod_ww {
+    label: "Produced (#) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${prod_lw}/${prod_pw}*100;; }
+
+  measure: ff_units_ww {
+    label: "Fulfilled (#) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${ff_units_lw}/${ff_units_pw}*100;; }
+
+  measure: ff_amt_ww {
+    label: "Fulfilled ($) W/W"
+    type: number
+    value_format: "0.0\%"
+    sql: ${ff_amt_lw}/${ff_amt_pw}*100;; }
+
+##########################   Year over Year
+  measure: sales_amt_yy {
+    label: "Gross Sales ($) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_amt_lw}/${sales_amt_ly}*100;; }
+
+  measure: sales_units_yy {
+    label: "Gross Sales (#) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_units_lw}/${sales_units_ly}*100;; }
+
+  measure: forecast_amt_yy {
+    label: "Forecast ($) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${forecast_amt_lw}/${forecast_amt_ly}*100;; }
+
+  measure: forecast_units_yy {
+    label: "Forecast (#) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${forecast_units_lw}/${forecast_units_ly}*100;; }
+
+  measure: inv_yy {
+    label: "Inventory (#) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${inv_lw}/${inv_ly}*100;; }
+
+  measure: prod_yy {
+    label: "Produced (#) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${prod_lw}/${prod_ly}*100;; }
+
+  measure: ff_units_yy {
+    label: "Fulfilled (#) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${ff_units_lw}/${ff_units_ly}*100;; }
+
+  measure: ff_amt_yy {
+    label: "Fulfilled ($) Y/Y"
+    type: number
+    value_format: "0.0\%"
+    sql: ${ff_amt_lw}/${ff_amt_ly}*100;; }
+
+##########################   to Plan
+  measure: sales_amt_tp {
+    label: "Gross Sales ($) to Plan"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_amt_lw}/${forecast_amt_lw}*100;; }
+
+  measure: sales_units_tp {
+    label: "Gross Sales (#) to Plan"
+    type: number
+    value_format: "0.0\%"
+    sql: ${sales_units_lw}/${forecast_units_lw}*100;; }
+
 }
