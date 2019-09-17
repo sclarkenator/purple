@@ -20,17 +20,20 @@ view: customer_table {
     label: "Customer Name"
     description: "Merging first and last name from netsuite"
     type: string
-    sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));; }
+    sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));;
+    required_access_grants:[can_view_pii] }
 
   dimension: first_name {
     label: "First Name"
     type: string
-    sql:  ${TABLE}.firstname;; }
+    sql:  ${TABLE}.firstname;;
+    required_access_grants:[can_view_pii] }
 
   dimension: last_name {
     label: "Last Name"
     type: string
-    sql:  ${TABLE}.lastname ;; }
+    sql:  ${TABLE}.lastname ;;
+    required_access_grants:[can_view_pii] }
 
   dimension: account_manager {
     label: "Account Manager"
@@ -52,14 +55,19 @@ view: customer_table {
     hidden:  no
     label: "Customer Email"
     type: string
-    sql: ${TABLE}.email ;; }
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes'
+              THEN ${TABLE}.email
+              ELSE '**********' || '@' || SPLIT_PART(${TABLE}.email, '@', 2)
+            END ;;
+    }
 
   dimension: phone {
     hidden:  no
     label: "Customer Phone"
     description: "Looking first at Home Phone, then at Mobile"
     type: string
-    sql: nvl(${TABLE}.home_phone,${TABLE}.mobile_phone) ;; }
+    sql: nvl(${TABLE}.home_phone,${TABLE}.mobile_phone) ;;
+    required_access_grants:[can_view_pii] }
 
   dimension: mf_or_other {
     label: "Is Mattress Firm"

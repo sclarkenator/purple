@@ -29,6 +29,11 @@ persist_with: temp_ipad_database_default_datagroup
 
 
 
+access_grant: can_view_pii {
+  user_attribute: can_view_pii
+  allowed_values: ["yes"]
+}
+
 explore: production_report {
   label: "iPad Production Data"
   group_label: "Production"
