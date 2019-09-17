@@ -316,7 +316,7 @@ view: executive_report {
     label: "Produced (#) LW"
     type: sum
     value_format: "#,##0"
-    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.prod else 0 end;; }
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then nullif(${TABLE}.prod,0) end;; }
 
   measure: ff_units_lw {
     label: "Fulfilled (#) LW"
@@ -365,7 +365,7 @@ view: executive_report {
     label: "Produced (#) PW"
     type: sum
     value_format: "#,##0"
-    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.prod else 0 end;; }
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then nullif(${TABLE}.prod,0) end;; }
 
   measure: ff_units_pw {
     label: "Fulfilled (#) PW"
@@ -475,7 +475,7 @@ view: executive_report {
     value_format: "0.0\%"
     sql: case when ${prod_lw} > 0 and ${prod_pw} > 0 then 100*${prod_lw}/nullif(${prod_pw},0)
             when ${prod_lw} > 0 then 1
-            else 0 end;; }
+            end;; }
 
   measure: ff_units_ww {
     label: "Fulfilled (#) W/W"
