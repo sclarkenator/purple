@@ -316,7 +316,7 @@ view: executive_report {
     label: "Produced (#) LW"
     type: sum
     value_format: "#,##0"
-    sql: case when ${TABLE}.week_bucket = 'Last Week' then ${TABLE}.prod else 0 end;; }
+    sql: case when ${TABLE}.week_bucket = 'Last Week' then nullif(${TABLE}.prod,0) end;; }
 
   measure: ff_units_lw {
     label: "Fulfilled (#) LW"
@@ -365,7 +365,7 @@ view: executive_report {
     label: "Produced (#) PW"
     type: sum
     value_format: "#,##0"
-    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then ${TABLE}.prod else 0 end;; }
+    sql: case when ${TABLE}.week_bucket = 'Two Weeks Ago' then nullif(${TABLE}.prod,0) end;; }
 
   measure: ff_units_pw {
     label: "Fulfilled (#) PW"
@@ -433,110 +433,195 @@ view: executive_report {
     label: "Gross Sales ($) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_amt_lw}/${sales_amt_pw}*100;; }
+    sql: case when ${sales_amt_lw} > 0 and ${sales_amt_pw} > 0 then 100*${sales_amt_lw}/nullif(${sales_amt_pw},0)
+            when ${sales_amt_lw} > 0 then 0
+            else 0 end;; }
 
   measure: sales_units_ww {
     label: "Gross Sales (#) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_units_lw}/${sales_units_pw}*100;; }
+    sql: case when ${sales_units_lw} > 0 and ${sales_units_pw} > 0 then 100*${sales_units_lw}/nullif(${sales_units_pw},0)
+            when ${sales_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: forecast_amt_ww {
     label: "Forecast ($) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${forecast_amt_lw}/$forecast_amt_pw}*100;; }
+    sql: case when ${forecast_amt_lw} > 0 and ${forecast_amt_pw} > 0 then 100*${forecast_amt_lw}/nullif(${forecast_amt_pw},0)
+            when ${forecast_amt_lw} > 0 then 1
+            else 0 end;; }
 
   measure: forecast_units_ww {
     label: "Forecast (#) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${forecast_units_lw}/${forecast_units_pw}*100;; }
+    sql: case when ${forecast_units_lw} > 0 and ${forecast_units_pw} > 0 then 100*${forecast_units_lw}/nullif(${forecast_units_pw},0)
+            when ${forecast_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: inv_ww {
     label: "Inventory (#) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${inv_lw}/$inv_pw}*100;; }
+    sql: case when ${inv_lw} > 0 and ${inv_pw} > 0 then 100*${inv_lw}/nullif(${inv_pw},0)
+            when ${inv_lw} > 0 then 1
+            else 0 end;; }
 
   measure: prod_ww {
     label: "Produced (#) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${prod_lw}/${prod_pw}*100;; }
+    sql: case when ${prod_lw} > 0 and ${prod_pw} > 0 then 100*${prod_lw}/nullif(${prod_pw},0)
+            when ${prod_lw} > 0 then 1
+            end;; }
 
   measure: ff_units_ww {
     label: "Fulfilled (#) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${ff_units_lw}/${ff_units_pw}*100;; }
+    sql: case when ${ff_units_lw} > 0 and ${ff_units_pw} > 0 then 100*${ff_units_lw}/nullif(${ff_units_pw},0)
+            when ${ff_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: ff_amt_ww {
     label: "Fulfilled ($) W/W"
     type: number
     value_format: "0.0\%"
-    sql: ${ff_amt_lw}/${ff_amt_pw}*100;; }
+    sql: case when ${ff_amt_lw} > 0 and ${ff_amt_pw} > 0 then 100*${ff_amt_lw}/nullif(${ff_amt_pw},0)
+            when ${ff_amt_lw} > 0 then 1
+            else 0 end;; }
 
 ##########################   Year over Year
   measure: sales_amt_yy {
     label: "Gross Sales ($) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_amt_lw}/${sales_amt_ly}*100;; }
+    sql: case when ${sales_amt_lw} > 0 and ${sales_amt_ly} > 0 then 100*${sales_amt_lw}/nullif(${sales_amt_ly},0)
+            when ${sales_amt_lw} > 0 then 1
+            else 0 end;; }
 
   measure: sales_units_yy {
     label: "Gross Sales (#) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_units_lw}/${sales_units_ly}*100;; }
+    sql: case when ${sales_units_lw} > 0 and ${sales_units_ly} > 0 then 100*${sales_units_lw}/nullif(${sales_units_ly},0)
+            when ${sales_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: forecast_amt_yy {
     label: "Forecast ($) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${forecast_amt_lw}/${forecast_amt_ly}*100;; }
+    sql: case when ${forecast_amt_lw} > 0 and ${forecast_amt_ly} > 0 then 100*${forecast_amt_lw}/nullif(${forecast_amt_ly},0)
+            when ${forecast_amt_lw} > 0 then 1
+            else 0 end;; }
 
   measure: forecast_units_yy {
     label: "Forecast (#) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${forecast_units_lw}/${forecast_units_ly}*100;; }
+    sql: case when ${forecast_units_lw} > 0 and ${forecast_units_ly} > 0 then 100*${forecast_units_lw}/nullif(${forecast_units_ly},0)
+            when ${forecast_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: inv_yy {
     label: "Inventory (#) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${inv_lw}/${inv_ly}*100;; }
+    sql: case when ${inv_lw} > 0 and ${inv_ly} > 0 then 100*${inv_lw}/nullif(${inv_ly},0)
+            when ${inv_lw} > 0 then 1
+            else 0 end;; }
 
   measure: prod_yy {
     label: "Produced (#) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${prod_lw}/${prod_ly}*100;; }
+    sql: case when ${prod_lw} > 0 and ${prod_ly} > 0 then 100*${prod_lw}/nullif(${prod_ly},0)
+            when ${prod_lw} > 0 then 1
+            else 0 end;; }
 
   measure: ff_units_yy {
     label: "Fulfilled (#) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${ff_units_lw}/${ff_units_ly}*100;; }
+    sql: case when ${ff_units_lw} > 0 and ${ff_units_ly} > 0 then 100*${ff_units_lw}/nullif(${ff_units_ly},0)
+            when ${ff_units_lw} > 0 then 1
+            else 0 end;; }
 
   measure: ff_amt_yy {
     label: "Fulfilled ($) Y/Y"
     type: number
     value_format: "0.0\%"
-    sql: ${ff_amt_lw}/${ff_amt_ly}*100;; }
+    sql: case when ${ff_amt_lw} > 0 and ${ff_amt_ly} > 0 then 100*${ff_amt_lw}/nullif(${ff_amt_ly},0)
+            when ${ff_amt_lw} > 0 then 1
+            else 0 end;; }
 
 ##########################   to Plan
   measure: sales_amt_tp {
     label: "Gross Sales ($) to Plan"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_amt_lw}/${forecast_amt_lw}*100;; }
+    sql: case when ${sales_amt_lw} > 0 and ${forecast_amt_lw} > 0 then 100*${sales_amt_lw}/nullif(${forecast_amt_lw},0)
+            when ${sales_amt_lw} > 0 then 1
+            else 0 end;; }
 
   measure: sales_units_tp {
     label: "Gross Sales (#) to Plan"
     type: number
     value_format: "0.0\%"
-    sql: ${sales_units_lw}/${forecast_units_lw}*100;; }
+    sql: case when ${sales_units_lw} > 0 and ${forecast_units_lw} > 0 then 100*${sales_units_lw}/nullif(${forecast_units_lw},0)
+            when ${sales_units_lw} > 0 then 1
+            else 0 end;; }
+
+  measure: ff_units_tp {
+    label: "Fulfilled (#) to Produced"
+    type: number
+    value_format: "0.0\%"
+    sql: case when ${ff_units_lw} > 0 and ${prod_lw} > 0 then 100*${ff_units_lw}/nullif(${prod_lw},0)
+            when ${ff_units_lw} > 0 then 1
+            else 0 end;; }
+
+##########################   Filters
+   measure: sales_amt_f {
+    label: "Gross Sales ($) Filter"
+    type: yesno
+    sql: ${sales_amt_lw}+${sales_amt_pw}+${sales_amt_ly} > 0 ;; }
+
+  measure: sales_units_f {
+    label: "Gross Sales (#) Filter"
+    type: yesno
+    sql: ${sales_units_lw}+${sales_units_pw}+${sales_units_ly} > 0 ;; }
+
+  measure: forecast_amt_f {
+    label: "Forecast ($) Filter"
+    type: yesno
+    sql: ${forecast_amt_lw}+${forecast_amt_pw}+${forecast_amt_ly} > 0 ;; }
+
+  measure: forecast_units_f {
+    label: "Forecast (#) Filter"
+    type: yesno
+    sql: ${forecast_units_lw}+${forecast_units_pw}+${forecast_units_ly} > 0 ;; }
+
+  measure: inv_f {
+    label: "Inventory (#) Filter"
+    type: yesno
+    sql: ${inv_lw}+${inv_pw}+${inv_ly} > 0 ;; }
+
+  measure: prod_f {
+    label: "Produced (#) Filter"
+    type: yesno
+    sql: ${prod_lw}+${prod_pw}+${prod_ly} > 0 ;; }
+
+  measure: ff_units_f {
+    label: "Fulfilled (#) Filter"
+    type: yesno
+    sql: ${ff_units_lw}+${ff_units_pw}+${ff_units_ly} > 0 ;; }
+
+  measure: ff_amt_f {
+    label: "Fulfilled ($) Filter"
+    type: yesno
+    sql: ${ff_amt_lw}+${ff_amt_pw}+${ff_amt_ly} > 0 ;; }
 
 }
