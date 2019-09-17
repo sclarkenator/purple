@@ -28,7 +28,8 @@ view: cm_pivot {
   }
 
   measure: amount {
-    label: "$ amount"
+    hidden:  yes
+    label: "$ amount (old)"
     description: "Dollar amount of each category"
     value_format: "#,##0"
     type: sum
@@ -36,7 +37,8 @@ view: cm_pivot {
   }
 
   dimension: category {
-    label: "CM components"
+    hidden: yes
+    label: "CM components (old)"
     description: "List of CM components"
     type: string
     case: {
