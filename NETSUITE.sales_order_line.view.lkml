@@ -964,7 +964,8 @@ measure: SLA_Achievement_prct {
     view_label: "Customer"
     group_label: "Customer Address"
     type: string
-    sql: ${TABLE}.STREET_ADDRESS ;; }
+    sql: ${TABLE}.STREET_ADDRESS ;;
+    required_access_grants:[can_view_pii] }
 
   dimension: system {
     hidden: yes
