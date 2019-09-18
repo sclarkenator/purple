@@ -68,6 +68,16 @@ view: sessions {
     type: string
     sql: ${TABLE}.landing_page ;; }
 
+  dimension: page_type {
+    label: "Page Type"
+    type:  string
+    description: "Bucketed landing pages"
+    sql:  case when ${landing_page} ilike ('%checkouts%') then 'Checkout Page'
+           when ${landing_page} ilike ('%mattresses%') or when ${landing_page} ilike ('%pillows%') or when ${landing_page} ilike ('%/sheets') or when ${landing_page} ilike ('%/mattress-protector') or when ${landing_page} ilike ('%/platform') or when ${landing_page} ilike ('%/powerbase') or when ${landing_page} ilike ('%/pet-bed') or when ${landing_page} ilike ('%/seatcushions') then 'PDP'
+           when ${landing_page} ilike ('purple.com') then 'Home Page'
+           when ${landing_page} ilike ('%medium=%') or (‘%promo’) then 'Main Landing Page'
+           when ${landing_page} ilike ('%/buy%') then 'Buy Page' ;; }
+
   dimension: library {
     label: "Library"
     type: string
