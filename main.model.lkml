@@ -870,10 +870,10 @@ explore: sales_order_line {
     type:  full_outer
     sql_on: ${sales_order_line.item_id}=${item_price.item_id} ;;
     relationship: one_to_one}
-  join: c3_conversion {
+  join: c3_conversion_ft_lt {
     view_label: "C3 Conversions"
     type:  full_outer
-    sql_on: ${sales_order.order_id}=${c3_conversion.order_id} ;;
+    sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
     relationship: one_to_one
   }
 }
