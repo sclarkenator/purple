@@ -76,7 +76,7 @@ view: sessions {
            when ${landing_page} ilike ('%mattresses%') or ${landing_page} ilike ('%pillows%') or ${landing_page} ilike ('%/sheets') or ${landing_page} ilike ('%/mattress-protector') or ${landing_page} ilike ('%/platform') or ${landing_page} ilike ('%/powerbase') or ${landing_page} ilike ('%/pet-bed') or ${landing_page} ilike ('%/seatcushions') then 'PDP'
            when ${landing_page} ilike ('purple.com') then 'Home Page'
            when ${landing_page} ilike ('%medium=%') or ('%promo') then 'Main Landing Page'
-           when ${landing_page} ilike ('%/buy%') then 'Buy Page' ;; }
+           when ${landing_page} ilike ('%/buy%') then 'Buy Page' end;; }
 
   dimension: library {
     label: "Library"
