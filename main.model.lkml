@@ -644,37 +644,34 @@ explore: v_agent_state  {
 #-------------------------------------------------------------------
 
 
-#explore: sales_simplified{
-#  from: sales_order_line
-#  group_label: " Sales"
-#  view_label: "DTC Sales - Simplified View"
-#  description:  "All sales orders for DTC channel"
-#  hidden: yes
-  #join: sf_zipcode_facts {
-  #  view_label: "Customer"
-  #  type:  left_outer
-  #  sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-  #  relationship: many_to_one}
-#  join: dma {
-#    view_label: "Customer"
-#    type:  left_outer
-#    sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
-#    fields: [dma.dma_name,dma.zip,dma.dma]
-#    relationship: many_to_one}
+explore: sales_simplified{
+  from: sales_order_line
+  group_label: " Sales"
+  view_label: "DTC Sales - Simplified View"
+  description:  "All sales orders for DTC channel"
+  hidden: yes
+  join: sf_zipcode_facts {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    relationship: many_to_one}
+  join: dma {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
+    fields: [dma.dma_name,dma.zip,dma.dma]
+    relationship: many_to_one}
   #join: customer_table {
   #  view_label: "Customer"
   #  type: left_outer
   #  sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
-  #  fields: [customer.]
   #  relationship: many_to_one}
- # join: sales_order {
-#    view_label: "Sales Header"
-#    type: left_outer
-#    sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
-#    relationship: many_to_one}
-
-
-#}
+  join: sales_order {
+    view_label: "Sales Header"
+    type: left_outer
+    sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
+    relationship: many_to_one}
+}
 
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
