@@ -666,11 +666,11 @@ explore: sales_simplified{
   #  type: left_outer
   #  sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
   #  relationship: many_to_one}
-  join: sales_order {
-    view_label: "Sales Header"
-    type: left_outer
-    sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
-    relationship: many_to_one}
+  #join: sales_order {
+  #  view_label: "Sales Header"
+  #  type: left_outer
+  #  sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
+  #  relationship: many_to_one}
 }
 
 explore: wholesale_mfrm_manual_asn  {
@@ -710,7 +710,7 @@ explore: sales_order_line {
     sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: many_to_many}
   join: visible {
-    view_label: "Visible"
+    view_label: "Fulfillment"
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
     relationship: many_to_one}
