@@ -3,7 +3,7 @@
 ######################################################
 view: day_aggregations_dtc_sales {
   derived_table: {
-    explore_source: sales_order_line_dtc {
+    explore_source: sales_order_line {
       column: created_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
@@ -11,7 +11,7 @@ view: day_aggregations_dtc_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line_dtc.created_date value: "2 years" }
+      filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
   #dimension: created_date { type: date }
@@ -32,7 +32,7 @@ view: day_aggregations_dtc_sales {
 ######################################################
 view: day_aggregations_wholesale_sales {
   derived_table: {
-    explore_source: sales_order_line_dtc {
+    explore_source: sales_order_line {
       column: fulfilled_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
@@ -40,7 +40,7 @@ view: day_aggregations_wholesale_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line_dtc.fulfilled_date value: "2 years" }
+      filters: { field: sales_order_line.fulfilled_date value: "2 years" }
     }
   }
   dimension: fulfilled_date { type: date }
@@ -130,7 +130,7 @@ view: day_aggregations_targets {
 
 view: day_aggregations_dtc_returns {
   derived_table: {
-    explore_source: sales_order_line_dtc {
+    explore_source: sales_order_line {
       column: total_trial_returns_completed_dollars { field: return_order_line.total_trial_returns_completed_dollars }
       column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
       column: return_completed_date { field: return_order.return_completed_date }
@@ -184,7 +184,7 @@ view: day_aggregations_wholesale_returns {
 
 view: day_aggregations_dtc_cancels {
   derived_table: {
-    explore_source: sales_order_line_dtc {
+    explore_source: sales_order_line {
       column: amt_cancelled_and_refunded { field: cancelled_order.amt_cancelled_and_refunded }
       column: cancelled_date { field: cancelled_order.cancelled_date }
       filters: { field: sales_order.channel value: "DTC" }

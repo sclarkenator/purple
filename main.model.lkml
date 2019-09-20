@@ -683,7 +683,7 @@ explore: wholesale_mfrm_manual_asn  {
   group_label: "Wholesale"
 }
 
-explore: sales_order_line_dtc{
+explore: sales_order_line{
   from:  sales_order_line
   label:  "DTC"
   group_label: " Sales"
@@ -697,32 +697,32 @@ explore: sales_order_line_dtc{
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${sales_order_line_dtc.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
   join: dma {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${sales_order_line_dtc.zip} = ${dma.zip} ;;
+    sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
     relationship: many_to_one}
   join: item {
     view_label: "Product"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.item_id} = ${item.item_id} ;;
+    sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
     relationship: many_to_one}
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: many_to_many}
   join: visible {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.order_id} = ${visible.order_id} and ${sales_order_line_dtc.item_id} = ${visible.item_id} ;;
+    sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
     relationship: many_to_one}
   join: sales_order {
     view_label: "Sales Header"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.order_system} = ${sales_order.order_system} ;;
+    sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
   #join: xpo_data_3_pl{
   #  view_label: "XPO Hub Data"
@@ -737,7 +737,7 @@ explore: sales_order_line_dtc{
   join: wholesale_customer_warehouses {
     view_label: "Wholesale Warehouses"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
+    sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
     relationship: many_to_one}
   join: shopify_orders {
     view_label: "Sales Line"
@@ -748,7 +748,7 @@ explore: sales_order_line_dtc{
   join: return_order_line {
     view_label: "Returns"
     type: full_outer
-    sql_on: ${sales_order_line_dtc.item_order} = ${return_order_line.item_order} ;;
+    sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
     relationship: one_to_many}
   join: return_order {
     view_label: "Returns"
@@ -780,7 +780,7 @@ explore: sales_order_line_dtc{
   join: retroactive_discount {
     view_label: "Retro Discounts"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.item_order} = ${retroactive_discount.item_order_refund} ;;
+    sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
     relationship: one_to_many}
   join: discount_code {
     view_label: "Retro Discounts"
@@ -790,7 +790,7 @@ explore: sales_order_line_dtc{
   join: cancelled_order {
     view_label: "Cancellations"
     type: left_outer
-    sql_on: ${sales_order_line_dtc.item_order} = ${cancelled_order.item_order} ;;
+    sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
     relationship: one_to_many}
   join: NETSUITE_cancelled_reason {
     view_label: "Cancellations"
@@ -814,12 +814,12 @@ explore: sales_order_line_dtc{
     relationship: one_to_one}
   join: contribution {
     type: left_outer
-    sql_on: ${contribution.contribution_pk} = ${sales_order_line_dtc.item_order} ;;
+    sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
     relationship: one_to_one}
   join: cm_pivot {
     view_label: "x-CM waterfall"
     type: left_outer
-    sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line_dtc.item_order} ;;
+    sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
     relationship: one_to_many}
   join: state_tax_reconciliation {
     view_label: "State Tax Reconciliation"
@@ -853,7 +853,7 @@ explore: sales_order_line_dtc{
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
-    sql_on: ${warranty_order_line.item_order} = ${sales_order_line_dtc.item_order};;
+    sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: one_to_many}
   join: warranty_order {
     view_label: "Warranties"

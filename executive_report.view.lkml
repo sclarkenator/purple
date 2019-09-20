@@ -3,7 +3,7 @@
 ######################################################
 view: sales_exec {
   derived_table: {
-        explore_source: sales_order_line_dtc {
+        explore_source: sales_order_line {
           column: sku_id { field: item.sku_id }
           column: channel2 { field: sales_order.channel2 }
           column: state { field: sf_zipcode_facts.state }
@@ -14,7 +14,7 @@ view: sales_exec {
           filters: { field: item.merchandise value: "No" }
           filters: { field: item.finished_good_flg value: "Yes" }
           filters: { field: item.modified value: "Yes" }
-          filters: { field: sales_order_line_dtc.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
+          filters: { field: sales_order_line.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
         }
       }
       dimension: sku_id { }
@@ -108,7 +108,7 @@ view: prod_exec {
 ######################################################
 view: ff_exec {
   derived_table: {
-    explore_source: sales_order_line_dtc {
+    explore_source: sales_order_line {
       column: sku_id { field: item.sku_id }
       column: channel2 { field: sales_order.channel2 }
       column: state { field: sf_zipcode_facts.state }
@@ -119,7 +119,7 @@ view: ff_exec {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line_dtc.week_bucket_ff value: "Last Week,Two Weeks Ago,Last Week LY" }
+      filters: { field: sales_order_line.week_bucket_ff value: "Last Week,Two Weeks Ago,Last Week LY" }
     }
   }
   dimension: sku_id { }
