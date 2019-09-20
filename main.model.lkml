@@ -683,7 +683,7 @@ explore: wholesale_mfrm_manual_asn  {
   group_label: "Wholesale"
 }
 
-explore: sales_order_line_dtc {
+explore: sales_order_line{
   from:  sales_order_line
   label:  "DTC"
   group_label: " Sales"
