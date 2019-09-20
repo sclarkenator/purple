@@ -16,6 +16,13 @@ view: item {
     type: string
     sql: ${TABLE}.classification ;; }
 
+  dimension: UPC_code {
+    label: "UPC Code"
+    description: "What UPC coe has been assigned"
+    hidden:  no
+    type: string
+    sql: ${TABLE}.UPC_CODE ;; }
+
   dimension: type {
     label: "Type"
     hidden: yes
