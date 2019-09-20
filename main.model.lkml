@@ -650,17 +650,17 @@ explore: sales_simplified{
   view_label: "DTC Sales - Simplified View"
   description:  "All sales orders for DTC channel"
   hidden: yes
-  join: sf_zipcode_facts {
-    view_label: "Customer"
-    type:  left_outer
-    sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-    relationship: many_to_one}
-  join: dma {
-    view_label: "Customer"
-    type:  left_outer
-    sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
-    fields: [dma.dma_name,dma.zip,dma.dma]
-    relationship: many_to_one}
+#   join: sf_zipcode_facts {
+#     view_label: "Customer"
+#     type:  left_outer
+#     sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+#     relationship: many_to_one}
+#   join: dma {
+#     view_label: "Customer"
+#     type:  left_outer
+#     sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
+#     fields: [dma.dma_name,dma.zip,dma.dma]
+#     relationship: many_to_one}
   #join: customer_table {
   #  view_label: "Customer"
   #  type: left_outer
