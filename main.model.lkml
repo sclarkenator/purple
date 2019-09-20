@@ -644,12 +644,16 @@ explore: v_agent_state  {
 #-------------------------------------------------------------------
 
 
-explore: sales_simplified{
-  from: sales_order_line
-  group_label: " Sales"
-  view_label: "DTC Sales - Simplified View"
-  description:  "All sales orders for DTC channel"
-  hidden: yes
+
+
+
+# explore: sales_simplified{
+#   from: sales
+#   group_label: " Sales"
+#   view_label: "DTC Sales - Simplified View"
+#   description:  "All sales orders for DTC channel"
+#   hidden: yes
+#   fields: [customer_table.first_name]
 #   join: sf_zipcode_facts {
 #     view_label: "Customer"
 #     type:  left_outer
@@ -671,7 +675,7 @@ explore: sales_simplified{
   #  type: left_outer
   #  sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
   #  relationship: many_to_one}
-}
+# }
 
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
@@ -679,7 +683,8 @@ explore: wholesale_mfrm_manual_asn  {
   group_label: "Wholesale"
 }
 
-explore: sales_order_line {
+explore: sales_order_line_dtc {
+  from:  sales_order_line
   label:  "DTC"
   group_label: " Sales"
   view_label: "Sales Line"
