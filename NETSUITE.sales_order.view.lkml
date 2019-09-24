@@ -22,6 +22,20 @@ view: sales_order {
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
+  measure: max_order_size {
+    label: "Max Order Size ($)"
+    description: "Max total order amount, excluding tax"
+    type: max
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.gross_amt ;; }
+
+  measure: min_order_size {
+    label: "Min Order Size ($)"
+    description: "Min total order amount, excluding tax"
+    type: min
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.gross_amt ;; }
+
   dimension: order_system {
     primary_key:  yes
     hidden:  yes

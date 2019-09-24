@@ -14,6 +14,7 @@ derived_table: {
       ,case when BLANKET_FLG >0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
       ,case when split_king > 0 then 1 else 0 end sk_flg
+      ,mattress_ordered
     FROM(
       select order_id
         ,sum(case when product_line_name_LKR = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -191,5 +192,11 @@ derived_table: {
     description: "1/0; 1 if there is more than 1 mattress in the order"
     type:  number
     sql:  ${TABLE}.mm_flg ;; }
+
+  dimension: mattress_count {
+    description: "Number of mattresses in the order"
+    type: number
+    sql: ${TABLE}.mattress_ordered ;;
+  }
 
 }
