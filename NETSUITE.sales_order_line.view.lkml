@@ -1,6 +1,11 @@
 view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
+  dimension: payment_method {
+    type: string
+    sql: sales_order.payment_method ;;
+  }
+
 
 
   dimension: item_order{

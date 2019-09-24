@@ -160,6 +160,15 @@ view: return_order_line {
     tiers: [30,60,90,120]
     sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
 
+  dimension: days_between_buckets_extended{
+    group_label: "Return Aging Buckets"
+    label: "60"
+    description: "What aging bucket the order was returned in (60,120,180,240,300,360)"
+    type: tier
+    style: integer
+    tiers: [60,120,180,240,300,360]
+    sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
+
   dimension: days_between_week_buckets{
     group_label: "Return Aging Buckets"
     label: "07"

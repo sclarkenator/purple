@@ -579,8 +579,8 @@ explore: cc_agent_data {
     relationship: one_to_many}
   join: agent_evaluation {
     type: full_outer
-    sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id} ;;
-    relationship: one_to_many}
+    sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
+    relationship: one_to_one}
   join: rpt_agent_stats {
     type: full_outer
     sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
@@ -602,11 +602,11 @@ explore: cc_agent_data {
     sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
   join: team_lead_name {
-    type:  full_outer
-    sql_on:  ${cc_agent_data.incontact_id} = ${team_lead_name.incontact_id}
-      and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date
-      and ${cc_agent_data.created_date}::date < ${team_lead_name.end_date}::date;;
-    relationship: many_to_one
+    type:  left_outer
+    sql_on:  ${team_lead_name.incontact_id}=${cc_agent_data.incontact_id}
+       and  ${team_lead_name.end_date}::date > '2089-12-31'::date
+      and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+    relationship: one_to_one
   }
   required_access_grants: [is_customer_care_manager]
 }
@@ -644,37 +644,38 @@ explore: v_agent_state  {
 #-------------------------------------------------------------------
 
 
-#explore: sales_simplified{
-#  from: sales_order_line
-#  group_label: " Sales"
-#  view_label: "DTC Sales - Simplified View"
-#  description:  "All sales orders for DTC channel"
-#  hidden: yes
-  #join: sf_zipcode_facts {
-  #  view_label: "Customer"
-  #  type:  left_outer
-  #  sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-  #  relationship: many_to_one}
-#  join: dma {
-#    view_label: "Customer"
-#    type:  left_outer
-#    sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
-#    fields: [dma.dma_name,dma.zip,dma.dma]
-#    relationship: many_to_one}
+
+
+
+# explore: sales_simplified{
+#   from: sales
+#   group_label: " Sales"
+#   view_label: "DTC Sales - Simplified View"
+#   description:  "All sales orders for DTC channel"
+#   hidden: yes
+#   fields: [customer_table.first_name]
+#   join: sf_zipcode_facts {
+#     view_label: "Customer"
+#     type:  left_outer
+#     sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+#     relationship: many_to_one}
+#   join: dma {
+#     view_label: "Customer"
+#     type:  left_outer
+#     sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
+#     fields: [dma.dma_name,dma.zip,dma.dma]
+#     relationship: many_to_one}
   #join: customer_table {
   #  view_label: "Customer"
   #  type: left_outer
   #  sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
-  #  fields: [customer.]
   #  relationship: many_to_one}
- # join: sales_order {
-#    view_label: "Sales Header"
-#    type: left_outer
-#    sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
-#    relationship: many_to_one}
-
-
-#}
+  #join: sales_order {
+  #  view_label: "Sales Header"
+  #  type: left_outer
+  #  sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
+  #  relationship: many_to_one}
+# }
 
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
@@ -682,7 +683,8 @@ explore: wholesale_mfrm_manual_asn  {
   group_label: "Wholesale"
 }
 
-explore: sales_order_line {
+explore: sales_order_line{
+  from:  sales_order_line
   label:  "DTC"
   group_label: " Sales"
   view_label: "Sales Line"
@@ -713,7 +715,7 @@ explore: sales_order_line {
     sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: many_to_many}
   join: visible {
-    view_label: "Visible"
+    view_label: "Fulfillment"
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
     relationship: many_to_one}
@@ -722,11 +724,11 @@ explore: sales_order_line {
     type: left_outer
     sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
-  join: xpo_data_3_pl{
-    view_label: "XPO Hub Data"
-    type: left_outer
-    sql_on: substring(${sales_order_line.zip},1,5) = ${xpo_data_3_pl.destinationzip} ;;
-    relationship: many_to_one}
+  #join: xpo_data_3_pl{
+  #  view_label: "XPO Hub Data"
+  #  type: left_outer
+  #  sql_on: substring(${sales_order_line.zip},1,5) = ${xpo_data_3_pl.destinationzip} ;;
+  #  relationship: many_to_one}
   #join: manna_data_pull {
   #  view_label: "Mike Shultz Project Data"
   #  type: left_outer
@@ -865,11 +867,12 @@ explore: sales_order_line {
     required_joins: [warranty_order]
     sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
     relationship: many_to_one}
-  join: item_price {
-    view_label: "Item Prices"
+  join: c3_conversion_ft_lt {
+    view_label: "C3 Conversions"
     type:  full_outer
-    sql_on: ${sales_order_line.item_id}=${item_price.item_id} ;;
-    relationship: one_to_one}
+    sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
+    relationship: one_to_one
+  }
 }
 
 
@@ -1047,6 +1050,7 @@ explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "A
 explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
+explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: warranty_timeline {
   label: "Warranty Timeline"
   group_label: "Accounting"

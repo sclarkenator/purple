@@ -157,7 +157,7 @@ view: day_aggregations_dtc_returns {
 
 view: day_aggregations_wholesale_returns {
   derived_table: {
-    explore_source: sales_order_line {
+    explore_source: sales_order_line_dtc {
       column: total_trial_returns_completed_dollars { field: return_order_line.total_trial_returns_completed_dollars }
       column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
       column: return_completed_date { field: return_order.return_completed_date }
