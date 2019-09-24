@@ -602,7 +602,7 @@ explore: cc_agent_data {
     sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
   join: team_lead_name {
-    type:  full_outer
+    type:  left_outer
     sql_on:  ${cc_agent_data.incontact_id} = ${team_lead_name.incontact_id}
       and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date
       and ${cc_agent_data.created_date}::date < ${team_lead_name.end_date}::date;;
