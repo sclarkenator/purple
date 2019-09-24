@@ -604,8 +604,8 @@ explore: cc_agent_data {
   join: team_lead_name {
     type:  left_outer
     sql_on:  ${team_lead_name.incontact_id}=${cc_agent_data.incontact_id}
-       and  ${team_lead_name.end_date}::date > '2089-12-31'::date
-      and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+       and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+      #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
     relationship: one_to_one
   }
   required_access_grants: [is_customer_care_manager]
