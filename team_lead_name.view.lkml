@@ -11,6 +11,7 @@ view: team_lead_name {
     sql: ${TABLE}."TEAM_LEAD_ID" ;;
   }
 
+
   dimension: start_date {
     type:  date
     sql:${TABLE}."START_DATE" ;;
@@ -23,7 +24,12 @@ view: team_lead_name {
 
   dimension: team_Name {
     type:  string
-    sql: ${TABLE}.team_name ;;
+    sql: ${TABLE}."TEAM_NAME" ;;
+  }
+
+  dimension: agent_Name {
+    type:  string
+    sql: ${TABLE}.agent_name ;;
   }
 
   measure: count {

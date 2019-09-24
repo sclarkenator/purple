@@ -579,8 +579,8 @@ explore: cc_agent_data {
     relationship: one_to_many}
   join: agent_evaluation {
     type: full_outer
-    sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id} ;;
-    relationship: one_to_many}
+    sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
+    relationship: one_to_one}
   join: rpt_agent_stats {
     type: full_outer
     sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
@@ -603,10 +603,10 @@ explore: cc_agent_data {
     relationship:  one_to_many}
   join: team_lead_name {
     type:  left_outer
-    sql_on:  ${cc_agent_data.incontact_id} = ${team_lead_name.incontact_id}
-      and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date
-      and ${cc_agent_data.created_date}::date < ${team_lead_name.end_date}::date;;
-    relationship: many_to_one
+    sql_on:  ${team_lead_name.incontact_id}=${cc_agent_data.incontact_id}
+       and  ${team_lead_name.end_date}::date > '2089-12-31'::date
+      and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+    relationship: one_to_one
   }
   required_access_grants: [is_customer_care_manager]
 }
