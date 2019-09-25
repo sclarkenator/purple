@@ -1051,6 +1051,7 @@ explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Account
 explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
+explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
 explore: warranty_timeline {
   label: "Warranty Timeline"
   group_label: "Accounting"
