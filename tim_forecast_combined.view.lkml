@@ -50,18 +50,18 @@ view: tim_forecast_combined {
         order by 2, 1
       ), yy as (
         --DTC forecast merged with dates to get a count/day
-        select b.date
+         select b.date
             , a.sku_id
             , a.amount/c.days_in_month as amount
             , a.units/c.days_in_month as paid_units
             , a.promo_units/c.days_in_month as promo_units
         from analytics.csv_uploads.forecasted_targets a
-        left join analytics.util.warehouse_date b on b.month = month(a.date::date) and b.year = year(a.date::date)
         left join (
-          select year, month, count (date) as days_in_month
+          select year, WEEK_OF_YEAR, min(date) as first_date, count (date) as days_in_month
           from analytics.util.warehouse_date
-          group by year, month
-        ) c on c.year = b.year and c.month = b.month
+          group by year, WEEK_OF_YEAR
+        ) c on c.first_date = a.date
+        left join analytics.util.warehouse_date b on b.year = c.year and b.week_of_year = c.week_of_year
       )
       select coalesce(zz.date, yy.date) as date
           , coalesce(zz.sku_id, yy.sku_id) as sku_id
