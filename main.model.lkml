@@ -335,6 +335,11 @@ explore: daily_adspend {
 explore: slicktext_contact {
   group_label: "Marketing"
   hidden: yes
+  join: slicktext_textword {
+    type: full_outer
+    sql_on: ${slicktext_contact.textword_id}=${slicktext_textword.id} ;;
+    relationship: many_to_many
+  }
 }
 
 
