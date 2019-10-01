@@ -36,4 +36,9 @@ view: agent_attendance {
     type: count
     drill_fields: [agent_name]
   }
+
+  dimension: insert_ts {
+    type: date_time
+    sql: ${TABLE}."INSERT_TS" ;;
+  }
 }
