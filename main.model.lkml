@@ -332,6 +332,12 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: slicktext_contact {
+  group_label: "Marketing"
+  hidden: yes
+}
+
+
 explore: hotjar_data {
   group_label: "Marketing"
   label: "Hotjar Survey Results"
