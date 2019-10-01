@@ -14,6 +14,7 @@ view: slicktext_contact {
   dimension: contact_id {
     type: number
     sql: ${TABLE}."CONTACT_ID" ;;
+    primary_key: yes
   }
 
   dimension: country {
