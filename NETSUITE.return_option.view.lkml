@@ -8,10 +8,10 @@ view: return_option {
     sql:${TABLE}.LIST_ID;; }
 
   dimension: list_item_name {
-    label:"Return Method"
+    label:" Return Method"
     description: "Channel the customer used show proof and qualify for the refund"
     type:  string
-    group_label: " Basic"
+
     sql:${TABLE}.list_item_name;; }
 
 }

@@ -276,10 +276,9 @@ view: return_order_line {
     sql: ${TABLE}.MEMO ;; }
 
   dimension: gross_amt {
-    label: "Gross Amount ($)"
+    label: " Gross Amount ($)"
     description: "Net amount ($) being returned"
     type: number
-    group_label: " Basic"
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: order_id {

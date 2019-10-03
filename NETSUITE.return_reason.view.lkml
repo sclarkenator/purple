@@ -8,10 +8,9 @@ view: return_reason {
     sql: ${TABLE}.LIST_ID ;; }
 
   dimension: return_reason {
-    label:"Return Reason"
+    label:" Return Reason"
     description: "Reason customer gives for returning that item"
     type:  string
-    group_label: " Basic"
     sql:  upper(${TABLE}.list_item_name) ;; }
 
 }
