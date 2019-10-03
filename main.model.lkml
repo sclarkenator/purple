@@ -270,6 +270,12 @@ explore: purcahse_and_transfer_ids {
     sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
     relationship: many_to_one}}
 
+explore: v_fedex_to_xpo {
+  hidden:  yes
+  group_label: "Production"
+}
+
+
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
   group_label: "Operations"
@@ -877,8 +883,7 @@ explore: sales_order_line{
     view_label: "Promo"
     type:left_outer
     sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
-    relationship: one_to_one
-   }
+    relationship: one_to_one}
   join: slicktext_contact {
     view_label: "Promo"
     type: full_outer

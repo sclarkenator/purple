@@ -994,7 +994,7 @@ measure: SLA_Achievement_prct {
   dimension: street_address {
     label: "Street Address"
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.STREET_ADDRESS ;;
     required_access_grants:[can_view_pii] }
@@ -1044,7 +1044,7 @@ measure: SLA_Achievement_prct {
 
   dimension: zip {
     view_label: "Customer"
-    group_label: "Customer Address"
+    label: " Zip"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: substr(${TABLE}.ZIP,1,5) ;; }

@@ -2,7 +2,7 @@ view: customer_table {
   sql_table_name: ANALYTICS_STAGE.netsuite.CUSTOMERS ;;
 
   dimension: customer_id {
-    label: "Customer ID"
+    label: "  Customer ID"
     description: "Hyperlink to customer record in netsuite by internal id"
     type: string
     primary_key: yes
@@ -18,6 +18,7 @@ view: customer_table {
 
   dimension: full_name {
     label: "Customer Name"
+    group_label: "Advanced"
     description: "Merging first and last name from netsuite"
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));;
@@ -25,12 +26,14 @@ view: customer_table {
 
   dimension: first_name {
     label: "First Name"
+    group_label: "Advanced"
     type: string
     sql:  ${TABLE}.firstname;;
     required_access_grants:[can_view_pii] }
 
   dimension: last_name {
     label: "Last Name"
+    group_label: "Advanced"
     type: string
     sql:  ${TABLE}.lastname ;;
     required_access_grants:[can_view_pii] }
@@ -54,6 +57,7 @@ view: customer_table {
   dimension: email {
     hidden:  no
     label: "Customer Email"
+    group_label: "Advanced"
     type: string
     sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes'
               THEN ${TABLE}.email
@@ -64,6 +68,7 @@ view: customer_table {
   dimension: phone {
     hidden:  no
     label: "Customer Phone"
+    group_label: "Advanced"
     description: "Looking first at Home Phone, then at Mobile"
     type: string
     sql: nvl(${TABLE}.home_phone,${TABLE}.mobile_phone) ;;

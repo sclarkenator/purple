@@ -22,20 +22,20 @@ view: sf_zipcode_facts {
   }
 
   dimension: city {
-    group_label: "Customer Address"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.city ;;
   }
 
   dimension: state {
-    group_label: "Customer Address"
+    label: " State"
     type: string
     map_layer_name: us_states
     sql: ${TABLE}.state ;;
   }
 
   dimension: price_test_state {
-    group_label: "Customer Address"
+    group_label: "Advanced"
     type: string
     sql: case when ${TABLE}.state in ('NC','OH','WA','CO','FL','WI') then 'test'
         else 'control' end ;;
@@ -43,7 +43,7 @@ view: sf_zipcode_facts {
 
   dimension: fulfillment_region {
     label: "US Fulfillment Region"
-    group_label: "Customer Address"
+    group_label: "Advanced"
     type: string
     sql: case when ${TABLE}.state = 'CA'
               then 'California'

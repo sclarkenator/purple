@@ -3,7 +3,7 @@ view: item {
 
   dimension: item_id {
     primary_key: yes
-    label: "Item ID"
+    label: " Item ID"
     description: "Internal Netsuite ID"
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     type: number
@@ -21,6 +21,7 @@ view: item {
     description: "What UPC coe has been assigned"
     hidden:  no
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.UPC_CODE ;; }
 
   dimension: type {
@@ -39,6 +40,7 @@ view: item {
   dimension: BASE_UNIT {
     label: "NetSuite Base Unit"
     description: "Used to show what unit non-each items are stored in"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.base_unit ;; }
 
@@ -52,6 +54,7 @@ view: item {
   dimension: merchandise2 {
     label: "Is Merchandising"
     description: "Yes is a merchandising product for wholesale"
+    group_label: "Yes/No Filters"
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;; }
 
@@ -77,7 +80,7 @@ view: item {
     sql: ${classification} = 'FG' ;;}
 
   dimension: product_description {
-    label:  "Product Name"
+    label:  " Product Name"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
@@ -97,7 +100,7 @@ view: item {
 
   dimension: model_name {
     hidden:  no
-    label:  "Mattress Model"
+    label:  " Mattress Model"
     description: "Original, P2, P3, P4, Powerbase, or Other"
     drill_fields: [product_description]
     type: string
@@ -114,6 +117,7 @@ view: item {
   dimension: product_line_name {
     label: "Production buckets"
     description: "Type of product (mattress, pillow, cushion, etc.)"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;; }
 
@@ -201,6 +205,7 @@ view: item {
   dimension: color {
     label: "Sheets Color"
     description: "Only sheets have color assigned"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.COLOR ;; }
 
@@ -215,7 +220,7 @@ view: item {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: size {
-    label: "Mattress Size"
+    label: " Mattress Size"
     description:  "TwinXL, Full, Queen, King, Cal-King or Other"
     type: string
     case: {
@@ -232,6 +237,7 @@ view: item {
     description: "SKU ID for item (XX-XX-XXXXXX)"
     link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.SKU_ID ;; }
 
   dimension: update_ts {
@@ -242,6 +248,7 @@ view: item {
   dimension: Inactive {
     label: "Inactive Item?"
     hidden: no
+    group_label: "Yes/No Filters"
     type: yesno
     sql: Case when ${TABLE}.inactive = 1 Then true else false End ;; }
 
@@ -249,6 +256,7 @@ view: item {
     label: "Classification (buckets)"
     description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other)"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.classification ;;
     case: {
       when: { sql: ${TABLE}.classification = 'FG' ;; label: "Finished Good" }
