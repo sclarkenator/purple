@@ -32,6 +32,7 @@ view: marketing_promo_codes {
 
   dimension: primary_key {
     primary_key: yes
+    hidden: yes
     sql: CONCAT(${promo},${source},${start_date}) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }

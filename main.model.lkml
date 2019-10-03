@@ -332,16 +332,6 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
-explore: slicktext_contact {
-  group_label: "Marketing"
-  hidden: yes
-  join: slicktext_textword {
-    type: full_outer
-    sql_on: ${slicktext_contact.textword_id}=${slicktext_textword.id} ;;
-    relationship: many_to_many
-  }
-}
-
 
 explore: hotjar_data {
   group_label: "Marketing"
@@ -882,7 +872,18 @@ explore: sales_order_line{
     view_label: "C3 Conversions"
     type:  full_outer
     sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
+    relationship: one_to_one}
+  join : slicktext_textword {
+    view_label: "Promo"
+    type:left_outer
+    sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
     relationship: one_to_one
+   }
+  join: slicktext_contact {
+    view_label: "Promo"
+    type: full_outer
+    sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
+    relationship: many_to_many
   }
 }
 

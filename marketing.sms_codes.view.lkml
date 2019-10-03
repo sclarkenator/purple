@@ -18,6 +18,7 @@ view: marketing_sms_codes {
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${sms},${promo}) ;;
+    hidden: yes
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 
