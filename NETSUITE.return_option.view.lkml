@@ -11,6 +11,7 @@ view: return_option {
     label:"Return Method"
     description: "Channel the customer used show proof and qualify for the refund"
     type:  string
+    group_label: " Basic"
     sql:${TABLE}.list_item_name;; }
 
 }

@@ -147,12 +147,13 @@ view: return_order_line {
 
   dimension: days_between_dimension {
     label: "Return Window (days)"
+    group_label: "Advanced"
     description: "How many days until product return was initiated?"
     type: number
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_buckets {
-    group_label: "Return Aging Buckets"
+    hidden:  yes
     label: "30"
     description: "What aging bucket the order was returned in (30,60,90,120)"
     type: tier
@@ -161,7 +162,7 @@ view: return_order_line {
     sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_buckets_extended{
-    group_label: "Return Aging Buckets"
+    hidden:  yes
     label: "60"
     description: "What aging bucket the order was returned in (60,120,180,240,300,360)"
     type: tier
@@ -170,7 +171,7 @@ view: return_order_line {
     sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_week_buckets{
-    group_label: "Return Aging Buckets"
+    hidden:  yes
     label: "07"
     description: "What aging bucket the order was returned in (7,14,21,28,35,42,49,56)"
     type: tier
@@ -278,6 +279,7 @@ view: return_order_line {
     label: "Gross Amount ($)"
     description: "Net amount ($) being returned"
     type: number
+    group_label: " Basic"
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: order_id {
@@ -314,21 +316,24 @@ view: return_order_line {
 
   dimension: return_qty {
     label: "Quantity Returned (units)"
+    group_label: "Advanced"
     description:  "Total units returned"
     type: number
     sql: ${TABLE}.RETURN_QTY ;; }
 
   dimension: revenue_item {
     label: "Is Revenue Item"
+    group_label: "Yes/No Filters"
     description: "Yes if return amount tied to a revenue item"
     type: yesno
     sql: ${TABLE}.REVENUE_ITEM ;; }
 
   dimension_group: shipment_received {
-    label: "Return Shipment Recieved"
+    label: "Date Return Shipment Recieved"
     description: "Date when the returned item was recieved by Purple"
     #hidden: yes
     type: time
+    group_label: "Dates"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -366,5 +371,4 @@ view: return_order_line {
       item.sub_category_name,
       item.product_line_name,
       product_line.product_line_id] }
-
 }

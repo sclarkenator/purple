@@ -11,6 +11,7 @@ view: return_reason {
     label:"Return Reason"
     description: "Reason customer gives for returning that item"
     type:  string
+    group_label: " Basic"
     sql:  upper(${TABLE}.list_item_name) ;; }
 
 }

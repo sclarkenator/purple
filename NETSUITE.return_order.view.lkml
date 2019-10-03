@@ -36,6 +36,7 @@ view: return_order {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
+    group_label: "Dates"
     sql: to_timestamp_ntz(${TABLE}.CREATED) ;; }
 
   dimension_group: customer_receipt {
@@ -44,6 +45,7 @@ view: return_order {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
+    group_label: "Dates"
     sql: ${"fulfillment".fulfilled_f_date} ;; }
 
   dimension: entity_id {
@@ -109,6 +111,7 @@ view: return_order {
   dimension: return_ref_id {
     label:"RMA Number"
     description:  "RMA number of return (Return Ref ID)"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.RETURN_REF_ID ;; }
 
@@ -120,6 +123,7 @@ view: return_order {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
+    group_label: "Dates"
     sql: ${TABLE}.RETURN_TRIAL_EXPIRY_DATE ;; }
 
   dimension_group: rma_pickup {
@@ -128,6 +132,7 @@ view: return_order {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
+    group_label: "Dates"
     sql: ${TABLE}.RMA_PICKUP_DATE ;; }
 
   dimension: rma_return_form_sent {
@@ -139,6 +144,7 @@ view: return_order {
     label:  "Return Type"
     description: "Return type: Trial / Non-trial"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.RMA_RETURN_TYPE ;; }
 
   dimension: rma_stretchy_sheet_id {
@@ -178,11 +184,13 @@ view: return_order {
     label: "Status of Return"
     description: "Refunded, cancelled, in process, etc."
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.STATUS ;; }
 
   dimension: was_returned {
     label: "Was Returned - Trial Return"
     description: "Indicates if a trial return was completed and refunded"
+    group_label: "Yes/No Filters"
     type: yesno
     sql: ${TABLE}.STATUS = 'Refunded' and ${TABLE}.RMA_RETURN_TYPE = 'Trial' ;;
   }
@@ -214,6 +222,7 @@ view: return_order {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
+    group_label: "Dates"
     sql: ${TABLE}.return_completed ;; }
 
   measure: days_from_order_to_complete_return {
@@ -233,11 +242,13 @@ view: return_order {
   dimension: law_tag {
     type: date
     sql: ${TABLE}.LAW_TAG ;;
+    hidden:  yes
   }
 
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
     hidden: no
+    group_label: "Advanced"
     sql: case when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
             when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 60 then '31-60 Days'
             when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 100 then '61-100 Days'
@@ -249,6 +260,7 @@ view: return_order {
   {
     primary_key:  yes
     sql: ${TABLE}.return_order_id ;;
+    hidden:  yes
 
   }
 
