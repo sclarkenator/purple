@@ -270,6 +270,12 @@ explore: purcahse_and_transfer_ids {
     sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
     relationship: many_to_one}}
 
+explore: v_fedex_to_xpo {
+  hidden:  yes
+  group_label: "Production"
+}
+
+
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
   group_label: "Operations"
