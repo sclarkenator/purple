@@ -34,7 +34,7 @@ view: warranty_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: memo {
-    group_label: "Memos"
+    group_label: "Advanced"
     label: "Header Memo"
     description: "The header level notes on the warranty order"
     type: string
@@ -46,12 +46,14 @@ view: warranty_order {
     sql: ${TABLE}.ORDER_ID ;; }
 
   dimension: related_tranid {
+    group_label: "Advanced"
     hidden: no
     label: "Related Transaction ID"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
   dimension: replacement_order_id {
+    group_label: "Advanced"
     hidden: no
     type: number
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;

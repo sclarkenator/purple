@@ -33,7 +33,7 @@ view: warranty_order_line {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: memo {
-    group_label: "Memos"
+    group_label: "Advanced"
     label: "Line Memo"
     description: "The line level notes on the warranty order"
     type: string

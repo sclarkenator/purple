@@ -117,7 +117,7 @@ view: rpt_skill_with_disposition_count {
   }
 
   measure: avg_handle_time {
-    type: number
+    type: average
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
