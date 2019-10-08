@@ -132,7 +132,12 @@ view: sessions {
     group_label: "Time Date"
     description: "Yes = 7 most recent days ONLY"
     type: yesno
-    sql: ${TABLE}time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+    sql: ${TABLE}.time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+
+  dimension: rollingday{
+    hidden:  yes
+    type: number
+    sql: date_part('dayofyear',${TABLE}.time::date)- date_part('dayofyear',current_date) ;; }
 
   dimension: Before_today{
     group_label: "Time Date"
