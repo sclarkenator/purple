@@ -275,6 +275,16 @@ explore: v_fedex_to_xpo {
   group_label: "Production"
 }
 
+  explore: fulfillment_snowflake{
+    from: fulfillment
+    hidden:  yes
+    group_label: "Production"
+  }
+
+  explore: fulfillment_amazon{
+    hidden:  yes
+    group_label: "Production"
+  }
 
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
