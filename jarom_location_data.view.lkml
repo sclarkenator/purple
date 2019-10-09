@@ -84,22 +84,18 @@ view: jarom_location_data {
     value_format: "0"
     sql: ${TABLE}.wholesale_units_over_150 ;;  }
 
-  dimension:wholesale_units  {
-    type: number
-    value_format: "0"
-    sql: ${TABLE}.wholesale_units ;;  }
 
   dimension: zip {
     label: "Zip Codes"
     map_layer_name: us_zipcode_tabulation_areas
     type: string
-    sql: ${TABLE}.ZIPCODE ;; }
+    sql: LEFT(${TABLE}.ZIPCODE, 5);; }
 
   dimension: state {
     label: "States"
     map_layer_name: us_states
     type: string
-    sql: ${TABLE}.country ;; }
+    sql: ${TABLE}.STATE ;; }
 
   dimension: Country {
     label: "Country"
