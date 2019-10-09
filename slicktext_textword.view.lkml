@@ -126,6 +126,7 @@ view: slicktext_textword {
   }
 
   measure: count {
+    label: "Count of slicktext text word rows"
     type: count
     drill_fields: [id, brand_name]
   }
