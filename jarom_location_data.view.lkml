@@ -55,4 +55,50 @@ group by 1,2,3,4,s.channel_id,sk.weight,i.sub_category_name
 order by 1
  ;;
   }
+  dimension:dtc_all_mattress_units   {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.dtc_all_mattress_units;;  }
+
+  dimension:wholesale_all_mattress_units   {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.wholesale_all_mattress_units;;  }
+
+  dimension:dtc_units_under_150   {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.dtc_units_under_150  ;;  }
+
+  dimension:wholesale_units_under_150  {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.wholesale_units_under_150 ;;  }
+
+  dimension:dtc_units_over_150   {
+    type: number
+    value_format: "0,\" K\""
+    sql: ${TABLE}.dtc_units_over_150  ;;  }
+
+  dimension:wholesale_units_over_150  {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.wholesale_units_over_150 ;;  }
+
+  dimension:wholesale_units  {
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.wholesale_units ;;  }
+
+  dimension: zip {
+    label: "Zip Codes"
+    map_layer_name: us_zipcode_tabulation_areas
+    type: string
+    sql: ${TABLE}.ZIPCODE ;; }
+
+  dimension: state {
+    label: "States"
+    map_layer_name: us_states
+    type: string
+    sql: ${TABLE}.country ;; }
 }

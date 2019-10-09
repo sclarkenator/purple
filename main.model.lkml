@@ -40,6 +40,10 @@ explore: production_report {
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
 }
 
+explore: jarom_location_data {
+  hidden:  yes
+}
+
 explore: current_oee {
   hidden:  yes
   label: "Current OEE Table"
