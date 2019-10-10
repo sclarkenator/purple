@@ -40,6 +40,10 @@ explore: production_report {
   description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
 }
 
+explore: jarom_location_data {
+  hidden:  yes
+}
+
 explore: current_oee {
   hidden:  yes
   label: "Current OEE Table"
@@ -275,6 +279,16 @@ explore: v_fedex_to_xpo {
   group_label: "Production"
 }
 
+  explore: fulfillment_snowflake{
+    from: fulfillment
+    hidden:  yes
+    group_label: "Production"
+  }
+
+  explore: fulfillment_amazon{
+    hidden:  yes
+    group_label: "Production"
+  }
 
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
@@ -395,6 +409,7 @@ explore: all_events {
   }
 }
 
+explore: c3_roa {hidden: yes}
 explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
 explore: marketing_magazine {hidden: yes}
 explore: sessions {hidden: yes}
@@ -881,13 +896,19 @@ explore: sales_order_line{
     relationship: one_to_one}
   join : slicktext_textword {
     view_label: "Promo"
-    type:left_outer
+    type:full_outer
     sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
     relationship: one_to_one}
   join: slicktext_contact {
     view_label: "Promo"
     type: full_outer
     sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
+    relationship: many_to_many
+  }
+  join: slicktext_opt_out {
+    view_label: "Promo"
+    type: full_outer
+    sql_on: ${slicktext_contact.email}=${slicktext_opt_out.email} ;;
     relationship: many_to_many
   }
 }

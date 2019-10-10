@@ -117,7 +117,7 @@ view: sessions {
 
   dimension_group: time {
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.time ;; }
 
   dimension: last_30{
@@ -132,7 +132,12 @@ view: sessions {
     group_label: "Time Date"
     description: "Yes = 7 most recent days ONLY"
     type: yesno
-    sql: ${TABLE}time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+    sql: ${TABLE}.time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
+
+  dimension: rollingday{
+    hidden:  yes
+    type: number
+    sql: date_part('dayofyear',${TABLE}.time::date)- date_part('dayofyear',current_date) ;; }
 
   dimension: Before_today{
     group_label: "Time Date"

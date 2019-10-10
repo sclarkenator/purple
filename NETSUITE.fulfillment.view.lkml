@@ -111,7 +111,7 @@ view: fulfillment {
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
-    hidden: yes
+    #hidden: yes
     description: "Direct shipping costs incurred, not including last-mile or other transfer costs"
     type: sum
     sql: ${TABLE}.shipping ;; }

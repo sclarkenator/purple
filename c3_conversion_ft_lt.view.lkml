@@ -5,10 +5,12 @@ view: c3_conversion_ft_lt {
     type: number
     sql: ${TABLE}."ANALYTICS_ORDER_ID" ;;
     primary_key: yes
+    hidden: yes
   }
 
   dimension: c3_sales_order_id {
     type: string
+    hidden:  yes
     sql: ${TABLE}."C3_SALES_ORDER_ID" ;;
   }
 
@@ -32,23 +34,40 @@ view: c3_conversion_ft_lt {
     sql: ${TABLE}."FIRST_TOUCH_PLATFORM" ;;
   }
 
+  dimension: ANY_TOUCH_GOOGLE {
+    label: "Includes a Google Touch"
+    type: string
+    sql: ${TABLE}."ANY_TOUCH_GOOGLE" ;;
+  }
+
+  dimension: ANY_TOUCH_FACEBOOK {
+    label: "Includes a Facebook Touch"
+    type: string
+    sql: ${TABLE}."ANY_TOUCH_FACEBOOK" ;;
+  }
+
+  dimension: ANY_TOUCH_TV {
+    label: "Includes a TV Touch"
+    type: string
+    sql: ${TABLE}."ANY_TOUCH_TV" ;;
+  }
+
+  dimension: ANY_TOUCH_YAHOO {
+    label: "Includes a Yahoo Touch"
+    type: string
+    sql: ${TABLE}."ANY_TOUCH_YAHOO" ;;
+  }
+
+  dimension: ANY_TOUCH_PINTEREST {
+    label: "Includes a Pinterest Touch"
+    hidden:  yes
+    type: string
+    sql: ${TABLE}."ANY_TOUCH_PINTEREST" ;;
+  }
+
   dimension: first_touch_source {
     type: string
     sql: ${TABLE}."FIRST_TOUCH_SOURCE" ;;
-  }
-
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: last_touch {
