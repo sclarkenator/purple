@@ -65,7 +65,8 @@ view: sales_order_line {
     sql:  ${TABLE}.discount_amt ;; }
 
   measure: avg_days_to_fulfill {
-    group_label: "Average Days:"
+    #group_label: "Average Days:"
+    group_label: "Advanced"
     label: "to Fulfillment"
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
@@ -139,6 +140,7 @@ view: sales_order_line {
 dimension_group: SLA_Target {
   label: "SLA Target"
   view_label: "Fulfillment"
+  group_label: "Advanced"
   type: time
   timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
   convert_tz: no
@@ -149,6 +151,7 @@ dimension_group: SLA_Target {
 dimension: SLA_Buckets {
   label: "Days Past SLA Target Buckets"
   view_label: "Fulfillment"
+  group_label: "Advanced"
   description: "# days in realtion to Target date"
   type: tier
   style: integer
@@ -158,21 +161,24 @@ dimension: SLA_Buckets {
 }
 
   dimension: sla_Before_today{
-    group_label: "SLA Target Date"
+    #group_label: "SLA Target Date"
     view_label: "Fulfillment"
+    group_label: "Advanced"
     label: "z - Is Before Today (mtd)"
     type: yesno
     sql: ${Due_Date}::date < current_date;; }
 
   dimension: sla_current_week_num{
-    group_label: "SLA Target Date"
+   # group_label: "SLA Target Date"
+    group_label: "Filters"
     view_label: "Fulfillment"
-    label: "z - Before Current Week"
+    label: "Before Current Week"
     type: yesno
     sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
 
   dimension: sla_prev_week{
-    group_label: "SLA Target Date"
+    #group_label: "SLA Target Date"
+    group_label: "Filters"
     view_label: "Fulfillment"
     label: "z - Previous Week"
     type: yesno
@@ -546,6 +552,7 @@ measure: SLA_Achievement_prct {
 
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
+    group_label: "Advanced"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
     hidden: yes
     type:  tier
@@ -580,12 +587,14 @@ measure: SLA_Achievement_prct {
 
   dimension: free_item {
     label: "Is Promo Item (free)"
+    group_label: "Filters"
     description: "Yes if this item is free" #with purchase of mattress
     type: yesno
     sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
   dimension: discounted_item {
     label: "Is Discounted"
+    group_label: "Filters"
     description: "Yes if this item had any discount, including if free"
     type: yesno
     sql: (${discount_amt} > 0)  ;; }
@@ -633,15 +642,17 @@ measure: SLA_Achievement_prct {
     sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;; }
 
   dimension: Before_today{
-    group_label: "Order Date"
+    #group_label: "Order Date"
     label: "z - Is Before Today (mtd)"
+    group_label: "Advanced"
     #hidden:  yes
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.Created < current_date;; }
 
   dimension: week_bucket{
-      group_label: "Order Date"
+      #group_label: "Order Date"
+      group_label: "Advanced"
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
@@ -930,6 +941,7 @@ measure: SLA_Achievement_prct {
     END;; }
 
   dimension: fulfillment_method {
+    group_label: "Advanced"
     label: "Fulfillment Method"
     description: "Use Shipping Provider instead"
     view_label: "Fulfillment"
@@ -1054,11 +1066,13 @@ measure: SLA_Achievement_prct {
     label: "Carrier (expected)"
     description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
     hidden: no
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.CARRIER ;; }
 
   dimension: DTC_carrier {
     view_label: "Fulfillment"
+    group_label: "Advanced"
     label: "Carrier (Grouping)"
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
     hidden: no
@@ -1071,7 +1085,8 @@ measure: SLA_Achievement_prct {
 
 
   dimension: week_2019_start {
-    group_label: "Created Date"
+    group_label: "Advanced"
+    view_label: "Fulfillment"
     label: "z - Week Start 2019"
     description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
     type: string

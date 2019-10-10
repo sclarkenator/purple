@@ -15,6 +15,7 @@ view: fulfillment {
   dimension: carrier {
     label: "Carrier (actual)"
     description: "Shipping provider was used to fulfill this part of the order"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.carrier ;;  }
 
@@ -101,6 +102,7 @@ view: fulfillment {
 
   dimension: tracking_numbers {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.tracking_numbers ;;}
 
   measure: count {
