@@ -53,6 +53,7 @@ view: visible {
 
   dimension: load_id {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."LOAD_ID" ;;
   }
 
@@ -99,6 +100,7 @@ view: visible {
 
   dimension: tranid {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."TRANID" ;;
   }
 
@@ -123,6 +125,7 @@ view: visible {
   }
 
   dimension: weight_of_load {
+    group_label: "Advanced"
     type: number
     sql: ${TABLE}."WEIGHT" ;;
   }
