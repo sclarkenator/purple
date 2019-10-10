@@ -963,6 +963,7 @@ measure: SLA_Achievement_prct {
     label:  "Fulfillment Warehouse"
     description:  "Warehouse that order was fulfilled out of"
     view_label: "Fulfillment"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.LOCATION ;; }
 
