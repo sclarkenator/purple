@@ -111,6 +111,7 @@ view: slicktext_contact {
   }
 
   measure: count {
+    label: "Count of slicktext contact rows"
     type: count
     drill_fields: [first_name, last_name]
   }
