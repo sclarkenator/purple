@@ -923,6 +923,12 @@ explore: sales_order_line{
     sql_on: ${slicktext_contact.email}=${slicktext_opt_out.email} ;;
     relationship: many_to_many
   }
+  join: standard_cost {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${standard_cost.item_id} = ${item.item_id};;
+    relationship: one_to_one
+    }
 }
 
 
@@ -1036,6 +1042,11 @@ explore: wholesale {
     sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
   join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
     sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+    join: standard_cost {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id};;
+      relationship:one_to_one}
 }
 
 

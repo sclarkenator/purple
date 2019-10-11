@@ -134,7 +134,7 @@ view: item {
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
     sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = '%ORIGINAL%'  then 'Original'
-     when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL'  then 'New Mattress'
+     when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL' and ${TABLE}.model_name_lkr <> 'NEW ORIGINAL' then 'New Mattress'
      else ${TABLE}.PRODUCT_LINE_NAME_lkr end;; }
 
   dimension: product_line_name_with_bases_breakout {
