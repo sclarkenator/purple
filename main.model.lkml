@@ -916,6 +916,7 @@ explore: sales_order_line{
     view_label: "Product"
     type: left_outer
     sql_on: ${standard_cost.item_id} = ${item.item_id};;
+    relationship: one_to_one
     }
 }
 
@@ -1033,7 +1034,8 @@ explore: wholesale {
     join: standard_cost {
       view_label: "Product"
       type: left_outer
-      sql_on: ${standard_cost.item_id} = ${item.item_id};; }
+      sql_on: ${standard_cost.item_id} = ${item.item_id};;
+      relationship:one_to_one}
 }
 
 
