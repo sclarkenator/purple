@@ -372,7 +372,18 @@ explore: hotjar_data {
   join: order_flag {
     type: left_outer
     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
-    relationship:  one_to_one}}
+    relationship:  one_to_one}
+  join: sales_order_line {
+    type:  left_outer
+    sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
+    relationship: one_to_many
+  }
+  join: sf_zipcode_facts {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    relationship: many_to_one}
+  }
 
 explore: all_events {
   label: "All Events (heap)"
