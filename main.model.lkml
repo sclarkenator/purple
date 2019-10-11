@@ -377,6 +377,7 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
     relationship: one_to_many
+    fields: [sales_order_line.zip]
   }
   join: sf_zipcode_facts {
     view_label: "Customer"
