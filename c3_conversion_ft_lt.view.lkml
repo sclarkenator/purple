@@ -9,8 +9,8 @@ view: c3_conversion_ft_lt {
   }
 
   dimension: has_touch {
-    type: string
-    label: "   *Has Marketing Touch"
+    type: yesno
+    label: "  * Has Marketing Touch"
     sql: case when  ${TABLE}."ANALYTICS_ORDER_ID" is null then 'No' else 'Yes' end;;
   }
 
