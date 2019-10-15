@@ -115,4 +115,4 @@ view: tim_forecast_wholesale {
     hidden: yes
   }
 
-    }
+}

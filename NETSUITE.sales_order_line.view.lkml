@@ -505,7 +505,7 @@ measure: SLA_Achievement_prct {
     sql:  ${TABLE}.ordered_qty ;; }
 
   measure: total_standard_cost {
-    hidden: yes
+    #hidden: yes
     label: "Total Standard Cost"
     group_label: "Product"
     type:  sum
@@ -1080,6 +1080,7 @@ measure: SLA_Achievement_prct {
 
 
   dimension: week_2019_start {
+    hidden: yes
     group_label: "Created Date"
     label: "z - Week Start 2019"
     description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
