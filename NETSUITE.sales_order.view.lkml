@@ -117,6 +117,7 @@ view: sales_order {
 
   dimension: 3PL_MSFID {
     label: "3PL MSFID"
+    view_label: "Fufillment"
     group_label: " Advanced"
     description: "The Pilot Order ID"
     hidden: no
@@ -192,8 +193,8 @@ view: sales_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: is_upgrade {
-    group_label: " Advanced"
-    label: "Is Order Upgrade"
+    #group_label: " Advanced"
+    label: "     * Is Replacement Order"
     description: "Yes - this order an upgrade on a previous order"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
@@ -319,6 +320,7 @@ view: sales_order {
     sql: ${TABLE}.SOURCE ;; }
 
   dimension: status {
+    group_label: " Advanced"
     label: "   Status"
     description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc"
     #hidden:  yes
@@ -345,7 +347,7 @@ view: sales_order {
     sql: ${TABLE}.TAX_AMT ;; }
 
   dimension_group: trandate {
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no

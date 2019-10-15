@@ -22,8 +22,16 @@ view: shopify_discount_codes {
       sql: ${TABLE}.shopify_order_name ;;
     }
 
+    dimension: used_promo {
+      label: "     * Used Promo Code"
+      view_label: "Sales Order"
+      type: yesno
+      sql: ${TABLE}.promo is not null;;
+    }
+
     dimension: promo {
-      group_label: " Advanced"
+      #group_label: " Advanced"
+      description: "Used a Promo Code in Shopify"
       #hidden:  yes
       view_label: "Sales Order"
       label: "   Promo Code Used (shopify)"
