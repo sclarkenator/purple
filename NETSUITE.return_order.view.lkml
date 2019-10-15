@@ -31,7 +31,7 @@ view: return_order {
 
   dimension_group: created {
     type: time
-    label:  "  Return Intiated"
+    label:  "   Return Intiated"
     description:"Date/time that RMA was initiated"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -123,7 +123,7 @@ view: return_order {
   dimension_group: return_trial_expiry {
     label: "Return Trial Expiration"
     description: "When the trial return period expires. Generally 100 days from when customer RECEIVED order for mattresses"
-    hidden: no
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -217,7 +217,7 @@ view: return_order {
     sql: ${TABLE}.WARRANTY_ORDER ;; }
 
   dimension_group: return_completed {
-    label: "  Return Completed"
+    label: "   Return Completed"
     type: time
     hidden: no
     description: "Date the return was reimbused and fully completed"

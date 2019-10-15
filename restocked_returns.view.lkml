@@ -40,7 +40,7 @@ view: restocked_returns {
       }
 
   measure: total_restocked_items_units {
-    label: "Total Restocked (units)"
+    label: " Total Restocked (units)"
     type: sum
     sql: ${TABLE}."RESTOCKED_ITEMS" ;;
   }
