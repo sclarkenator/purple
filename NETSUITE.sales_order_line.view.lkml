@@ -2,6 +2,10 @@ view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
   dimension: payment_method {
+    view_label: "Sales Order"
+    group_label: " Advanced"
+    label: "Payment Method"
+    description: "Blank is no special cirumstance.  Values include Affirm, Progressive, Paypal, etc"
     type: string
     sql: sales_order.payment_method ;;
   }
@@ -516,7 +520,7 @@ measure: SLA_Achievement_prct {
 
   measure: dates{
     label: "Count of Days"
-    #hidden:  yes
+    hidden:  yes
     type: count_distinct
     sql: ${TABLE}.Created::date ;; }
 
@@ -532,7 +536,9 @@ dimension: days_to_cancel {
   sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
   dimension: order_age_bucket {
-    label: "Order Age (bucket)"
+    view_label: "Sales Order"
+    group_label: " Advanced"
+    label: "  Order Age (bucket)"
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
     type:  tier
     tiers: [1,2,3,4,5,6,7,11,15,21]
@@ -590,13 +596,13 @@ dimension: days_to_cancel {
     sql: ${created_date} = dateadd(d,-1,current_date) ;; }
 
   dimension: free_item {
-    label: "Is Promo Item (free)"
+    label: "     * Zero Dollar Items (promo/free)"
     description: "Yes if this item is free" #with purchase of mattress
     type: yesno
     sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;; }
 
   dimension: discounted_item {
-    label: "Is Discounted"
+    label: "     * Is Discounted"
     description: "Yes if this item had any discount, including if free"
     type: yesno
     sql: (${discount_amt} > 0)  ;; }
@@ -636,7 +642,8 @@ dimension: days_to_cancel {
     sql: ${TABLE}.COUNTRY ;; }
 
   dimension: MTD_flg{
-    group_label: "Order Date"
+    group_label: "    Order Date"
+    view_label: "Sales Order"
     label: "z - Is Before Today (mtd)"
     hidden:  yes
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
@@ -644,7 +651,8 @@ dimension: days_to_cancel {
     sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;; }
 
   dimension: Before_today{
-    group_label: "Order Date"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
     label: "z - Is Before Today (mtd)"
     #hidden:  yes
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
@@ -652,7 +660,8 @@ dimension: days_to_cancel {
     sql: ${TABLE}.Created < current_date;; }
 
   dimension: week_bucket{
-      group_label: "Order Date"
+    view_label: "Sales Order"
+      group_label: "    Order Date"
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
@@ -665,14 +674,16 @@ dimension: days_to_cancel {
           else 'Other' end;; }
 
   dimension: Before_today_ly{
-    group_label: "Order Date"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
     label: "z - Is Before Today Last Year (mtd)"
     hidden:  yes
     type: yesno
     sql: ${TABLE}.Created < dateadd('year',-1,current_date);; }
 
   dimension: last_30{
-    group_label: "Order Date"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
     label: "z - Last 30 Days"
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
@@ -680,7 +691,8 @@ dimension: days_to_cancel {
     sql: ${TABLE}.Created > dateadd(day,-30,current_date);; }
 
   dimension: current_week_num{
-    group_label: "Order Date"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
     label: "z - Before Current Week"
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
@@ -688,7 +700,8 @@ dimension: days_to_cancel {
     sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);; }
 
   dimension: prev_week{
-    group_label: "Order Date"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
     label: "z - Previous Week"
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
@@ -696,6 +709,7 @@ dimension: days_to_cancel {
     sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
 
   dimension: Shipping_Addresee{
+    hidden:  yes
     description: "The name on the shipping address"
     type: string
     sql: ${TABLE}.Ship_company;; }
@@ -749,7 +763,8 @@ dimension: days_to_cancel {
 
 
   dimension_group: created {
-    label: "Order"
+    view_label: "Sales Order"
+    label: "    Order"
     description:  "Time and date order was placed"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -967,14 +982,16 @@ dimension: days_to_cancel {
     sql: ${TABLE}.LOCATION ;; }
 
   dimension: memo {
+    group_label: " Advanced"
     label:  "Memo"
     description:  "Notes field from the Shopify Draft Order Line"
     type: string
     sql: ${TABLE}.memo ;; }
 
   dimension: gross_amt {
-    label: "Gross Sales ($)"
-    description: "Gross sales is what the customer paid on initial order, net of discounts, excluding tax, freight or other fees"
+    group_label: " Advanced"
+    label: "Gross Sales Item Level ($)"
+    description: "Gross sales is what the customer paid on initial order per sku, net of discounts, excluding tax, freight or other fees"
     type: number
     sql: ${TABLE}.gross_amt ;; }
 
@@ -1085,11 +1102,6 @@ dimension: days_to_cancel {
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
-
-  dimension: week_start_2019_date {
-
-  }
-
 
   dimension: week_2019_start {
     hidden: yes
