@@ -27,7 +27,7 @@ view: sales_order_line {
     sql:  ${TABLE}.estimated_Cost ;; }
 
   measure: total_estimated_cost {
-    hidden: no
+    hidden: yes
     label: "Estimated Costs ($)"
     description: "Estimated cost value from NetSuite for the cost of materials"
     type: sum
@@ -309,6 +309,7 @@ measure: SLA_Achievement_prct {
   measure: unfulfilled_orders {
     group_label: "Gross Sales Unfulfilled"
     label: "Unfulfilled Orders ($)"
+    view_label: "Fulfillment"
     description: "Orders placed that have not been fulfilled"
     value_format: "$#,##0"
     type: sum
@@ -317,6 +318,7 @@ measure: SLA_Achievement_prct {
 
   measure: unfulfilled_orders_units {
     group_label: "Gross Sales Unfulfilled"
+    view_label: "Fulfillment"
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
     type: sum
@@ -325,6 +327,7 @@ measure: SLA_Achievement_prct {
 
   measure: fulfilled_orders {
     group_label: "Gross Sales Fulfilled"
+    view_label: "Fulfillment"
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
     value_format: "$#,##0"
@@ -334,6 +337,7 @@ measure: SLA_Achievement_prct {
 
   measure: fulfilled_orders_units {
     group_label: "Gross Sales Fulfilled"
+    view_label: "Fulfillment"
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
     type: sum
@@ -512,6 +516,7 @@ measure: SLA_Achievement_prct {
   measure: total_standard_cost {
     #hidden: yes
     label: "Total Standard Cost"
+    description: "Total Cost (cost per unit * number of units)"
     group_label: "Product"
     type:  sum
     value_format: "$#,##0"
@@ -524,6 +529,10 @@ measure: SLA_Achievement_prct {
     type: count_distinct
     sql: ${TABLE}.Created::date ;; }
 
+dimension: has_standard_cost {
+  label: "    * Has Standard Cost"
+  type: yesno
+  sql: ${standard_cost.standard_cost} is not null ;; }
 
 dimension: days_to_cancel {
   view_label: "Cancellations"
@@ -1054,18 +1063,27 @@ dimension: days_to_cancel {
     sql: ${TABLE}.AVERAGE_COST ;; }
 
   measure: Qty_Picked {
+    view_label: "Fulfillment"
+    group_label: "By Status"
+    label: "Picked (units)"
     type: sum
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the picked state"
     sql: ${TABLE}.PICKED ;; }
 
   measure: Qty_Committed {
+    view_label: "Fulfillment"
+    group_label: "By Status"
+    label: "Committed (units)"
     type: sum
    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the committed state"
     sql: ${TABLE}.QUANTITY_COMMITTED ;; }
 
   measure: Qty_Packed {
+    view_label: "Fulfillment"
+    group_label: "By Status"
+    label: "Packed (units)"
     type: sum
    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the packed state"
