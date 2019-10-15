@@ -90,7 +90,7 @@ view: item {
 
   dimension: product_name {
     label:  "3. Name"
-    group_label: "Forecast Tier"
+    group_label: "Forecast Product Heirarchy"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
@@ -122,7 +122,7 @@ view: item {
 
   dimension: product_bucket {
     label: "1 Buckets"
-    group_label: "Forecast Tier"
+    group_label: "Forecast Product Heirarchy"
     description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
     type: string
         case: {
@@ -133,7 +133,7 @@ view: item {
 
   dimension: type_2 {
     label: "2. Type"
-    group_label: "Forecast Tier"
+    group_label: "Forecast Product Heirarchy"
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
     sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = '%ORIGINAL%'  then 'Original'
