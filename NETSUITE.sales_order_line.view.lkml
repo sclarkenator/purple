@@ -1092,7 +1092,7 @@ dimension: days_to_cancel {
 
   measure: days_to_cancel_measure {
     view_label: "Cancellations"
-    label: "Avg days from order to cancellation"
+    label: "      Avg days from order to cancellation"
     description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
     type: average
     sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }

@@ -2,13 +2,13 @@ view: cancelled_order {
   sql_table_name: SALES.CANCELLED_ORDER ;;
 
   measure: units_cancelled {
-    label: "Cancelled Orders (units)"
+    label: "      Cancelled Orders (units)"
     description: "Total individual units cancelled"
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;; }
 
   measure: orders_cancelled {
-    label: "Cancelled Orders (count)"
+    label: "      Cancelled Orders (count)"
     description: "Count (#) of distinct orders with at least 1 item cancelled"
     type: count_distinct
     sql: ${order_id} ;; }
@@ -25,11 +25,17 @@ view: cancelled_order {
     hidden:yes}
 
   measure: amt_cancelled {
-    label:  "Cancelled Orders ($)"
+    label:  "      Cancelled Orders ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
+
+  dimension: is_cancelled {
+    label:  "     *Is Cancelled"
+    description: "Whether the order was cancelled"
+    type: yesno
+    sql: ${cancelled_date} is not NULL ;; }
 
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancellations Completed ($)"
