@@ -2,6 +2,7 @@ view: sales_order_line {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
 
   dimension: payment_method {
+    hidden: yes
     view_label: "Sales Order"
     group_label: " Advanced"
     label: "Payment Method"
