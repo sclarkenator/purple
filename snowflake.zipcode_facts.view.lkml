@@ -37,6 +37,7 @@ view: sf_zipcode_facts {
   dimension: price_test_state {
     group_label: "Customer Address"
     type: string
+    hidden:  yes
     sql: case when ${TABLE}.state in ('NC','OH','WA','CO','FL','WI') then 'test'
         else 'control' end ;;
       }
