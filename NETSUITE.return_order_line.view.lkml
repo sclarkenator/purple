@@ -340,6 +340,7 @@ view: return_order_line {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
+    hidden: yes
     sql: ${TABLE}.SHIPMENT_RECEIVED ;; }
 
   dimension: transaction_discount_line {
