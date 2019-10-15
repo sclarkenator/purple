@@ -13,6 +13,7 @@ view: discount_code {
     sql: ${TABLE}.CREATED ;; }
 
   dimension: discount_reason {
+    hidden: yes
     label: "Discount Reason"
     description: "Reason for retroactive discount bucketed (Issue, Military, Promo, Change, Other)"
     case: {
