@@ -154,8 +154,9 @@ view: return_order_line {
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_buckets {
-    group_label: "Return Aging Buckets"
-    view_label: " Advanced"
+    label: "Return Aging Buckets"
+    group_label: " Advanced"
+    view_label: "Returns"
     description: "What aging bucket the order was returned in (30,60,90,120)"
     type: tier
     style: integer
