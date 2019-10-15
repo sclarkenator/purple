@@ -32,7 +32,7 @@ view: cancelled_order {
     sql: ${TABLE}.gross_amt ;; }
 
   dimension: is_cancelled {
-    label:  "     *Is Cancelled"
+    label:  "     * Is Cancelled"
     description: "Whether the order was cancelled"
     type: yesno
     sql: ${cancelled_date} is not NULL ;; }
