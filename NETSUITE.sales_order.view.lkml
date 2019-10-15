@@ -43,7 +43,7 @@ view: sales_order {
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: channel_source {
-    label: "Order Source (buckets)"
+    label: "   Order Source (buckets)"
     description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
@@ -61,6 +61,7 @@ view: sales_order {
       else: "OTHER" } }
 
   dimension: Amazon_fulfillment{
+    group_label: " Advanced"
     label: "Amazon Fulfillment"
     description: "Whether the purchase from amazon was deliverd by amazon or purple"
     case: {
@@ -88,8 +89,8 @@ view: sales_order {
               else 'Other' end  ;; }
 
   dimension: channel2 {
-    label: "Channel"
-    description:  "Which Netsuite Channel was the order processed through"
+    label: "  Channel"
+    description:  "Which Netsuite Channel was the order processed through (DTC, Wholesale, Owned Retail, etc)"
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
@@ -104,6 +105,7 @@ view: sales_order {
     sql: ${TABLE}.CREATED ;; }
 
   dimension: shipping_hold {
+    group_label: " Advanced"
     label: "Shipping Hold? (Y/N)"
     type: yesno
     sql: ${TABLE}.SHIPPING_HOLD ;; }
@@ -115,12 +117,14 @@ view: sales_order {
 
   dimension: 3PL_MSFID {
     label: "3PL MSFID"
+    group_label: " Advanced"
     description: "The Pilot Order ID"
     hidden: no
     type: string
     sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
   dimension: Showroom_Order {
+    group_label: " Advanced"
     description: "Flag for orders made in the Alpine Showroom"
     type: yesno
     sql: ${TABLE}.Showroom ;; }
@@ -188,6 +192,7 @@ view: sales_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: is_upgrade {
+    group_label: " Advanced"
     label: "Is Order Upgrade"
     description: "Yes - this order an upgrade on a previous order"
     #type: string
@@ -206,13 +211,14 @@ view: sales_order {
     sql: ${TABLE}.MODIFIED ;; }
 
   dimension: gross_amt {
+    group_label: " Advanced"
     label:  "Gross Order Size ($)"
     description: "Total gross sales for all items on order, excluding taxes."
     type: number
     sql: ${TABLE}.gross_amt ;;  }
 
   dimension: Order_size_buckets{
-    label: "Order Size (buckets)"
+    label: "   Order Size (buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
     hidden:   no
     type:  tier
@@ -240,6 +246,7 @@ view: sales_order {
 
 
   dimension: order_id {
+    group_label: " Advanced"
     label: "Order ID"
     hidden: no
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
@@ -248,6 +255,7 @@ view: sales_order {
     sql: ${TABLE}.ORDER_ID ;; }
 
   dimension: payment_method {
+    group_label: " Advanced"
     label: "Order Payment Method (shopify)"
     description: "For Shopify-US orders only. The customer's method of payment"
     type: string
@@ -259,6 +267,7 @@ view: sales_order {
     sql: ${TABLE}.RECYCLE_FEE_AMT ;; }
 
   dimension: related_tranid {
+    group_label: " Advanced"
     label: "Related Transaction ID"
     description: "Netsuite's internal related transaction id"
     type: string
@@ -287,7 +296,7 @@ view: sales_order {
 
   dimension: shopify_discount_code {
     label: "Shopify Discount Code"
-    #hidden: yes
+    hidden: yes
     type: string
     sql: ${TABLE}.SHOPIFY_DISCOUNT_CODE ;; }
 
@@ -302,6 +311,7 @@ view: sales_order {
     sql: ${TABLE}.SHOPIFY_RISK_RATING ;; }
 
   dimension: source {
+    group_label: " Advanced"
     label:  "Order Source"
     description: "System where order was placed"
     #hidden: yes
@@ -309,14 +319,16 @@ view: sales_order {
     sql: ${TABLE}.SOURCE ;; }
 
   dimension: status {
-    label: "Status of Order"
+    label: "   Status"
+    description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc"
     #hidden:  yes
     type: string
     sql: ${TABLE}.STATUS ;; }
 
   dimension: system {
+    group_label: " Advanced"
     label: "System"
-    description: "System the order originated in."
+    description: "System the order originated in. (Amazon, Shopify, Netsuite)"
     #hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
@@ -342,6 +354,7 @@ view: sales_order {
 
   dimension: tranid {
     label: "Transaction ID"
+    group_label: " Advanced"
     description: "Netsuite's Sale Order Number"
     link: {
       label: "NetSuite"
@@ -370,6 +383,7 @@ view: sales_order {
     sql: ${TABLE}.WARRANTY_CLAIM_ID ;; }
 
   dimension: warranty_order_flg {
+    group_label: " Advanced"
     label: "Is Warranty Order"
     description: "Yes if this order has a warranty replacement"
     type: yesno
@@ -400,7 +414,8 @@ view: sales_order {
     sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';; }
 
   dimension: bill_of_lading_number {
-    label: "Bill Of Landing Number"
+    label: "Bill of Landing Number"
+    hidden: yes
     type: string
     sql: ${TABLE}.bill_of_lading_number ;;
   }
