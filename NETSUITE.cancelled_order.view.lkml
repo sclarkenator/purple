@@ -163,10 +163,10 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
-    label:  "Cancelled Orders ($)"
+    label:  "Total Cancelled ($)"
     description: "Total $ returned to customer, excluding shipping and freight"
     type:  number
-    hidden: yes
+    group_label: "Advanced"
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: gross_amt_tier {
