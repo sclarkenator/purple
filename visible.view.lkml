@@ -2,6 +2,9 @@ view: visible {
   sql_table_name: PRODUCTION.VISIBLE ;;
 
   dimension_group: delivery {
+    group_label: "Visible SCM"
+    label: "Visible delivery"
+    description: "Date Visible delivered load to recipient"
     type: time
     timeframes: [
       raw,
@@ -17,6 +20,9 @@ view: visible {
   }
 
   dimension_group: in_hand {
+    group_label: "Visible SCM"
+    label: "Visible in-hand"
+    description: "Date Visible takes load"
     type: time
     timeframes: [
       raw,
@@ -48,16 +54,21 @@ view: visible {
 
   dimension: item_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension: load_id {
+    group_label: "Visible SCM"
+    label: "Visible load_id"
+    description: "Visible SCM load_id"
     type: string
     sql: ${TABLE}."LOAD_ID" ;;
   }
 
   dimension: order_id {
     type: string
+    hidden:  yes
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
@@ -68,17 +79,21 @@ view: visible {
   }
 
   measure: quantity_on_load{
+    label: "Load size (qty)"
+    description: "Number of items on Visible load"
     type: sum
     sql: ${TABLE}."QUANTITY" ;;
   }
 
   dimension: recipient {
     type: string
+    hidden:  yes
     sql: ${TABLE}."RECIPIENT" ;;
   }
 
   dimension: recipient_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."RECIPIENT_ID" ;;
   }
 
@@ -93,17 +108,20 @@ view: visible {
       year
     ]
     convert_tz: no
+    hidden:  yes
     datatype: date
     sql: ${TABLE}."SHIPPED" ;;
   }
 
   dimension: tranid {
     type: string
+    hidden:  yes
     sql: ${TABLE}."TRANID" ;;
   }
 
   dimension: type {
     type: string
+    hidden: yes
     sql: ${TABLE}."TYPE" ;;
   }
 
@@ -123,7 +141,9 @@ view: visible {
   }
 
   dimension: weight_of_load {
+    group_label: "Visible SCM"
     type: number
+    hidden:  yes
     sql: ${TABLE}."WEIGHT" ;;
   }
 

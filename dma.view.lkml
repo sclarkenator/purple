@@ -11,8 +11,7 @@ view: dma {
     label: "DMA"
     description: "Designated Marketing Area - derived from zipcode"
     type: string
-    view_label: "Customer"
-    group_label: "Customer Address"
+    view_label: "Geography"
     sql: ${TABLE}.dma_name ;;
   }
 
@@ -44,7 +43,7 @@ view: dma {
   }
 
   dimension: County {
-    group_label: "Customer Address"
+    view_label: "Geography"
     description:"Name of the County the Zipcode is in"
     type: string
     hidden: no
@@ -53,7 +52,7 @@ view: dma {
 
   dimension: FIPS {
     label: "FIPS Code"
-    group_label: "Customer Address"
+    view_label: "Geography"
     description: "The County FIPS number (combination of a state ID and County ID"
     type: string
     map_layer_name: us_counties_fips

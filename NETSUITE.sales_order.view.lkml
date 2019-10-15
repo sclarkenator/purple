@@ -9,7 +9,8 @@ view: sales_order {
     sql: ${order_id} ;; }
 
   measure: unique_customers {
-    label: "Distinct Emails"
+    label: "Distinct customers"
+    description: "Counts distinct email addresses in customer table"
     view_label: "Customer"
     type: count_distinct
     hidden: no

@@ -44,6 +44,7 @@ view: fulfillment_dates {
     sql:${TABLE}.days_between_ff ;; }
 
   measure: days_to_last_ff {
+    hidden: yes
     group_label: "Average Days Between"
     label: "Order to Last Fulfilled Item"
     description: "A calculations between the order date and last item fulfilled"
@@ -57,21 +58,21 @@ view: fulfillment_dates {
     sql: ${TABLE}.order_id ;;  }
 
   dimension: days_to_ff_dimension {
-    group_label: "Difference in Days"
+    group_label: " Advanced"
     label: "Order to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  number
     sql:${TABLE}.days_to_ff ;; }
 
   dimension: days_between_ff_dimension {
-    group_label: "Difference in Days"
+    group_label: " Advanced"
     label: "First to Last Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  number
     sql:${TABLE}.days_between_ff ;; }
 
   dimension: days_to_last_ff_dimension {
-    group_label: "Difference in Days"
+    group_label: " Advanced"
     label: "Order to last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
     type:  number
@@ -81,6 +82,7 @@ view: fulfillment_dates {
     group_label: "Difference in Days"
     label: "3 Day Fulfillment SLA"
     description: "More than 3 Days between fulfillment of first and last item"
+    hidden:  yes
     type:  yesno
     sql: NVL(${TABLE}.days_between_ff,0) <= 3 ;; }
 
@@ -98,6 +100,7 @@ view: fulfillment_dates {
     label: "Order and First Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between order date and first item fulfilled (0,1,3,7,14,21,28)"
     type: tier
+    hidden:  yes
     style: integer
     tiers: [0,1,3,7,14,21,28]
     sql: ${TABLE}.days_to_ff;; }
@@ -106,15 +109,17 @@ view: fulfillment_dates {
     group_label: "Difference in Days"
     label: "First and Last Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between the first and last item fulfilled (0,1,3,7,14,21,28)"
+    hidden:  yes
     type: tier
     style: integer
     tiers: [0,1,3,7,14,21,28]
     sql: ${TABLE}.days_to_ff;;  }
 
   dimension: days_to_last_ff_tier {
-    group_label: "Difference in Days"
+    group_label: "Advanced"
     label: "Order and Last Item Fulfilled (buckets)"
     description: "Bucketing the caclulation between the order date and last item fulfilled (0,1,3,7,14,21,28)"
+    hidden: yes
     type: tier
     style: integer
     tiers: [0,1,2,3,4,7,14,21,28]

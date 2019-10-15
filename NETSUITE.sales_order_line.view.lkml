@@ -147,6 +147,7 @@ dimension_group: SLA_Target {
 }
 
 dimension: SLA_Buckets {
+  group_label: " Advanced"
   label: "Days Past SLA Target Buckets"
   view_label: "Fulfillment"
   description: "# days in realtion to Target date"
@@ -917,6 +918,7 @@ measure: SLA_Achievement_prct {
 
   dimension_group: fulfilled {
     view_label: "Fulfillment"
+    label: "    Fulfilled"
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -1057,6 +1059,15 @@ measure: SLA_Achievement_prct {
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: substr(${TABLE}.ZIP,1,5) ;; }
+
+  dimension: zip_1 {
+    view_label: "Geography"
+    label: "Zipcode"
+    description: "5-digit ship-to zipcode"
+    type: zipcode
+    map_layer_name: us_zipcode_tabulation_areas
+    sql: substr(${TABLE}.ZIP,1,5) ;; }
+
 
   dimension: carrier {
     view_label: "Fulfillment"
