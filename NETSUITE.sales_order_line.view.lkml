@@ -560,7 +560,7 @@ dimension: days_to_cancel {
   sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
   dimension: order_age_bucket {
-    view_label: "Sales Order"
+    view_label: "Fulfillment"
     group_label: " Advanced"
     label: "  Order Age (bucket)"
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
@@ -1081,6 +1081,7 @@ dimension: days_to_cancel {
     sql: ${TABLE}.UPDATE_TS ;; }
 
   measure: Total_Average_Cost{
+    hidden: yes
     type: sum
     description: "The average cost of the item at time of order creation."
     value_format: "$#,##0"
