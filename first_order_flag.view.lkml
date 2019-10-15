@@ -20,7 +20,7 @@ view: first_order_flag {
 
         dimension: new_flg {
           label: "New/Repeat Customer?"
-          view_label: "Sales Header"
+          view_label: "Sales Order"
           description: "New or repeat for this email address?"
           type: string
           sql: ${TABLE}.new_Flg ;;
