@@ -754,7 +754,7 @@ explore: sales_order_line{
     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
     relationship: many_to_one}
   join: sales_order {
-    view_label: "Sales Header"
+    view_label: "Sales Order"
     type: left_outer
     sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
@@ -902,7 +902,7 @@ explore: sales_order_line{
     sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
     relationship: many_to_one}
   join: c3_conversion_ft_lt {
-    view_label: "C3 Conversions"
+    view_label: "Marketing Attribution"
     type:  full_outer
     sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
     relationship: one_to_one}
