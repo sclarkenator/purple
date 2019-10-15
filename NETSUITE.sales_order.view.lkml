@@ -106,7 +106,8 @@ view: sales_order {
 
   dimension: shipping_hold {
     group_label: " Advanced"
-    label: "Shipping Hold? (Y/N)"
+    view_label: "Fulfillment"
+    label: "Shipping Hold?"
     type: yesno
     sql: ${TABLE}.SHIPPING_HOLD ;; }
 
@@ -117,7 +118,7 @@ view: sales_order {
 
   dimension: 3PL_MSFID {
     label: "3PL MSFID"
-    view_label: "Fufillment"
+    view_label: "Fulfillment"
     group_label: " Advanced"
     description: "The Pilot Order ID"
     hidden: no
@@ -321,7 +322,7 @@ view: sales_order {
 
   dimension: status {
     group_label: " Advanced"
-    label: "   Status"
+    label: "Status"
     description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc"
     #hidden:  yes
     type: string
