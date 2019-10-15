@@ -193,8 +193,8 @@ view: sales_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: is_upgrade {
-    #group_label: " Advanced"
-    label: "     * Is Replacement Order"
+    group_label: " Advanced"
+    label: "Is Order Upgrade"
     description: "Yes - this order an upgrade on a previous order"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
