@@ -100,6 +100,8 @@ view: fulfillment {
     sql: ${TABLE}.update_ts ;; }
 
   dimension: tracking_numbers {
+    group_label: " Advanced"
+    description: "Carrier tracking numbers"
     type: string
     sql: ${TABLE}.tracking_numbers ;;}
 

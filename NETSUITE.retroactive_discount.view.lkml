@@ -2,6 +2,7 @@ view: retroactive_discount {
   sql_table_name: SALES.RETROACTIVE_DISCOUNT ;;
 
   measure: total_retro_discounts {
+    hidden: yes
     label: "Total Retro Discounts ($)"
     description:  "Total of all applied retroactive discounts"
     type:  sum
@@ -14,12 +15,14 @@ view: retroactive_discount {
 
   dimension: amount {
     label:  "Discount ($)"
+    hidden: yes
     description: "Discount amount applied at item-level"
     type: number
     sql: ${TABLE}.AMOUNT ;; }
 
   dimension: discount_amt_bucket {
     label: "Discount (buckets)"
+    hidden: yes
     description: "Bucketing amount by 50, 100, 150, 200, 350, 500, 1000"
     type:  tier
     tiers: [50,100,150,200,350,500,1000]
@@ -34,6 +37,7 @@ view: retroactive_discount {
     sql: ${created_date} = dateadd(d,-1,current_date) ;; }
 
   dimension_group: created {
+    hidden: yes
     label:  "Discount Applied"
     description:  "Date discount was applied"
     type: time
@@ -101,6 +105,7 @@ view: retroactive_discount {
     sql: ${TABLE}.UPDATE_MST ;; }
 
   measure: count {
+    hidden: yes
     label: "Discounts Applied (count)"
     description: "Disintct Discounts Applied"
     type: count

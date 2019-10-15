@@ -34,6 +34,23 @@ view: sf_zipcode_facts {
     sql: ${TABLE}.state ;;
   }
 
+  dimension: city_1 {
+    view_label: "Geography"
+    label: "City"
+    description: "Ship-to city for order"
+    type: string
+    sql: ${TABLE}.city ;;
+  }
+
+  dimension: state_1 {
+    view_label: "Geography"
+    label: "State"
+    description: "Ship-to state"
+    type: string
+    map_layer_name: us_states
+    sql: ${TABLE}.state ;;
+  }
+
   dimension: price_test_state {
     group_label: "Customer Address"
     type: string
@@ -43,8 +60,9 @@ view: sf_zipcode_facts {
       }
 
   dimension: fulfillment_region {
-    label: "US Fulfillment Region"
-    group_label: "Customer Address"
+    label: "US Region"
+    view_label: "Geography"
+    description: "Geographic grouping based on ship-to state"
     type: string
     sql: case when ${TABLE}.state = 'CA'
               then 'California'
@@ -63,7 +81,7 @@ view: sf_zipcode_facts {
   }
 
   dimension: county_name {
-    group_label: "County"
+    view_label: "Geography"
     hidden: yes
     type: string
     sql: ${TABLE}.county ;;
