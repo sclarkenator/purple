@@ -19,8 +19,6 @@ datagroup: temp_ipad_database_default_datagroup {
 persist_with: temp_ipad_database_default_datagroup
 
 
-
-
 #-------------------------------------------------------------------
 #
 # Production Explores
@@ -721,7 +719,7 @@ explore: sales_order_line{
   from:  sales_order_line
   label:  "DTC"
   group_label: " Sales"
-  view_label: "Sales Line"
+  view_label: "Sales Order Line"
   description:  "All sales orders for DTC channel"
   always_filter: {
     filters: {field: sales_order.channel      value: "DTC"}
@@ -774,7 +772,7 @@ explore: sales_order_line{
     sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
     relationship: many_to_one}
   join: shopify_orders {
-    view_label: "Sales Line"
+    view_label: "Sales Order Line"
     type:  left_outer
     fields: [shopify_orders.call_in_order_Flag]
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
@@ -832,7 +830,7 @@ explore: sales_order_line{
     sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
     relationship: many_to_one}
   join: order_flag {
-    view_label: "Sales Header"
+    view_label: "Sales Order"
     type: left_outer
     sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
     relationship: one_to_one}
@@ -938,7 +936,7 @@ explore: wholesale {
   from: sales_order_line
   label:  "Wholesale"
   group_label: " Sales"
-  view_label: "Sales Line"
+  view_label: "Sales Order Line"
   description:  "All sales orders for wholesale channel"
   always_filter: {
     filters: {field: sales_order.channel      value: "Wholesale"}
@@ -971,7 +969,7 @@ explore: wholesale {
     sql_on: ${wholesale.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
   join: shopify_orders {
-    view_label: "Sales Line"
+    view_label: "Sales Order Line"
     type:  left_outer
     fields: [shopify_orders.call_in_order_Flag]
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;

@@ -40,6 +40,7 @@ view: slicktext_opt_out {
   }
 
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -72,6 +73,7 @@ view: slicktext_opt_out {
   }
 
   dimension_group: opt_out {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -98,6 +100,7 @@ view: slicktext_opt_out {
   }
 
   dimension_group: subscribed {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -119,6 +122,7 @@ view: slicktext_opt_out {
 
   dimension_group: update_ts {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -140,6 +144,7 @@ view: slicktext_opt_out {
   measure: count {
     label: "Count of slicktext opt out rows"
     type: count
+    hidden: yes
     drill_fields: [first_name, last_name]
   }
 }
