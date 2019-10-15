@@ -48,6 +48,7 @@ view: warranty_order_line {
     label: "Total Warranties Initiated (units)"
     description: "Units for which a warranty was created"
     type: sum
+    drill_fields: [sales_order_line.order_id,sales_order_line.created_date,warranty_order.created_date,item.model_name,item.size,item.product_name,warranty_reason.return_reason]
     sql: ${TABLE}.QUANTITY ;; }
 
   measure: quantity_complete {
