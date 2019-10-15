@@ -39,7 +39,7 @@ view: cancelled_order {
 
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancellations Completed ($)"
-    group_label: "Advanced"
+    hidden: yes
     description: "Total USD amount of cancelled order, excluding taxes, where a refund has been given"
     type: sum
     value_format: "$#,##0.00"
@@ -53,7 +53,7 @@ view: cancelled_order {
     label:  "Total Cancellations Completed (units)"
     description: "Total quantity of cancelled units where a refund has been given"
     type: sum
-    group_label: "Advanced"
+    hidden: yes
     filters: {
       field: refunded
       value: "Yes"
@@ -163,10 +163,10 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
-    label:  "Cancelled Orders ($)"
+    label:  "Total Cancelled ($)"
     description: "Total $ returned to customer, excluding shipping and freight"
     type:  number
-    hidden: yes
+    group_label: "Advanced"
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: gross_amt_tier {

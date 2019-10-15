@@ -33,8 +33,10 @@ view: restocked_returns {
   }
 
   measure: total_restocked_items {
-    label: "Total Restocked (units)"
-    type: sum
-    sql: ${TABLE}."RESTOCKED_ITEMS" ;;
+    group_label: "  Advanced"
+    label: "    * Is Restocked"
+    description: "in units"
+    type: yesno
+    sql: ${TABLE}."RESTOCKED_ITEMS is not NULL" ;;
   }
 }

@@ -9,6 +9,7 @@ view: return_option {
 
   dimension: list_item_name {
     label:"Return Method"
+    hidden:  yes
     description: "Channel the customer used show proof and qualify for the refund"
     type:  string
     sql:${TABLE}.list_item_name;; }

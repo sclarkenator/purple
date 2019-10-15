@@ -23,9 +23,10 @@ view: shopify_discount_codes {
     }
 
     dimension: promo {
+      group_label: " Advanced"
       #hidden:  yes
       view_label: "Sales Order"
-      label: "Promo (shopify)"
+      label: "   Promo Code Used (shopify)"
       type: string
       sql: ${TABLE}.promo ;;
     }

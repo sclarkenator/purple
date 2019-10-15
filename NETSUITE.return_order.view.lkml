@@ -31,7 +31,7 @@ view: return_order {
 
   dimension_group: created {
     type: time
-    label:  "Return"
+    label:  "  Return Intiated"
     description:"Date/time that RMA was initiated"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -108,6 +108,7 @@ view: return_order {
 
   dimension: return_ref_id {
     label:"RMA Number"
+    group_label: " Advanced"
     description:  "RMA number of return (Return Ref ID)"
     type: string
     sql: ${TABLE}.RETURN_REF_ID ;; }
@@ -137,6 +138,7 @@ view: return_order {
 
   dimension: rma_return_type {
     label:  "Return Type"
+    group_label: " Advanced"
     description: "Return type: Trial / Non-trial"
     type: string
     sql: ${TABLE}.RMA_RETURN_TYPE ;; }
@@ -175,13 +177,14 @@ view: return_order {
     sql: ${TABLE}.SHIPPING_ITEM_ID ;; }
 
   dimension: status {
-    label: "Status of Return"
+    label: "   Status of Return"
     description: "Refunded, cancelled, in process, etc."
     type: string
     sql: ${TABLE}.STATUS ;; }
 
   dimension: was_returned {
     label: "Was Returned - Trial Return"
+    group_label: " Advanced"
     description: "Indicates if a trial return was completed and refunded"
     type: yesno
     sql: ${TABLE}.STATUS = 'Refunded' and ${TABLE}.RMA_RETURN_TYPE = 'Trial' ;;
@@ -208,6 +211,7 @@ view: return_order {
     sql: ${TABLE}.WARRANTY_ORDER ;; }
 
   dimension_group: return_completed {
+    label: "  Return Completed"
     type: time
     hidden: no
     description: "Date the return was reimbused and fully completed"
@@ -215,6 +219,13 @@ view: return_order {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.return_completed ;; }
+
+  dimension: return_completed {
+    type: yesno
+    hidden: no
+    label: "   * Return Completed"
+    description: "Date the return was reimbused and fully completed"
+    sql: ${TABLE}.return_completed is not NULL ;; }
 
   measure: days_from_order_to_complete_return {
     type: average
@@ -233,22 +244,25 @@ view: return_order {
   dimension: law_tag {
     type: date
     sql: ${TABLE}.LAW_TAG ;;
+    hidden: yes
   }
 
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
-    hidden: no
+    group_label: " Advanced"
     sql: case when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
             when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 60 then '31-60 Days'
             when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 100 then '61-100 Days'
             when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) > 100 then 'Over 100'
             end;;
+
   }
 
   dimension: primary_key
   {
     primary_key:  yes
     sql: ${TABLE}.return_order_id ;;
+    hidden:  yes
 
   }
 
