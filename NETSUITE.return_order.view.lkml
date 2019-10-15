@@ -38,6 +38,13 @@ view: return_order {
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.CREATED) ;; }
 
+  dimension: created_date_filter {
+    type: yesno
+    label:  "   * Return Intiated"
+    description:"Date/time that RMA was initiated"
+
+    sql: to_timestamp_ntz(${TABLE}.CREATED) is not NULL ;;}
+
   dimension_group: customer_receipt {
     hidden: yes
     type: time
@@ -137,8 +144,7 @@ view: return_order {
     sql: ${TABLE}.RMA_RETURN_FORM_SENT ;; }
 
   dimension: rma_return_type {
-    label:  "Return Type"
-    group_label: " Advanced"
+    label:  "   Return Type"
     description: "Return type: Trial / Non-trial"
     type: string
     sql: ${TABLE}.RMA_RETURN_TYPE ;; }
