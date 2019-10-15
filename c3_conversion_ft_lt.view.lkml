@@ -11,7 +11,8 @@ view: c3_conversion_ft_lt {
   dimension: has_touch {
     type: yesno
     label: "  * Has Marketing Touch"
-    sql: case when  ${TABLE}."ANALYTICS_ORDER_ID" is null then 'No' else 'Yes' end;;
+    description: "If there is a marketing touch on the order.  Most blank will be orders made not on the website (wholesale/retail)"
+    sql: ${TABLE}."ANALYTICS_ORDER_ID" is not null;;
   }
 
   dimension: c3_sales_order_id {
@@ -44,37 +45,42 @@ view: c3_conversion_ft_lt {
 
   dimension: ANY_TOUCH_GOOGLE {
     label: "Includes a Google Touch"
+    description: "If there is a google touch anywhere in the timeline"
     group_label: "Advanced"
-    type: string
-    sql: ${TABLE}."ANY_TOUCH_GOOGLE" ;;
+    type: yesno
+    sql: ${TABLE}."ANY_TOUCH_GOOGLE" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_FACEBOOK {
     label: "Includes a Facebook Touch"
+    description: "If there is a facebook touch anywhere in the timeline"
     group_label: "Advanced"
-    type: string
-    sql: ${TABLE}."ANY_TOUCH_FACEBOOK" ;;
+    type: yesno
+    sql: ${TABLE}."ANY_TOUCH_FACEBOOK" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_TV {
     label: "Includes a TV Touch"
+    description: "If there is a tv touch anywhere in the timeline"
     group_label: "Advanced"
-    type: string
-    sql: ${TABLE}."ANY_TOUCH_TV" ;;
+    type: yesno
+    sql: ${TABLE}."ANY_TOUCH_TV" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_YAHOO {
     label: "Includes a Yahoo Touch"
+    description: "If there is a yahoo touch anywhere in the timeline"
     group_label: "Advanced"
-    type: string
-    sql: ${TABLE}."ANY_TOUCH_YAHOO" ;;
+    type: yesno
+    sql: ${TABLE}."ANY_TOUCH_YAHOO" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_PINTEREST {
     label: "Includes a Pinterest Touch"
+    description: "If there is a google touch anywhere in the timeline"
     group_label: "Advanced"
-    type: string
-    sql: ${TABLE}."ANY_TOUCH_PINTEREST" ;;
+    type: yesno
+    sql: ${TABLE}."ANY_TOUCH_PINTEREST" = 'YES' ;;
   }
 
   dimension: first_touch_source {
@@ -113,6 +119,7 @@ view: c3_conversion_ft_lt {
 
   dimension: total_touches {
     type: number
+    description: "Total touchpoints from all channels (not unique per channel)"
     group_label: "Advanced"
     sql: ${TABLE}."TOTAL_TOUCHES" ;;
   }
