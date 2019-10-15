@@ -44,7 +44,7 @@ view: shopify_discount_codes {
     description: "Promo Code Used in Shopify, bucketed (removed unique key)"
     #hidden:  yes
     view_label: "Sales Order"
-    label: "Promo Code (bucket)"
+    label: "  Promo Code (bucket)"
     type: string
     sql: split_part(${TABLE}.promo,'-',1) ;;
   }
