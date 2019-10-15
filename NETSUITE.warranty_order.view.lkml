@@ -19,9 +19,16 @@ view: warranty_order {
     type: number
     sql: ${TABLE}.CHANNEL_ID ;; }
 
+  dimension: is_warrantied {
+    label: "     * Is Warrantied"
+    type: yesno
+    sql: ${TABLE}.CREATED is not null ;;
+  }
+
   dimension_group: created {
     type: time
-    label: "Warranty Created"
+    label: "   Warranty "
+    description: "Warranty Created"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -34,7 +41,7 @@ view: warranty_order {
     sql: ${TABLE}.INSERT_TS ;; }
 
   dimension: memo {
-    group_label: "Memos"
+    group_label: " Advanced"
     label: "Header Memo"
     description: "The header level notes on the warranty order"
     type: string
@@ -47,12 +54,14 @@ view: warranty_order {
 
   dimension: related_tranid {
     hidden: no
+    group_label: " Advanced"
     label: "Related Transaction ID"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
   dimension: replacement_order_id {
     hidden: no
+    group_label: " Advanced"
     type: number
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.REPLACEMENT_ORDER_ID ;; }
@@ -63,7 +72,7 @@ view: warranty_order {
     sql: ${TABLE}.RMAWARRANTY_TICKET_NUMBER ;; }
 
   dimension: status {
-    label: "Status"
+    label: "  Status"
     description: "Warrenty status (Cancelled, Closed, Refunded, etc). Closed means the warranty was completed."
     type: string
     sql: ${TABLE}.STATUS ;; }
@@ -91,12 +100,13 @@ view: warranty_order {
 
   dimension: warranty_ref_id {
     label: "RMA Number"
+    group_label: " Advanced"
     description: "RMA number for warranty"
     type: string
     sql: ${TABLE}.WARRANTY_REF_ID ;; }
 
   dimension: warranty_type {
-    label: "Warranty Type"
+    label: "  Warranty Type"
     description: "Material or Non Material"
     type: string
     sql: ${TABLE}.WARRANTY_TYPE ;;  }

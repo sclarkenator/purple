@@ -29,7 +29,8 @@ view: fulfillment_dates {
     }
 
   measure: days_to_ff {
-    group_label: "Average Days Between"
+    group_label: "Average Days:"
+    hidden: yes
     label: "Order to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  average   #sum??
@@ -37,8 +38,8 @@ view: fulfillment_dates {
     sql:${TABLE}.days_to_ff ;; }
 
   measure: days_between_ff {
-    group_label: "Average Days Between"
-    label: "First and Last Fulfillment"
+    group_label: "Average Days:"
+    label: "Between 1st & Last Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  average   #sum??
     sql:${TABLE}.days_between_ff ;; }
@@ -58,21 +59,21 @@ view: fulfillment_dates {
     sql: ${TABLE}.order_id ;;  }
 
   dimension: days_to_ff_dimension {
-    group_label: " Advanced"
+    group_label: "  Advanced"
     label: "Order to Fulfillment"
     description: "A calculations between the order date and first item fulfilled"
     type:  number
     sql:${TABLE}.days_to_ff ;; }
 
   dimension: days_between_ff_dimension {
-    group_label: " Advanced"
+    group_label: "  Advanced"
     label: "First to Last Fulfillment"
     description: "A calculations between the first item and last item fulfilled"
     type:  number
     sql:${TABLE}.days_between_ff ;; }
 
   dimension: days_to_last_ff_dimension {
-    group_label: " Advanced"
+    group_label: "  Advanced"
     label: "Order to last Fulfilled item"
     description: "A calculations between the order date and last item fulfilled"
     type:  number

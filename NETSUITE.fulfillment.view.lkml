@@ -13,7 +13,7 @@ view: fulfillment {
     sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;  }
 
   dimension: carrier {
-    label: "Carrier (actual)"
+    label: "   Carrier (actual)"
     description: "Shipping provider was used to fulfill this part of the order"
     type: string
     sql: ${TABLE}.carrier ;;  }
@@ -73,7 +73,7 @@ view: fulfillment {
     sql: ${TABLE}.parent_item_id ;; }
 
   measure: Fulfillment_record_quantity {
-    hidden: no
+    hidden: yes
     type: sum
     sql: ${TABLE}.quantity ;; }
 
@@ -100,13 +100,13 @@ view: fulfillment {
     sql: ${TABLE}.update_ts ;; }
 
   dimension: tracking_numbers {
-    group_label: " Advanced"
+    group_label: "  Advanced"
     description: "Carrier tracking numbers"
     type: string
     sql: ${TABLE}.tracking_numbers ;;}
 
   measure: count {
-    label: "Fulfilled Count"
+    label: "Units fulfilled"
     description: "Count of unique items fulfilled"
     #hidden: yes
     type: count}
