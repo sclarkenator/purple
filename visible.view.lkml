@@ -2,7 +2,7 @@ view: visible {
   sql_table_name: PRODUCTION.VISIBLE ;;
 
   dimension_group: delivery {
-    group_label: "Visible SCM"
+    group_label: "  Visible SCM"
     label: "Visible delivery"
     description: "Date Visible delivered load to recipient"
     type: time
@@ -20,7 +20,7 @@ view: visible {
   }
 
   dimension_group: in_hand {
-    group_label: "Visible SCM"
+    group_label: "  Visible SCM"
     label: "Visible in-hand"
     description: "Date Visible takes load"
     type: time
@@ -59,7 +59,7 @@ view: visible {
   }
 
   dimension: load_id {
-    group_label: "Visible SCM"
+    group_label: "  Visible SCM"
     label: "Visible load_id"
     description: "Visible SCM load_id"
     type: string
@@ -82,6 +82,7 @@ view: visible {
     label: "Load size (qty)"
     description: "Number of items on Visible load"
     type: sum
+    hidden: yes
     sql: ${TABLE}."QUANTITY" ;;
   }
 
@@ -141,7 +142,7 @@ view: visible {
   }
 
   dimension: weight_of_load {
-    group_label: "Visible SCM"
+    group_label: "  Visible SCM"
     type: number
     hidden:  yes
     sql: ${TABLE}."WEIGHT" ;;
