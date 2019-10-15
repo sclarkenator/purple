@@ -151,7 +151,7 @@ dimension_group: SLA_Target {
 }
 
 dimension: SLA_Buckets {
-  group_label: " Advanced"
+  group_label: "  Advanced"
   label: "Days Past SLA Target Buckets"
   view_label: "Fulfillment"
   description: "# days in realtion to Target date"
@@ -213,6 +213,7 @@ dimension: SLA_Buckets {
 
   measure: zSLA_Achievement_prct {
     view_label: "Fulfillment"
+    group_label: "SLA"
     label: "SLA $ Achievement %"
     hidden: no
     value_format_name: percent_1
@@ -223,6 +224,7 @@ dimension: SLA_Buckets {
 
   measure: Qty_eligable_for_SLA{
     label: "Qty Eligable SLA"
+    group_label: "SLA"
     view_label: "Fulfillment"
     type: sum
     sql: Case
@@ -240,6 +242,7 @@ dimension: SLA_Buckets {
 
 measure: Qty_Fulfilled_in_SLA{
   label: "Qty Fulfilled in SLA"
+  group_label: "SLA"
   view_label: "Fulfillment"
   type: sum
   sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
@@ -247,9 +250,20 @@ measure: Qty_Fulfilled_in_SLA{
         Else 0 END END;;
 }
 
-measure: SLA_Achievement_prct {
+dimension: SLA_fulfilled {
+    label: "     * Is SLA fulfilled"
+    description: "Was item fulfilled in SLA window"
+    view_label: "Fulfillment"
+    type: yesno
+    sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
+        case when ${fulfilled_date} <= ${Due_Date} THEN 1
+        Else 0 END END;;
+  }
+
+  measure: SLA_Achievement_prct {
   view_label: "Fulfillment"
   label: "SLA Achievement %"
+  group_label: "SLA"
   hidden: no
   value_format_name: percent_1
   type: number
@@ -724,7 +738,7 @@ dimension: days_to_cancel {
     sql: ${TABLE}.Ship_company;; }
 
   dimension: MTD_fulfilled_flg{
-    group_label: "Fulfilled Date"
+    group_label: "    Fulfilled Date"
     label: "z - Month to Date (current year)"
     #hidden:  yes
     view_label: "Fulfillment"
@@ -733,7 +747,7 @@ dimension: days_to_cancel {
     sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;; }
 
   dimension: ff_Before_today{
-    group_label: "Fulfilled Date"
+    group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
@@ -741,7 +755,7 @@ dimension: days_to_cancel {
     sql: ${TABLE}.fulfilled < current_date;; }
 
   dimension: ff_current_week_num{
-    group_label: "Fulfilled Date"
+    group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
@@ -749,7 +763,7 @@ dimension: days_to_cancel {
     sql: date_part('week',${TABLE}.fulfilled) < date_part('week',current_date);; }
 
   dimension: ff_prev_week{
-    group_label: "Fulfilled Date"
+    group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
@@ -757,7 +771,7 @@ dimension: days_to_cancel {
     sql: date_part('week',${TABLE}.fulfilled) = date_part('week',current_date)-1;; }
 
   dimension: week_bucket_ff{
-    group_label: "Fulfilled Date"
+    group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
@@ -951,10 +965,18 @@ dimension: days_to_cancel {
     datatype: date
     sql: ${TABLE}.FULFILLED ;; }
 
+  dimension: is_fulfilled {
+    view_label: "Fulfillment"
+    label: "     * Is fulfilled"
+    description:  "Has order been fulfilled"
+    type: yesno
+    sql: ${TABLE}.FULFILLED is not null;; }
+
+
   dimension: fulfilled_status {
     view_label: "Fulfillment"
     #hidden: yes
-    label: "Status"
+    label: "   Status"
     description: "Fulfillment status - On Time, Late, Open, Late (open)"
     type: string
     sql:
@@ -985,6 +1007,7 @@ dimension: days_to_cancel {
 
   dimension: location {
     label:  "Fulfillment Warehouse"
+    group_label: "  Advanced"
     description:  "Warehouse that order was fulfilled out of"
     view_label: "Fulfillment"
     type: string
@@ -1107,7 +1130,7 @@ dimension: days_to_cancel {
 
   dimension: carrier {
     view_label: "Fulfillment"
-    label: "Carrier (expected)"
+    label: "   Carrier (expected)"
     description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
     hidden: no
     type: string
@@ -1115,6 +1138,7 @@ dimension: days_to_cancel {
 
   dimension: DTC_carrier {
     view_label: "Fulfillment"
+    group_label: "  Advanced"
     label: "Carrier (Grouping)"
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
     hidden: no

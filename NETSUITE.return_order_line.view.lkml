@@ -121,7 +121,8 @@ view: return_order_line {
   measure: average_gross_return {
     label: "Average Gross Returns"
     type: average
-    sql: ${TABLE}.gross_amt ;; }
+    sql: ${TABLE}.gross_amt ;;
+    hidden:yes}
 
   measure: total_gross_amt {
     group_label: "Return Amounts"
@@ -147,13 +148,14 @@ view: return_order_line {
 
   dimension: days_between_dimension {
     label: "Return Window (days)"
+    group_label: " Advanced"
     description: "How many days until product return was initiated?"
     type: number
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_buckets {
     group_label: "Return Aging Buckets"
-    label: "30"
+    view_label: " Advanced"
     description: "What aging bucket the order was returned in (30,60,90,120)"
     type: tier
     style: integer
@@ -166,6 +168,7 @@ view: return_order_line {
     description: "What aging bucket the order was returned in (60,120,180,240,300,360)"
     type: tier
     style: integer
+    hidden: yes
     tiers: [60,120,180,240,300,360]
     sql: datediff(day,${fulfillment.fulfilled_F_date},${return_order.created_raw}) ;; }
 
@@ -175,6 +178,7 @@ view: return_order_line {
     description: "What aging bucket the order was returned in (7,14,21,28,35,42,49,56)"
     type: tier
     style: integer
+    hidden: yes
     tiers: [7,14,21,28,35,42,49,56]
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw})   ;; }
 
@@ -275,8 +279,9 @@ view: return_order_line {
     sql: ${TABLE}.MEMO ;; }
 
   dimension: gross_amt {
-    label: "Gross Amount ($)"
-    description: "Net amount ($) being returned"
+    label: "Amount Returned ($)"
+    group_label: " Advanced"
+    description: "Gross amount ($) being returned"
     type: number
     sql: ${TABLE}.gross_amt ;; }
 
@@ -316,10 +321,13 @@ view: return_order_line {
     label: "Quantity Returned (units)"
     description:  "Total units returned"
     type: number
-    sql: ${TABLE}.RETURN_QTY ;; }
+    sql: ${TABLE}.RETURN_QTY ;;
+    group_label:" Advanced"
+    }
 
   dimension: revenue_item {
-    label: "Is Revenue Item"
+    label: "   * Is Revenue Item"
+    group_label: " Advanced"
     description: "Yes if return amount tied to a revenue item"
     type: yesno
     sql: ${TABLE}.REVENUE_ITEM ;; }
