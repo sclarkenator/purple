@@ -25,7 +25,7 @@ view: cancelled_order {
     hidden:yes}
 
   measure: amt_cancelled {
-    label:  "Total Cancelled ($)"
+    label:  "Cancelled Orders ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
     type: sum
     value_format: "$#,##0.00"
@@ -33,7 +33,7 @@ view: cancelled_order {
 
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancellations Completed ($)"
-    hidden: yes
+    group_label: "Advanced"
     description: "Total USD amount of cancelled order, excluding taxes, where a refund has been given"
     type: sum
     value_format: "$#,##0.00"
@@ -47,7 +47,7 @@ view: cancelled_order {
     label:  "Total Cancellations Completed (units)"
     description: "Total quantity of cancelled units where a refund has been given"
     type: sum
-    hidden: yes
+    group_label: "Advanced"
     filters: {
       field: refunded
       value: "Yes"
@@ -113,7 +113,7 @@ view: cancelled_order {
     sql: ${gross_amt}/60 ;; }
 
   dimension_group: cancelled {
-    label: "Cancelled"
+    label: "   Cancelled"
     description: "Date order was cancelled. Cancelled time is available for full-order cancellations."
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -122,7 +122,8 @@ view: cancelled_order {
     sql: to_timestamp_ntz(${TABLE}.CANCELLED) ;; }
 
   dimension: cancelled_order_type {
-    view_label: "Advanced"
+    group_label: "Advanced"
+    view_label: "Cancellations"
     label:  "Cancellation Type"
     description:  "Full order or partial order"
     type: string
@@ -167,7 +168,7 @@ view: cancelled_order {
     description: "Total $ returned to customer, excluding shipping and freight (0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
     type: tier
     style:  integer
-    hidden: yes
+    group_label: "Advanced"
     tiers: [0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     sql: ${TABLE}.gross_amt ;;}
 
@@ -179,7 +180,8 @@ view: cancelled_order {
   dimension: refunded {
     description: "Yes if cancellation was completed and customer's money was refunded"
     type: string
-    sql: ${TABLE}.REFUNDED ;; }
+    sql: ${TABLE}.REFUNDED ;;
+    hidden:yes}
 
   dimension: revenue_item {
     label:"Is Revenue Item"

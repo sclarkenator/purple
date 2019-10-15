@@ -520,15 +520,15 @@ measure: SLA_Achievement_prct {
     sql: ${TABLE}.Created::date ;; }
 
 
-# dimension: days_to_cancel {
-#   view_label: "Cancellations"
-#   label: "# days from order"
-#   description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
-#   type: tier
-#   style: integer
-#   hidden:  yes
-#   tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
-#   sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
+dimension: days_to_cancel {
+  view_label: "Cancellations"
+  label: "# days from order"
+  description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
+  type: tier
+  style: integer
+  hidden:  yes
+  tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
+  sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
   dimension: order_age_bucket {
     label: "Order Age (bucket)"
@@ -1090,7 +1090,7 @@ measure: SLA_Achievement_prct {
 
 
 
-  measure: days_to_cancel {
+  measure: days_to_cancel_measure {
     view_label: "Cancellations"
     label: "Avg days from order to cancellation"
     description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"

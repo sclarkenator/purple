@@ -10,7 +10,7 @@ view: NETSUITE_cancelled_reason {
 
   dimension: list_name {
     type: string
-    label: "Cancel Reason"
+    label: " Cancel Reason"
     description: "Given reason for cancelling the order or item"
     sql: ${TABLE}.list_item_name  ;; }
 
