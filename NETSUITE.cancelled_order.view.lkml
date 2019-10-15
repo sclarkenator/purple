@@ -2,7 +2,7 @@ view: cancelled_order {
   sql_table_name: SALES.CANCELLED_ORDER ;;
 
   measure: units_cancelled {
-    label: "Total Cancelled (units)"
+    label: "Cancelled Orders (units)"
     description: "Total individual units cancelled"
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;; }
@@ -21,7 +21,8 @@ view: cancelled_order {
       field: refunded
       value: "Yes"
     }
-    sql: ${order_id} ;; }
+    sql: ${order_id} ;;
+    hidden:yes}
 
   measure: amt_cancelled {
     label:  "Total Cancelled ($)"
@@ -32,6 +33,7 @@ view: cancelled_order {
 
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancellations Completed ($)"
+    hidden: yes
     description: "Total USD amount of cancelled order, excluding taxes, where a refund has been given"
     type: sum
     value_format: "$#,##0.00"
@@ -45,6 +47,7 @@ view: cancelled_order {
     label:  "Total Cancellations Completed (units)"
     description: "Total quantity of cancelled units where a refund has been given"
     type: sum
+    hidden: yes
     filters: {
       field: refunded
       value: "Yes"
@@ -61,6 +64,7 @@ view: cancelled_order {
             then '60+ Days'
           else 'Today' end
         ;;
+    hidden: yes
   }
 
   dimension: yesterday_flag {
@@ -118,6 +122,7 @@ view: cancelled_order {
     sql: to_timestamp_ntz(${TABLE}.CANCELLED) ;; }
 
   dimension: cancelled_order_type {
+    view_label: "Advanced"
     label:  "Cancellation Type"
     description:  "Full order or partial order"
     type: string
@@ -151,9 +156,10 @@ view: cancelled_order {
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
-    label:  "Total Cancelled"
+    label:  "Cancelled Orders ($)"
     description: "Total $ returned to customer, excluding shipping and freight"
     type:  number
+    hidden: yes
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: gross_amt_tier {
@@ -161,6 +167,7 @@ view: cancelled_order {
     description: "Total $ returned to customer, excluding shipping and freight (0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
     type: tier
     style:  integer
+    hidden: yes
     tiers: [0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     sql: ${TABLE}.gross_amt ;;}
 
