@@ -268,6 +268,12 @@ view: sales_order {
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
 
+  dimension: payment_method_flag {
+    label: "     * Is Financed"
+    description: "For Shopify-US orders only. Payment with Affirm or Progressive"
+    type: yesno
+    sql: case when ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' then 1 else 0 end;; }
+
   dimension: recycle_fee_amt {
     hidden:yes
     type: number
