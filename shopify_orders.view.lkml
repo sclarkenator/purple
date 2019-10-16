@@ -63,10 +63,10 @@ view: shopify_orders {
   dimension: call_in_order_Flag {
     view_label: "Sales Order"
     #group_label: " Advanced"
-    label: "     * Is Draft Order"
+    label: "     * Is Call center order"
     description: "Draft orders created by call center agents"
     type: yesno
-    sql: ${TABLE}.source_name = 'shopify_draft_order' ;;
+    sql: ${TABLE}.user_id is not null and ${sales_order.showroom} = 'FALSE' ;;
   }
 
   dimension: tax_match {

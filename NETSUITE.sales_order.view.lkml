@@ -37,6 +37,11 @@ view: sales_order {
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
+  dimension: showroom {
+    hidden:  yes
+    sql: ${TABLE}.showroom ;;
+  }
+
   dimension: order_system {
     primary_key:  yes
     hidden:  yes
