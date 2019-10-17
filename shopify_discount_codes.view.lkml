@@ -30,14 +30,24 @@ view: shopify_discount_codes {
     }
 
     dimension: promo {
-      #group_label: " Advanced"
-      description: "Used a Promo Code in Shopify"
+      group_label: " Advanced"
+      #description: "Full Promo Code in Shopify"
       #hidden:  yes
       view_label: "Sales Order"
-      label: "   Promo Code Used (shopify)"
+      label: "Full Promo Code Used (shopify)"
       type: string
       sql: ${TABLE}.promo ;;
     }
+
+  dimension: promo_bucket {
+    #group_label: " Advanced"
+    description: "Promo Code Used in Shopify, bucketed (removed unique key)"
+    #hidden:  yes
+    view_label: "Sales Order"
+    label: "  Promo Code (bucket)"
+    type: string
+    sql: split_part(${TABLE}.promo,'-',1) ;;
+  }
 
   dimension: promo_2 {
     hidden:  yes

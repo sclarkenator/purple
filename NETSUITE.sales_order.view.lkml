@@ -37,6 +37,11 @@ view: sales_order {
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
+  dimension: showroom {
+    hidden:  yes
+    sql: ${TABLE}.showroom ;;
+  }
+
   dimension: order_system {
     primary_key:  yes
     hidden:  yes
@@ -262,6 +267,12 @@ view: sales_order {
     description: "For Shopify-US orders only. The customer's method of payment"
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
+
+  dimension: payment_method_flag {
+    label: "     * Is Financed"
+    description: "For Shopify-US orders only. Payment with Affirm or Progressive"
+    type: yesno
+    sql: case when ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' then 1 else 0 end;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
