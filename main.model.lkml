@@ -729,8 +729,14 @@ explore: sales_order_line{
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    sql_on: ${sales_order_line.zip_1}::varchar = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
+  join: zcta5 {
+    view_label: "Geography"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar ;;
+    relationship: many_to_one}
+
   join: dma {
     view_label: "Customer"
     type:  left_outer
