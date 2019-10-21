@@ -3,6 +3,7 @@ view: shawn_ryan_view {
   derived_table: {
     sql:
 select  extract(month from a.date) as MONTH,
+        extract(year from a.date) as YEAR,
         CASE
             when trim(lower(a.ad_name)) like '%calps%' then 'AGENCY_WITHIN'
             else 'PURPLE'
@@ -13,13 +14,19 @@ from analytics.marketing.adspend a
 where a.platform = 'FACEBOOK'
     and to_date(a.date) >= '2019-04-01'
     and to_date(a.date) < current_date
-group by 1,2,3
+group by 1,2,3,4
 order by 1;; }
 
 dimension: month {
   description: "Month as integer number"
   type: date_fiscal_month_num
   sql: ${TABLE}.month;;
+}
+
+dimension: year {
+  description: "year as integer number"
+  type: date_fiscal_year
+  sql: ${TABLE}.year;;
 }
 
 dimension: partner {
