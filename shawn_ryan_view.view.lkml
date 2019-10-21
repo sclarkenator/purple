@@ -47,6 +47,7 @@ measure: spend {
 
 dimension: primary_key{
   primary_key: yes
+  hidden:  yes
   type: string
   sql: CONCAT(${TABLE}.spend, ${TABLE}.campaign_name, ${TABLE}.partner) ;;
   #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
