@@ -14,10 +14,20 @@ navigation:
     label: Release Notes
 ---
 
-# [Company Name] Analytics Home Page
+# Purple Analytics Home Page
 Click on the [_looker_](https://[customer_looker_url]) logo in the upper left corner at any time to return to this page
 ​
 ---
+​<iframe
+  src="​https://purple.looker.com/embed/dashboards/77?Date=1%20months&filter_config=%7B"Date":%5B%7B"type":"past","values":%5B%7B"constant":"1","unit":"mo"%7D,%7B%7D%5D,"id":2%7D%5D%7D"
+  width="1000"
+  height="2000"
+  frameborder="0">
+</iframe>
+
+-
+​
+​
 ​
 ## Welcome!
 ​
