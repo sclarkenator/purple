@@ -1119,7 +1119,7 @@ dimension: days_to_cancel {
     group_label: "Customer Address"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
-    sql: substr(${TABLE}.ZIP,1,5) ;; }
+    sql: split_part(${TABLE}.ZIP,'-',1) ;; }
 
   dimension: zip_1 {
     view_label: "Geography"
@@ -1127,7 +1127,7 @@ dimension: days_to_cancel {
     description: "5-digit ship-to zipcode"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
-    sql: substr(${TABLE}.ZIP,1,5) ;; }
+    sql: split_part(${TABLE}.ZIP,'-',1) ;; }
 
 
   dimension: carrier {
