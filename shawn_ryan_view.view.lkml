@@ -1,39 +1,29 @@
 view: shawn_ryan_view {
+  sql_table_name: marketing.adspend ;;
 
-  derived_table: {
-    sql:
-select  to_number(extract(month from a.date)) as MONTH,
-        to_number(extract(year from a.date)) as YEAR,
-        CASE
-            when trim(lower(a.ad_name)) like '%calps%' then 'AGENCY_WITHIN'
-            else 'PURPLE'
-        END as PARTNER,
-        trim(upper(a.campaign_name)) as CAMPAIGN_NAME,
-        sum(coalesce(spend,0)) as SPEND
-from analytics.marketing.adspend a
-where a.platform = 'FACEBOOK'
-    and to_date(a.date) >= '2019-04-01'
-    and to_date(a.date) < current_date
-group by 1,2,3,4
-order by 1;; }
 
-dimension: month {
-  description: "Month as integer number"
-  type: number
-  #type: date_fiscal_month_num
-  sql: ${TABLE}.month;;
-}
+  dimension_group: Date {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
+  }
 
-dimension: year {
-  description: "year as integer number"
-  type: number
-  #type: date_fiscal_year
-  sql: ${TABLE}.year;;
-}
 
 dimension: partner {
   type: string
-  sql: ${TABLE}.partner;;
+  sql: CASE
+            when trim(lower(${TABLE}.ad_name)) like '%calps%' then 'AGENCY_WITHIN'
+            else 'PURPLE'
+        END ;;
 }
 
 dimension: campaign_name {
@@ -44,7 +34,7 @@ dimension: campaign_name {
 measure: spend {
   type: number
   value_format: "$0.00"
-  sql: ${TABLE}.campaign_name;;
+  sql: ${TABLE}.spend;;
 }
 
 dimension: primary_key{
