@@ -32,10 +32,17 @@ dimension: campaign_name {
   sql: ${TABLE}.campaign_name;;
 }
 
-dimension: spend {
+measure: spend {
   type: number
   value_format: "$0.00"
   sql: ${TABLE}.campaign_name;;
+}
+
+dimension: primary_key{
+  primary_key: yes
+  type: string
+  sql: CONCAT(${TABLE}.spend, ${TABLE}.campaign_name, ${TABLE}.partner) ;;
+  #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
 }
 
 
