@@ -1160,7 +1160,7 @@ dimension: days_to_cancel {
     description: "Average units/transactions"
     type: average
     value_format: "0.0"
-    sql: ${TABLE}.total_units/sales_order.order_id;; }
+    sql: ${TABLE}.ordered_qty/count(sales_order.order_id);; }
 
 
   measure: days_to_cancel_measure {
