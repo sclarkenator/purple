@@ -2,8 +2,8 @@ view: shawn_ryan_view {
 
   derived_table: {
     sql:
-select  extract(month from a.date) as MONTH,
-        extract(year from a.date) as YEAR,
+select  to_number(extract(month from a.date)) as MONTH,
+        to_number(extract(year from a.date)) as YEAR,
         CASE
             when trim(lower(a.ad_name)) like '%calps%' then 'AGENCY_WITHIN'
             else 'PURPLE'
@@ -19,13 +19,15 @@ order by 1;; }
 
 dimension: month {
   description: "Month as integer number"
-  type: date_fiscal_month_num
+  type: number
+  #type: date_fiscal_month_num
   sql: ${TABLE}.month;;
 }
 
 dimension: year {
   description: "year as integer number"
-  type: date_fiscal_year
+  type: number
+  #type: date_fiscal_year
   sql: ${TABLE}.year;;
 }
 
