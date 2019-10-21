@@ -1155,12 +1155,6 @@ dimension: days_to_cancel {
     type: string
     sql: to_char( ${TABLE}.created,'MON-DD');; }
 
-  measure: average_order_size_units {
-    label: "Average Order Size (units)"
-    description: "Average units/transactions"
-    type: average
-    value_format: "0.0"
-    sql: ${TABLE}.ordered_qty/count(sales_order.order_id);; }
 
 
   measure: days_to_cancel_measure {

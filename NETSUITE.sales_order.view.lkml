@@ -16,6 +16,14 @@ view: sales_order {
     hidden: no
     sql: ${TABLE}.email ;; }
 
+  measure: average_order_size_units {
+    label: "Average Order Size (units)"
+    group_label: "Sales Order"
+    description: "Average units/transactions"
+    type: average
+    value_format: "0.0"
+    sql: sales_order_line.ordered_qty/count(${TABLE}.order_id);; }
+
   measure: average_order_size {
     label: "Average Order Size ($)"
     description: "Average total order amount, excluding tax"
@@ -24,14 +32,14 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;; }
 
   measure: max_order_size {
-    label: "Max Order Size ($)"
+    label: " Max Order Size ($)"
     description: "Max total order amount, excluding tax"
     type: max
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: min_order_size {
-    label: "Min Order Size ($)"
+    label: " Min Order Size ($)"
     description: "Min total order amount, excluding tax"
     type: min
     value_format: "$#,##0.00"
