@@ -32,7 +32,7 @@ dimension: campaign_name {
 }
 
 measure: spend {
-  type: number
+  type: sum
   value_format: "$0.00"
   sql: ${TABLE}.spend;;
 }
