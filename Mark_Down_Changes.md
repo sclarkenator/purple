@@ -18,18 +18,23 @@ navigation:
 Click on the [_looker_](https://[customer_looker_url]) logo in the upper left corner at any time to return to this page
 ​
 ---
+<div class="iframe_container">
 ​<iframe
-  src="​https://purple.looker.com/embed/dashboards/77?Date=1%20months&filter_config=%7B"Date":%5B%7B"type":"past","values":%5B%7B"constant":"1","unit":"mo"%7D,%7B%7D%5D,"id":2%7D%5D%7D"
-  width="1000"
-  height="2000"
+  src="​https://purple.looker.com/embed/dashboards/77/4?allow_login_screen=true"
+  width="250"
+  height="500"
   frameborder="0">
-</iframe>
-
+ </iframe>
+</div>
 -
 ​
 ​
 ​
 ## Welcome!
+
+
+
+
 ​
 If you are new to the Looker data exploration platform or would like training on how to explore, visualize and share date with Looker, please send an email to <help.looker.com> for access to the training ground at learn.looker.com.
 ​
