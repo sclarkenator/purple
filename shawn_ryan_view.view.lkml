@@ -31,6 +31,11 @@ dimension: campaign_name {
   sql: ${TABLE}.campaign_name;;
 }
 
+  dimension: ad_name {
+    type: string
+    sql: ${TABLE}.ad_name;;
+  }
+
 measure: spend {
   type: sum
   value_format: "$0.00"
