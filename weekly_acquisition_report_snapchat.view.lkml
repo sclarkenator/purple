@@ -1,7 +1,7 @@
 view: weekly_acquisition_report_snapchat {
   sql_table_name: MARKETING.WEEKLY_ACQUISITION_REPORT ;;
 
-  dimension: cpm {
+  measure: cpm {
     type: number
     sql: ${TABLE}."CPM" ;;
   }
@@ -28,25 +28,20 @@ view: weekly_acquisition_report_snapchat {
     sql: ${TABLE}."PLATFORM" ;;
   }
 
-  dimension: revenue {
+  measure: revenue {
     type: number
     sql: ${TABLE}."REVENUE" ;;
   }
 
-  dimension: roas {
+  measure: roas {
     type: number
     sql: ${TABLE}."ROAS" ;;
   }
 
-  dimension: spend {
+  measure: spend {
     type: number
     sql: ${TABLE}."SPEND" ;;
   }
 
 
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
