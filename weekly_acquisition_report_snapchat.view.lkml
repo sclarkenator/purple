@@ -2,7 +2,7 @@ view: weekly_acquisition_report_snapchat {
   sql_table_name: MARKETING.WEEKLY_ACQUISITION_REPORT ;;
 
   measure: cpm {
-    type: number
+    type: average
     sql: ${TABLE}."CPM" ;;
   }
 
@@ -29,17 +29,17 @@ view: weekly_acquisition_report_snapchat {
   }
 
   measure: revenue {
-    type: number
+    type: sum
     sql: ${TABLE}."REVENUE" ;;
   }
 
   measure: roas {
-    type: number
+    type: average
     sql: ${TABLE}."ROAS" ;;
   }
 
   measure: spend {
-    type: number
+    type: sum
     sql: ${TABLE}."SPEND" ;;
   }
 
