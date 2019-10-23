@@ -355,6 +355,11 @@ explore: shawn_ryan_view {
   group_label: "Marketing"
 }
 
+explore: weekly_acquisition_report_snapchat  {
+  hidden: yes
+  group_label: "Marketing"
+}
+
 
 explore: hotjar_data {
   group_label: "Marketing"
