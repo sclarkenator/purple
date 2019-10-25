@@ -16,7 +16,7 @@ view: referral_sales_orders {
     sql: ${TABLE}."ORDER_DATE" ;;
   }
 
-  dimension: order_id {
+  dimension: order_id_referral {
     type: number
     sql: ${TABLE}."ORDER_ID" ;;
   }
@@ -24,7 +24,7 @@ view: referral_sales_orders {
 
   dimension: order_id_flag {
     type:  yesno
-    sql: order_id is not NULL ;;
+    sql: ${order_id_referral} is not NULL  ;;
   }
 
 }
