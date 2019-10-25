@@ -21,8 +21,10 @@ view: referral_sales_orders {
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
+
+  dimension: order_id_flag {
+    type:  yesno
+    sql: order_id is not NULL ;;
   }
+
 }
