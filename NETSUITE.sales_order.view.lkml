@@ -16,13 +16,7 @@ view: sales_order {
     hidden: no
     sql: ${TABLE}.email ;; }
 
-  measure: average_order_size_units {
-    label: "Average Order Size (units)"
-    group_label: "Sales Order"
-    description: "Average units/transactions"
-    type: average
-    value_format: "0.0"
-    sql: sales_order_line.ordered_qty/count(${TABLE}.order_id);; }
+
 
   measure: average_order_size {
     label: "Average Order Size ($)"
@@ -268,6 +262,13 @@ view: sales_order {
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
+
+  dimension: order_id_count{
+    group_label: " Advanced"
+    label: "Order ID"
+    hidden: yes
+    type: number
+    sql: count(${TABLE}.ORDER_ID) ;; }
 
   dimension: payment_method {
     group_label: " Advanced"
