@@ -906,11 +906,13 @@ explore: sales_order_line{
     sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
     relationship: many_to_one
   }
+  join: affiliate_sales_orders {
+    type: left_outer
+    sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
+    relationship: many_to_one
+  }
 }
 
-explore: referral_sales_orders {
-  hidden: yes
-}
 
 
 explore: wholesale {

@@ -14,15 +14,19 @@ view: referral_sales_orders {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."ORDER_DATE" ;;
+    hidden:  yes
   }
 
   dimension: order_id_referral {
     type: number
     sql: ${TABLE}."ORDER_ID" ;;
+    hidden: yes
   }
 
 
   dimension: order_id_flag {
+    view_label: "Sales Order"
+    label: "     * Is Referral Order"
     type:  yesno
     sql: ${order_id_referral} is not NULL  ;;
   }
