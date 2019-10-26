@@ -43,11 +43,6 @@ measure: upt {
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
-  dimension: showroom {
-    hidden:  yes
-    sql: ${TABLE}.showroom ;;
-  }
-
   dimension: order_system {
     primary_key:  yes
     hidden:  yes
@@ -447,5 +442,13 @@ measure: upt {
     sql: ${TABLE}.bill_of_lading_number ;;
   }
 
+  dimension: store_id {
+    label: "Retail store ID"
+    description: "Netsuite retail store ID"
+    group_label: "Advanced"
+    view_label: "Sales Order"
+    type: string
+    sql: ${TABLE}.showroom_name ;;
+  }
 
 }
