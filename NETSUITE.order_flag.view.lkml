@@ -123,28 +123,28 @@ derived_table: {
     label: "a Mattress"
     description: "1/0; 1 if there is a mattress in this order"
     type:  yesno
-    sql: ${TABLE}.mattress_flg ;; }
+    sql: ${TABLE}.mattress_flg = 1 ;; }
 
   dimension: cushion_flg {
     group_label: "    * Orders has:"
     label: "a Cushion"
     description: "1/0; 1 if there is a cushion in this order"
     type:  yesno
-    sql: ${TABLE}.cushion_flg ;; }
+    sql: ${TABLE}.cushion_flg = 1 ;; }
 
   dimension: sheets_flg {
     group_label: "    * Orders has:"
     label: "Sheets"
     description: "1/0; 1 if there are sheets in this order"
     type:  yesno
-    sql: ${TABLE}.sheets_flg ;; }
+    sql: ${TABLE}.sheets_flg = 1 ;; }
 
   dimension: protector_flg {
     group_label: "    * Orders has:"
     label: "a Mattress Protector"
     description: "1/0; 1 if there is a mattress protector in this order"
     type:  yesno
-    sql: ${TABLE}.protector_flg ;; }
+    sql: ${TABLE}.protector_flg = 1 ;; }
 
   dimension: base_flg {
     hidden: yes
@@ -152,28 +152,28 @@ derived_table: {
     label: "a Base"
     description: "1/0; 1 if there is a base in this order"
     type:  number
-    sql: ${TABLE}.base_flg ;; }
+    sql: ${TABLE}.base_flg = 1 ;; }
 
   dimension: powerbase_flg {
     group_label: "    * Orders has:"
     label: "a Powerbase"
     description: "1/0; 1 if there is a powerbase in this order"
     type:  yesno
-    sql: ${TABLE}.powerbase_flg ;; }
+    sql: ${TABLE}.powerbase_flg = 1 ;; }
 
   dimension: platform_flg {
     group_label: "    * Orders has:"
     label: "a Platform Base"
     description: "1/0; 1 if there is a platform base in this order"
     type:  yesno
-    sql: ${TABLE}.platform_flg ;; }
+    sql: ${TABLE}.platform_flg = 1 ;; }
 
   dimension: pillow_flg {
     group_label: "    * Orders has:"
     label: "a Pillow"
     description: "1/0; 1 if there is a pillow in this order"
     type:  yesno
-    sql: ${TABLE}.pillow_flg ;; }
+    sql: ${TABLE}.pillow_flg = 1 ;; }
 
   dimension: blanket_flg {
     hidden:  yes
@@ -181,7 +181,7 @@ derived_table: {
     label: "a Blanket"
     description: "1/0; 1 if there is a blanket in this order"
     type:  number
-    sql: ${TABLE}.blanket_flg ;; }
+    sql: ${TABLE}.blanket_flg = 1 ;; }
 
   dimension: split_flg {
     group_label: "    * Orders has:"
@@ -195,7 +195,7 @@ derived_table: {
     label: "Multiple Mattresses"
     description: "1/0; 1 if there is more than 1 mattress in the order"
     type:  yesno
-    sql:  ${TABLE}.mm_flg ;; }
+    sql:  ${TABLE}.mm_flg = 1 ;; }
 
   dimension: mattress_count {
     group_label: " Advanced"

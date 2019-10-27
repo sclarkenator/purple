@@ -280,7 +280,7 @@ measure: upt {
     label: "     * Is Financed"
     description: "For Shopify-US orders only. Payment with Affirm or Progressive"
     type: yesno
-    sql: case when ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' then 1 else 0 end;; }
+    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
