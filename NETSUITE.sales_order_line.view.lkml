@@ -526,6 +526,14 @@ dimension: SLA_fulfilled {
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
 
+  dimension: total_units_dem {
+    group_label: " Advanced"
+    label:  "Gross Sales (units) (dimension version)"
+    description: "Dimension version: Total units purchased, before returns and cancellations"
+    type: number
+    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    sql:  ${TABLE}.ordered_qty ;; }
+
   measure: total_standard_cost {
     #hidden: yes
     label: "Total Standard Cost"
