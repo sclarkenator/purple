@@ -350,6 +350,16 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: shawn_ryan_view {
+  hidden: yes
+  group_label: "Marketing"
+}
+
+explore: weekly_acquisition_report_snapchat  {
+  hidden: yes
+  group_label: "Marketing"
+}
+
 
 explore: hotjar_data {
   group_label: "Marketing"
@@ -679,35 +689,7 @@ explore: v_agent_state  {
 
 
 
-# explore: sales_simplified{
-#   from: sales
-#   group_label: " Sales"
-#   view_label: "DTC Sales - Simplified View"
-#   description:  "All sales orders for DTC channel"
-#   hidden: yes
-#   fields: [customer_table.first_name]
-#   join: sf_zipcode_facts {
-#     view_label: "Customer"
-#     type:  left_outer
-#     sql_on: ${sales_simplified.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-#     relationship: many_to_one}
-#   join: dma {
-#     view_label: "Customer"
-#     type:  left_outer
-#     sql_on: ${sales_simplified.zip} = ${dma.zip} ;;
-#     fields: [dma.dma_name,dma.zip,dma.dma]
-#     relationship: many_to_one}
-  #join: customer_table {
-  #  view_label: "Customer"
-  #  type: left_outer
-  #  sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
-  #  relationship: many_to_one}
-  #join: sales_order {
-  #  view_label: "Sales Header"
-  #  type: left_outer
-  #  sql_on: ${sales_simplified.order_system} = ${sales_order.order_system} ;;
-  #  relationship: many_to_one}
-# }
+
 
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
@@ -729,7 +711,12 @@ explore: sales_order_line{
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    sql_on: ${sales_order_line.zip_1}::varchar = (${sf_zipcode_facts.zipcode})::varchar ;;
+    relationship: many_to_one}
+  join: zcta5 {
+    view_label: "Geography"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar ;;
     relationship: many_to_one}
   join: dma {
     view_label: "Customer"
@@ -756,16 +743,6 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
-  #join: xpo_data_3_pl{
-  #  view_label: "XPO Hub Data"
-  #  type: left_outer
-  #  sql_on: substring(${sales_order_line.zip},1,5) = ${xpo_data_3_pl.destinationzip} ;;
-  #  relationship: many_to_one}
-  #join: manna_data_pull {
-  #  view_label: "Mike Shultz Project Data"
-  #  type: left_outer
-  #  sql_on: ${sales_order.tranid} = ${manna_data_pull.transaction_id} ;;
-  #  relationship: one_to_many}
   join: wholesale_customer_warehouses {
     view_label: "Wholesale Warehouses"
     type: left_outer
@@ -908,26 +885,32 @@ explore: sales_order_line{
     view_label: "Promo"
     type:full_outer
     sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
-    relationship: one_to_one
-   }
+    relationship: one_to_one}
   join: slicktext_contact {
     view_label: "Promo"
     type: full_outer
     sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
-    relationship: many_to_many
-  }
+    relationship: many_to_many}
   join: slicktext_opt_out {
     view_label: "Promo"
     type: full_outer
     sql_on: ${slicktext_contact.email}=${slicktext_opt_out.email} ;;
-    relationship: many_to_many
-  }
+    relationship: many_to_many}
   join: standard_cost {
     view_label: "Product"
     type: left_outer
     sql_on: ${standard_cost.item_id} = ${item.item_id};;
-    relationship: one_to_one
-    }
+    relationship: one_to_one}
+  join: referral_sales_orders {
+    type: left_outer
+    sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
+    relationship: many_to_one
+  }
+  join: affiliate_sales_orders {
+    type: left_outer
+    sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
@@ -1000,8 +983,7 @@ explore: wholesale {
     type: left_outer
     relationship: one_to_one
     required_joins: [return_order_line]
-    sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;
-  }
+    sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;}
   join: customer_table {
     view_label: "Customer"
     type: left_outer
@@ -1078,8 +1060,8 @@ join: item {
   type:  left_outer
   sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
   required_joins: [warranty_order_line]
-  relationship: many_to_one}}
-
+  relationship: many_to_one}
+}
 
 explore: logan_fulfillment {
   description: "Stop gap on fulfillment data"

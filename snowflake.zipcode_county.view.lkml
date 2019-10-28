@@ -26,6 +26,7 @@ view: sf_zipcode_county {
 
   dimension: county_code {
     group_label: "County"
+    hidden: yes
     map_layer_name: us_counties_fips
     type: string
     sql: ${TABLE}.county_code;;

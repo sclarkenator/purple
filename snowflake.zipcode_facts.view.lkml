@@ -9,6 +9,14 @@ view: sf_zipcode_facts {
     sql: ${TABLE}.zip_code ;;
   }
 
+  dimension: us_flag {
+    hidden: yes
+    view_label: "Geography"
+    label: "     * In US"
+    description: "Order placed for delivery in US"
+    sql: case when ${TABLE}.zipcode is null then 0 else 1 end ;;
+  }
+
   dimension: latitude {
     hidden: yes
     type: number
@@ -35,6 +43,7 @@ view: sf_zipcode_facts {
   }
 
   dimension: city_1 {
+    hidden: yes
     view_label: "Geography"
     label: "City"
     description: "Ship-to city for order"
@@ -43,6 +52,7 @@ view: sf_zipcode_facts {
   }
 
   dimension: state_1 {
+    hidden: yes
     view_label: "Geography"
     label: "State"
     description: "Ship-to state"
@@ -59,8 +69,47 @@ view: sf_zipcode_facts {
         else 'control' end ;;
       }
 
-  dimension: fulfillment_region {
+  dimension: fulfillment_region_1 {
+    hidden: yes
     label: "US Region"
+    view_label: "Geography"
+    description: "Geographic grouping based on ship-to state"
+    type: string
+    case: {
+      when: {
+        sql: ${TABLE}.state in ('CA','OR','WA','HI','AK','NV') ;;
+        label: "WEST"
+      }
+      when: {
+        sql: ${TABLE}.state in ('UT','MT','ID','CO','WY') ;;
+        label: "MOUNTAIN"
+      }
+      when: {
+        sql: ${TABLE}.state in ('AZ','NM','TX','OK') ;;
+        label: "SOUTHWEST"
+      }
+      when: {
+        sql: ${TABLE}.state in ('ND','SD','NE','KS','MO','IA','MN') ;;
+        label: "PLAINS"
+      }
+      when: {
+        sql: ${TABLE}.state in ('WI','MI','IL','IN','OH') ;;
+        label: "GREAT LAKES"
+      }
+      when: {
+        sql: ${TABLE}.state in ('AR','LA','MS','AL','GA','TN','KY','WV','VA','NC','SC','FL') ;;
+        label: "SOUTHEAST"
+      }
+      when: {
+        sql: ${TABLE}.state in ('ME','NH','VT','MA','RI','CT','PA','NY','DE','MD','DC','NJ') ;;
+        label: "NORTHEAST"
+      }
+    }
+  }
+
+ dimension: fulfillment_region {
+    label: "US Region"
+    hidden:  yes
     view_label: "Geography"
     description: "Geographic grouping based on ship-to state"
     type: string

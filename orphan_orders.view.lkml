@@ -16,6 +16,7 @@ view: orphan_orders {
     description:  "This is the 'ID' field in Shopify"
     type:  string
     primary_key: yes
+    html: <a href = "https://onpurple.myshopify.com/admin/orders/{{value}}"> {{value}} </a> ;;
     sql: ${TABLE}.id ;; }
 
   dimension: status {

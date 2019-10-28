@@ -111,4 +111,10 @@ view: warranty_order {
     type: string
     sql: ${TABLE}.WARRANTY_TYPE ;;  }
 
+  dimension: customer_receipt {
+    label: "Customer Receipt"
+    description: "Date the Customer received a bed"
+    type: date
+    sql: ${TABLE}.CUSTOMER_RECEIPT ;; }
+
 }

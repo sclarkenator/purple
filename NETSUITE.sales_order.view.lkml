@@ -16,6 +16,12 @@ view: sales_order {
     hidden: no
     sql: ${TABLE}.email ;; }
 
+measure: upt {
+  label: "UPT"
+  description: "Units per transaction"
+  type: number
+  sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
+
   measure: average_order_size {
     label: "Average Order Size ($)"
     description: "Average total order amount, excluding tax"
@@ -24,23 +30,18 @@ view: sales_order {
     sql: ${TABLE}.gross_amt ;; }
 
   measure: max_order_size {
-    label: "Max Order Size ($)"
+    label: " Max Order Size ($)"
     description: "Max total order amount, excluding tax"
     type: max
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: min_order_size {
-    label: "Min Order Size ($)"
+    label: " Min Order Size ($)"
     description: "Min total order amount, excluding tax"
     type: min
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
-
-  dimension: showroom {
-    hidden:  yes
-    sql: ${TABLE}.showroom ;;
-  }
 
   dimension: order_system {
     primary_key:  yes
@@ -261,6 +262,13 @@ view: sales_order {
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
 
+  dimension: order_id_count{
+    group_label: " Advanced"
+    label: "Order ID"
+    hidden: yes
+    type: number
+    sql: count(${TABLE}.ORDER_ID) ;; }
+
   dimension: payment_method {
     group_label: " Advanced"
     label: "Order Payment Method (shopify)"
@@ -272,7 +280,7 @@ view: sales_order {
     label: "     * Is Financed"
     description: "For Shopify-US orders only. Payment with Affirm or Progressive"
     type: yesno
-    sql: case when ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' then 1 else 0 end;; }
+    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
@@ -434,5 +442,13 @@ view: sales_order {
     sql: ${TABLE}.bill_of_lading_number ;;
   }
 
+  dimension: store_id {
+    label: "Retail store ID"
+    description: "Netsuite retail store ID"
+    group_label: "Advanced"
+    view_label: "Sales Order"
+    type: string
+    sql: ${TABLE}.showroom_name ;;
+  }
 
 }
