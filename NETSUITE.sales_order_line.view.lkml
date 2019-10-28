@@ -11,18 +11,6 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
-#  measure: average_order_size_units {
-#    label: "Average Order Size (units)"
-#    view_label: "Sales Order"
-#    description: "Average units/transactions"
-#    type: average
-#    value_format: "0.0"
-#    sql: sum(${TABLE}.ordered_qty)/count(${sales_order.order_id});; }
-
-
-
-
-
   dimension: item_order{
     type: string
     primary_key:  yes
