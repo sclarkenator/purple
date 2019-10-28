@@ -13,84 +13,84 @@ view: tim_forecast_wholesale_dim {
           , 'Mattress Firm Instore' as account
           , a.MF_Instore_Units as units
           , a.MF_Instore_Amount as amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Mattress Firm Online'
           , a.MF_Online_Units
           , a.MF_Online_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Furniture Row'
           , a.FR_Units
           , a.FR_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Macys Instore'
           , a.Macys_Instore_Units
           , a.Macys_Instore_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Macys Online'
           , a.Macys_Online_Units
           , a.Macys_Online_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Sleep Country Canada'
           , a.SCC_Units
           , a.SCC_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Bed Bath & Beyond'
           , a.BBB_Units
           , a.BBB_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Medical'
           , a.Medical_Units
           , a.Medical_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Trucking'
           , a.Trucking_Units
           , a.Trucking_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'HOM'
           , a.HOM_units
           , a.HOM_AMOUNT
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Bloomingdales'
           , a.BD_Units
           , a.BD_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Other'
           , a.Other_Units
           , a.Other_Amount
-        from analytics.sales.FORECATED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
       ) a
       left join (
         select
