@@ -66,7 +66,7 @@ view: shopify_orders {
     label: "     * Is Call center order"
     description: "Draft orders created by call center agents"
     type: yesno
-    sql: ${TABLE}.user_id is not null and ${sales_order.showroom_order} = 'FALSE' ;;
+    sql: ${TABLE}.user_id is not null and ${sales_order.showroom} = 'FALSE' ;;
   }
 
   dimension: tax_match {
