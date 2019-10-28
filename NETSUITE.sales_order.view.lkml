@@ -135,7 +135,7 @@ measure: upt {
     group_label: " Advanced"
     description: "Flag for orders made in the Alpine Showroom"
     type: yesno
-    sql: ${TABLE}.Showroom ;; }
+    sql: ${TABLE}.showroom ;; }
 
   dimension: customer_id {
     hidden: yes
