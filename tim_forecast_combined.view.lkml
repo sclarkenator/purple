@@ -45,13 +45,13 @@ view: tim_forecast_combined {
           where year > 2018
           group by year, week_of_year
           order by 1
-        ) c on c.year_week = a.week
+        ) c on c.year_week = left(a.week,7)
         left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
         order by 2, 1
       ), yy as (
         --DTC forecast merged with dates to get a count/day
          select b.date
-            , a.sku as sku_id
+            , a.sku
             , a.amount/c.days_in_month as amount
             , a.units/c.days_in_month as paid_units
             , a.promo_units/c.days_in_month as promo_units
@@ -64,7 +64,7 @@ view: tim_forecast_combined {
         left join analytics.util.warehouse_date b on b.year = c.year and b.week_of_year = c.week_of_year
       )
       select coalesce(zz.date, yy.date) as date
-          , coalesce(zz.sku_id, yy.sku_id) as sku_id
+          , coalesce(zz.sku_id, yy.sku) as sku_id
 
           , coalesce(zz.total_units, 0) + coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as total_units
           , coalesce(zz.total_amount, 0) + coalesce(yy.amount,0) as total_amount
@@ -97,7 +97,7 @@ view: tim_forecast_combined {
           , zz.Other_Units
           , zz.Other_Amount
       from zz
-      full outer join yy on yy.sku_id = zz.sku_id and yy.date = zz.date
+      full outer join yy on yy.sku = zz.sku_id and yy.date = zz.date
       left join (
         select item_id, sku_id
           from (
@@ -110,7 +110,7 @@ view: tim_forecast_combined {
           ) a
           where a.row_num = 1
         order by 2,1
-      ) i on i.sku_id = coalesce(yy.sku_id, zz.sku_id)
+      ) i on i.sku_id = coalesce(yy.sku, zz.sku_id)
   ;; }
 
   dimension_group: date {

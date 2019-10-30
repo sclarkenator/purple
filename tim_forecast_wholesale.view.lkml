@@ -44,7 +44,7 @@ view: tim_forecast_wholesale {
         where year > 2018
         group by year, week_of_year
         order by 1
-      ) c on c.year_week = a.week
+      ) c on c.year_week = left(a.week,7)
       left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
       order by 2, 1
   ;; }
