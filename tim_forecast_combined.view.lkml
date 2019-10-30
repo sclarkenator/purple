@@ -55,7 +55,7 @@ view: tim_forecast_combined {
             , a.amount/c.days_in_month as amount
             , a.units/c.days_in_month as paid_units
             , a.promo_units/c.days_in_month as promo_units
-        from analytics.csv_uploads.forecasted_targets a
+        from analytics.sales.forecasted_targets a
         left join (
           select year, WEEK_OF_YEAR, min(date) as first_date, count (date) as days_in_month
           from analytics.util.warehouse_date
