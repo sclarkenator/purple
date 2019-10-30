@@ -31,7 +31,7 @@ view: tim_forecast_wholesale {
           , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
           , coalesce(a.Other_Amount/c.days_in_week,0) as Other_Amount
 
-      from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+      from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
       left join (
         select
             year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week

@@ -32,7 +32,7 @@ view: tim_forecast_combined {
             , coalesce(a.HOM_Amount/c.days_in_week,0) as HOM_Amount
             , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
             , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         left join (
           select
               year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week
@@ -55,7 +55,7 @@ view: tim_forecast_combined {
             , a.amount/c.days_in_month as amount
             , a.units/c.days_in_month as paid_units
             , a.promo_units/c.days_in_month as promo_units
-        from analytics.sales.forecasted_targets a
+        from analytics.csv_uploads.forecasted_targets a
         left join (
           select year, WEEK_OF_YEAR, min(date) as first_date, count (date) as days_in_month
           from analytics.util.warehouse_date
