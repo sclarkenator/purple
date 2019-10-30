@@ -11,86 +11,86 @@ view: tim_forecast_wholesale_dim {
         select a.week
           , a.sku_id
           , 'Mattress Firm Instore' as account
-          , a.MFRM_UNITS as units
-          , a.MFRM_AMOUNT as amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.MF_Instore_Units as units
+          , a.MF_Instore_Amount as amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Mattress Firm Online'
-          , a.MFRM_WEB_UNITS
-          , a.MFRM_WEB_AMOUNT
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.MF_Online_Units
+          , a.MF_Online_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Furniture Row'
           , a.FR_Units
           , a.FR_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Macys Instore'
-          , a.MACYS_UNITS
-          , a.MACYS_AMOUNT
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.Macys_Instore_Units
+          , a.Macys_Instore_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Macys Online'
-          , a.MACYS_WEB_UNITS
-          , a.MACYS_WEB_AMOUNT
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.Macys_Online_Units
+          , a.Macys_Online_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Sleep Country Canada'
           , a.SCC_Units
           , a.SCC_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Bed Bath & Beyond'
           , a.BBB_Units
           , a.BBB_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Medical'
-          , a.MED_Units
-          , a.MED_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.Medical_Units
+          , a.Medical_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Trucking'
-          , a.Truck_Units
-          , a.Truck_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+          , a.Trucking_Units
+          , a.Trucking_Amount
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'HOM'
-          , a.HOM__UNITS
+          , a.HOM_units
           , a.HOM_AMOUNT
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Bloomingdales'
           , a.BD_Units
           , a.BD_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
         union all
         select a.week
           , a.sku_id
           , 'Other'
           , a.Other_Units
           , a.Other_Amount
-        from analytics.sales.FORECASTED_UNITS_WHOLESALES a
+        from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
       ) a
       left join (
         select
@@ -137,7 +137,7 @@ view: tim_forecast_wholesale_dim {
   dimension: top_customers {
     label: "Accout Name (merged)"
     type:  string
-     case: {
+    case: {
       when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online') ;;  label: "Mattress Firm" }
       when: { sql: ${TABLE}.account in ('Furniture Row') ;;  label: "Furniture Row" }
       when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online') ;;  label: "Macy's" }
