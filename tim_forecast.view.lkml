@@ -3,11 +3,11 @@ view: tim_forecast {
   derived_table: {
     sql:
        select b.date
-          , a.sku_id
+          , a.sku
           , a.amount/c.days_in_month as amount
           , a.units/c.days_in_month as paid_units
           , a.promo_units/c.days_in_month as promo_units
-      from analytics.csv_uploads.forecasted_targets a
+      from analytics.sales.forecasted_targets a
       left join (
         select year, WEEK_OF_YEAR, min(date) as first_date, count (date) as days_in_month
         from analytics.util.warehouse_date
@@ -45,9 +45,9 @@ view: tim_forecast {
         when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
         else 'Other' end;; }
 
-  dimension: sku_id {
+  dimension: sku {
     type:  string
-    sql:${TABLE}.sku_id ;;
+    sql:${TABLE}.sku ;;
     primary_key:yes
     }
 

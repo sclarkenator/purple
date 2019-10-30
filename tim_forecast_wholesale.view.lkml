@@ -3,35 +3,35 @@ view: tim_forecast_wholesale {
   derived_table: {
     sql:
       select b.date
-          , a.sku_id
-          , coalesce(a.total_units/c.days_in_week,0) as total_units
-          , coalesce(a.total_amount/c.days_in_week,0) as total_amount
-          , coalesce(a.MF_Instore_Units/c.days_in_week,0) as MF_Instore_Units
-          , coalesce(a.MF_Online_Units/c.days_in_week,0) as MF_Online_Units
-          , coalesce(a.FR_Units/c.days_in_week,0) as FR_Units
-          , coalesce(a.Macys_Instore_Units/c.days_in_week,0) as Macys_Instore_Units
-          , coalesce(a.Macys_Online_Units/c.days_in_week,0) as Macys_Online_Units
-          , coalesce(a.SCC_Units/c.days_in_week,0) as SCC_Units
-          , coalesce(a.HOM_Units/c.days_in_week,0) as HOM_Units
-          , coalesce(a.BBB_Units/c.days_in_week,0) as BBB_Units
-          , coalesce(a.Medical_Units/c.days_in_week,0) as Medical_Units
-          , coalesce(a.Trucking_Units/c.days_in_week,0) as Trucking_Units
-          , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
-          , coalesce(a.BD_Units/c.days_in_week,0) as Other_Units
-          , coalesce(a.MF_Instore_Amount/c.days_in_week,0) as MF_Instore_Amount
-          , coalesce(a.MF_Online_Amount/c.days_in_week,0) as MF_Online_Amount
-          , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount
-          , coalesce(a.Macys_Instore_Amount/c.days_in_week,0) as Macys_Instore_Amount
-          , coalesce(a.Macys_Online_Amount/c.days_in_week,0) as Macys_Online_Amount
-          , coalesce(a.SCC_Amount/c.days_in_week,0) as SCC_Amount
-          , coalesce(a.HOM_Amount/c.days_in_week,0) as HOM_Amount
-          , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
-          , coalesce(a.Medical_Amount/c.days_in_week,0) as Medical_Amount
-          , coalesce(a.Trucking_Amount/c.days_in_week,0) as Trucking_Amount
-          , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
-          , coalesce(a.Other_Amount/c.days_in_week,0) as Other_Amount
+         , a.sku_id as sku_id
+            , coalesce(a.total_units/c.days_in_week,0) as total_units
+            , coalesce(a.total_amount/c.days_in_week,0) as total_amount
+            , coalesce(a.MFRM_UNITS/c.days_in_week,0) as MF_Instore_Units
+            , coalesce(a.MFRM_WEB_AMOUNT/c.days_in_week,0) as MF_Online_Units
+            , coalesce(a.FR_Units/c.days_in_week,0) as FR_Units
+            , coalesce(a.MACYS_UNITS/c.days_in_week,0) as Macys_Instore_Units
+            , coalesce(a.MACYS_WEB_UNITS/c.days_in_week,0) as Macys_Online_Units
+            , coalesce(a.SCC_Units/c.days_in_week,0) as SCC_Units
+            , coalesce(a.BBB_Units/c.days_in_week,0) as BBB_Units
+            , coalesce(a.MED_UNITS/c.days_in_week,0) as Medical_Units
+            , coalesce(a.TRUCK_UNITS/c.days_in_week,0) as Trucking_Units
+            , coalesce(a.MFRM_AMOUNT/c.days_in_week,0) as MF_Instore_Amount
+            , coalesce(a.MFRM_WEB_AMOUNT/c.days_in_week,0) as MF_Online_Amount
+            , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount
+            , coalesce(a.MACYS_AMOUNT/c.days_in_week,0) as Macys_Instore_Amount
+            , coalesce(a.MACYS_WEB_AMOUNT/c.days_in_week,0) as Macys_Online_Amount
+            , coalesce(a.SCC_Amount/c.days_in_week,0) as SCC_Amount
+            , coalesce(a.BBB_Amount/c.days_in_week,0) as BBB_Amount
+            , coalesce(a.MED_AMOUNT/c.days_in_week,0) as Medical_Amount
+            , coalesce(a.TRUCK_AMOUNT/c.days_in_week,0) as Trucking_Amount
+            , coalesce(a.Other_Units/c.days_in_week,0) as Other_Units
+            , coalesce(a.Other_Amount/c.days_in_week,0) as Other_Amount
+            , coalesce(a.HOM__UNITS/c.days_in_week,0) as HOM_Units
+            , coalesce(a.HOM_Amount/c.days_in_week,0) as HOM_Amount
+            , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
+            , coalesce(a.BD_Amount/c.days_in_week,0) as BD_Amount
 
-      from analytics.csv_uploads.FORECATED_UNITS_WHOLESALES a
+      from analytics.sales.FORECASTED_UNITS_WHOLESALES a
       left join (
         select
             year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week
