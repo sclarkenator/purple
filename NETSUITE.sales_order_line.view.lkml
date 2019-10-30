@@ -1151,7 +1151,7 @@ dimension: days_to_cancel {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT') THEN 'Purple' Else ${carrier} END;; }
+    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;; }
 
   dimension: week_2019_start {
     hidden: yes
