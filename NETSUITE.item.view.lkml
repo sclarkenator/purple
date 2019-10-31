@@ -105,14 +105,16 @@ view: item {
     drill_fields: [product_description]
     type: string
     case: {
-      when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "Original Purple Mattress" }
-      when: { sql: ${TABLE}.model_name_lkr = 'NEW ORIGINAL' ;; label: "The Purple Mattress" }
-      when: { sql: ${TABLE}.model_name_lkr = 'SCC' ;; label: "SCC" }
-      when: { sql: ${TABLE}.model_name_lkr = 'Hybrid 2' ;; label: "Hybrid 2" }
-      when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;; label: "Hybrid 3" }
-      when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.4' ;; label: "Hybrid 4" }
-      when: { sql: ${TABLE}.model_name_lkr = 'POWERBASE' ;; label: "POWERBASE" }
-      else: "Other" } }
+         when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "ORIGINAL" }
+        when: { sql: ${TABLE}.model_name_lkr = 'NEW ORIGINAL' ;; label: "NEW ORIGINAL" }
+        when: { sql: ${TABLE}.model_name_lkr = 'SCC' ;; label: "SCC" }
+        when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.2' ;; label: "PURPLE.2" }
+        when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;; label: "PURPLE.3" }
+        when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.4' ;; label: "PURPLE.4" }
+        when: { sql: ${TABLE}.model_name_lkr = 'POWERBASE' ;; label: "POWERBASE" }
+        else: "Other" } }
+
+
 
   dimension: product_line_name {
     label: "   Production buckets"
@@ -155,14 +157,14 @@ view: item {
     description: "Pillow, Powerbase, Original, P2, P3, P4, or Other"
     type: string
     case: {
-      when: { sql: ${model_name} = 'ORIGINAL' ;; label: "Original Purple Mattress" }
-      when: { sql: ${model_name} = 'PURPLE.2' ;; label: "Hybrid 2" }
-      when: { sql: ${model_name} = 'PURPLE.3' ;; label: "Hybrid 3" }
-      when: { sql: ${model_name} = 'PURPLE.4' ;; label: "Hybrid 4" }
-      when: { sql: ${product_line_name} = 'PILLOW' ;; label: "PILLOW" }
-      when: { sql: ${product_line_name} = 'POWERBASE' ;; label: "POWERBASE" }
-      #when: { sql: ${product_line_name} = 'SHEETS' ;; label: "SHEETS" }
-      else: "OTHER" } }
+      when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "ORIGINAL" }
+      when: { sql: ${TABLE}.model_name_lkr = 'NEW ORIGINAL' ;; label: "NEW ORIGINAL" }
+      when: { sql: ${TABLE}.model_name_lkr = 'SCC' ;; label: "SCC" }
+      when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.2' ;; label: "PURPLE.2" }
+      when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;; label: "PURPLE.3" }
+      when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.4' ;; label: "PURPLE.4" }
+      when: { sql: ${TABLE}.model_name_lkr = 'POWERBASE' ;; label: "POWERBASE" }
+      else: "Other" } }
 
   dimension: manna_fulfilled {
     hidden: yes
@@ -186,7 +188,7 @@ view: item {
     type: string
     sql: case
       when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
-      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr in ('Hybrid 2', 'Hybrid 3', 'Hybrid 4')  then 'New Mattress'
+      when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr in ('PURPLE.2', 'PURPLE.3', 'PURPLE.4')  then 'New Mattress'
       else 'Other' end;; }
 
   dimension: sub_category_name {
