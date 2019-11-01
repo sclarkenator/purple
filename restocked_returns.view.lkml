@@ -36,7 +36,7 @@ view: restocked_returns {
     label: "    * Is Restocked"
     description: "in units"
     type: yesno
-    sql: ${TABLE}."RESTOCKED_ITEMS is not NULL" ;;
+    sql: ${TABLE}."RESTOCKED_ITEMS" is not NULL ;;
       }
 
   measure: total_restocked_items_units {
