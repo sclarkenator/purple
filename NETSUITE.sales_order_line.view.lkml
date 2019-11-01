@@ -1162,6 +1162,13 @@ dimension: days_to_cancel {
     sql: to_char( ${TABLE}.created,'MON-DD');; }
 
 
+  dimension: line_shipping_method {
+    hidden: yes
+    group_label: "Advanced"
+    description: "Shipping method from shopify "
+    type: string
+    sql: ${TABLE}.line_shipping_method;; }
+
 
   measure: days_to_cancel_measure {
     view_label: "Cancellations"
