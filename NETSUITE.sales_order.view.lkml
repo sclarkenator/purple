@@ -131,7 +131,7 @@ measure: upt {
     type: string
     sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
-  dimension: Showroom_Order {
+  dimension: showroom {
     group_label: " Advanced"
     description: "Flag for orders made in the Alpine Showroom"
     type: yesno
