@@ -14,6 +14,9 @@ derived_table: {
       ,case when BLANKET_FLG >0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
       ,case when split_king > 0 then 1 else 0 end sk_flg
+      ,case when harmony > 0 then 1 else 0 end harmony_pillow_flg
+      ,case when plush > 0 then 1 else 0 end plush_pillow_flg
+      ,case when purple_pillow > 0 then 1 else 0 end purple_pillow_flg
       ,mattress_ordered
     FROM(
       select order_id
@@ -28,6 +31,9 @@ derived_table: {
         ,SUM(CASE WHEN PRODUCT_description_LKR like '%BLANKET%' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when product_description_LKR like '%POWERBASE - SPLIT KING%' then 1 else 0 end) split_king
+        ,sum(case when sku_id in ('10-31-12890','10-31-12895') then 1 else 0 end) harmony
+        ,sum(case when sku_id in ('10-31-12860','10-31-1285') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('10-31-12854 ','10-31-12855') then 1 else 0 end) purple_pillow
       from sales_order_line sol
       left join item on item.item_id = sol.item_id
       GROUP BY 1) ;;
@@ -203,5 +209,25 @@ derived_table: {
     type: number
     sql: ${TABLE}.mattress_ordered ;;
   }
-
+  dimension: harmony_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Harmony Pillow"
+    description: "1/0; 1 if there is a Harmony Pillow in this order"
+    type: yesno
+    sql: ${TABLE}.harmony_pillow_flg > 0 ;; }
+  dimension: plush_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Plush Pillow"
+    description: "1/0; 1 if there is a Plush Pillow in this order"
+    type: yesno
+    sql: ${TABLE}.plush_pillow_flg > 0 ;; }
+  dimension: purple_pillow_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Purple Pillow"
+    description: "1/0; 1 if there is a Purple Pillow (Purple 2.0, has only purple grid) in this order"
+    type: yesno
+    sql: ${TABLE}.purple_pillow_flg > 0 ;; }
 }
