@@ -35,13 +35,6 @@ view: sf_zipcode_facts {
     sql: ${TABLE}.city ;;
   }
 
-  dimension: state {
-    group_label: "Customer Address"
-    type: string
-    map_layer_name: us_states
-    sql: ${TABLE}.state ;;
-  }
-
   dimension: city_1 {
     hidden: yes
     view_label: "Geography"

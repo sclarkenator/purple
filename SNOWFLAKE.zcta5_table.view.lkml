@@ -21,6 +21,7 @@ order by 1 ;;
 
   dimension: zipcode {
     label: "Zip code (5)"
+    hidden:  yes
     description: "5-digit US zip code"
     view_label: "Geography"
     primary_key: yes
@@ -29,6 +30,7 @@ order by 1 ;;
   }
 
   dimension: state {
+    view_label: "Customer"
     group_label: "Customer Address"
     type: string
     map_layer_name: us_states

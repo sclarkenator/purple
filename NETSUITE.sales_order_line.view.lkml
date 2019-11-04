@@ -1123,13 +1123,14 @@ dimension: days_to_cancel {
   dimension: zip {
     view_label: "Customer"
     group_label: "Customer Address"
+    label: "Zipcode (5)"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;; }
 
   dimension: zip_1 {
     view_label: "Geography"
-    label: "Zipcode"
+    label: "Zipcode (5)"
     description: "5-digit ship-to zipcode"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
