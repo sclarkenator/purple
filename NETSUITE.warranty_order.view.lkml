@@ -112,9 +112,17 @@ view: warranty_order {
     sql: ${TABLE}.WARRANTY_TYPE ;;  }
 
   dimension: customer_receipt {
+    group_label: " Advanced"
     label: "Customer Receipt"
     description: "Date the Customer received a bed"
     type: date
     sql: ${TABLE}.CUSTOMER_RECEIPT ;; }
+
+  measure: days_between {
+    group_label: " Advanced"
+    label: "Warranty Window"
+    description: "Average number of days between Customer Receipt and Warranty Created dates"
+    type: average
+    sql: datediff(day,${warranty_order.customer_receipt},${warranty_order.created_date}) ;; }
 
 }
