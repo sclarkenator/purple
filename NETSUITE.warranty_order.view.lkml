@@ -123,6 +123,6 @@ view: warranty_order {
     label: "Warranty Window"
     description: "Average number of days between Customer Receipt and Warranty Created dates"
     type: average
-    sql: datediff(day,${warranty_order.customer_receipt},${warranty_order.created_date}) ;; }
+    sql: datediff(day,${TABLE}.customer_receipt,${TABLE}.created) ;; }
 
 }
