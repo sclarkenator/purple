@@ -916,6 +916,11 @@ explore: sales_order_line{
     sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
     relationship: many_to_one
   }
+  join: zipcode_radius {
+    type: left_outer
+    sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
+    relationship: one_to_many
+  }
 }
 
 

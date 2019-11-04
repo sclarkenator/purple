@@ -445,7 +445,7 @@ measure: upt {
   dimension: store_id {
     label: "Retail store ID"
     description: "Netsuite retail store ID"
-    group_label: "Advanced"
+    group_label: " Advanced"
     view_label: "Sales Order"
     type: string
     sql: ${TABLE}.showroom_name ;;
