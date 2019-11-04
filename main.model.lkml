@@ -350,6 +350,11 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: zipcode_radius {
+  hidden: yes
+  group_label: "Marketing"
+}
+
 explore: shawn_ryan_view {
   hidden: yes
   group_label: "Marketing"
