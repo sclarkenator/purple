@@ -213,20 +213,22 @@ derived_table: {
     type: number
     sql: ${TABLE}.mattress_ordered ;;
   }
+
   dimension: harmony_flg {
-    hidden: yes
     group_label: "    * Orders has:"
     label: "a Harmony Pillow"
     description: "1/0; 1 if there is a Harmony Pillow in this order"
     type: yesno
     sql: ${TABLE}.harmony_pillow_flg > 0 ;; }
+
   dimension: plush_flg {
-    hidden: yes
+    hidden:  yes
     group_label: "    * Orders has:"
     label: "a Plush Pillow"
     description: "1/0; 1 if there is a Plush Pillow in this order"
     type: yesno
     sql: ${TABLE}.plush_pillow_flg > 0 ;; }
+
   dimension: purple_pillow_flg {
     hidden: yes
     group_label: "    * Orders has:"
@@ -234,12 +236,14 @@ derived_table: {
     description: "1/0; 1 if there is a Purple Pillow (Purple 2.0, has only purple grid) in this order"
     type: yesno
     sql: ${TABLE}.purple_pillow_flg > 0 ;; }
+
   dimension: gravity_mask_flg {
     group_label: "    * Orders has:"
     label: "a Gavity Mask"
     description: "1/0; 1 if there is a Gravity Mask in this order"
     type: yesno
     sql: ${TABLE}.purple_pillow_flg > 0 ;; }
+
   dimension: gravity_blanket_flg {
     group_label: "    * Orders has:"
     label: "a Gravity Blanket"
