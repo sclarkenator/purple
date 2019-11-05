@@ -17,6 +17,10 @@ derived_table: {
       ,case when harmony > 0 then 1 else 0 end harmony_pillow_flg
       ,case when plush > 0 then 1 else 0 end plush_pillow_flg
       ,case when purple_pillow > 0 then 1 else 0 end purple_pillow_flg
+      ,case when gravity_mask > 0 then 1 else 0 end gravity_mask_flg
+      ,case when gravity_blanket > 0 then 1 else 0 end gravity_blanket_flg
+      ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
+      ,case when duvet > 0 then 1 else 0 end duvet_flg
       ,mattress_ordered
     FROM(
       select order_id
@@ -32,8 +36,12 @@ derived_table: {
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when product_description_LKR like '%POWERBASE - SPLIT KING%' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('10-31-12890','10-31-12895') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('10-31-12860','10-31-1285') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('10-31-12860','10-31-12857') then 1 else 0 end) plush
         ,sum(case when sku_id in ('10-31-12854 ','10-31-12855') then 1 else 0 end) purple_pillow
+        ,sum(case when sku_id in ('10-21-68268') then 1 else 0 end) gravity_mask
+        ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
+        ,sum(case when sku_id in ('10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45868','10-38-45869','10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 1 else 0 end) accordion_platform
+        ,sum(case when sku_id in ('10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
       from sales_order_line sol
       left join item on item.item_id = sol.item_id
       GROUP BY 1) ;;
@@ -209,6 +217,7 @@ derived_table: {
     type: number
     sql: ${TABLE}.mattress_ordered ;;
   }
+
   dimension: harmony_flg {
     hidden: yes
     group_label: "    * Orders has:"
@@ -216,13 +225,15 @@ derived_table: {
     description: "1/0; 1 if there is a Harmony Pillow in this order"
     type: yesno
     sql: ${TABLE}.harmony_pillow_flg > 0 ;; }
+
   dimension: plush_flg {
-    hidden: yes
+    hidden:  yes
     group_label: "    * Orders has:"
     label: "a Plush Pillow"
     description: "1/0; 1 if there is a Plush Pillow in this order"
     type: yesno
     sql: ${TABLE}.plush_pillow_flg > 0 ;; }
+
   dimension: purple_pillow_flg {
     hidden: yes
     group_label: "    * Orders has:"
@@ -230,4 +241,36 @@ derived_table: {
     description: "1/0; 1 if there is a Purple Pillow (Purple 2.0, has only purple grid) in this order"
     type: yesno
     sql: ${TABLE}.purple_pillow_flg > 0 ;; }
+
+  dimension: gravity_mask_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Gavity Mask"
+    description: "1/0; 1 if there is a Gravity Mask in this order"
+    type: yesno
+    sql: ${TABLE}.gravity_mask_flg > 0 ;; }
+
+  dimension: gravity_blanket_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Gravity Blanket"
+    description: "1/0; 1 if there is a Gravity Blanket in this order"
+    type: yesno
+    sql: ${TABLE}.gravity_blanket_flg > 0 ;; }
+
+  dimension: accordion_platform_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Accordion Base"
+    description: "1/0; 1 if there is a Accordion Base in this order"
+    type: yesno
+    sql: ${TABLE}.accordion_platform_flg > 0 ;; }
+
+  dimension: duvet_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Duvet"
+    description: "1/0; 1 if there is a Duvet in this order"
+    type: yesno
+    sql: ${TABLE}.duvet_flg > 0 ;; }
 }
