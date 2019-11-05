@@ -21,6 +21,7 @@ view: warranty_order {
 
   dimension: is_warrantied {
     label: "     * Is Warrantied"
+    description: "Warranty order has been created"
     type: yesno
     sql: ${TABLE}.CREATED is not null ;;
   }
@@ -56,6 +57,7 @@ view: warranty_order {
     hidden: no
     group_label: " Advanced"
     label: "Related Transaction ID"
+    description: "The related transaction ID"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
@@ -63,6 +65,7 @@ view: warranty_order {
     hidden: no
     group_label: " Advanced"
     type: number
+    description: "Order Id for the replacement item"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.REPLACEMENT_ORDER_ID ;; }
 

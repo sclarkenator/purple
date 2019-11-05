@@ -81,6 +81,7 @@ view: warranty_order_line {
     sql: ${TABLE}.WARRANTY_ORDER_ID ;; }
 
   measure: count {
+    hidden:  yes
     type: count
     drill_fields: [warranty_order.warranty_order_id] }
 

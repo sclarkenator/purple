@@ -150,7 +150,7 @@ dimension_group: SLA_Target {
 }
 
 dimension: SLA_Buckets {
-  group_label: "  Advanced"
+  group_label: " Advanced"
   label: "Days Past SLA Target Buckets"
   view_label: "Fulfillment"
   description: "# days in realtion to Target date"
@@ -553,6 +553,7 @@ dimension: SLA_fulfilled {
 dimension: has_standard_cost {
   label: "    * Has Standard Cost"
   type: yesno
+  description: "Data exists for what it costs Purple to make the product"
   sql: ${standard_cost.standard_cost} is not null ;; }
 
 dimension: days_to_cancel {
@@ -1014,7 +1015,7 @@ dimension: days_to_cancel {
 
   dimension: location {
     label:  "Fulfillment Warehouse"
-    group_label: "  Advanced"
+    group_label: " Advanced"
     description:  "Warehouse that order was fulfilled out of"
     view_label: "Fulfillment"
     type: string
@@ -1147,7 +1148,7 @@ dimension: days_to_cancel {
 
   dimension: DTC_carrier {
     view_label: "Fulfillment"
-    group_label: "  Advanced"
+    group_label: " Advanced"
     label: "Carrier (Grouping)"
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
     hidden: no
