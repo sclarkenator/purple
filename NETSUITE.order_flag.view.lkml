@@ -32,7 +32,7 @@ derived_table: {
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when product_description_LKR like '%POWERBASE - SPLIT KING%' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('10-31-12890','10-31-12895') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('10-31-12860','10-31-1285') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('10-31-12860','10-31-12857') then 1 else 0 end) plush
         ,sum(case when sku_id in ('10-31-12854 ','10-31-12855') then 1 else 0 end) purple_pillow
       from sales_order_line sol
       left join item on item.item_id = sol.item_id
