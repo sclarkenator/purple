@@ -6,6 +6,7 @@ view: sales_order {
     #description:"Unique orders placed"
     drill_fields: [order_id, tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,minimum_ship_date ,item.product_description, sales_order_line.location, source, sales_order_line.total_units,sales_order_line.gross_amt]
     type: count_distinct
+    description: "Distinct Orders"
     sql: ${order_id} ;; }
 
   measure: unique_customers {
@@ -362,6 +363,7 @@ measure: upt {
 
   measure: tax_amt_total {
     label: "Total Tax ($)"
+    description: "Amount of Tax Collected"
     #hidden: yes
     type: sum
     sql: ${TABLE}.TAX_AMT ;; }

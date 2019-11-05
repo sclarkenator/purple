@@ -14,7 +14,7 @@ order by 1 ;;
 
   dimension: us_flag {
     view_label: "Geography"
-    label: "     * In US"
+    label: "     * In US (Yes / No)"
     description: "Order placed for delivery in US"
     sql: case when ${TABLE}.zipcode is null then 0 else 1 end ;;
   }
