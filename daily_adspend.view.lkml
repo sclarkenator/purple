@@ -222,7 +222,7 @@ view: daily_adspend {
   dimension: purchase_viewthrough_conversions {
     hidden:  yes
     label: "Purchase Viewthrough Conversions"
-    description: "Conversions within 1 day of viewing a page"
+    description: "Conversions within 1 day of viewing a page - only for Quora"
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
 
