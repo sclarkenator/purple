@@ -219,4 +219,11 @@ view: daily_adspend {
       when: { sql: ${TABLE}.platform = 'YAHOO' ;; label: "Verizon Media Group" }
       else: "Other" } }
 
+  dimension: purchase_viewthrough_conversions {
+    hidden:  yes
+    label: "Purchase Viewthrough Conversions"
+    description: "Conversions within 1 day of viewing a page"
+    type: number
+    sql: ${TABLE}.purchase_viewthrough_conversions ;; }
+
 }
