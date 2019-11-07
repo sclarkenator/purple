@@ -936,6 +936,11 @@ explore: wholesale {
     filters: {field: item.merchandise         value: "No"}
     filters: {field: item.finished_good_flg   value: "Yes"}
     filters: {field: item.modified            value: "Yes"}}
+  join: sales_order_line
+    {type:left_outer
+      sql_on:${shopify_orders.order_ref}=${sales_order_line.order_id}::string;;
+      relationship: one_to_one
+      fields:[total_units]}
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
@@ -1162,8 +1167,24 @@ explore: day_aggregations {
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-  explore: shopify_orders { hidden:  yes  label: "Shopify sales simple"  description: "Shopify header level information"
-    join: sales_order{type:left_outer sql_on: ${sales_order.etail_order_id}::text = ${shopify_orders.id}::text ;; relationship: one_to_one }}
+
+
+  explore: shopify_orders
+    { hidden:  yes
+      label: "Shopify sales simple"
+      description: "Shopify header level information"
+    join: sales_order
+      {type:left_outer
+      sql_on: ${sales_order.etail_order_id}::text = ${shopify_orders.id}::text ;;
+      relationship: one_to_one }
+    join: sales_order_line
+      {type:left_outer
+      sql_on:${shopify_orders.order_ref}=${sales_order_line.order_id}::string;;
+      relationship: one_to_one
+      fields:[total_units]}
+    }
+
+
   explore: orphan_orders {
     hidden:  yes
     group_label: "Customer Care"

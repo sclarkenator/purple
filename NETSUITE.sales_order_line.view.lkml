@@ -1165,8 +1165,9 @@ dimension: days_to_cancel {
 
 
   dimension: line_shipping_method {
-    hidden: yes
-    group_label: "Advanced"
+    hidden: no
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     description: "Shipping method from shopify "
     type: string
     sql: ${TABLE}.line_shipping_method;; }
