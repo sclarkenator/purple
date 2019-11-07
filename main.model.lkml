@@ -432,6 +432,11 @@ explore: all_events {
     sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
     relationship: one_to_one
   }
+  join: date_meta {
+    type: left_outer
+    sql_on: ${date_meta.date}::date = ${all_events.time_date}::date;;
+    relationship: many_to_one
+  }
 }
 
 explore: c3_roa {hidden: yes}
@@ -920,10 +925,6 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
     relationship: one_to_many
-  }
-  join: date_meta {
-    type: left_outer
-    sql_on: ${sales_order_line.created_date}::date = ${date_meta.date} ;;
   }
 }
 
