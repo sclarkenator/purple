@@ -921,6 +921,10 @@ explore: sales_order_line{
     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
     relationship: one_to_many
   }
+  join: date_meta {
+    type: left_outer
+    sql_on: ${sales_order_line.created_date}::date = ${date_meta.date} ;;
+  }
 }
 
 
