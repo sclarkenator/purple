@@ -434,8 +434,8 @@ explore: all_events {
   }
   join: date_meta {
     type: left_outer
-    sql_on: ${date_meta.date}::date = ${all_events.time_date}::date;;
-    relationship: many_to_one
+    sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+    relationship: one_to_many
   }
 }
 
