@@ -45,8 +45,17 @@ view: warranty_timeline {
     hidden:  no
   }
 
-  dimension: original_fulfilled{
-    type: number
+  dimension_group: original_fulfilled{
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.original_fulfilled ;;
     hidden:  no
   }
