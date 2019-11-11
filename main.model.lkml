@@ -432,6 +432,11 @@ explore: all_events {
     sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
     relationship: one_to_one
   }
+  join: date_meta {
+    type: left_outer
+    sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+    relationship: one_to_many
+  }
 }
 
 explore: c3_roa {hidden: yes}

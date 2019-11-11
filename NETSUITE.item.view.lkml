@@ -86,7 +86,7 @@ view: item {
     link: {
       label: "NetSuite"
       url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
-    sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;; }
+    sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;;}
 
   dimension: product_name {
     label:  "3. Name"
