@@ -22,6 +22,37 @@ view: warranty_timeline {
     hidden:  yes
   }
 
+  dimension: original_fulfillment_id {
+    type: number
+    sql: ${TABLE}.original_FULFILLMENT_ID ;;
+    hidden:  no
+  }
+
+  dimension: original_fulfillment_tran_id {
+    type: number
+    sql: ${TABLE}.original_FULFILLMENT_tran_ID ;;
+    hidden:  no
+  }
+
+  dimension: original_item_id {
+    type: number
+    sql: ${TABLE}.original_item_ID ;;
+    hidden:  no
+  }
+  dimension: original_qty_fulfilled{
+    type: number
+    sql: ${TABLE}.original_qty_fulfilled ;;
+    hidden:  no
+  }
+
+  dimension: original_fulfilled{
+    type: number
+    sql: ${TABLE}.original_fulfilled ;;
+    hidden:  no
+  }
+
+
+
   dimension: fulfillment_tranid {
     type: number
     value_format_name: id
