@@ -19,7 +19,8 @@ view: fulfillment {
     sql: ${TABLE}.carrier ;;  }
 
   dimension_group: created {
-    hidden: yes
+    label: "Fulfilled Date (V2)"
+    #hidden: yes
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
@@ -107,9 +108,10 @@ view: fulfillment {
 
   measure: count {
     label: "Units fulfilled"
-    description: "Count of unique items fulfilled"
+    description: "Count of items fulfilled"
     #hidden: yes
-    type: count}
+    type: sum
+    sql: ${TABLE}.quantity ;;}
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
