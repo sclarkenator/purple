@@ -189,7 +189,7 @@ view: return_order {
     sql: ${TABLE}.STATUS ;; }
 
   dimension: was_returned {
-    label: "Was Returned - Trial Return"
+    label: "* Was Returned - Trial Return"
     group_label: " Advanced"
     description: "Indicates if a trial return was completed and refunded"
     type: yesno
