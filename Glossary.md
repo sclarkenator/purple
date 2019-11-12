@@ -45,6 +45,8 @@
 **Orphan Orders:** [1) data from an order where some part of the data matching does not match up apporiately](https://database.guide/what-is-an-orphaned-record/)
                 2) An order that was abandoned by the user
 
+**Procom Security:** A service Purple ueses to count people coming in/ out of retail stores.
+
 **ROAS:** [Return on adspend](https://www.bigcommerce.com/ecommerce-answers/what-is-roas-calculating-return-on-ad-spend/)
 
 **ROI:** [Return on investment](https://www.investopedia.com/terms/r/returnoninvestment.asp)
