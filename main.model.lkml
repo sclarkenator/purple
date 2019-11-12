@@ -1103,15 +1103,7 @@ explore: return_form_entry {
     relationship: one_to_many}
 }
 
-explore: v_fit_problem {label: "Fit Problem" group_label: "Accounting" hidden:yes}
-  explore: v_fit_affirm {label: "Fit Affirm" group_label: "Accounting" hidden:yes}
-  explore: v_fit_amazon {label: "Fit Amazon" group_label: "Accounting" hidden:yes}
-  explore: v_fit_axomo {label: "Fit Axomo" group_label: "Accounting" hidden:yes}
-  explore: v_fit_braintree {label: "Fit Braintree" group_label: "Accounting" hidden:yes}
-  explore: v_fit_first_data {label: "Fit First Data" group_label: "Accounting" hidden:yes}
-  explore: v_fit_paypal {label: "Fit Paypal" group_label: "Accounting" hidden:yes}
-  explore: v_fit_shopify_payments {label: "Fit Shopify Payments" group_label: "Accounting" hidden:yes}
-  explore: v_fit_stripe {label: "Fit Stripe" group_label: "Accounting" hidden:yes}
+
 explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
