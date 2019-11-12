@@ -1134,6 +1134,22 @@ explore: day_aggregations {
   group_label: " Sales"
   hidden:no }
 
+
+#-------------------------------------------------------------------
+#
+# Retail Explores
+#
+#-------------------------------------------------------------------
+
+
+explore: procom_security_daily_customer {
+  label: "Procom Customers"
+  group_label: "Retail"
+  hidden:yes
+  }
+
+
+
 #-------------------------------------------------------------------
 # Old/Bad Explores
 #-------------------------------------------------------------------
