@@ -279,6 +279,7 @@ derived_table: {
     sql: ${TABLE}.duvet_flg > 0 ;; }
 
   dimension: ff_bundle_flg {
+    hidden:  yes
     group_label: "    * Orders has:"
     label: "a Fall Flash Bundle"
     description: "1/0; 1 if there is a Fall Flash BUndle in this order"
