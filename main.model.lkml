@@ -504,10 +504,12 @@ explore: customer_satisfaction_survey {
   join: agent_lkp {
     type: left_outer
     sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
+    relationship: many_to_one
   }
   join: team_lead_name {
     type:  left_outer
     sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id};;
+    relationship: many_to_one
     }
 }
 explore: rpt_agent_stats {
