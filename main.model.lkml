@@ -501,8 +501,15 @@ explore: customer_satisfaction_survey {
   group_label: "Customer Care"
   hidden: yes
   description: "Customer satisfaction of interactions with Customer Care agents"
+  join: agent_lkp {
+    type: left_outer
+    sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
+  }
+  join: team_lead_name {
+    type:  left_outer
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.zendesk_id};;
+    }
 }
-
 explore: rpt_agent_stats {
   hidden: yes
   label: "InContact Agent Stats"
