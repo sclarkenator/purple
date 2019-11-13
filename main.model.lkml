@@ -503,11 +503,11 @@ explore: customer_satisfaction_survey {
   description: "Customer satisfaction of interactions with Customer Care agents"
   join: agent_lkp {
     type: left_outer
-    sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
+    sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
   }
   join: team_lead_name {
     type:  left_outer
-    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.zendesk_id};;
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id};;
     }
 }
 explore: rpt_agent_stats {
