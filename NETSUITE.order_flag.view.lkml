@@ -21,10 +21,10 @@ derived_table: {
       ,case when gravity_blanket > 0 then 1 else 0 end gravity_blanket_flg
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
-      ,case when ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 = 3 then 1 else 0 end ff_bundle_flg
+      ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
       ,mattress_ordered
     FROM(
-      select order_id
+      select sol.order_id
         ,sum(case when product_line_name_LKR = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'CUSHION' THEN 1 ELSE 0 END) CUSHION_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
@@ -43,11 +43,13 @@ derived_table: {
         ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45868','10-38-45869','10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 1 else 0 end) accordion_platform
         ,sum(case when sku_id in ('10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
-        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PROTECTOR' AND discount_amt=50) THEN 1 ELSE 0 END) ff_bundle_pt1
-        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'SHEETS' AND discount_amt=50) then 1 else 0 end) ff_bundle_pt2
-        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=100) then 1 else 0 end) ff_bundle_pt3
+        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
+        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'SHEETS' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt2
+        ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
+        ,sum(case when s.memo ilike ('%flashbundle%') AND s.memo ilike ('%2019%') then 1 else 0 end) ff_bundle_pt4
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
+      left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
       GROUP BY 1) ;;
 }
 
