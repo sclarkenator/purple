@@ -215,6 +215,10 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: inventory_reconciliation {
+  hidden: yes
+}
+
 
 #-------------------------------------------------------------------
 #
