@@ -3,17 +3,30 @@ view: tim_forecast {
   derived_table: {
     sql:
        select b.date
-          , a.sku_id
-          , a.amount/c.days_in_month as amount
-          , a.units/c.days_in_month as paid_units
-          , a.promo_units/c.days_in_month as promo_units
-      from analytics.csv_uploads.forecasted_targets a
-      left join (
-        select year, WEEK_OF_YEAR, min(date) as first_date, count (date) as days_in_month
-        from analytics.util.warehouse_date
-        group by year, WEEK_OF_YEAR
-      ) c on c.first_date = a.date
-      left join analytics.util.warehouse_date b on b.year = c.year and b.week_of_year = c.week_of_year
+            , a.sku_id
+            , (a.standard_sales + a.discounted_sales)/c.days as amount
+            , (a.standard_units + a.discounted_units)/c.days as paid_units
+            , a.promo_units/days as promo_units
+        from analytics.csv_uploads.forecast_dtc a
+        left join (
+            select distinct a.start_date
+                , a.end_date
+                , b.date
+            from analytics.csv_uploads.forecast_dtc a
+            left join analytics.util.warehouse_date b on b.date::date >= a.start_date::date and b.date::date <= a.end_date
+        ) b on b.start_date = a.start_date and b.end_date = a.end_date
+        left join (
+            select z.start_date
+                , count (z.date) as days
+            from (
+              select distinct a.start_date
+                  , a.end_date
+                  , b.date
+              from analytics.csv_uploads.forecast_dtc a
+              left join analytics.util.warehouse_date b on b.date::date >= a.start_date::date and b.date::date <= a.end_date
+              ) z
+              group by z.start_date
+          ) c on c.start_date = a.start_date
     ;; }
 
       dimension_group: date {
