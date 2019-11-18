@@ -155,8 +155,7 @@ view: daily_adspend {
       else: "Other" } }
 
   dimension: medium {
-    label: "Medium"
-    group_label: "Advanced"
+    label: "  Medium"
     description: "Calculated based on source and platform"
     type: string
     case: {
