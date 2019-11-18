@@ -745,7 +745,7 @@ explore: sales_order_line{
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
-    relationship: many_to_one}
+    relationship: many_to_many}
   join: item {
     view_label: "Product"
     type: left_outer
