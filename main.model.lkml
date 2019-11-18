@@ -163,6 +163,38 @@ explore: warehouse_transfer {
   }
 }
 
+explore: v_fit {
+  hidden: yes
+  group_label: "Accounting"}
+explore: fit_problem {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_affirm {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_amazon {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_axomo {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_braintree {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_first_data {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_paypal {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_shopify_payment {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_stripe {
+  hidden: yes
+  group_label: "Accounting"}
+
+
 explore: finance_bill{
   hidden: yes
   group_label: "Accounting"
