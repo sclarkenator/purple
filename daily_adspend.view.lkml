@@ -77,6 +77,7 @@ view: daily_adspend {
 
   measure: agency_cost {
     label: "  Agency Cost ($)"
+    group_label: "Advanced"
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
