@@ -1,6 +1,9 @@
 #-------------------------------------------------------------------
 # Owner - Scott Clark
 # Mattress firm store details
+#
+#    OLD AND DEPRICATED
+#
 #-------------------------------------------------------------------
 
 view: mattress_firm_store_details {

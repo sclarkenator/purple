@@ -16,4 +16,9 @@ view: mattress_firm_item {
     type:  string
     primary_key: yes
     sql: ${TABLE}.mf_sku ;;  }
+
+  dimension: purple_sku {
+    hidden: yes
+    type:  string
+    sql: ${TABLE}.purple_sku ;;  }
 }

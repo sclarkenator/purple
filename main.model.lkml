@@ -1254,14 +1254,22 @@ explore: procom_security_daily_customer {
     always_filter: {filters: {field: warranty_created_date value: "last month"}}}
   explore: netsuite_warranty_exceptions { hidden: yes group_label: "x - Accounting" label: "Warranty ModCode Cleanup"
     description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"}
-  explore: Mattress_Firm {hidden: yes from: mattress_firm_store_details  group_label: "Wholesale"
+  explore: Mattress_Firm {hidden: yes from: mattress_firm_master_store_list  group_label: "Wholesale"
     join: mattress_firm_sales {type: left_outer
-      sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store_id} and ${mattress_firm_sales.finalized_date_date} is not null ;;
+      sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store} and ${mattress_firm_sales.finalized_date_date} is not null ;;
       relationship: one_to_many }
     join: mattress_firm_item {type:  left_outer sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.mf_sku} ;; relationship:  many_to_one}
-    join: mattress_firm_master_store_list {type:  full_outer  sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
-      relationship:  one_to_one}
+    #join: mattress_firm_master_store_list {type:  full_outer  sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
+    #  relationship:  one_to_one}
     join: item {type:  left_outer sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;; relationship:  many_to_one}}
+  explore: mattress_firm_sales {hidden:yes
+    join:mattress_firm_master_store_list {sql_on: ${mattress_firm_master_store_list.store_id} = ${mattress_firm_sales.store} ;;
+        type: left_outer relationship: many_to_one}
+    join: mattress_firm_item { sql_on: ${mattress_firm_item.item_id} = ${mattress_firm_sales.product_id} ;;
+        type:  left_outer relationship: many_to_one}
+    join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+        type: left_outer relationship: many_to_one}
+      }
   explore: item {hidden:  yes label: "Transfer and Purchase Orders --old" group_label: "Operations"
     description: "Netsuite data on Transfer and purchase orders"
     join: purchase_order_line {view_label: "Purchase Order"  type: full_outer

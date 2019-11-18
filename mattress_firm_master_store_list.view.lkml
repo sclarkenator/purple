@@ -7,9 +7,8 @@ view: mattress_firm_master_store_list {
   sql_table_name: mattress_firm.master_store_list ;;
 
   measure: count {
-    label: "Count"
-    type: count
-    drill_fields: [detail*] }
+    label: "Store Count"
+    type: count}
 
   dimension: store_id {
     primary_key: yes
@@ -57,6 +56,7 @@ view: mattress_firm_master_store_list {
   dimension: store_phone {
     label: "Store Phone Number"
     type: string
+    hidden: yes
     sql: ${TABLE}.store_phone ;; }
 
   dimension: number_of_beds {
@@ -71,40 +71,47 @@ view: mattress_firm_master_store_list {
 
   dimension: store_notes {
     label: "Store Notes"
+    hidden: yes
     type: string
     sql: ${TABLE}.store_notes ;; }
 
   dimension: store_dm {
     label: "Store DM"
+    hidden: yes
     type: string
     sql: ${TABLE}.store_dm ;; }
 
   dimension: store_rvp {
     label: "Store RVP"
+    hidden: yes
     type: string
     sql: ${TABLE}.store_rvp ;; }
 
   dimension: store_phase {
     label: "Store Phase"
+    hidden: yes
     type: string
     sql: ${TABLE}.store_phase ;; }
 
   dimension: additional_items {
     label: "Additional Items"
+    hidden: yes
     type: string
     sql: ${TABLE}.additional_items ;; }
 
   dimension: open_date {
-    label: "Open"
+    label: "Store Open"
     type: date
     sql: ${TABLE}.open_date ;; }
 
   dimension: end_date {
+    hidden: yes
     label: "End"
     type: date
     sql: ${TABLE}.end_date ;; }
 
   dimension: open_weeks {
+    hidden: yes
     label: "Open Weeks"
     description: "Number of complete weeks the store has been open"
     type: number
@@ -112,6 +119,7 @@ view: mattress_firm_master_store_list {
          else datediff('week' ,${TABLE}.open_date, ${TABLE}.end_date) end ;; }
 
   dimension: open_days {
+    hidden: yes
     label: "Open Days"
     description: "Number of complete days the store has been open"
     type: number
@@ -119,6 +127,7 @@ view: mattress_firm_master_store_list {
          else datediff('day' ,${TABLE}.open_date, ${TABLE}.end_date) end  ;; }
 
   dimension: open_months {
+    hidden: yes
     label: "Open Months"
     description: "Number of complete months the store has been open"
     type: number
