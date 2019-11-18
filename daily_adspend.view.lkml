@@ -13,48 +13,48 @@ view: daily_adspend {
     sql: ${TABLE}.ad_id||'-'||${TABLE}.date;; }
 
   dimension_group: ad {
-    label: "Ad"
+    label: "  Ad"
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
 
   dimension: MTD_flg{
     label: "z - MTD Flag"
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     description: "This field is for formatting on MTD (month to date) reports"
     type: yesno
     sql: ${TABLE}.date <= dateadd(day,-1,current_date) and month(${TABLE}.date) = month(dateadd(day,-1,current_date)) and year(${TABLE}.date) = year(current_date) ;;  }
 
   dimension: last_30{
     label: "z - Last 30 Days"
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: ${TABLE}.date > dateadd(day,-30,current_date);; }
 
   dimension: rolling_7day {
     label: "z - Rolling 7 Day Filter"
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     description: "Yes = 7 most recent days ONLY"
     type: yesno
     sql: ${ad_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
 
   dimension: Before_today{
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.date < current_date;; }
 
   dimension: current_week_num{
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
 
   dimension: prev_week{
-    group_label: "Ad Date"
+    group_label: "  Ad Date"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
@@ -62,20 +62,21 @@ view: daily_adspend {
 
   measure: adspend {
     label: "Total Adspend ($k)"
+    group_label: "Advanced"
     description: "Total adspend for selected channels"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.spend ;;  }
 
   measure: adspend_raw {
-    label: "Total Adspend ($)"
+    label: "  Total Adspend ($)"
     description: "Total adspend for selected channels"
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.spend ;;  }
 
   measure: agency_cost {
-    label: "Agency Cost ($)"
+    label: "  Agency Cost ($)"
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
@@ -89,6 +90,7 @@ view: daily_adspend {
 
   measure: adspend_no_agency {
     label: "Adspend without Agency Cost ($)"
+    group_label: "Advanced"
     description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
     type: sum
     value_format: "$#,##0"
@@ -107,13 +109,14 @@ view: daily_adspend {
     sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;  }
 
   measure: impressions {
-    label: "Total Impressions"
+    label: "  Total Impressions"
     description: "Total impressions for selected channels (online only)"
     type: sum
     sql: ${TABLE}.impressions ;; }
 
   measure: impressions_mil {
     label: "Total Impressions (Millions)"
+    group_label: "Advanced"
     description: "Total impressions for selected channels (online only)"
     type: sum
     value_format: "#,##0,\" K\""
@@ -121,13 +124,13 @@ view: daily_adspend {
 
 
   measure: clicks {
-    label: "Total Clicks"
+    label: "  Total Clicks"
     description: "Total clicks for selected channels (online only)"
     type: sum
     sql: ${TABLE}.clicks ;; }
 
   dimension: spend_platform {
-    label: "Spend Platform"
+    label: " Spend Platform"
     description: "What platform for spend (google, facebook, TV, etc.)"
     type:  string
     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE'
@@ -137,6 +140,7 @@ view: daily_adspend {
   dimension: Spend_platform_condensed {
     label: "Major Spend Platform"
     description: "What platform for spend, grouping smaller platforms into all other (Facebook,Google,TV,Amazon,Yahoo,Other)"
+    group_label: "Advanced"
     type: string
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER') ;; label: "Social" }
@@ -151,6 +155,7 @@ view: daily_adspend {
 
   dimension: medium {
     label: "Medium"
+    group_label: "Advanced"
     description: "Calculated based on source and platform"
     type: string
     case: {
@@ -162,7 +167,7 @@ view: daily_adspend {
       else: "Other" } }
 
   dimension: agency_within {
-    label: "Agency Within"
+    label: "      * Managed by Agency Within"
     description: "A Channel Managed by Agency Within"
     type: yesno
     sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'Display')
@@ -172,17 +177,19 @@ view: daily_adspend {
 
   dimension: ad_display_type {
     label: "Ad Display Type"
+    group_label: "Advanced"
     description: "How ad was presented (Search, Display, Video, TV, etc.)"
     type:  string
     sql: ${TABLE}.source ;; }
 
   dimension: campaign_name {
-    label: "Campaign Name"
+    label: "  Campaign Name"
     type:  string
     sql: ${TABLE}.campaign_name ;; }
 
   dimension: campaign_type {
     label: "Campaign Type"
+    group_label: "Advanced"
     description: "Bucketing the Campaign type into Prospecting, Retargeting, Brand, and Other"
     type:  string
     case: {
@@ -192,7 +199,7 @@ view: daily_adspend {
       else: "OTHER" } }
 
   dimension: ad_device {
-    label: "Ad Device"
+    label: "  Ad Device"
     description: "What device was ad viewed on? (Mobile, Tablet, Desktop, Other)"
     type: string
     case: {
@@ -207,6 +214,7 @@ view: daily_adspend {
   dimension: platform_source_group {
     hidden:  no
     label:  "Platform Source Group"
+    group_label: "Advanced"
     description: "Grouping of source, platform, and if the name has shop"
     type: string
     case: {

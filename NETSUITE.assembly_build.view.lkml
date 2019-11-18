@@ -6,7 +6,9 @@ view: assembly_build {
     description: "Netsuites transaction ID, used to hyperlink directly to record"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     hidden:  no
+    group_label: "Advanced"
     type: number
+
     sql: ${TABLE}.build_id ;;}
 
   dimension: accounting_period_id {
@@ -48,6 +50,7 @@ view: assembly_build {
   dimension: created_by {
     label: "Created By"
     description: "What NetSuite account created the Transaction"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.CREATED_BY ;; }
 
