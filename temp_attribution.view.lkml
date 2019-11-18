@@ -50,6 +50,7 @@ view: temp_attribution {
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: []
   }
