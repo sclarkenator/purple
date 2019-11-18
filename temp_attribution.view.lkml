@@ -8,6 +8,7 @@ view: temp_attribution {
   }
   dimension_group: ad {
     label: "Ad"
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -23,6 +24,7 @@ view: temp_attribution {
   }
 
   dimension_group: att {
+    hidden:  yes
     label: "Attribution"
     type: time
     timeframes: [
@@ -41,15 +43,18 @@ view: temp_attribution {
   measure: conversions {
     label: "Conversion value"
     type: sum
+    hidden:  yes
     sql: ${TABLE}."CONVERSIONS" ;;
   }
 
   dimension: partner {
     type: string
+    hidden:  yes
     sql: upper(${TABLE}."PARTNER") ;;
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: []
   }
