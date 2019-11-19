@@ -251,6 +251,15 @@ explore: inventory_reconciliation {
   hidden: yes
 }
 
+explore: fg_to_sfg {hidden: yes
+  join: item {sql_on: ${fg_item_id} = ${item.item_id};;
+    view_label: "FG Product"}
+  join: item2 {from: item sql_on: ${hep_item_id} = ${item2.item_id} ;;
+    view_label: "HEP Product"}
+  join: item3 {from: item sql_on: ${mix_item_id} = ${item3.item_id};;
+    view_label: "Mix Product"}
+}
+
 
 #-------------------------------------------------------------------
 #
