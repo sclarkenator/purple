@@ -12,8 +12,8 @@ view: warehouse_location {
       sql: ${TABLE}.name ;; }
 
   dimension: location_Active {
-    label: "Inactive Locations Included"
-    type: string
+    label: "* Inactive Locations Included"
+    type: yesno
     sql: ${TABLE}.ISINACTIVE;; }
 
   dimension: location_name_manna_grouped {
@@ -25,6 +25,7 @@ view: warehouse_location {
 
   dimension: primary_key {
     primary_key: yes
+    hidden:  yes
     sql: CONCAT(${TABLE}.location_id,${TABLE}.ISINACTIVE) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
