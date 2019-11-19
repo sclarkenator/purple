@@ -251,14 +251,7 @@ explore: inventory_reconciliation {
   hidden: yes
 }
 
-explore: fg_to_sfg {hidden: yes
-  join: item {sql_on: ${fg_item_id} = ${item.item_id};;
-    view_label: "FG Product"}
-  join: item2 {from: item sql_on: ${hep_item_id} = ${item2.item_id} ;;
-    view_label: "HEP Product"}
-  join: item3 {from: item sql_on: ${mix_item_id} = ${item3.item_id};;
-    view_label: "Mix Product"}
-}
+
 
 
 #-------------------------------------------------------------------
@@ -375,7 +368,16 @@ explore: starship_fulfillment {
       view_label: "Product"
       type: left_outer
       sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one}}
+      relationship: many_to_one}
+    join:fg_to_sfg{
+      view_label: "FG to SFG"
+      sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+      type: left_outer
+      relationship: one_to_one
+    }
+    }
+
+
 
 #-------------------------------------------------------------------
 #
