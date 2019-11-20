@@ -1,5 +1,5 @@
 view: po_and_to_reconciliation {
-  sql_table_name: HIGHJUMP.PO_AND_TO_RECONCILIATION ;;
+  sql_table_name: HIGHJUMP.po_and_to_inbound ;;
 
   dimension: description {
     type: string
