@@ -247,9 +247,8 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
-explore: inventory_reconciliation {
-  hidden: yes
-}
+explore: inventory_reconciliation { hidden: yes}
+explore: po_and_to_reconciliation {hidden: yes}
 
 
 
