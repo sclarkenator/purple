@@ -2,7 +2,7 @@ view: fg_to_sfg {
   sql_table_name: PRODUCTION.FG_TO_SFG ;;
 
   dimension: fg_item_id {
-
+    primary_key: yes
     type: number
     sql: ${TABLE}."FG_ITEM_ID" ;;
   }
