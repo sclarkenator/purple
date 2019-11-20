@@ -19,11 +19,4 @@ view: date_meta {
     sql: ${TABLE}.day_in_quarter ;;
   }
 
-  dimension: most_recent_day_of_quarter {
-    label: "Highest Day of Current Quarter"
-    type: number
-    #hidden: yes
-    sql: case when ${date} = current_date() then ${DAY_OF_QUARTER} end ;;
-  }
-
 }
