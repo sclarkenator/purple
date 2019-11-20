@@ -12,8 +12,8 @@ view: warehouse_location {
       sql: ${TABLE}.name ;; }
 
   dimension: location_Active {
-    label: "* Inactive Locations Included"
-    type: yesno
+    label: "* Inactive Locations Included (Yes/ No)"
+    type: string
     sql: ${TABLE}.ISINACTIVE;; }
 
   dimension: location_name_manna_grouped {
