@@ -248,7 +248,7 @@ explore: inventory_snap {
 }
 
 explore: inventory_reconciliation { hidden: yes}
-explore: po_and_to_reconciliation {hidden: yes}
+explore: po_and_to_inbound {hidden: yes}
 
 
 

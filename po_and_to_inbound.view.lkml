@@ -1,4 +1,4 @@
-view: po_and_to_reconciliation {
+view: po_and_to_inbound {
   sql_table_name: HIGHJUMP.po_and_to_inbound ;;
 
   dimension: description {
