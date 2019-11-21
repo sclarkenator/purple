@@ -73,7 +73,7 @@ view: sales_order_line {
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
     type:  average
-    value_format: "#,##0.0"
+    value_format: "#.0"
     sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;; }
 
   measure: mf_fulfilled {
@@ -120,7 +120,7 @@ view: sales_order_line {
     hidden: yes
     type: date
     sql: Case
-          When sales_order.channel_id = 1 THEN
+          When sales_order.channel_id <> 2 THEN
             Case
               When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
               Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
@@ -136,7 +136,6 @@ view: sales_order_line {
           Else dateadd(d,3,${created_date})
         END
               ;;
-
   }
 
 dimension_group: SLA_Target {
@@ -158,7 +157,6 @@ dimension: SLA_Buckets {
   style: integer
   tiers: [1,2,3,4,5,6,7,11,15,21]
   sql: datediff(d,${SLA_Target_date},current_date) ;;
-
 }
 
   dimension: sla_Before_today{
@@ -182,8 +180,8 @@ dimension: SLA_Buckets {
     type: yesno
     sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
 
-  measure: zQty_eligable_for_SLA{
-    label: "zQty Eligable SLA"
+  measure: sales_eligible_for_SLA{
+    label: "zQty Eligible SLA"
     hidden:  yes
     view_label: "Fulfillment"
     type: sum
@@ -200,7 +198,7 @@ dimension: SLA_Buckets {
                 END;;
   }
 
-  measure: zQty_Fulfilled_in_SLA{
+  measure: sales_Fulfilled_in_SLA{
     label: "zQty Fulfilled in SLA"
     view_label: "Fulfillment"
     hidden:  yes
@@ -218,11 +216,11 @@ dimension: SLA_Buckets {
     value_format_name: percent_1
     type: number
     drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
-    sql: Case when ${zQty_eligable_for_SLA} = 0 then 0 Else ${zQty_Fulfilled_in_SLA}/${zQty_eligable_for_SLA} End ;;
+    sql: Case when ${sales_eligible_for_SLA} = 0 then 0 Else ${sales_Fulfilled_in_SLA}/${sales_eligible_for_SLA} End ;;
   }
 
-  measure: Qty_eligable_for_SLA{
-    label: "Qty Eligable SLA"
+  measure: Qty_eligible_for_SLA{
+    label: "Qty Eligible SLA"
     group_label: "SLA"
     view_label: "Fulfillment"
     type: sum
@@ -267,7 +265,7 @@ dimension: SLA_fulfilled {
   value_format_name: percent_1
   type: number
   drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
-  sql: Case when ${Qty_eligable_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligable_for_SLA} End ;;
+  sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
 }
 
   measure: whlsl_units {
@@ -394,6 +392,7 @@ dimension: SLA_fulfilled {
 
   measure: SLA_achieved{
     label: "West SLA Achievement (% in 3 days)"
+    hidden: yes
     description: "Percent of line items fulfilled by Purple West within 3 days of order"
     view_label: "Fulfillment"
     group_label: "SLA"
@@ -580,6 +579,23 @@ dimension: days_to_cancel {
         else ${created_date} end
       , current_date) ;; }
     #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
+  dimension: order_age_bucket2 {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "  Order Age (bucket 2)"
+    hidden: yes
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
+    style: integer
+    sql: datediff(day,
+      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
+        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
+        else ${created_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
 
   dimension: order_age_raw {
     label: "Order Age Raw"
@@ -1141,10 +1157,18 @@ dimension: days_to_cancel {
   dimension: carrier {
     view_label: "Fulfillment"
     label: "   Carrier (expected)"
-    description: "From Netsuite sales order line, the carrier expected to deliver the item. May not be the actual carrier."
+    description: "Derived field based on fulfillment location."
     hidden: no
     type: string
-    sql: ${TABLE}.CARRIER ;; }
+    sql: case
+          when ${location} ilike '%mainfreight%' then 'MainFreight'
+          when ${location} ilike '%xpo%' then 'XPO'
+          when ${location} ilike '%pilot%' then 'Pilot'
+          when ${location} is null then 'FBA'
+          when ${location} ilike '%100-%' then 'Purple'
+          when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
+          else 'Other' end ;;
+    }
 
   dimension: DTC_carrier {
     view_label: "Fulfillment"
