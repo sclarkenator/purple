@@ -61,6 +61,16 @@ view: po_and_to_inbound {
     sql: ${TABLE}."VENDOR" ;;
   }
 
+  dimension: hj_created {
+    type: date
+    sql: ${TABLE}.hj_created ;;
+  }
+
+  dimension: ns_created {
+    type: date
+    sql: ${TABLE}.ns_created ;;
+  }
+
   measure: total_hj_ordered_units {
     type: sum
     sql: ${TABLE}."HJ_ORDERED_UNITS" ;;
