@@ -29,4 +29,16 @@ dimension: PROJECT_NUM {
   type: string
   sql: ${TABLE}.PROJECT_NUM ;; }
 
+measure: COUNT_OF_REQUEST{
+  label: "Request Count"
+  description: "A Total Count of Requests"
+  type: sum
+  sql: case when ${CHANGETYPE} = 'Request' then 1 else 0 end ;;}
+
+  measure: COUNT_OF_REVISED{
+    label: "Revised Count"
+    description: "A Total Count of Revised"
+    type: sum
+    sql: case when ${CHANGETYPE} = 'Revised' then 1 else 0 end ;;}
+
 }
