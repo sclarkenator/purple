@@ -250,7 +250,7 @@ explore: inventory_snap {
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
-
+explore: change_mgmt {hidden:yes}
 
 
 
