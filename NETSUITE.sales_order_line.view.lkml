@@ -115,7 +115,7 @@ view: sales_order_line {
     type: sum
     sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;; }
 
-  dimension: Due_Date{
+  dimension: Due_Date_old {
     view_label: "Fulfillment"
     hidden: yes
     type: date
@@ -136,6 +136,33 @@ view: sales_order_line {
           Else dateadd(d,3,${created_date})
         END
               ;;
+  }
+
+  dimension: Due_Date {
+    view_label: "Fulfillment"
+    hidden: yes
+    type: date
+    sql: case
+      -- wholesale is ship by date (from sales order)
+      WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
+        THEN ${sales_order.ship_by_date}
+      -- fedex is min ship date
+      WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT') and ${sales_order.minimum_ship_date} > ${created_date}
+        THEN ${sales_order.minimum_ship_date}
+      -- fedex without min ship date is created + 3
+      WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT')
+        THEN dateadd(d,3,${created_date})
+      --whiteglove is created + 14
+      WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT')
+        THEN dateadd(d,14,${created_date})
+      --catch all is creatd +3
+      Else dateadd(d,3,${created_date}) END ;;
+  }
+
+  dimension: due_date_dif_flag {
+    hidden: yes
+    type: yesno
+    sql: ${Due_Date_old}=${Due_Date}  ;;
   }
 
 dimension_group: SLA_Target {

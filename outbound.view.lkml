@@ -26,8 +26,18 @@ view: outbound {
   #  sql: ${TABLE}."HJ_UNITS_SHIPPED" ;;
   #}
 
+  dimension: link {
+    type: string
+    sql: case when ${TABLE}.transaction_type = 'Sales Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
+        when  ${TABLE}.transaction_type = 'Transfer Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
+        when  ${TABLE}.transaction_type = 'Work Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
+        end;;
+  }
+
   dimension: internal_id {
     type: number
+    link: {label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{outbound.dynamic_link_variable}.nl?id={outbound.internal_id}&whence="}
     sql: ${TABLE}."INTERNAL_ID" ;;
   }
 
@@ -140,6 +150,12 @@ view: outbound {
     type: number
     sql: ${total_hj_units_ordered}-${total_ns_ordered_units} ;;
   }
+
+  measure: total_built_units {
+    type: number
+    sql:  ${total_hj_units_built}+${total_ns_built_units} ;;
+  }
+
 
   measure: count {
     type: count
