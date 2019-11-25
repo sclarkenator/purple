@@ -16,15 +16,15 @@ view: outbound {
     sql: ${TABLE}."HJ_CREATED" ;;
   }
 
-  dimension: hj_units_ordered {
-    type: number
-    sql: ${TABLE}."HJ_UNITS_ORDERED" ;;
-  }
+  #dimension: hj_units_ordered {
+  #  type: number
+  #  sql: ${TABLE}."HJ_UNITS_ORDERED" ;;
+  #}
 
-  dimension: hj_units_shipped {
-    type: number
-    sql: ${TABLE}."HJ_UNITS_SHIPPED" ;;
-  }
+  #dimension: hj_units_shipped {
+  #  type: number
+  #  sql: ${TABLE}."HJ_UNITS_SHIPPED" ;;
+  #}
 
   dimension: internal_id {
     type: number
@@ -46,25 +46,25 @@ view: outbound {
     sql: ${TABLE}."NS_CREATED" ;;
   }
 
-  dimension: ns_ordered_units {
-    type: number
-    sql: ${TABLE}."NS_ORDERED_UNITS" ;;
-  }
+  #dimension: ns_ordered_units {
+  #  type: number
+  #  sql: ${TABLE}."NS_ORDERED_UNITS" ;;
+  #}
 
-  dimension: ns_shipped_units {
-    type: number
-    sql: ${TABLE}."NS_SHIPPED_UNITS" ;;
-  }
+  #dimension: ns_shipped_units {
+  #  type: number
+  #  sql: ${TABLE}."NS_SHIPPED_UNITS" ;;
+  #}
 
   dimension: ns_sku {
     type: string
     sql: ${TABLE}."NS_SKU" ;;
   }
 
-  dimension: ordered_units_diff {
-    type: number
-    sql: ${TABLE}."ORDERED_UNITS_DIFF" ;;
-  }
+  #dimension: ordered_units_diff {
+  #  type: number
+  #  sql: ${TABLE}."ORDERED_UNITS_DIFF" ;;
+  #}
 
   dimension: price {
     type: number
@@ -96,10 +96,10 @@ view: outbound {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
-  dimension: units_shipped_diff {
-    type: number
-    sql: ${TABLE}."UNITS_SHIPPED_DIFF" ;;
-  }
+  #dimension: units_shipped_diff {
+  #  type: number
+  #  sql: ${TABLE}."UNITS_SHIPPED_DIFF" ;;
+  #}
 
   measure: total_hj_units_ordered {
     type: sum
@@ -123,22 +123,22 @@ view: outbound {
 
   measure: total_ns_shipped_units {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."NS_UNITS_SHIPPED" else 0 end ;;
   }
 
   measure: total_ns_built_units {
     type: sum
-    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."NS_UNITS_SHIPPED" else 0 end ;;
   }
 
   measure: total_ordered_units_diff {
-    type: sum
-    sql: ${TABLE}."ORDERED_UNITS_DIFF" ;;
+    type: number
+    sql: (${total_hj_units_built}+${total_hj_units_shipped})-(${total_ns_built_units}+${total_ns_shipped_units}) ;;
   }
 
   measure: total_units_shipped_diff {
-    type: sum
-    sql: ${TABLE}."UNITS_SHIPPED_DIFF" ;;
+    type: number
+    sql: ${total_hj_units_ordered}-${total_ns_ordered_units} ;;
   }
 
   measure: count {
