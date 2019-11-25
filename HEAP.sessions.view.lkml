@@ -101,8 +101,17 @@ view: sessions {
           when ${TABLE}.referrer ilike ('%facebook%') then 'https://facebook.com/*'
           when ${TABLE}.referrer ilike ('%youtube%') then 'https://youtube.com/*'
           when ${TABLE}.referrer ilike ('%msn.%') then 'https://msn.com/*'
+          when ${TABLE}.referrer ilike ('%bing.%') then 'https://bing.com/*'
           when ${TABLE}.referrer ilike ('%yahoo.%') then 'https://yahoo.com/*'
-          else ${TABLE}.referrer end ;; }
+          when ${TABLE}.referrer ilike ('%myslumberyard%') then 'https://myslumberyard.com/*'
+          when ${TABLE}.referrer ilike ('%tuck%') then 'https://tuck.com/*'
+          when ${TABLE}.referrer ilike ('%pinterest.%') then 'https://pinterest.com/*'
+          when ${TABLE}.referrer ilike ('%affirm%') then 'https://affirm.com/*'
+          when ${TABLE}.referrer ilike ('%sleepopolis%') then 'https://sleepopolis.com/*'
+          when ${TABLE}.referrer ilike ('%mattressclarity%') then 'https://mattressclarity.com/*'
+          when ${TABLE}.referrer ilike ('%narvar.%') then 'https://narvar.com/*'
+          when ${TABLE}.referrer ilike ('%instagram%') then 'https://instagram.com/*'
+          else left(${TABLE}.referrer,16)||'*' end ;; }
   #https://purple.com
 
   dimension: region {

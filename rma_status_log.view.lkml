@@ -2,6 +2,7 @@ view: rma_status_log {
   sql_table_name: CUSTOMER_CARE.RMA_STATUS_LOG ;;
 
   dimension: amount {
+    label: "  Amount"
     type: number
     sql: ${TABLE}."AMOUNT" ;;
   }
@@ -136,10 +137,12 @@ view: rma_status_log {
 
   dimension: item_id {
     type: string
+    label: "  Item Id"
     sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension_group: refunded {
+    group_label: "   Refunded Date"
     type: time
     timeframes: [
       raw,
@@ -156,6 +159,7 @@ view: rma_status_log {
   }
 
   dimension: related_tranid {
+    group_label: " Advanced"
     type: string
     primary_key: yes
     sql: ${TABLE}."RELATED_TRANID" ;;
@@ -163,21 +167,24 @@ view: rma_status_log {
 
   dimension: return_order_id {
     type: number
-
+    group_label: " Advanced"
     sql: ${TABLE}."RETURN_ORDER_ID" ;;
   }
 
   dimension: rma_return_type {
+    label: "  RMA Return Type"
     type: string
     sql: ${TABLE}."RMA_RETURN_TYPE" ;;
   }
 
   dimension: tranid {
     type: string
+    group_label: " Advanced"
     sql: ${TABLE}."TRANID" ;;
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: []
   }
