@@ -770,6 +770,7 @@ explore: sales_order_line{
   group_label: " Sales"
   view_label: "Sales Order Line"
   description:  "All sales orders for DTC channel"
+  always_join: [fulfillment]
   always_filter: {
     filters: {field: sales_order.channel      value: "DTC"}
     filters: {field: item.merchandise         value: "No"}
@@ -799,7 +800,7 @@ explore: sales_order_line{
     view_label: "Fulfillment"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
-    relationship: many_to_many}
+    relationship: one_to_many}
   join: visible {
     view_label: "Fulfillment"
     type: left_outer
@@ -993,6 +994,7 @@ explore: wholesale {
   group_label: " Sales"
   view_label: "Sales Order Line"
   description:  "All sales orders for wholesale channel"
+  always_join: [fulfillment]
   always_filter: {
     filters: {field: sales_order.channel      value: "Wholesale"}
     filters: {field: item.merchandise         value: "No"}
@@ -1022,7 +1024,7 @@ explore: wholesale {
     view_label: "Fulfillment"
     type: left_outer
     sql_on: ${wholesale.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
-    relationship: many_to_many}
+    relationship: one_to_many}
   join: sales_order {
     view_label: "Sales Header"
     type: left_outer

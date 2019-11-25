@@ -6,8 +6,8 @@ with day_values as (select a.item_id, a.product_description_lkr, a.shipper, a.da
             , (coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0))) weighted_quantity
             , sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days) running_sum
             , sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper) item_sum
-            , (sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days)) / (sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper)) cumulative_percent
-            , abs(0.95 - ((sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days)) / (sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper)))) distance_from_95
+            , (sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days)) / NULLIF((sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper)),0) cumulative_percent
+            , abs(0.95 - ((sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper order by a.days)) / NULLIF((sum((coalesce(a.fulfilled_quantity, 0) + (2 * coalesce(unfulfilled_quantity, 0)))) over (partition by a.item_id, a.shipper)),0)  )) distance_from_95
         from (
             select item_id, product_description_lkr, days_to_fulfill days, shipper, sum(ordered_quantity) fulfilled_quantity
             from (
@@ -19,15 +19,16 @@ with day_values as (select a.item_id, a.product_description_lkr, a.shipper, a.da
                     , case when sol.location = ('100-Purple West') then 'West'
                         when sol.location like ('%Pilot%') or sol.location like ('%Manna%') then 'Pilot'
                         when sol.location like ('%XPO%') then 'XPO' else 'Other' end as shipper
-                    , datediff('day', sol.created, sol.fulfilled) days_to_fulfill
+                    , datediff('day', sol.created, ful.created) days_to_fulfill
                     , sol.ordered_qty::int ordered_quantity
                 from sales_order_line sol
+                    LEFT JOIN sales.fulfillment ful ON sol.order_id = ful.order_id AND sol.item_id = ful.item_id AND sol.system = ful.system
                     join sales_order so on so.order_id = sol.order_id and so.system = sol.system
                     left join item i on i.item_id = sol.item_id
                     left join cancelled_order c on c.order_id = sol.order_id and c.system = sol.system
                 where sol.created >= dateadd('day', -30, current_date())
                     and sol.created < dateadd('day', -5, current_date())
-                    and sol.fulfilled is not null
+                    and ful.created is not null
                     and (c.refunded != 'Yes' or c.refunded is null)
                     and so.channel_id = 1
                     and sol.system not like ('AMAZON%')
@@ -47,12 +48,13 @@ with day_values as (select a.item_id, a.product_description_lkr, a.shipper, a.da
                 , datediff('day', sol.created, current_date()) days_since_order
                 , sol.ordered_qty::int ordered_quantity
             from sales_order_line sol
+                LEFT JOIN sales.fulfillment ful ON sol.order_id = ful.order_id AND sol.item_id = ful.item_id AND sol.system = ful.system
                 join sales_order so on so.order_id = sol.order_id and so.system = sol.system
                 left join item i on i.item_id = sol.item_id
                 left join cancelled_order c on c.order_id = sol.order_id and c.system = sol.system
             where sol.created >= dateadd('day', -30, current_date())
                 and sol.created < dateadd('day', -5, current_date())
-                and sol.fulfilled is null
+                and ful.created is null
                 and (c.refunded != 'Yes' or c.refunded is null)
                 and so.channel_id = 1
                 and sol.system not like ('AMAZON%')
@@ -77,7 +79,6 @@ order by item_id, fulfillment_location
       dimension: item_id {
         hidden: yes
         type: number
-
         sql: ${TABLE}.item_id;; }
 
       dimension: fulfillment_source {

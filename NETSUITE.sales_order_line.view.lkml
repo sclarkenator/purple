@@ -74,7 +74,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     type:  average
     value_format: "#.0"
-    sql: datediff(day,${TABLE}.created,${TABLE}.fulfilled) ;; }
+    sql: datediff(day,${TABLE}.created,${fulfilled_raw}) ;; }
 
   measure: mf_fulfilled {
     view_label: "Fulfillment"
@@ -213,16 +213,13 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     type: sum
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN
-              ${TABLE}.gross_amt
-                Else
+            when ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            Else
               Case
-                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN
-                ${TABLE}.gross_amt
-                  Else
-                0
-                END
-                END;;
+                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.gross_amt
+                Else 0
+              END
+          END;;
   }
 
   measure: sales_Fulfilled_in_SLA{
@@ -230,9 +227,14 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     hidden:  yes
     type: sum
-    sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
-        case when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
-        Else 0 END END;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+          Else
+            case
+              when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
+              Else 0
+            END
+        END;;
   }
 
   measure: zSLA_Achievement_prct {
@@ -252,26 +254,29 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     type: sum
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN
-              ${TABLE}.ordered_qty
-                Else
+            when ${cancelled_order.cancelled_date} is null THEN ${TABLE}.ordered_qty
+            Else
               Case
-                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN
-                ${TABLE}.ordered_qty
-                  Else
-                0
-                END
-                END;;
+                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.ordered_qty
+                Else 0
+              END
+          END;;
   }
 
 measure: Qty_Fulfilled_in_SLA{
   label: "Qty Fulfilled in SLA"
   group_label: "SLA"
   view_label: "Fulfillment"
-  type: sum
-  sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
-        case when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        Else 0 END END;;
+  type: sum_distinct
+  sql_distinct_key: ${fulfillment.PK} ;;
+  sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        Else
+          case
+            when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+            Else 0
+          END
+      END;;
 }
 
 dimension: SLA_fulfilled {
@@ -398,7 +403,7 @@ dimension: SLA_fulfilled {
 ##      value: "1" }
       drill_fields: [fulfill_details*]
       type: sum
-      sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
+      sql:  case when ${fulfilled_date} <= to_Date(dateadd(d,3,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
 
   measure: SLA_eligible {
     label: "WEST SLA Eligible (3)"
@@ -444,7 +449,7 @@ dimension: SLA_fulfilled {
 ##      value: "1" }
         drill_fields: [fulfill_details*]
         type: sum
-        sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
+        sql:  case when ${fulfilled_date} <= to_Date(dateadd(d,14,${TABLE}.created)) then ${ordered_qty} else 0 end ;; }
 
   measure: manna_SLA_eligible {
     label: "Pilot SLA Eligible (14)"
@@ -490,7 +495,7 @@ dimension: SLA_fulfilled {
 ##      value: "1" }
       drill_fields: [fulfill_details*]
       type: sum
-      sql:  case when ${TABLE}.fulfilled <= to_Date(dateadd(d,14,${TABLE}.created)) and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
+      sql:  case when ${fulfilled_date} <= to_Date(dateadd(d,14,${TABLE}.created)) and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
 
   measure: XPO_SLA_eligible {
     label: "Manna SLA Eligible (14)"
@@ -795,7 +800,7 @@ dimension: days_to_cancel {
     view_label: "Fulfillment"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${TABLE}.fulfilled <= current_date and month(${TABLE}.fulfilled) = month(dateadd(day,-1,current_date)) and year(${TABLE}.fulfilled) = year(current_date) ;; }
+    sql: ${fulfilled_date} <= current_date and month(${fulfilled_raw}) = month(dateadd(day,-1,current_date)) and year(${fulfilled_raw}) = year(current_date) ;; }
 
   dimension: ff_Before_today{
     group_label: "    Fulfilled Date"
@@ -803,7 +808,7 @@ dimension: days_to_cancel {
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${TABLE}.fulfilled < current_date;; }
+    sql: ${fulfilled_date} < current_date;; }
 
   dimension: ff_current_week_num{
     group_label: "    Fulfilled Date"
@@ -811,7 +816,7 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.fulfilled) < date_part('week',current_date);; }
+    sql: date_part('week',${fulfilled_date}) < date_part('week',current_date);; }
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -819,7 +824,7 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.fulfilled) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${fulfilled_date}) = date_part('week',current_date)-1;; }
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
@@ -827,14 +832,13 @@ dimension: days_to_cancel {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-    sql: case when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
-        when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${TABLE}.fulfilled::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.fulfilled::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+    sql: case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
         else 'Other' end;; }
-
 
   dimension_group: created {
     view_label: "Sales Order"
@@ -1014,15 +1018,15 @@ dimension: days_to_cancel {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.FULFILLED ;; }
+    #sql: ${TABLE}.FULFILLED ;;
+    sql: ${fulfillment.created_raw} ;;}
 
   dimension: is_fulfilled {
     view_label: "Fulfillment"
     label: "     * Is fulfilled"
     description:  "Has order been fulfilled"
     type: yesno
-    sql: ${TABLE}.FULFILLED is not null;; }
-
+    sql: ${fulfilled_date} is not null;; }
 
   dimension: fulfilled_status {
     view_label: "Fulfillment"
@@ -1032,9 +1036,9 @@ dimension: days_to_cancel {
     type: string
     sql:
     CASE
-    When ${SLA_Target_date} >= ${TABLE}.FULFILLED then 'On Time'
-    When ${SLA_Target_date} < ${TABLE}.FULFILLED then 'Late'
-    When ${TABLE}.FULFILLED is null and current_date() > ${SLA_Target_date} Then 'Late (open)'
+    When ${SLA_Target_date} >= ${fulfilled_date} then 'On Time'
+    When ${SLA_Target_date} < ${fulfilled_date} then 'Late'
+    When ${fulfilled_date} is null and current_date() > ${SLA_Target_date} Then 'Late (open)'
     else 'Open'
     END;; }
 
@@ -1180,12 +1184,11 @@ dimension: days_to_cancel {
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;; }
 
-
   dimension: carrier {
     view_label: "Fulfillment"
     label: "   Carrier (expected)"
     description: "Derived field based on fulfillment location."
-    hidden: no
+    #hidden: yes
     type: string
     sql: case
           when ${location} ilike '%mainfreight%' then 'MainFreight'

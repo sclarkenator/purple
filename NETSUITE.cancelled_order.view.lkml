@@ -83,6 +83,7 @@ view: cancelled_order {
   dimension: item_order{
     primary_key:  yes
     hidden:  yes
+    type: string
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: 7_day_window {
