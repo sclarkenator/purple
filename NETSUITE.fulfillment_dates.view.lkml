@@ -20,12 +20,13 @@ view: fulfillment_dates {
         -- aggregating sol to 1 row per order with dates
         SELECT sol.order_id
           , MIN(sol.created) order_date
-          , MIN(coalesce(sol.fulfilled, co.cancelled, current_date())) first_ff
-          , MAX(coalesce(sol.fulfilled, co.cancelled, current_date())) last_ff
+          , MIN(coalesce(ful.created, co.cancelled, current_date())) first_ff
+          , MAX(coalesce(ful.created, co.cancelled, current_date())) last_ff
         FROM sales.sales_order_line sol
-        LEFT JOIN sales.cancelled_order co on co.order_id = sol.order_id and co.item_id = sol.order_id and co.system = sol.system
+        LEFT JOIN sales.fulfillment ful ON sol.order_id = ful.order_id AND sol.item_id = ful.item_id AND sol.system = ful.system
+        LEFT JOIN sales.cancelled_order co on co.order_id = sol.order_id and co.item_id = sol.item_id and co.system = sol.system
         GROUP BY sol.order_id
-      );;
+        );;
     }
 
   measure: days_to_ff {

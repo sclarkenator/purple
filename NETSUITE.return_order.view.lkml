@@ -237,14 +237,14 @@ view: return_order {
     type: average
     hidden: yes
     description: "Days from when the customer ordered to when a return was completed (refunded)"
-    sql: datediff('day', sales_order_line.created, ${TABLE}.return_completed) ;;
+    sql: datediff('day', ${sales_order_line.created_raw}, ${TABLE}.return_completed) ;;
   }
 
   dimension: days_from_fulfillment_to_complete_return {
     type: number
     hidden: yes
     description: "Days from when the item was fulfilled to when a return was completed (refunded)"
-    sql: datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) ;;
+    sql: datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) ;;
   }
 
   dimension: law_tag {
@@ -256,10 +256,10 @@ view: return_order {
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
     group_label: " Advanced"
-    sql: case when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
-            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 60 then '31-60 Days'
-            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) <= 100 then '61-100 Days'
-            when datediff('day', sales_order_line.fulfilled, ${TABLE}.return_completed) > 100 then 'Over 100'
+    sql: case when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
+            when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 60 then '31-60 Days'
+            when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 100 then '61-100 Days'
+            when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) > 100 then 'Over 100'
             end;;
 
   }
