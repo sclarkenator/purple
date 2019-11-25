@@ -108,17 +108,27 @@ view: outbound {
 
   measure: total_hj_units_shipped {
     type: sum
-    sql: ${TABLE}."HJ_UNITS_SHIPPED" ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+  }
+
+  measure: total_hj_units_built {
+    type: sum
+    sql: case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
   }
 
   measure: total_ns_ordered_units {
     type: sum
-    sql: ${TABLE}."NS_ORDERED_UNITS" ;;
+    sql: ${TABLE}."NS_UNITS_ORDERED" ;;
   }
 
   measure: total_ns_shipped_units {
     type: sum
-    sql: ${TABLE}."NS_SHIPPED_UNITS" ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+  }
+
+  measure: total_ns_built_units {
+    type: sum
+    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
   }
 
   measure: total_ordered_units_diff {
