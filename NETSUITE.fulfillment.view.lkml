@@ -10,7 +10,12 @@ view: fulfillment {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;  }
+    sql: ${TABLE}."FULFILLMENT_ID"||'-'|| ${item_id} ||${TABLE}.parent_item_id ;;  }
+
+  dimension: status {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.status ;; }
 
   dimension: carrier {
     label: "   Carrier (actual)"
@@ -62,7 +67,7 @@ view: fulfillment {
   dimension: item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}.item_id ;; }
+    sql: case when ${TABLE}.parent_item_id = 0 or ${TABLE}.parent_item_id is null then ${TABLE}.item_id else ${TABLE}.parent_item_id end ;; }
 
   dimension: order_id {
     hidden: yes

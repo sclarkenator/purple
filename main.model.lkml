@@ -799,7 +799,7 @@ explore: sales_order_line{
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} and ${fulfillment.status} = 'Shipped' ;;
     relationship: one_to_many}
   join: visible {
     view_label: "Fulfillment"

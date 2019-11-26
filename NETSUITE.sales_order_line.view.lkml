@@ -254,6 +254,7 @@ dimension: SLA_Buckets {
     group_label: "SLA"
     view_label: "Fulfillment"
     type: sum
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: Case
             when ${cancelled_order.cancelled_date} is null THEN ${TABLE}.ordered_qty
             Else
@@ -1020,7 +1021,8 @@ dimension: days_to_cancel {
     convert_tz: no
     datatype: date
     #sql: ${TABLE}.FULFILLED ;;
-    sql: ${fulfillment.created_raw} ;;}
+    sql: ${fulfillment.created_raw} ;;
+    }
 
   dimension_group: fulfilled_old {
     view_label: "Fulfillment"
