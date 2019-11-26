@@ -24,7 +24,7 @@ view: outbound {
     }
     sql: case when ${transaction_type} = 'Work Order' then 'workord.nl?id=' || ${internal_id}
       when ${transaction_type} = 'Sales Order' then 'salesord.nl?id=' || ${internal_id}
-      when ${transaction_type} = 'Trasnfer Order' then 'trnford.nl?id=' || ${internal_id}
+      when ${transaction_type} = 'Transfer Order' then 'trnford.nl?id=' || ${internal_id}
       end;;
   }
 
