@@ -141,7 +141,7 @@ view: outbound {
 
   measure: total_units_shipped_diff {
     type: number
-    sql: ${total_hj_units_shipped}-${total_ns_shipped_units}) ;;
+    sql: ${total_hj_units_shipped}-${total_ns_shipped_units} ;;
   }
 
   measure: total_ordered_units_diff {
