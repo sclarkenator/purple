@@ -141,7 +141,7 @@ view: outbound {
 
   measure: total_units_shipped_diff {
     type: number
-    sql: (${total_hj_units_built}+${total_hj_units_shipped})-(${total_ns_built_units}+${total_ns_shipped_units}) ;;
+    sql: ${total_hj_units_shipped}-${total_ns_shipped_units}) ;;
   }
 
   measure: total_ordered_units_diff {
@@ -150,9 +150,9 @@ view: outbound {
     #sql: sum(${TABLE}."HJ_UNITS_ORDERED") - sum(${TABLE}."NS_UNITS_ORDERED");;
   }
 
-  measure: total_built_units {
+  measure: total_built_units_diff {
     type: number
-    sql:  ${total_hj_units_built}+${total_ns_built_units} ;;
+    sql:  ${total_hj_units_built}-${total_ns_built_units} ;;
   }
 
 
