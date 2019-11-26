@@ -256,13 +256,10 @@ dimension: SLA_Buckets {
     type: sum
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${TABLE}.ordered_qty
-            Else
-              Case
-                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.ordered_qty
-                Else 0
-              END
-          END;;
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
   }
 
 measure: Qty_Fulfilled_in_SLA{
@@ -273,12 +270,8 @@ measure: Qty_Fulfilled_in_SLA{
   sql_distinct_key: ${fulfillment.PK} ;;
   sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        Else
-          case
-            when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-            Else 0
-          END
-      END;;
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0 END ;;
 }
 
 dimension: SLA_fulfilled {
@@ -286,9 +279,9 @@ dimension: SLA_fulfilled {
     description: "Was item fulfilled in SLA window"
     view_label: "Fulfillment"
     type: yesno
-    sql: Case when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0 Else
-        case when ${fulfilled_date} <= ${Due_Date} THEN 1
-        Else 0 END END;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+          when ${fulfilled_date} <= ${Due_Date} THEN 1 Else 0 END ;;
   }
 
   measure: SLA_Achievement_prct {
@@ -1027,6 +1020,7 @@ dimension: days_to_cancel {
   dimension_group: fulfilled_old {
     view_label: "Fulfillment"
     label: "    Fulfilled"
+    hidden:  yes
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
