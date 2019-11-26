@@ -74,6 +74,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     type:  average
     value_format: "#.0"
+    sql_distinct_key: ${fulfillment.PK};;
     sql: datediff(day,${TABLE}.created,${fulfilled_raw}) ;; }
 
   measure: mf_fulfilled {
@@ -1020,6 +1021,18 @@ dimension: days_to_cancel {
     datatype: date
     #sql: ${TABLE}.FULFILLED ;;
     sql: ${fulfillment.created_raw} ;;}
+
+  dimension_group: fulfilled_old {
+    view_label: "Fulfillment"
+    label: "    Fulfilled"
+    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
+    type: time
+    timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.FULFILLED ;;
+    #sql: ${fulfillment.created_raw} ;;
+    }
 
   dimension: is_fulfilled {
     view_label: "Fulfillment"

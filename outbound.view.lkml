@@ -36,8 +36,6 @@ view: outbound {
 
   dimension: internal_id {
     type: number
-    link: {label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{outbound.dynamic_link_variable}.nl?id={outbound.internal_id}&whence="}
     sql: ${TABLE}."INTERNAL_ID" ;;
   }
 
@@ -118,12 +116,12 @@ view: outbound {
 
   measure: total_hj_units_shipped {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_BUILT_OR_SHIPPED" else 0 end ;;
   }
 
   measure: total_hj_units_built {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_UNITS_SHIPPED" else 0 end ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_BUILT_OR_SHIPPED" else 0 end ;;
   }
 
   measure: total_ns_ordered_units {
@@ -133,22 +131,23 @@ view: outbound {
 
   measure: total_ns_shipped_units {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."NS_UNITS_SHIPPED" else 0 end ;;
+    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."NS_BUILT_OR_SHIPPED" else 0 end ;;
   }
 
   measure: total_ns_built_units {
     type: sum
-    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."NS_UNITS_SHIPPED" else 0 end ;;
-  }
-
-  measure: total_ordered_units_diff {
-    type: number
-    sql: (${total_hj_units_built}+${total_hj_units_shipped})-(${total_ns_built_units}+${total_ns_shipped_units}) ;;
+    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."NS_BUILT_OR_SHIPPED" else 0 end ;;
   }
 
   measure: total_units_shipped_diff {
     type: number
+    sql: (${total_hj_units_built}+${total_hj_units_shipped})-(${total_ns_built_units}+${total_ns_shipped_units}) ;;
+  }
+
+  measure: total_ordered_units_diff {
+    type: number
     sql: ${total_hj_units_ordered}-${total_ns_ordered_units} ;;
+    #sql: sum(${TABLE}."HJ_UNITS_ORDERED") - sum(${TABLE}."NS_UNITS_ORDERED");;
   }
 
   measure: total_built_units {
