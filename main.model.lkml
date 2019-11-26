@@ -984,6 +984,11 @@ explore: sales_order_line{
     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
     relationship: one_to_many
   }
+  join: shopify_discount_titles {
+    type: left_outer
+    sql_on: ${shopify_discount_titles.order_id} = ${sales_order.etail_order_id} ;;
+    relationship: one_to_many
+  }
 }
 
 
