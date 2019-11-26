@@ -102,12 +102,12 @@ view: outbound {
   }
 
   measure: ordered_diff {
-    type: number
+    type: sum
     sql: ${TABLE}."ORDERED_DIFF" ;;
   }
 
   measure: built_or_shipped_diff {
-    type: number
+    type: sum
     sql: ${TABLE}."BUILT_OR_SHIPPED_DIFF" ;;
   }
 
