@@ -17,11 +17,15 @@ view: outbound {
   }
 
   dimension: link {
-    type: string
-    sql: case when ${TABLE}.transaction_type = 'Sales Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        when  ${TABLE}.transaction_type = 'Transfer Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        when  ${TABLE}.transaction_type = 'Work Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        end;;
+    label: "Netsuite Link"
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{ value }}&whence= "
+    }
+    sql: case when ${transaction_type} = 'Work Order' then 'workord.nl?id=' || ${internal_id}
+      when ${transaction_type} = 'Sales Order' then 'salesord.nl?id=' || ${internal_id}
+      when ${transaction_type} = 'Trasnfer Order' then 'trnford.nl?id=' || ${internal_id}
+      end;;
   }
 
   dimension: internal_id {
