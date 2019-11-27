@@ -21,6 +21,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: order_id {
     type: string
+    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     sql: ${TABLE}.order_id ;;
   }
 
@@ -269,7 +270,7 @@ view: mainchain_transaction_outwards_detail {
   measure: distinct_tran {
     type: count_distinct
     sql: ${tranid} ;;
-    drill_fields: [tranid,order_status,carrier,ordered_date,sku_id,units_despatched,units_ordered,con_note_number]
+    drill_fields: [order_id,tranid,order_status,carrier,ordered_date,sku_id,units_despatched,units_ordered,con_note_number]
   }
 
   measure: count {
