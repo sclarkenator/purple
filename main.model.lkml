@@ -263,10 +263,10 @@ explore: mainchain_transaction_outwards_detail {hidden:yes
     relationship: one_to_many}
   join: sales_order_line {
     type: left_outer
+    fields: []
     sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
     relationship:many_to_one}
   }
-
 
 #-------------------------------------------------------------------
 #

@@ -362,7 +362,7 @@ dimension: SLA_fulfilled {
     description: "Orders placed that have not been fulfilled"
     value_format: "$#,##0"
     type: number
-    sql_distinct_key: ${pk_concat_ful_sales_order};;
+    #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
     sql: (${total_gross_Amt}/nullif(${total_units},0))*(${total_units}-${fulfillment.count}) ;; }
 
@@ -372,7 +372,7 @@ dimension: SLA_fulfilled {
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
     type: number
-    sql_distinct_key: ${pk_concat_ful_sales_order};;
+    #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
     sql: ${total_units}-${fulfillment.count} ;;}
 
@@ -383,7 +383,7 @@ dimension: SLA_fulfilled {
     description: "Orders placed that have been fulfilled"
     value_format: "$#,##0"
     type: number
-    sql_distinct_key: ${pk_concat_ful_sales_order};;
+    #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
     sql: (${total_gross_Amt}/nullif(${total_units},0))*(${fulfillment.count}) ;; }
 
@@ -393,7 +393,7 @@ dimension: SLA_fulfilled {
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
     type: number
-    sql_distinct_key: ${pk_concat_ful_sales_order};;
+    #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
     sql: ${fulfillment.count} ;; }
 
