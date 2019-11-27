@@ -1002,6 +1002,13 @@ explore: sales_order_line{
     sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
     relationship: one_to_many
   }
+  join: mainchain_transaction_outwards_detail {
+    view_label: "MainChain"
+    type: left_outer
+    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+      and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
+    relationship: one_to_many
+  }
 }
 
 

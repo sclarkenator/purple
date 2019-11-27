@@ -14,6 +14,21 @@ view: mainchain_transaction_outwards_detail {
     sql: ${TABLE}."CARRIER" ;;
   }
 
+  dimension: item_id {
+    type: string
+    sql: ${TABLE}.item_id ;;
+  }
+
+  dimension: order_id {
+    type: string
+    sql: ${TABLE}.order_id ;;
+  }
+
+  dimension: system {
+    type: string
+    sql: ${TABLE}.system ;;
+  }
+
   dimension: client {
     type: string
     sql: ${TABLE}."CLIENT" ;;
