@@ -32,7 +32,8 @@ view: shopify_discount_titles {
   dimension: order_id {
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.order_id ;;}
+    type: string
+    sql: ${TABLE}.order_id::string ;;}
 
   dimension: flash {
     hidden: yes
