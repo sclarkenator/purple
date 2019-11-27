@@ -122,4 +122,10 @@ view: shopify_discount_titles {
     hidden: yes
     sql: ${TABLE}.dsc_labor ;; }
 
+  dimension: sleep_bundle_mattress_reqd {
+    hidden:  yes
+    type: yesno
+    sql: ((${shopify_discount_titles.plush_pillow_50_off_2}=1 OR ${shopify_discount_titles.harmony_pillow_100_off_2}=1 OR ${shopify_discount_titles.harmony_pillow_50_off}=1)
+    AND ${shopify_discount_titles.sheets_50_off}=1 AND ${shopify_discount_titles.protector_50_off}=1) ;; }
+
 }
