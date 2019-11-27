@@ -357,22 +357,24 @@ dimension: SLA_fulfilled {
 
   measure: unfulfilled_orders {
     group_label: "Gross Sales Unfulfilled"
-    label: "Unfulfilled Orders ($)"
+    label: "Unfulfilled Units ($)"
     view_label: "Fulfillment"
     description: "Orders placed that have not been fulfilled"
     value_format: "$#,##0"
-    type: sum
+    type: number
+    sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
-    sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${gross_amt} else 0 end ;; }
+    sql: (${total_gross_Amt}/nullif(${total_units},0))*(${total_units}-${fulfillment.count}) ;; }
 
   measure: unfulfilled_orders_units {
     group_label: "Gross Sales Unfulfilled"
     view_label: "Fulfillment"
     label: "Unfulfilled Orders (units)"
     description: "Orders placed that have not been fulfilled"
-    type: sum
+    type: number
+    sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
-    sql: case when ${fulfilled_date} is null and ${cancelled_order.cancelled_date} is null then ${ordered_qty} else 0 end ;; }
+    sql: ${total_units}-${fulfillment.count} ;;}
 
   measure: fulfilled_orders {
     group_label: "Gross Sales Fulfilled"
@@ -380,18 +382,20 @@ dimension: SLA_fulfilled {
     label: "Fulfilled Orders ($)"
     description: "Orders placed that have been fulfilled"
     value_format: "$#,##0"
-    type: sum
+    type: number
+    sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
-    sql: case when ${fulfilled_date} is not null then ${gross_amt} else 0 end ;; }
+    sql: (${total_gross_Amt}/nullif(${total_units},0))*(${fulfillment.count}) ;; }
 
   measure: fulfilled_orders_units {
     group_label: "Gross Sales Fulfilled"
     view_label: "Fulfillment"
     label: "Fulfilled Orders (units)"
     description: "Orders placed that have been fulfilled"
-    type: sum
+    type: number
+    sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
-    sql: case when ${fulfilled_date} is not null then ${ordered_qty} else 0 end ;; }
+    sql: ${fulfillment.count} ;; }
 
   measure: fulfilled_in_SLA {
     view_label: "Fulfillment"

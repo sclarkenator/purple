@@ -252,7 +252,16 @@ explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
 explore: change_mgmt {hidden:yes}
 explore: outbound {hidden:yes}
-
+explore: mainchain_transaction_outwards_detail {hidden:yes
+  join: sales_order{
+    type: left_outer
+    sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
+    relationship: many_to_one}
+  join: item {
+    type: left_outer
+    sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
+    relationship: one_to_many}
+  }
 
 
 #-------------------------------------------------------------------
