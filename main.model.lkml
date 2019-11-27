@@ -1005,7 +1005,8 @@ explore: sales_order_line{
   join: mainchain_transaction_outwards_detail {
     view_label: "MainChain"
     type: left_outer
-    sql_on: ${mainchain_transaction_outwards_detail.tranid} = ${sales_order.tranid} and ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
+    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+      and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
     relationship: one_to_many
   }
 }
