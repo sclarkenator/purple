@@ -986,7 +986,7 @@ explore: sales_order_line{
   }
   join: shopify_discount_titles {
     type: left_outer
-    sql_on: ${shopify_discount_titles.order_id} = ${sales_order.etail_order_id} ;;
+    sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
     relationship: one_to_many
   }
 }

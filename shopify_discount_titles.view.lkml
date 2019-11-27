@@ -1,7 +1,7 @@
 view: shopify_discount_titles {
   derived_table: {
     sql:
-      select a.order_id
+      select n.order_id
           , max(case when title ilike ('%flash%') and title ilike ('%sale%') then 1 else 0 end) as flash
           , max(case when (title ilike ('%bundle%') and title not ilike ('%flash%'))
                or title ilike ('Free Sleep Mask w/ Weighted Blanket Purchase%') then 1 else 0 end) as bundle
@@ -26,7 +26,14 @@ view: shopify_discount_titles {
           , max(case when title ilike ('%DSC%') and title ilike ('%labor%') then 1 else 0 end) as dsc_labor
       from analytics_stage.shopify_us_ft.discount_application a
       left join analytics_stage.shopify_us_ft."ORDER" o on o.id = a.order_id
-      group by order_id
+      left join (
+        select ETAIL_ORDER_ID
+            , created
+            , order_id
+            , row_number () over (partition by etail_order_id order by created) row_num
+        from analytics.sales.sales_order
+        ) n on n.etail_order_id = o.id::string and n.row_num = 1
+      group by n.order_id
   ;; }
 
   dimension: order_id {
