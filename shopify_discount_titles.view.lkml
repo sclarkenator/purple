@@ -12,7 +12,6 @@ view: shopify_discount_titles {
           , max(case when title ilike ('Free Pillow w/ Mattress%') then 1 else 0 end) as free_pillow_w_mattress
           , max(case when title ilike ('$200 Off Purple Hybrid Premier Mattress%') then 1 else 0 end) as hybrid_mattress_200_off
           , max(case when title ilike ('$150 Off Purple Hybrid Mattress%') then 1 else 0 end) as hybrid_mattress_150_off
-          , max(case when title ilike ('$200 Off Purple Hybrid Premier Mattress%') then 1 else 0 end) as hybrid_mattress_200_off
           , max(case when title ilike ('$100 Off Purple Hybrid Premier Mattress%') then 1 else 0 end) as hybrid_mattress_100_off
           , max(case when title ilike ('$50 Off The Purple Mattress%') then 1 else 0 end) as purple_mattress_50_off
           , max(case when title in ('$50 off Twin & Twin XL Purple Mattress','$50 Off The Purple Mattress Twin/TwinXL') then 1 else 0 end) as purple_twin_mattress_50_off
