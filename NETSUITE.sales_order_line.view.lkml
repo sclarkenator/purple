@@ -72,7 +72,7 @@ view: sales_order_line {
     label: "to Fulfillment"
     description: "Average number of days between order and fulfillment"
     view_label: "Fulfillment"
-    type:  average
+    type:  average_distinct
     value_format: "#.0"
     sql_distinct_key: ${fulfillment.PK};;
     sql: datediff(day,${TABLE}.created,${fulfilled_raw}) ;; }
@@ -113,7 +113,8 @@ view: sales_order_line {
     label: "Wholesale SLA (old)"
     hidden: yes
     description: "Was the order shipped out by the required ship-by date to arrive on time"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat_ful_sales_order} ;;
     sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;; }
 
   dimension: Due_Date_old {
@@ -212,14 +213,13 @@ dimension: SLA_Buckets {
     label: "zQty Eligible SLA"
     hidden:  yes
     view_label: "Fulfillment"
-    type: sum
-    sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
-            Else
-              Case
-                When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.gross_amt
-                Else 0
-              END
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: CASE
+            WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.gross_amt
+            ELSE 0
           END;;
   }
 
@@ -227,7 +227,8 @@ dimension: SLA_Buckets {
     label: "zQty Fulfilled in SLA"
     view_label: "Fulfillment"
     hidden:  yes
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
           Else
@@ -249,15 +250,26 @@ dimension: SLA_Buckets {
     sql: Case when ${sales_eligible_for_SLA} = 0 then 0 Else ${sales_Fulfilled_in_SLA}/${sales_eligible_for_SLA} End ;;
   }
 
+  dimension: pk_concat_ful_sales_order {
+    type: string
+    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${item_order},'_');;
+  }
+
+  dimension: pk_concat {
+    type: string
+    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||'_'||NVL(${item_order},'_');;
+  }
+
   measure: Qty_eligible_for_SLA{
     label: "Qty Eligible SLA"
     group_label: "SLA"
     view_label: "Fulfillment"
-    type: sum
-    sql_distinct_key: ${fulfillment.PK} ;;
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
     sql: Case
             when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
-            When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
             Else 0
             END ;;
   }
@@ -267,11 +279,12 @@ measure: Qty_Fulfilled_in_SLA{
   group_label: "SLA"
   view_label: "Fulfillment"
   type: sum_distinct
-  sql_distinct_key: ${fulfillment.PK} ;;
+  sql_distinct_key: ${pk_concat} ;;
   sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        Else 0 END ;;
+        Else 0
+      END ;;
 }
 
 dimension: SLA_fulfilled {
@@ -279,9 +292,7 @@ dimension: SLA_fulfilled {
     description: "Was item fulfilled in SLA window"
     view_label: "Fulfillment"
     type: yesno
-    sql: Case
-          when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-          when ${fulfilled_date} <= ${Due_Date} THEN 1 Else 0 END ;;
+    sql: ${cancelled_order.cancelled_date} >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
   }
 
   measure: SLA_Achievement_prct {
@@ -463,6 +474,54 @@ dimension: SLA_fulfilled {
       type:  sum
       sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) >= to_Date(dateadd(d,14,${created_date})) then ${ordered_qty} else 0 end ;; }
 
+  measure: manna_fulfilled_in_SLA_14days {
+    view_label: "Fulfillment"
+    label: "Pilot Fulfillment SLA"
+    hidden: yes
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+    filters: {
+      field: carrier
+      value: "Pilot,Manna" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      drill_fields: [fulfill_details*]
+      type: sum
+      sql:
+      case
+        when datediff(day,${created_date},current_date) > 14
+          AND ${fulfilled_date} <= to_Date(dateadd(d,14,${TABLE}.created))
+          then ${ordered_qty}
+        else 0
+      end ;; }
+
+  measure: manna_SLA_eligible_14days {
+    label: "Pilot SLA Eligible (14)"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+    view_label: "Fulfillment"
+    hidden: yes
+    filters: {
+      field: carrier
+      value: "Pilot,Manna" }
+    filters: {
+      field: sales_order.channel_source
+      value: "SHOPIFY%" }
+##    filters: {
+##      field: sales_order.channel_id
+##      value: "1" }
+      type:  sum
+      sql:
+        case
+          when datediff(day,${created_date},current_date) > 14
+            AND ${cancelled_order.cancelled_date} is null
+            or to_Date(${cancelled_order.cancelled_date}) >= to_Date(dateadd(d,14,${created_date}))
+            then ${ordered_qty}
+          else 0
+        end ;; }
+
   measure: manna_sla_achieved{
     label: "Pilot SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
@@ -472,7 +531,7 @@ dimension: SLA_fulfilled {
     type: number
     drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
     value_format_name: percent_1
-    sql: case when datediff(day,${created_date},current_date) > 14 then ${manna_fulfilled_in_SLA}/nullif(${manna_SLA_eligible},0) else null end ;; }
+    sql:${manna_fulfilled_in_SLA_14days}/nullif(${manna_SLA_eligible_14days},0) ;; }
 
   measure: XPO_fulfilled_in_SLA {
     view_label: "Fulfillment"
@@ -1013,8 +1072,7 @@ dimension: days_to_cancel {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    #sql: ${TABLE}.FULFILLED ;;
-    sql: ${fulfillment.created_raw} ;;
+    sql: ${fulfillment.fulfilled_F_raw} ;;
     }
 
   dimension_group: fulfilled_old {
@@ -1027,7 +1085,6 @@ dimension: days_to_cancel {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.FULFILLED ;;
-    #sql: ${fulfillment.created_raw} ;;
     }
 
   dimension: is_fulfilled {
