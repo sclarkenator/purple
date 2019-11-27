@@ -254,6 +254,7 @@ view: mainchain_transaction_outwards_detail {
   measure: distinct_tran {
     type: count_distinct
     sql: ${tranid} ;;
+    drill_fields: [tranid,order_status,carrier,ordered_date,sku_id,units_despatched,units_ordered,con_note_number]
   }
 
   measure: count {
