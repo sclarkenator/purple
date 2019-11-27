@@ -854,7 +854,7 @@ dimension: days_to_cancel {
     view_label: "Fulfillment"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${fulfilled_date} <= current_date and month(${fulfilled_raw}) = month(dateadd(day,-1,current_date)) and year(${fulfilled_raw}) = year(current_date) ;; }
+    sql: ${fulfilled_raw}::date <= current_date and month(${fulfilled_raw}::date) = month(dateadd(day,-1,current_date)) and year(${fulfilled_raw}::date) = year(current_date) ;; }
 
   dimension: ff_Before_today{
     group_label: "    Fulfilled Date"
@@ -862,7 +862,7 @@ dimension: days_to_cancel {
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${fulfilled_date} < current_date;; }
+    sql: ${fulfilled_raw}::date < current_date;; }
 
   dimension: ff_current_week_num{
     group_label: "    Fulfilled Date"
@@ -870,7 +870,7 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_date}) < date_part('week',current_date);; }
+    sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -878,7 +878,7 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_date}) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
