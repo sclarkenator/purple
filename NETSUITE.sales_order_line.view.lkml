@@ -257,7 +257,7 @@ dimension: SLA_Buckets {
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: Case
             when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
-            When ${cancelled_order.cancelled_date} > ${SLA_Target_date} or ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             Else 0
             END ;;
   }
@@ -1019,8 +1019,8 @@ dimension: days_to_cancel {
 
   dimension_group: fulfilled_old {
     view_label: "Fulfillment"
-    label: "    Fulfilled"
-    hidden:  yes
+    label: "    Fulfilled1"
+    hidden:  no
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
