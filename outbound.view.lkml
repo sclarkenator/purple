@@ -16,22 +16,16 @@ view: outbound {
     sql: ${TABLE}."HJ_CREATED" ;;
   }
 
-  #dimension: hj_units_ordered {
-  #  type: number
-  #  sql: ${TABLE}."HJ_UNITS_ORDERED" ;;
-  #}
-
-  #dimension: hj_units_shipped {
-  #  type: number
-  #  sql: ${TABLE}."HJ_UNITS_SHIPPED" ;;
-  #}
-
   dimension: link {
-    type: string
-    sql: case when ${TABLE}.transaction_type = 'Sales Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        when  ${TABLE}.transaction_type = 'Transfer Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        when  ${TABLE}.transaction_type = 'Work Order' then "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id=" || ${TABLE}."INTERNAL_ID" || "&whence= "
-        end;;
+    label: "Netsuite Link"
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{ value }}&whence= "
+    }
+    sql: case when ${transaction_type} = 'Work Order' then 'workord.nl?id=' || ${internal_id}
+      when ${transaction_type} = 'Sales Order' then 'salesord.nl?id=' || ${internal_id}
+      when ${transaction_type} = 'Transfer Order' then 'trnford.nl?id=' || ${internal_id}
+      end;;
   }
 
   dimension: internal_id {
@@ -54,25 +48,10 @@ view: outbound {
     sql: ${TABLE}."NS_CREATED" ;;
   }
 
-  #dimension: ns_ordered_units {
-  #  type: number
-  #  sql: ${TABLE}."NS_ORDERED_UNITS" ;;
-  #}
-
-  #dimension: ns_shipped_units {
-  #  type: number
-  #  sql: ${TABLE}."NS_SHIPPED_UNITS" ;;
-  #}
-
   dimension: ns_sku {
     type: string
     sql: ${TABLE}."NS_SKU" ;;
   }
-
-  #dimension: ordered_units_diff {
-  #  type: number
-  #  sql: ${TABLE}."ORDERED_UNITS_DIFF" ;;
-  #}
 
   dimension: price {
     type: number
@@ -104,57 +83,37 @@ view: outbound {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
-  #dimension: units_shipped_diff {
-  #  type: number
-  #  sql: ${TABLE}."UNITS_SHIPPED_DIFF" ;;
-  #}
-
-  measure: total_hj_units_ordered {
+  measure: hj_units_ordered {
     type: sum
     sql: ${TABLE}."HJ_UNITS_ORDERED" ;;
   }
 
-  measure: total_hj_units_shipped {
+  measure: hj_built_or_shipped {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."HJ_BUILT_OR_SHIPPED" else 0 end ;;
+    label: "HJ Built/Shipped"
+    sql: ${TABLE}."HJ_BUILT_OR_SHIPPED" ;;
   }
 
-  measure: total_hj_units_built {
-    type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."HJ_BUILT_OR_SHIPPED" else 0 end ;;
-  }
-
-  measure: total_ns_ordered_units {
+  measure: ns_units_ordered {
     type: sum
     sql: ${TABLE}."NS_UNITS_ORDERED" ;;
   }
 
-  measure: total_ns_shipped_units {
+  measure: ns_built_or_shipped {
     type: sum
-    sql: case when ${TABLE}."TRANSACTION_TYPE" = 'Work Order' then ${TABLE}."NS_BUILT_OR_SHIPPED" else 0 end ;;
+    label: "NS Built/Shipped"
+    sql: ${TABLE}."NS_BUILT_OR_SHIPPED" ;;
   }
 
-  measure: total_ns_built_units {
+  measure: ordered_diff {
     type: sum
-    sql:  case when ${TABLE}."TRANSACTION_TYPE" != 'Work Order' then ${TABLE}."NS_BUILT_OR_SHIPPED" else 0 end ;;
+    sql: ${TABLE}."ORDERED_DIFF" ;;
   }
 
-  measure: total_units_shipped_diff {
-    type: number
-    sql: ${total_hj_units_shipped}-${total_ns_shipped_units} ;;
+  measure: built_or_shipped_diff {
+    type: sum
+    sql: ${TABLE}."BUILT_OR_SHIPPED_DIFF" ;;
   }
-
-  measure: total_ordered_units_diff {
-    type: number
-    sql: ${total_hj_units_ordered}-${total_ns_ordered_units} ;;
-    #sql: sum(${TABLE}."HJ_UNITS_ORDERED") - sum(${TABLE}."NS_UNITS_ORDERED");;
-  }
-
-  measure: total_built_units_diff {
-    type: number
-    sql:  ${total_hj_units_built}-${total_ns_built_units} ;;
-  }
-
 
   measure: count {
     type: count

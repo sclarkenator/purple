@@ -252,7 +252,20 @@ explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
 explore: change_mgmt {hidden:yes}
 explore: outbound {hidden:yes}
-
+#explore: mainchain_transaction_outwards_detail {hidden:yes
+#  join: sales_order{
+#    type: left_outer
+#    sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
+#    relationship: many_to_one}
+#  join: item {
+#    type: left_outer
+#    sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
+#    relationship: one_to_many}
+#  join: sales_order_line {
+#    type: left_outer
+#    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
+#    relationship:many_to_one}
+#  }
 
 
 #-------------------------------------------------------------------
@@ -982,6 +995,18 @@ explore: sales_order_line{
   join: zipcode_radius {
     type: left_outer
     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
+    relationship: one_to_many
+  }
+  join: shopify_discount_titles {
+    type: left_outer
+    sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
+    relationship: one_to_many
+  }
+  join: mainchain_transaction_outwards_detail {
+    view_label: "MainChain"
+    type: left_outer
+    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+      and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
     relationship: one_to_many
   }
 }

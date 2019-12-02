@@ -34,7 +34,7 @@ view: fulfillment {
   dimension_group: fulfilled_F {
     hidden: yes
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql:to_timestamp_ntz(${TABLE}.fulfilled) ;;  }

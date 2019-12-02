@@ -46,6 +46,7 @@ measure: upt {
 
   dimension: order_system {
     primary_key:  yes
+    type: string
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
