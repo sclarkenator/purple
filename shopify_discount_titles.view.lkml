@@ -16,11 +16,11 @@ view: shopify_discount_titles {
           , max(case when title ilike ('$50 Off The Purple Mattress%') then 1 else 0 end) as purple_mattress_50_off
           , max(case when title in ('$50 off Twin & Twin XL Purple Mattress','$50 Off The Purple Mattress Twin/TwinXL') then 1 else 0 end) as purple_twin_mattress_50_off
           , max(case when title ilike ('Free Purple Pillow w/ mattress%') then 1 else 0 end) as pillow_w_mattress
-          , max(case when title ilike ('$50 off Two Plush Pillows w/ Mattress%') then 1 else 0 end) as plush_pillow_50_off_2
-          , max(case when title ilike ('$50 off a Harmony Pillow w/ Mattress%') then 1 else 0 end) as harmony_pillow_50_off
-          , max(case when title ilike ('$100 off Two Harmony Pillows w/ Mattress%') then 1 else 0 end) as harmony_pillow_100_off_2
-          , max(case when title ilike ('$50 off Sheets w/ Mattress%') then 1 else 0 end) as sheets_50_off
-          , max(case when title ilike ('$50 off Mattress Protector w/ Mattress%') then 1 else 0 end) as protector_50_off
+          , max(case when title ilike ('%$50 off Two Plush Pillows w/ Mattress%') then 1 else 0 end) as plush_pillow_50_off_2
+          , max(case when title ilike ('%$50 off a Harmony Pillow w/ Mattress%') then 1 else 0 end) as harmony_pillow_50_off
+          , max(case when title ilike ('%$100 off Two Harmony Pillows w/ Mattress%') then 1 else 0 end) as harmony_pillow_100_off_2
+          , max(case when title ilike ('%$50 off Sheets w/ Mattress%') then 1 else 0 end) as sheets_50_off
+          , max(case when title ilike ('%$50 off Mattress Protector w/ Mattress%') then 1 else 0 end) as protector_50_off
           , max(case when title ilike ('20% Off Powerbase with Mattress%') then 1 else 0 end) as powerbase_20per_off
           , max(case when title ilike ('%DSC%') and title ilike ('%black%') and title ilike ('%friday%') then 1 else 0 end) as dsc_blackfriday
           , max(case when title ilike ('%DSC%') and title ilike ('%labor%') then 1 else 0 end) as dsc_labor
