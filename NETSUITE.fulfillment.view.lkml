@@ -10,7 +10,8 @@ view: fulfillment {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}."FULFILLMENT_ID"||'-'|| ${item_id} ||${TABLE}.parent_item_id ;;  }
+    sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') ||'-'|| NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
+    }
 
   dimension: status {
     hidden: yes
@@ -125,5 +126,16 @@ view: fulfillment {
     description: "Direct shipping costs incurred, not including last-mile or other transfer costs"
     type: sum
     sql: ${TABLE}.shipping ;; }
+
+#   measure: unfulfilled_orders {
+#     group_label: "Gross Sales Unfulfilled"
+#     label: "Unfulfilled Units ($) - TEST"
+#     view_label: "Fulfillment"
+#     description: "Orders placed that have not been fulfilled"
+#     value_format: "$#,##0"
+#     type: number
+#     #sql_distinct_key: ${pk_concat_ful_sales_order};;
+#   #  drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
+#     sql: (${sales_order_line.total_gross_Amt}/nullif(${sales_order_line.total_units},0))*(${sales_order_line.total_units}-${count}) ;; }
 
 }
