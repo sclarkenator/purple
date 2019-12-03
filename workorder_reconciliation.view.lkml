@@ -137,6 +137,11 @@ view: workorder_reconciliation {
     hidden: yes
   }
 
+  dimension: order_expected_match {
+    type: yesno
+    sql: ${expected} = ${ordered} ;;
+  }
+
   measure: count {
     hidden: yes
     type: count
