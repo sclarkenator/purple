@@ -101,8 +101,17 @@ view: sessions {
           when ${TABLE}.referrer ilike ('%facebook%') then 'https://facebook.com/*'
           when ${TABLE}.referrer ilike ('%youtube%') then 'https://youtube.com/*'
           when ${TABLE}.referrer ilike ('%msn.%') then 'https://msn.com/*'
+          when ${TABLE}.referrer ilike ('%bing.%') then 'https://bing.com/*'
           when ${TABLE}.referrer ilike ('%yahoo.%') then 'https://yahoo.com/*'
-          else ${TABLE}.referrer end ;; }
+          when ${TABLE}.referrer ilike ('%myslumberyard%') then 'https://myslumberyard.com/*'
+          when ${TABLE}.referrer ilike ('%tuck%') then 'https://tuck.com/*'
+          when ${TABLE}.referrer ilike ('%pinterest.%') then 'https://pinterest.com/*'
+          when ${TABLE}.referrer ilike ('%affirm%') then 'https://affirm.com/*'
+          when ${TABLE}.referrer ilike ('%sleepopolis%') then 'https://sleepopolis.com/*'
+          when ${TABLE}.referrer ilike ('%mattressclarity%') then 'https://mattressclarity.com/*'
+          when ${TABLE}.referrer ilike ('%narvar.%') then 'https://narvar.com/*'
+          when ${TABLE}.referrer ilike ('%instagram%') then 'https://instagram.com/*'
+          else left(${TABLE}.referrer,16)||'*' end ;; }
   #https://purple.com
 
   dimension: region {
@@ -117,7 +126,7 @@ view: sessions {
 
   dimension_group: time {
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
     sql: ${TABLE}.time ;; }
 
   dimension: last_30{
@@ -178,30 +187,48 @@ view: sessions {
     hidden: yes
     sql: ${TABLE}.user_id ;; }
 
+  dimension: channel {
+    type: string
+    hidden:  no
+    label: "Channel"
+    description: "Channel that current session came from"
+    sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
+          when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${referrer} ilike '%fb%' or ${referrer} ilike '%facebo%' or ${referrer} ilike '%insta%' or ${referrer} ilike '%l%nk%din%' or ${referrer} ilike '%pinteres%' or ${referrer} ilike '%snapch%' then 'social'
+          when ${utm_medium} ilike 'vi' or ${utm_medium} ilike 'video' or ${referrer} ilike '%y%tube%' then 'video'
+          when ${utm_medium} ilike 'nt' or ${utm_medium} ilike 'native' then 'native'
+          when ${utm_medium} ilike 'ds' or ${utm_medium} ilike 'display' or ${referrer} ilike '%outbrain%' or ${referrer} ilike '%doubleclick%' or ${referrer} ilike '%googlesyndica%' then 'display'
+          when ${utm_medium} ilike 'sh' or ${utm_medium} ilike 'shopping' then 'shopping'
+          when ${utm_medium} ilike 'af' or ${utm_medium} ilike 'ir' or ${utm_medium} ilike '%affiliate%' then 'affiliate'
+          when ${utm_medium} ilike 'em' or ${utm_medium} ilike 'email' or ${referrer} ilike '%mail.%' or ${referrer} ilike '%outlook.live%' then 'email'
+          when ${utm_medium} is null and (referrer ilike '%google%' or ${referrer} ilike '%bing%' or ${referrer} ilike '%yahoo%' or ${referrer} ilike '%ask%' or ${referrer} ilike '%aol%' or ${referrer} ilike '%msn%' or ${referrer} ilike '%yendex%' or ${referrer} ilike '%duckduck%') then 'organic'
+          when ${utm_medium} ilike 'rf' or ${utm_medium} ilike 'referral' or ${utm_medium} ilike '%partner platfo%' or lower(referrer) not like '%purple%' then 'referral'
+          when (${referrer} ilike '%purple%' and ${utm_medium} is null) or ${referrer} is null then 'direct' else 'undefined' end ;;
+  }
+
   dimension: utm_campaign {
     label: "UTM Campaign"
     type: string
-    sql: ${TABLE}.utm_campaign ;; }
+    sql: lower(${TABLE}.utm_campaign) ;; }
 
   dimension: utm_content {
     label: "UTM Content"
     type: string
-    sql: ${TABLE}.utm_content ;; }
+    sql: lower(${TABLE}.utm_content) ;; }
 
   dimension: utm_medium {
     label: "UTM Medium"
     type: string
-    sql: ${TABLE}.utm_medium ;; }
+    sql: lower(${TABLE}.utm_medium) ;; }
 
   dimension: utm_source {
     label: "UTM Source"
     type: string
-    sql: ${TABLE}.utm_source ;; }
+    sql: lower(${TABLE}.utm_source) ;; }
 
   dimension: utm_term {
     label: "UTM Term"
     type: string
-    sql: ${TABLE}.utm_term ;; }
+    sql: lower(${TABLE}.utm_term) ;; }
 
   measure: count {
     type: count_distinct

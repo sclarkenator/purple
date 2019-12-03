@@ -49,6 +49,12 @@ view: workorder_reconciliation {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: expected {
+    label: "QTY Consumed (Expected)"
+    type: number
+    sql: ${TABLE}."EXPECTED_AMT" ;;
+  }
+
   measure: expected_amt {
     label: "QTY Consumed (Expected)"
     type: sum
@@ -68,6 +74,12 @@ view: workorder_reconciliation {
       year
     ]
     sql: ${TABLE}."INSERT_TS" ;;
+  }
+
+  dimension: ordered {
+    label: "QTY Consumed (Actual)"
+    type: number
+    sql: ${TABLE}."ORDERED_AMT" ;;
   }
 
   measure: ordered_amt {
@@ -123,6 +135,13 @@ view: workorder_reconciliation {
     primary_key: yes
     sql: CONCAT(${component_item_id}, ${tranid},${component_item_id}) ;;
     hidden: yes
+  }
+
+  measure: order_expected_match {
+    label: "Ordered and Expected Amounts Match"
+    description: "If they match = 1 if not = 0"
+    type: number
+    sql: case when round(${expected_amt},1) = round(${ordered_amt},1) then 1 else 0 end ;;
   }
 
   measure: count {

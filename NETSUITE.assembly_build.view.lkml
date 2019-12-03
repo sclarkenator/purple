@@ -2,11 +2,13 @@ view: assembly_build {
   sql_table_name: PRODUCTION.BUILD ;;
 
   dimension: assembly_build_id {
+    label: "  Assembly Build Id"
     primary_key: yes
     description: "Netsuites transaction ID, used to hyperlink directly to record"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     hidden:  no
     type: number
+
     sql: ${TABLE}.build_id ;;}
 
   dimension: accounting_period_id {
@@ -20,6 +22,7 @@ view: assembly_build {
     sql: ${TABLE}.amount ;; }
 
   dimension_group: created {
+    label: "   Created"
     hidden: no
     description: "When in NetSuite the Transaction was created"
     type: time
@@ -39,7 +42,7 @@ view: assembly_build {
     sql: ${TABLE}.description ;; }
 
   dimension: type {
-    label: "Transaction Type"
+    label: "  Transaction Type"
     description: "The build type. Assembly builds are positive and unbuilds are negative"
     hidden: no
     type: string
@@ -47,6 +50,7 @@ view: assembly_build {
 
   dimension: created_by {
     label: "Created By"
+    group_label: "Advanced"
     description: "What NetSuite account created the Transaction"
     type: string
     sql: ${TABLE}.CREATED_BY ;; }
@@ -70,6 +74,7 @@ view: assembly_build {
 
   dimension: memo {
     label: "Memo"
+    group_label: "Advanced"
     description: "Notes on the Assembly Transaction"
     type: string
     sql: ${TABLE}.memo ;; }
@@ -92,6 +97,7 @@ view: assembly_build {
 
   dimension: Before_today{
     group_label: "Produced Date"
+
     label: "z - Is Before Today (mtd)"
     type: yesno
     sql: ${TABLE}.PRODUCED < current_date;; }
@@ -147,6 +153,7 @@ view: assembly_build {
 
   dimension: shifts {
     label: "Shifts"
+    group_label: "Advanced"
     description: "Buckets the Shift time into shift buckets"
     type: string
     sql: case
@@ -218,7 +225,7 @@ view: assembly_build {
     sql: ${TABLE}.tranid ;; }
 
   dimension: transaction_number {
-    label: "Transaction Number"
+    label: "  Transaction Number"
     link: {
       label: "NetSuite"
       url: "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{assembly_build_id._value}}&whence="}
@@ -233,6 +240,7 @@ view: assembly_build {
 
   measure: count {
     type: count
+    hidden:  yes
     drill_fields: [assembly_build_id] }
 
   measure: Total_Quantity {

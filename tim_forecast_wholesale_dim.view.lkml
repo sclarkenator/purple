@@ -199,7 +199,7 @@ view: tim_forecast_wholesale_dim {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${sku_id}, ${date_date}) ;;
+    sql: CONCAT(${sku_id}, ${date_date}, ${account}) ;;
     hidden: yes
   }
 

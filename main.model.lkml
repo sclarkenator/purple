@@ -163,6 +163,38 @@ explore: warehouse_transfer {
   }
 }
 
+explore: v_fit {
+  hidden: yes
+  group_label: "Accounting"}
+explore: fit_problem {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_affirm {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_amazon {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_axomo {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_braintree {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_first_data {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_paypal {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_shopify_payment {
+  hidden: yes
+  group_label: "Accounting"}
+explore: v_fit_stripe {
+  hidden: yes
+  group_label: "Accounting"}
+
+
 explore: finance_bill{
   hidden: yes
   group_label: "Accounting"
@@ -215,6 +247,26 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: inventory_reconciliation { hidden: yes}
+explore: po_and_to_inbound {hidden: yes}
+explore: inventory_recon_sub_locations {hidden:yes}
+explore: change_mgmt {hidden:yes}
+explore: outbound {hidden:yes}
+explore: mainchain_transaction_outwards_detail {hidden:yes
+  join: sales_order{
+    type: left_outer
+    sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
+    relationship: many_to_one}
+  join: item {
+    type: left_outer
+    sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
+    relationship: one_to_many}
+  join: sales_order_line {
+    type: left_outer
+    fields: []
+    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
+    relationship:many_to_one}
+  }
 
 #-------------------------------------------------------------------
 #
@@ -330,7 +382,16 @@ explore: starship_fulfillment {
       view_label: "Product"
       type: left_outer
       sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one}}
+      relationship: many_to_one}
+    join:fg_to_sfg{
+      view_label: "FG to SFG"
+      sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+      type: left_outer
+      relationship: one_to_one
+    }
+    }
+
+
 
 #-------------------------------------------------------------------
 #
@@ -724,6 +785,7 @@ explore: sales_order_line{
   group_label: " Sales"
   view_label: "Sales Order Line"
   description:  "All sales orders for DTC channel"
+  always_join: [fulfillment]
   always_filter: {
     filters: {field: sales_order.channel      value: "DTC"}
     filters: {field: item.merchandise         value: "No"}
@@ -743,7 +805,7 @@ explore: sales_order_line{
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
-    relationship: many_to_one}
+    relationship: many_to_many}
   join: item {
     view_label: "Product"
     type: left_outer
@@ -752,8 +814,8 @@ explore: sales_order_line{
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
-    relationship: many_to_many}
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} and ${fulfillment.status} = 'Shipped' ;;
+    relationship: one_to_many}
   join: visible {
     view_label: "Fulfillment"
     type: left_outer
@@ -937,6 +999,18 @@ explore: sales_order_line{
     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
     relationship: one_to_many
   }
+  join: shopify_discount_titles {
+    type: left_outer
+    sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
+    relationship: one_to_many
+  }
+  join: mainchain_transaction_outwards_detail {
+    view_label: "MainChain"
+    type: left_outer
+    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+      and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
+    relationship: one_to_many
+  }
 }
 
 
@@ -947,6 +1021,7 @@ explore: wholesale {
   group_label: " Sales"
   view_label: "Sales Order Line"
   description:  "All sales orders for wholesale channel"
+  always_join: [fulfillment]
   always_filter: {
     filters: {field: sales_order.channel      value: "Wholesale"}
     filters: {field: item.merchandise         value: "No"}
@@ -976,7 +1051,7 @@ explore: wholesale {
     view_label: "Fulfillment"
     type: left_outer
     sql_on: ${wholesale.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
-    relationship: many_to_many}
+    relationship: one_to_many}
   join: sales_order {
     view_label: "Sales Header"
     type: left_outer
@@ -1220,14 +1295,22 @@ explore: procom_security_daily_customer {
     always_filter: {filters: {field: warranty_created_date value: "last month"}}}
   explore: netsuite_warranty_exceptions { hidden: yes group_label: "x - Accounting" label: "Warranty ModCode Cleanup"
     description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"}
-  explore: Mattress_Firm {hidden: yes from: mattress_firm_store_details  group_label: "Wholesale"
+  explore: Mattress_Firm {hidden: yes from: mattress_firm_master_store_list  group_label: "Wholesale"
     join: mattress_firm_sales {type: left_outer
-      sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store_id} and ${mattress_firm_sales.finalized_date_date} is not null ;;
+      sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store} and ${mattress_firm_sales.finalized_date_date} is not null ;;
       relationship: one_to_many }
     join: mattress_firm_item {type:  left_outer sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.mf_sku} ;; relationship:  many_to_one}
-    join: mattress_firm_master_store_list {type:  full_outer  sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
-      relationship:  one_to_one}
+    #join: mattress_firm_master_store_list {type:  full_outer  sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
+    #  relationship:  one_to_one}
     join: item {type:  left_outer sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;; relationship:  many_to_one}}
+  explore: mattress_firm_sales {hidden:yes
+    join:mattress_firm_master_store_list {sql_on: ${mattress_firm_master_store_list.store_id} = ${mattress_firm_sales.store} ;;
+        type: left_outer relationship: many_to_one}
+    join: mattress_firm_item { sql_on: ${mattress_firm_item.item_id} = ${mattress_firm_sales.product_id} ;;
+        type:  left_outer relationship: many_to_one}
+    join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+        type: left_outer relationship: many_to_one}
+      }
   explore: item {hidden:  yes label: "Transfer and Purchase Orders --old" group_label: "Operations"
     description: "Netsuite data on Transfer and purchase orders"
     join: purchase_order_line {view_label: "Purchase Order"  type: full_outer

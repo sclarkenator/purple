@@ -12,7 +12,7 @@ view: warehouse_location {
       sql: ${TABLE}.name ;; }
 
   dimension: location_Active {
-    label: "Inactive Locations Included"
+    label: "* Inactive Locations Included (Yes/ No)"
     type: string
     sql: ${TABLE}.ISINACTIVE;; }
 
@@ -25,6 +25,7 @@ view: warehouse_location {
 
   dimension: primary_key {
     primary_key: yes
+    hidden:  yes
     sql: CONCAT(${TABLE}.location_id,${TABLE}.ISINACTIVE) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }

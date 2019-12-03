@@ -9,11 +9,18 @@ view: fulfillment {
   dimension: PK {
     primary_key: yes
     hidden: yes
-    type: number
-    sql: ${TABLE}."FULFILLMENT_ID"||'-'||${TABLE}.item_id||${TABLE}.parent_item_id ;;  }
+    type: string
+    sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') ||'-'|| NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
+    }
+
+  dimension: status {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.status ;; }
 
   dimension: carrier {
     label: "   Carrier (actual)"
+    #hidden: yes
     description: "Shipping provider was used to fulfill this part of the order"
     type: string
     sql: ${TABLE}.carrier ;;  }
@@ -22,13 +29,13 @@ view: fulfillment {
     label: "Fulfilled Date (V2)"
     #hidden: yes
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
   dimension_group: fulfilled_F {
     hidden: yes
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql:to_timestamp_ntz(${TABLE}.fulfilled) ;;  }
@@ -61,7 +68,7 @@ view: fulfillment {
   dimension: item_id {
     hidden: yes
     type: number
-    sql: ${TABLE}.item_id ;; }
+    sql: case when ${TABLE}.parent_item_id = 0 or ${TABLE}.parent_item_id is null then ${TABLE}.item_id else ${TABLE}.parent_item_id end ;; }
 
   dimension: order_id {
     hidden: yes

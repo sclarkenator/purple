@@ -83,6 +83,7 @@ view: cancelled_order {
   dimension: item_order{
     primary_key:  yes
     hidden:  yes
+    type: string
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: 7_day_window {
@@ -159,7 +160,7 @@ view: cancelled_order {
 
   dimension: item_id {
     type: number
-    hidden: yes
+    #hidden: yes
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
@@ -179,7 +180,7 @@ view: cancelled_order {
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: order_id {
-    hidden:  yes
+    #hidden:  yes
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
 
@@ -209,7 +210,7 @@ view: cancelled_order {
     sql: ${TABLE}.SHOPIFY_DISCOUNT_CODE ;; }
 
   dimension: system {
-    hidden:  yes
+    #hidden:  yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 

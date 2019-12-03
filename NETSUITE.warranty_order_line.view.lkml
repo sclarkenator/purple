@@ -1,11 +1,16 @@
 view: warranty_order_line {
   sql_table_name: sales.warranty_order_line ;;
 
-  dimension: item_order{
+  dimension: primary_key {
     type: string
     primary_key:  yes
-    hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
+    hidden: yes
+    sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-')||NVL(${TABLE}.created_ts,'0') ;; }
+
+  dimension: item_order{
+    type: string
+    hidden: yes
+    sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-');; }
 
   dimension_group: closed {
     hidden: yes
@@ -48,7 +53,7 @@ view: warranty_order_line {
     label: "Total Warranties Initiated (units)"
     description: "Units for which a warranty was created"
     type: sum
-    drill_fields: [sales_order_line.order_id,sales_order_line.created_date,warranty_order.created_date,item.model_name,item.size,item.product_name,warranty_reason.return_reason]
+    #drill_fields: [sales_order_line.order_id,sales_order_line.created_date,warranty_order.created_date,item.model_name,item.size,item.product_name,warranty_reason.return_reason]
     sql: ${TABLE}.QUANTITY ;; }
 
   measure: quantity_complete {
