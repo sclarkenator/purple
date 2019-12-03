@@ -49,6 +49,12 @@ view: workorder_reconciliation {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: expected {
+    label: "QTY Consumed (Expected)"
+    type: number
+    sql: ${TABLE}."EXPECTED_AMT" ;;
+  }
+
   measure: expected_amt {
     label: "QTY Consumed (Expected)"
     type: sum
@@ -68,6 +74,12 @@ view: workorder_reconciliation {
       year
     ]
     sql: ${TABLE}."INSERT_TS" ;;
+  }
+
+  dimension: ordered {
+    label: "QTY Consumed (Actual)"
+    type: number
+    sql: ${TABLE}."ORDERED_AMT" ;;
   }
 
   measure: ordered_amt {
