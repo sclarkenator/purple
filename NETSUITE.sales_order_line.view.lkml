@@ -251,11 +251,13 @@ dimension: SLA_Buckets {
   }
 
   dimension: pk_concat_ful_sales_order {
+    hidden: yes
     type: string
     sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${item_order},'_');;
   }
 
   dimension: pk_concat {
+    hidden: yes
     type: string
     sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||'_'||NVL(${item_order},'_');;
   }
