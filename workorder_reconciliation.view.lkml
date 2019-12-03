@@ -139,7 +139,7 @@ view: workorder_reconciliation {
 
   dimension: order_expected_match {
     type: yesno
-    sql: ${expected} = ${ordered} ;;
+    sql: ${expected_amt} = ${ordered_amt} ;;
   }
 
   measure: count {
