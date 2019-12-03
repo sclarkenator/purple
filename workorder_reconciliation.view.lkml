@@ -137,9 +137,11 @@ view: workorder_reconciliation {
     hidden: yes
   }
 
-  dimension: order_expected_match {
-    type: yesno
-    sql: ${expected_amt} = ${ordered_amt} ;;
+  measure: order_expected_match {
+    label: "Ordered and Expected Amounts Match"
+    description: "If they match = 1 if not = 0"
+    type: number
+    sql: case when round(${expected_amt},1) = round(${ordered_amt},1) then 1 else 0 end ;;
   }
 
   measure: count {
