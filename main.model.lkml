@@ -508,7 +508,9 @@ explore: customer_satisfaction_survey {
   }
   join: team_lead_name {
     type:  left_outer
-    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id};;
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+      AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
     relationship: many_to_one
     }
 }
