@@ -116,7 +116,7 @@ measure: upt {
     group_label: " Advanced"
     view_label: "Fulfillment"
     label: "Shipping Hold?"
-    type: yesno
+    type: string
     sql: ${TABLE}.SHIPPING_HOLD ;; }
 
   dimension: created_by_id {
@@ -449,6 +449,18 @@ measure: upt {
     hidden: yes
     type: string
     sql: ${TABLE}.SHIPPING_ADDRESS_VALIDATED ;;
+  }
+
+  dimension: WAREHOUSE_EDGE_STATUS {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.WAREHOUSE_EDGE_STATUS ;;
+  }
+
+  dimension: DOWNLOAD_TO_WAREHOUSE_EDGE {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.DOWNLOAD_TO_WAREHOUSE_EDGE ;;
   }
 
   dimension: store_id {
