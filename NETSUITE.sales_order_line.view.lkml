@@ -1299,6 +1299,16 @@ dimension: days_to_cancel {
     type: string
     sql: ${TABLE}.line_shipping_method;; }
 
+  dimension: IS_3PL_TRANSMIT_SUCCESS {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.IS_3PL_TRANSMIT_SUCCESS;; }
+
+  dimension: TRANSMITTED_TO_ID {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.TRANSMITTED_TO_ID;; }
+
 
   measure: days_to_cancel_measure {
     view_label: "Cancellations"

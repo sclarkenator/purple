@@ -445,6 +445,12 @@ measure: upt {
     sql: ${TABLE}.bill_of_lading_number ;;
   }
 
+  dimension: SHIPPING_ADDRESS_VALIDATED {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.SHIPPING_ADDRESS_VALIDATED ;;
+  }
+
   dimension: store_id {
     label: "Retail store ID"
     description: "Netsuite retail store ID"
