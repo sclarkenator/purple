@@ -1085,7 +1085,7 @@ dimension: days_to_cancel {
   dimension_group: fulfilled_old {
     view_label: "Fulfillment"
     label: "    Fulfilled1"
-    hidden:  no
+    hidden:  yes
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
