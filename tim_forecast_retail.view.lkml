@@ -54,7 +54,7 @@ view: tim_forecast_retail {
   measure: total_units {
     label: "Total Units"
     type:  sum
-    value_format: "$#,##0.00"
+    value_format: "#,##0"
     sql:${TABLE}.total_units ;; }
 
   measure: total_amount {
