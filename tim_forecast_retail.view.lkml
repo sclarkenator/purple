@@ -10,7 +10,7 @@ view: tim_forecast_retail {
       left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
       left join (
         select z.start_date
-          , count (y.date) as days_in_dates
+          , count (distinct (y.date)) as days_in_dates
         from  analytics.csv_uploads.FORECAST_or z
         left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
         group by z.start_date
@@ -54,12 +54,14 @@ view: tim_forecast_retail {
   measure: total_units {
     label: "Total Units"
     type:  sum
-    sql:round(${TABLE}.total_units,2) ;; }
+    value_format: "$#,##0.00"
+    sql:${TABLE}.total_units ;; }
 
   measure: total_amount {
     label: "Total Amount"
     type:  sum
-    sql:round(${TABLE}.total_amount,2) ;; }
+    value_format: "$#,##0.00"
+    sql:${TABLE}.total_amount ;; }
 
   measure: to_date {
     label: "Total Goal to Date"
