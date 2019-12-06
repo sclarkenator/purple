@@ -11,7 +11,7 @@ view: restocked_returns {
     type: string
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}."RECEIPT_ID" ||'-'|| ${TABLE}."ITEM_ID" ;;
+    sql: ${TABLE}.return_order_id ||'-'|| ${TABLE}."ITEM_ID" ;;
   }
 
   dimension: return_order_id {
