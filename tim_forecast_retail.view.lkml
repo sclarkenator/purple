@@ -4,23 +4,17 @@ view: tim_forecast_retail {
     sql:
       select b.date
           , a.sku_id
-          , coalesce(a.total_units/c.days_in_week,0) as total_units
-          , coalesce(a.total_amount/c.days_in_week,0) as total_amount
-      from analytics.csv_uploads.FORECAST_RETAIL a
+          , coalesce(a.units/c.days_in_dates,0) as total_units
+          , coalesce(a.sales/c.days_in_dates,0) as total_amount
+      from analytics.csv_uploads.FORECAST_or a
+      left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
       left join (
-        select
-            year::text || '-' ||case when week_of_year < 10 then concat('0',week_of_year::text) else week_of_year::text end as year_week
-            , year
-            , week_of_year
-            , count (date) as days_in_week
-            , min(date) as start_date
-            , max(date) as end_date
-        from analytics.util.warehouse_date
-        where year > 2018
-        group by year, week_of_year
-        order by 1
-      ) c on c.year_week = a.week
-      left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
+        select z.start_date
+          , count (y.date) as days_in_dates
+        from  analytics.csv_uploads.FORECAST_or z
+        left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
+        group by z.start_date
+      ) c on c.start_date = a.start_date
       order by 2, 1
   ;; }
 
@@ -62,21 +56,10 @@ view: tim_forecast_retail {
             type:  sum
             sql:round(${TABLE}.total_units,2) ;; }
 
-          measure: total_units_2 {
-            label: "Total Units (not rounded)"
-            type:  sum
-            sql:${TABLE}.total_units ;; }
-
           measure: total_amount {
             label: "Total Amount"
             type:  sum
             sql:round(${TABLE}.total_amount,2) ;; }
-
-
-          measure: avg_units {
-            label: "Average Units"
-            type:  average
-            sql:round(${TABLE}.total_units,2) ;; }
 
           measure: to_date {
             label: "Total Goal to Date"
