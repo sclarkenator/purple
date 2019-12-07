@@ -18,16 +18,19 @@ view: mattress_firm_master_store_list {
 
   dimension: market {
     label: "Market"
+
     type: string
     sql: ${TABLE}.market ;; }
 
   dimension: store_name {
     label: "Store Name"
+    description: "Mattress Firm store name"
     type: string
     sql: ${TABLE}.store_name ;; }
 
   dimension: address {
     label: "Address"
+    description: "Store address"
     type: string
     sql: ${TABLE}.address ;; }
 
@@ -48,7 +51,7 @@ view: mattress_firm_master_store_list {
     sql: ${TABLE}.city ||', ' ||  ${TABLE}.state_name;; }
 
   dimension: zip {
-    label: "Zip"
+    label: "Zip (5)"
     map_layer_name: us_zipcode_tabulation_areas
     type: string
     sql: ${TABLE}.zip ;; }
@@ -61,12 +64,14 @@ view: mattress_firm_master_store_list {
 
   dimension: number_of_beds {
     label: "Number of Beds"
+    hidden:  yes
     type: string
     sql: ${TABLE}.number_of_beds ;; }
 
   dimension: bed_type {
     label: "Bed Type"
     type: string
+    hidden:  yes
     sql: ${TABLE}.bed_type ;; }
 
   dimension: store_notes {
@@ -101,6 +106,7 @@ view: mattress_firm_master_store_list {
 
   dimension: open_date {
     label: "Store Open"
+    hidden: yes
     type: date
     sql: ${TABLE}.open_date ;; }
 
@@ -136,6 +142,7 @@ view: mattress_firm_master_store_list {
 
   dimension: models {
     label: "Models"
+    hidden: yes
     type: number
     sql: ${TABLE}.models ;; }
 
