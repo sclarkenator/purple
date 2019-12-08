@@ -111,6 +111,22 @@ from analytics.csv_uploads.nps_survey_06dec2019
     }
   }
 
+  dimension: shopping_satisfaction_buckets {
+    type: string
+    description: "Those who answered either Extremely Satisfied or Somewhat Satisfied vs those less satisfied"
+    case: {
+      when: {
+        sql: ${shopping_experience} = 'Extremely satisfied' or ${shopping_experience} = 'Somewhat satisfied' ;;
+        label: "Satisfied"
+      }
+      when: {
+        sql: ${shopping_experience} = 'Neither satisfied nor dissatisfied' or ${shopping_experience} = 'Somewhat dissatisfied' or ${shopping_experience} = 'Extremely dissatisfied' ;;
+        label: "Unsatisfied"
+      }
+      else: "Other"
+    }
+  }
+
   dimension: delivery_experience {
     type: string
     hidden: yes
@@ -142,6 +158,22 @@ from analytics.csv_uploads.nps_survey_06dec2019
         label: "Extremely Dissatisfied"
       }
       else: "Unanswered"
+    }
+  }
+
+  dimension: delivery_satisfaction_buckets {
+    type: string
+    description: "Those who answered either Extremely Satisfied or Somewhat Satisfied vs those less satisfied"
+    case: {
+      when: {
+        sql: ${delivery_experience} = 'Extremely satisfied' or ${delivery_experience} = 'Somewhat satisfied' ;;
+        label: "Satisfied"
+      }
+      when: {
+        sql: ${delivery_experience} = 'Neither satisfied nor dissatisfied' or ${delivery_experience} = 'Somewhat dissatisfied' or ${delivery_experience} = 'Extremely dissatisfied' ;;
+        label: "Unsatisfied"
+      }
+      else: "Other"
     }
   }
 
@@ -182,7 +214,7 @@ from analytics.csv_uploads.nps_survey_06dec2019
 
   measure: nps_detractors {
     type: count_distinct
-    label: "NPS Detractors"
+    label: "Detractors"
     filters: {
       field: nps_group
       value: "Detractor"
@@ -192,7 +224,7 @@ from analytics.csv_uploads.nps_survey_06dec2019
 
   measure: nps_promoters {
     type: count_distinct
-    label: "NPS Promoters"
+    label: "Promoters"
     filters: {
       field: nps_group
       value: "Promoter"
@@ -202,7 +234,7 @@ from analytics.csv_uploads.nps_survey_06dec2019
 
   measure: nps_passives {
     type: count_distinct
-    label: "NPS Passives"
+    label: "Passives"
     filters: {
       field: nps_group
       value: "Passive"
