@@ -182,10 +182,58 @@ from (select *
     sql: ${TABLE}.product_cleaned ;;
   }
 
+#   dimension: csat {
+#     type: string
+#     label: "CSAT"
+#     sql: ${TABLE}.csat ;;
+#   }
+
   dimension: csat {
     type: string
     label: "CSAT"
-    sql: ${TABLE}.csat ;;
+    case: {
+      when: {
+        sql: ${TABLE}.csat = 'Extremely satisfied' ;;
+        label: "Extremely Satisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Somewhat satisfied' ;;
+        label: "Somewhat Satisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Neither satisfied nor dissatisfied' ;;
+        label: "Neither Satisfied nor Dissatisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Somewhat dissatisfied' ;;
+        label: "Somewhat Dissatisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Extremely dissatisfied' ;;
+        label: "Extremely Dissatisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'I did not order/receive that product' ;;
+        label: "Did not Order/Receive"
+      }
+      else: "Unanswered"
+    }
+  }
+
+  dimension: satisfaction_buckets {
+    type: string
+    description: "Those who answered either Extremely Satisfied or Somewhat Satisfied vs those less satisfied"
+    case: {
+      when: {
+        sql: ${TABLE}.csat = 'Extremely satisfied' or ${TABLE}.csat = 'Somewhat satisfied' ;;
+        label: "Satisfied"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Neither satisfied nor dissatisfied' or ${TABLE}.csat = 'Somewhat dissatisfied' or ${TABLE}.csat = 'Extremely dissatisfied' ;;
+        label: "Unsatisfied"
+      }
+      else: "Other"
+    }
   }
 
   measure: response_count {
@@ -224,7 +272,7 @@ from (select *
 
   dimension: mattress_size {
     type: string
-    sql: case lower(${TABLE}.product) like ('%cal king%') then 'CAL KING'
+    sql: case when lower(${TABLE}.product) like ('%cal king%') then 'CAL KING'
           when lower(${TABLE}.product) like ('%split king%') then 'SPLIT KING'
           when lower(${TABLE}.product) like ('%king%') then 'KING'
           when lower(${TABLE}.product) like ('%queen%') then 'QUEEN'
@@ -241,7 +289,7 @@ from (select *
 
   dimension: sheet_color {
     type: string
-    sql: case lower(${production_buckets}) = 'sheets' and lower(${TABLE}.product) like ('%sand%') then 'SAND'
+    sql: case when lower(${production_buckets}) = 'sheets' and lower(${TABLE}.product) like ('%sand%') then 'SAND'
           when lower(${production_buckets}) = 'sheets' and lower(${TABLE}.product) like ('%white%') then 'WHITE'
           when lower(${production_buckets}) = 'sheets' and lower(${TABLE}.product) like ('%purple%') then 'PURPLE'
           when lower(${production_buckets}) = 'sheets' and lower(${TABLE}.product) like ('sand') then 'SLATE'
