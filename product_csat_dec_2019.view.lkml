@@ -14,6 +14,7 @@ select "Start Date", "End Date", "Response Type", "IP Address", "PROGRESS", "FIN
      when product = 'Hybrid Premier 3 - Cal King 2' then 'Hybrid Premier 3 - Cal King'
      when product = 'Hybrid Mattress - Twin XL 2' then 'Hybrid Mattress - Twin XL'
      when product = 'Mattress Protector - Split King 2' then 'Mattress Protector - Split King'
+     when product = 'Mattress Protector - Split King ' then 'Mattress Protector - Split King'
      when product = 'Hybrid Mattress - Split King 2' then 'Hybrid Mattress - Split King'
      when product = 'Hybrid Premier 3 - Queen 2' then 'Hybrid Premier 3 - Queen'
      when product = 'Hybrid Premier 3 Mattress - King 2' then 'Hybrid Premier 3 - King'
