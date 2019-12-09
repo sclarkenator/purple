@@ -2,8 +2,6 @@
 # Owner - Scott Clark
 # Mattress firm store details
 #
-#    OLD AND DEPRICATED
-#
 #-------------------------------------------------------------------
 
 view: mattress_firm_store_details {
@@ -13,15 +11,17 @@ view: mattress_firm_store_details {
     primary_key: yes
     hidden: yes
     type:  string
-    sql:  ${TABLE}.store_id ;; }
+    sql:  ${TABLE}.store ;; }
 
   dimension: district {
     label: "District"
+    description: "Mattress Firm district designation"
     type:  string
     sql:  ${TABLE}.district ;; }
 
   dimension: market {
     label: "Market"
+    description: "Mattress Firm market designation"
     type:  string
     sql:  ${TABLE}.market ;; }
 
@@ -57,7 +57,7 @@ view: mattress_firm_store_details {
     sql:  ${TABLE}.state ;; }
 
   dimension: zipcode {
-    label: "Zip"
+    label: "Zip (5)"
     map_layer_name: us_zipcode_tabulation_areas
     type:  zipcode
     sql:  ${TABLE}.zip ;; }
@@ -72,7 +72,7 @@ view: mattress_firm_store_details {
     sql: ${TABLE}.start_date ;; }
 
   measure: store_count {
-    label: "Count of Store"
-    type:  count }
+    label: "Total stores"
+    type:  count}
 
 }
