@@ -5,6 +5,8 @@ derived_table: {
     select first_name || ' ' || last_name agent_name
         , contact_info_to
         , captured
+        , contact_id
+        , contact_info_from
         --, call_end
         --, unique_calls
         , case when unique_orders = 1 then id end as order_id
@@ -16,7 +18,7 @@ derived_table: {
         --calls with orders
         select contact_id
             , contact_info_to
-            --, contact_info_from
+            , contact_info_from
             , agent_id
             --, disposition
             , captured
@@ -59,5 +61,15 @@ dimension: order_id {
   primary_key: yes
   hidden: yes
   sql: ${TABLE}.order_id ;; }
+
+  dimension: contact_id {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.contact_id ;; }
+
+  dimension: contact_info_from {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.contact_info_from ;; }
 
 }
