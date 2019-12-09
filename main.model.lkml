@@ -1011,6 +1011,12 @@ explore: sales_order_line{
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
     relationship: one_to_many
   }
+  join: calls_to_orders {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${calls_to_orders.order_id}::string =  ${sales_order.etail_order_id}::string;;
+    relationship: one_to_one
+  }
 }
 
 
@@ -1188,7 +1194,6 @@ explore: return_form_entry {
     sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
     relationship: one_to_many}
 }
-
 
 explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
