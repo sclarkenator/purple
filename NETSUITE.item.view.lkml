@@ -114,6 +114,10 @@ view: item {
         when: { sql: ${TABLE}.model_name_lkr = 'POWERBASE' ;; label: "POWERBASE" }
         else: "Other" } }
 
+  dimension: product_line_name_raw {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.product_line_name ;; }
 
 
   dimension: product_line_name {
