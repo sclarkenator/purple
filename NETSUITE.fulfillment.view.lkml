@@ -13,6 +13,21 @@ view: fulfillment {
     sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') ||'-'|| NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
     }
 
+  dimension: fulfillment_id {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.FULFILLMENT_ID ;; }
+
+  dimension: COGS_DIRECT_MATERIAL_AMT {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.COGS_DIRECT_MATERIAL_AMT ;; }
+
+  measure: total_COGS_DIRECT_MATERIAL_AMT {
+    hidden: yes
+    type: sum
+    sql: ${TABLE}.COGS_DIRECT_MATERIAL_AMT ;; }
+
   dimension: status {
     hidden: yes
     type: string
