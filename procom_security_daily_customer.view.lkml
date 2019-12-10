@@ -13,15 +13,7 @@ view: procom_security_daily_customer {
 
   dimension_group: created {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,hour,time,date,day_of_month,week,month,quarter,quarter_of_year,year]
     sql: ${TABLE}."CREATED" ;;
   }
 
