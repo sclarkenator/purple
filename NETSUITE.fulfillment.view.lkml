@@ -143,10 +143,10 @@ view: fulfillment {
   measure: bundle_count {
     group_label: " Advanced"
     label: "Bundeled Units Fulfilled"
-    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is 0"
+    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units"
     #hidden: yes
     type: sum
-    sql: ${TABLE}.BUNDLE_QUANTITY ;;}
+    sql: case when ${TABLE}.BUNDLE_QUANTITY = 0 then ${TABLE}.quantity else ${TABLE}.BUNDLE_QUANTITY end  ;;}
 
 #BUNDLE_QUANTITY
 
