@@ -6,6 +6,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: primary_key {
     hidden: yes
+    primary_key: yes
     sql: ${tranid} || ${order_line_number} || ${sku_id}  ;;
   }
 
