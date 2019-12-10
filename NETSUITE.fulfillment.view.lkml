@@ -140,6 +140,15 @@ view: fulfillment {
     type: sum
     sql: ${TABLE}.quantity ;;}
 
+  measure: bundle_count {
+    group_label: " Advanced"
+    label: "Bundeled Units Fulfilled"
+    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is 0"
+    #hidden: yes
+    type: sum
+    sql: ${TABLE}.BUNDLE_QUANTITY ;;}
+
+#BUNDLE_QUANTITY
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
