@@ -25,15 +25,20 @@ view: procom_security_daily_customer {
     sql: ${TABLE}."CREATED" ;;
   }
 
-  dimension: enter {
-    type: number
+  measure: enter {
+    label: "Total entering"
+    description: "Total count of people entering store"
+    type: sum
     sql: ${TABLE}."ENTER" ;;
   }
 
-  dimension: exit {
-    type: number
+  measure: exit {
+    description: "Total count of people leaving store"
+    label: "Total leaving"
+    type: sum
     sql: ${TABLE}."EXIT" ;;
   }
+
 
   measure: count {
     type: count
