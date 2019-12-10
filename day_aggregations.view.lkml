@@ -27,6 +27,27 @@ view: day_aggregations_dtc_sales {
   }
 
 }
+
+######################################################
+#   DTC Count of Unique Orders and Mattress Orders
+######################################################
+view: day_aggregation_dtc_orders {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: total_orders { field: sales_order.total_orders }
+      column: created_date {}
+      column: mattress_orders { field: order_flag.mattress_orders }
+      filters: { field: sales_order.channel value: "DTC" }
+      filters: { field: item.merchandise value: "No" }
+      filters: { field: item.finished_good_flg value: "Yes" }
+      filters: { field: item.modified value: "Yes" }
+    }
+  }
+  dimension: total_orders { type: number }
+  dimension: created_date { type: date }
+  dimension: mattress_orders { type: number }
+}
+
 ######################################################
 #   Wholesale Sales and Units
 ######################################################
@@ -242,6 +263,8 @@ view: day_aggregations {
         , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
         , adspend_target.amount as adspend_target
+        , dtc_orders.total_orders as total_unique_orders
+        , dtc_orders.mattress_orders as unique_mattress_orders
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -262,6 +285,7 @@ view: day_aggregations {
       left join ${day_aggregations_dtc_returns.SQL_TABLE_NAME} dtc_returns on dtc_returns.return_completed_date::date = d.date
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
+      left join ${day_aggregation_dtc_orders.SQL_TABLE_NAME} dtc_orders on dtc_orders.created_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
@@ -466,4 +490,15 @@ view: day_aggregations {
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_target;; }
 
+  measure: total_unique_orders {
+    label: "Total Unique DTC Orders"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.total_unique_orders ;; }
+
+ measure: unique_mattress_orders {
+   label: "Total Unique DTC Mattress Orders"
+   type: sum
+   value_format: "#,##0"
+   sql: ${TABLE}.unique_mattress_orders ;; }
 }
