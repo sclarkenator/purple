@@ -239,6 +239,25 @@ view: day_aggregations_adspend_target {
 }
 
 ######################################################
+#   Site Sessions and Non-Bounced Sessions
+######################################################
+
+view: day_aggregations_sessions {
+  derived_table: {
+    explore_source: all_events {
+      column: time_date { field: sessions.time_date }
+      column: count { field: sessions.count }
+      column: Sum_non_bounced_session { field: heap_page_views.Sum_non_bounced_session }
+    }
+  }
+  dimension: time_date { type: date }
+  dimension: count { type: number }
+  dimension: Sum_non_bounced_session { type: number }
+}
+
+
+
+######################################################
 #   CREATING FINAL TABLE
 ######################################################
 view: day_aggregations {
@@ -265,6 +284,8 @@ view: day_aggregations {
         , adspend_target.amount as adspend_target
         , dtc_orders.total_orders as total_unique_orders
         , dtc_orders.mattress_orders as unique_mattress_orders
+        , sessions.count as sessions_count
+        , sessions.Sum_non_bounced_session as non_bounced_sessions
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -286,6 +307,7 @@ view: day_aggregations {
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
       left join ${day_aggregation_dtc_orders.SQL_TABLE_NAME} dtc_orders on dtc_orders.created_date::date = d.date
+      left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
   }
   dimension: date {type: date hidden:yes}
@@ -501,4 +523,17 @@ view: day_aggregations {
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.unique_mattress_orders ;; }
+
+ measure: sessions_count {
+   label: "Total Site Sessions"
+   type: sum
+   value_format: "#,##0"
+   sql: ${TABLE}.sessions_count ;; }
+
+ measure: non_bounced_sessions {
+   label: "Total Non-Bounced Site Sessions"
+   type: sum
+   value_format: "#,##0"
+   sql: ${TABLE}.non_bounced_sessions ;; }
+
 }
