@@ -24,6 +24,13 @@ view: heap_page_views {
     Case
       When ${TABLE}.pages_viewed < 2 THEN 1 Else 0 End;; }
 
+
+ measure: Sum_non_bounced_session {
+    type: sum_distinct
+    sql:
+    Case
+      When ${TABLE}.pages_viewed >= 2 THEN 1 Else 0 End;; }
+
   dimension: pages_viewed {
     label: "Pages Viewed"
     description: "Pages viewed per session"
