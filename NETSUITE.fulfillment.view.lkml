@@ -82,8 +82,13 @@ view: fulfillment {
 
   dimension: item_id {
     hidden: yes
-    type: number
+    type: string
     sql: case when ${TABLE}.parent_item_id = 0 or ${TABLE}.parent_item_id is null then ${TABLE}.item_id else ${TABLE}.parent_item_id end ;; }
+
+  dimension: item_id_raw {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.item_id ;; }
 
   dimension: order_id {
     hidden: yes
@@ -134,6 +139,7 @@ view: fulfillment {
     #hidden: yes
     type: sum
     sql: ${TABLE}.quantity ;;}
+
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
