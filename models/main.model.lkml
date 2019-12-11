@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------
 
   connection: "analytics_warehouse"
-    include: "*.view"
+    include: "/views/**/*.view"
 
 week_start_day: sunday
 

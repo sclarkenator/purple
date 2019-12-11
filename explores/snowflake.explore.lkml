@@ -1,4 +1,4 @@
-include: "snowflake.*.view.lkml"
+include: "/views/snowflake.*.view.lkml"
 
 explore: gsod {
   from: sf_gsod

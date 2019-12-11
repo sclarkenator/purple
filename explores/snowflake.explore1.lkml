@@ -1,5 +1,4 @@
-include: "snowflake.*.view.lkml"
-
+include: "/views/snowflake.*.view.lkml"
 
 explore: fast_facts {
   from: sf_logrecno_bg_map
