@@ -770,8 +770,16 @@ explore: v_agent_state  {
 
 
 
-
-
+explore: mattress_firm_sales {hidden:no
+  label: "Mattress Firm"
+  group_label: " Sales"
+  join: mattress_firm_store_details {sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
+    type: left_outer relationship: many_to_one}
+  join: mattress_firm_item { sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
+    type:  left_outer relationship: many_to_one}
+  join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+    type: left_outer relationship: many_to_one}
+}
 
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
@@ -942,17 +950,22 @@ explore: sales_order_line{
     sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
     join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
       sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+
+  join: warranty_order {
+      view_label: "Warranties"
+      type: full_outer
+      #required_joins: [warranty_order_line]
+      sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.system};;
+      #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+      relationship: many_to_one}
+
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
-    sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
+    sql_on: ${warranty_order_line.system} = ${warranty_order.system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+    #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: one_to_many}
-  join: warranty_order {
-    view_label: "Warranties"
-    type: full_outer
-    required_joins: [warranty_order_line]
-    sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
-    relationship: many_to_one}
+
   join: warranty_reason {
     view_label: "Warranties"
     type: left_outer
@@ -1010,6 +1023,25 @@ explore: sales_order_line{
     sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
     relationship: one_to_many
+  }
+  join: calls_to_orders {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${calls_to_orders.order_id}::string =  ${sales_order.etail_order_id}::string;;
+    relationship: one_to_one
+  }
+  join: exchange_order_line {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
+    and ${sales_order_line.system} = ${exchange_order_line.system} ;;
+    relationship: one_to_many
+  }
+  join: exchange_order {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
+    relationship: many_to_one
   }
 }
 
@@ -1189,7 +1221,6 @@ explore: return_form_entry {
     relationship: one_to_many}
 }
 
-
 explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
@@ -1267,7 +1298,9 @@ explore: procom_security_daily_customer {
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
 
-
+  explore: nps_survey_06_dec2019 {hidden:yes}
+  explore: product_csat_dec_2019 {hidden:yes}
+  explore: customer_nps_dec_2019 {hidden:yes}
   explore: shopify_orders
     { hidden:  yes
       label: "Shopify sales simple"
@@ -1295,22 +1328,8 @@ explore: procom_security_daily_customer {
     always_filter: {filters: {field: warranty_created_date value: "last month"}}}
   explore: netsuite_warranty_exceptions { hidden: yes group_label: "x - Accounting" label: "Warranty ModCode Cleanup"
     description: "Provides a list of suspected warranty orders in NetSuite with incorrect references to the original order and/or that are missing a modification code"}
-  explore: Mattress_Firm {hidden: yes from: mattress_firm_master_store_list  group_label: "Wholesale"
-    join: mattress_firm_sales {type: left_outer
-      sql_on:   ${Mattress_Firm.store_id} = ${mattress_firm_sales.store} and ${mattress_firm_sales.finalized_date_date} is not null ;;
-      relationship: one_to_many }
-    join: mattress_firm_item {type:  left_outer sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.mf_sku} ;; relationship:  many_to_one}
-    #join: mattress_firm_master_store_list {type:  full_outer  sql_on: ${Mattress_Firm.store_id} = ${mattress_firm_master_store_list.store_id} ;;
-    #  relationship:  one_to_one}
-    join: item {type:  left_outer sql_on: ${mattress_firm_item.item_id} = ${item.item_id} ;; relationship:  many_to_one}}
-  explore: mattress_firm_sales {hidden:yes
-    join:mattress_firm_master_store_list {sql_on: ${mattress_firm_master_store_list.store_id} = ${mattress_firm_sales.store} ;;
-        type: left_outer relationship: many_to_one}
-    join: mattress_firm_item { sql_on: ${mattress_firm_item.item_id} = ${mattress_firm_sales.product_id} ;;
-        type:  left_outer relationship: many_to_one}
-    join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
-        type: left_outer relationship: many_to_one}
-      }
+
+
   explore: item {hidden:  yes label: "Transfer and Purchase Orders --old" group_label: "Operations"
     description: "Netsuite data on Transfer and purchase orders"
     join: purchase_order_line {view_label: "Purchase Order"  type: full_outer

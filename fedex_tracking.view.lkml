@@ -71,10 +71,12 @@ view: fedex_tracking {
   }
 
   measure: fedex_label_count {
+
     type: count
     description: "FedEx Label Count"
     view_label: "Fulfillment"
-    group_label: "FedEx Details"
+    group_label: " Advanced"
+    #group_label: "FedEx Details"
     drill_fields: [tracking_number, sales_order_line.order_id, fedex_status_description, status_ts_date, days_since_last_scan, completed] ##NOTE## This drill references sales_order_line. It will break if not joined to sales_order_line in the explore.
   }
 }

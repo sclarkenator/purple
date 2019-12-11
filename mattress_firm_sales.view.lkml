@@ -10,7 +10,7 @@ view: mattress_firm_sales {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}.product_id || || ${TABLE}.store || ||  ${TABLE}.finalized_date;; }
+    sql: ${TABLE}.product_id||'-'|| ${TABLE}.store||'-'||${TABLE}.finalized_date;; }
 
 
   dimension: mf_sku{
@@ -18,8 +18,9 @@ view: mattress_firm_sales {
     type:  string
     sql:  ${TABLE}.mf_Sku ;; }
 
-  dimension_group: finalized_date{
-    label: "Finalized"
+  dimension_group: finalized{
+    label: "Order date"
+    description: "When order was placed @ Mattress Firm"
     type:  time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     datatype: date
@@ -36,13 +37,13 @@ view: mattress_firm_sales {
     sql:  ${TABLE}.product_id ;; }
 
   measure: final_units {
-    label: "Total Sold (units)"
-    description: "Total units finalized to customer"
+    label: "Units"
+    description: "Total units sold (finalized) to customer"
     type:  sum
     sql:  ${TABLE}.final_units ;; }
 
-  measure: transaction_count {
-    label: "Transaction Count"
-    type: count }
+  #measure: transaction_count {
+  #  label: "Transaction Count"
+  #  type: count }
 
 }

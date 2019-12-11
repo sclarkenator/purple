@@ -129,6 +129,23 @@ view: dma {
     }
   }
 
+  dimension: extra_tv {
+    hidden: no
+    label: "Markets with 2x TV"
+    view_label: "Geography"
+    description: "Social prospecting spend group for Q4 geo-holdout test"
+    group_label: "Geo-holdout test"
+    type: string
+    case: {
+      when: {
+        sql: ${dma} in (650,641,535,567,527,839) ;;
+        label: "2x"
+      }
+      else: "Standard"
+    }
+  }
+
+
   dimension: social_prospecting_amt {
     hidden: no
     label: "FB/Insta pt spend"

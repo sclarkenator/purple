@@ -13,6 +13,21 @@ view: fulfillment {
     sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') || NVL(${TABLE}.system,'0') || NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
     }
 
+  dimension: fulfillment_id {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.FULFILLMENT_ID ;; }
+
+  dimension: COGS_DIRECT_MATERIAL_AMT {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.COGS_DIRECT_MATERIAL_AMT ;; }
+
+  measure: total_COGS_DIRECT_MATERIAL_AMT {
+    hidden: yes
+    type: sum
+    sql: ${TABLE}.COGS_DIRECT_MATERIAL_AMT ;; }
+
   dimension: status {
     hidden: yes
     type: string
@@ -67,8 +82,13 @@ view: fulfillment {
 
   dimension: item_id {
     hidden: yes
-    type: number
+    type: string
     sql: case when ${TABLE}.parent_item_id = 0 or ${TABLE}.parent_item_id is null then ${TABLE}.item_id else ${TABLE}.parent_item_id end ;; }
+
+  dimension: item_id_raw {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.item_id ;; }
 
   dimension: order_id {
     hidden: yes
@@ -119,6 +139,16 @@ view: fulfillment {
     #hidden: yes
     type: sum
     sql: ${TABLE}.quantity ;;}
+
+  measure: bundle_count {
+    group_label: " Advanced"
+    label: "Bundeled Units Fulfilled"
+    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units"
+    #hidden: yes
+    type: sum
+    sql: case when ${TABLE}.BUNDLE_QUANTITY = 0 then ${TABLE}.quantity else ${TABLE}.BUNDLE_QUANTITY end  ;;}
+
+#BUNDLE_QUANTITY
 
   measure: total_shipping {
     label: "Total Direct Shipping Costs"
