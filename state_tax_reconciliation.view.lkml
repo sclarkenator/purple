@@ -29,6 +29,12 @@ order by so.created desc
        ;;
    }
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden: yes
+    type: string
+    sql: ${TABLE}.order_id||'-'||NVL(${TABLE}.zip,'-') ;;
+  }
 
   dimension_group: created {
     label: "Order"
@@ -43,7 +49,6 @@ order by so.created desc
   dimension: order_id {
     label: "Order ID"
     hidden: yes
-    primary_key: yes
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: number

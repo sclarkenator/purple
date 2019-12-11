@@ -1,6 +1,12 @@
 view: retroactive_discount {
   sql_table_name: SALES.RETROACTIVE_DISCOUNT ;;
 
+  dimension: primary_key{
+    primary_key:  yes
+    hidden:  yes
+    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system||'-'||${TABLE}.refund_link_id||'-'||${TABLE}.transaction_type;;
+  }
+
   measure: total_retro_discounts {
     hidden: yes
     label: "Total Retro Discounts ($)"
@@ -9,7 +15,6 @@ view: retroactive_discount {
     sql:  ${TABLE}.amount;; }
 
   dimension: item_order_refund{
-    primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 

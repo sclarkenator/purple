@@ -1,8 +1,13 @@
 view: return_order_line {
   sql_table_name: (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US') ;;
 
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    type: number
+    sql: ${TABLE}.RETURN_ORDER_ID||${TABLE}.item_id ;; }
+
   dimension: item_order{
-    #primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
@@ -311,12 +316,6 @@ view: return_order_line {
     hidden: yes
     type: number
     sql: ${TABLE}.RETURN_ORDER_ID ;; }
-
-  dimension: pk {
-    primary_key: yes
-    hidden: yes
-    type: number
-    sql: ${TABLE}.RETURN_ORDER_ID||${TABLE}.item_id ;; }
 
   dimension: return_qty {
     label: "Quantity Returned (units)"

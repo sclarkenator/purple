@@ -1,6 +1,13 @@
 view: return_order {
   sql_table_name: SALES.RETURN_ORDER ;;
 
+  dimension: primary_key
+  {
+    primary_key:  yes
+    type: string
+    sql: NVL(${TABLE}.return_order_id,0)||NVL(${TABLE}.order_id,0) ;;
+    hidden:  yes
+  }
 
   dimension: return_order_id {
     #label: "Return Order ID"
@@ -263,15 +270,5 @@ view: return_order {
             end;;
 
   }
-
-  dimension: primary_key
-  {
-    primary_key:  yes
-    sql: ${TABLE}.return_order_id ;;
-    hidden:  yes
-
-  }
-
-
 
 }

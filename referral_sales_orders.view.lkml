@@ -1,6 +1,13 @@
 view: referral_sales_orders {
   sql_table_name: MARKETING.REFERRAL_SALES_ORDERS ;;
 
+  dimension: order_id_referral {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}."ORDER_ID" ;;
+    hidden: yes
+  }
+
   dimension_group: order {
     type: time
     timeframes: [
@@ -16,13 +23,6 @@ view: referral_sales_orders {
     sql: ${TABLE}."ORDER_DATE" ;;
     hidden:  yes
   }
-
-  dimension: order_id_referral {
-    type: number
-    sql: ${TABLE}."ORDER_ID" ;;
-    hidden: yes
-  }
-
 
   dimension: order_id_flag {
     view_label: "Sales Order"

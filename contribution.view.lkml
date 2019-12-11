@@ -5,7 +5,7 @@ view: contribution {
     type: string
     primary_key:  yes
     hidden:  yes
-    sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
+    sql: NVL(${TABLE}.item_id,0)||'-'||NVL(${TABLE}.order_id,0)||'-'||${TABLE}.system ;; }
 
   dimension: order_id {
     type: string

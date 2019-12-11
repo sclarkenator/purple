@@ -1,8 +1,14 @@
 view: warranty_order {
   sql_table_name: SALES.WARRANTY_ORDER ;;
 
-  dimension: warranty_order_id {
+  dimension: primary_key {
     primary_key: yes
+    hidden: yes
+    type: string
+    sql: NVL(${TABLE}.order_id,0)||${TABLE}.warranty_order_id||${TABLE}.replacement_order_id ;;
+  }
+
+  dimension: warranty_order_id {
     hidden: yes
     type: number
     sql: ${TABLE}.WARRANTY_ORDER_ID ;;}

@@ -1,12 +1,11 @@
 view: mainchain_transaction_outwards_detail {
   sql_table_name: PRODUCTION.MAINCHAIN_TRANSACTION_OUTWARDS_DETAIL ;;
 
-
-#primary key - tran id, order line number, sku id
-
   dimension: primary_key {
+    primary_key: yes
     hidden: yes
-    sql: ${tranid} || ${order_line_number} || ${sku_id}  ;;
+    type: string
+    sql: ${tranid} || ${order_line_number} || ${sku_id} || ${units_despatched}  ;;
   }
 
   dimension: carrier {

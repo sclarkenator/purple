@@ -150,7 +150,7 @@ view: visible {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${update_ts_date}, ${item_id}, ${order_id}) ;;
+    sql: CONCAT(${update_ts_raw}, ${item_id}, ${order_id}, ${load_id}) ;;
     hidden: yes
   }
 

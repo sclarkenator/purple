@@ -1,6 +1,14 @@
 view: shopify_orders {
   sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
 
+  dimension: id {
+    primary_key: yes
+    label: "Shopify Order"
+    hidden:  yes
+    type: string
+    sql: ${TABLE}.id ;;
+  }
+
   measure: discounts {
     label: "Total Discounts"
     description: "All discounts given in Shopify"
@@ -40,16 +48,8 @@ view: shopify_orders {
     description: "Netsuite Reference ID"
     label: "Related_tranid"
     hidden:  yes
-    primary_key: yes
     type: string
     sql: ${TABLE}.name ;;
-  }
-
-  dimension: id {
-    label: "Shopify Order"
-    hidden:  yes
-    type: string
-    sql: ${TABLE}.id ;;
   }
 
   dimension: checkout_token {

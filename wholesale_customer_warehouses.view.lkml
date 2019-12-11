@@ -5,7 +5,7 @@ view: wholesale_customer_warehouses {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}."customer_id" - ${TABLE}."street_address" ;;
+    sql: ${TABLE}."customer_id" || ${TABLE}."street_address" ;;
   }
 
   dimension: city {

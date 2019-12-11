@@ -7,6 +7,13 @@
 view: dma {
   sql_table_name: analytics.marketing.DMA_FIPS_LKP ;;
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden: yes
+    type: string
+    sql: ${TABLE}.zipcode||NVL(${TABLE}.FIPS,0) ;;
+  }
+
   dimension: dma_name {
     label: "DMA"
     description: "Designated Marketing Area - derived from zipcode"
@@ -259,7 +266,6 @@ view: dma {
 
   dimension: zip {
     type: zipcode
-    primary_key: yes
     hidden: yes
     sql: ${TABLE}.zipcode ;;
   }

@@ -1,6 +1,13 @@
 view: zipcode_radius {
   sql_table_name: CSV_UPLOADS.ZIPCODE_RADIUS ;;
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden: yes
+    type: string
+    sql: ${TABLE}.zipcode||${TABLE}.description ;;
+  }
+
   dimension: description {
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;

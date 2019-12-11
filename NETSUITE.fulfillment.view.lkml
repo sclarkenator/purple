@@ -10,7 +10,7 @@ view: fulfillment {
     primary_key: yes
     hidden: yes
     type: string
-    sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') ||'-'|| NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
+    sql:  NVL(${TABLE}.FULFILLMENT_ID,'0') || NVL(${TABLE}.system,'0') || NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.parent_item_id,'0') ;;
     }
 
   dimension: status {

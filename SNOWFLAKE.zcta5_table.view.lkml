@@ -11,6 +11,12 @@ group by 1,2,3
 order by 1 ;;
   }
 
+  dimension: primary_key {
+    primary_key: yes
+    hidden: yes
+    type: string
+    sql:  ${TABLE}.zipcode|| ${TABLE}.st_cd ;;
+  }
 
   dimension: us_flag {
     view_label: "Geography"
@@ -24,7 +30,6 @@ order by 1 ;;
     hidden:  yes
     description: "5-digit US zip code"
     view_label: "Geography"
-    primary_key: yes
     type: string
     sql: ${TABLE}.zipcode ;;
   }
