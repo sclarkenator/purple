@@ -4,7 +4,11 @@
 #-------------------------------------------------------------------
 
 view: users {
-  sql_table_name: heap.users ;;
+  derived_table: {
+    sql: select * from heap.users;;
+    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*7)/(60*60*24)) ;;
+  }
+  #sql_table_name: heap.users ;;
 
   dimension: user_id {
     primary_key: yes

@@ -15,6 +15,8 @@ view: session_facts {
         COUNT(distinct(all_events.session_id || '-' || all_events.user_id)) AS all_events_count
       FROM heap.all_events AS all_events
       GROUP BY 1,2,3  ;;
+
+    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*7)/(60*60*24)) ;;
   }
 
   dimension: session_unique_id {

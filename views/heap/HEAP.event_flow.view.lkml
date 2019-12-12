@@ -5,35 +5,39 @@
 
 view: event_flow {
   derived_table: {
-    sql: select      a.unique_event_id
-            , a.event_id
-            , a.session_id
-            , a.sequence_number_for_event_flow
-            , a.event_name
-            , a.user_id
-            , b.event_name as event_2
-            , c.event_name as event_3
-            , d.event_name as event_4
-            , e.event_name as event_5
+    sql:
+      select
+        a.unique_event_id
+        , a.event_id
+        , a.session_id
+        , a.sequence_number_for_event_flow
+        , a.event_name
+        , a.user_id
+        , b.event_name as event_2
+        , c.event_name as event_3
+        , d.event_name as event_4
+        , e.event_name as event_5
 
-from ${event_facts.SQL_TABLE_NAME} a
-left join ${event_facts.SQL_TABLE_NAME} b
-on a.sequence_number_for_event_flow + 1 = b.sequence_number_for_event_flow
-and a.user_id = b.user_id
-and a.session_id = b.session_id
-left join ${event_facts.SQL_TABLE_NAME} c
-on a.sequence_number_for_event_flow + 2 = c.sequence_number_for_event_flow
-and a.user_id = c.user_id
-and a.session_id = c.session_id
-left join ${event_facts.SQL_TABLE_NAME} d
-on a.sequence_number_for_event_flow + 3 = d.sequence_number_for_event_flow
-and a.user_id = d.user_id
-and a.session_id = d.session_id
-left join ${event_facts.SQL_TABLE_NAME} e
-on a.sequence_number_for_event_flow + 4 = e.sequence_number_for_event_flow
-and a.user_id = e.user_id
-and a.session_id = e.session_id
- ;;
+      from ${event_facts.SQL_TABLE_NAME} a
+      left join ${event_facts.SQL_TABLE_NAME} b
+        on a.sequence_number_for_event_flow + 1 = b.sequence_number_for_event_flow
+        and a.user_id = b.user_id
+        and a.session_id = b.session_id
+      left join ${event_facts.SQL_TABLE_NAME} c
+        on a.sequence_number_for_event_flow + 2 = c.sequence_number_for_event_flow
+        and a.user_id = c.user_id
+        and a.session_id = c.session_id
+      left join ${event_facts.SQL_TABLE_NAME} d
+        on a.sequence_number_for_event_flow + 3 = d.sequence_number_for_event_flow
+        and a.user_id = d.user_id
+        and a.session_id = d.session_id
+      left join ${event_facts.SQL_TABLE_NAME} e
+        on a.sequence_number_for_event_flow + 4 = e.sequence_number_for_event_flow
+        and a.user_id = e.user_id
+        and a.session_id = e.session_id
+       ;;
+
+      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*7)/(60*60*24)) ;;
   }
 
   dimension: unique_event_id {
