@@ -166,6 +166,23 @@ view: daily_adspend {
       when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST') OR ${TABLE}.source = 'CINEMA' ;; label:"Traditional"}
       else: "Other" } }
 
+  dimension: channel {
+    type: string
+    hidden:  no
+    label: "Channel"
+    description: "Channel that current session came from"
+    sql: case when ${medium} = 'sr' or ${medium} = 'search' or ${medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
+          when ${medium} = 'so' or ${medium} ilike '%social%' then 'social'
+          when ${medium} ilike 'vi' or ${medium} ilike 'video' then 'video'
+          when ${medium} ilike 'nt' or ${medium} ilike 'native' then 'native'
+          when ${medium} ilike 'ds' or ${medium} ilike 'display' then 'display'
+          when ${medium} ilike 'sh' or ${medium} ilike 'shopping' then 'shopping'
+          when ${medium} ilike 'af' or ${medium} ilike 'ir' or ${medium} ilike '%affiliate%' then 'affiliate'
+          when ${medium} ilike 'em' or ${medium} ilike 'email' then 'email'
+          when ${medium} is null then 'organic'
+          when ${medium} ilike 'rf' or ${medium} ilike 'referral' then 'referral'
+           end ;; }
+
   dimension: agency_within {
     label: "      * Managed by Agency Within"
     description: "A Channel Managed by Agency Within"
@@ -233,5 +250,4 @@ view: daily_adspend {
     description: "Conversions within 1 day of viewing a page - only for Quora"
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
-
 }
