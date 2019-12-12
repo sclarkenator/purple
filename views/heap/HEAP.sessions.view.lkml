@@ -27,6 +27,30 @@ view: sessions {
     type: string
     sql: ${TABLE}.browser ;; }
 
+  dimension: browser_bucket {
+    label: "Browser Bucket"
+    type: string
+    sql: case when ${browser} ilike ('%Chrome%') then 'Chrome'
+              when ${browser} ilike ('%Safari%') then 'Safari'
+              when ${browser} ilike ('%Amazon Silk%') then 'Amazon Silk'
+              when ${browser} ilike ('%Edge%') then 'Edge'
+              when ${browser} ilike ('%Firefox%') then 'Firefox'
+              when ${browser} ilike ('%IE%') then 'Edge'
+              when ${browser} ilike ('%Facebook%') then 'Facebook'
+              when ${browser} ilike ('%Android%') then 'Android'
+              when ${browser} ilike ('%Chromium%') then 'Chromium'
+              when ${browser} ilike ('%Opera%') then 'Opera'
+              when ${browser} ilike ('%UC Browser%') then 'UC Browser'
+              when ${browser} ilike ('%Samsung Internet%') then 'Samsung Internet'
+               when ${browser} ilike ('%Puffin%') then 'Puffin'
+              when ${browser} ilike ('%NewFront%') then 'NewFront'
+              when ${browser} ilike ('%Yandex%') then 'Yandex Browser'
+              when ${browser} ilike ('%Apple Mail%') then 'Apple Mail'
+              when ${browser} ilike ('%AppleMail%') then 'Apple Mail'
+              when ${browser} ilike ('%Webcrawler%') then 'Webcrawler'
+              when ${browser} ilike ('%web-crawlers%') then 'Webcrawler'
+              else 'Other' end ;; }
+
   dimension: carrier {
     label: "Carrier"
     type: string
