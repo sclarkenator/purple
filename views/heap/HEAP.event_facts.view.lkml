@@ -56,7 +56,7 @@ view: event_facts {
         ON events.event_id = a.event_id
         AND events.event_name = a.event_table_name
        ;;
-      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
+      datagroup_trigger: pdt_refresh_745am
     }
 
   measure: count {
