@@ -11,7 +11,7 @@ view: day_aggregations_dtc_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line.created_date value: "2 years" }
+      filters: { field: item.product_description value: "-%SQUISHY%" }
     }
   }
   #dimension: created_date { type: date }
