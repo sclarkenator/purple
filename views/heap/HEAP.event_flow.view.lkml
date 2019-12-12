@@ -37,7 +37,7 @@ view: event_flow {
         and a.session_id = e.session_id
        ;;
 
-      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28785)/(60*60*24)) ;;
+      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
   }
 
   dimension: unique_event_id {

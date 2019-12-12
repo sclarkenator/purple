@@ -12,7 +12,7 @@ view: heap_page_views {
       --where time::date >=  '2019-06-16' and time::date <=  '2019-06-22'
       group by session_id ;;
 
-      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28785)/(60*60*24)) ;;
+      sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
 
   }
 

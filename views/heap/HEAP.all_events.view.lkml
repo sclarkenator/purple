@@ -6,8 +6,11 @@
 view: all_events {
   derived_table: {
     sql: select * from heap.all_events;;
-    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28785)/(60*60*24)) ;;
+    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
   }
+  # 60*60*8 = 28800
+  # 60*15 = 900
+  #  28800-900 = 27900
   #  sql_table_name: heap.all_events ;;
 
 
