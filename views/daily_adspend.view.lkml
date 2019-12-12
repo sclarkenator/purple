@@ -171,16 +171,17 @@ view: daily_adspend {
     hidden:  no
     label: "Channel"
     description: "Channel that current session came from"
-    sql: case when ${medium} = 'sr' or ${medium} = 'search' or ${medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
-          when ${medium} = 'so' or ${medium} ilike '%social%' then 'social'
-          when ${medium} ilike 'vi' or ${medium} ilike 'video' then 'video'
-          when ${medium} ilike 'nt' or ${medium} ilike 'native' then 'native'
-          when ${medium} ilike 'ds' or ${medium} ilike 'display' then 'display'
-          when ${medium} ilike 'sh' or ${medium} ilike 'shopping' then 'shopping'
-          when ${medium} ilike 'af' or ${medium} ilike 'ir' or ${medium} ilike '%affiliate%' then 'affiliate'
-          when ${medium} ilike 'em' or ${medium} ilike 'email' then 'email'
+    sql: case when ${medium} ilike '%Search%' then 'search'
+          when ${medium} ilike '%Social%' then 'social'
+          when ${medium} ilike 'Video' then 'video'
+          when ${medium} ilike 'Native' then 'native'
+          when ${medium} ilike 'Display' then 'display'
+          when ${medium} ilike 'Shopping' then 'shopping'
+          when ${medium} ilike '%Affiliate%' then 'affiliate'
+          when ${medium} ilike 'Email' then 'email'
           when ${medium} is null then 'organic'
-          when ${medium} ilike 'rf' or ${medium} ilike 'referral' then 'referral'
+          when ${medium} ilike 'Referral' then 'referral'
+          else 'other'
            end ;; }
 
   dimension: agency_within {
