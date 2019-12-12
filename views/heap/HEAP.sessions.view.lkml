@@ -4,7 +4,11 @@
 #-------------------------------------------------------------------
 
 view: sessions {
-  sql_table_name: heap.sessions ;;
+  derived_table: {
+    sql: select * from heap.sessions;;
+    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
+  }
+  #sql_table_name: heap.sessions ;;
 
   dimension: session_id {
     primary_key: yes
