@@ -6,7 +6,7 @@
 view: users_orig {
   derived_table: {
     sql: select * from heap.users;;
-    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*7)/(60*60*24)) ;;
+    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28785)/(60*60*24)) ;;
   }
   #sql_table_name: heap.users ;;
 
