@@ -1293,6 +1293,8 @@ explore: procom_security_daily_customer {
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: tim_forecast_amazon {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
