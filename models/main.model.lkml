@@ -1233,6 +1233,7 @@ explore: return_form_entry {
     relationship: one_to_many}
 }
 
+explore: affirm_daily_lto_funnel {hidden:yes}
 explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
