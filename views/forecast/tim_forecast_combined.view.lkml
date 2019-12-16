@@ -123,7 +123,7 @@ view: tim_forecast_combined {
         order by 2, 1
       )
       select coalesce(zz.date, yy.date, xx.date, ww.date) as date
-          , coalesce(zz.sku_id, yy.sku_id, xx.sku_id, ww,sku_id) as sku_id
+          , coalesce(zz.sku_id, yy.sku_id, xx.sku_id, ww.sku_id) as sku_id
 
           , coalesce(zz.total_units, 0) + coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as total_units
           , coalesce(zz.total_amount, 0) + coalesce(yy.amount,0) as total_amount
@@ -157,7 +157,7 @@ view: tim_forecast_combined {
           , zz.Other_Amount
 
           , xx.total_units amazon_units
-          , xx.toatl_amount amazon_amount
+          , xx.total_amount amazon_amount
 
           , ww.total_units retail_units
           , ww.total_amount retail_amount
