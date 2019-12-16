@@ -242,10 +242,38 @@ view: sessions {
     type: string
     sql: lower(${TABLE}.utm_medium) ;; }
 
+  dimension: medium_bucket {
+    label: "Medium Bucket"
+    type: string
+    hidden: yes
+    sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
+          when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' or ${utm_medium} ilike '%instagram%' or ${utm_medium} ilike 'twitter' then 'social'
+          when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
+          when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
+          else ${utm_medium} end ;;
+  }
+
   dimension: utm_source {
     label: "UTM Source"
     type: string
     sql: lower(${TABLE}.utm_source) ;; }
+
+  dimension: source_bucket {
+    label: "Source Bucket"
+    type: string
+    hidden: yes
+    sql: case when ${utm_source} = "go " or ${utm_source} ilike "%google%" then "GOOGLE"
+              when ${utm_source} ilike "%fb%" or ${utm_source} ilike "%faceboo%" then "FACEBOOK"
+              when ${utm_source} ilike "%yahoo%" then "YAHOO"
+              when ${utm_source} ilike "yt"  or  ${utm_source} ilike "%youtube%" then "YOUTUBE"
+              when ${utm_source} ilike "%snapchat%" then "SNAPCHAT"
+              when ${utm_source} ilike "%adwords%" then "ADWORDS"
+              when ${utm_source} ilike "pinterest" then "PINTEREST"
+              when ${utm_source} ilike "bing" then "BING"
+              when ${utm_source} ilike "gemini" then "GEMINI"
+              when ${utm_source} ilike "twitter" then "TWITTER"
+              else ${utm_source} end ;;  }
 
   dimension: utm_term {
     label: "UTM Term"
