@@ -6,7 +6,7 @@ view: tim_forecast_amazon {
           , a.sku_id
           , coalesce(a.units/c.days_in_dates,0) as total_units
           , coalesce(a.sales/c.days_in_dates,0) as total_amount
-      from analytics.csv_uploads.FORECAST_or a
+      from analytics.csv_uploads.FORECAST_amazon a
       left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
       left join (
         select z.start_date
