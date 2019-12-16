@@ -257,6 +257,7 @@ view: mainchain_transaction_outwards_detail {
   }
 
   measure: total_units_ordered {
+    drill_fields: [sales_order.order_id, sales_order.tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, sales_order_line.location, sales_order.source, total_units_ordered]
     type: sum
     sql: ${TABLE}."UNITS_ORDERED" ;;
   }

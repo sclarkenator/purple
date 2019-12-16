@@ -18,6 +18,18 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
+# Rebuilds at 7:50am MDT
+datagroup: pdt_refresh_750am {
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28200)/(60*60*24)) ;;
+  max_cache_age: "24 hours"
+}
+
+# Rebuilds at 7:45am MDT
+datagroup: pdt_refresh_745am {
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
+  max_cache_age: "24 hours"
+}
+
 
 #-------------------------------------------------------------------
 #
@@ -1221,6 +1233,7 @@ explore: return_form_entry {
     relationship: one_to_many}
 }
 
+explore: affirm_daily_lto_funnel {hidden:yes}
 explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
 explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
@@ -1281,6 +1294,8 @@ explore: procom_security_daily_customer {
     join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: tim_forecast_amazon {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes

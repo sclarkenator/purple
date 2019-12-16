@@ -11,7 +11,8 @@ view: day_aggregations_dtc_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-
+      filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
+      filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
   }
   #dimension: created_date { type: date }
@@ -41,6 +42,8 @@ view: day_aggregation_dtc_orders {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
+      filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
   }
   dimension: total_orders { type: number }
@@ -310,10 +313,7 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
 
-    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28200)/(60*60*24)) ;;
-    # 60*60*8 = 28800
-    # 60*10 = 600
-    #  28800-600 = 28200
+    datagroup_trigger: pdt_refresh_750am
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {

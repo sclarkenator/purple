@@ -89,12 +89,46 @@ view: tim_forecast_combined {
               ) z
               group by z.start_date
           ) c on c.start_date = a.start_date
+      ), xx as (
+        -- amazon
+        select b.date
+            , a.sku_id
+            , coalesce(a.units/c.days_in_dates,0) as total_units
+            , coalesce(a.sales/c.days_in_dates,0) as total_amount
+        from analytics.csv_uploads.FORECAST_amazon a
+        left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
+        left join (
+          select z.start_date
+            , count (distinct (y.date)) as days_in_dates
+          from  analytics.csv_uploads.FORECAST_amazon z
+          left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
+          group by z.start_date
+        ) c on c.start_date = a.start_date
+        order by 2, 1
+      ), ww as (
+        --owned retail
+        select b.date
+            , a.sku_id
+            , coalesce(a.units/c.days_in_dates,0) as total_units
+            , coalesce(a.sales/c.days_in_dates,0) as total_amount
+        from analytics.csv_uploads.FORECAST_or a
+        left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
+        left join (
+          select z.start_date
+            , count (distinct (y.date)) as days_in_dates
+          from  analytics.csv_uploads.FORECAST_or z
+          left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
+          group by z.start_date
+        ) c on c.start_date = a.start_date
+        order by 2, 1
       )
-      select coalesce(zz.date, yy.date) as date
-          , coalesce(zz.sku_id, yy.sku_id) as sku_id
+      select coalesce(zz.date, yy.date, xx.date, ww.date) as date
+          , coalesce(zz.sku_id, yy.sku_id, xx.sku_id, ww.sku_id) as sku_id
 
-          , coalesce(zz.total_units, 0) + coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as total_units
-          , coalesce(zz.total_amount, 0) + coalesce(yy.amount,0) as total_amount
+          , coalesce(zz.total_units, 0) + coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0)
+              + coalesce(xx.total_units, 0) + coalesce(ww.total_units,0) as total_units
+          , coalesce(zz.total_amount, 0) + coalesce(yy.amount,0)
+            + coalesce(xx.total_amount, 0) + coalesce(ww.total_amount,0)as total_amount
 
           , coalesce(zz.total_units, 0) as wholesale_units
           , coalesce(yy.paid_units,0) + coalesce(yy.promo_units, 0) as dtc_units
@@ -123,8 +157,16 @@ view: tim_forecast_combined {
           , zz.Trucking_Amount
           , zz.Other_Units
           , zz.Other_Amount
+
+          , xx.total_units amazon_units
+          , xx.total_amount amazon_amount
+
+          , ww.total_units retail_units
+          , ww.total_amount retail_amount
       from zz
       full outer join yy on yy.sku_id = zz.sku_id and yy.date = zz.date
+      full outer join xx on xx.sku_id = zz.sku_id and xx.date = zz.date
+      full outer join ww on ww.sku_id = zz.sku_id and ww.date = zz.date
       left join (
         select item_id, sku_id
           from (
@@ -376,6 +418,28 @@ view: tim_forecast_combined {
         type:  sum
         value_format: "$#,##0.00"
         sql:${TABLE}.Other_Amount ;; }
+
+      measure: amazon_units {
+        label: "Amazon Units"
+        type:  sum
+        value_format: "#,##0"
+        sql:${TABLE}.amazon_units ;; }
+
+      measure: amazon_amount {
+        label: "Amazon Amount"
+        type:  sum
+        value_format: "$#,##0.00"
+        sql:${TABLE}.amazon_amount ;; }
+
+      measure: retail_units {
+        type:  sum
+        value_format: "#,##0"
+        sql:${TABLE}.retail_units ;; }
+
+      measure: retail_amount {
+        type:  sum
+        value_format: "$#,##0.00"
+        sql:${TABLE}.retail_amount ;; }
 
       measure: to_date {
         label: "Total Goal to Date"

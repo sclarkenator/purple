@@ -69,8 +69,16 @@ view: receipt_restock {
   dimension: return_order_id {
     type: number
     hidden: yes
-    sql: ${TABLE}.return_order_id ;;
+    sql: ${TABLE}.original_transaction_id ;;
   }
+
+  dimension: original_transaction_id {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.original_transaction_id ;;
+  }
+
+  #original_transaction_id
 
   dimension_group: insert_ts {
     type: time

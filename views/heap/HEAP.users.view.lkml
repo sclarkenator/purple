@@ -6,7 +6,7 @@
 view: users {
   derived_table: {
     sql: select * from heap.users;;
-    sql_trigger_value: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
+    datagroup_trigger: pdt_refresh_745am
   }
   #sql_table_name: heap.users ;;
 
