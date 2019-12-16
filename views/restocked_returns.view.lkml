@@ -1,6 +1,6 @@
 view: restocked_returns {
   derived_table: {
-    sql: SELECT rr.return_order_id, rr.item_id, sum(rr.item_count) restocked_items
+    sql: SELECT rr.original_transaction_id, rr.item_id, sum(rr.item_count) restocked_items
         FROM analytics.finance.receipt_restock rr
         where do_restock = 'Yes'
       GROUP BY 1, 2
@@ -11,13 +11,19 @@ view: restocked_returns {
     type: string
     hidden: yes
     primary_key: yes
-    sql: ${TABLE}.return_order_id ||'-'|| ${TABLE}."ITEM_ID" ;;
+    sql: ${TABLE}.original_transaction_id ||'-'|| ${TABLE}."ITEM_ID" ;;
   }
 
   dimension: return_order_id {
     type: number
     hidden: yes
-    sql: ${TABLE}.return_order_id ;;
+    sql: ${TABLE}.original_transaction_id ;;
+  }
+
+  dimension: original_transaction_id {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.original_transaction_id ;;
   }
 
   dimension: item_id {
