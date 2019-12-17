@@ -1314,6 +1314,7 @@ explore: procom_security_daily_customer {
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
 
   explore: nps_survey_06_dec2019 {hidden:yes}
+  explore: nps_survey_dec2019 {hidden:yes}
   explore: product_csat_dec_2019 {hidden:yes}
   explore: customer_nps_dec_2019 {hidden:yes}
   explore: shopify_orders
