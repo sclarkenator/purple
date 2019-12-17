@@ -1055,6 +1055,13 @@ explore: sales_order_line{
     sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
     relationship: many_to_one
   }
+  join: zendesk_sales {
+    view_label: "Zendesk Sell"
+    type: left_outer
+    sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
+    relationship: one_to_one
+  }
+
 }
 
 
