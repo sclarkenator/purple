@@ -15,7 +15,15 @@ from analytics.customer_care.v_zendesk_sell_kpi a
 left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id
 where order_id is not null;;
   }
-  dimension: deal_id {
+
+ dimension:has_touch {
+    label: "    * Has Touch"
+    description: "Y/N; Yes if Zendesk Order ID matches Netsuite"
+    sql: ${TABLE}.deal_id is not null;;
+    type:yesno
+  }
+
+ dimension: deal_id {
     type: string
     hidden: yes
     primary_key: yes
@@ -68,5 +76,7 @@ where order_id is not null;;
   measure: total_draft_amount{
     type: sum
     sql: ${TABLE}.draft_order_subtotal_amt;;
-    value_format: "$#,##0.00"}
+    value_format: "$#,##0.00"
+    }
+
 }
