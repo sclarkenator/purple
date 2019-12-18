@@ -11,6 +11,7 @@ view: zendesk_sales {
 , b.name
 , b.email
 , b.team_name
+, b.zendesk_id
 from analytics.customer_care.v_zendesk_sell_kpi a
 left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id
 where order_id is not null;;
@@ -69,6 +70,10 @@ where order_id is not null;;
   dimension: team_name{
     type: string
     sql: ${TABLE}.team_name ;;
+  }
+  dimension: zendesk_id {
+    type: string
+    sql: ${TABLE}.zendesk_id ;;
   }
   measure: count{
     type:  count
