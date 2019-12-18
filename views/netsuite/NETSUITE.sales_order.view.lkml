@@ -254,12 +254,20 @@ measure: upt {
     tiers: [150,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3100]
     sql: ${TABLE}.gross_amt ;; }
 
+  dimension: order_type_hyperlink {
+    hidden: yes
+    type: string
+    sql: case when ${transaction_type} = 'Cash Sale' then 'cashsale' else 'salesord' end;;
+  }
 
   dimension: order_id {
     group_label: " Advanced"
     label: "Order ID"
     hidden: no
-    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
+    #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
@@ -391,6 +399,11 @@ measure: upt {
     hidden: yes
     type: string
     sql: ${TABLE}.TRANSACTION_NUMBER ;; }
+
+  dimension: transaction_type {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.TRANSACTION_TYPE ;; }
 
   dimension: update_ts {
     hidden: yes

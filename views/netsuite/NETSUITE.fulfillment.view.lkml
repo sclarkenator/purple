@@ -50,7 +50,7 @@ view: fulfillment {
 
   dimension_group: created {
     label: "Fulfilled Date (V2)"
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
