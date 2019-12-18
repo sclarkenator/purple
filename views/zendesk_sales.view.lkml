@@ -22,7 +22,12 @@ left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id;;
     sql: ${TABLE}.deal_id is not null;;
     type:yesno
   }
-
+  dimension: pending_draft_order{
+    label: "    * Pending Draft Order"
+    description: "Y/N; Yes if Order ID is null"
+    type: yesno
+    sql: ${TABLE}.order_id is null ;;
+  }
  dimension: deal_id {
     type: string
     hidden: yes
