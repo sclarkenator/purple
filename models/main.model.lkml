@@ -1057,7 +1057,7 @@ explore: sales_order_line{
   }
   join: zendesk_sales {
     view_label: "Zendesk Sell"
-    type: left_outer
+    type: full_outer
     sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
     relationship: one_to_one
   }

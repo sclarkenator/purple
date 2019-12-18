@@ -13,8 +13,7 @@ view: zendesk_sales {
 , b.team_name
 , b.zendesk_id
 from analytics.customer_care.v_zendesk_sell_kpi a
-left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id
-where order_id is not null;;
+left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id;;
   }
 
  dimension:has_touch {
@@ -23,7 +22,12 @@ where order_id is not null;;
     sql: ${TABLE}.deal_id is not null;;
     type:yesno
   }
-
+  dimension: pending_draft_order{
+    label: "    * Pending Draft Order"
+    description: "Y/N; Yes if Order ID is null"
+    type: yesno
+    sql: ${TABLE}.order_id is null ;;
+  }
  dimension: deal_id {
     type: string
     hidden: yes
