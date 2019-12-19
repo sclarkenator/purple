@@ -63,6 +63,7 @@ view: sales_order_line {
 
   measure: total_discounts {
     label:  "Total Discounts ($)"
+    value_format:"$#,##0"
     description:  "Total of all applied discounts when order was placed"
     type: sum
     sql:  ${TABLE}.discount_amt ;; }
