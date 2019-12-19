@@ -259,6 +259,8 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: l2_l_checklist_answers {hidden: yes}
+explore: l2_l_checklists {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
