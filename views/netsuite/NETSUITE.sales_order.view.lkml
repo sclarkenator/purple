@@ -1,6 +1,16 @@
 view: sales_order {
   sql_table_name: SALES.SALES_ORDER ;;
 
+  dimension: valid_address{
+    label: "Is address valid?"
+    description: "Address validation field: yes/no/blank"
+    type: string
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: ${TABLE}.shipping_address_validated ;;
+  }
+
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
