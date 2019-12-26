@@ -387,7 +387,49 @@ measure: upt {
     type: sum
     sql: ${TABLE}.TAX_AMT ;; }
 
-  dimension_group: trandate {
+  dimension: order_age_bucket {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "  Order Age (bucket)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,11,15,21]
+    style: integer
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
+  dimension: order_age_bucket2 {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "  Order Age (bucket 2)"
+    hidden: no
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
+    style: integer
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
+  dimension: order_age_raw {
+    label: "Order Age Raw"
+    description: "Number of days between today and when order was placed"
+    hidden:  yes
+    type:  number
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+
+dimension_group: trandate {
     hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
