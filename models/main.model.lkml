@@ -819,7 +819,7 @@ explore: sales_order_line{
   join: zcta5 {
     view_label: "Geography"
     type:  left_outer
-    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar ;;
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
     relationship: many_to_one}
   join: dma {
     view_label: "Customer"
@@ -840,7 +840,7 @@ explore: sales_order_line{
     view_label: "Fulfillment"
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
-    relationship: many_to_one}
+    relationship: one_to_many}
   join: sales_order {
     view_label: "Sales Order"
     type: left_outer
@@ -856,7 +856,7 @@ explore: sales_order_line{
     type:  left_outer
     fields: [shopify_orders.call_in_order_Flag]
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-    relationship:  one_to_one}
+    relationship:  many_to_many}
   join: return_order_line {
     view_label: "Returns"
     type: full_outer
@@ -903,7 +903,7 @@ explore: sales_order_line{
     view_label: "Cancellations"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
-    relationship: one_to_many}
+    relationship: one_to_one }
   join: NETSUITE_cancelled_reason {
     view_label: "Cancellations"
     type: left_outer
@@ -923,7 +923,7 @@ explore: sales_order_line{
     view_label: "Fulfillment"
     type: full_outer
     sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
-    relationship: one_to_one}
+    relationship: many_to_one}
   join: contribution {
     type: left_outer
     sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
@@ -937,12 +937,12 @@ explore: sales_order_line{
     view_label: "State Tax Reconciliation"
     type: left_outer
     sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
-    relationship: one_to_one}
+    relationship: one_to_many}
   join: shopify_discount_codes {
     view_label: "Promo"
     type: left_outer
     sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
-    relationship: many_to_one}
+    relationship: many_to_many}
   join: marketing_sms_codes {
     view_label: "Promo"
     type: left_outer
