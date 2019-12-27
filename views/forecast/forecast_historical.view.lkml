@@ -1,4 +1,4 @@
-view: tim_forecast_historical {
+view: forecast_historical {
 
   derived_table: {
     sql:

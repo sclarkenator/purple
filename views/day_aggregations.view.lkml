@@ -81,7 +81,7 @@ view: day_aggregations_wholesale_sales {
 ######################################################
 view: day_aggregations_forecast {
   derived_table: {
-    explore_source: tim_forecast_combined {
+    explore_source: forecast_combined {
       column: date_date {}
       column: total_amount {}
       column: dtc_amount {}
@@ -89,7 +89,7 @@ view: day_aggregations_forecast {
       column: total_units {}
       column: dtc_units {}
       column: wholesale_units {}
-      filters: { field: tim_forecast_combined.date_date value: "2 years" }
+      filters: { field: forecast_combined.date_date value: "2 years" }
     }
   }
   dimension: date_date { type: date }

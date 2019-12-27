@@ -387,7 +387,7 @@ explore: starship_fulfillment {
     relationship: many_to_one  }
 }
 
-  explore: tim_forecast_combined {
+  explore: forecast_combined {
     label: "Forecast"
     description: "Combined wholesale and dtc forecast of units and dollars."
     group_label: "Operations"
@@ -395,7 +395,7 @@ explore: starship_fulfillment {
     join: item {
       view_label: "Product"
       type: left_outer
-      sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;
+      sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one}
     join:fg_to_sfg{
       view_label: "FG to SFG"
@@ -1293,22 +1293,22 @@ explore: procom_security_daily_customer {
 # Old/Bad Explores
 #-------------------------------------------------------------------
 
-  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
+  explore: forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
-    join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
-    join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_amazon {hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_dtc { from: forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
+    join: forecast_wholesale {type: full_outer sql_on: ${forecast_dtc.sku_id} = ${forecast_wholesale.sku_id} and ${forecast_dtc.date_date} = ${forecast_wholesale.date_date};; relationship: one_to_one}
+    join: item {view_label: "Product" type: left_outer sql_on: coalesce(${forecast_wholesale.sku_id},${forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_amazon {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+      join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: wholesale_stores {hidden: yes}
   explore: deleted_fulfillment {hidden: yes}
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
