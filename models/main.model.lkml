@@ -1063,6 +1063,12 @@ explore: sales_order_line{
     sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
     relationship: one_to_one
   }
+  join: warranty_original_information {
+    view_label: "Warranties"
+    type: left_outer
+    sql_on: ${warranty_order.replacement_order_id} = ${warranty_original_information.order_id} and ${sales_order_line.item_id} = ${warranty_original_information.item_id} ;;
+    relationship: one_to_one
+  }
 
 }
 
