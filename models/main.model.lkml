@@ -259,6 +259,8 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: l2_l_checklist_answers {hidden: yes}
+explore: l2_l_checklists {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
@@ -1055,6 +1057,13 @@ explore: sales_order_line{
     sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
     relationship: many_to_one
   }
+  join: zendesk_sales {
+    view_label: "Zendesk Sell"
+    type: full_outer
+    sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
+    relationship: one_to_one
+  }
+
 }
 
 
@@ -1314,6 +1323,7 @@ explore: procom_security_daily_customer {
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
 
   explore: nps_survey_06_dec2019 {hidden:yes}
+  explore: nps_survey_dec2019 {hidden:yes}
   explore: product_csat_dec_2019 {hidden:yes}
   explore: customer_nps_dec_2019 {hidden:yes}
   explore: shopify_orders

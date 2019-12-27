@@ -42,8 +42,7 @@ view: day_aggregation_dtc_orders {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
-      filters: { field: item.product_description value: "-SQUISHY 2.0" }
+      filters: { field: item.product_description value: "-SQUISHY 2.0,-PURPLE SQUISHY MAILER SAMPLE" }
     }
   }
   dimension: total_orders { type: number }

@@ -92,7 +92,6 @@ view: warranty_order {
     sql: ${TABLE}.SYSTEM ;; }
 
   dimension: transaction_number {
-    hidden: yes
     type: string
     sql: ${TABLE}.TRANSACTION_NUMBER ;; }
 

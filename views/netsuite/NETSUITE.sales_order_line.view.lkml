@@ -63,6 +63,7 @@ view: sales_order_line {
 
   measure: total_discounts {
     label:  "Total Discounts ($)"
+    value_format:"$#,##0"
     description:  "Total of all applied discounts when order was placed"
     type: sum
     sql:  ${TABLE}.discount_amt ;; }
@@ -658,49 +659,6 @@ dimension: days_to_cancel {
   tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
   sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
-  dimension: order_age_bucket {
-    view_label: "Fulfillment"
-    group_label: " Advanced"
-    label: "  Order Age (bucket)"
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
-    type:  tier
-    tiers: [1,2,3,4,5,6,7,11,15,21]
-    style: integer
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
-
-  dimension: order_age_bucket2 {
-    view_label: "Fulfillment"
-    group_label: " Advanced"
-    label: "  Order Age (bucket 2)"
-    hidden: yes
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
-    type:  tier
-    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
-    style: integer
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
-
-
-  dimension: order_age_raw {
-    label: "Order Age Raw"
-    description: "Number of days between today and when order was placed"
-    hidden:  yes
-    type:  number
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
@@ -906,7 +864,7 @@ dimension: days_to_cancel {
     label: "    Order"
     description:  "Time and date order was placed"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;; }
@@ -964,6 +922,18 @@ dimension: days_to_cancel {
     hidden: yes
     type: yesno
     sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 90 ;; }
+
+  dimension: customer_age_bucket {
+    label: "Customer Age Bucket"
+    hidden: yes
+    type: string
+    sql:  case
+        when datediff(months, to_date(${TABLE}.Created), current_date()) < 12 then '<12 mon'
+        when datediff(months, to_date(${TABLE}.Created), current_date()) >= 12 and datediff(months, to_date(${TABLE}.Created), current_date()) < 18 then '12-18 mon'
+        when datediff(months, to_date(${TABLE}.Created), current_date()) >= 18 and datediff(months, to_date(${TABLE}.Created), current_date()) < 24 then '18-24 mon'
+        else '24+ mon'
+        end ;;
+  }
 
   measure: 7_day_sales {
     label: "7 Day Average (units)"
@@ -1079,7 +1049,7 @@ dimension: days_to_cancel {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${fulfillment.fulfilled_F_raw} ;;
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
     }
 
   dimension_group: fulfilled_old {
