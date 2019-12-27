@@ -387,7 +387,7 @@ explore: starship_fulfillment {
     relationship: many_to_one  }
 }
 
-  explore: tim_forecast_combined {
+  explore: forecast_combined {
     label: "Forecast"
     description: "Combined wholesale and dtc forecast of units and dollars."
     group_label: "Operations"
@@ -395,7 +395,7 @@ explore: starship_fulfillment {
     join: item {
       view_label: "Product"
       type: left_outer
-      sql_on: ${tim_forecast_combined.sku_id} = ${item.sku_id} ;;
+      sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one}
     join:fg_to_sfg{
       view_label: "FG to SFG"
@@ -821,7 +821,7 @@ explore: sales_order_line{
   join: zcta5 {
     view_label: "Geography"
     type:  left_outer
-    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar ;;
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
     relationship: many_to_one}
   join: dma {
     view_label: "Customer"
@@ -842,7 +842,7 @@ explore: sales_order_line{
     view_label: "Fulfillment"
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
-    relationship: many_to_one}
+    relationship: one_to_many}
   join: sales_order {
     view_label: "Sales Order"
     type: left_outer
@@ -858,7 +858,7 @@ explore: sales_order_line{
     type:  left_outer
     fields: [shopify_orders.call_in_order_Flag]
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-    relationship:  one_to_one}
+    relationship:  many_to_many}
   join: return_order_line {
     view_label: "Returns"
     type: full_outer
@@ -905,7 +905,7 @@ explore: sales_order_line{
     view_label: "Cancellations"
     type: left_outer
     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
-    relationship: one_to_many}
+    relationship: one_to_one }
   join: NETSUITE_cancelled_reason {
     view_label: "Cancellations"
     type: left_outer
@@ -925,7 +925,7 @@ explore: sales_order_line{
     view_label: "Fulfillment"
     type: full_outer
     sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
-    relationship: one_to_one}
+    relationship: many_to_one}
   join: contribution {
     type: left_outer
     sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
@@ -939,12 +939,12 @@ explore: sales_order_line{
     view_label: "State Tax Reconciliation"
     type: left_outer
     sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
-    relationship: one_to_one}
+    relationship: one_to_many}
   join: shopify_discount_codes {
     view_label: "Promo"
     type: left_outer
     sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
-    relationship: many_to_one}
+    relationship: many_to_many}
   join: marketing_sms_codes {
     view_label: "Promo"
     type: left_outer
@@ -1299,22 +1299,22 @@ explore: procom_security_daily_customer {
 # Old/Bad Explores
 #-------------------------------------------------------------------
 
-  explore: tim_forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
+  explore: forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_dtc { from: tim_forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
-    join: tim_forecast_wholesale {type: full_outer sql_on: ${tim_forecast_dtc.sku_id} = ${tim_forecast_wholesale.sku_id} and ${tim_forecast_dtc.date_date} = ${tim_forecast_wholesale.date_date};; relationship: one_to_one}
-    join: item {view_label: "Product" type: left_outer sql_on: coalesce(${tim_forecast_wholesale.sku_id},${tim_forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_amazon {hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: tim_forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${tim_forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_dtc { from: forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
+    join: forecast_wholesale {type: full_outer sql_on: ${forecast_dtc.sku_id} = ${forecast_wholesale.sku_id} and ${forecast_dtc.date_date} = ${forecast_wholesale.date_date};; relationship: one_to_one}
+    join: item {view_label: "Product" type: left_outer sql_on: coalesce(${forecast_wholesale.sku_id},${forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_amazon {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+      join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: wholesale_stores {hidden: yes}
   explore: deleted_fulfillment {hidden: yes}
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}

@@ -1211,6 +1211,13 @@ dimension: days_to_cancel {
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
 
+  dimension: state {
+    view_label: "Customer"
+    group_label: "Customer Address"
+    type: string
+    map_layer_name: us_states
+    sql: ${TABLE}.STATE ;; }
+
   dimension: zip {
     view_label: "Customer"
     group_label: "Customer Address"

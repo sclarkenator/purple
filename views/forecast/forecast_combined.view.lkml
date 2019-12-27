@@ -1,5 +1,5 @@
 
-view: tim_forecast_combined {
+view: forecast_combined {
 
   derived_table: {
     sql:
