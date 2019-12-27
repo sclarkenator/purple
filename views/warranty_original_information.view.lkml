@@ -8,6 +8,7 @@ view: warranty_original_information {
         column: order_id { field: sales_order.order_id }
         column: w_created_date { field: warranty_order.created_date }
         column: s_created_date {field: sales_order_line.created_date}
+        column: replacement_order_id {field: warranty_order.replacement_order_id}
       }
     }
     dimension: key {
@@ -63,4 +64,22 @@ view: warranty_original_information {
       type: date
       sql: ${TABLE}.s_created_date ;;
     }
+  dimension: replacement_order_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.replacement_order_id ;;
+  }
+
+ dimension: bucketed_item_id {
+      hidden: yes
+      type: string
+      sql: case when ${TABLE}.ITEM_ID = '3797' then '1668'
+            when ${TABLE}.ITEM_ID = '3800' then '2991'
+            when ${TABLE}.ITEM_ID = '4410' then '4409'
+            when ${TABLE}.ITEM_ID = '3798' then '1667'
+            when ${TABLE}.ITEM_ID = '3799' then '1666'
+            when ${TABLE}.ITEM_ID = '3802' then '3715'
+            when ${TABLE}.ITEM_ID = '3801' then '1665'
+            else ${TABLE}.ITEM_ID
+            end ;; }
   }
