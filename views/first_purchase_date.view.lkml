@@ -3,9 +3,9 @@ view: first_purchase_date {
       sql: select email,
                   min(to_date(created)) as first_order_date
                   from sales_order
-                  group by email
-
-        dimension: pk {
+                  group by email ;;
+    }
+        dimension: email {
           description: "Primary key for order lookup"
           primary_key: yes
           hidden:  yes
