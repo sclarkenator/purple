@@ -4,6 +4,7 @@ view: customer_table {
   dimension: customer_id {
     label: "Customer ID"
     description: "Hyperlink to customer record in netsuite by internal id"
+    group_label: " Advanced"
     type: string
     primary_key: yes
     html: <a href = "https://system.na2.netsuite.com/app/common/entity/custjob.nl?id={{value}}" target="_blank"> {{value}} </a> ;;
