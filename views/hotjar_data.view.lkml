@@ -44,15 +44,17 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: ${TABLE}.created::date <= '2019-12-30' ;;}
-  #sql: date_part('week',${TABLE}.created) < date_part('week',current_date);; }
+    #sql: ${TABLE}.created::date <= '2019-12-30' ;;}
+    #sql: date_part('week',${TABLE}.created) < date_part('week',current_date);; }
+    sql: date_part('week',${TABLE}.created) < 53;; }
 
   dimension: prev_week{
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql:  ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' ;; }
-  #sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
+    #sql:  ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' ;; }
+    #sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.created) = 52;; }
 
   dimension: cur_week{
     group_label: "Created Date"

@@ -33,6 +33,7 @@ view: inventory_snap {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
+<<<<<<< HEAD
     sql: case
     when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
     when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
@@ -49,6 +50,15 @@ view: inventory_snap {
 #         when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -1 then 'Last Week LY'
 #         when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
 #         else 'Other' end;; }
+=======
+    sql: case when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = 52 then 'Last Week'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) and date_part('week',${TABLE}.created::date) = 51 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = 52 then 'Last Week LY'
+        when date_part('year', ${TABLE}.created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.created::date) = 51 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   measure: inbound {
     label: "Total Inbound"

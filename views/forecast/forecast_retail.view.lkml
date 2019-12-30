@@ -60,6 +60,7 @@ view: forecast_retail {
 #               when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
 #               else 'Other' end;; }
 
+
   measure: total_units {
     label: "Total Units"
     type:  sum

@@ -182,22 +182,31 @@ view: sessions {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql: ${TABLE}.time::date <= '2019-12-30' ;;}
   #sql: date_part('week',${TABLE}.time::date) < date_part('week',current_date);; }
+=======
+    sql: date_part('week',${TABLE}.time::date) < 53;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: prev_week{
     group_label: "Time Date"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql:  ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' ;; }
   #sql: date_part('week',${TABLE}.time::date) = date_part('week',current_date)-1;; }
+=======
+    sql: date_part('week',${TABLE}.time::date) = 52;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: week_bucket{
     group_label: "Time Date"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
+<<<<<<< HEAD
     sql: case
       when ${TABLE}.time::date >= '2019-12-30' and ${TABLE}.time::date <= '2020-01-05' then 'Current Week'
       when ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' then 'Last Week'
@@ -214,6 +223,15 @@ view: sessions {
 #         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -1 then 'Last Week LY'
 #         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
 #         else 'Other' end;; }
+=======
+    sql: case when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = 52 then 'Last Week'
+        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = 51 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = 52 then 'Last Week LY'
+        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = 51 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: user_id {
     type: number

@@ -201,16 +201,24 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     type: yesno
+<<<<<<< HEAD
     sql: ${Due_Date}::date <= '2019-12-30' ;;}
   #sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
+=======
+    sql: date_part('week',${Due_Date}::date) < 53;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: sla_prev_week{
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
     type: yesno
+<<<<<<< HEAD
     sql: ${Due_Date}::date >= '2019-12-23' and ${Due_Date}::date <= '2019-12-29' ;; }
   #sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
+=======
+    sql: date_part('week',${Due_Date}::date) = 52;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
@@ -765,6 +773,7 @@ dimension: days_to_cancel {
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
+<<<<<<< HEAD
       sql: case
           when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
           when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
@@ -787,6 +796,15 @@ dimension: days_to_cancel {
 #       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
 #         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -2 then 'Two Weeks Ago LY'
 #       else 'Other' end;; }
+=======
+      sql: case when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = 52 then 'Last Week'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = 51 then 'Two Weeks Ago'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week LY'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = 52 then 'Last Week LY'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = 51 then 'Two Weeks Ago LY'
+          else 'Other' end;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: Before_today_ly{
     view_label: "Sales Order"
@@ -812,9 +830,13 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql: ${TABLE}.Created::date <= '2019-12-30' ;;}
     #sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);;
 
+=======
+    sql: date_part('week',${TABLE}.Created) < 53;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: prev_week{
     view_label: "Sales Order"
@@ -823,8 +845,12 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql:  ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' ;; }
   #sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
+=======
+    sql: date_part('week',${TABLE}.Created) = 52;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: Shipping_Addresee{
     hidden:  yes
@@ -855,8 +881,12 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql: ${fulfilled_raw}::date <= '2019-12-30' ;;}
   #sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
+=======
+    sql: date_part('week',${fulfilled_raw}::date) < 53;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -864,8 +894,12 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
+<<<<<<< HEAD
     sql:  ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' ;; }
   #sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
+=======
+    sql: date_part('week',${fulfilled_raw}::date) = 52;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
@@ -873,6 +907,7 @@ dimension: days_to_cancel {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
+<<<<<<< HEAD
     sql: case
     when ${fulfilled_raw}::date >= '2019-12-30' and ${fulfilled_raw}::date <= '2020-01-05' then 'Current Week'
     when ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' then 'Last Week'
@@ -889,6 +924,15 @@ dimension: days_to_cancel {
 #         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week LY'
 #         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
 #         else 'Other' end;; }
+=======
+    sql: case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = 52 then 'Last Week'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = 51 then 'Two Weeks Ago'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = 52 then 'Last Week LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = 51 then 'Two Weeks Ago LY'
+        else 'Other' end;; }
+>>>>>>> branch 'master' of git@github.com:sclarkenator/purple.git
 
   dimension_group: created {
     view_label: "Sales Order"

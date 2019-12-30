@@ -347,8 +347,9 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: ${TABLE}.date::date <= '2019-12-30' ;;}
-  #sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
+    #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+    #sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
+    sql: date_part('week',${TABLE}.date) < 53 and ${TABLE}.date::date <= current_date::date;; }
 
   dimension: 6_weeks{
     group_label: "Created Date"
@@ -360,8 +361,9 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql:  ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' ;; }
-  #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+    #sql:  ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' ;; }
+    #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.date) = 52;; }
 
   dimension: cur_week{
     group_label: "Created Date"
