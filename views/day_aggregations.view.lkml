@@ -347,7 +347,8 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
+    sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+  #sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
 
   dimension: 6_weeks{
     group_label: "Created Date"
@@ -359,7 +360,8 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+    sql:  ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' ;; }
+  #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
 
   dimension: cur_week{
     group_label: "Created Date"
@@ -379,13 +381,28 @@ view: day_aggregations {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-    sql: case when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
-        else 'Other' end;; }
+    sql: case
+    when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
+    when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
+    when ${TABLE}.Created::date >= '2019-12-16' and ${TABLE}.Created::date <= '2019-12-22' then 'Two Weeks Ago'
+    when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Current Week LY'
+    when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Last Week LY'
+    when ${TABLE}.Created::date >= '2018-12-17' and ${TABLE}.Created::date <= '2018-12-23' then 'Two Weeks Ago LY'
+    else 'Other' end ;; }
+
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week'
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -1 then 'Last Week'
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -2 then 'Two Weeks Ago'
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week LY'
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -1 then 'Last Week LY'
+#     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#     and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -2 then 'Two Weeks Ago LY'
+#     else 'Other' end;; }
 
   measure: dtc_amount {
     label: "DTC Amount"

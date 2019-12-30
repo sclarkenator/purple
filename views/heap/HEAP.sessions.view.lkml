@@ -182,27 +182,38 @@ view: sessions {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.time::date) < date_part('week',current_date);; }
+    sql: ${TABLE}.time::date <= '2019-12-30' ;;}
+  #sql: date_part('week',${TABLE}.time::date) < date_part('week',current_date);; }
 
   dimension: prev_week{
     group_label: "Time Date"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.time::date) = date_part('week',current_date)-1;; }
+    sql:  ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' ;; }
+  #sql: date_part('week',${TABLE}.time::date) = date_part('week',current_date)-1;; }
 
   dimension: week_bucket{
     group_label: "Time Date"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-    sql: case when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
-        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
-        else 'Other' end;; }
+    sql: case
+      when ${TABLE}.time::date >= '2019-12-30' and ${TABLE}.time::date <= '2020-01-05' then 'Current Week'
+      when ${TABLE}.time::date >= '2019-12-23' and ${TABLE}.time::date <= '2019-12-29' then 'Last Week'
+      when ${TABLE}.time::date >= '2019-12-16' and ${TABLE}.time::date <= '2019-12-22' then 'Two Weeks Ago'
+      when ${TABLE}.time::date >= '2018-12-31' and ${TABLE}.time::date <= '2019-01-06' then 'Current Week LY'
+      when ${TABLE}.time::date >= '2018-12-24' and ${TABLE}.time::date <= '2018-12-30' then 'Last Week LY'
+      when ${TABLE}.time::date >= '2018-12-17' and ${TABLE}.time::date <= '2018-12-23' then 'Two Weeks Ago LY'
+      else 'Other' end ;; }
+
+#   case when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week'
+#         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -1 then 'Last Week'
+#         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+#         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) then 'Current Week LY'
+#         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -1 then 'Last Week LY'
+#         when date_part('year', ${TABLE}.time::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.time::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+#         else 'Other' end;; }
 
   dimension: user_id {
     type: number
