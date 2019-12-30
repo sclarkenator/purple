@@ -44,7 +44,7 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${TABLE}.created) < date_part('week',current_date);; }
+    sql: date_part('week',${TABLE}.created) < 53;; }
 
   dimension: prev_week{
     group_label: "Created Date"

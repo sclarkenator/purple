@@ -202,7 +202,7 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Before Current Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+        sql: date_part('week',${TABLE}.date) < 53;; }
 
       dimension: week_offset{
         group_label: "Forecast Date"

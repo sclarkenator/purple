@@ -347,7 +347,7 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
+    sql: date_part('week',${TABLE}.date) < 53 and ${TABLE}.date::date <= current_date::date;; }
 
   dimension: 6_weeks{
     group_label: "Created Date"
@@ -380,11 +380,11 @@ view: day_aggregations {
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
     sql: case when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = 52 then 'Last Week'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) and date_part('week',${TABLE}.date::date) = 51 then 'Two Weeks Ago'
         when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = 52 then 'Last Week LY'
+        when date_part('year', ${TABLE}.date::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.date::date) = 51 then 'Two Weeks Ago LY'
         else 'Other' end;; }
 
   measure: dtc_amount {

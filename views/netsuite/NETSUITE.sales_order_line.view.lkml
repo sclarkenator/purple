@@ -201,7 +201,7 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
+    sql: date_part('week',${Due_Date}::date) < 53;; }
 
   dimension: sla_prev_week{
     group_label: "SLA Target Date"
@@ -764,11 +764,11 @@ dimension: days_to_cancel {
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
       sql: case when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -1 then 'Last Week'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = 52 then 'Last Week'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = 51 then 'Two Weeks Ago'
           when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week LY'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -1 then 'Last Week LY'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = 52 then 'Last Week LY'
+          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = 51 then 'Two Weeks Ago LY'
           else 'Other' end;; }
 
   dimension: Before_today_ly{
@@ -795,7 +795,7 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);; }
+    sql: date_part('week',${TABLE}.Created) < 53;; }
 
   dimension: prev_week{
     view_label: "Sales Order"
@@ -835,7 +835,7 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
+    sql: date_part('week',${fulfilled_raw}::date) < 53;; }
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -852,11 +852,11 @@ dimension: days_to_cancel {
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
     sql: case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = 52 then 'Last Week'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = 51 then 'Two Weeks Ago'
         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = 52 then 'Last Week LY'
+        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = 51 then 'Two Weeks Ago LY'
         else 'Other' end;; }
 
   dimension_group: created {
