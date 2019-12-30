@@ -50,7 +50,7 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.created) = 52;; }
 
   dimension: cur_week{
     group_label: "Created Date"

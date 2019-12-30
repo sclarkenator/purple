@@ -189,7 +189,7 @@ view: sessions {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.time::date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.time::date) = 52;; }
 
   dimension: week_bucket{
     group_label: "Time Date"

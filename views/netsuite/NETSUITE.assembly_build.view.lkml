@@ -125,7 +125,7 @@ view: assembly_build {
     group_label: "Produced Date"
     label: "z - Previous Week"
     type: yesno
-    sql: date_part('week',${TABLE}.PRODUCED) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.PRODUCED) = 52;; }
 
   dimension: week_bucket{
     group_label: "Produced Date"

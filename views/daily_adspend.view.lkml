@@ -58,7 +58,7 @@ view: daily_adspend {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.date) = 52;; }
 
   measure: adspend {
     label: "Total Adspend ($k)"

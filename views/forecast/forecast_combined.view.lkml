@@ -220,7 +220,7 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Previous Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+        sql: date_part('week',${TABLE}.date) = 52;; }
 
       dimension: cur_week{
         group_label: "Forecast Date"

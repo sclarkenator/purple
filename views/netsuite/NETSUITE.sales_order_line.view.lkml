@@ -208,7 +208,7 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Previous Week"
     type: yesno
-    sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${Due_Date}::date) = 52;; }
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
@@ -804,7 +804,7 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.Created) = 52;; }
 
   dimension: Shipping_Addresee{
     hidden:  yes
@@ -843,7 +843,7 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${fulfilled_raw}::date) = 52;; }
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
