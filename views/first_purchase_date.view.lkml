@@ -20,4 +20,16 @@ view: first_purchase_date {
           type: date
           sql: ${TABLE}.first_order_date ;;
         }
+        dimension: customer_age_bucket {
+          label: "Customer Age Bucket"
+          description: "Customer Age by <12 mon, 12-18 mon, 18-24 mon, 24+ mon"
+          group_label: " Advanced"
+          type: string
+          sql:  case
+              when datediff(months, ${first_order_date}, current_date()) < 12 then '<12 mon'
+              when datediff(months, ${first_order_date}, current_date()) >= 12 and datediff(months, ${first_order_date}, current_date()) < 18 then '12-18 mon'
+              when datediff(months, ${first_order_date}, current_date()) >= 18 and datediff(months, ${first_order_date}, current_date()) < 24 then '18-24 mon'
+              else '24+ mon'
+              end ;;
+  }
       }

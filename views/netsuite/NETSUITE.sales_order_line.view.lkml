@@ -961,18 +961,6 @@ dimension: days_to_cancel {
     type: yesno
     sql: datediff(d,${created_date},dateadd(d,-1,current_date)) < 90 ;; }
 
-  dimension: customer_age_bucket {
-    label: "Customer Age Bucket"
-    hidden: yes
-    type: string
-    sql:  case
-        when datediff(months, to_date(${TABLE}.Created), current_date()) < 12 then '<12 mon'
-        when datediff(months, to_date(${TABLE}.Created), current_date()) >= 12 and datediff(months, to_date(${TABLE}.Created), current_date()) < 18 then '12-18 mon'
-        when datediff(months, to_date(${TABLE}.Created), current_date()) >= 18 and datediff(months, to_date(${TABLE}.Created), current_date()) < 24 then '18-24 mon'
-        else '24+ mon'
-        end ;;
-  }
-
   measure: 7_day_sales {
     label: "7 Day Average (units)"
     description: "Units ordered in the last 7 days /7"
