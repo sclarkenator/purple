@@ -748,30 +748,11 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
-explore: agent_company_value {
-  hidden: yes
-  label: "Agent Company Value"
-  group_label: "Customer Care"
-}
-
-explore: agent_evaluation {
-  hidden: yes
-  label: "Agent Evaluation"
-  group_label: "Customer Care"
-}
-
-explore: agent_attendance {
-  hidden: yes
-  label: "Agent Attendance"
-  group_label: "Customer Care"
-
-}
-
-explore: v_agent_state  {
-  hidden:  yes
-  label: "Agent Time States"
-  group_label: "Customer Care"
-}
+explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
+explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
+explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
+explore: stella_response {hidden:yes}
 
 
 #-------------------------------------------------------------------
