@@ -290,4 +290,13 @@ view: item {
             when ${TABLE}.ITEM_ID = '3801' then '1665'
             else ${TABLE}.ITEM_ID
             end ;; }
+
+    dimension: bucketed_bases {
+      hidden: yes
+      type: string
+      sql: case when ${product_name} ilike '%accordion%' then 'Foundations (accordion)'
+            when ${product_name} ilike '%platform%' then 'Platforms (non-accordion)'
+            when ${product_name} ilike '%powerbase%' then 'PowerBase'
+            else 'Other'
+            end ;;  }
 }
