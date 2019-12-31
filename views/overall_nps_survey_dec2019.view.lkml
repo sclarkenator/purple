@@ -131,16 +131,19 @@ view: overall_nps_survey_dec2019 {
 
   dimension: nps_comment {
     type: string
+    label: "NPS Comment"
     sql: ${TABLE}."NPS_COMMENT" ;;
   }
 
   dimension: nps_question {
     type: string
+    label: "NPS Numeric Response"
     sql: ${TABLE}."NPS_QUESTION" ;;
   }
 
   dimension: nps_question_group {
     type: string
+    label: "NPS Groups"
     sql: ${TABLE}."NPS_QUESTION_GROUP" ;;
   }
 
