@@ -297,5 +297,6 @@ view: item {
       sql: case when ${product_name} ilike '%accordion%' then 'Foundations (accordion)'
             when ${product_name} ilike '%platform%' then 'Platforms (non-accordion)'
             when ${product_name} ilike '%powerbase%' then 'PowerBase'
-            else "Other"  ;;  }
+            else "Other"
+            end ;;  }
 }
