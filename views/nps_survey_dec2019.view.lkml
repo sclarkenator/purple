@@ -1,10 +1,52 @@
-view: nps_survey_dec2019 {
-  sql_table_name: CSV_UPLOADS.NPS_SURVEY_DEC2019 ;;
+view: nps_survey_dec2019 {derived_table: {
+      sql:
+      select "EMAIL","CREATED_DATE","FULFILLED_DATE","SURVEY_RECORDED_DATE","ITEM_ID","SKU_ID","TRANID","ORDER_ID",product,csat
+      from (select *
+          from analytics.csv_uploads.nps_survey_dec2019
+          unpivot(csat for product in ("WEIGHTED_BLANKET","ULTIMATE_CUSHION","SLEEP_MASK","SIMPLY_CUSHION","SHEETS_TWIN_WHITE","SHEETS_TWIN_SLATE","SHEETS_TWIN_SAND","SHEETS_TWIN_PURPLE","SHEETS_SPLIT_KING_WHITE","SHEETS_SPLIT_KING_SLATE","SHEETS_SPLIT_KING_SAND","SHEETS_SPLIT_KING_PURPLE","SHEETS_KING_WHITE","SHEETS_KING_SLATE","SHEETS_KING_SAND","SHEETS_KING_PURPLE","SHEETS_FULL_WHITE","SHEETS_FULL_SLATE","SHEETS_FULL_SAND","SHEETS_FULL_PURPLE","ROYAL_CUSHION","PURPLE_PLUSH_PILLOW_KING","PURPLE_PLUSH_PILLOW","PURPLE_PILLOW","PURPLE_MATTRESS_TWIN_XL","PURPLE_MATTRESS_TWIN","PURPLE_MATTRESS_SPLIT_KING","PURPLE_MATTRESS_QUEEN","PURPLE_MATTRESS_KING","PURPLE_MATTRESS_FULL","PURPLE_MATTRESS_CAL_KING","POWERBASE_TWIN_XL","POWERBASE_SPLIT_KING","POWERBASE_QUEEN","PORTABLE_CUSHION","PLATFORM_BASE_TWIN_XL","PLATFORM_BASE_TWIN","PLATFORM_BASE_QUEEN","PLATFORM_BASE_KING","PLATFORM_BASE_FULL","PLATFORM_BASE_CALIFORNIA_KING","PET_BED_SMALL","PET_BED_MEDIUM","PET_BED_LARGE","MATTRESS_PROTECTOR_TWIN_XL","MATTRESS_PROTECTOR_TWIN","MATTRESS_PROTECTOR_SPLIT_KING","MATTRESS_PROTECTOR_QUEEN","MATTRESS_PROTECTOR_KING","MATTRESS_PROTECTOR_FULL_XL","MATTRESS_PROTECTOR_FULL","MATTRESS_PROTECTOR_CALIFORNIA_KING","HYBRID_PREMIER_4_TWIN_XL","HYBRID_PREMIER_4_SPLIT_KING","HYBRID_PREMIER_4_QUEEN","HYBRID_PREMIER_4_MATTRESS_KING","HYBRID_PREMIER_4_MATTRESS_FULL","HYBRID_PREMIER_4_CAL_KING","HYBRID_PREMIER_3_TWIN_XL","HYBRID_PREMIER_3_SPLIT_KING","HYBRID_PREMIER_3_QUEEN","HYBRID_PREMIER_3_MATTRESS_KING","HYBRID_PREMIER_3_MATTRESS_FULL","HYBRID_PREMIER_3_CAL_KING","HYBRID_MATTRESS_TWIN_XL","HYBRID_MATTRESS_SPLIT_KING","HYBRID_MATTRESS_QUEEN","HYBRID_MATTRESS_KING","HYBRID_MATTRESS_FULL","HYBRID_MATTRESS_CAL_KING","HARMONY_PILLOW_TALL","HARMONY_PILLOW","EVERYWHERE_CUSHION","DOUBLE_CUSHION","BACK_CUSHION"
+                                 ))
+                                );;
+    }
 
-  dimension: back_cushion {
+  dimension: Primary_Key {
     type: string
-    sql: ${TABLE}."BACK_CUSHION" ;;
+    primary_key: yes
+    sql:  ${TABLE}.email || ${TABLE}.item_id || ${TABLE}.order_id || ${TABLE}.FULFILLED_DATE;;
+    hidden: yes
   }
+
+  dimension: CSAT_Group {
+    label: "Survey Response Group"
+    description: "Aggregate survey responses by Promoter, Passive, and Detractor"
+    type: string
+    case: {
+      when: {
+        sql: ${TABLE}.csat = 'Extremely satisfied' ;;
+        label: "Promoter"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Somewhat satisfied' ;;
+        label: "Passive"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Neither satisfied nor dissatisfied' ;;
+        label: "Detractor"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Somewhat dissatisfied' ;;
+        label: "Detractor"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'Extremely dissatisfied' ;;
+        label: "Detractor"
+      }
+      when: {
+        sql: ${TABLE}.csat = 'I did not order/receive that product' ;;
+        label: "Did not Order/Receive"
+      }
+      else: "Unanswered"
+      }
+    }
 
   dimension_group: created {
     type: time
@@ -18,461 +60,123 @@ view: nps_survey_dec2019 {
     ]
     convert_tz: no
     datatype: date
+    label: "Order Created"
     sql: ${TABLE}."CREATED_DATE" ;;
   }
 
-  dimension: delivery_experience_satisfaction {
-    type: string
-    sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" ;;
-  }
-
-  dimension: double_cushion {
-    type: string
-    sql: ${TABLE}."DOUBLE_CUSHION" ;;
-  }
-
-  dimension: email {
-    type: string
-    sql: ${TABLE}."EMAIL" ;;
-  }
-
-  dimension: everywhere_cushion {
-    type: string
-    sql: ${TABLE}."EVERYWHERE_CUSHION" ;;
-  }
-
-  dimension_group: fulfilled {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."FULFILLED_DATE" ;;
-  }
-
-  dimension: harmony_pillow {
-    type: string
-    sql: ${TABLE}."HARMONY_PILLOW" ;;
-  }
-
-  dimension: harmony_pillow_tall {
-    type: string
-    sql: ${TABLE}."HARMONY_PILLOW_TALL" ;;
-  }
-
-  dimension: hybrid_mattress_cal_king {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_CAL_KING" ;;
-  }
-
-  dimension: hybrid_mattress_full {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_FULL" ;;
-  }
-
-  dimension: hybrid_mattress_king {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_KING" ;;
-  }
-
-  dimension: hybrid_mattress_queen {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_QUEEN" ;;
-  }
-
-  dimension: hybrid_mattress_split_king {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_SPLIT_KING" ;;
-  }
-
-  dimension: hybrid_mattress_twin_xl {
-    type: string
-    sql: ${TABLE}."HYBRID_MATTRESS_TWIN_XL" ;;
-  }
-
-  dimension: hybrid_premier_3_cal_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_CAL_KING" ;;
-  }
-
-  dimension: hybrid_premier_3_mattress_full {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_MATTRESS_FULL" ;;
-  }
-
-  dimension: hybrid_premier_3_mattress_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_MATTRESS_KING" ;;
-  }
-
-  dimension: hybrid_premier_3_queen {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_QUEEN" ;;
-  }
-
-  dimension: hybrid_premier_3_split_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_SPLIT_KING" ;;
-  }
-
-  dimension: hybrid_premier_3_twin_xl {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_3_TWIN_XL" ;;
-  }
-
-  dimension: hybrid_premier_4_cal_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_CAL_KING" ;;
-  }
-
-  dimension: hybrid_premier_4_mattress_full {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_MATTRESS_FULL" ;;
-  }
-
-  dimension: hybrid_premier_4_mattress_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_MATTRESS_KING" ;;
-  }
-
-  dimension: hybrid_premier_4_queen {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_QUEEN" ;;
-  }
-
-  dimension: hybrid_premier_4_split_king {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_SPLIT_KING" ;;
-  }
-
-  dimension: hybrid_premier_4_twin_xl {
-    type: string
-    sql: ${TABLE}."HYBRID_PREMIER_4_TWIN_XL" ;;
-  }
-
-  dimension: item_id {
-    type: string
-    sql: ${TABLE}."ITEM_ID" ;;
-  }
-
-  dimension: mattress_protector_california_king {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_CALIFORNIA_KING" ;;
-  }
-
-  dimension: mattress_protector_full {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_FULL" ;;
-  }
-
-  dimension: mattress_protector_full_xl {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_FULL_XL" ;;
-  }
-
-  dimension: mattress_protector_king {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_KING" ;;
-  }
-
-  dimension: mattress_protector_queen {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_QUEEN" ;;
-  }
-
-  dimension: mattress_protector_split_king {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_SPLIT_KING" ;;
-  }
-
-  dimension: mattress_protector_twin {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_TWIN" ;;
-  }
-
-  dimension: mattress_protector_twin_xl {
-    type: string
-    sql: ${TABLE}."MATTRESS_PROTECTOR_TWIN_XL" ;;
-  }
-
-  dimension: nps_comment {
-    type: string
-    sql: ${TABLE}."NPS_COMMENT" ;;
-  }
-
-  dimension: nps_question {
-    type: string
-    sql: ${TABLE}."NPS_QUESTION" ;;
-  }
-
-  dimension: nps_question_group {
-    type: string
-    sql: ${TABLE}."NPS_QUESTION_GROUP" ;;
-  }
-
-  dimension: order_id {
-    type: string
-    sql: ${TABLE}."ORDER_ID" ;;
-  }
-
-  dimension: pet_bed_large {
-    type: string
-    sql: ${TABLE}."PET_BED_LARGE" ;;
-  }
-
-  dimension: pet_bed_medium {
-    type: string
-    sql: ${TABLE}."PET_BED_MEDIUM" ;;
-  }
-
-  dimension: pet_bed_small {
-    type: string
-    sql: ${TABLE}."PET_BED_SMALL" ;;
-  }
-
-  dimension: platform_base_california_king {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_CALIFORNIA_KING" ;;
-  }
-
-  dimension: platform_base_full {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_FULL" ;;
-  }
-
-  dimension: platform_base_king {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_KING" ;;
-  }
-
-  dimension: platform_base_queen {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_QUEEN" ;;
-  }
-
-  dimension: platform_base_twin {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_TWIN" ;;
-  }
-
-  dimension: platform_base_twin_xl {
-    type: string
-    sql: ${TABLE}."PLATFORM_BASE_TWIN_XL" ;;
-  }
-
-  dimension: portable_cushion {
-    type: string
-    sql: ${TABLE}."PORTABLE_CUSHION" ;;
-  }
-
-  dimension: powerbase_queen {
-    type: string
-    sql: ${TABLE}."POWERBASE_QUEEN" ;;
-  }
-
-  dimension: powerbase_split_king {
-    type: string
-    sql: ${TABLE}."POWERBASE_SPLIT_KING" ;;
-  }
-
-  dimension: powerbase_twin_xl {
-    type: string
-    sql: ${TABLE}."POWERBASE_TWIN_XL" ;;
-  }
-
-  dimension: purple_mattress_cal_king {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_CAL_KING" ;;
-  }
-
-  dimension: purple_mattress_full {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_FULL" ;;
-  }
-
-  dimension: purple_mattress_king {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_KING" ;;
-  }
-
-  dimension: purple_mattress_queen {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_QUEEN" ;;
-  }
-
-  dimension: purple_mattress_split_king {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_SPLIT_KING" ;;
-  }
-
-  dimension: purple_mattress_twin {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_TWIN" ;;
-  }
-
-  dimension: purple_mattress_twin_xl {
-    type: string
-    sql: ${TABLE}."PURPLE_MATTRESS_TWIN_XL" ;;
-  }
-
-  dimension: purple_pillow {
-    type: string
-    sql: ${TABLE}."PURPLE_PILLOW" ;;
-  }
-
-  dimension: purple_plush_pillow {
-    type: string
-    sql: ${TABLE}."PURPLE_PLUSH_PILLOW" ;;
-  }
-
-  dimension: purple_plush_pillow_king {
-    type: string
-    sql: ${TABLE}."PURPLE_PLUSH_PILLOW_KING" ;;
-  }
-
-  dimension: royal_cushion {
-    type: string
-    sql: ${TABLE}."ROYAL_CUSHION" ;;
-  }
-
-  dimension: sheets_full_purple {
-    type: string
-    sql: ${TABLE}."SHEETS_FULL_PURPLE" ;;
-  }
-
-  dimension: sheets_full_sand {
-    type: string
-    sql: ${TABLE}."SHEETS_FULL_SAND" ;;
-  }
-
-  dimension: sheets_full_slate {
-    type: string
-    sql: ${TABLE}."SHEETS_FULL_SLATE" ;;
-  }
-
-  dimension: sheets_full_white {
-    type: string
-    sql: ${TABLE}."SHEETS_FULL_WHITE" ;;
-  }
-
-  dimension: sheets_king_purple {
-    type: string
-    sql: ${TABLE}."SHEETS_KING_PURPLE" ;;
-  }
-
-  dimension: sheets_king_sand {
-    type: string
-    sql: ${TABLE}."SHEETS_KING_SAND" ;;
-  }
-
-  dimension: sheets_king_slate {
-    type: string
-    sql: ${TABLE}."SHEETS_KING_SLATE" ;;
-  }
-
-  dimension: sheets_king_white {
-    type: string
-    sql: ${TABLE}."SHEETS_KING_WHITE" ;;
-  }
-
-  dimension: sheets_split_king_purple {
-    type: string
-    sql: ${TABLE}."SHEETS_SPLIT_KING_PURPLE" ;;
-  }
-
-  dimension: sheets_split_king_sand {
-    type: string
-    sql: ${TABLE}."SHEETS_SPLIT_KING_SAND" ;;
-  }
-
-  dimension: sheets_split_king_slate {
-    type: string
-    sql: ${TABLE}."SHEETS_SPLIT_KING_SLATE" ;;
-  }
-
-  dimension: sheets_split_king_white {
-    type: string
-    sql: ${TABLE}."SHEETS_SPLIT_KING_WHITE" ;;
-  }
-
-  dimension: sheets_twin_purple {
-    type: string
-    sql: ${TABLE}."SHEETS_TWIN_PURPLE" ;;
-  }
-
-  dimension: sheets_twin_sand {
-    type: string
-    sql: ${TABLE}."SHEETS_TWIN_SAND" ;;
-  }
-
-  dimension: sheets_twin_slate {
-    type: string
-    sql: ${TABLE}."SHEETS_TWIN_SLATE" ;;
-  }
-
-  dimension: sheets_twin_white {
-    type: string
-    sql: ${TABLE}."SHEETS_TWIN_WHITE" ;;
-  }
-
-  dimension: shopping_experience_satisfaction {
-    type: string
-    sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" ;;
-  }
-
-  dimension: simply_cushion {
-    type: string
-    sql: ${TABLE}."SIMPLY_CUSHION" ;;
-  }
-
-  dimension: sku_id {
-    type: string
-    sql: ${TABLE}."SKU_ID" ;;
-  }
-
-  dimension: sleep_mask {
-    type: string
-    sql: ${TABLE}."SLEEP_MASK" ;;
-  }
-
-  dimension_group: survey_recorded {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."SURVEY_RECORDED_DATE" ;;
-  }
-
-  dimension: tranid {
-    type: string
-    sql: ${TABLE}."TRANID" ;;
-  }
-
-  dimension: ultimate_cushion {
-    type: string
-    sql: ${TABLE}."ULTIMATE_CUSHION" ;;
-  }
-
-  dimension: weighted_blanket {
-    type: string
-    sql: ${TABLE}."WEIGHTED_BLANKET" ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
-}
+    measure: count {
+      type: count
+      drill_fields: []
+    }
+
+    dimension: email {
+      label: "Email"
+      type: string
+      sql: ${TABLE}."EMAIL" ;;
+    }
+
+    dimension_group: fulfilled {
+      type: time
+      label: "Order Fulfilled"
+      timeframes: [
+        raw,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
+      convert_tz: no
+      datatype: date
+      sql: ${TABLE}.fulfilled_date ;;
+    }
+
+    dimension_group: survey_recorded {
+      type: time
+      timeframes: [
+        raw,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
+      convert_tz: no
+      datatype: date
+      sql: ${TABLE}.survey_recorded_date ;;
+    }
+
+    dimension: item_id {
+      type: string
+      hidden: yes
+      sql: ${TABLE}."ITEM_ID" ;;
+    }
+
+    dimension: sku_id {
+      type: string
+      hidden: yes
+      sql: ${TABLE}."SKU_ID" ;;
+    }
+
+    dimension: tranid {
+      type: string
+      hidden: yes
+      sql: ${TABLE}."TRANID" ;;
+    }
+
+    dimension: order_id {
+      type: string
+      hidden: yes
+      sql: ${TABLE}."ORDER_ID" ;;
+    }
+
+    dimension: product {
+      type: string
+      hidden: yes
+      sql: ${TABLE}."PRODUCT" ;;
+    }
+
+    dimension: csat {
+      label: "Survey Response"
+      description: "Customer's selected response in the survey"
+      type: string
+      case: {
+        when: {
+          sql: ${TABLE}."CSAT" = 'Extremely satisfied' ;;
+          label: "Extremely Satisfied"
+        }
+        when: {
+          sql: ${TABLE}."CSAT" = 'Somewhat satisfied' ;;
+          label: "Somewhat Satisfied"
+        }
+        when: {
+          sql: ${TABLE}."CSAT" = 'Neither satisfied nor dissatisfied' ;;
+          label: "Neither Satisfied nor Dissatisfied"
+        }
+        when: {
+          sql: ${TABLE}."CSAT" = 'Somewhat dissatisfied' ;;
+          label: "Somewhat Dissatisfied"
+        }
+        when: {
+          sql: ${TABLE}."CSAT" = 'Extremely dissatisfied' ;;
+          label: "Extremely Dissatisfied"
+        }
+        else: "Unanswered"
+      }
+    }
+
+    set: detail {
+      fields: [
+        email,
+        created_date,
+        fulfilled_date,
+        survey_recorded_date,
+        item_id,
+        sku_id,
+        tranid,
+        order_id,
+        product,
+        csat
+      ]
+    }
+    }

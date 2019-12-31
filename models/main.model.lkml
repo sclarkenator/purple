@@ -1320,10 +1320,11 @@ explore: procom_security_daily_customer {
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
 
-  explore: nps_survey_06_dec2019 {hidden:yes}
-  explore: nps_survey_dec2019 {hidden:yes}
-  explore: product_csat_dec_2019 {hidden:yes}
-  explore: customer_nps_dec_2019 {hidden:yes}
+  explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
+
+  explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
+
+  explore: product_csat_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
   explore: shopify_orders
     { hidden:  yes
       label: "Shopify sales simple"
@@ -1339,6 +1340,15 @@ explore: procom_security_daily_customer {
       fields:[total_units]}
     }
 
+  explore: overall_nps_survey_dec2019 {hidden:yes}
+
+  explore:  nps_survey_dec2019 {
+    hidden: yes
+    label: "NPS Survey"
+    join: item {type: full_outer
+      sql_on: ${item.item_id} = ${nps_survey_dec2019.item_id};;
+      relationship: many_to_one}
+  }
 
   explore: orphan_orders {
     hidden:  yes
