@@ -11,7 +11,7 @@ view: overall_nps_survey_dec2019 {
   }
 
   dimension_group: last_fulfilled_date {
-    label: "Last Order Fulfilled"
+    label: "Order Fulfilled"
     type: time
     timeframes: [
       raw,
@@ -23,7 +23,7 @@ view: overall_nps_survey_dec2019 {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."last_fulfilled_date" ;;
+    sql: ${TABLE}."Last Fulfilled Date" ;;
   }
 
   dimension_group: created {
@@ -119,6 +119,46 @@ view: overall_nps_survey_dec2019 {
     sql: ${TABLE}."NPS_QUESTION_GROUP" ;;
   }
 
+  measure: nps_response_count {
+    type: count_distinct
+    label: "NPS Respondent Count"
+    filters: {
+      field: nps_question_group
+      value: "Promoter, Passive, Detractor"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
+  measure: nps_detractors {
+    type: count_distinct
+    label: "Detractor Count"
+    filters: {
+      field: nps_question_group
+      value: "Detractor"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
+  measure: nps_promoters {
+    type: count_distinct
+    label: "Promoter Count"
+    filters: {
+      field: nps_question_group
+      value: "Promoter"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
+  measure: nps_passives {
+    type: count_distinct
+    label: "Passive Count"
+    filters: {
+      field: nps_question_group
+      value: "Passive"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
   dimension: shopping_experience {
     hidden: yes
     type: string
@@ -169,10 +209,7 @@ view: overall_nps_survey_dec2019 {
     }
   }
 
-  dimension: survey_recorded_date {
-    type: date
-    sql: ${TABLE}."SURVEY_RECORDED_DATE" ;;
-  }
+
 
   dimension_group: survey_recorded_date {
     label: "Survey Recorded"
@@ -187,7 +224,7 @@ view: overall_nps_survey_dec2019 {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."survey_recorded_date" ;;
+    sql: ${TABLE}."SURVEY_RECORDED_DATE"  ;;
   }
 
   dimension: tranid {
