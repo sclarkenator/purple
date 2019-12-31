@@ -471,6 +471,16 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
+  join: zcta5 {
+    view_label: "Geography"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
+    relationship: many_to_one}
+  join: dma {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+    relationship: many_to_many}
   }
 
 explore: all_events {
