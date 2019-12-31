@@ -1,6 +1,16 @@
 view: sales_order {
   sql_table_name: SALES.SALES_ORDER ;;
 
+  dimension: valid_address{
+    label: "Is address valid?"
+    description: "Address validation field: yes/no/blank"
+    type: string
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: ${TABLE}.shipping_address_validated ;;
+  }
+
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
@@ -254,12 +264,20 @@ measure: upt {
     tiers: [150,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3100]
     sql: ${TABLE}.gross_amt ;; }
 
+  dimension: order_type_hyperlink {
+    hidden: yes
+    type: string
+    sql: case when ${transaction_type} = 'Cash Sale' then 'cashsale' else 'salesord' end;;
+  }
 
   dimension: order_id {
     group_label: " Advanced"
     label: "Order ID"
     hidden: no
-    html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
+    #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
@@ -369,7 +387,49 @@ measure: upt {
     type: sum
     sql: ${TABLE}.TAX_AMT ;; }
 
-  dimension_group: trandate {
+  dimension: order_age_bucket {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "  Order Age (bucket)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,11,15,21]
+    style: integer
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
+  dimension: order_age_bucket2 {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "  Order Age (bucket 2)"
+    hidden: no
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
+    style: integer
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
+
+  dimension: order_age_raw {
+    label: "Order Age Raw"
+    description: "Number of days between today and when order was placed"
+    hidden:  yes
+    type:  number
+    sql: datediff(day,
+      case when ${minimum_ship_date} >= coalesce(dateadd(d,-3,${ship_by_date}), ${trandate_date}) and ${minimum_ship_date} >= ${trandate_date} then ${minimum_ship_date}
+        when dateadd(d,-3,${ship_by_date}) >= coalesce(${minimum_ship_date}, ${trandate_date}) and dateadd(d,-3,${ship_by_date}) >= ${trandate_date} then ${ship_by_date}
+        else ${trandate_date} end
+      , current_date) ;; }
+
+dimension_group: trandate {
     hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -391,6 +451,11 @@ measure: upt {
     hidden: yes
     type: string
     sql: ${TABLE}.TRANSACTION_NUMBER ;; }
+
+  dimension: transaction_type {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.TRANSACTION_TYPE ;; }
 
   dimension: update_ts {
     hidden: yes

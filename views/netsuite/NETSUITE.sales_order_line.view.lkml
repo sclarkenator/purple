@@ -63,6 +63,7 @@ view: sales_order_line {
 
   measure: total_discounts {
     label:  "Total Discounts ($)"
+    value_format:"$#,##0"
     description:  "Total of all applied discounts when order was placed"
     type: sum
     sql:  ${TABLE}.discount_amt ;; }
@@ -200,14 +201,18 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
+    #sql: ${Due_Date}::date <= '2019-12-30' ;;}
+    #sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
+    sql: date_part('week',${Due_Date}::date) < 53;; }
 
   dimension: sla_prev_week{
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
     type: yesno
-    sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
+    #sql: ${Due_Date}::date >= '2019-12-23' and ${Due_Date}::date <= '2019-12-29' ;; }
+    #sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${Due_Date}::date) = 52;; }
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
@@ -658,49 +663,6 @@ dimension: days_to_cancel {
   tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
   sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
-  dimension: order_age_bucket {
-    view_label: "Fulfillment"
-    group_label: " Advanced"
-    label: "  Order Age (bucket)"
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
-    type:  tier
-    tiers: [1,2,3,4,5,6,7,11,15,21]
-    style: integer
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
-
-  dimension: order_age_bucket2 {
-    view_label: "Fulfillment"
-    group_label: " Advanced"
-    label: "  Order Age (bucket 2)"
-    hidden: yes
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
-    type:  tier
-    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
-    style: integer
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-    #sql: datediff(day,coalesce(dateadd(d,-3,${sales_order.ship_by_date}),${created_date}),current_date) ;; }
-
-
-  dimension: order_age_raw {
-    label: "Order Age Raw"
-    description: "Number of days between today and when order was placed"
-    hidden:  yes
-    type:  number
-    sql: datediff(day,
-      case when ${sales_order.minimum_ship_date} > coalesce(dateadd(d,-3,${sales_order.ship_by_date}), ${created_date}) and ${sales_order.minimum_ship_date} > ${created_date} then ${sales_order.minimum_ship_date}
-        when dateadd(d,-3,${sales_order.ship_by_date}) > coalesce(${sales_order.minimum_ship_date}, ${created_date}) and dateadd(d,-3,${sales_order.ship_by_date}) > ${created_date} then ${sales_order.ship_by_date}
-        else ${created_date} end
-      , current_date) ;; }
-
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
     description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
@@ -805,13 +767,29 @@ dimension: days_to_cancel {
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
-      sql: case when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -1 then 'Last Week'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) then 'Current Week LY'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -1 then 'Last Week LY'
-          when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1 and date_part('week',${TABLE}.Created::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
-          else 'Other' end;; }
+      sql: case
+          when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
+          when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
+          when ${TABLE}.Created::date >= '2019-12-16' and ${TABLE}.Created::date <= '2019-12-22' then 'Two Weeks Ago'
+          when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Current Week LY'
+          when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Last Week LY'
+          when ${TABLE}.Created::date >= '2018-12-17' and ${TABLE}.Created::date <= '2018-12-23' then 'Two Weeks Ago LY'
+          else 'Other' end ;; }
+
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week'
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -1 then 'Last Week'
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -2 then 'Two Weeks Ago'
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week LY'
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -1 then 'Last Week LY'
+#       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date) -1
+#         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end -2 then 'Two Weeks Ago LY'
+#       else 'Other' end;; }
+
 
   dimension: Before_today_ly{
     view_label: "Sales Order"
@@ -837,7 +815,10 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);; }
+    #sql: ${TABLE}.Created::date <= '2019-12-30' ;;}
+    #sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);;
+    sql: date_part('week',${TABLE}.Created) < 53;; }
+
 
   dimension: prev_week{
     view_label: "Sales Order"
@@ -846,7 +827,9 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
+    #sql:  ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' ;; }
+    #sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${TABLE}.Created) = 52;; }
 
   dimension: Shipping_Addresee{
     hidden:  yes
@@ -877,7 +860,9 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
+    #sql: ${fulfilled_raw}::date <= '2019-12-30' ;;}
+    #sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
+    sql: date_part('week',${fulfilled_raw}::date) < 53;; }
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -885,7 +870,9 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
+    #sql:  ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' ;; }
+    #sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
+    sql: date_part('week',${fulfilled_raw}::date) = 52;; }
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
@@ -893,20 +880,29 @@ dimension: days_to_cancel {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-    sql: case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week LY'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week LY'
-        when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
-        else 'Other' end;; }
+    sql: case
+    when ${fulfilled_raw}::date >= '2019-12-30' and ${fulfilled_raw}::date <= '2020-01-05' then 'Current Week'
+    when ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' then 'Last Week'
+    when ${fulfilled_raw}::date >= '2019-12-16' and ${fulfilled_raw}::date <= '2019-12-22' then 'Two Weeks Ago'
+    when ${fulfilled_raw}::date >= '2018-12-31' and ${fulfilled_raw}::date <= '2019-01-06' then 'Current Week LY'
+    when ${fulfilled_raw}::date >= '2018-12-24' and ${fulfilled_raw}::date <= '2018-12-30' then 'Last Week LY'
+    when ${fulfilled_raw}::date >= '2018-12-17' and ${fulfilled_raw}::date <= '2018-12-23' then 'Two Weeks Ago LY'
+    else 'Other' end ;; }
+
+#   case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
+#         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week'
+#         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago'
+#         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week LY'
+#         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -1 then 'Last Week LY'
+#         when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) -1 and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) -2 then 'Two Weeks Ago LY'
+#         else 'Other' end;; }
 
   dimension_group: created {
     view_label: "Sales Order"
     label: "    Order"
     description:  "Time and date order was placed"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;; }
@@ -1079,7 +1075,7 @@ dimension: days_to_cancel {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${fulfillment.fulfilled_F_raw} ;;
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
     }
 
   dimension_group: fulfilled_old {
@@ -1240,6 +1236,13 @@ dimension: days_to_cancel {
    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
+
+  dimension: state {
+    view_label: "Customer"
+    group_label: "Customer Address"
+    type: string
+    map_layer_name: us_states
+    sql: ${TABLE}.STATE ;; }
 
   dimension: zip {
     view_label: "Customer"

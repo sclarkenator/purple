@@ -31,12 +31,12 @@ view: sales_exec {
 
 view: wholesale_exec {
   derived_table: {
-    explore_source: tim_forecast_wholesale {
+    explore_source: forecast_wholesale {
       column: sku_id { field: item.sku_id }
        column: week_bucket {}
       column: total_amount {}
       column: total_units {}
-      filters: { field: tim_forecast_wholesale.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
+      filters: { field: forecast_wholesale.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
     }
   }
   dimension: sku_id { }
@@ -51,12 +51,12 @@ view: wholesale_exec {
 
 view: dtc_exec {
   derived_table: {
-    explore_source: tim_forecast {
+    explore_source: forecast {
       column: sku_id { field: item.sku_id }
       column: week_bucket {}
       column: amount {}
       column: total_units {}
-      filters: { field: tim_forecast.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
+      filters: { field: forecast.week_bucket value: "Last Week,Two Weeks Ago,Last Week LY" }
     }
   }
   dimension: sku_id { }

@@ -20,6 +20,24 @@ view: all_events {
     type: string
     sql: ${TABLE}.event_table_name ;; }
 
+  dimension: event_table_name_bucket {
+    label: "Event Table Name Bucket"
+    hidden: yes
+    type: string
+    sql: case when ${event_table_name} = 'homepage' then 'Homepage'
+          when ${event_table_name} = 'mattresses' or ${event_table_name} = 'mattresses_hybrid' or ${event_table_name} = 'mattresses_hybrid_premier' or ${event_table_name} = 'products_mattresses_purple_bed'
+            or ${event_table_name} = 'products_viewed_page_either_mattress_lp' or ${event_table_name} = 'products_viewed_page_new_mattress' then 'Mattress'
+          when ${event_table_name} ilike '%compare%' then 'Compare Page'
+          when ${event_table_name} ilike '%pdp%' then 'PDP'
+          when ${event_table_name} ilike '%buy%' then 'Buy'
+          when ${event_table_name} ilike '%cart%' then 'Add to Cart'
+          when ${event_table_name} = 'checkout_view_checkout_page' then 'Checkout-Page'
+          when ${event_table_name} = 'checkout_submit_customer_info' then 'Checkout-Customer Info'
+          when ${event_table_name} = 'checkout_step_1_continue_to_shipping_step_1_continue_to_shipping' then 'Checkout-Shipping'
+          when ${event_table_name} = 'checkout_step_2_continue_to_payment' then 'Checkout-Payment'
+          when ${event_table_name} = 'checkout_step_3_complete' then 'Checkout-Complete'
+          end ;; }
+
   dimension: session_id {
     hidden: yes
     type: number

@@ -40,9 +40,17 @@ view: fulfillment {
     type: string
     sql: ${TABLE}.carrier ;;  }
 
+  dimension: carrier_grouped {
+    view_label: "Carrier Grouped"
+    type: string
+    hidden: yes
+    sql: case when ${TABLE}.carrier = 'Carry Out' then 'Carry Out'
+          when ${TABLE}.carrier = 'Will Call' then 'Will Call'
+          else 'Shipped' end ;; }
+
   dimension_group: created {
     label: "Fulfilled Date (V2)"
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
