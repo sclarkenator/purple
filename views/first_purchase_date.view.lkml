@@ -1,7 +1,7 @@
 view: first_purchase_date {
     derived_table: {
       sql: select email,
-                  min(to_date(created)) as first_order_date
+                  min(to_date(created)) as first_order_date,
                   max(to_date(created)) as last_order_date
                   from sales_order
                   group by email ;;
