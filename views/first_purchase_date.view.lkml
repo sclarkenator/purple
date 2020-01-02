@@ -1,7 +1,8 @@
 view: first_purchase_date {
     derived_table: {
       sql: select email,
-                  min(to_date(created)) as first_order_date
+                  min(to_date(created)) as first_order_date,
+                  max(to_date(created)) as last_order_date
                   from sales_order
                   group by email ;;
     }
@@ -18,8 +19,15 @@ view: first_purchase_date {
           description: "Customers First Purchase Date"
           group_label: " Advanced"
           type: date
-          sql: ${TABLE}.first_order_date ;;
-        }
+          sql: ${TABLE}.first_order_date ;; }
+
+        dimension: last_order_date {
+          label: "Last Purchase Date"
+          description: "Customers Last Purchase Date"
+          group_label: " Advanced"
+          type: date
+          sql: ${TABLE}.last_order_date ;;  }
+
         dimension: customer_age_bucket {
           label: "Customer Age Bucket"
           description: "Customer Age by <12 mon, 12-18 mon, 18-24 mon, 24+ mon"
