@@ -144,6 +144,11 @@ view: v_fedex_to_xpo {
     sql: ${TABLE}."XPO_STATUS" ;;
   }
 
+  dimension: status {
+    type:  string
+    sql: ${TABLE}.status ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
