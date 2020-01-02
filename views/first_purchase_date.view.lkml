@@ -25,6 +25,7 @@ view: first_purchase_date {
           label: "Last Purchase Date"
           description: "Customers Last Purchase Date"
           group_label: " Advanced"
+          type: date
           sql: ${TABLE}.last_order_date ;;  }
 
         dimension: customer_age_bucket {
