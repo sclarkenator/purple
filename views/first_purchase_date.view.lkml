@@ -22,7 +22,7 @@ view: first_purchase_date {
           sql: ${TABLE}.first_order_date ;; }
 
         dimension: last_order_date {
-          label: "Last Order Date"
+          label: "Last Purchase Date"
           description: "Customers Last Purchase Date"
           group_label: " Advanced"
           sql: ${TABLE}.last_order_date ;;  }
