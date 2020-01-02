@@ -5,7 +5,7 @@
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
 
-week_start_day: sunday
+week_start_day: monday
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
