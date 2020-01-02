@@ -5,7 +5,7 @@
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
 
-week_start_day: sunday
+week_start_day: monday
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -1341,10 +1341,10 @@ explore: procom_security_daily_customer {
       fields:[total_units]}
     }
 
-  explore: overall_nps_survey_dec2019 {hidden:yes}
+  explore: overall_nps_survey_dec2019 {hidden:no}
 
   explore:  nps_survey_dec2019 {
-    hidden: yes
+    hidden: no
     label: "NPS Survey"
     join: item {type: full_outer
       sql_on: ${item.item_id} = ${nps_survey_dec2019.item_id};;

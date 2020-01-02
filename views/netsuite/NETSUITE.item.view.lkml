@@ -294,9 +294,11 @@ view: item {
     dimension: bucketed_bases {
       hidden: yes
       type: string
-      sql: case when ${product_name} ilike '%accordion%' then 'Foundations (accordion)'
-            when ${product_name} ilike '%platform%' then 'Platforms (non-accordion)'
-            when ${product_name} ilike '%powerbase%' then 'PowerBase'
-            else 'Other'
-            end ;;  }
+       sql: case
+             when ${type_2} = 'PLATFORM' and ${product_name} ilike ('%accordion%') then 'Foundations (accordion)'
+             when ${type_2} = 'PLATFORM' and ${product_name} not ilike ('%accordion%') then 'Platforms (non-accordion)'
+             when ${type_2} = 'POWERBASE'  then 'PowerBase'
+             else 'Other'
+             end ;;  }
+
 }

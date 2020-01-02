@@ -60,23 +60,23 @@ view: overall_nps_survey_dec2019 {
     description: "Customer reported satisfaction with the delivery experience"
     case: {
       when: {
-        sql: ${TABLE}.delivery_experience = 'Extremely satisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Extremely satisfied' ;;
         label: "Extremely Satisfied"
       }
       when: {
-        sql: ${TABLE}.delivery_experience = 'Somewhat satisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Somewhat satisfied' ;;
         label: "Somewhat Satisfied"
       }
       when: {
-        sql: ${TABLE}.delivery_experience = 'Neither satisfied nor dissatisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Neither satisfied nor dissatisfied' ;;
         label: "Neither Satisfied nor Dissatisfied"
       }
       when: {
-        sql: ${TABLE}.delivery_experience = 'Somewhat dissatisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Somewhat dissatisfied' ;;
         label: "Somewhat Dissatisfied"
       }
       when: {
-        sql: ${TABLE}.delivery_experience = 'Extremely dissatisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Extremely dissatisfied' ;;
         label: "Extremely Dissatisfied"
       }
       else: "Unanswered"
@@ -88,15 +88,40 @@ view: overall_nps_survey_dec2019 {
     description: "Those who answered either Extremely Satisfied or Somewhat Satisfied vs those less satisfied"
     case: {
       when: {
-        sql: ${TABLE}.delivery_experience = 'Extremely satisfied' or ${TABLE}.delivery_experience = 'Somewhat satisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Extremely satisfied'
+              or ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Somewhat satisfied' ;;
         label: "Satisfied"
       }
       when: {
-        sql: ${TABLE}.delivery_experience = 'Neither satisfied nor dissatisfied' or ${TABLE}.delivery_experience = 'Somewhat dissatisfied' or ${TABLE}.delivery_experience = 'Extremely dissatisfied' ;;
+        sql: ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Neither satisfied nor dissatisfied'
+              or ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Somewhat dissatisfied'
+              or ${TABLE}."DELIVERY_EXPERIENCE_SATISFACTION" = 'Extremely dissatisfied' ;;
         label: "Unsatisfied"
       }
       else: "Other"
     }
+  }
+
+  measure: delivery_satisfaction_satisfied_count {
+    type: count_distinct
+    label: "Customers Satisified with Delivery"
+    description: "Count of customers who selected Extremely Satisfied or Somewhat Satisfied with the delivery experience"
+    filters: {
+      field: delivery_satisfaction_buckets
+      value: "Satisfied"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
+  measure: delivery_satisfaction_respondents {
+    type: count_distinct
+    label: "Delivery Satisfaction Respondents"
+    description: "Count of customers who answered the delivery satisfaction question"
+    filters: {
+      field: delivery_satisfaction_buckets
+      value: "Satisfied, Unsatisfied"
+    }
+    sql: ${TABLE}.order_id ;;
   }
 
   dimension: email {
@@ -106,16 +131,19 @@ view: overall_nps_survey_dec2019 {
 
   dimension: nps_comment {
     type: string
+    label: "NPS Comment"
     sql: ${TABLE}."NPS_COMMENT" ;;
   }
 
   dimension: nps_question {
     type: string
+    label: "NPS Numeric Response"
     sql: ${TABLE}."NPS_QUESTION" ;;
   }
 
   dimension: nps_question_group {
     type: string
+    label: "NPS Groups"
     sql: ${TABLE}."NPS_QUESTION_GROUP" ;;
   }
 
@@ -170,23 +198,23 @@ view: overall_nps_survey_dec2019 {
     description: "Customer reported satisfaction with the online shopping experience"
     case: {
       when: {
-        sql: ${TABLE}.shopping_experience = 'Extremely satisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Extremely satisfied' ;;
         label: "Extremely Satisfied"
       }
       when: {
-        sql: ${TABLE}.shopping_experience = 'Somewhat satisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Somewhat satisfied' ;;
         label: "Somewhat Satisfied"
       }
       when: {
-        sql: ${TABLE}.shopping_experience = 'Neither satisfied nor dissatisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Neither satisfied nor dissatisfied' ;;
         label: "Neither Satisfied nor Dissatisfied"
       }
       when: {
-        sql: ${TABLE}.shopping_experience = 'Somewhat dissatisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Somewhat dissatisfied' ;;
         label: "Somewhat Dissatisfied"
       }
       when: {
-        sql: ${TABLE}.shopping_experience = 'Extremely dissatisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Extremely dissatisfied' ;;
         label: "Extremely Dissatisfied"
       }
       else: "Unanswered"
@@ -198,15 +226,41 @@ view: overall_nps_survey_dec2019 {
     description: "Those who answered either Extremely Satisfied or Somewhat Satisfied vs those less satisfied"
     case: {
       when: {
-        sql: ${TABLE}.shopping_experience = 'Extremely satisfied' or ${TABLE}.shopping_experience = 'Somewhat satisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Extremely satisfied'
+              or ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Somewhat satisfied' ;;
         label: "Satisfied"
       }
       when: {
-        sql: ${TABLE}.shopping_experience = 'Neither satisfied nor dissatisfied' or ${TABLE}.shopping_experience = 'Somewhat dissatisfied' or ${TABLE}.shopping_experience = 'Extremely dissatisfied' ;;
+        sql: ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Neither satisfied nor dissatisfied'
+              or ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Somewhat dissatisfied'
+              or ${TABLE}."SHOPPING_EXPERIENCE_SATISFACTION" = 'Extremely dissatisfied' ;;
         label: "Unsatisfied"
       }
       else: "Other"
     }
+  }
+
+
+  measure: shopping_satisfaction_satisfied_count {
+    type: count_distinct
+    label: "Customers Satisified with Shopping Experience"
+    description: "Count of customers who selected Extremely Satisfied or Somewhat Satisfied with the shopping experience"
+    filters: {
+      field: shopping_satisfaction_buckets
+      value: "Satisfied"
+    }
+    sql: ${TABLE}.order_id ;;
+  }
+
+  measure: shopping_satisfaction_respondents {
+    type: count_distinct
+    label: "Shopping Satisfaction Respondents"
+    description: "Count of customers who answered the shopping satisfaction question"
+    filters: {
+      field: shopping_satisfaction_buckets
+      value: "Satisfied, Unsatisfied"
+    }
+    sql: ${TABLE}.order_id ;;
   }
 
 

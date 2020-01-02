@@ -913,13 +913,13 @@ dimension: days_to_cancel {
     description: "Abbreviated day of week (Sun, Mon, Tue, etc)"
     type: string
     case: {
-      when: { sql: ${created_day_of_week} = 'Sunday' ;; label: "Sun" }
       when: { sql: ${created_day_of_week} = 'Monday' ;; label: "Mon" }
       when: { sql: ${created_day_of_week} = 'Tuesday' ;;  label: "Tue" }
       when: { sql: ${created_day_of_week} = 'Wednesday' ;; label: "Wed" }
       when: { sql: ${created_day_of_week} = 'Thursday' ;; label: "Thu" }
       when: { sql: ${created_day_of_week} = 'Friday' ;; label: "Fri" }
-      when: { sql: ${created_day_of_week} = 'Saturday' ;; label: "Sat" } } }
+      when: { sql: ${created_day_of_week} = 'Saturday' ;; label: "Sat" }
+      when: { sql: ${created_day_of_week} = 'Sunday' ;; label: "Sun" }} }
 
   parameter: timeframe_picker{
     label: "Date Granularity Sales"
