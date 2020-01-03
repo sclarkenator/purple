@@ -17,7 +17,7 @@ view: forecast_wholesale {
           , coalesce(a.Medical_Units/c.days_in_week,0) as Medical_Units
           , coalesce(a.Trucking_Units/c.days_in_week,0) as Trucking_Units
           , coalesce(a.BD_Units/c.days_in_week,0) as BD_Units
-          , coalesce(a.BD_Units/c.days_in_week,0) as Other_Units
+          , coalesce(a.Other_Units/c.days_in_week,0) as Other_Units
           , coalesce(a.MF_Instore_Amount/c.days_in_week,0) as MF_Instore_Amount
           , coalesce(a.MF_Online_Amount/c.days_in_week,0) as MF_Online_Amount
           , coalesce(a.FR_Amount/c.days_in_week,0) as FR_Amount

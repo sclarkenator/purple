@@ -157,6 +157,10 @@ view: forecast_combined {
           , zz.Trucking_Amount
           , zz.Other_Units
           , zz.Other_Amount
+          , zz.bd_units
+          , zz.bd_amount
+          , zz.hom_units
+          , zz.hom_amount
 
           , xx.total_units amazon_units
           , xx.total_amount amazon_amount
@@ -401,25 +405,25 @@ view: forecast_combined {
         label: "Wholesale Bloomingdales Units"
         type:  sum
         value_format: "#,##0"
-        sql:${TABLE}.Other_Units ;; }
+        sql:${TABLE}.BD_Units ;; }
 
       measure: BD_Amount {
         label: "Wholesale Bloomingdales Amount"
         type:  sum
         value_format: "$#,##0.00"
-        sql:${TABLE}.Other_Amount ;; }
+        sql:${TABLE}.BD_Amount ;; }
 
       measure: HOM_Units {
         label: "Wholesale HOM Units"
         type:  sum
         value_format: "#,##0"
-        sql:${TABLE}.Other_Units ;; }
+        sql:${TABLE}.HOM_Units ;; }
 
       measure: hom_Amount {
         label: "Wholesale HOM Amount"
         type:  sum
         value_format: "$#,##0.00"
-        sql:${TABLE}.Other_Amount ;; }
+        sql:${TABLE}.hom_Amount ;; }
 
       measure: amazon_units {
         label: "Amazon Units"
