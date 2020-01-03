@@ -1335,10 +1335,10 @@ explore: procom_security_daily_customer {
       fields:[total_units]}
     }
 
-  explore: overall_nps_survey_dec2019 {hidden:no}
+  explore: overall_nps_survey_dec2019 {hidden:yes}
 
   explore:  nps_survey_dec2019 {
-    hidden: no
+    hidden: yes
     label: "NPS Survey"
     join: item {type: full_outer
       sql_on: ${item.item_id} = ${nps_survey_dec2019.item_id};;
