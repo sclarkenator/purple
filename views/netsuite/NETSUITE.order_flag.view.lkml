@@ -171,7 +171,7 @@ derived_table: {
     sql:  ${TABLE}.gravity_mask_flg ;; }
 
   measure: accordion_platfrom_flg {
-    hidden: no
+    hidden: yes
     group_label: "Total Orders with:"
     label: "a Accordion Platform"
     description: "1/0 per order; 1 if there was a accordion platform in the order"
