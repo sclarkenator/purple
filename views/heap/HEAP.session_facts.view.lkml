@@ -16,7 +16,7 @@ view: session_facts {
       FROM heap.all_events AS all_events
       GROUP BY 1,2,3  ;;
 
-    datagroup_trigger: pdt_refresh_745am
+    datagroup_trigger: pdt_refresh_741am
   }
 
   dimension: session_unique_id {

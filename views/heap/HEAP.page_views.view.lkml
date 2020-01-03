@@ -12,7 +12,7 @@ view: heap_page_views {
       --where time::date >=  '2019-06-16' and time::date <=  '2019-06-22'
       group by session_id ;;
 
-    datagroup_trigger: pdt_refresh_745am
+    datagroup_trigger: pdt_refresh_741am
 
   }
 

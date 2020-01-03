@@ -94,6 +94,14 @@ derived_table: {
     type:  sum
     sql:  ${TABLE}.pillow_flg ;; }
 
+  measure: harmony_orders {
+    group_label: "Total Orders with:"
+    label: "a Harmony Pillow"
+    hidden: yes
+    description: "1/0 per order; 1 if there was a pillow in the order"
+    type:  sum
+    sql:  ${TABLE}.harmony_pillow_flg ;; }
+
   measure: base_orders {
     hidden:  yes
     group_label: "Total Orders with:"
@@ -137,6 +145,38 @@ derived_table: {
     description: "1/0 per order; 1 if multiple twin XL mattresses purchased in this order"
     type: sum
     sql: ${TABLE}.sk_flg ;; }
+
+  measure: duvet_orders {
+    hidden: yes
+    group_label: "Total Orders with:"
+    label: "a Duvet"
+    description: "1/0 per order; 1 if there was a duvet in the order"
+    type:  sum
+    sql:  ${TABLE}.duvet_flg ;; }
+
+  measure: gravity_blanket_orders {
+    hidden: yes
+    group_label: "Total Orders with:"
+    label: "a Gravity Blanket"
+    description: "1/0 per order; 1 if there was a gravity blanket in the order"
+    type:  sum
+    sql:  ${TABLE}.gravity_blanket_flg ;; }
+
+  measure: gravity_mask_orders {
+    hidden: yes
+    group_label: "Total Orders with:"
+    label: "a Gravity Mask"
+    description: "1/0 per order; 1 if there was a gravity mask in the order"
+    type:  sum
+    sql:  ${TABLE}.gravity_mask_flg ;; }
+
+  measure: accordion_platfrom_flg {
+    hidden: yes
+    group_label: "Total Orders with:"
+    label: "a Accordion Platform"
+    description: "1/0 per order; 1 if there was a accordion platform in the order"
+    type:  sum
+    sql:  ${TABLE}.accordion_platform_flg ;; }
 
   dimension: mattress_flg {
     group_label: "    * Orders has:"
@@ -271,6 +311,14 @@ derived_table: {
     description: "1/0; 1 if there is a Accordion Base in this order"
     type: yesno
     sql: ${TABLE}.accordion_platform_flg > 0 ;; }
+
+  dimension: foundation_base_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Foundation Base"
+    description: "1/0; 1 if there is a Foundation Base in this order"
+    type: yesno
+    sql: ${TABLE}.foundation_base_flg > 0 ;; }
 
   dimension: duvet_flg {
     hidden: yes
