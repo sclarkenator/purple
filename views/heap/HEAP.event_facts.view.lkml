@@ -56,7 +56,7 @@ view: event_facts {
         ON events.event_id = a.event_id
         AND events.event_name = a.event_table_name
        ;;
-      datagroup_trigger: pdt_refresh_745am
+      datagroup_trigger: pdt_refresh_741am
     }
 
   measure: count {
