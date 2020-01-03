@@ -767,14 +767,13 @@ dimension: days_to_cancel {
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
-      sql: case
-          when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
-          when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
-          when ${TABLE}.Created::date >= '2019-12-16' and ${TABLE}.Created::date <= '2019-12-22' then 'Two Weeks Ago'
-          when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Current Week LY'
-          when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Last Week LY'
-          when ${TABLE}.Created::date >= '2018-12-17' and ${TABLE}.Created::date <= '2018-12-23' then 'Two Weeks Ago LY'
-          else 'Other' end ;; }
+      sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
+              WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+              WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+              WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
+              WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+              WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+              ELSE 'Other' END ;; }
 
 #       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
 #         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week'
