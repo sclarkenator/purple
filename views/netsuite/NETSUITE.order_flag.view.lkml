@@ -21,7 +21,6 @@ derived_table: {
       ,case when gravity_blanket > 0 then 1 else 0 end gravity_blanket_flg
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
-      ,case when foundation_base > 0 then 1 else 0 end foundation_base_flg
       ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
       ,mattress_ordered
     FROM(
@@ -44,7 +43,6 @@ derived_table: {
         ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45868','10-38-45869','10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 1 else 0 end) accordion_platform
         ,sum(case when sku_id in ('10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
-        ,sum(case when sku_id in ('10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45873','10-38-45872','10-38-45871','10-38-45870','10-38-45869','10-38-45868') then 1 else 0 end) foundation_base
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'SHEETS' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt2
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
@@ -172,13 +170,13 @@ derived_table: {
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
 
-  measure: foundation_base_orders {
-    hidden: yes
+  measure: accordion_platfrom_flg {
+    hidden: no
     group_label: "Total Orders with:"
-    label: "a Foundation Base"
-    description: "1/0 per order; 1 if there was a foundation base in the order"
+    label: "a Accordion Platform"
+    description: "1/0 per order; 1 if there was a accordion platform in the order"
     type:  sum
-    sql:  ${TABLE}.foundation_base_flg ;; }
+    sql:  ${TABLE}.accordion_platform_flg ;; }
 
   dimension: mattress_flg {
     group_label: "    * Orders has:"
