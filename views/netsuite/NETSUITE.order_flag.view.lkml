@@ -94,6 +94,14 @@ derived_table: {
     type:  sum
     sql:  ${TABLE}.pillow_flg ;; }
 
+  measure: harmony_orders {
+    group_label: "Total Orders with:"
+    label: "a Harmony Pillow"
+    hidden: yes
+    description: "1/0 per order; 1 if there was a pillow in the order"
+    type:  sum
+    sql:  ${TABLE}.harmony_pillow_flg ;; }
+
   measure: base_orders {
     hidden:  yes
     group_label: "Total Orders with:"
