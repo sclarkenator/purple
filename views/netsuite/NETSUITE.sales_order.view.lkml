@@ -537,4 +537,14 @@ dimension_group: trandate {
     sql: ${TABLE}.showroom_name ;;
   }
 
+  dimension: date_diff_yoy {
+    hidden:  yes
+    description: "Used as a filter to compare periods of time to the same time period last year only (doesn't work for 2 years ago). Ex. - Last 90 days this year to those days last year"
+    group_label: " Advanced"
+    view_label: "Sales Order"
+    type: number
+    sql:datediff(day
+      ,case when datediff(day,${created},current_date()) > 270 then dateadd(year,1,${created}) else ${created} end
+      ,current_date());;
+    }
 }

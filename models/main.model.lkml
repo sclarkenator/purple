@@ -5,7 +5,7 @@
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
 
-week_start_day: sunday
+week_start_day: monday
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -272,21 +272,20 @@ explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
 explore: change_mgmt {hidden:yes}
 explore: outbound {hidden:yes}
-explore: mainchain_transaction_outwards_detail {hidden:yes
-  join: sales_order{
-    type: left_outer
-    sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
-    relationship: many_to_one}
-  join: item {
-    type: left_outer
-    sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
-    relationship: one_to_many}
-  join: sales_order_line {
-    type: left_outer
-    fields: []
-    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
-    relationship:many_to_one}
-  }
+# explore: mainchain_transaction_outwards_detail {hidden:yes
+#   join: sales_order{
+#     type: left_outer
+#     sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
+#     relationship: many_to_one}
+#   join: item {
+#     type: left_outer
+#     sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
+#     relationship: one_to_many}
+#  join: sales_order_line {
+#    type: left_outer
+#    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
+#    relationship:many_to_one}
+#  }
 
 #-------------------------------------------------------------------
 #
@@ -478,6 +477,16 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
+  join: zcta5 {
+    view_label: "Geography"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
+    relationship: many_to_one}
+  join: dma {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+    relationship: many_to_many}
   }
 
 explore: all_events {
@@ -755,30 +764,11 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
-explore: agent_company_value {
-  hidden: yes
-  label: "Agent Company Value"
-  group_label: "Customer Care"
-}
-
-explore: agent_evaluation {
-  hidden: yes
-  label: "Agent Evaluation"
-  group_label: "Customer Care"
-}
-
-explore: agent_attendance {
-  hidden: yes
-  label: "Agent Attendance"
-  group_label: "Customer Care"
-
-}
-
-explore: v_agent_state  {
-  hidden:  yes
-  label: "Agent Time States"
-  group_label: "Customer Care"
-}
+explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
+explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
+explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
+explore: stella_response {hidden:yes}
 
 
 #-------------------------------------------------------------------
@@ -970,7 +960,6 @@ explore: sales_order_line{
     sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
     join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
       sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
-
   join: warranty_order {
       view_label: "Warranties"
       type: full_outer
@@ -978,14 +967,12 @@ explore: sales_order_line{
       sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.system};;
       #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
       relationship: one_to_many}
-
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
     sql_on: ${warranty_order_line.system} = ${warranty_order.system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: many_to_many}
-
   join: warranty_reason {
     view_label: "Warranties"
     type: left_outer
@@ -1068,6 +1055,18 @@ explore: sales_order_line{
     type: full_outer
     sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
     relationship: one_to_many
+  }
+  join: warranty_original_information {
+    view_label: "Warranties"
+    type: left_outer
+    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
+    relationship: one_to_one
+  }
+  join: first_purchase_date {
+    view_label: "Customer"
+    type: left_outer
+    sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
+    relationship: one_to_one
   }
 
 }
@@ -1328,10 +1327,11 @@ explore: procom_security_daily_customer {
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
 
-  explore: nps_survey_06_dec2019 {hidden:yes}
-  explore: nps_survey_dec2019 {hidden:yes}
-  explore: product_csat_dec_2019 {hidden:yes}
-  explore: customer_nps_dec_2019 {hidden:yes}
+  explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
+
+  explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
+
+  explore: product_csat_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
   explore: shopify_orders
     { hidden:  yes
       label: "Shopify sales simple"
@@ -1347,6 +1347,15 @@ explore: procom_security_daily_customer {
       fields:[total_units]}
     }
 
+  explore: overall_nps_survey_dec2019 {hidden:no}
+
+  explore:  nps_survey_dec2019 {
+    hidden: no
+    label: "NPS Survey"
+    join: item {type: full_outer
+      sql_on: ${item.item_id} = ${nps_survey_dec2019.item_id};;
+      relationship: many_to_one}
+  }
 
   explore: orphan_orders {
     hidden:  yes

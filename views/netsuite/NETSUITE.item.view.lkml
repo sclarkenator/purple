@@ -278,4 +278,27 @@ view: item {
       type: string
       sql: ${TABLE}.DIMENSIONS ;; }
 
+    dimension: bucketed_item_id {
+      hidden: yes
+      type: string
+      sql: case when ${TABLE}.ITEM_ID = '3797' then '1668'
+            when ${TABLE}.ITEM_ID = '3800' then '2991'
+            when ${TABLE}.ITEM_ID = '4410' then '4409'
+            when ${TABLE}.ITEM_ID = '3798' then '1667'
+            when ${TABLE}.ITEM_ID = '3799' then '1666'
+            when ${TABLE}.ITEM_ID = '3802' then '3715'
+            when ${TABLE}.ITEM_ID = '3801' then '1665'
+            else ${TABLE}.ITEM_ID
+            end ;; }
+
+    dimension: bucketed_bases {
+      hidden: yes
+      type: string
+       sql: case
+             when ${type_2} = 'PLATFORM' and ${product_name} ilike ('%accordion%') then 'Foundations (accordion)'
+             when ${type_2} = 'PLATFORM' and ${product_name} not ilike ('%accordion%') then 'Platforms (non-accordion)'
+             when ${type_2} = 'POWERBASE'  then 'PowerBase'
+             else 'Other'
+             end ;;  }
+
 }

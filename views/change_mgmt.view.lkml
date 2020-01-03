@@ -1,39 +1,43 @@
 view: change_mgmt {
-   sql_table_name: engineering.eng.change_mgmt ;;
+  sql_table_name: engineering.eng.change_mgmt ;;
 
-dimension: CH_ID {
-  type: string
-  sql: ${TABLE}.CH_ID ;; }
+  dimension: CH_ID {
+    type: string
+    sql: ${TABLE}.CH_ID ;; }
 
-dimension: CHANGETYPE {
-  type: string
-  sql: ${TABLE}.CHANGETYPE ;; }
+  dimension: CHANGETYPE {
+    type: string
+    sql: ${TABLE}.CHANGETYPE ;; }
 
-dimension: DESCRIPTION {
-  type: string
-  sql: ${TABLE}.DESCRIPTION ;; }
+  dimension: DESCRIPTION {
+    type: string
+    sql: ${TABLE}.DESCRIPTION ;; }
 
-dimension: AREASEFFECTED {
-  type: string
-  sql: ${TABLE}.AREASEFFECTED ;; }
+  dimension: DATE {
+    type: date
+    sql: ${TABLE}.DATE ;; }
 
-dimension: DATE {
-  type: date
-  sql: ${TABLE}.DATE ;; }
+  dimension: REQBY {
+    type: string
+    sql: ${TABLE}.REQBY ;; }
 
-dimension: REQBY {
-  type: string
-  sql: ${TABLE}.REQBY ;; }
+  dimension: PROJECT_NUM {
+    type: string
+    sql: ${TABLE}.PROJECT_NUM ;; }
 
-dimension: PROJECT_NUM {
-  type: string
-  sql: ${TABLE}.PROJECT_NUM ;; }
+  dimension: WF_ID {
+    type: string
+    sql: ${TABLE}.WF_ID ;; }
 
-measure: COUNT_OF_REQUEST{
-  label: "Request Count"
-  description: "A Total Count of Requests"
-  type: sum
-  sql: case when ${CHANGETYPE} = 'Request' then 1 else 0 end ;;}
+  dimension: FIXED_ASSET {
+    type: string
+    sql: ${TABLE}.FIXED_ASSET ;; }
+
+  measure: COUNT_OF_REQUEST{
+    label: "Request Count"
+    description: "A Total Count of Requests"
+    type: sum
+    sql: case when ${CHANGETYPE} = 'Request' then 1 else 0 end ;;}
 
   measure: COUNT_OF_REVISED{
     label: "Revised Count"

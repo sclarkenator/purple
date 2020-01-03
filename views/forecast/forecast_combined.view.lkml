@@ -202,7 +202,9 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Before Current Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+        #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+        #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+        sql: date_part('week',${TABLE}.date) < 53;; }
 
       dimension: week_offset{
         group_label: "Forecast Date"
@@ -220,7 +222,7 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Previous Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+        sql: date_part('week',${TABLE}.date) = 52;; }
 
       dimension: cur_week{
         group_label: "Forecast Date"
