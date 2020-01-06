@@ -206,9 +206,9 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Before Current Week"
         type: yesno
-        #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+        sql: ${TABLE}.date::date <= '2020-01-05' ;;}
         #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
-        sql: date_part('week',${TABLE}.date) < 53;; }
+        #sql: date_part('week',${TABLE}.date) < 53;; }
 
       dimension: week_offset{
         group_label: "Forecast Date"
@@ -226,13 +226,16 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Previous Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = 52;; }
+        sql:  ${TABLE}.date::date >= '2019-12-20' and ${TABLE}.date::date <= '2020-01-05' ;; }
+        #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
+        #sql: date_part('week',${TABLE}.date) = 52;; }
 
       dimension: cur_week{
         group_label: "Forecast Date"
         label: "z - Current Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
+        sql:  ${TABLE}.date::date >= '2020-01-06' and ${TABLE}.date::date <= '2020-01-12' ;; }
+        #sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
 
       dimension: sku_id {
         type:  string
