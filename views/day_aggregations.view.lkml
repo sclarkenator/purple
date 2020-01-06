@@ -361,7 +361,7 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql:  ${TABLE}.date::date >= '2019-12-20' and ${TABLE}.date::date <= '2020-01-05' ;; }
+    sql:  ${TABLE}.date::date >= '2019-12-30' and ${TABLE}.date::date <= '2020-01-05' ;; }
     #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
     #sql: date_part('week',${TABLE}.date) = 52;; }
 
