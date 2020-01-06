@@ -52,7 +52,7 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql:  ${TABLE}.time::date >= '2019-12-30' and ${TABLE}.time::date <= '2020-01-05' ;; }
+    sql:  ${TABLE}.created::date >= '2019-12-30' and ${TABLE}.created::date <= '2020-01-05' ;; }
     #sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
     #sql: date_part('week',${TABLE}.created) = 52;; }
 
