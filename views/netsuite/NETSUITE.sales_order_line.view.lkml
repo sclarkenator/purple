@@ -1,6 +1,7 @@
 view: sales_order_line {
   #sql_table_name: SALES.SALES_ORDER_LINE ;;
-  derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
+  #derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
+  derived_table: {sql:select * from sales.sales_order_line where item_id not in ('1682');;}
 
   dimension: payment_method {
     hidden: yes
