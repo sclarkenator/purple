@@ -37,7 +37,6 @@ view: event_flow {
         and a.session_id = e.session_id
        ;;
 
-      datagroup_trigger: pdt_refresh_741am
   }
 
   dimension: unique_event_id {
