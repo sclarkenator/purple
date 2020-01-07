@@ -3,6 +3,8 @@
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
 
+### View File not current used in content. Query is slow to run.
+
 view: event_flow {
   derived_table: {
     sql:
