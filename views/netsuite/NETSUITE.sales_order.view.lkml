@@ -31,6 +31,7 @@ measure: upt {
   label: "UPT"
   description: "Units per transaction"
   type: number
+  value_format: "#,##0.00"
   sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
 
   measure: average_order_size {

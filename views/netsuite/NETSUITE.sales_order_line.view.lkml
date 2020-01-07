@@ -840,6 +840,75 @@ dimension: days_to_cancel {
     #sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
     #sql: date_part('week',${TABLE}.Created) = 52;; }
 
+  dimension: promo_date_bucket {
+    label: "Promo Date Buckets"
+    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
+    group_label: " Advanced"
+    #hidden: yes
+    sql: case
+        when ${TABLE}.created::date between '2018-11-14' and '2018-11-17' then '18 TG 1 WB'
+        when ${TABLE}.created::date between '2018-11-20' and '2018-11-21'
+          or ${TABLE}.created::date between '2018-11-24' and '2018-11-25' then '18 TG 2 PM'
+        when ${TABLE}.created::date = '2018-11-22' then '18 TG'
+        when ${TABLE}.created::date = '2018-11-23' then '18 BF'
+        when ${TABLE}.created::date = '2018-11-26' then '18 CM'
+        when ${TABLE}.created::date between '2019-05-05' and '2019-05-10' then '19 MD WB'
+        when ${TABLE}.created::date between '2019-05-20' and '2019-05-26' then '19 MD PM'
+        when ${TABLE}.created::date = '2019-05-27' then '19 MD'
+        when ${TABLE}.created::date between '2019-08-08' and '2019-08-14' then '19 LD WB'
+        when ${TABLE}.created::date between '2019-08-25' and '2019-09-01' then '19 LD PM'
+        when ${TABLE}.created::date = '2019-09-02' then '19 LD'
+        when ${TABLE}.created::date between '2019-11-08' and '2019-11-14' then '19 TG WB'
+        when ${TABLE}.created::date between '2019-11-23' and '2019-11-27'
+          or ${TABLE}.created::date between '2019-11-30' and '2019-12-01' then '19 TG PM'
+        when ${TABLE}.created::date = '2019-11-28' then '19 TG'
+        when ${TABLE}.created::date = '2019-11-29' then '19 BF'
+        when ${TABLE}.created::date = '2019-12-02' then '19 CM'
+        else 'Other' end  ;; }
+
+  dimension: promo_date_holliday {
+    label: "Promo Date Holliday"
+    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
+    group_label: " Advanced"
+    #hidden: yes
+    sql: case
+        when ${TABLE}.created::date between '2018-11-14' and '2018-11-17'
+          or ${TABLE}.created::date between '2018-11-20' and '2018-11-26' then '18 Thanksgiving'
+        when ${TABLE}.created::date between '2019-05-05' and '2019-05-10'
+          or ${TABLE}.created::date between '2019-05-20' and '2019-05-27' then '19 Memorial Day'
+        when ${TABLE}.created::date between '2019-08-08' and '2019-08-14'
+          or ${TABLE}.created::date between '2019-08-25' and '2019-09-02' then '19 Labor Day'
+        when ${TABLE}.created::date between '2019-11-08' and '2019-11-14'
+          or ${TABLE}.created::date between '2019-11-23' and '2019-12-02' then '19 Thanksgiving'
+        else 'Other' end  ;; }
+
+    dimension: promo_date_type {
+    label: "Promo Date Type"
+    description: "A manual bucketing of the major promos in types; Week Before, Promo Period, Holliday"
+    group_label: " Advanced"
+    #hidden: yes
+    sql: case
+        when ${TABLE}.created::date between '2018-11-14' and '2018-11-17'
+          or ${TABLE}.created::date between '2019-05-05' and '2019-05-10'
+          or ${TABLE}.created::date between '2019-08-08' and '2019-08-14'
+          or ${TABLE}.created::date between '2019-11-08' and '2019-11-14' then 'Week Before'
+        when ${TABLE}.created::date between '2018-11-20' and '2018-11-21'
+          or ${TABLE}.created::date between '2018-11-24' and '2018-11-25'
+          or ${TABLE}.created::date between '2019-05-20' and '2019-05-26'
+          or ${TABLE}.created::date between '2019-08-25' and '2019-09-01'
+          or ${TABLE}.created::date between '2019-08-25' and '2019-09-01'
+          or ${TABLE}.created::date = '2019-11-28'
+          or ${TABLE}.created::date = '2018-11-22'
+          or ${TABLE}.created::date between '2019-11-23' and '2019-11-27'
+          or ${TABLE}.created::date between '2019-11-30' and '2019-12-01' then 'Promo'
+        when ${TABLE}.created::date = '2018-11-23'
+          or ${TABLE}.created::date = '2018-11-26'
+          or ${TABLE}.created::date = '2019-05-27'
+          or ${TABLE}.created::date = '2019-09-02'
+          or ${TABLE}.created::date = '2019-11-29'
+          or ${TABLE}.created::date = '2019-12-02' then 'Holliday'
+        else 'Other' end  ;; }
+
   dimension: Shipping_Addresee{
     hidden:  yes
     description: "The name on the shipping address"

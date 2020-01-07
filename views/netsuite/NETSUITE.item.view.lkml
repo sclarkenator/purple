@@ -105,8 +105,9 @@ view: item {
     drill_fields: [product_description]
     type: string
     case: {
-         when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "ORIGINAL" }
-        when: { sql: ${TABLE}.model_name_lkr = 'NEW ORIGINAL' ;; label: "NEW ORIGINAL" }
+        when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL'
+            or  ${TABLE}.model_name_lkr = 'NEW ORIGINAL'
+            or ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = 'NO MODEL';; label: "ORIGINAL" }
         when: { sql: ${TABLE}.model_name_lkr = 'SCC' ;; label: "SCC" }
         when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.2' ;; label: "PURPLE.2" }
         when: { sql: ${TABLE}.model_name_lkr = 'PURPLE.3' ;; label: "PURPLE.3" }
