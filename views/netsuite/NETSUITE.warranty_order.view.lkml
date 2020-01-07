@@ -129,8 +129,9 @@ view: warranty_order {
   measure: days_between {
     group_label: " Advanced"
     label: "Warranty Window"
-    description: "Average number of days between Customer Receipt and Warranty Created dates"
+    description: "Average number of days between Customer Receipt and Warranty Created dates rounded to whole days"
     type: average
+    value_format: "0"
     sql: datediff(day,${TABLE}.customer_receipt,${TABLE}.created) ;; }
 
 }

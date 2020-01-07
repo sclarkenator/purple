@@ -494,9 +494,10 @@ explore: all_events {
     type: left_outer
     sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
     relationship: one_to_one }
-  join: event_flow {
-    sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
-    relationship: one_to_one }
+## event_flow not currently used in content.
+#   join: event_flow {
+#     sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
+#     relationship: one_to_one }
   join: zip_codes_city {
     type: left_outer
     sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
