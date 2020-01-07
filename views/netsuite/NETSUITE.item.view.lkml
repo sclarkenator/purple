@@ -83,9 +83,9 @@ view: item {
     label:  "  Product Name"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
-    link: {
-      label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+##    link: {
+##      label: "NetSuite"
+##      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;;}
 
   dimension: product_name {
@@ -290,4 +290,15 @@ view: item {
             when ${TABLE}.ITEM_ID = '3801' then '1665'
             else ${TABLE}.ITEM_ID
             end ;; }
+
+    dimension: bucketed_bases {
+      hidden: yes
+      type: string
+       sql: case
+             when ${type_2} = 'PLATFORM' and ${product_name} ilike ('%accordion%') then 'Foundations (accordion)'
+             when ${type_2} = 'PLATFORM' and ${product_name} not ilike ('%accordion%') then 'Platforms (non-accordion)'
+             when ${type_2} = 'POWERBASE'  then 'PowerBase'
+             else 'Other'
+             end ;;  }
+
 }

@@ -1,5 +1,7 @@
 view: sales_order_line {
-  sql_table_name: SALES.SALES_ORDER_LINE ;;
+  #sql_table_name: SALES.SALES_ORDER_LINE ;;
+  #derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
+  derived_table: {sql:select * from sales.sales_order_line where item_id not in ('1682');;}
 
   dimension: payment_method {
     hidden: yes
@@ -201,18 +203,18 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     type: yesno
-    #sql: ${Due_Date}::date <= '2019-12-30' ;;}
+    sql: ${Due_Date}::date <= '2020-01-05' ;;}
     #sql: date_part('week',${Due_Date}::date) < date_part('week',current_date);; }
-    sql: date_part('week',${Due_Date}::date) < 53;; }
+    #sql: date_part('week',${Due_Date}::date) < 53;; }
 
   dimension: sla_prev_week{
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
     type: yesno
-    #sql: ${Due_Date}::date >= '2019-12-23' and ${Due_Date}::date <= '2019-12-29' ;; }
+    sql: ${Due_Date}::date >= '2019-12-30' and ${Due_Date}::date <= '2020-01-05' ;; }
     #sql: date_part('week',${Due_Date}::date) = date_part('week',current_date)-1;; }
-    sql: date_part('week',${Due_Date}::date) = 52;; }
+    #sql: date_part('week',${Due_Date}::date) = 52;; }
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
@@ -767,14 +769,21 @@ dimension: days_to_cancel {
       label: "z - Week Bucket"
       description: "Grouping by week, for comparing last week, to the week before, to last year"
       type: string
-      sql: case
-          when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
-          when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
-          when ${TABLE}.Created::date >= '2019-12-16' and ${TABLE}.Created::date <= '2019-12-22' then 'Two Weeks Ago'
-          when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Current Week LY'
-          when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Last Week LY'
-          when ${TABLE}.Created::date >= '2018-12-17' and ${TABLE}.Created::date <= '2018-12-23' then 'Two Weeks Ago LY'
-          else 'Other' end ;; }
+#       sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
+#               WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+#               WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+#               WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
+#               WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+#               WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+#               ELSE 'Other' END ;; }
+  sql: case
+  when ${TABLE}.Created::date >= '2020-01-06' and ${TABLE}.Created::date <= '2020-01-12' then 'Current Week'
+  when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Last Week'
+  when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Two Weeks Ago'
+  when ${TABLE}.Created::date >= '2019-01-07' and ${TABLE}.Created::date <= '2019-01-13' then 'Current Week LY'
+  when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Last Week LY'
+  when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Two Weeks Ago LY'
+  else 'Other' end ;; }
 
 #       when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
 #         and date_part('week',${TABLE}.Created::date) = case when date_part('week', current_date) in ('0','1') then 53 else date_part('week', current_date) end then 'Current Week'
@@ -815,9 +824,9 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql: ${TABLE}.Created::date <= '2019-12-30' ;;}
+    sql: ${TABLE}.Created::date <= '2020-01-05' ;;}
     #sql: date_part('week',${TABLE}.Created) < date_part('week',current_date);;
-    sql: date_part('week',${TABLE}.Created) < 53;; }
+    #sql: date_part('week',${TABLE}.Created) < 53;; }
 
 
   dimension: prev_week{
@@ -827,9 +836,9 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql:  ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' ;; }
+    sql:  ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' ;; }
     #sql: date_part('week',${TABLE}.Created) = date_part('week',current_date)-1;; }
-    sql: date_part('week',${TABLE}.Created) = 52;; }
+    #sql: date_part('week',${TABLE}.Created) = 52;; }
 
   dimension: Shipping_Addresee{
     hidden:  yes
@@ -860,9 +869,9 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql: ${fulfilled_raw}::date <= '2019-12-30' ;;}
+    sql: ${fulfilled_raw}::date <= '2020-01-05' ;;}
     #sql: date_part('week',${fulfilled_raw}::date) < date_part('week',current_date);; }
-    sql: date_part('week',${fulfilled_raw}::date) < 53;; }
+    #sql: date_part('week',${fulfilled_raw}::date) < 53;; }
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"
@@ -870,9 +879,9 @@ dimension: days_to_cancel {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql:  ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' ;; }
+    sql:  ${fulfilled_raw}::date >= '2019-12-30' and ${fulfilled_raw}::date <= '2020-01-05' ;; }
     #sql: date_part('week',${fulfilled_raw}::date) = date_part('week',current_date)-1;; }
-    sql: date_part('week',${fulfilled_raw}::date) = 52;; }
+    #sql: date_part('week',${fulfilled_raw}::date) = 52;; }
 
   dimension: week_bucket_ff{
     group_label: "    Fulfilled Date"
@@ -881,12 +890,12 @@ dimension: days_to_cancel {
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
     sql: case
-    when ${fulfilled_raw}::date >= '2019-12-30' and ${fulfilled_raw}::date <= '2020-01-05' then 'Current Week'
-    when ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' then 'Last Week'
-    when ${fulfilled_raw}::date >= '2019-12-16' and ${fulfilled_raw}::date <= '2019-12-22' then 'Two Weeks Ago'
-    when ${fulfilled_raw}::date >= '2018-12-31' and ${fulfilled_raw}::date <= '2019-01-06' then 'Current Week LY'
-    when ${fulfilled_raw}::date >= '2018-12-24' and ${fulfilled_raw}::date <= '2018-12-30' then 'Last Week LY'
-    when ${fulfilled_raw}::date >= '2018-12-17' and ${fulfilled_raw}::date <= '2018-12-23' then 'Two Weeks Ago LY'
+    when ${fulfilled_raw}::date >= '2020-01-06' and ${fulfilled_raw}::date <= '2020-01-12' then 'Current Week'
+    when ${fulfilled_raw}::date >= '2019-12-30' and ${fulfilled_raw}::date <= '2020-01-05' then 'Last Week'
+    when ${fulfilled_raw}::date >= '2019-12-23' and ${fulfilled_raw}::date <= '2019-12-29' then 'Two Weeks Ago'
+    when ${fulfilled_raw}::date >= '2019-01-07' and ${fulfilled_raw}::date <= '2019-01-13' then 'Current Week LY'
+    when ${fulfilled_raw}::date >= '2018-12-31' and ${fulfilled_raw}::date <= '2019-01-06' then 'Last Week LY'
+    when ${fulfilled_raw}::date >= '2018-12-24' and ${fulfilled_raw}::date <= '2018-12-30' then 'Two Weeks Ago LY'
     else 'Other' end ;; }
 
 #   case when date_part('year', ${fulfilled_raw}::date) = date_part('year', current_date) and date_part('week',${fulfilled_raw}::date) = date_part('week', current_date) then 'Current Week'
@@ -913,13 +922,13 @@ dimension: days_to_cancel {
     description: "Abbreviated day of week (Sun, Mon, Tue, etc)"
     type: string
     case: {
-      when: { sql: ${created_day_of_week} = 'Sunday' ;; label: "Sun" }
       when: { sql: ${created_day_of_week} = 'Monday' ;; label: "Mon" }
       when: { sql: ${created_day_of_week} = 'Tuesday' ;;  label: "Tue" }
       when: { sql: ${created_day_of_week} = 'Wednesday' ;; label: "Wed" }
       when: { sql: ${created_day_of_week} = 'Thursday' ;; label: "Thu" }
       when: { sql: ${created_day_of_week} = 'Friday' ;; label: "Fri" }
-      when: { sql: ${created_day_of_week} = 'Saturday' ;; label: "Sat" } } }
+      when: { sql: ${created_day_of_week} = 'Saturday' ;; label: "Sat" }
+      when: { sql: ${created_day_of_week} = 'Sunday' ;; label: "Sun" }} }
 
   parameter: timeframe_picker{
     label: "Date Granularity Sales"

@@ -64,6 +64,36 @@ view: nps_survey_dec2019 {derived_table: {
     sql: ${TABLE}."CREATED_DATE" ;;
   }
 
+    measure: nps_promoters {
+      type: count_distinct
+      label: "Promoters"
+      filters: {
+        field: CSAT_Group
+        value: "Promoter"
+      }
+      sql:  ${Primary_Key};;
+    }
+
+    measure: nps_detractors {
+      type: count_distinct
+      label: "Detractors"
+      filters: {
+        field: CSAT_Group
+        value: "Detractor"
+      }
+      sql:  ${Primary_Key};;
+    }
+
+    measure: nps_total_response_groups {
+      type: count_distinct
+      label: "Total Responses"
+      filters: {
+        field: CSAT_Group
+        value: "Detractor, Promoter, Passive"
+      }
+      sql:  ${Primary_Key};;
+      }
+
     measure: count {
       type: count
       drill_fields: []

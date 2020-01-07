@@ -6,7 +6,7 @@
 view: all_events {
   derived_table: {
     sql: select * from heap.all_events;;
-    datagroup_trigger: pdt_refresh_745am
+    datagroup_trigger: pdt_refresh_741am
   }
 
   dimension: event_id {

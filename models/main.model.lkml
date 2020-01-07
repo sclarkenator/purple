@@ -5,7 +5,7 @@
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
 
-week_start_day: sunday
+week_start_day: monday
 
 datagroup: gross_to_net_sales_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -18,15 +18,9 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
-# Rebuilds at 7:50am MDT
-datagroup: pdt_refresh_750am {
-  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 28200)/(60*60*24)) ;;
-  max_cache_age: "24 hours"
-}
-
-# Rebuilds at 7:45am MDT
-datagroup: pdt_refresh_745am {
-  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27900)/(60*60*24)) ;;
+# Rebuilds at 7:41am MDT
+datagroup: pdt_refresh_741am {
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27660)/(60*60*24)) ;;
   max_cache_age: "24 hours"
 }
 
@@ -471,6 +465,16 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
+  join: zcta5 {
+    view_label: "Geography"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
+    relationship: many_to_one}
+  join: dma {
+    view_label: "Customer"
+    type:  left_outer
+    sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+    relationship: many_to_many}
   }
 
 explore: all_events {
@@ -748,30 +752,11 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
-explore: agent_company_value {
-  hidden: yes
-  label: "Agent Company Value"
-  group_label: "Customer Care"
-}
-
-explore: agent_evaluation {
-  hidden: yes
-  label: "Agent Evaluation"
-  group_label: "Customer Care"
-}
-
-explore: agent_attendance {
-  hidden: yes
-  label: "Agent Attendance"
-  group_label: "Customer Care"
-
-}
-
-explore: v_agent_state  {
-  hidden:  yes
-  label: "Agent Time States"
-  group_label: "Customer Care"
-}
+explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
+explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
+explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
+explore: stella_response {hidden:yes}
 
 
 #-------------------------------------------------------------------
@@ -948,7 +933,7 @@ explore: sales_order_line{
     view_label: "Promo"
     type: left_outer
     sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
-    relationship:many_to_one}
+    relationship:many_to_many}
   join: marketing_promo_codes {
     view_label: "Promo"
     type: left_outer
@@ -959,9 +944,9 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
     relationship: one_to_one}
-  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
     sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-    join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+    join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
       sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
   join: warranty_order {
       view_label: "Warranties"
@@ -969,13 +954,13 @@ explore: sales_order_line{
       #required_joins: [warranty_order_line]
       sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.system};;
       #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
-      relationship: many_to_one}
+      relationship: one_to_many}
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
     sql_on: ${warranty_order_line.system} = ${warranty_order.system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
-    relationship: one_to_many}
+    relationship: many_to_many}
   join: warranty_reason {
     view_label: "Warranties"
     type: left_outer
@@ -991,12 +976,12 @@ explore: sales_order_line{
     view_label: "Promo"
     type:full_outer
     sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
-    relationship: one_to_one}
+    relationship: many_to_many}
   join: slicktext_contact {
     view_label: "Promo"
     type: full_outer
     sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
-    relationship: many_to_many}
+    relationship: one_to_many}
   join: slicktext_opt_out {
     view_label: "Promo"
     type: full_outer
@@ -1010,12 +995,12 @@ explore: sales_order_line{
   join: referral_sales_orders {
     type: left_outer
     sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
-    relationship: many_to_one
+    relationship: one_to_one
   }
   join: affiliate_sales_orders {
     type: left_outer
     sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
-    relationship: many_to_one
+    relationship: one_to_one
   }
   join: zipcode_radius {
     type: left_outer
@@ -1025,12 +1010,12 @@ explore: sales_order_line{
   join: shopify_discount_titles {
     type: left_outer
     sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
-    relationship: one_to_many
+    relationship: one_to_one
   }
   join: mainchain_transaction_outwards_detail {
     view_label: "MainChain"
     type: left_outer
-    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${item.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+    sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
     relationship: one_to_many
   }
@@ -1038,7 +1023,7 @@ explore: sales_order_line{
     view_label: "Sales Order"
     type: left_outer
     sql_on: ${calls_to_orders.order_id}::string =  ${sales_order.etail_order_id}::string;;
-    relationship: one_to_one
+    relationship: many_to_one
   }
   join: exchange_order_line {
     view_label: "Returns"
@@ -1057,7 +1042,7 @@ explore: sales_order_line{
     view_label: "Zendesk Sell"
     type: full_outer
     sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
-    relationship: one_to_one
+    relationship: one_to_many
   }
   join: warranty_original_information {
     view_label: "Warranties"

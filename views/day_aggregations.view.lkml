@@ -312,7 +312,7 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
 
-    datagroup_trigger: pdt_refresh_750am
+    datagroup_trigger: pdt_refresh_741am
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
@@ -347,9 +347,9 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+    sql: ${TABLE}.date::date <= '2020-01-05' ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date) and ${TABLE}.date::date <= current_date::date;; }
-    sql: date_part('week',${TABLE}.date) < 53 and ${TABLE}.date::date <= current_date::date;; }
+    #sql: date_part('week',${TABLE}.date) < 53 and ${TABLE}.date::date <= current_date::date;; }
 
   dimension: 6_weeks{
     group_label: "Created Date"
@@ -361,15 +361,16 @@ view: day_aggregations {
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    #sql:  ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' ;; }
+    sql:  ${TABLE}.date::date >= '2019-12-30' and ${TABLE}.date::date <= '2020-01-05' ;; }
     #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
-    sql: date_part('week',${TABLE}.date) = 52;; }
+    #sql: date_part('week',${TABLE}.date) = 52;; }
 
   dimension: cur_week{
     group_label: "Created Date"
     label: "z - Current Week"
     type: yesno
-    sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
+    sql:  ${TABLE}.date::date >= '2020-01-06' and ${TABLE}.date::date <= '2020-01-12' ;; }
+    #sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
 
   dimension: week_2019_start {
     group_label: "Created Date"
@@ -383,13 +384,20 @@ view: day_aggregations {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
+#     sql:  CASE WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) THEN 'Current Week'
+#             WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+#             WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+#             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
+#             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+#             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+#             ELSE 'Other' END ;; }
     sql: case
-    when ${TABLE}.Created::date >= '2019-12-30' and ${TABLE}.Created::date <= '2020-01-05' then 'Current Week'
-    when ${TABLE}.Created::date >= '2019-12-23' and ${TABLE}.Created::date <= '2019-12-29' then 'Last Week'
-    when ${TABLE}.Created::date >= '2019-12-16' and ${TABLE}.Created::date <= '2019-12-22' then 'Two Weeks Ago'
-    when ${TABLE}.Created::date >= '2018-12-31' and ${TABLE}.Created::date <= '2019-01-06' then 'Current Week LY'
-    when ${TABLE}.Created::date >= '2018-12-24' and ${TABLE}.Created::date <= '2018-12-30' then 'Last Week LY'
-    when ${TABLE}.Created::date >= '2018-12-17' and ${TABLE}.Created::date <= '2018-12-23' then 'Two Weeks Ago LY'
+    when ${TABLE}.date::date >= '2020-01-06' and ${TABLE}.date::date <= '2020-01-12' then 'Current Week'
+    when ${TABLE}.date::date >= '2019-12-30' and ${TABLE}.date::date <= '2020-01-05' then 'Last Week'
+    when ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' then 'Two Weeks Ago'
+    when ${TABLE}.date::date >= '2019-01-07' and ${TABLE}.date::date <= '2019-01-13' then 'Current Week LY'
+    when ${TABLE}.date::date >= '2018-12-31' and ${TABLE}.date::date <= '2019-01-06' then 'Last Week LY'
+    when ${TABLE}.date::date >= '2018-12-24' and ${TABLE}.date::date <= '2018-12-30' then 'Two Weeks Ago LY'
     else 'Other' end ;; }
 
 #     when date_part('year', ${TABLE}.Created::date) = date_part('year', current_date)
