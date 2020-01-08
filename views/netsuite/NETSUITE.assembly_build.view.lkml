@@ -119,7 +119,7 @@ view: assembly_build {
     group_label: "Produced Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${TABLE}.PRODUCED::date) < date_trunc(week, current_date) ;;}
 
   dimension: prev_week{
     group_label: "Produced Date"

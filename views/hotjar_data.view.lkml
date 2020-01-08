@@ -44,7 +44,7 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_trunc(week, ${TABLE}.created::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${TABLE}.created::date) < date_trunc(week, current_date) ;;}
 
   dimension: prev_week{
     group_label: "Created Date"

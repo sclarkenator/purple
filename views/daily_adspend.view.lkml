@@ -51,7 +51,7 @@ view: daily_adspend {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
     #sql: date_part('week',${TABLE}.date) < 53;; }
 

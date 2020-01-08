@@ -206,7 +206,7 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Before Current Week"
         type: yesno
-        sql: date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) ;;}
+        sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
 
       dimension: week_offset{
         group_label: "Forecast Date"
