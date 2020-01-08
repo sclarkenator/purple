@@ -203,7 +203,7 @@ dimension: SLA_Buckets {
     view_label: "Fulfillment"
     label: "z - Before Current Week"
     type: yesno
-    sql: date_trunc(week, ${Due_Date}::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${Due_Date}::date) < date_trunc(week, current_date) ;;}
 
   dimension: sla_prev_week{
     group_label: "SLA Target Date"
@@ -801,7 +801,7 @@ dimension: days_to_cancel {
     #hidden:  yes
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${TABLE}.Created::date) < date_trunc(week, current_date) ;;}
 
 
   dimension: prev_week{
@@ -911,7 +911,7 @@ dimension: days_to_cancel {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${fulfilled_raw}::date) < date_trunc(week, current_date) ;;}
 
   dimension: ff_prev_week{
     group_label: "    Fulfilled Date"

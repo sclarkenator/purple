@@ -182,7 +182,7 @@ view: sessions {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: date_trunc(week, ${TABLE}.time::date) = date_trunc(week, current_date) ;;}
+    sql: date_trunc(week, ${TABLE}.time::date) < date_trunc(week, current_date) ;;}
 
   dimension: prev_week{
     group_label: "Time Date"
