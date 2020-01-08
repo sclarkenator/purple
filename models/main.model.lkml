@@ -260,6 +260,7 @@ explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
 explore: change_mgmt {hidden:yes}
 explore: outbound {hidden:yes}
+explore: pilot_daily_report {hidden:yes}
 # explore: mainchain_transaction_outwards_detail {hidden:yes
 #   join: sales_order{
 #     type: left_outer

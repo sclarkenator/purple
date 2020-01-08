@@ -208,6 +208,12 @@ view: item {
     type: string
     sql: ${TABLE}.CATEGORY_NAME_lkr ;; }
 
+  dimension: category_raw { hidden: yes sql: ${TABLE}.category ;; }
+  dimension: line_raw { hidden: yes sql: ${TABLE}.line ;; }
+  dimension: model_raw { hidden: yes sql: ${TABLE}.model ;; }
+  dimension: product_description_raw { hidden: yes sql: ${TABLE}.product_description ;; }
+
+
   dimension: color {
     label: " Sheets Color"
     description: "Only sheets have color assigned"
