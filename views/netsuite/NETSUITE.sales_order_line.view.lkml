@@ -621,7 +621,7 @@ dimension: SLA_fulfilled {
     drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     sql:  ${TABLE}.ordered_qty ;; }
 
-  measure: total_units_raw {
+  dimension: total_units_raw {
     type: number
     sql:  ${TABLE}.ordered_qty ;; }
 
