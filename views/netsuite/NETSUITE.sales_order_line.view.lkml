@@ -844,7 +844,7 @@ dimension: days_to_cancel {
     label: "Promo Date Buckets"
     description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
     group_label: " Advanced"
-    hidden: yes
+    #hidden: yes
     sql: case
         when ${TABLE}.created::date between '2018-11-14' and '2018-11-17' then '18 TG 1 WB'
         when ${TABLE}.created::date between '2018-11-20' and '2018-11-21'
@@ -870,7 +870,7 @@ dimension: days_to_cancel {
     label: "Promo Date Holliday"
     description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
     group_label: " Advanced"
-    hidden: yes
+    #hidden: yes
     sql: case
         when ${TABLE}.created::date between '2018-11-14' and '2018-11-17'
           or ${TABLE}.created::date between '2018-11-20' and '2018-11-26' then '18 Thanksgiving'
@@ -886,7 +886,7 @@ dimension: days_to_cancel {
     label: "Promo Date Type"
     description: "A manual bucketing of the major promos in types; Week Before, Promo Period, Holliday"
     group_label: " Advanced"
-    hidden: yes
+    #hidden: yes
     sql: case
         when ${TABLE}.created::date between '2018-11-14' and '2018-11-17'
           or ${TABLE}.created::date between '2019-05-05' and '2019-05-10'
@@ -1153,7 +1153,7 @@ dimension: days_to_cancel {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: case when ${sales_order.transaction_type} = 'Cash Sale' then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA')  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
     }
 
   dimension_group: fulfilled_old {
