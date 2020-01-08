@@ -142,11 +142,12 @@ view: fulfillment {
     sql: ${TABLE}.tracking_numbers ;;}
 
   measure: count {
-    label: "Units fulfilled"
+    label: "Units Fulfilled"
     description: "Count of items fulfilled"
     #hidden: yes
     type: sum
     sql: ${TABLE}.quantity ;;}
+    #sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA')  then ${sales_order_line.total_units_raw} else ${TABLE}.quantity ;;}
 
   measure: bundle_count {
     group_label: " Advanced"

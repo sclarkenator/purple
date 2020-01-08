@@ -44,25 +44,19 @@ view: hotjar_data {
     group_label: "Created Date"
     label: "z - Before Current Week"
     type: yesno
-    sql: ${TABLE}.created::date <= '2020-01-05' ;;}
-    #sql: date_part('week',${TABLE}.created) < date_part('week',current_date);; }
-    #sql: date_part('week',${TABLE}.created) < 53;; }
+    sql: date_trunc(week, ${TABLE}.created::date) = date_trunc(week, current_date) ;;}
 
   dimension: prev_week{
     group_label: "Created Date"
     label: "z - Previous Week"
     type: yesno
-    sql:  ${TABLE}.created::date >= '2019-12-30' and ${TABLE}.created::date <= '2020-01-05' ;; }
-    #sql: date_part('week',${TABLE}.created) = date_part('week',current_date)-1;; }
-    #sql: date_part('week',${TABLE}.created) = 52;; }
+    sql:  date_trunc(week, ${TABLE}.created::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
   dimension: cur_week{
     group_label: "Created Date"
     label: "z - Current Week"
     type: yesno
-    sql:  ${TABLE}.created::date >= '2020-01-06' and ${TABLE}.created::date <= '2020-01-12' ;; }
-    #sql: date_part('week',${TABLE}.created) = date_part('week',current_date);; }
-
+    sql: date_trunc(week, ${TABLE}.created) = date_trunc(week, current_date) ;;}
 
   dimension: how_heard {
     label: "How did you hear? (all)"

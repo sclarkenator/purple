@@ -51,7 +51,7 @@ view: daily_adspend {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql: ${TABLE}.date::date <= '2020-01-05' ;;}
+    sql: date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
     #sql: date_part('week',${TABLE}.date) < 53;; }
 
@@ -60,9 +60,7 @@ view: daily_adspend {
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    sql:  ${TABLE}.date::date >= '2019-12-30'  and ${TABLE}.date::date <= '2020-01-05' ;; }
-    #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
-    #sql: date_part('week',${TABLE}.date) = 52;; }
+    sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
   measure: adspend {
     label: "Total Adspend ($k)"
