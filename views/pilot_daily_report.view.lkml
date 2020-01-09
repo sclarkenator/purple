@@ -135,7 +135,7 @@ view: pilot_daily_report {
   }
 
   dimension: pro_number {
-    type: number
+    type: string
     sql: ${TABLE}."PRO_NUMBER" ;;
   }
 
