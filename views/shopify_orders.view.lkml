@@ -76,6 +76,12 @@ view: shopify_orders {
     sql: ${TABLE}.total_tax = ${sales_order.tax_amt} ;;
   }
 
+  dimension: user_id {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.user_id ;;
+  }
+
   dimension_group: created_at  {
     type: time
     timeframes: [
