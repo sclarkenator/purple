@@ -32,6 +32,13 @@ dimension: name {
   sql: ${TABLE}.name ;;
 }
 
+  dimension: merged_name{
+    description: "The name of this agent"
+    label: "CC/ZD Agent Name"
+    group_label: " Advanced"
+    type:  string
+    sql: nvl(${zendesk_sales.name},${TABLE}.name)  ;;
+  }
 
 
 }
