@@ -531,6 +531,7 @@ explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign"
   join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
     relationship: many_to_one } }
 explore: target_adspend {hidden: yes}
+explore: promotion {hidden:yes}
 
 
 explore: narvar_dashboard_track_metrics {
@@ -1058,7 +1059,6 @@ explore: sales_order_line{
     sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
     relationship: one_to_one
   }
-
 }
 
 

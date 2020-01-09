@@ -17,8 +17,8 @@ view: promotion {
   }
 
   dimension: description {
-    label: "Promotion Period Description"
-    group_label: "  Advanced"
+    #label: "Promotion Period Description"
+    #group_label: " Advanced"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
@@ -27,6 +27,7 @@ view: promotion {
     type: time
     timeframes: [
       raw,
+      time,
       date,
       week,
       month,
@@ -34,15 +35,15 @@ view: promotion {
       year
     ]
     convert_tz: no
-    hidden: yes
+    #hidden: yes
     datatype: date
     sql: ${TABLE}."END" ;;
   }
 
    dimension: name {
     type: string
-    label: "Promotion Period Name"
-    group_label: "  Advanced"
+    #label: "Promotion Period Name"
+    #group_label: " Advanced"
     sql: ${TABLE}."NAME" ;;
   }
 
@@ -50,6 +51,7 @@ view: promotion {
     type: time
     timeframes: [
       raw,
+      time,
       date,
       week,
       month,
@@ -57,21 +59,21 @@ view: promotion {
       year
     ]
     convert_tz: no
-    hidden: yes
+    #hidden: yes
     datatype: date
     sql: ${TABLE}."START" ;;
   }
 
   dimension: type {
     type: string
-    label: "Promotion Period Type"
-    group_label: "  Advanced"
+    #label: "Promotion Period Type"
+    #group_label: " Advanced"
     sql: ${TABLE}."TYPE" ;;
   }
 
   measure: count {
     type: count
-    hidden: yes
+    #hidden: yes
     drill_fields: [id, name]
   }
 }
