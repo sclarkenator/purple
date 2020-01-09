@@ -36,13 +36,16 @@ derived_table: {
         ,SUM(CASE WHEN PRODUCT_description_LKR like '%BLANKET%' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN PRODUCT_LINE_NAME_LKR = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when product_description_LKR like '%POWERBASE - SPLIT KING%' then 1 else 0 end) split_king
-        ,sum(case when sku_id in ('10-31-12890','10-31-12895') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('10-31-12860','10-31-12857') then 1 else 0 end) plush
-        ,sum(case when sku_id in ('10-31-12854 ','10-31-12855') then 1 else 0 end) purple_pillow
-        ,sum(case when sku_id in ('10-21-68268') then 1 else 0 end) gravity_mask
-        ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
-        ,sum(case when sku_id in ('10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45868','10-38-45869','10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 1 else 0 end) accordion_platform
-        ,sum(case when sku_id in ('10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
+        ,sum(case when sku_id ilike '%10-31-12890%' AND sku_id ilike '%10-31-12895%' then 1 else 0 end) harmony
+        ,sum(case when sku_id ilike '%10-31-12860%' AND sku_id ilike '%10-31-12857%' then 1 else 0 end) plush
+        ,sum(case when sku_id ilike '%10-31-12854%' AND sku_id ilike '%10-31-12855%' then 1 else 0 end) purple_pillow
+        ,sum(case when sku_id ilike '%10-21-68268%' then 1 else 0 end) gravity_mask
+        ,sum(case when sku_id ilike '%10-38-13050%' then 1 else 0 end) gravity_blanket
+        ,sum(case when sku_id ilike '%10-38-45867%' AND sku_id ilike '%10-38-45866%' AND sku_id ilike '%10-38-45865%' AND sku_id ilike '%10-38-45864%'
+            AND sku_id ilike '%10-38-45863%' AND sku_id ilike '%10-38-45862%' AND sku_id ilike '%10-38-45868%' AND sku_id ilike '%10-38-45869%'
+            AND sku_id ilike '%10-38-45870%' AND sku_id ilike '%10-38-45871%' AND sku_id ilike '%10-38-45872%' AND sku_id ilike '%10-38-45873%') then 1 else 0 end) accordion_platform
+        ,sum(case when sku_id ilike '%10-38-13015%' AND sku_id ilike '%10-38-13010%' AND sku_id ilike '%10-38-13005%' AND sku_id ilike '%10-38-13030%'
+            AND sku_id ilike '%10-38-13025%' AND sku_id ilike '%10-38-13020%') then 1 else 0 end) duvet
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'SHEETS' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt2
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
