@@ -1275,6 +1275,26 @@ dimension: days_to_cancel {
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
 
+  dimension:  is_packed {
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.PACKED=${TABLE}.ordered_qty ;;
+  }
+
+  dimension: wholesale_packed {
+    label: "Is Wholesale and Packed"
+    type: yesno
+    #hidden: yes
+    sql: ${sales_order.channel_id} = 2 and ${is_packed} ;;
+  }
+
+    dimension: xpo_pilot_packed {
+      label: "Is Pilot or XPO and Packed"
+      type: yesno
+      #hidden: yes
+      sql: ${fulfillment.carrier} in ('XPO','Pilot') and ${is_packed} ;;
+    }
+
   dimension: state {
     view_label: "Customer"
     group_label: "Customer Address"
