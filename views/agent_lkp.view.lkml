@@ -20,6 +20,12 @@ view: agent_lkp {
     sql: ${TABLE}.zendesk_id ;;
   }
 
+  dimension: zendesk_sell_id {
+    description: "The ZenDesk Sell ID for this agent"
+    type:  number
+    sql: ${TABLE}.zendesk_sell_user_id ;;
+  }
+
   dimension: shopify_id {
     description: "The Shopify ID for this agent"
     type:  number
