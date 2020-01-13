@@ -928,11 +928,11 @@ dimension: days_to_cancel {
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
     sql:  CASE WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, current_date) THEN 'Current Week'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
       ELSE 'Other' END ;; }
 
   dimension_group: created {
@@ -1274,6 +1274,26 @@ dimension: days_to_cancel {
    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;; }
+
+  dimension:  is_packed {
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.PACKED=${TABLE}.ordered_qty ;;
+  }
+
+  dimension: wholesale_packed {
+    label: "Is Wholesale and Packed"
+    type: yesno
+    #hidden: yes
+    sql: ${sales_order.channel_id} = 2 and ${is_packed} ;;
+  }
+
+    dimension: xpo_pilot_packed {
+      label: "Is Pilot or XPO and Packed"
+      type: yesno
+      #hidden: yes
+      sql: ${fulfillment.carrier} in ('XPO','Pilot') and ${is_packed} ;;
+    }
 
   dimension: state {
     view_label: "Customer"
