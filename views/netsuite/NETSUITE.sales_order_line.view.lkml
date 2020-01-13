@@ -928,11 +928,11 @@ dimension: days_to_cancel {
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
     sql:  CASE WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, current_date) THEN 'Current Week'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-      WHEN date_trunc(week, ${fulfilled_raw}.Created::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(year, -1, current_date)) THEN 'Current Week LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+      WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
       ELSE 'Other' END ;; }
 
   dimension_group: created {
