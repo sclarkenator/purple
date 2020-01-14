@@ -206,6 +206,16 @@ measure: upt {
     sql: case when ${sales_order.minimum_ship_date} > ${sales_order.ship_by_date} then ${sales_order.minimum_ship_date}
       else dateadd(d,-3,${sales_order.ship_by_date}) end ;; }
 
+  dimension_group: ship_order_by {
+    label: "Ship by or Order"
+    description: "Using ship by date unless blank then order date"
+    view_label: "Fulfillment"
+    type:time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql:nvl(${TABLE}.SHIP_BY,${TABLE}.Created::date) ;; }
+
   dimension: insert_ts {
     hidden: yes
     type: string
