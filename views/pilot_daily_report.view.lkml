@@ -21,6 +21,11 @@ view: pilot_daily_report {
     sql: ${TABLE}."CURRENT_STATUS" ;;
   }
 
+  dimension: netsuite_status {
+    type: string
+    sql: ${TABLE}."NETSUITE_STATUS" ;;
+  }
+
   dimension_group: entry {
     type: time
     timeframes: [
