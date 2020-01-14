@@ -267,10 +267,11 @@ view: item {
         when ${sku_clean} = '10-21-23618' then '10-21-12618'
         --Platforms
         when ${sku_clean} = '10-38-82822' then '10-38-12822'
-        when ${sku_clean} in ('10-38-92892','10-38-82815') then '10-38-12815'
+        when ${sku_clean} in ('10-38-82815','10-38-92892','10-38-92892') then '10-38-12815'
         when ${sku_clean} = '10-38-82846' then '10-38-12846'
-        when ${sku_clean} = '10-38-82895' then '10-38-12893'
-        when ${sku_clean} = '' then ''
+        when ${sku_clean} in ('10-38-82893','10-38-82895','10-38-82895') then '10-38-12893'
+        when ${sku_clean} in ('10-21-13064','10-38-82890','10-38-82890','10-38-82892') then '10-38-12892'
+        --Cushions
         when ${sku_clean} = '10-41-12571' then '10-41-12378'
         when ${sku_clean} = '10-41-12533' then '10-41-12573'
         when ${sku_clean} = '10-41-12574' then '10-41-12502'
@@ -283,8 +284,10 @@ view: item {
         when ${sku_clean} in ('10-38-13748','10-38-12755') then '10-38-12748'
         when ${sku_clean} = '10-38-13924' then '10-38-12724'
         when ${sku_clean} = '10-38-13731' then '10-38-12731'
-        else ${sku_clean} end ;;
-  }
+        --powerbases
+        when ${sku_clean} in ('10-38-12946','10-38-12949') then '10-38-12953'
+        when ${sku_clean} = '10-38-12939' then '10-38-12948'
+        else ${sku_clean} end ;;  }
 
   dimension: update_ts {
     hidden: yes
