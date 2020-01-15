@@ -1378,9 +1378,6 @@ dimension: days_to_cancel {
     type: average
     sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;; }
 
-
-
-
   set: fulfill_details {
     fields: [order_id,item_id,created_date,fulfilled_date] }
 }
