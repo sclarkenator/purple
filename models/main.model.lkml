@@ -23,6 +23,11 @@ datagroup: pdt_refresh_741am {
   sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27660)/(60*60*24)) ;;
   max_cache_age: "24 hours"
 }
+# Rebuilds at 6:00am MDT
+datagroup: pdt_refresh_6am {
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*6)/(60*60*24)) ;;
+  max_cache_age: "24 hours"
+}
 
 
 #-------------------------------------------------------------------
