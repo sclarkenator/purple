@@ -146,7 +146,7 @@ view: fulfillment {
     description: "Count of items fulfilled"
     #hidden: yes
     type: sum
-    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA') then ${sales_order_line.total_units_raw} else ${TABLE}.quantity END ;;}
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA') then ${sales_order_line.total_units_raw} else nvl(${TABLE}.BUNDLE_QUANTITY,${TABLE}.quantity) END ;;}
 
   measure: bundle_count {
     group_label: " Advanced"
@@ -156,6 +156,11 @@ view: fulfillment {
     type: sum
     sql: case when ${TABLE}.BUNDLE_QUANTITY = 0 then ${TABLE}.quantity else ${TABLE}.BUNDLE_QUANTITY end  ;;}
 
+  measure: bundle_quantity {
+    type: sum
+    hidden: yes
+    sql: ${TABLE}.BUNDLE_QUANTITY ;;
+  }
 #BUNDLE_QUANTITY
 
   measure: total_shipping {
