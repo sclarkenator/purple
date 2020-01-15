@@ -154,7 +154,8 @@ view: ltol_pitch {
   }
 
   measure: operational_availability {
-    type: sum
+    type: average
+    value_format: "#0.0"
     sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
   }
 
