@@ -1,20 +1,20 @@
 view: zendesk_sales {
-  derived_table: {
-    sql:
-    select a.deal_id
-, a.contact_id
-, a.user_id
-, a.deal_created
-, a.draft_order_subtotal_amt
-, a.order_id
-, a.system
-, b.name
-, b.email
-, b.team_name
-, b.zendesk_id
-from analytics.customer_care.v_zendesk_sell_kpi a
-left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id;;
-  }
+#  sql_table_name: customer_care.v_zendesk_sell_kpi ;;
+   derived_table: {
+     sql:
+     select a.deal_id
+ , a.contact_id
+ , a.user_id
+ , a.deal_created
+ , a.draft_order_subtotal_amt
+ , a.order_id
+ , a.system
+ , b.zendesk_id
+ , nvl(b.name,c.name) name
+ from analytics.customer_care.v_zendesk_sell_kpi a
+ left join analytics.customer_care.agent_lkp b on a.user_id = b.zendesk_sell_user_id
+ left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id;;
+   }
 
  dimension:has_touch {
     label: "    * Has Touch"
@@ -69,12 +69,9 @@ left join analytics.customer_care.zendesk_sell_user b on a.user_id = b.user_id;;
     type: string
     label: "Agent Name"
     description: "Null if not linked to a deal"
-    sql: ${TABLE}.name ;;
+    sql: ${TABLE}.name;;
   }
-  dimension: team_name{
-    type: string
-    sql: ${TABLE}.team_name ;;
-  }
+
   dimension: zendesk_id {
     type: string
     sql: ${TABLE}.zendesk_id ;;

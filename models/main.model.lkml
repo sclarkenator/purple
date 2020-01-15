@@ -260,6 +260,7 @@ explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
 explore: change_mgmt {hidden:yes}
 explore: outbound {hidden:yes}
+explore: pilot_daily_report {hidden:yes}
 # explore: mainchain_transaction_outwards_detail {hidden:yes
 #   join: sales_order{
 #     type: left_outer
@@ -336,11 +337,11 @@ explore: v_fedex_to_xpo {
   group_label: "Production"
 }
 
-  explore: fulfillment_snowflake{
-    from: fulfillment
-    hidden:  yes
-    group_label: "Production"
-  }
+#  explore: fulfillment_snowflake{
+#    from: fulfillment
+#    hidden:  yes
+#    group_label: "Production"
+#  }
 
   explore: fulfillment_amazon{
     hidden:  yes
@@ -494,9 +495,10 @@ explore: all_events {
     type: left_outer
     sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
     relationship: one_to_one }
-  join: event_flow {
-    sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
-    relationship: one_to_one }
+## event_flow not currently used in content.
+#   join: event_flow {
+#     sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
+#     relationship: one_to_one }
   join: zip_codes_city {
     type: left_outer
     sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
@@ -529,6 +531,7 @@ explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign"
   join: external_campaign {type: left_outer sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
     relationship: many_to_one } }
 explore: target_adspend {hidden: yes}
+explore: promotion {hidden:yes}
 
 
 explore: narvar_dashboard_track_metrics {
@@ -757,6 +760,18 @@ explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
 explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
 explore: stella_response {hidden:yes}
+explore: exchange_items {hidden: yes
+  join: item {
+      type:  left_outer
+      sql_on:  ${item.item_id} = ${exchange_items.original_order_item_id} ;;
+      relationship: many_to_one
+      view_label: "Original Item"}
+  join: item_2 {
+    from: item
+    type:  left_outer
+    sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
+    relationship: many_to_one
+    view_label: "Exchange Item"}}
 
 
 #-------------------------------------------------------------------
@@ -870,6 +885,13 @@ explore: sales_order_line{
     relationship: one_to_one
     required_joins: [return_order_line]
     sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;}
+  join: restocked_warranties {
+    from: restocked_returns
+    view_label: "Warranties"
+    type: left_outer
+    relationship: one_to_one
+    required_joins: [warranty_order_line]
+    sql_on: ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id};;}
   join: customer_table {
     view_label: "Customer"
     type: left_outer
@@ -1047,7 +1069,7 @@ explore: sales_order_line{
   join: warranty_original_information {
     view_label: "Warranties"
     type: left_outer
-    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
+    sql_on: ${sales_order.order_id} = ${warranty_original_information.order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
     relationship: one_to_one
   }
   join: first_purchase_date {
@@ -1056,6 +1078,15 @@ explore: sales_order_line{
     sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
     relationship: one_to_one
   }
+join: agent_name {
+  view_label: "Sales Order"
+  type: left_outer
+  sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+  relationship: many_to_one
+}
+
+
+
 
 }
 

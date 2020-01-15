@@ -157,6 +157,10 @@ view: forecast_combined {
           , zz.Trucking_Amount
           , zz.Other_Units
           , zz.Other_Amount
+          , zz.bd_units
+          , zz.bd_amount
+          , zz.hom_units
+          , zz.hom_amount
 
           , xx.total_units amazon_units
           , xx.total_amount amazon_amount
@@ -202,9 +206,7 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Before Current Week"
         type: yesno
-        #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
-        #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
-        sql: date_part('week',${TABLE}.date) < 53;; }
+        sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
 
       dimension: week_offset{
         group_label: "Forecast Date"
@@ -222,13 +224,13 @@ view: forecast_combined {
         group_label: "Forecast Date"
         label: "z - Previous Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = 52;; }
+        sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
       dimension: cur_week{
         group_label: "Forecast Date"
         label: "z - Current Week"
         type: yesno
-        sql: date_part('week',${TABLE}.date) = date_part('week',current_date);; }
+        sql: date_trunc(week, ${TABLE}.date) = date_trunc(week, current_date) ;;}
 
       dimension: sku_id {
         type:  string
@@ -401,25 +403,25 @@ view: forecast_combined {
         label: "Wholesale Bloomingdales Units"
         type:  sum
         value_format: "#,##0"
-        sql:${TABLE}.Other_Units ;; }
+        sql:${TABLE}.BD_Units ;; }
 
       measure: BD_Amount {
         label: "Wholesale Bloomingdales Amount"
         type:  sum
         value_format: "$#,##0.00"
-        sql:${TABLE}.Other_Amount ;; }
+        sql:${TABLE}.BD_Amount ;; }
 
       measure: HOM_Units {
         label: "Wholesale HOM Units"
         type:  sum
         value_format: "#,##0"
-        sql:${TABLE}.Other_Units ;; }
+        sql:${TABLE}.HOM_Units ;; }
 
       measure: hom_Amount {
         label: "Wholesale HOM Amount"
         type:  sum
         value_format: "$#,##0.00"
-        sql:${TABLE}.Other_Amount ;; }
+        sql:${TABLE}.hom_Amount ;; }
 
       measure: amazon_units {
         label: "Amazon Units"

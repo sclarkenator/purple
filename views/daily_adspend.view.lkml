@@ -51,33 +51,31 @@ view: daily_adspend {
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql: ${TABLE}.date::date <= '2019-12-30' ;;}
+    sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
-    sql: date_part('week',${TABLE}.date) < 53;; }
+    #sql: date_part('week',${TABLE}.date) < 53;; }
 
   dimension: prev_week{
     group_label: "  Ad Date"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
-    #sql:  ${TABLE}.date::date >= '2019-12-23' and ${TABLE}.date::date <= '2019-12-29' ;; }
-    #sql: date_part('week',${TABLE}.date) = date_part('week',current_date)-1;; }
-    sql: date_part('week',${TABLE}.date) = 52;; }
+    sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
   measure: adspend {
     label: "Total Adspend ($k)"
     group_label: "Advanced"
-    description: "Total adspend for selected channels"
-    type: sum
+    description: "Total adspend for selected channels (includes Agency cost)"
+    type: number
     value_format: "$#,##0,\" K\""
-    sql: ${TABLE}.spend ;;  }
+    sql: ${agency_cost}+${adspend_no_agency} ;;  }
 
   measure: adspend_raw {
     label: "  Total Adspend ($)"
-    description: "Total adspend for selected channels"
-    type: sum
+    description: "Total adspend for selected channels (includes Agency cost)"
+    type: number
     value_format: "$#,##0"
-    sql: ${TABLE}.spend ;;  }
+    sql: ${adspend} ;;  }
 
   measure: agency_cost {
     label: "  Agency Cost ($)"
@@ -87,7 +85,7 @@ view: daily_adspend {
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'Display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('YOUTUBE') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.06
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;

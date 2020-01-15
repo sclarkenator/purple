@@ -3,6 +3,8 @@
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
 
+### View File not current used in content. Query is slow to run.
+
 view: event_flow {
   derived_table: {
     sql:
@@ -37,7 +39,6 @@ view: event_flow {
         and a.session_id = e.session_id
        ;;
 
-      datagroup_trigger: pdt_refresh_741am
   }
 
   dimension: unique_event_id {
