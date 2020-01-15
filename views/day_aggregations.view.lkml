@@ -312,7 +312,7 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
 
-    datagroup_trigger: pdt_refresh_741am
+    datagroup_trigger: pdt_refresh_6am
   }
   dimension: date {type: date hidden:yes}
   dimension_group: date {
