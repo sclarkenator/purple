@@ -253,11 +253,13 @@ view: item {
 
   dimension: sku_clean {
     type: string
+    hidden: yes
     sql: case when left(${sku_id},3) = 'AC-' then right(${sku_id},11) else ${sku_id} end ;;
   }
 
   dimension: sku_merged {
     type: string
+    hidden: yes
     sql: --OG Mattress
       case when ${sku_clean} = '10-21-23960' then '10-21-12960'
         when ${sku_clean} = '10-21-23620' then '10-21-12620'
