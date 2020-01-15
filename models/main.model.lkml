@@ -885,6 +885,13 @@ explore: sales_order_line{
     relationship: one_to_one
     required_joins: [return_order_line]
     sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;}
+  join: restocked_warranties {
+    from: restocked_returns
+    view_label: "Warranties"
+    type: left_outer
+    relationship: one_to_one
+    required_joins: [warranty_order_line]
+    sql_on: ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id};;}
   join: customer_table {
     view_label: "Customer"
     type: left_outer
