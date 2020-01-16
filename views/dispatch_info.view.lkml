@@ -67,7 +67,6 @@ view: dispatch_info {
 
   dimension: dispatch_code {
     label: "Dispatch Type"
-    description: "What kind of Dispatch"
     type: string
     sql: ${TABLE}."DISPATCH_CODE" ;;
   }
@@ -105,7 +104,7 @@ view: dispatch_info {
   }
 
   dimension: dispatch_type_description {
-    description: "The explination of the Dispatch Type"
+    description: "The explanation of dispatch type"
     type: string
     sql: ${TABLE}."DISPATCH_TYPE_DESCRIPTION" ;;
   }
@@ -118,7 +117,7 @@ view: dispatch_info {
 
   dimension_group: dispatched {
     label: "Dispatched Time"
-    description: "When was the dispactch sent out to a Tech"
+    description: "Time dispatch was sent to a tech"
     type: time
     timeframes: [
       raw,
@@ -134,14 +133,14 @@ view: dispatch_info {
 
   measure: downtime {
     label: "Downtime Total (Min.)"
-    description: "How long was the dispatch open"
+    description: "How long the dispatch was open"
     type: sum
     sql: ${TABLE}."DOWNTIME" ;;
   }
 
   measure: downtime_until_dispatch {
     label: "Downtime Until Dispatched (Min.)"
-    description: "How long was the Dispatch Reported until it was reported dispatched"
+    description: "How long was dispatch reported until it was reported"
     type: sum
     sql: ${TABLE}."DOWNTIME_UNTIL_DISPATCHED" ;;
   }
@@ -160,7 +159,7 @@ view: dispatch_info {
 
   measure: DISPATCHED_UNTIL_COMPLETED {
     label: "Dispatched Until Completed (Min.)"
-    description: "How long from the time the dispatch was dispatched to the completed time was reported"
+    description: "How long from the time the dispatch was dispatched to the completed time reported"
     type: sum
     sql: ${TABLE}."DISPATCHED_UNTIL_COMPLETED" ;;
   }

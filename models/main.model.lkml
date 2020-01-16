@@ -23,6 +23,11 @@ datagroup: pdt_refresh_741am {
   sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27660)/(60*60*24)) ;;
   max_cache_age: "24 hours"
 }
+# Rebuilds at 6:00am MDT
+datagroup: pdt_refresh_6am {
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*6)/(60*60*24)) ;;
+  max_cache_age: "24 hours"
+}
 
 
 #-------------------------------------------------------------------
@@ -1083,6 +1088,12 @@ join: agent_name {
   type: left_outer
   sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
   relationship: many_to_one
+}
+join: promotions_combined {
+  view_label: "Sales Order"
+  type: left_outer
+  sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
+relationship: one_to_one
 }
 
 
