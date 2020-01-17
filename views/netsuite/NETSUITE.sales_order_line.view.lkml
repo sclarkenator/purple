@@ -940,7 +940,7 @@ dimension: days_to_cancel {
     label: "    Order"
     description:  "Time and date order was placed"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;; }
