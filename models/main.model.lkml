@@ -18,14 +18,9 @@ datagroup: temp_ipad_database_default_datagroup {
 
 persist_with: temp_ipad_database_default_datagroup
 
-# Rebuilds at 7:41am MDT
-datagroup: pdt_refresh_741am {
-  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 27660)/(60*60*24)) ;;
-  max_cache_age: "24 hours"
-}
-# Rebuilds at 6:00am MDT
+# Rebuilds at 6:00am MDT / 13:00 UTC
 datagroup: pdt_refresh_6am {
-  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*6)/(60*60*24)) ;;
+  sql_trigger: SELECT FLOOR((DATE_PART('EPOCH_SECOND', CURRENT_TIMESTAMP) - 60*60*13)/(60*60*24)) ;;
   max_cache_age: "24 hours"
 }
 
