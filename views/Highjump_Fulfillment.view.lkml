@@ -12,7 +12,7 @@ view: highjump_fulfillment {
   dimension:  transaction_number {
     label: "NetSuite Tran ID"
     description: "NetSuite Transaction ID"
-    type: number
+    type: string
     hidden:  no
     sql: ${TABLE}.transaction_number ;;
   }
@@ -44,7 +44,7 @@ view: highjump_fulfillment {
   dimension:  shipped {
     label: "Ship Date"
     description: "Time the Order was shipped"
-    type: date_time
+    type: date
     hidden:  no
     sql: ${TABLE}.shipped ;;
   }
@@ -52,7 +52,7 @@ view: highjump_fulfillment {
   dimension:  tracking_number {
     label: "Tracking Number"
     description: "Item's Shipping Tracking Number"
-    type: number
+    type: string
     hidden:  no
     sql: ${TABLE}.tracking_number ;;
   }
