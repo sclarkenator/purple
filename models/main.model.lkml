@@ -1111,7 +1111,7 @@ relationship: one_to_one
 join: highjump_fulfillment {
   view_label: "Highjump"
   type: left_outer
-  sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_id} = ${highjump_fulfillment.sku} ;;
+  sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
   relationship: one_to_many
 }
 
