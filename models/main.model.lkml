@@ -1030,7 +1030,7 @@ explore: sales_order_line{
   join: standard_cost {
     view_label: "Product"
     type: left_outer
-    sql_on: ${standard_cost.item_id} = ${item.item_id};;
+    sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
     relationship: one_to_one}
   join: referral_sales_orders {
     type: left_outer
