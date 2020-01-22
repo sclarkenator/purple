@@ -118,6 +118,15 @@ measure: upt {
                when ${channel_id} = 5 then 'Owned Retail'
               else 'Other' end  ;; }
 
+  dimension: dtc_channel_sub_category {
+    label: "  DTC Channel Sub-Category"
+    description: "Which DTC Sub-Category was the order processed through (Merchandise, Shopify, Direct Entry, etc)"
+    type: string
+    sql: case when ${source} = 'Amazon-FBM-US' OR ${source} = 'Amazon-FBA' OR ${source} = 'Amazon FBA - US' OR ${source} = 'eBay' then 'Merchant'
+              when ${source} = 'SHOPIFY-US Historical' OR ${source} = 'SHOPIFY-CA' OR ${source} = 'Shopify - US' OR ${source} = 'Shopify - Canada' then 'Shopify'
+              when ${source} = 'Direct Entry' then 'Direct Entry'
+              else 'Other' end ;;  }
+
   dimension: created {
     hidden: yes
     type: date_time
