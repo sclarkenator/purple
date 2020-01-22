@@ -1,6 +1,6 @@
 view: ltol_pitch {
   label: "L2L Pitch Data"
-  sql_table_name: PRODUCTION.L2L_PITCH ;;
+  sql_table_name: ANALYTICS_STAGE.PRODUCTION_STG.L2L_PITCH_RAW ;;
 
   dimension: pitch_id {
     primary_key: yes
@@ -57,7 +57,7 @@ view: ltol_pitch {
       quarter,
       year
     ]
-    sql: ${TABLE}."CREATED" ;;
+    sql: ${TABLE}."CREATED"::date ;;
   }
 
   dimension: createdby {
@@ -101,21 +101,6 @@ view: ltol_pitch {
     hidden: yes
     type: yesno
     sql: ${TABLE}."HAS_SCRAP_DETAILS" ;;
-  }
-
-  dimension_group: insert_ts {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: lastupdated {
@@ -184,7 +169,7 @@ view: ltol_pitch {
       quarter,
       year
     ]
-    sql: ${TABLE}."PITCH_END" ;;
+    sql: ${TABLE}."PITCH_END"::date ;;
   }
 
   dimension_group: pitch_start {
@@ -199,7 +184,7 @@ view: ltol_pitch {
       quarter,
       year
     ]
-    sql: ${TABLE}."PITCH_START" ;;
+    sql: ${TABLE}."PITCH_START"::date ;;
   }
 
   measure: Total_planned_operator_count {
@@ -242,28 +227,13 @@ view: ltol_pitch {
       quarter,
       year
     ]
-    sql: ${TABLE}."SHIFT_START_DATE" ;;
+    sql: ${TABLE}."SHIFT_START_DATE"::date ;;
   }
 
   dimension: site {
     hidden: yes
     type: number
     sql: ${TABLE}."SITE" ;;
-  }
-
-  dimension_group: update_ts {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
   }
 
   measure: count {
