@@ -1,6 +1,6 @@
 view: ltol_pitch {
   label: "L2L Pitch Data"
-  sql_table_name: ANALYTICS_STAGE.PRODUCTION_STG.L2L_PITCH_RAW ;;
+  sql_table_name: PRODUCTION.L2L_PITCH ;;
 
   dimension: pitch_id {
     primary_key: yes
