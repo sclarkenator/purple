@@ -3,15 +3,15 @@ view: order_flag {
 derived_table: {
   sql:
     SELECT ORDER_ID
-      ,case when MATTRESS_FLG >0 then 1 else 0 end mattress_flg
-      ,case when CUSHION_FLG >0 then 1 else 0 end cushion_flg
-      ,case when SHEETS_FLG >0 then 1 else 0 end sheets_flg
-      ,case when PROTECTOR_FLG >0 then 1 else 0 end protector_flg
-      ,case when BASE_FLG >0 then 1 else 0 end base_flg
-      ,case when POWERBASE_FLG >0 then 1 else 0 end powerbase_flg
-      ,case when PLATFORM_FLG >0 then 1 else 0 end platform_flg
-      ,case when PILLOW_FLG >0 then 1 else 0 end pillow_flg
-      ,case when BLANKET_FLG >0 then 1 else 0 end blanket_flg
+      ,case when MATTRESS_FLG > 0 then 1 else 0 end mattress_flg
+      ,case when CUSHION_FLG > 0 then 1 else 0 end cushion_flg
+      ,case when SHEETS_FLG > 0 then 1 else 0 end sheets_flg
+      ,case when PROTECTOR_FLG > 0 then 1 else 0 end protector_flg
+      ,case when BASE_FLG > 0 then 1 else 0 end base_flg
+      ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
+      ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
+      ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
+      ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
       ,case when split_king > 0 then 1 else 0 end sk_flg
       ,case when harmony > 0 then 1 else 0 end harmony_pillow_flg
@@ -22,7 +22,7 @@ derived_table: {
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
       ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
-      ,mattress_ordered
+      , mattress_ordered
     FROM(
       select sol.order_id
         ,sum(case when product_line_name_LKR = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
