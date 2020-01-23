@@ -299,7 +299,7 @@ measure: upt {
       url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
-    type: number
+    type: string
     sql: ${TABLE}.ORDER_ID ;; }
 
   dimension: order_id_count{
