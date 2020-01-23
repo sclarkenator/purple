@@ -91,6 +91,11 @@ view: warranty_order {
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 
+  dimension: original_system {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.ORIGINAL_SYSTEM ;; }
+
   dimension: transaction_number {
     type: string
     sql: ${TABLE}.TRANSACTION_NUMBER ;; }

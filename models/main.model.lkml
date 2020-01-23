@@ -992,13 +992,13 @@ explore: sales_order_line{
       view_label: "Warranties"
       type: full_outer
       #required_joins: [warranty_order_line]
-      sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.system};;
+      sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.original_system} ;;
       #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
       relationship: one_to_many}
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
-    sql_on: ${warranty_order_line.system} = ${warranty_order.system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+    sql_on: ${warranty_order_line.system} = ${warranty_order.original_system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: many_to_many}
   join: warranty_reason {
