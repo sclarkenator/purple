@@ -1114,6 +1114,12 @@ join: highjump_fulfillment {
   sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
   relationship: one_to_many
 }
+join: v_transmission_dates {
+  view_label: "V Transmission Dates"
+  type: left_outer
+  sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.v_transmission_dates_order_id} and ${sales_order_line.system} = ${v_transmission_dates.v_transmission_dates_system} and ${sales_order_line.item_id} = ${v_transmission_dates.v_transmission_dates_item_id} ;;
+  relationship: one_to_one
+  }
 
 
 }
