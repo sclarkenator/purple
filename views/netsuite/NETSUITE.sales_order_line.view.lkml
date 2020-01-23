@@ -959,6 +959,15 @@ dimension: days_to_cancel {
       when: { sql: ${created_day_of_week} = 'Saturday' ;; label: "Sat" }
       when: { sql: ${created_day_of_week} = 'Sunday' ;; label: "Sun" }} }
 
+    dimension: dayofquarterindex {   #returns day of quarter index int 1-92
+      type: number
+      view_label: "Sales Order"
+      description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32"
+      group_label: "    Order Date"
+      label: "Day of Quarter"
+      sql: DATEDIFF('day',date_trunc('quarter',${created_raw}),${created_date}) + 1 ;;
+    }
+
   parameter: timeframe_picker{
     label: "Date Granularity Sales"
     hidden: yes
