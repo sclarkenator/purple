@@ -772,6 +772,24 @@ explore: exchange_items {hidden: yes
     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
     relationship: many_to_one
     view_label: "Exchange Item"}}
+explore: qualtrics {hidden:yes
+  from: qualtrics_answer
+    view_label: "Answer"
+  join: qualtrics_response {
+    type: left_outer
+    sql_on: ${qualtrics.response_id = ${qualtrics_response.response_id} and ${qualtrics.survey_id = ${qualtrics_response.survey_id} ;;
+    relationship: many_to_one
+    view_label: "Response"}
+  join: qualtrics_customer {
+    type: left_outer
+    sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+    relationship: many_to_one
+    view_label: "Customer"}
+  join: qualtrics_survey {
+    type: left_outer
+    sql_on: ${qualtrics.survey_id} = ${qualtrics_survey.id} ;;
+    relationship: many_to_one
+    view_label: "Survey"}}
 
 
 #-------------------------------------------------------------------
@@ -1012,7 +1030,7 @@ explore: sales_order_line{
   join: standard_cost {
     view_label: "Product"
     type: left_outer
-    sql_on: ${standard_cost.item_id} = ${item.item_id};;
+    sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
     relationship: one_to_one}
   join: referral_sales_orders {
     type: left_outer
@@ -1090,8 +1108,12 @@ join: promotions_combined {
   sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
 relationship: one_to_one
 }
-
-
+join: highjump_fulfillment {
+  view_label: "Highjump"
+  type: left_outer
+  sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
+  relationship: one_to_many
+}
 
 
 }

@@ -148,7 +148,7 @@ view: sessions {
 
   dimension_group: time {
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
     sql: ${TABLE}.time ;; }
 
   dimension: last_30{

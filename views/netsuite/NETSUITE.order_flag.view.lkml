@@ -101,9 +101,17 @@ derived_table: {
     group_label: "Total Orders with:"
     label: "a Harmony Pillow"
     hidden: yes
-    description: "1/0 per order; 1 if there was a pillow in the order"
+    description: "1/0 per order; 1 if there was a Harmony pillow in the order"
     type:  sum
     sql:  ${TABLE}.harmony_pillow_flg ;; }
+
+  measure: plush_orders {
+    group_label: "Total Orders with:"
+    label: "a Plush Pillow"
+    hidden: yes
+    description: "1/0 per order; 1 if there was a Plush pillow in the order"
+    type:  sum
+    sql:  ${TABLE}.plush_pillow_flg ;; }
 
   measure: base_orders {
     hidden:  yes

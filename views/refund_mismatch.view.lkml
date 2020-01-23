@@ -1,5 +1,5 @@
 view: refund_mismatch {
-  sql_table_name: CUSTOMER_CARE.REFUND_MISMATCH ;;
+  sql_table_name: CUSTOMER_CARE.V_REFUND_MISMATCH ;;
 
   dimension: amount_diff {
     type: number
