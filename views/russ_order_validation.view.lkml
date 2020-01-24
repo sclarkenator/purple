@@ -4,19 +4,19 @@ view: russ_order_validation {
       select distinct EVENT_FEATURES_SHOPIFY_ORDER_ID, event_metrics_revenue/100 as money, max(convert_timezone('America/Denver', timestamp)) event_time
       from analytics_stage.optimizely.visitor_action va
       where event_name = 'totalRevenue'
-          and convert_timezone('America/Denver', timestamp)::date >= '2020-01-20'
+          and convert_timezone('America/Denver', timestamp)::date >= '2019-11-01'
       group by 1, 2),
       h as (
       select name, subtotal_price, convert_timezone('America/Denver', time)::date the_day, total_discounts
       from analytics.heap.cart_orders_placed_order
-      where convert_timezone('America/Denver', time)::date >= '2020-01-20'
+      where convert_timezone('America/Denver', time)::date >= '2019-11-01'
       ),
 
       t as (
       select distinct "EVENT - UDO - ORDER_ID" order_id, convert_timezone('America/Denver', "EVENT - TIME")::date the_day, "EVENT - UDO - ORDER_SUBTOTAL" subtotal_amt
       from analytics.TEALIUM.EVENTS_VIEW__ALL_EVENTS__ALL_EVENTs
       where "EVENT - UDO - ORDER_ID" is not null
-          and convert_timezone('America/Denver', "EVENT - TIME")::date >= '2020-01-20'
+          and convert_timezone('America/Denver', "EVENT - TIME")::date >= '2019-11-01'
       ),
 
       s as (
@@ -24,7 +24,7 @@ view: russ_order_validation {
               s.subtotal_price shopify_revenue,
               convert_timezone('America/Denver',s.created_at)  s_event_time
       from analytics_stage.shopify_us_ft."ORDER" s
-      where to_date(convert_timezone('America/Denver',s.created_at)) >= '2020-01-20'
+      where to_date(convert_timezone('America/Denver',s.created_at)) >= '2019-11-01'
            and lower(s.source_name) = 'web'
       )
 
@@ -38,7 +38,7 @@ view: russ_order_validation {
       full outer join h on h.name = so.related_tranid
       full outer join t on t.order_id = so.related_tranid
       full outer join s on s.shopify_order_id = so.related_tranid
-      where created::date >= '2020-01-20'
+      where created::date >= '2019-11-01'
           and so.source = 'Shopify - US'
           and warranty != 'T'
           and exchange != 'T'
