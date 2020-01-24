@@ -1389,14 +1389,6 @@ explore: procom_security_daily_customer {
         relationship: many_to_one }
     }
 
-#-------------------------------------------------------------------
-#
-# Russ Order Explore(s)
-#
-#-------------------------------------------------------------------
-
-
-
 
 
 #-------------------------------------------------------------------
@@ -1504,3 +1496,8 @@ explore: procom_security_daily_customer {
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: executive_report { hidden: yes
     join: item { type:inner  sql_on: ${sku_id} = ${item.sku_id};; relationship: one_to_one}}
+
+    explore: russ_order_validation {
+      label: "Order Validation"
+      description: "Constructed table comparing orders from different sources"
+      hidden:yes }
