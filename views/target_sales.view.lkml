@@ -2,14 +2,14 @@ view: sales_targets {
   sql_table_name: CSV_UPLOADS.finance_targets ;;
 
   measure: dtc_target {
-    label: "Daily sales target"
+    label: "Daily DTC Sales Target"
     description: "Monthly gross sales target, spread by day"
     type: sum
     sql: ${TABLE}.DTC ;;
   }
 
   measure: retail_target {
-    label: "Retail sales target"
+    label: "Retail Sales Target"
     description: "Monthly gross sales target, spread by day"
 #    value_format: "0.0,,\" M\""
     type: sum
@@ -17,7 +17,7 @@ view: sales_targets {
   }
 
   measure: whlsl_target {
-    label: "Wholesale sales target"
+    label: "Wholesale Sales Target"
     description: "Monthly gross sales target, spread by day"
     value_format: "0.0,,\" M\""
     type: sum
