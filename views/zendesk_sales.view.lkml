@@ -10,10 +10,12 @@ view: zendesk_sales {
  , a.order_id
  , a.system
  , b.zendesk_id
+ , d.draft_order_name
  , nvl(b.name,c.name) name
  from analytics.customer_care.v_zendesk_sell_kpi a
  left join analytics.customer_care.agent_lkp b on a.user_id = b.zendesk_sell_user_id
- left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id;;
+ left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id
+ left join analytics.customer_care.zendesk_sell_deal d on a.user_id= d.user_id ;;
    }
 
  dimension:has_touch {
@@ -69,6 +71,12 @@ view: zendesk_sales {
     label: "Agent Name"
     description: "Null if not linked to a deal"
     sql: ${TABLE}.name;;
+  }
+
+  dimension: draft_order_name {
+    type: string
+    label: "Draft Order Name"
+    sql: ${TABLE}.draft_order_name;;
   }
 
   dimension: zendesk_id {
