@@ -1396,6 +1396,39 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${ecommerce.user_id}::string = ${users.user_id}::string ;;
         relationship: many_to_one }
+
+      ## To join later, after we get the table from Engineering
+      # not sure we'll need the sales_order one or sales_order_line
+    #  join: sales_order {
+    #    type:  left_outer
+    #    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    #    relationship: one_to_one}
+
+    #  join: order_flag {
+    #    type: left_outer
+    #    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    #    relationship:  one_to_one}
+
+    #  join: sales_order_line {
+    #  type:  left_outer
+    #  sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
+    #  relationship: one_to_many
+    #  fields: [sales_order_line.zip]
+
+    #  join: hotjar_data {
+    #    type: left_outer
+    #    sql_on:  sales email = hotjar email
+    #    relationship one_to_one }
+
+    #  join: hotjar_whenheard {
+    #    type:  left_outer
+    #    sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
+    #    relationship: many_to_one}
+
+    #  join: all_events_subset {
+    #    type: left_outer
+    #    sql_on: ${ecommerce.user_id}::string = ${all_events_subset.user_id}::string ;;
+    #    relationship: many_to_one }
     }
 
 
