@@ -4,6 +4,7 @@ view: sales_targets {
   measure: dtc_target {
     label: "Daily DTC Sales Target"
     description: "Monthly gross sales target, spread by day"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.DTC ;;
   }
@@ -11,7 +12,7 @@ view: sales_targets {
   measure: retail_target {
     label: "Retail Sales Target"
     description: "Monthly gross sales target, spread by day"
-#    value_format: "0.0,,\" M\""
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.RETAIL ;;
   }
@@ -19,7 +20,7 @@ view: sales_targets {
   measure: whlsl_target {
     label: "Wholesale Sales Target"
     description: "Monthly gross sales target, spread by day"
-    value_format: "0.0,,\" M\""
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.WHLSL ;;
   }
