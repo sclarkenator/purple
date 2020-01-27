@@ -120,6 +120,7 @@ measure: upt {
 
   dimension: dtc_channel_sub_category {
     label: "  DTC Channel Sub-Category"
+    group_label: " Advanced"
     description: "Which DTC Sub-Category was the order processed through (Merchandise, Shopify, Direct Entry, etc)"
     type: string
     sql: case when ${source} = 'Amazon-FBM-US' OR ${source} = 'Amazon-FBA' OR ${source} = 'Amazon FBA - US' OR ${source} = 'eBay' then 'Merchant'
