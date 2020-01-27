@@ -22,9 +22,9 @@ derived_table: {
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
       ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
-      ,case when (pdULTpt1>=2 and pdULTpt2=1) then 1 else 0 end pdULT_flg
-      ,case when (pdDELpt1>=2 and pdDELpt2=1) then 1 else 0 end pdDEL_flg
-      ,case when (pdESSpt1>=2 and pdESSpt2=1) then 1 else 0 end pdESS_flg
+      ,case when (pdULTpt1>=2 and pdANYpt2=1) then 1 else 0 end pdULT_flg
+      ,case when (pdDELpt1>=2 and pdANYpt2=1) then 1 else 0 end pdDEL_flg
+      ,case when (pdESSpt1>=2 and pdANYpt2=1) then 1 else 0 end pdESS_flg
       ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
     FROM(
@@ -54,11 +54,9 @@ derived_table: {
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
         ,sum(case when s.memo ilike ('%flashbundle%') AND s.memo ilike ('%2019%') then 1 else 0 end) ff_bundle_pt4
         ,sum(case when (product_description_lkr ilike '%harmony%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdULTpt1
-        ,sum(case when (product_description_lkr ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdULTpt2
         ,sum(case when (product_description_lkr ilike '%pillow 2.0%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdDELpt1
-        ,sum(case when (product_description_lkr ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdDELpt2
         ,sum(case when (product_description_lkr ilike '%plush%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdESSpt1
-        ,sum(case when (product_description_lkr ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdESSpt2
+        ,sum(case when (product_description_lkr ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdANYpt2
         ,sum(case when (product_description_lkr ilike '%gravity%' AND PRODUCT_LINE_NAME_lkr ilike '%blanket%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
         ,sum(case when (product_description_lkr ilike '%gravity%' AND PRODUCT_LINE_NAME_lkr ilike '%mask%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
         from sales_order_line sol
