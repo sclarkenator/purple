@@ -30,7 +30,6 @@ view: zendesk_sales {
   }
  dimension: deal_id {
     type: string
-    hidden: yes
     primary_key: yes
     sql: ${TABLE}.deal_id ;;
   }
