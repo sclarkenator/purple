@@ -1,15 +1,27 @@
 view: warranty_original_information {
     derived_table: {
-      explore_source: sales_order_line {
-        column: return_reason { field: warranty_reason.return_reason }
-        column: fulfilled_date {}
-        column: total_gross_Amt_non_rounded {}
-        column: item_id { field: item.item_id }
-        column: order_id { field: sales_order.order_id }
-        column: w_created_date { field: warranty_order.created_date }
-        column: s_created_date {field: sales_order_line.created_date}
-        column: replacement_order_id {field: warranty_order.replacement_order_id}
-      }
+      sql:
+        SELECT
+          wr.list_item_name AS return_reason
+          , case when s.TRANSACTION_TYPE = 'Cash Sale' or s.SOURCE in ('Amazon FBA - US','Amazon-FBA')  then s.CREATED::date else f.fulfilled::date end fulfilled_date
+          , i.ITEM_ID
+          , s.ORDER_ID
+          , w.CREATED::date w_created_date
+          , sol.Created::date s_created_date
+          , w.REPLACEMENT_ORDER_ID
+            , case when s.CHANNEL_id = 1 then 'DTC'
+               when s.CHANNEL_id = 2 then 'Wholesale'
+               when s.CHANNEL_id = 3 then 'General'
+               when s.CHANNEL_id = 4 then 'Employee Store'
+               when s.CHANNEL_id = 5 then 'Owned Retail'
+              else 'Other' end as channel
+          , sol.gross_amt as total_gross_Amt_non_rounded
+        FROM sales.sales_order_line sol
+        LEFT JOIN SALES.ITEM  AS i ON sol.ITEM_ID = i.ITEM_ID
+        LEFT JOIN SALES.FULFILLMENT  AS f ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system and f.status = 'Shipped'
+        LEFT JOIN SALES.SALES_ORDER  AS s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
+        FULL OUTER JOIN SALES.WARRANTY_ORDER  AS w ON s.ORDER_ID = w.ORDER_ID and s.SYSTEM = w.ORIGINAL_SYSTEM
+        LEFT JOIN ANALYTICS_STAGE.netsuite.UPDATE_WARRANTY_REASONS  AS wr ON w.WARRANTY_REASON_CODE_ID = wr.LIST_ID ;;
     }
     dimension: key {
       hidden: yes
@@ -19,7 +31,7 @@ view: warranty_original_information {
       label: "Original Warranties Warranty Reason"
       group_label: " Advanced"
       description: "Original Reason customer gives for submitting warranty claim on that item"
-      sql: ${TABLE}.return_reason ;;
+      sql: upper(${TABLE}.return_reason) ;;
     }
     dimension: fulfilled_date {
       label: "Original Fulfillment"
@@ -68,6 +80,14 @@ view: warranty_original_information {
     hidden: yes
     type: number
     sql: ${TABLE}.replacement_order_id ;;
+  }
+
+  dimension: channel {
+    label: "Original Channel"
+    group_label: " Advanced"
+    description: "Original Channel"
+    type: date
+    sql: ${TABLE}.channel ;;
   }
 
  dimension: bucketed_item_id {
