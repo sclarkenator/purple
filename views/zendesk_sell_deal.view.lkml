@@ -193,4 +193,14 @@ view: zendesk_sell_deal {
     type: count
     drill_fields: [name, draft_order_name, source_name, stage_name]
   }
-}
+
+measure: tran_count {
+  type: count
+  sql: ${TABLE}.RELATED_TRANID ;;
+  }
+
+measure: Deal_ID_count {
+    type: count
+    sql: ${TABLE}."DEAL_ID" ;;
+  }
+  }
