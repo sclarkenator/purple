@@ -1,6 +1,15 @@
 view: ltol_pitch {
   label: "L2L Pitch Data"
-  sql_table_name: PRODUCTION.L2L_PITCH ;;
+ # sql_table_name: PRODUCTION.L2L_PITCH ;;
+
+derived_table: {
+  sql: select * from (
+    select *
+        , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
+    from ANALYTICS.PRODUCTION.L2L_Pitch
+) z
+where z.row_num = 1;;
+}
 
   dimension: pitch_id {
     primary_key: yes

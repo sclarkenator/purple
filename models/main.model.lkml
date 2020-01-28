@@ -413,6 +413,10 @@ explore: daily_adspend {
   group_label: "Marketing"
   description: "Adspend by platform aggregated by date"
   hidden: no
+  join: adspend_target {
+    type: full_outer
+    sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date} and ${adspend_target.medium} = ${daily_adspend.medium} ;;
+    relationship: many_to_one}
   join: temp_attribution {
     type: left_outer
     sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
@@ -760,6 +764,9 @@ explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
 explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
 explore: stella_response {hidden:yes}
+explore: zendesk_sell_contact {hidden:yes}
+explore: zendesk_sell_deal {hidden:yes}
+explore: zendesk_sell_user {hidden:yes}
 explore: exchange_items {hidden: yes
   join: item {
       type:  left_outer
@@ -1096,7 +1103,7 @@ explore: sales_order_line{
   join: warranty_original_information {
     view_label: "Warranties"
     type: left_outer
-    sql_on: ${sales_order.order_id} = ${warranty_original_information.order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
+    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
     relationship: one_to_one
   }
   join: first_purchase_date {
@@ -1129,7 +1136,12 @@ join: v_transmission_dates {
   sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.v_transmission_dates_order_id} and ${sales_order_line.system} = ${v_transmission_dates.v_transmission_dates_system} and ${sales_order_line.item_id} = ${v_transmission_dates.v_transmission_dates_item_id} ;;
   relationship: one_to_one
   }
-
+join: pilot_daily {
+  view_label: "Pilot Info"
+  type: full_outer
+  relationship: many_to_one
+  sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+}
 
 }
 
@@ -1396,6 +1408,39 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${ecommerce.user_id}::string = ${users.user_id}::string ;;
         relationship: many_to_one }
+
+      ## To join later, after we get the table from Engineering
+      # not sure we'll need the sales_order one or sales_order_line
+    #  join: sales_order {
+    #    type:  left_outer
+    #    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    #    relationship: one_to_one}
+
+    #  join: order_flag {
+    #    type: left_outer
+    #    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    #    relationship:  one_to_one}
+
+    #  join: sales_order_line {
+    #  type:  left_outer
+    #  sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
+    #  relationship: one_to_many
+    #  fields: [sales_order_line.zip]
+
+    #  join: hotjar_data {
+    #    type: left_outer
+    #    sql_on:  sales email = hotjar email
+    #    relationship one_to_one }
+
+    #  join: hotjar_whenheard {
+    #    type:  left_outer
+    #    sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
+    #    relationship: many_to_one}
+
+    #  join: all_events_subset {
+    #    type: left_outer
+    #    sql_on: ${ecommerce.user_id}::string = ${all_events_subset.user_id}::string ;;
+    #    relationship: many_to_one }
     }
 
 
@@ -1505,3 +1550,8 @@ explore: procom_security_daily_customer {
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: executive_report { hidden: yes
     join: item { type:inner  sql_on: ${sku_id} = ${item.sku_id};; relationship: one_to_one}}
+
+    explore: russ_order_validation {
+      label: "Order Validation"
+      description: "Constructed table comparing orders from different sources"
+      hidden:yes }

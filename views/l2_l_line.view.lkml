@@ -118,7 +118,7 @@ view: ltol_line {
   }
 
   dimension: site {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}."SITE" ;;
   }

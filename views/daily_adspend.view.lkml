@@ -161,17 +161,19 @@ view: daily_adspend {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${TABLE}.source ilike ('%earc%') ;; label:"Search"}
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' ;; label:"Video"}
-      when: {sql: ${TABLE}.platform = 'AMAZON MEDIA GROUP' OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') ;; label:"Display"}
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"Social"}
-      when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST') OR ${TABLE}.source = 'CINEMA' ;; label:"Traditional"}
-      else: "Other" } }
+      when: {sql: ${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike '%rand%' or ${campaign_name} ilike 'NB%' or ${spend_platform} = 'AMAZON-HSA';; label:"search"}
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"social"}
+      when: {sql: ${TABLE}.platform in ('TV','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
+      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
+      else: "other" } }
 
   dimension: channel {
     type: string
     hidden:  no
-    label: "Channel"
+    label: " Channel"
     description: "Channel that current session came from"
     sql: case when ${medium} ilike '%Search%' then 'search'
           when ${medium} ilike '%Social%' then 'social'

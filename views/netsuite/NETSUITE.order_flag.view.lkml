@@ -22,6 +22,10 @@ derived_table: {
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
       ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
+      ,case when (pdULTpt1>=2 and pdANYpt2=1) then 1 else 0 end pdULT_flg
+      ,case when (pdDELpt1>=2 and pdANYpt2=1) then 1 else 0 end pdDEL_flg
+      ,case when (pdESSpt1>=2 and pdANYpt2=1) then 1 else 0 end pdESS_flg
+      ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
     FROM(
       select sol.order_id
@@ -49,6 +53,12 @@ derived_table: {
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'SHEETS' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt2
         ,sum(case when (PRODUCT_LINE_NAME_LKR = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
         ,sum(case when s.memo ilike ('%flashbundle%') AND s.memo ilike ('%2019%') then 1 else 0 end) ff_bundle_pt4
+        ,sum(case when (product_description_lkr ilike '%harmony%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdULTpt1
+        ,sum(case when (product_description_lkr ilike '%pillow 2.0%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdDELpt1
+        ,sum(case when (product_description_lkr ilike '%plush%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdESSpt1
+        ,sum(case when (product_description_lkr ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdANYpt2
+        ,sum(case when (product_description_lkr ilike '%gravity%' AND PRODUCT_LINE_NAME_lkr ilike '%blanket%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
+        ,sum(case when (product_description_lkr ilike '%gravity%' AND PRODUCT_LINE_NAME_lkr ilike '%mask%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -346,4 +356,32 @@ derived_table: {
     description: "1/0; 1 if there is a Fall Flash BUndle in this order"
     type:  yesno
     sql: ${TABLE}.ff_bundle_flg = 1 ;; }
+
+  dimension: pdULT_flg {
+    hidden:  yes
+    group_label: "    * Orders has:"
+    description: "yesno; yes if there is a pillow-duvet ultimate bundle in this order (1/21/2020-2/14/2020)"
+    type:  yesno
+    sql: ${TABLE}.pdULT_flg = 1 ;; }
+
+  dimension: pdDEL_flg {
+    hidden:  yes
+    group_label: "    * Orders has:"
+    description: "yesno; yes if there is a pillow-duvet deluxe bundle in this order (1/21/2020-2/14/2020)"
+    type:  yesno
+    sql: ${TABLE}.pdDEL_flg = 1 ;; }
+
+  dimension: pdESS_flg {
+    hidden:  yes
+    group_label: "    * Orders has:"
+    description: "yesno; yes if there is a pillow-duvet essential bundle in this order (1/21/2020-2/14/2020)"
+    type:  yesno
+    sql: ${TABLE}.pdESS_flg = 1 ;; }
+
+  dimension: weightedtwo_flg {
+    hidden:  yes
+    group_label: "    * Orders has:"
+    description: "yesno; yes if there is a discounted gravity blanket and 2 free masks in this order (1/21/2020-2/14/2020)"
+    type:  yesno
+    sql: ${TABLE}.weightedtwo_flg = 1 ;; }
 }

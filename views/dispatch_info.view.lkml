@@ -2,8 +2,8 @@ view: dispatch_info {
   sql_table_name: PRODUCTION.DISPATCH_INFO ;;
 
   dimension: assigned_techs {
-    label: "Assigned Technicain"
-    description: "The Technicains listed on the dispatch"
+    label: "Assigned Technician"
+    description: "The Technicians listed on the dispatch"
     type: string
     sql: ${TABLE}."ASSIGNED_TECHS" ;;
   }
@@ -25,7 +25,7 @@ view: dispatch_info {
   }
 
   dimension_group: created {
-    hidden: yes
+    hidden: no
     label: "Created Time"
     description: "When was the dispactch created in L2L"
     type: time
