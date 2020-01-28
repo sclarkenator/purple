@@ -5,6 +5,7 @@ view: warranty_original_information {
           wr.list_item_name AS return_reason
           , case when s.TRANSACTION_TYPE = 'Cash Sale' or s.SOURCE in ('Amazon FBA - US','Amazon-FBA')  then s.CREATED::date else f.fulfilled::date end fulfilled_date
           , i.ITEM_ID
+          , i.sku_id
           , s.ORDER_ID
           , w.CREATED::date w_created_date
           , sol.Created::date s_created_date
@@ -56,6 +57,51 @@ view: warranty_original_information {
       type: number
       sql: ${TABLE}.item_id ;;
     }
+  dimension: sku_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.sku_id ;;
+  }
+  dimension: sku_clean {
+    type: string
+    hidden: yes
+    sql: case when left(${sku_id},3) = 'AC-' then right(${sku_id},11) else ${sku_id} end ;;
+  }
+  dimension: sku_merged {
+    type: string
+    hidden: yes
+    sql: --OG Mattress
+      case when ${sku_clean} = '10-21-23960' then '10-21-12960'
+        when ${sku_clean} = '10-21-23620' then '10-21-12620'
+        when ${sku_clean} = '10-21-23632' then '10-21-12632'
+        when ${sku_clean} = '10-21-23625' then '10-21-12625'
+        when ${sku_clean} = '10-21-23617' then '10-21-12617'
+        when ${sku_clean} = '10-21-23618' then '10-21-12618'
+        --Platforms
+        when ${sku_clean} in ('10-38-82822','10-38-52822') then '10-38-12822'
+        when ${sku_clean} in ('10-38-82815','10-38-92892','10-38-92892','10-38-52815') then '10-38-12815'
+        when ${sku_clean} in ('10-38-82846','10-38-52846') then '10-38-12846'
+        when ${sku_clean} in ('10-38-82893','10-38-82895','10-38-82895','10-38-52893') then '10-38-12893'
+        when ${sku_clean} in ('10-38-82890','10-38-82890','10-38-82892','10-38-52892') then '10-38-12892'
+        when ${sku_clean} in ('10-38-52891') then '10-38-82891'
+        --Cushions
+        when ${sku_clean} = '10-41-12571' then '10-41-12378'
+        when ${sku_clean} = '10-41-12533' then '10-41-12573'
+        when ${sku_clean} = '10-41-12574' then '10-41-12502'
+        when ${sku_clean} in ('10-41-12572','10-41-12583') then '10-41-12496'
+        when ${sku_clean} = '10-41-12576' then '10-41-12519'
+        --Protectors
+        when ${sku_clean} = '10-38-13917' then '10-38-12717'
+        when ${sku_clean} = '10-38-13994' then '10-38-12694'
+        when ${sku_clean} = '10-38-13900' then '10-38-12700'
+        when ${sku_clean} in ('10-38-13748','10-38-12755') then '10-38-12748'
+        when ${sku_clean} = '10-38-13924' then '10-38-12724'
+        when ${sku_clean} = '10-38-13731' then '10-38-12731'
+        --powerbases
+        when ${sku_clean} in ('10-38-12946','10-38-12949') then '10-38-12953'
+        when ${sku_clean} = '10-38-12939' then '10-38-12948'
+        else ${sku_clean} end ;;  }
+
     dimension: order_id {
       group_label: " Advanced"
       description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."

@@ -1103,7 +1103,7 @@ explore: sales_order_line{
   join: warranty_original_information {
     view_label: "Warranties"
     type: left_outer
-    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
+    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.sku_merged} = ${warranty_original_information.sku_merged} ;;
     relationship: one_to_one
   }
   join: first_purchase_date {
