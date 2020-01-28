@@ -764,6 +764,9 @@ explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
 explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
 explore: stella_response {hidden:yes}
+explore: zendesk_sell_contact {hidden:yes}
+explore: zendesk_sell_deal {hidden:yes}
+explore: zendesk_sell_user {hidden:yes}
 explore: exchange_items {hidden: yes
   join: item {
       type:  left_outer
