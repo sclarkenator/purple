@@ -31,7 +31,7 @@ view: warranty_original_information {
       label: "Original Warranties Warranty Reason"
       group_label: " Advanced"
       description: "Original Reason customer gives for submitting warranty claim on that item"
-      sql: ${TABLE}.return_reason ;;
+      sql: upper(${TABLE}.return_reason) ;;
     }
     dimension: fulfilled_date {
       label: "Original Fulfillment"
