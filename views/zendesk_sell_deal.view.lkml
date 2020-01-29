@@ -53,6 +53,7 @@ view: zendesk_sell_deal {
 
   dimension: draft_order_name {
     type: string
+    drill_fields: [deal_id]
     sql: ${TABLE}."DRAFT_ORDER_NAME" ;;
   }
 
@@ -197,5 +198,6 @@ view: zendesk_sell_deal {
 
 measure: Deal_ID_count {
     type: count
+
   }
   }
