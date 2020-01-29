@@ -55,6 +55,20 @@ view: fulfillment {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
+  dimension_group: left_purple {
+    label: "Left Purple"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.PURPLE_SLA ;; }
+
+  dimension_group: in_hand {
+    label: "In Hand"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.IN_HAND_SLA ;; }
+
   dimension_group: fulfilled_F {
     hidden: yes
     type: time

@@ -1112,36 +1112,36 @@ explore: sales_order_line{
     sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
     relationship: one_to_one
   }
-join: agent_name {
-  view_label: "Sales Order"
-  type: left_outer
-  sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
-  relationship: many_to_one
-}
-join: promotions_combined {
-  view_label: "Sales Order"
-  type: left_outer
-  sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
-relationship: one_to_one
-}
-join: highjump_fulfillment {
-  view_label: "Highjump"
-  type: left_outer
-  sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
-  relationship: one_to_many
-}
-join: v_transmission_dates {
-  view_label: "V Transmission Dates"
-  type: left_outer
-  sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+  join: agent_name {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+    relationship: many_to_one
+  }
+  join: promotions_combined {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
   relationship: one_to_one
-}
-join: pilot_daily {
-  view_label: "Pilot Info"
-  type: full_outer
-  relationship: many_to_one
-  sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
-}
+  }
+  join: highjump_fulfillment {
+    view_label: "Highjump"
+    type: left_outer
+    sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
+    relationship: one_to_many
+  }
+  join: v_transmission_dates {
+    view_label: "Fulfillment"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+    relationship: one_to_one
+  }
+  join: pilot_daily {
+    view_label: "Pilot Info"
+    type: full_outer
+    relationship: many_to_one
+    sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+  }
 
 }
 
