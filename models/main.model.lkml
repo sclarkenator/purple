@@ -1133,9 +1133,9 @@ join: highjump_fulfillment {
 join: v_transmission_dates {
   view_label: "V Transmission Dates"
   type: left_outer
-  sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.v_transmission_dates_order_id} and ${sales_order_line.system} = ${v_transmission_dates.v_transmission_dates_system} and ${sales_order_line.item_id} = ${v_transmission_dates.v_transmission_dates_item_id} ;;
+  sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
   relationship: one_to_one
-  }
+}
 join: pilot_daily {
   view_label: "Pilot Info"
   type: full_outer
