@@ -132,7 +132,7 @@ view: warranty_original_information {
     label: "Original Channel"
     group_label: " Advanced"
     description: "Original Channel"
-    type: date
+    type: string
     sql: ${TABLE}.channel ;;
   }
 
