@@ -82,7 +82,6 @@ view: c3_roa {
       when: {sql: ${SOURCE} ilike ('%earc%')
                 or ${SOURCE} ilike '%rand%'
                 or ${CAMPAIGN_NAME} ilike 'NB%'
-                or ${SOURCE} ilike 'seo%'
                 or ${PLATFORM} in ('BING','YAHOO')
                 or ${SOURCE} in ('SHOPPING') ;; label:"search"}
       else: "other" } }
