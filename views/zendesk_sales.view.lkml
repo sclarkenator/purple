@@ -11,11 +11,12 @@ view: zendesk_sales {
  , a.system
  , b.zendesk_id
  , d.draft_order_name
+ , d.RELATED_TRANID
  , nvl(b.name,c.name) name
  from analytics.customer_care.v_zendesk_sell_kpi a
  left join analytics.customer_care.agent_lkp b on a.user_id = b.zendesk_sell_user_id
  left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id
- left join analytics.customer_care.zendesk_sell_deal d on a.user_id= d.user_id ;;
+ left join analytics.customer_care.zendesk_sell_deal d on a.deal_id= d.deal_id ;;
    }
 
  dimension:has_touch {
@@ -61,6 +62,7 @@ view: zendesk_sales {
     hidden: yes
     sql: ${TABLE}.order_id ;;
   }
+
   dimension: system {
     type: string
     hidden: yes
@@ -77,6 +79,12 @@ view: zendesk_sales {
     type: string
     label: "Draft Order Name"
     sql: ${TABLE}.draft_order_name;;
+  }
+
+  dimension: related_tranid {
+    type: string
+    label: "Related Tran ID"
+    sql: ${TABLE}.RELATED_TRANID;;
   }
 
   dimension: zendesk_id {

@@ -1,6 +1,19 @@
 view: zendesk_sell_deal {
-  sql_table_name: "CUSTOMER_CARE"."ZENDESK_SELL_DEAL"
-    ;;
+  derived_table: {sql:
+      select z.draft_count, a.*
+      from customer_care.zendesk_sell_deal a
+      left join (
+            --getting max row num for each draft
+            select draft_order_name , max(rownum) draft_count
+            from (
+              --applying row number to each draft order name
+              select deal_id, draft_order_name
+              , row_number () over (partition by draft_order_name order by deal_id) as rownum
+              from customer_care.zendesk_sell_deal
+            )
+            group by 1
+      ) z on z.draft_order_name = a.draft_order_name ;;
+}
 
   dimension: age {
     type: number
@@ -53,6 +66,7 @@ view: zendesk_sell_deal {
 
   dimension: draft_order_name {
     type: string
+    drill_fields: [deal_id]
     sql: ${TABLE}."DRAFT_ORDER_NAME" ;;
   }
 
@@ -189,18 +203,19 @@ view: zendesk_sell_deal {
     sql: ${TABLE}."USER_ID" ;;
   }
 
+  dimension: draft_count {
+    type: number
+    sql: ${TABLE}.draft_count ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [name, draft_order_name, source_name, stage_name]
   }
 
-measure: tran_count {
-  type: count
-  sql: ${TABLE}.RELATED_TRANID ;;
-  }
 
 measure: Deal_ID_count {
     type: count
-    sql: ${TABLE}."DEAL_ID" ;;
+
   }
   }
