@@ -16,7 +16,7 @@ view: zendesk_sales {
  from analytics.customer_care.v_zendesk_sell_kpi a
  left join analytics.customer_care.agent_lkp b on a.user_id = b.zendesk_sell_user_id
  left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id
- left join analytics.customer_care.zendesk_sell_deal d on a.user_id= d.user_id ;;
+ left join analytics.customer_care.zendesk_sell_deal d on a.deal_id= d.deal_id ;;
    }
 
  dimension:has_touch {
