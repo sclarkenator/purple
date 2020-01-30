@@ -17,6 +17,12 @@ view: v_transmission_dates {
     sql: ${TABLE}."DOWNLOAD_TO_WAREHOUSE_EDGE" ;;
   }
 
+  dimension: v_transmission_dates_primary {
+    hidden: yes
+    primary_key: yes
+    sql: ${v_transmission_dates_item_id}||${v_transmission_dates_order_id}||${v_transmission_dates_system} ;;
+  }
+
   dimension: v_transmission_dates_item_id {
     hidden: yes
     label: "Transmission Dates Item ID"
