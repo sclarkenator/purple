@@ -1266,6 +1266,12 @@ explore: wholesale {
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id};;
       relationship:one_to_one}
+  join: v_transmission_dates {
+    view_label: "V Transmission Dates"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+    relationship: one_to_one}
+
 }
 
 

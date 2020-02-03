@@ -239,13 +239,17 @@ view: item {
   dimension: product_description_raw { hidden: yes sql: ${TABLE}.product_description ;;
   }
 
-
   dimension: color {
-    label: " Sheets Color"
-    description: "Only sheets have color assigned"
+    label: " Product Color"
+    description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc)"
     type: string
-    sql: ${TABLE}.COLOR ;;
-  }
+    sql: case when ${product_description_raw} ilike '%GREY' then 'GREY'
+      when ${product_description_raw} ilike '%CHARCL' then 'CHARCOAL'
+      when ${product_description_raw} ilike '%SLATE' then 'SLATE'
+      when ${product_description_raw} ilike '%SAND' then 'SAND'
+      when ${product_description_raw} ilike '%WHITE' then 'WHITE'
+      when ${product_description_raw} ilike '%PURPLE' then 'PURPLE'
+      else null end ;; }
 
   dimension: created_ts {
     hidden: yes
