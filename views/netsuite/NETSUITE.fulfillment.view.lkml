@@ -49,7 +49,7 @@ view: fulfillment {
           else 'Shipped' end ;; }
 
   dimension_group: created {
-    label: "Fulfilled Date (V2)"
+    label: "Fulfilled Created Date"
     hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -57,17 +57,19 @@ view: fulfillment {
 
   dimension_group: left_purple {
     label: "Left Purple"
-    hidden: yes
+    description: "Date the item left purple"
+    #hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.PURPLE_SLA ;; }
+    sql: coalesce(${TABLE}.PURPLE_SLA, ${fulfilled_F_raw}) ;; }
 
   dimension_group: in_hand {
     label: "In Hand"
-    hidden: yes
+    description: "Date the customer recieved the item"
+    #hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.IN_HAND_SLA ;; }
+    sql: coalesce(${TABLE}.IN_HAND_SLA, ${fulfilled_F_raw}) ;; }
 
   dimension_group: fulfilled_F {
     hidden: yes
