@@ -112,6 +112,7 @@ view: item {
 
   dimension: product_name {
     label:  "3. Name"
+    hidden: yes
     group_label: "Forecast Product Hierarchy"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
@@ -180,6 +181,7 @@ view: item {
 
   dimension: product_bucket {
     label: "1. Buckets"
+    hidden: yes
     group_label: "Forecast Product Hierarchy"
     description: "Grouping the type of products into Mattress, Bedding, Bases, and Other"
     type: string
@@ -203,6 +205,7 @@ view: item {
 
   dimension: type_2 {
     label: "2. Type"
+    hidden: yes
     group_label: "Forecast Product Hierarchy"
     description: "Type of product (hybrid, original mattress, pillow, cushion, etc.)"
     type: string
@@ -335,9 +338,10 @@ view: item {
     sql: ${TABLE}.SUB_CATEGORY_NAME_lkr ;; }
 
   dimension: category_name {
-    hidden: yes
-    label: "Category"
-    description:  "Sit / Sleep / Stand"
+    #hidden: yes
+    group_label: "Product Hierarchy"
+    label: "1. Category"
+    description:  "Mattress/Bedding/Bases/Seating/Other"
     type: string
     sql: ${category_raw} ;;
   }
@@ -351,11 +355,26 @@ view: item {
 
   dimension: category_raw { hidden: yes sql: ${TABLE}.category ;;
   }
-  dimension: line_raw { hidden: yes sql: ${TABLE}.line ;;
+  dimension: line_raw {
+    group_label: "Product Hierarchy"
+    label: "2. Line"
+    description: "Original/Hybird, Pillow/Bedding, Platform/Powerbase, etc"
+    #hidden: yes
+    sql: ${TABLE}.line ;;
   }
-  dimension: model_raw { hidden: yes sql: ${TABLE}.model ;;
+  dimension: model_raw {
+    group_label: "Product Hierarchy"
+    label: "Model"
+    description: "Original/Hybird, Harmony/Plush, etc"
+    #hidden: yes
+    sql: ${TABLE}.model ;;
   }
-  dimension: product_description_raw { hidden: yes sql: ${TABLE}.product_description ;;
+  dimension: product_description_raw {
+    group_label: "Product Hierarchy"
+    label: "3. Name"
+    description: "Product Description"
+    #hidden: yes
+    sql: ${TABLE}.product_description ;;
   }
 
   dimension: color {
