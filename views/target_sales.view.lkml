@@ -36,6 +36,8 @@ view: sales_targets {
     type:  time
     timeframes: [
       date,
+      day_of_week_index,
+      day_of_year,
       week,
       month,
       quarter,
