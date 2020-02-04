@@ -244,11 +244,11 @@ view: sales_order_line {
   }
 
   dimension: SLA_fulfilled {
-    label: "     * Is SLA fulfilled"
+    label: "     * Is Fulfilled in SLA"
     description: "Was item fulfilled in SLA window"
     view_label: "Fulfillment"
     type: yesno
-    sql: ${cancelled_order.cancelled_date} >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
+    sql: nvl(${cancelled_order.cancelled_date},'2099-01-01') >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
   }
 
   measure: SLA_Achievement_prct {
@@ -618,7 +618,7 @@ view: sales_order_line {
 
   dimension: is_fulfilled {
     view_label: "Fulfillment"
-    label: "     * Is fulfilled"
+    label: "     * Is Fulfilled"
     description:  "Has order been fulfilled"
     type: yesno
     sql: ${fulfilled_date} is not null;;
