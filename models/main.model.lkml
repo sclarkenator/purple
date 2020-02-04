@@ -1415,6 +1415,11 @@ explore: procom_security_daily_customer {
         sql_on: ${ecommerce.user_id}::string = ${users.user_id}::string ;;
         relationship: many_to_one }
 
+    #  join: ecommerce1 {
+
+
+
+    #  }
       ## To join later, after we get the table from Engineering
       # not sure we'll need the sales_order one or sales_order_line
 
@@ -1444,9 +1449,9 @@ explore: procom_security_daily_customer {
     #    sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
     #    relationship: many_to_one}
 
-    #  join: all_events_subset {
+    #  join: heap_all_events_subset {
     #    type: left_outer
-    #    sql_on: ${ecommerce.user_id}::string = ${all_events_subset.user_id}::string ;;
+    #    sql_on: ${ecommerce.user_id}::string = ${heap_all_events_subset.user_id}::string ;;
     #    relationship: many_to_one }
     }
 
