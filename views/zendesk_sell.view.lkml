@@ -75,6 +75,13 @@ view: zendesk_sell {
     sql: ${TABLE}.fraud_risk;;
   }
 
+  dimension: inside_sales_order {
+    label: "     * Is Inside Sales Order"
+    description: "Order matched on related tranid, draft order, or email"
+    type: yesno
+    sql: ${TABLE}.order_id is not null ;;
+  }
+
   dimension: related_tranid {
     type: string
     label: "Related Tran ID"
