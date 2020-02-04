@@ -764,6 +764,9 @@ explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
 explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
 explore: stella_response {hidden:yes}
+explore: zendesk_sell_contact {hidden:yes}
+explore: zendesk_sell_deal {hidden:yes}
+explore: zendesk_sell_user {hidden:yes}
 explore: exchange_items {hidden: yes
   join: item {
       type:  left_outer
@@ -901,19 +904,28 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
     relationship: many_to_one}
-  join: restocked_returns {
-    view_label: "Returns"
-    type: left_outer
-    relationship: one_to_one
-    required_joins: [return_order_line]
-    sql_on: ${restocked_returns.return_order_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id};;}
   join: restocked_warranties {
     from: restocked_returns
     view_label: "Warranties"
+    # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
+    # This view is joined in twice to display the same measure under the Returns and Warranties Views.
     type: left_outer
     relationship: one_to_one
     required_joins: [warranty_order_line]
-    sql_on: ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id};;}
+    sql_on:
+    ( ${restocked_warranties.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_warranties.item_id} = ${return_order_line.item_id} ) OR
+    ( ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id} ) ;; }
+  join: restocked_returns {
+    from: restocked_returns
+    view_label: "Returns"
+    # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
+    # This view is joined in twice to display the same measure under the Returns and Warranties Views.
+    type: left_outer
+    relationship: one_to_one
+    required_joins: [warranty_order_line]
+    sql_on:
+    ( ${restocked_returns.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id} ) OR
+    ( ${restocked_returns.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_returns.item_id} = ${warranty_order_line.item_id} ) ;; }
   join: customer_table {
     view_label: "Customer"
     type: left_outer
@@ -1082,16 +1094,16 @@ explore: sales_order_line{
     sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
     relationship: many_to_one
   }
-  join: zendesk_sales {
+  join: zendesk_sell {
     view_label: "Zendesk Sell"
     type: full_outer
-    sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} and ${zendesk_sales.system}=${sales_order.system} ;;
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} ;;
     relationship: one_to_many
   }
   join: warranty_original_information {
     view_label: "Warranties"
     type: left_outer
-    sql_on: ${sales_order.order_id} = ${warranty_original_information.order_id} and ${item.bucketed_item_id} = ${warranty_original_information.bucketed_item_id} ;;
+    sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.sku_merged} = ${warranty_original_information.sku_merged} ;;
     relationship: one_to_one
   }
   join: first_purchase_date {
@@ -1100,36 +1112,36 @@ explore: sales_order_line{
     sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
     relationship: one_to_one
   }
-join: agent_name {
-  view_label: "Sales Order"
-  type: left_outer
-  sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
-  relationship: many_to_one
-}
-join: promotions_combined {
-  view_label: "Sales Order"
-  type: left_outer
-  sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
-relationship: one_to_one
-}
-join: highjump_fulfillment {
-  view_label: "Highjump"
-  type: left_outer
-  sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
-  relationship: one_to_many
-}
-join: v_transmission_dates {
-  view_label: "V Transmission Dates"
-  type: left_outer
-  sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.v_transmission_dates_order_id} and ${sales_order_line.system} = ${v_transmission_dates.v_transmission_dates_system} and ${sales_order_line.item_id} = ${v_transmission_dates.v_transmission_dates_item_id} ;;
+  join: agent_name {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+    relationship: many_to_one
+  }
+  join: promotions_combined {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
   relationship: one_to_one
   }
-join: pilot_daily {
-  view_label: "Pilot Info"
-  type: full_outer
-  relationship: many_to_one
-  sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
-}
+  join: highjump_fulfillment {
+    view_label: "Highjump"
+    type: left_outer
+    sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
+    relationship: one_to_many
+  }
+  join: v_transmission_dates {
+    view_label: "Fulfillment"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+    relationship: one_to_one
+  }
+  join: pilot_daily {
+    view_label: "Pilot Info"
+    type: full_outer
+    relationship: many_to_one
+    sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+  }
 
 }
 
@@ -1254,6 +1266,12 @@ explore: wholesale {
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id};;
       relationship:one_to_one}
+  join: v_transmission_dates {
+    view_label: "V Transmission Dates"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+    relationship: one_to_one}
+
 }
 
 
