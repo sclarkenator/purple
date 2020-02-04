@@ -570,7 +570,7 @@ explore: narvar_dashboard_notify_metrics {
 
 explore: narvar_customer_feedback {
   group_label: "Marketing"
-  hidden: yes
+  hidden: no
   label: "Narvar customer feedback"
 }
 
