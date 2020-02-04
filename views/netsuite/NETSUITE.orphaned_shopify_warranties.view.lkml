@@ -12,7 +12,7 @@ view: orphaned_shopify_warranties {
         select
           replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O',''),'#','') as original_order_number,
           o.etail_order_id as replacement_order_id, o.related_tranid, o.created as replaced, i.product_description as product_name,
-          i.product_line_name_lkr as category, REGEXP_SUBSTR(replace(upper(o.MEMO),'RLP','RPL'),'RPL\\d{2}') as mod_code,
+          i.category as category, REGEXP_SUBSTR(replace(upper(o.MEMO),'RLP','RPL'),'RPL\\d{2}') as mod_code,
           replace(o.memo,'\n',' ') as memo, o.tranid, CASE WHEN REGEXP_SUBSTR(upper(o.MEMO),'#[ABCS]') is null THEN 'No' ELSE 'Yes' END wholesale
         from analytics.sales.sales_order o
             join analytics.sales.sales_order_line l on o.order_id = l.order_id
