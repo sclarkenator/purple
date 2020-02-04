@@ -4,7 +4,7 @@ view: netsuite_warranty_exceptions {
       with tmp as (
         select
           o.created, o.order_id as netsuite_order_id, o.tranid as transaction_number, o.related_tranid, o.source, o.etail_order_id as shopify_order_id,
-          replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'O#?\\d{4,7}'),'O',''),'#','') as original_order_number,upper(i.line) as category,
+          replace(replace(REGEXP_SUBSTR(replace(upper(o.MEMO),' ',''),'O#?\\d{4,7}'),'O',''),'#','') as original_order_number,upper(i.category) as category,
           replace(replace(replace(replace(upper(COALESCE(o.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as order_memo,
           replace(replace(replace(replace(upper(COALESCE(l.memo,'')),'RLP','RPL'),'DCS','DSC'),'NIS','NSI'),' ','') as line_memo
         from analytics.sales.sales_order o
