@@ -218,6 +218,7 @@ view: ecommerce1 {
 
   dimension: utm_source {
     type: string
+    view_label: "Sessions"
     group_label: "UTM"
     sql: ${TABLE}.utm_source ;;
     hidden:  yes
@@ -225,6 +226,7 @@ view: ecommerce1 {
 
   dimension: utm_campaign {
     type: string
+    view_label: "Sessions"
     group_label: "UTM"
     sql: ${TABLE}.utm_campaign ;;
     hidden:  yes
@@ -232,6 +234,7 @@ view: ecommerce1 {
 
   dimension: utm_medium {
     type: string
+    view_label: "Sessions"
     group_label: "UTM"
     sql: ${TABLE}.utm_medium ;;
     hidden:  yes
@@ -239,6 +242,7 @@ view: ecommerce1 {
 
   dimension: utm_term {
     type: string
+    view_label: "Sessions"
     group_label: "UTM"
     sql: ${TABLE}.utm_term ;;
     hidden:  yes
@@ -246,6 +250,7 @@ view: ecommerce1 {
 
   dimension: utm_content {
     type: string
+    view_label: "Sessions"
     group_label: "UTM"
     sql: ${TABLE}.utm_content ;;
     hidden:  yes

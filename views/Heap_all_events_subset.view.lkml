@@ -10,30 +10,40 @@
 
     dimension: event_id {
       description: "ID number for each event"
+      view_label: "Sessions"
+      group_label: "Events"
       type: string
       sql: ${TABLE}.event_id ;;
     }
 
     dimension: time {
       description: "Date Time of event"
+      view_label: "Sessions"
+      group_label: "Events"
       type: date_time
       sql: ${TABLE}.time ;;
     }
 
     dimension: user_id {
       description: "ID number for each user"
+      view_label: "Sessions"
+      group_label: "Events"
       type: string
       sql: ${TABLE}.user_id ;;
     }
 
     dimension: session_id {
       description: "ID number for the session the event occured in"
+      view_label: "Sessions"
+      group_label: "Events"
       type: string
       sql: ${TABLE}.session_id ;;
     }
 
     dimension: event_table_name {
       description: "Name of event"
+      view_label: "Sessions"
+      group_label: "Events"
       type: string
       sql: ${TABLE}.event_table_name ;;
     }
