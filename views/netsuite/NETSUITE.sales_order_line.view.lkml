@@ -612,7 +612,7 @@ view: sales_order_line {
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
+    #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA')  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
@@ -731,6 +731,28 @@ view: sales_order_line {
     type: number
     sql: ${return_order_line.total_gross_amt} / nullif(${total_gross_Amt},0) ;;
     value_format_name: "percent_1"
+  }
+
+  dimension_group: min_ship_date {
+    label: "Minimum Ship by"
+    description: "Merging Minimum Ship By and Ship By fields from netsuite into a single values.  Min then Ship by."
+    view_label: "Fulfillment"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date}) ;;
+  }
+
+  dimension_group: transmitted_date {
+    label: "Transmitted"
+    view_label: "Fulfillment"
+    description: "Looking at the trasmitted date that matches the carrier from sales order line"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
+      --when ${carrier} = 'XPO' ${v_transmission_dates.TRANSMITTED_TO_??}
+      when ${carrier} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
+      when ${carrier} = 'Carry Out' then ${created_raw}
+      else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
   }
 
   set: fulfill_details {

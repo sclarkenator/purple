@@ -10,7 +10,7 @@ view: fedex_tracking {
   dimension: completed {
     type: yesno
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     sql: ${TABLE}."COMPLETED" ;;
   }
 
@@ -18,7 +18,7 @@ view: fedex_tracking {
     type: string
     hidden: yes
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     sql: ${TABLE}."FEDEX_STATUS_CODE" ;;
   }
 
@@ -26,14 +26,14 @@ view: fedex_tracking {
     label: "FedEx Status"
     type: string
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     sql: ${TABLE}."FEDEX_STATUS_DESCRIPTION" ;;
   }
 
   dimension_group: status_ts {
     label: "Last Scan"
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     type: time
     timeframes: [
       time,
@@ -48,7 +48,7 @@ view: fedex_tracking {
 
   dimension: tracking_number {
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     type: string
     primary_key: yes
     sql: ${TABLE}."TRACKING_NUMBER" ;;
@@ -57,14 +57,14 @@ view: fedex_tracking {
   dimension: days_since_last_scan {
     type: number
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     sql: datediff(day, ${TABLE}."STATUS_TS", current_timestamp())  ;;
   }
 
   dimension: days_since_last_scan_bins {
     type: tier
     view_label: "Fulfillment"
-    group_label: "  FedEx Details"
+    group_label: "FedEx Details"
     tiers: [0,1,2,3,4,5,10]
     style: integer
     sql: ${days_since_last_scan} ;;

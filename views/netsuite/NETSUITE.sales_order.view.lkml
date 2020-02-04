@@ -179,7 +179,7 @@ measure: upt {
     label: "NetSuite In Hand"
     view_label: "Fulfillment"
     type: time
-    hidden: no
+    hidden: yes
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
@@ -189,7 +189,7 @@ measure: upt {
     label: "Minimum Ship by"
     description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay"
     view_label: "Fulfillment"
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -200,6 +200,7 @@ measure: upt {
     label: "Ship by"
     description: "This is the date order must be fulfilled by to arrive as expected (used by wholesale)"
     view_label: "Fulfillment"
+    hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -211,6 +212,7 @@ measure: upt {
     description: "Picking the date in the future of the created date"
     view_label: "Fulfillment"
     type: time
+    hidden: yes
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -222,6 +224,7 @@ measure: upt {
     description: "Using ship by date unless blank then order date"
     view_label: "Fulfillment"
     type:time
+    hidden: yes
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
