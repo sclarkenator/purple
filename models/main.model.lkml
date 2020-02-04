@@ -1145,6 +1145,7 @@ explore: sales_order_line{
 
 }
 
+explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 
 
 explore: wholesale {
