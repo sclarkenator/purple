@@ -223,6 +223,11 @@ view: item {
       when ${product_description_raw} ilike '%SAND' then 'SAND'
       when ${product_description_raw} ilike '%WHITE' then 'WHITE'
       when ${product_description_raw} ilike '%PURPLE' then 'PURPLE'
+      when ${product_description_raw} ilike '%NATURAL' then 'NATURAL OAT'
+      when ${product_description_raw} ilike '%STORMY' then 'STORMY GRAY'
+      when ${product_description_raw} ilike '%SOFT' then 'SOFT LILAC'
+      when ${product_description_raw} ilike '%MORNING' then 'MORNING MIST'
+      when ${product_description_raw} ilike '%DEEP' then 'DEEP PURPLE'
       else null end ;; }
 
   dimension: created_ts {

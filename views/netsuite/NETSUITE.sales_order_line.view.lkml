@@ -171,7 +171,7 @@ view: sales_order_line {
     sql: CASE
             WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
-            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
   }
@@ -183,10 +183,10 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-          when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
           Else
             case
-              when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
               Else 0
             END
         END;;
@@ -225,7 +225,7 @@ view: sales_order_line {
             when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
-            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
   }
@@ -237,8 +237,8 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${ordered_qty}
         Else 0
       END ;;
   }
