@@ -179,7 +179,7 @@ view: item {
     sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;; }
 
   dimension: product_bucket {
-    label: "1 Buckets"
+    label: "1. Buckets"
     group_label: "Forecast Product Heirarchy"
     description: "Grouping the type of products into Mattress, Bedding, Bases, and Other"
     type: string
