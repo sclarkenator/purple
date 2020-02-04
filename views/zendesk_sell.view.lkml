@@ -1,30 +1,23 @@
-view: zendesk_sales {
-#  sql_table_name: customer_care.v_zendesk_sell_kpi ;;
+view: zendesk_sell {
    derived_table: {
      sql:
-     select a.deal_id
- , a.contact_id
- , a.user_id
- , a.deal_created
- , a.draft_order_subtotal_amt
- , a.order_id
- , a.system
- , b.zendesk_id
+select d.deal_id
+ , d.contact_id
+ , d.user_id
+ , d.created_at
+ , d.order_id
+ , d.order_link
+ , d.fraud_risk
+ , lk.zendesk_id
  , d.draft_order_name
  , d.RELATED_TRANID
- , nvl(b.name,c.name) name
- from analytics.customer_care.v_zendesk_sell_kpi a
- left join analytics.customer_care.agent_lkp b on a.user_id = b.zendesk_sell_user_id
- left join analytics.customer_care.zendesk_sell_user c on a.user_id = c.user_id
- left join analytics.customer_care.zendesk_sell_deal d on a.deal_id= d.deal_id ;;
+ , nvl(lk.name,u.name) name
+ from analytics.customer_care.zendesk_sell_deal d
+ left join analytics.customer_care.agent_lkp lk on d.user_id = lk.zendesk_sell_user_id
+ left join analytics.customer_care.zendesk_sell_user u on d.user_id = u.user_id
+ left join analytics.customer_care.zendesk_sell_contact c on d.contact_id = c.contact_id
    }
 
- dimension:has_touch {
-    label: "    * Has Touch"
-    description: "Y/N; Yes if Zendesk Order ID matches Netsuite"
-    sql: ${TABLE}.deal_id is not null;;
-    type:yesno
-  }
   dimension: pending_draft_order{
     label: "    * Pending Draft Order"
     description: "Y/N; Yes if Order ID is null"
@@ -50,12 +43,7 @@ view: zendesk_sales {
     type: date
     label: "Created Date"
     description: "Date deal was created in Zendesk"
-    sql: ${TABLE}.deal_created ;;
-  }
-  dimension: draft_amt {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.draft_order_subtotal_amt ;;
+    sql: ${TABLE}.created_at ;;
   }
   dimension: order_id {
     type: string
@@ -63,11 +51,6 @@ view: zendesk_sales {
     sql: ${TABLE}.order_id ;;
   }
 
-  dimension: system {
-    type: string
-    hidden: yes
-    sql: ${TABLE}.system ;;
-  }
   dimension: name {
     type: string
     label: "Agent Name"
@@ -94,10 +77,4 @@ view: zendesk_sales {
   measure: count{
     type:  count
   }
-  measure: total_draft_amount{
-    type: sum
-    sql: ${TABLE}.draft_order_subtotal_amt;;
-    value_format: "$#,##0.00"
-    }
-
 }
