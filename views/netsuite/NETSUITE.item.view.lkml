@@ -112,7 +112,7 @@ view: item {
 
   dimension: product_name {
     label:  "3. Name"
-    group_label: "Forecast Product Heirarchy"
+    group_label: "Forecast Product Hierarchy"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
@@ -124,7 +124,7 @@ view: item {
   dimension: product_name_legacy {
     hidden: yes
     label:  "3. Name Legacy"
-    group_label: "Forecast Product Heirarchy"
+    group_label: "Forecast Product Hierarchy"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
     link: {
@@ -180,7 +180,7 @@ view: item {
 
   dimension: product_bucket {
     label: "1. Buckets"
-    group_label: "Forecast Product Heirarchy"
+    group_label: "Forecast Product Hierarchy"
     description: "Grouping the type of products into Mattress, Bedding, Bases, and Other"
     type: string
     case: {
@@ -192,7 +192,7 @@ view: item {
   dimension: product_bucket_legacy {
     hidden: yes
     label: "1 Buckets"
-    group_label: "Forecast Product Heirarchy Legacy"
+    group_label: "Forecast Product Hierarchy Legacy"
     description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
     type: string
     case: {
@@ -203,7 +203,7 @@ view: item {
 
   dimension: type_2 {
     label: "2. Type"
-    group_label: "Forecast Product Heirarchy"
+    group_label: "Forecast Product Hierarchy"
     description: "Type of product (hybrid, original mattress, pillow, cushion, etc.)"
     type: string
     sql: case when  ${category_raw} = 'MATTRESS' and ${line_raw} = 'FOAM' then 'Original'
@@ -214,7 +214,7 @@ view: item {
   dimension: type_2_legacy {
     hidden: yes
     label: "2. Type"
-    group_label: "Forecast Product Heirarchy Legacy"
+    group_label: "Forecast Product Hierarchy Legacy"
     description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
     type: string
     sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = '%ORIGINAL%'  then 'Original'
