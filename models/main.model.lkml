@@ -1411,9 +1411,10 @@ explore: procom_security_daily_customer {
 
       ## To join later, after we get the table from Engineering
       # not sure we'll need the sales_order one or sales_order_line
+
     #  join: sales_order {
     #    type:  left_outer
-    #    sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+    #    sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
     #    relationship: one_to_one}
 
     #  join: order_flag {

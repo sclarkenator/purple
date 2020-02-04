@@ -127,7 +127,7 @@ view: exchange_order_line {
   }
 
   dimension: is_exchanged {
-    label: "     * Is Excahnged"
+    label: "     * Is Exchanged"
     description: "Exchange order has been created"
     type: yesno
     sql: ${TABLE}.CREATED is not null ;;
