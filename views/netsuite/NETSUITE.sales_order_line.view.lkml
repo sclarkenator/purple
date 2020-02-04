@@ -171,7 +171,7 @@ view: sales_order_line {
     sql: CASE
             WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
-            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
   }
@@ -183,10 +183,10 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-          when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
           Else
             case
-              when ${fulfilled_date} <= ${Due_Date} THEN ${gross_amt}
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
               Else 0
             END
         END;;
@@ -225,7 +225,7 @@ view: sales_order_line {
             when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
-            WHEN ${cancelled_order.cancelled_date} >= ${fulfilled_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
   }
@@ -237,18 +237,18 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${ordered_qty}
         Else 0
       END ;;
   }
 
   dimension: SLA_fulfilled {
-    label: "     * Is SLA fulfilled"
+    label: "     * Is Fulfilled in SLA"
     description: "Was item fulfilled in SLA window"
     view_label: "Fulfillment"
     type: yesno
-    sql: ${cancelled_order.cancelled_date} >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
+    sql: nvl(${cancelled_order.cancelled_date},'2099-01-01') >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
   }
 
   measure: SLA_Achievement_prct {
@@ -618,7 +618,7 @@ view: sales_order_line {
 
   dimension: is_fulfilled {
     view_label: "Fulfillment"
-    label: "     * Is fulfilled"
+    label: "     * Is Fulfilled"
     description:  "Has order been fulfilled"
     type: yesno
     sql: ${fulfilled_date} is not null;;

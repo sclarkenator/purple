@@ -4,13 +4,40 @@
 #-------------------------------------------------------------------
 
 view: mattress_firm_sales {
-  sql_table_name: mattress_firm.sales_data ;;
+  #sql_table_name: mattress_firm.sales_data ;;
+  derived_table: {
+    sql:
+      --Adding sales
+      select z.date as finalized_date
+          , z.store
+          , y.product_id
+          , nvl(final_units,0) as final_units
+          , z.open_date
+          , z.close_date
+      from (
+        --list of stores by date (filling in blanks)
+        select z.date, a.store, a.first_sale as open_date, a.last_sale as close_date
+        from util.warehouse_date z
+        left join (
+          --store open and close dates
+          select store
+            , min(finalized_date::date) as first_sale
+            , max(finalized_date::date) as last_sale
+          from mattress_firm.sales_data
+          group by 1
+        ) a on a.first_sale <= z.date and case when dateadd('day',60,last_sale) > current_date then current_date else last_sale end >= z.date
+        where z.date < current_date and a.store is not null
+        order by 2,1
+      ) z
+      left join mattress_firm.sales_data y on y.store = z.store and y.finalized_date::date = z.date
+    ;;
+  }
 
   dimension: key {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}.product_id||'-'|| ${TABLE}.store||'-'||${TABLE}.finalized_date;; }
+    sql: nvl(${TABLE}.product_id,"000") ||'-'|| ${TABLE}.store ||'-'||${TABLE}.finalized_date;; }
 
 
   dimension: mf_sku{
@@ -19,12 +46,28 @@ view: mattress_firm_sales {
     sql:  ${TABLE}.mf_Sku ;; }
 
   dimension_group: finalized{
-    label: "Order date"
+    label: "Order"
     description: "When order was placed @ Mattress Firm"
     type:  time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     datatype: date
     sql: ${TABLE}.finalized_date ;; }
+
+  dimension_group: open_date{
+    label: "Store Open"
+    description: "When order was placed @ Mattress Firm"
+    type:  time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    datatype: date
+    sql: ${TABLE}.open_date ;; }
+
+  dimension_group: close_date{
+    label: "Store Close"
+    description: "When order was placed @ Mattress Firm"
+    type:  time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    datatype: date
+    sql: ${TABLE}.close_date ;; }
 
   dimension: store {
     hidden:  yes
