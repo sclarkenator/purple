@@ -34,7 +34,7 @@ view: mattress_firm_store_details {
     sql:  ${TABLE}.market_state ;; }
 
   dimension: coordinates {
-    label: "Corrdinates"
+    label: "Coordinates"
     description: "Latitude and Longitude of Location"
     type:  location
     sql_latitude: ${TABLE}.latitude ;;
