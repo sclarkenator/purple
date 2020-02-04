@@ -116,9 +116,9 @@ view: item {
     group_label: "Forecast Product Hierarchy"
     description: "from Netsuite, with a hyperlink to the product"
     type: string
-    link: {
-      label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+   # link: {
+   # label: "NetSuite"
+    #  url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
     sql: ${product_description_raw} ;;
   }
 
