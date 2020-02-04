@@ -37,7 +37,7 @@ dimension: name {
     label: "CC/ZD Agent Name"
     group_label: " Advanced"
     type:  string
-    sql: nvl(${zendesk_sales.name},${TABLE}.name)  ;;
+    sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
   }
 
 

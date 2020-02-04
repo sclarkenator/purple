@@ -570,7 +570,7 @@ explore: narvar_dashboard_notify_metrics {
 
 explore: narvar_customer_feedback {
   group_label: "Marketing"
-  hidden: yes
+  hidden: no
   label: "Narvar customer feedback"
 }
 
@@ -1094,10 +1094,10 @@ explore: sales_order_line{
     sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
     relationship: many_to_one
   }
-  join: zendesk_sales {
+  join: zendesk_sell {
     view_label: "Zendesk Sell"
     type: full_outer
-    sql_on: ${zendesk_sales.order_id}=${sales_order.order_id} ;;
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} ;;
     relationship: one_to_many
   }
   join: warranty_original_information {
