@@ -11,6 +11,17 @@ view: sales_order {
     sql: ${TABLE}.shipping_address_validated ;;
   }
 
+  dimension: cannot_ship{
+    type: string
+    hidden:  yes
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: case when ${valid_address} = 'No' then 'address not validated'
+    when ${shipping_hold} = 'T' then 'shipping hold'
+    when ${status} = 'Pending Approval' then 'pending approval'
+    end;;
+  }
+
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
@@ -137,6 +148,7 @@ measure: upt {
     group_label: " Advanced"
     view_label: "Fulfillment"
     label: "Shipping Hold?"
+    description: "T/F T if there is a shipping hold"
     type: string
     sql: ${TABLE}.SHIPPING_HOLD ;; }
 
