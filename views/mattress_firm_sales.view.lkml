@@ -112,7 +112,7 @@ dimension: promo_date_bucket {
         else 'Other' end  ;; }
 
   dimension: promo_date_holliday {
-    label: "Promo Date Holliday"
+    label: "Promo Date Holiday"
     description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
     group_label: " Advanced"
     #hidden: yes
