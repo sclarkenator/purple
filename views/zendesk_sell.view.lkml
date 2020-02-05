@@ -1,7 +1,6 @@
 view: zendesk_sell {
    derived_table: {
-     sql:
-select d.deal_id
+     sql: select d.deal_id
  , d.contact_id
  , d.user_id
  , d.created_at
@@ -15,8 +14,8 @@ select d.deal_id
  from analytics.customer_care.zendesk_sell_deal d
  left join analytics.customer_care.agent_lkp lk on d.user_id = lk.zendesk_sell_user_id
  left join analytics.customer_care.zendesk_sell_user u on d.user_id = u.user_id
- left join analytics.customer_care.zendesk_sell_contact c on d.contact_id = c.contact_id
-   }
+ left join analytics.customer_care.zendesk_sell_contact c on d.contact_id = c.contact_id ;;
+     }
 
   dimension: pending_draft_order{
     label: "    * Pending Draft Order"
@@ -62,6 +61,25 @@ select d.deal_id
     type: string
     label: "Draft Order Name"
     sql: ${TABLE}.draft_order_name;;
+  }
+
+  dimension: order_link {
+    type: string
+    label: "Order Link"
+    sql: ${TABLE}.order_link;;
+  }
+
+  dimension: fraud_risk {
+    type: string
+    label: "Fraud Risk"
+    sql: ${TABLE}.fraud_risk;;
+  }
+
+  dimension: inside_sales_order {
+    label: "     * Is Inside Sales Order"
+    description: "Order matched on related tranid, draft order, or email"
+    type: yesno
+    sql: ${TABLE}.order_id is not null ;;
   }
 
   dimension: related_tranid {

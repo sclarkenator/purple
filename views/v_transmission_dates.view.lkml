@@ -1,5 +1,16 @@
 view: v_transmission_dates {
-  sql_table_name: SHIPPING.V_TRANSMISSION_DATES ;;
+  #sql_table_name: SHIPPING.V_TRANSMISSION_DATES ;;
+  derived_table: {
+    sql:
+      select z.*
+      from (
+        select a.*
+            , row_number () over (partition by a.order_id, a.system, a.item_id order by coalesce(a.DOWNLOAD_TO_WAREHOUSE_EDGE,a.TRANSMITTED_TO_MAINFREIGHT,a.TRANSMITTED_TO_PILOT)) as row_num
+        from SHIPPING.V_TRANSMISSION_DATES a
+      ) z
+      where z.row_num = 1
+    ;;
+    }
 
   dimension: item_id {
     hidden: yes

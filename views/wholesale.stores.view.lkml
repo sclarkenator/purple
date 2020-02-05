@@ -32,7 +32,16 @@ view: wholesale_stores {
     group_label: "Location"
     type: string
     map_layer_name: us_states
-    sql: ${TABLE}.State ;;
+  # sql: ${TABLE}.State
+   sql: case when ${TABLE}.State = 'California' then 'CA'
+        when ${TABLE}.State = 'District of Columbia' then 'DC'
+        when ${TABLE}.State = 'Illinois' then 'IL'
+        when ${TABLE}.State = 'Maryland' then 'MD'
+        when ${TABLE}.State = 'New York' then 'NY'
+        when ${TABLE}.State = 'Pennsylvania' then 'PA'
+        when ${TABLE}.State = 'Texas' then 'TX'
+        when ${TABLE}.State = 'Virginia' then 'VA'
+        else ${TABLE}.State end ;;
   }
 
   dimension: zip {

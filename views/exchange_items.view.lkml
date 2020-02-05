@@ -1,19 +1,19 @@
 view: exchange_items {
 derived_table: {sql:
-select
+  select
   eo.order_id as original_order_id,
   f.fulfillment_id as original_fulfilment_id,
   f.fulfilled as orginal_fulfilled,
   eo.exchange_order_id as rma_exchange_order_id,
   eo.replacement_order_id,
   eol.item_id as original_order_item_id,
-  i.product_line_name_lkr as original_order_product_line_name_lkr,
-  i.product_description_lkr as original_order_product_description_lkr,
+  i.line as original_order_product_line_name_lkr,
+  i.product_description as original_order_product_description_lkr,
   esol.item_id as exchange_order_item_id,
   ef.fulfillment_id as exchange_fulfillment_id,
   ef.fulfilled as exchange_fulfilled,
-  ei.product_line_name_lkr as exchange_order_product_line_name_lkr,
-  ei.product_description_lkr as exchange_order_product_description_lkr,
+  ei.line as exchange_order_product_line_name_lkr,
+  ei.product_description as exchange_order_product_description_lkr,
   ero.rma_return_type as exchange_return_type,
   ero.status as exchange_return_status,
   ero.created as exchange_return_initiated,
@@ -27,12 +27,12 @@ select
   left join analytics.sales.item i on eol.item_id = i.item_id
   left join analytics.sales.sales_order eso on eo.replacement_order_id = eso.order_id
   left join analytics.sales.sales_order_line esol on eso.order_id = esol.order_id and eso.system = esol.system
-  left join analytics.sales.item ei on esol.item_id = ei.item_id and i.sub_category_name_lkr = ei.sub_category_name_lkr
+  left join analytics.sales.item ei on esol.item_id = ei.item_id and i.category = ei.category
   left join analytics.sales.fulfillment f on eo.order_id = f.order_id and eo.system = f.system and eol.item_id = case when f.parent_item_id is null or f.parent_item_id = 0 then f.item_id else f.parent_item_id end
   left join analytics.sales.fulfillment ef on eo.replacement_order_id = ef.order_id and eo.system = ef.system and esol.item_id = case when ef.parent_item_id is null or ef.parent_item_id = 0 then ef.item_id else ef.parent_item_id end
   left join analytics.sales.return_order ero on eo.exchange_order_id = ero.return_order_id
   left join analytics.sales.return_order eoo on eo.replacement_order_id = eoo.order_id
-where ei.item_id is not null ;; }
+  where ei.item_id is not null ;; }
 
 dimension: original_order_id {
   label: "Order ID"

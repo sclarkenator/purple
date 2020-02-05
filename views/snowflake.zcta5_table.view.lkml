@@ -38,6 +38,7 @@ order by 1 ;;
     view_label: "Customer"
     group_label: "Customer Address"
     type: string
+    hidden: yes
     map_layer_name: us_states
     sql: ${TABLE}.st ;;
   }

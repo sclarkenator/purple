@@ -10,7 +10,7 @@ view: wholesale_customer_warehouses {
 
   dimension: city {
     view_label: "Fulfillment"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     type: string
     sql: ${TABLE}."city" ;;
   }
@@ -18,14 +18,14 @@ view: wholesale_customer_warehouses {
   dimension: companyname {
     view_label: "Fulfillment"
     label: " Company name"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     type: string
     sql: ${TABLE}."companyname" ;;
   }
 
   dimension: customer_id {
     view_label: "Fulfillment"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     hidden: yes
     type: string
     sql: ${TABLE}."customer_id" ;;
@@ -33,7 +33,7 @@ view: wholesale_customer_warehouses {
 
   dimension: state {
     view_label: "Fulfillment"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     type: string
     map_layer_name: us_states
     sql: ${TABLE}."state" ;;
@@ -41,14 +41,14 @@ view: wholesale_customer_warehouses {
 
   dimension: street_address {
     view_label: "Fulfillment"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     type: string
     sql: ${TABLE}."street_address" ;;
   }
 
   dimension: zip {
     view_label: "Fulfillment"
-    group_label: "  Wholesale receiving warehouse"
+    group_label: "Wholesale receiving warehouse"
     type: zipcode
     sql: ${TABLE}."zip" ;;
   }

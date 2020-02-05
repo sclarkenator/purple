@@ -244,11 +244,11 @@ view: sales_order_line {
   }
 
   dimension: SLA_fulfilled {
-    label: "     * Is SLA fulfilled"
+    label: "     * Is Fulfilled in SLA"
     description: "Was item fulfilled in SLA window"
     view_label: "Fulfillment"
     type: yesno
-    sql: ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} AND ${fulfillment.left_purple_date} <= ${Due_Date} ;;
+    sql: nvl(${cancelled_order.cancelled_date},'2099-01-01') >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
   }
 
   measure: SLA_Achievement_prct {
@@ -612,13 +612,13 @@ view: sales_order_line {
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
+    #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA')  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
   dimension: is_fulfilled {
     view_label: "Fulfillment"
-    label: "     * Is fulfilled"
+    label: "     * Is Fulfilled"
     description:  "Has order been fulfilled"
     type: yesno
     sql: ${fulfilled_date} is not null;;
@@ -731,6 +731,72 @@ view: sales_order_line {
     type: number
     sql: ${return_order_line.total_gross_amt} / nullif(${total_gross_Amt},0) ;;
     value_format_name: "percent_1"
+  }
+
+  dimension_group: min_ship_date {
+    label: "Minimum Ship by"
+    description: "Merging Minimum Ship By and Ship By fields from netsuite into a single values.  Min then Ship by."
+    view_label: "Fulfillment"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date}) ;;
+  }
+
+  dimension_group: transmitted_date {
+    label: "Transmitted"
+    view_label: "Fulfillment"
+    description: "Looking at the trasmitted date that matches the carrier from sales order line"
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
+      when ${carrier} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
+      when ${carrier} = 'Carry Out' then ${created_raw}
+      else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
+  }
+
+  measure: days_to_trasnmitted {
+    label: "Order to Transmission"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
+  }
+
+  measure: days_to_left_purple {
+    label: "Order to Left Purple"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
+  }
+
+  measure: days_to_left_purple_2 {
+    label: "Transmission to Left Purple"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
+  }
+
+  measure: days_to_in_hand {
+    label: "Order to In Hand"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
+  }
+
+  measure: days_to_in_hand_2 {
+    label: "Left Purple to In Hand"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 
   set: fulfill_details {
