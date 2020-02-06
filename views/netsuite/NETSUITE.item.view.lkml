@@ -193,7 +193,7 @@ view: item {
 
   dimension: product_bucket_legacy {
     hidden: yes
-    label: "1 Buckets"
+    label: "1 Buckets Legacy"
     group_label: "Forecast Product Hierarchy Legacy"
     description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
     type: string
