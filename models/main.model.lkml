@@ -808,15 +808,25 @@ explore: qualtrics {hidden:yes
 
 
 
-explore: mattress_firm_sales {hidden:no
-  label: "Mattress Firm"
-  group_label: " Sales"
-  join: mattress_firm_store_details {sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
-    type: left_outer relationship: many_to_one}
-  join: mattress_firm_item { sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
-    type:  left_outer relationship: many_to_one}
-  join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
-    type: left_outer relationship: many_to_one}
+  explore: mattress_firm_sales {hidden:no
+    label: "Mattress Firm"
+    group_label: " Sales"
+    view_label: "Store Details"
+    join: mattress_firm_store_details {
+      view_label: "Store Details"
+      sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
+      type: left_outer
+      relationship: many_to_one}
+    join: mattress_firm_item {
+      view_label: "Store Details"
+      sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
+      type:  left_outer
+      relationship: many_to_one}
+    join: item {
+      view_label: "Product"
+      sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+      type: left_outer
+      relationship: many_to_one}
 }
 
 explore: wholesale_mfrm_manual_asn  {

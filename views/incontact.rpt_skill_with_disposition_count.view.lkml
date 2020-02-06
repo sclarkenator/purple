@@ -91,6 +91,7 @@ view: rpt_skill_with_disposition_count {
       raw,
       date,
       week,
+      week_of_year,
       month,
       quarter,
       year
