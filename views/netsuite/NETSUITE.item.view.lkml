@@ -364,14 +364,14 @@ view: item {
   }
   dimension: model_raw {
     group_label: "Product Hierarchy"
-    label: "Model"
+    label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc"
     #hidden: yes
     sql: ${TABLE}.model ;;
   }
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
-    label: "3. Name"
+    label: "4. Name"
     description: "Product Description"
     #hidden: yes
     sql: ${TABLE}.product_description ;;
