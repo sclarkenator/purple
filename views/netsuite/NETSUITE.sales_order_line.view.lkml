@@ -262,6 +262,14 @@ view: sales_order_line {
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
 
+  dimension: picked_packed_sla {
+    label: "Picked/Packed is Fulfilled in SLA"
+    hidden: yes
+    description: "Was item fulfilled in SLA window for Left Purple Date to Minimun Ship by Date"
+    type: yesno
+    sql:  ${fulfillment.left_purple_date} < ${sales_order_line.min_ship_date_date};;
+  }
+
   measure: whlsl_units {
     view_label: "Fulfillment"
     label: "Wholesale SLA (units)"
