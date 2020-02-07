@@ -142,6 +142,19 @@ view: item {
     sql: ${model_raw} ;;
     }
 
+  dimension: mattress_model_name {
+    hidden:  yes
+    label:  " Mattress Model Name"
+    description: "4, 3, 2, Original"
+    drill_fields: [product_description]
+    type: string
+    case: {
+      when: { sql: ${TABLE}.model = 'HYBRID PREMIER 4' ;; label: "4" }
+      when: { sql: ${TABLE}.model = 'HYBRID PREMIER 3' ;; label: "3" }
+      when: { sql: ${TABLE}.model = 'HYBRID 2' ;; label: "2" }
+      when: { sql: ${TABLE}.model = 'THE PURPLE MATTRESS' OR ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS' ;; label: " ORIGINAL" }
+      else: "Other" } }
+
   dimension: model_name_legacy {
     hidden:  yes
     label:  " Mattress Model Legacy"

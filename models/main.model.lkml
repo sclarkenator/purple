@@ -1079,7 +1079,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: mainchain_transaction_outwards_detail {
-    view_label: "MainChain"
+    view_label: "Fulfillment"
     type: left_outer
     sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
@@ -1147,7 +1147,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: pilot_daily {
-    view_label: "Pilot Info"
+    view_label: "Fulfillment"
     type: full_outer
     relationship: many_to_one
     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
