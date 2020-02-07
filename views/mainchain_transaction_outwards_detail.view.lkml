@@ -65,7 +65,7 @@ view: mainchain_transaction_outwards_detail {
   }
 
   dimension_group: finalised {
-    label: "Mainchain Finalised Date"
+    label: "Mainchain Finalised"
     type: time
     timeframes: [
       raw,
