@@ -23,6 +23,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: appointment_date {
     group_label: "Pilot Info"
+    description: "Pilot Appointment Date"
     type: date
     sql: case when ${TABLE}."APPOINTMENT" = 'NULL' then null else left(${TABLE}."APPOINTMENT",10)::date end ;;
   }
@@ -76,12 +77,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: pieces {
     group_label: "Pilot Info"
+    description: "Number of Pieces"
     type: number
     sql: ${TABLE}."PIECES" ;;
   }
 
   dimension: pilot_shipment_id {
     group_label: "Pilot Info"
+    description: "Pilot Shipment ID"
     type: number
     sql: ${TABLE}."PILOT_SHIPMENT_ID" ;;
   }
@@ -104,12 +107,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: shipper_city {
     group_label: "Pilot Info"
+    description: "Shipper City Name"
     type: string
     sql: ${TABLE}."SHIPPER_CITY" ;;
   }
 
   dimension: shipper_ref {
     group_label: "Pilot Info"
+    description: "Shipper Reference ID"
     type: string
     sql: ${TABLE}."SHIPPER_REF" ;;
   }
@@ -123,6 +128,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: status {
     group_label: "Pilot Info"
+    description: "Delivery Status"
     type: string
     sql: ${TABLE}."STATUS" ;;
   }
@@ -145,6 +151,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: total_charges {
     group_label: "Pilot Info"
+    description: "Total Number of Charges"
     type: number
     sql: ${TABLE}."TOTAL_CHARGES" ;;
   }
