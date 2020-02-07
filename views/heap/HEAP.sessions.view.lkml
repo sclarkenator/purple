@@ -19,20 +19,24 @@ view: sessions {
   dimension: app_name {
     label: "App Name"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.app_name ;; }
 
   dimension: app_version {
     label: "App Version"
     type: string
+    hidden:  yes
     sql: ${TABLE}.app_version ;; }
 
   dimension: browser {
     label: "Browser"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.browser ;; }
 
   dimension: browser_bucket {
     label: "Browser Bucket"
+    group_label: "Advanced"
     type: string
     sql: case when ${browser} ilike ('%Chrome%') then 'Chrome'
               when ${browser} ilike ('%Safari%') then 'Safari'
@@ -52,14 +56,17 @@ view: sessions {
   dimension: carrier {
     label: "Carrier"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.carrier ;; }
 
   dimension: city {
+    group_label: "Advanced"
     label: "City"
     type: string
     sql: ${TABLE}.city ;; }
 
   dimension: country {
+    group_label: "Advanced"
     label: "Country"
     map_layer_name: countries
     type: string
@@ -67,11 +74,13 @@ view: sessions {
 
   dimension: device {
     label: "Device"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.device ;; }
 
   dimension: device_type {
     label: "Device Type"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.device_type ;; }
 
@@ -82,16 +91,17 @@ view: sessions {
 
   dimension: ip {
     label: "IP"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.ip ;; }
 
   dimension: landing_page {
-    label: "Landing Page"
+    label: " Landing Page"
     type: string
     sql: ${TABLE}.landing_page ;; }
 
   dimension: page_type {
-    label: "Page Type"
+    label: " Page Type"
     type:  string
     description: "Bucketed landing pages"
     sql:  case when ${landing_page} ilike ('%checkouts%') then 'Checkout Page'
@@ -103,20 +113,23 @@ view: sessions {
   dimension: library {
     label: "Library"
     type: string
+    hidden: yes
     sql: ${TABLE}.library ;; }
 
   dimension: platform {
     label: "Platform"
+    group_label: "Advanced"
+    description: "Device OS"
     type: string
     sql: ${TABLE}.platform ;; }
 
   dimension: referrer {
-    label: "Referrer"
+    label: " Referrer"
     type: string
     sql: ${TABLE}.referrer ;; }
 
   dimension: referrer_2 {
-    label: "Referrer (grouped)"
+    label: " Referrer (grouped)"
     type: string
     sql: case when ${TABLE}.referrer ilike ('%purple.com%') then 'https://purple.com/*'
           when ${TABLE}.referrer ilike ('%google.%') then 'https://google.com/*'
@@ -139,28 +152,31 @@ view: sessions {
   dimension: region {
     label: "Region"
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}.region ;; }
 
   dimension: search_keyword {
     label: "Search Keyword"
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.search_keyword ;; }
 
   dimension_group: time {
+    group_label: "  Session Time"
     type: time
     timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
     sql: ${TABLE}.time ;; }
 
   dimension: last_30{
     label: "z - Last 30 Days"
-    group_label: "Time Date"
+    group_label: "  Session Time"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: ${TABLE}.time::date > dateadd(day,-30,current_date);; }
 
   dimension: rolling_7day {
     label: "z - Rolling 7 Day Filter"
-    group_label: "Time Date"
+    group_label: "  Session Time"
     description: "Yes = 7 most recent days ONLY"
     type: yesno
     sql: ${TABLE}.time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
@@ -171,28 +187,28 @@ view: sessions {
     sql: date_part('dayofyear',${TABLE}.time::date)- date_part('dayofyear',current_date) ;; }
 
   dimension: Before_today{
-    group_label: "Time Date"
+    group_label: "  Session Time"
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.time::date < current_date;; }
 
   dimension: current_week_num{
-    group_label: "Time Date"
+    group_label: "  Session Time"
     label: "z - Before Current Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_trunc(week, ${TABLE}.time::date) < date_trunc(week, current_date) ;;}
 
   dimension: prev_week{
-    group_label: "Time Date"
+    group_label: "  Session Time"
     label: "z - Previous Week"
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql:  date_trunc(week, ${TABLE}.time::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
   dimension: week_bucket{
-    group_label: "Time Date"
+    group_label: "  Session Time"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
@@ -212,7 +228,7 @@ view: sessions {
   dimension: channel {
     type: string
     hidden:  no
-    label: "Channel"
+    label: " Channel"
     description: "Channel that current session came from"
     sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
           when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${referrer} ilike '%fb%' or ${referrer} ilike '%facebo%' or ${referrer} ilike '%insta%' or ${referrer} ilike '%l%nk%din%' or ${referrer} ilike '%pinteres%' or ${referrer} ilike '%snapch%' then 'social'
@@ -228,16 +244,19 @@ view: sessions {
   }
 
   dimension: utm_campaign {
+    group_label: "UTM Tags"
     label: "UTM Campaign"
     type: string
     sql: lower(${TABLE}.utm_campaign) ;; }
 
   dimension: utm_content {
+    group_label: "UTM Tags"
     label: "UTM Content"
     type: string
     sql: lower(${TABLE}.utm_content) ;; }
 
   dimension: utm_medium {
+    group_label: "UTM Tags"
     label: "UTM Medium"
     type: string
     sql: lower(${TABLE}.utm_medium) ;; }
@@ -255,6 +274,7 @@ view: sessions {
   }
 
   dimension: utm_source {
+    group_label: "UTM Tags"
     label: "UTM Source"
     type: string
     sql: lower(${TABLE}.utm_source) ;; }
@@ -276,6 +296,7 @@ view: sessions {
               else ${utm_source} end ;;  }
 
   dimension: utm_term {
+    group_label: "UTM Tags"
     label: "UTM Term"
     type: string
     sql: lower(${TABLE}.utm_term) ;; }
