@@ -8,12 +8,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension: order_id {
+    hidden: yes
     group_label: "Pilot Info"
     type: string
     sql: ${TABLE}.order_id ;;
   }
 
   dimension: appointment {
+    hidden: yes
     group_label: "Pilot Info"
     type: string
     sql: ${TABLE}."APPOINTMENT" ;;
@@ -26,19 +28,22 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension: consignee_city {
+    hidden: yes
     group_label: "Pilot Info"
     type: string
     sql: ${TABLE}."CONSIGNEE_CITY" ;;
   }
 
   dimension: consignee_ref {
+    hidden: yes
     group_label: "Pilot Info"
     type: string
     sql: ${TABLE}."CONSIGNEE_REF" ;;
   }
 
   dimension_group: entry {
-    group_label: "Pilot Info"
+    hidden: yes
+    label: "Pilot Entry Date"
     type: time
     timeframes: [
       raw,
@@ -53,7 +58,8 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension_group: pickup {
-    group_label: "Pilot Info"
+    hidden: yes
+    label: "Pilot Pickup Date"
     type: time
     timeframes: [
       raw,
@@ -81,7 +87,8 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension_group: pod {
-    group_label: "Pilot Info"
+    hidden: yes
+    label: "Pilot POD Date"
     type: time
     timeframes: [
       raw,
@@ -108,6 +115,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension: signature {
+    hidden: yes
     group_label: "Pilot Info"
     type: string
     sql: ${TABLE}."SIGNATURE" ;;
@@ -120,6 +128,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   }
 
   dimension_group: status_ts {
+    hidden: yes
     group_label: "Pilot Info"
     type: time
     timeframes: [
