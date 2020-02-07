@@ -65,7 +65,7 @@ view: forecast_combined {
             , sum (case when account = 'Truck' then units else 0 end) as Trucking_Units
             , sum (case when account = 'HOM' then amount else 0 end) as HOM_Units
             , sum (case when account in ('Bloom_Ware','Bloom_DTC') then amount else 0 end) as BD_Units
-            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels') then amount else 0 end) as Other_Units
+            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels','Other') then amount else 0 end) as Other_Units
             , sum (case when account = 'MFRM_Ware' then amount else 0 end) as MF_Instore_Amount
             , sum (case when account = 'MFRM_DTC' then amount else 0 end) as MF_Online_Amount
             , sum (case when account = 'FR' then amount else 0 end) as FR_Amount
@@ -77,7 +77,7 @@ view: forecast_combined {
             , sum (case when account = 'Truck' then amount else 0 end) as Trucking_Amount
             , sum (case when account = 'HOM' then amount else 0 end) as HOM_Amount
             , sum (case when account in ('Bloom_Ware','Bloom_DTC') then amount else 0 end) as BD_Amount
-            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels') then amount else 0 end) as Other_Amount
+            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels','Other') then amount else 0 end) as Other_Amount
         from (
          select b.date
               , a.sku_id
