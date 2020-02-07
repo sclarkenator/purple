@@ -38,11 +38,12 @@ view: session_facts {
 
   dimension: session_sequence_number {
     label: "Session Sequence Number"
+    group_label: "Advanced"
     type: number
     sql: ${TABLE}.session_sequence_number ;; }
 
   dimension: is_first_session {
-    label: "Is First Session"
+    label: "    * Is First Session"
     description: "Yes/No value for if it is the first session"
     type: yesno
     sql: ${session_sequence_number} = 1 ;; }
@@ -50,16 +51,19 @@ view: session_facts {
   dimension_group: session_start_time {
     label: "Session Start Time"
     type: time
+    hidden: yes
     timeframes: [time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.session_start_time ;; }
 
   dimension_group: session_end_time {
     label: "Session End Time"
     type: time
+    hidden: yes
     timeframes: [time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.session_end_time ;; }
 
   dimension: session_duration_minutes {
+    group_label: "Advanced"
     label: "Session Durations (minutes)"
     type: number
     sql: extract(epoch from (${TABLE}.session_end_time - ${TABLE}.session_start_time))/60 ;;
@@ -67,6 +71,7 @@ view: session_facts {
 
   dimension: duration_tier {
     label:  "Session Durations (minutes bucket)"
+    group_label: "Advanced"
     description: "Minutes spent on site (0,1,5,10,15,20,25,30)"
     type: tier
     style:  integer
@@ -75,6 +80,7 @@ view: session_facts {
           else datediff('minutes',session_start_time,session_end_time)::int  end;;}
 
   dimension: event_count {
+    group_label: "Advanced"
     label: "Event Count"
     type: number
     sql: ${TABLE}.all_events_count ;; }

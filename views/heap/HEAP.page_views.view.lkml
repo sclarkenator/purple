@@ -25,24 +25,26 @@ view: heap_page_views {
     type: sum_distinct
     sql:
     Case
-      When ${TABLE}.pages_viewed < 2 THEN 1 Else 0 End;; }
+      When ${TABLE}.pages_viewed < 2 THEN 1 Else 0 End;;
+    view_label: "Sessions" }
 
 
  measure: Sum_non_bounced_session {
     type: sum_distinct
     sql:
     Case
-      When ${TABLE}.pages_viewed >= 2 THEN 1 Else 0 End;; }
+      When ${TABLE}.pages_viewed >= 2 THEN 1 Else 0 End;;
+    view_label: "Sessions" }
 
   dimension: pages_viewed {
-    label: "Pages Viewed"
+    label: " Pages Viewed"
     description: "Pages viewed per session"
     view_label: "Sessions"
     type: number
     sql: ${TABLE}.pages_viewed ;;}
 
   dimension: bounced {
-    label: "Bounced"
+    label: "   * Bounced"
     description: "Only viewed 1 page"
     view_label: "Sessions"
     type: yesno
@@ -50,6 +52,7 @@ view: heap_page_views {
 
   dimension: query {
     label: "Query - tag string"
+    group_label: "Advanced"
     description: "The whole tag string after purple.com."
     view_label: "Sessions"
     type: string
