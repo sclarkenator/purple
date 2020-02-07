@@ -1576,3 +1576,8 @@ explore: procom_security_daily_customer {
       label: "Order Validation"
       description: "Constructed table comparing orders from different sources"
       hidden:yes }
+
+    explore: hour_assumptions {
+      label: "Hour Assumptions"
+      description: "% of day's sales by hour for dtc day prediction"
+      hidden: yes  }
