@@ -142,6 +142,19 @@ view: item {
     sql: ${model_raw} ;;
     }
 
+  dimension: mattress_model_name {
+    hidden:  yes
+    label:  " Mattress Model Name"
+    description: "4, 3, 2, Original"
+    drill_fields: [product_description]
+    type: string
+    case: {
+      when: { sql: ${TABLE}.model = 'HYBRID PREMIER 4' ;; label: "4" }
+      when: { sql: ${TABLE}.model = 'HYBRID PREMIER 3' ;; label: "3" }
+      when: { sql: ${TABLE}.model = 'HYBRID 2' ;; label: "2" }
+      when: { sql: ${TABLE}.model = 'THE PURPLE MATTRESS' OR ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS' ;; label: " ORIGINAL" }
+      else: "Other" } }
+
   dimension: model_name_legacy {
     hidden:  yes
     label:  " Mattress Model Legacy"
@@ -193,7 +206,7 @@ view: item {
 
   dimension: product_bucket_legacy {
     hidden: yes
-    label: "1 Buckets"
+    label: "1 Buckets Legacy"
     group_label: "Forecast Product Hierarchy Legacy"
     description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
     type: string
@@ -364,14 +377,14 @@ view: item {
   }
   dimension: model_raw {
     group_label: "Product Hierarchy"
-    label: "Model"
+    label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc"
     #hidden: yes
     sql: ${TABLE}.model ;;
   }
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
-    label: "3. Name"
+    label: "4. Name"
     description: "Product Description"
     #hidden: yes
     sql: ${TABLE}.product_description ;;

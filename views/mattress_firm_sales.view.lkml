@@ -88,7 +88,6 @@ view: mattress_firm_sales {
 dimension: promo_date_bucket {
     label: "Promo Date Buckets"
     description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
-    group_label: " Advanced"
     #hidden: yes
     sql: case
         when ${TABLE}.finalized_date::date between '2018-11-14' and '2018-11-17' then '18 TG 1 WB'
@@ -114,7 +113,6 @@ dimension: promo_date_bucket {
   dimension: promo_date_holliday {
     label: "Promo Date Holiday"
     description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
-    group_label: " Advanced"
     #hidden: yes
     sql: case
         when ${TABLE}.finalized_date::date between '2018-11-14' and '2018-11-17'
@@ -130,7 +128,6 @@ dimension: promo_date_bucket {
     dimension: promo_date_type {
     label: "Promo Date Type"
     description: "A manual bucketing of the major promos in types; Week Before, Promo Period, Holliday"
-    group_label: " Advanced"
     #hidden: yes
     sql: case
         when ${TABLE}.finalized_date::date between '2018-11-14' and '2018-11-17'

@@ -808,15 +808,25 @@ explore: qualtrics {hidden:yes
 
 
 
-explore: mattress_firm_sales {hidden:no
-  label: "Mattress Firm"
-  group_label: " Sales"
-  join: mattress_firm_store_details {sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
-    type: left_outer relationship: many_to_one}
-  join: mattress_firm_item { sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
-    type:  left_outer relationship: many_to_one}
-  join: item {sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
-    type: left_outer relationship: many_to_one}
+  explore: mattress_firm_sales {hidden:no
+    label: "Mattress Firm"
+    group_label: " Sales"
+    view_label: "Store Details"
+    join: mattress_firm_store_details {
+      view_label: "Store Details"
+      sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
+      type: left_outer
+      relationship: many_to_one}
+    join: mattress_firm_item {
+      view_label: "Store Details"
+      sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
+      type:  left_outer
+      relationship: many_to_one}
+    join: item {
+      view_label: "Product"
+      sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+      type: left_outer
+      relationship: many_to_one}
 }
 
 explore: wholesale_mfrm_manual_asn  {
@@ -1069,7 +1079,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: mainchain_transaction_outwards_detail {
-    view_label: "MainChain"
+    view_label: "Fulfillment"
     type: left_outer
     sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
@@ -1137,7 +1147,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: pilot_daily {
-    view_label: "Pilot Info"
+    view_label: "Fulfillment"
     type: full_outer
     relationship: many_to_one
     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
@@ -1430,6 +1440,7 @@ explore: procom_security_daily_customer {
       join: sales_order {
         type:  left_outer
         sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
+        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total]
         relationship: one_to_one }
 
       join: order_flag {
@@ -1565,3 +1576,8 @@ explore: procom_security_daily_customer {
       label: "Order Validation"
       description: "Constructed table comparing orders from different sources"
       hidden:yes }
+
+    explore: hour_assumptions {
+      label: "Hour Assumptions"
+      description: "% of day's sales by hour for dtc day prediction"
+      hidden: yes  }

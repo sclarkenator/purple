@@ -4,6 +4,7 @@ view: order_flag {
     sql:
     SELECT ORDER_ID
       ,case when MATTRESS_FLG > 0 then 1 else 0 end mattress_flg
+      ,case when HYBRID_MATTRESS_FLG > 0 then 1 else 0 end hybird_mattress_flg
       ,case when CUSHION_FLG > 0 then 1 else 0 end cushion_flg
       ,case when SHEETS_FLG > 0 then 1 else 0 end sheets_flg
       ,case when PROTECTOR_FLG > 0 then 1 else 0 end protector_flg
@@ -30,6 +31,7 @@ view: order_flag {
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
+        ,sum(case when line = 'COIL' THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
         ,SUM(CASE WHEN line = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
         ,SUM(CASE WHEN line = 'PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
@@ -205,6 +207,13 @@ view: order_flag {
     description: "1/0; 1 if there is a mattress in this order"
     type:  yesno
     sql: ${TABLE}.mattress_flg = 1 ;; }
+
+  dimension: hybird_mattress_flg {
+    group_label: "    * Orders has:"
+    label: "a Hybrid Mattress"
+    description: "1/0; 1 if there is a hybrid or hybrid premier mattress in this order"
+    type:  yesno
+    sql: ${TABLE}.hybird_mattress_flg = 1 ;; }
 
   dimension: cushion_flg {
     group_label: "    * Orders has:"
