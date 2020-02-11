@@ -1,4 +1,4 @@
-view: quality_yellow_card {
+view: l2l_quality_yellow_card {
   sql_table_name: "L2L"."QUALITY_YELLOW_CARD"
     ;;
 

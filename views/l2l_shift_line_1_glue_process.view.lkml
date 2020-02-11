@@ -1,4 +1,4 @@
-view: shift_line_1_glue_process {
+view: l2l_shift_line_1_glue_process {
   sql_table_name: "L2L"."SHIFT_LINE_1_GLUE_PROCESS"
     ;;
 
