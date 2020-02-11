@@ -148,7 +148,7 @@
       hidden: yes
     }
 
-    measure: working_rate_measure {
+  measure: working_rate_measure {
       label: "Working Rate"
       type: average
       value_format_name: decimal_2
