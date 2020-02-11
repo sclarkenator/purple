@@ -8,8 +8,8 @@
     }
 
     dimension: agent_id {
-      type: string
-      sql: ${TABLE}."agent_id" ;;
+      type: number
+      sql: ${TABLE}.agent_id ;;
     }
 
     dimension: total {
