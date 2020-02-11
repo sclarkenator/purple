@@ -789,6 +789,16 @@ view: sales_order_line {
     sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
   }
 
+  measure: days_to_left_purple_3 {
+    label: "Transmitted to In Hand"
+    view_label: "Fulfillment"
+    group_label: "Days between benchmarks"
+    description: "The average difference between the order date and transmitted date"
+    type: average
+    sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
+  }
+
+
   measure: days_to_in_hand {
     label: "Order to In Hand"
     view_label: "Fulfillment"
