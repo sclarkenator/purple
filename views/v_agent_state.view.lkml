@@ -129,7 +129,7 @@
     dimension: occupancy {
       type: number
       value_format_name: decimal_2
-      sql: ${TABLE}."occupancy" ;;
+      sql: ${TABLE}.occupancy ;;
     }
     dimension: true_occupancy {
       type: number
@@ -139,7 +139,7 @@
     dimension: working_rate {
       type: number
       value_format_name: decimal_2
-      sql: ${TABLE}."working_rate" ;;
+      sql: ${TABLE}.working_rate ;;
     }
 
     dimension: primary_key {
@@ -148,7 +148,21 @@
       hidden: yes
     }
 
+    measure: working_rate_measure {
+      label: "Working Rate"
+      type: average
+      value_format_name: decimal_2
+      sql: ${TABLE}.working_rate ;;
 
+    }
+
+    measure: occupancy_measure {
+      label: "Occupancy"
+      type: average
+      value_format_name: decimal_2
+      sql: ${TABLE}.occupancy ;;
+
+        }
 
     measure: count {
       type: count
