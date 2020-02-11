@@ -62,8 +62,8 @@ view: order_flag {
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdANYpt2
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'BLANKETS' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
-        ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKETS')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
-          AND discount_amt>=.1*sol.ORDERED_QTY*(discount_amt+sol.gross_amt)) THEN 1 else 0 end) buymsm1
+        ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKET')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
+          ) THEN 1 else 0 end) buymsm1
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
