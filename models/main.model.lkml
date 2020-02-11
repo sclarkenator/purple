@@ -255,6 +255,9 @@ explore: inventory_snap {
 
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
+explore: l2l_qpc_mattress_audit {hidden: yes}
+explore: l2l_quality_yellow_card {hidden: yes}
+explore: l2l_shift_line_1_glue_process {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
