@@ -14,7 +14,7 @@
 
     dimension: total {
       type: number
-      value_format_name: "usd"
+      value_format_name: decimal_2
       sql: ${TABLE}.total ;;
     }
 
@@ -163,6 +163,54 @@
       sql: ${TABLE}.occupancy ;;
 
         }
+
+    measure: total_measure {
+      label: "Total"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.total ;;
+
+    }
+
+    measure: personal_measure {
+      label: "Personal"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.personal ;;
+
+    }
+
+    measure: break_measure {
+      label: "Break"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.break ;;
+
+    }
+
+    measure: lunch_measure {
+      label: "Lunch"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.lunch ;;
+
+    }
+
+    measure: handle_measure {
+      label: "Handle"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.handle ;;
+
+    }
+
+    measure: available_measure {
+      label: "Available"
+      type: sum
+      value_format_name: decimal_2
+      sql: ${TABLE}.available ;;
+
+    }
 
     measure: count {
       type: count
