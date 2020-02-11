@@ -28,6 +28,7 @@ view: order_flag {
       ,case when (pdESSpt1>=2 and pdANYpt2=1) then 1 else 0 end pdESS_flg
       ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
+      ,case when buymsm1 > 0 then 1 else 0 end buymsm
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -61,6 +62,8 @@ view: order_flag {
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdANYpt2
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'BLANKETS' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
+        ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKETS')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
+          AND discount_amt>=.1*sol.ORDERED_QTY*(discount_amt+sol.gross_amt)) THEN 1 else 0 end) buymsm1
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -393,4 +396,13 @@ view: order_flag {
     description: "yesno; yes if there is a discounted gravity blanket and 2 free masks in this order (1/21/2020-2/14/2020)"
     type:  yesno
     sql: ${TABLE}.weightedtwo_flg = 1 ;; }
+
+  dimension: buymoresavemore {
+    hidden:  yes
+    group_label: "    * Orders has:"
+    description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020)"
+    type:  yesno
+    sql: ${TABLE}.buymsm = 1 ;; }
+
+
 }
