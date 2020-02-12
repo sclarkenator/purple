@@ -821,4 +821,60 @@ view: sales_order_line {
     fields: [order_id,item_id,created_date,fulfilled_date]
   }
 
+  measure: mattress_sales {
+    label: "Mattress Sales ($)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'MATTRESS' then ${gross_amt} else 0 end ;;
+  }
+
+  measure: mattress_units {
+    label: "Mattress Sales (Units)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'MATTRESS' then ${total_units_raw} else 0 end ;;
+  }
+
+  measure: base_sales {
+    label: "Base Sales ($)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'BASE' then ${gross_amt} else 0 end ;;
+  }
+
+  measure: base_units {
+    label: "Base Sales (Units)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'BASE' then ${total_units_raw} else 0 end ;;
+  }
+
+  measure: bedding_sales {
+    label: "Bedding Sales ($)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'BEDDING' then ${gross_amt} else 0 end ;;
+  }
+
+  measure: bedding_units {
+    label: "Bedding Sales (Units)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'BEDDING' then ${total_units_raw} else 0 end ;;
+  }
+
+  measure: pet_sales {
+    label: "Pet Sales ($)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'PET' then ${gross_amt} else 0 end ;;
+  }
+
+  measure: pet_units {
+    label: "Pet Sales (Units)"
+    view_label: "Product"
+    type: sum
+    sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
+  }
+
 }
