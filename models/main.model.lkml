@@ -700,6 +700,10 @@ explore: agent_lkp {
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
     relationship: one_to_many}
+  join: v_agent_state {
+    type: full_outer
+    sql_on: ${agent_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
+    relationship: one_to_many}
   join: agent_attendance{
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
