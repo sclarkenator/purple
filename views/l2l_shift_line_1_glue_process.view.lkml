@@ -203,32 +203,32 @@ view: l2l_shift_line_1_glue_process {
   measure: average_open_time_measure{
     type: average
     label: "Average Open Time"
-    sql: ${TABLE}."AVERAGE_OPEN_TIME" ;;
+    sql: ${TABLE}.AVERAGE_OPEN_TIME;;
 
   }
 
   measure: temp_measure{
     type: average
     label: "Temp"
-    sql: ${TABLE}."TEMP" ;;
+    sql: ${TABLE}.TEMP ;;
     }
 
   measure: glue_block_test_left_measure {
     type: average
     label: "Glue Block Test Left"
-    sql: ${TABLE}."GLUE_BLOCK_TEST_LEFT" ;;
+    sql: ${TABLE}.GLUE_BLOCK_TEST_LEFT ;;
   }
 
   measure: glue_block_test_middle_measure {
     type: average
     label: "Glue Block Test Left"
-    sql: ${TABLE}."GLUE_BLOCK_TEST_MIDDLE" ;;
+    sql: ${TABLE}.GLUE_BLOCK_TEST_MIDDLE ;;
   }
 
   measure: glue_block_test_right_measure{
     type: average
     label: "Glue Block Test Left"
-    sql: ${TABLE}."GLUE_BLOCK_TEST_RIGHT" ;;
+    sql: ${TABLE}.GLUE_BLOCK_TEST_RIGHT ;;
   }
 
 }
