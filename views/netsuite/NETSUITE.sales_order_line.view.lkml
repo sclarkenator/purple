@@ -763,7 +763,7 @@ view: sales_order_line {
   }
 
   measure: days_to_trasnmitted {
-    label: "Order to Transmission"
+    label: "Order to Transmitted"
     view_label: "Fulfillment"
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
@@ -781,7 +781,7 @@ view: sales_order_line {
   }
 
   measure: days_to_left_purple_2 {
-    label: "Transmission to Left Purple"
+    label: "Transmitted to Left Purple"
     view_label: "Fulfillment"
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
