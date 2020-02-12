@@ -1152,6 +1152,12 @@ explore: sales_order_line{
     relationship: many_to_one
     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
   }
+  join: optimizely_experiment_lookup {
+    view_label: "Sales Order"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
+  }
 
 }
 
