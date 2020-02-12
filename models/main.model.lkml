@@ -426,6 +426,8 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: adspend_target { hidden:yes }
+
 explore: zipcode_radius {
   hidden: yes
   group_label: "Marketing"
