@@ -7,19 +7,28 @@ view: l2l_qpc_mattress_audit {
     sql: ${TABLE}."AREA" ;;
   }
 
-  dimension: cover_fit {
-    type: string
-    sql: ${TABLE}."COVER_FIT" ;;
+  measure: cover_fit {
+    type: average
+    sql: case when ${TABLE}.COVER_FIT ='FAIL' OR ${TABLE}.COVER_FIT= '0' then 0
+              when ${TABLE}.COVER_FIT ='PASS' OR ${TABLE}.COVER_FIT= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: cover_rips_tears {
-    type: string
-    sql: ${TABLE}."COVER_RIPS_TEARS" ;;
+  measure: cover_rips_tears {
+    type: average
+    sql: case when ${TABLE}."COVER_RIPS_TEARS"  ='FAIL' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '0' then 0
+    when ${TABLE}."COVER_RIPS_TEARS"='PASS' OR ${TABLE}."COVER_RIPS_TEARS" = '1' then 1
+    else null
+    end;;
   }
 
-  dimension: cover_stains {
-    type: string
-    sql: ${TABLE}."COVER_STAINS" ;;
+  measure: cover_stains {
+    type: average
+    sql: case when ${TABLE}.COVER_STAINS ='FAIL' OR ${TABLE}.COVER_STAINS= '0' then 0
+              when ${TABLE}.COVER_STAINS ='PASS' OR ${TABLE}.COVER_STAINS= '1' then 1
+              else null
+              end;;
   }
 
   dimension_group: created {
@@ -51,54 +60,85 @@ view: l2l_qpc_mattress_audit {
     sql: ${TABLE}."DISPATCH_NUM" ;;
   }
 
-  dimension: fire_sock_holes_rips_glue {
-    type: string
-    sql: ${TABLE}."FIRE_SOCK_HOLES_RIPS_GLUE" ;;
+  measure: fire_sock_holes_rips_glue {
+    type: average
+    sql: case when ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE ='FAIL' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '0' then 0
+              when ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE ='PASS' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: fire_sock_seam {
-    type: string
-    sql: ${TABLE}."FIRE_SOCK_SEAM" ;;
+  measure: fire_sock_seam {
+    type: average
+    sql: case when ${TABLE}.FIRE_SOCK_SEAM ='FAIL' OR ${TABLE}.FIRE_SOCK_SEAM= '0' then 0
+              when ${TABLE}.FIRE_SOCK_SEAM ='PASS' OR ${TABLE}.FIRE_SOCK_SEAM= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: foam_puckered {
-    type: string
-    sql: ${TABLE}."FOAM_PUCKERED" ;;
+  measure: foam_puckered {
+    type: average
+    sql: case when ${TABLE}.FOAM_PUCKERED ='FAIL' OR ${TABLE}.FOAM_PUCKERED= '0' then 0
+              when ${TABLE}.FOAM_PUCKERED ='PASS' OR ${TABLE}.FOAM_PUCKERED= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: foam_recovery {
-    type: string
-    sql: ${TABLE}."FOAM_RECOVERY" ;;
+  measure: foam_recovery {
+    type: average
+    sql: case when ${TABLE}.FOAM_RECOVERY ='FAIL' OR ${TABLE}.FOAM_RECOVERY= '0' then 0
+              when ${TABLE}.FOAM_RECOVERY ='PASS' OR ${TABLE}.FOAM_RECOVERY= '1' then 1
+              else null
+              end;;
+
   }
 
-  dimension: foam_tears_holes {
-    type: string
-    sql: ${TABLE}."FOAM_TEARS_HOLES" ;;
+  measure: foam_tears_holes {
+    type: average
+    sql: case when ${TABLE}.foam_tears_holes ='FAIL' OR ${TABLE}.foam_tears_holes= '0' then 0
+              when ${TABLE}.foam_tears_holes ='PASS' OR ${TABLE}.foam_tears_holes= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: hep_adhesion {
-    type: string
-    sql: ${TABLE}."HEP_ADHESION" ;;
+  measure: hep_adhesion {
+    type: average
+    sql: case when ${TABLE}.HEP_ADHESION ='FAIL' OR ${TABLE}.HEP_ADHESION= '0' then 0
+              when ${TABLE}.HEP_ADHESION ='PASS' OR ${TABLE}.HEP_ADHESION= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: hep_alignment {
-    type: string
-    sql: ${TABLE}."HEP_ALIGNMENT" ;;
+  measure: hep_alignment {
+    type: average
+    sql: case when ${TABLE}.HEP_ALIGNMENT ='FAIL' OR ${TABLE}.HEP_ALIGNMENT= '0' then 0
+              when ${TABLE}.HEP_ALIGNMENT ='PASS' OR ${TABLE}.HEP_ALIGNMENT= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: hep_gaps_to_foam_rails {
-    type: string
-    sql: ${TABLE}."HEP_GAPS_TO_FOAM_RAILS" ;;
+  measure: hep_gaps_to_foam_rails {
+    type: average
+    sql: case when ${TABLE}.hep_gaps_to_foam_rails ='FAIL' OR ${TABLE}.hep_gaps_to_foam_rails= '0' then 0
+              when ${TABLE}.hep_gaps_to_foam_rails ='PASS' OR ${TABLE}.hep_gaps_to_foam_rails= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: hep_tears_voids {
-    type: string
-    sql: ${TABLE}."HEP_TEARS_VOIDS" ;;
+  measure: hep_tears_voids {
+    type: average
+    sql: case when ${TABLE}.hep_tears_voids ='FAIL' OR ${TABLE}.hep_tears_voids= '0' then 0
+              when ${TABLE}.hep_tears_voids ='PASS' OR ${TABLE}.hep_tears_voids= '1' then 1
+              else null
+              end;;
   }
 
-  dimension: law_tag_date {
-    type: string
-    sql: ${TABLE}."LAW_TAG_DATE" ;;
+  measure: law_tag_date {
+    type: average
+    sql:case when ${TABLE}.law_tag_date ='FAIL' OR ${TABLE}.law_tag_date= '0' then 0
+              when ${TABLE}.law_tag_date ='PASS' OR ${TABLE}.law_tag_date= '1' then 1
+              else null
+              end;;
   }
 
   dimension: line {
@@ -160,13 +200,13 @@ view: l2l_qpc_mattress_audit {
     sql: ${TABLE}."TECHNOLOGY" ;;
   }
 
-  dimension: would_you_want_customer {
-    type: string
+  measure: would_you_want_customer {
+    type: average
     sql: ${TABLE}."WOULD_YOU_WANT_CUSTOMER" ;;
   }
 
-  dimension: would_you_want_retail {
-    type: string
+  measure: would_you_want_retail {
+    type: average
     sql: ${TABLE}."WOULD_YOU_WANT_RETAIL" ;;
   }
 

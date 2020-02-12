@@ -426,6 +426,8 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: adspend_target { hidden:yes }
+
 explore: zipcode_radius {
   hidden: yes
   group_label: "Marketing"
@@ -697,6 +699,10 @@ explore: agent_lkp {
   join: rpt_agent_stats {
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+    relationship: one_to_many}
+  join: v_agent_state {
+    type: full_outer
+    sql_on: ${agent_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
     relationship: one_to_many}
   join: agent_attendance{
     type: full_outer
@@ -1154,6 +1160,12 @@ explore: sales_order_line{
     type: full_outer
     relationship: many_to_one
     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+  }
+  join: optimizely_experiment_lookup {
+    view_label: "Sales Order"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
   }
 
 }
