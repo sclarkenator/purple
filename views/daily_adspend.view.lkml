@@ -84,7 +84,7 @@ view: daily_adspend {
     type: sum
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'Display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.06
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
@@ -161,15 +161,15 @@ view: daily_adspend {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${TABLE}.source ilike ('%earc%') --or ${campaign_name} ilike '%rand%'
-          or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"social"}
+      when: {sql:${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
-      else: "other" } }
+      else: "other" }
+  }
 
   dimension: channel {
     type: string
@@ -183,6 +183,7 @@ view: daily_adspend {
           when ${medium} ilike 'Display' then 'display'
           when ${medium} ilike 'Shopping' then 'shopping'
           when ${medium} ilike '%Affiliate%' then 'affiliate'
+          when ${medium} ilike 'traditional' then 'traditional'
           when ${medium} ilike 'Email' then 'email'
           when ${medium} is null then 'organic'
           when ${medium} ilike 'Referral' then 'referral'
@@ -193,7 +194,7 @@ view: daily_adspend {
     label: "      * Managed by Agency Within"
     description: "A Channel Managed by Agency Within"
     type: yesno
-    sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'Display')
+    sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'display')
       or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
        ;;
   }
