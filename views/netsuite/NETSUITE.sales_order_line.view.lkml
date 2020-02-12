@@ -768,6 +768,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
   }
 
@@ -777,6 +778,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
 
@@ -786,6 +788,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
   }
 
@@ -795,6 +798,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
@@ -805,6 +809,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
   }
 
@@ -814,6 +819,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 
