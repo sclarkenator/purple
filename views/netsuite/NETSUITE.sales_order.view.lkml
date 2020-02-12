@@ -145,6 +145,7 @@ measure: upt {
     sql: ${TABLE}.CREATED ;; }
 
   dimension: shipping_hold {
+    hidden: yes
     group_label: " Advanced"
     view_label: "Fulfillment"
     label: "Shipping Hold?"
@@ -588,7 +589,7 @@ dimension: store_name{
   when ${store_id} = 'CA-02' then 'Santa Clara'
   when ${store_id} = 'CA-03' then 'Santa Monica'
   when ${store_id} = 'WA-01' then 'Seattle'
-  when ${store_id} in ('FO-01','FO_01') then 'Salt Lake City'
+  when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
   when ${store_id} = 'UT-01' then 'Showroom'
   else ${store_id} end;;
 }

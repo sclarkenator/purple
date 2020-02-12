@@ -77,6 +77,30 @@ view: customer_table {
     type: yesno
     sql: ${customer_id}=2662 ;;}
 
+  dimension: shipping_hold {
+    view_label: "Customer"
+    label: "Shipping Hold"
+    description: "True/False True if there is a shipping hold"
+    type: string
+    sql: ${TABLE}.SHIPPING_HOLD
+    ;;
+    }
+
+  dimension: hold_reason_id {
+    view_label: "Customer"
+    label: "Shipping Hold Reason"
+    description: "Reason For Shipping Hold"
+    type: string
+    sql: case when ${TABLE}.hold_reason_id = 1 then 'Potential Fraud'
+    when ${TABLE}.hold_reason_id = 2 then 'Future Ship Date'
+    when ${TABLE}.hold_reason_id = 3 then 'Chargeback'
+    when ${TABLE}.hold_reason_id = 4 then 'Return Issue'
+    else 'other'
+    end
+
+      ;;
+  }
+
   dimension: top_vendors {
     label: "Wholesale Top Customers"
     group_label: "Wholesale"
