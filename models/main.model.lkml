@@ -1402,7 +1402,7 @@ explore: procom_security_daily_customer {
     label: "eCommerce"
     view_label: "Sessions"
     description: "Combined Website and Sales Data - Has Shopify US, doesn't have Amazon, Draft orders, others not related to a website visit"
-    hidden: no
+    hidden: yes
     join: session_facts {
       view_label: "Sessions"
       type: left_outer
