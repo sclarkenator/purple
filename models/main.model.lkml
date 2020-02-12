@@ -1116,8 +1116,8 @@ explore: sales_order_line{
   join: zendesk_sell {
     view_label: "Zendesk Sell"
     type: full_outer
-    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} ;;
-    relationship: one_to_many
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+    relationship: one_to_one
   }
   join: warranty_original_information {
     view_label: "Warranties"
