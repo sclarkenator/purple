@@ -1,15 +1,15 @@
 view: inside_sales {
-  sql_table_name: "CUSTOMER_CARE"."INSIDE_SALES"
+  sql_table_name: CUSTOMER_CARE.INSIDE_SALES
     ;;
 
   dimension: deal_id {
     type: number
-    sql: ${TABLE}."DEAL_ID" ;;
+    sql: ${TABLE}.DEAL_ID ;;
   }
 
   dimension: fraud_risk {
     type: string
-    sql: ${TABLE}."FRAUD_RISK" ;;
+    sql: ${TABLE}.FRAUD_RISK ;;
   }
 
   dimension_group: insert_ts {
@@ -23,17 +23,17 @@ view: inside_sales {
       quarter,
       year
     ]
-    sql: ${TABLE}."INSERT_TS" ;;
+    sql: ${TABLE}.INSERT_TS ;;
   }
 
   dimension: order_id {
     type: number
-    sql: ${TABLE}."ORDER_ID" ;;
+    sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: order_link {
     type: string
-    sql: ${TABLE}."ORDER_LINK" ;;
+    sql: ${TABLE}.ORDER_LINK ;;
   }
 
   dimension_group: update_ts {
@@ -47,12 +47,12 @@ view: inside_sales {
       quarter,
       year
     ]
-    sql: ${TABLE}."UPDATE_TS" ;;
+    sql: ${TABLE}.UPDATE_TS ;;
   }
 
   dimension: zendesk_sell_user_id {
     type: number
-    sql: ${TABLE}."ZENDESK_SELL_USER_ID" ;;
+    sql: ${TABLE}.ZENDESK_SELL_USER_ID ;;
   }
 
   measure: count {
