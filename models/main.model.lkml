@@ -255,6 +255,9 @@ explore: inventory_snap {
 
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
+explore: l2l_qpc_mattress_audit {hidden: yes}
+explore: l2l_quality_yellow_card {hidden: yes}
+explore: l2l_shift_line_1_glue_process {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
@@ -422,6 +425,8 @@ explore: daily_adspend {
     sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
     relationship: many_to_one}
 }
+
+explore: adspend_target { hidden:yes }
 
 explore: zipcode_radius {
   hidden: yes
@@ -694,6 +699,10 @@ explore: agent_lkp {
   join: rpt_agent_stats {
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+    relationship: one_to_many}
+  join: v_agent_state {
+    type: full_outer
+    sql_on: ${agent_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
     relationship: one_to_many}
   join: agent_attendance{
     type: full_outer
@@ -1079,7 +1088,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: mainchain_transaction_outwards_detail {
-    view_label: "MainChain"
+    view_label: "Fulfillment"
     type: left_outer
     sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
@@ -1147,7 +1156,7 @@ explore: sales_order_line{
     relationship: one_to_one
   }
   join: pilot_daily {
-    view_label: "Pilot Info"
+    view_label: "Fulfillment"
     type: full_outer
     relationship: many_to_one
     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
@@ -1582,3 +1591,8 @@ explore: procom_security_daily_customer {
       label: "Order Validation"
       description: "Constructed table comparing orders from different sources"
       hidden:yes }
+
+    explore: hour_assumptions {
+      label: "Hour Assumptions"
+      description: "% of day's sales by hour for dtc day prediction"
+      hidden: yes  }

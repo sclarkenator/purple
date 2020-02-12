@@ -1,5 +1,5 @@
 view: adspend_target {
-  sql_table_name: CSV_UPLOADS.ADSPEND_TARGET ;;
+  sql_table_name: CSV_UPLOADS.ADSPEND_TARGETS ;;
 
   dimension: ad_target_pk {
     hidden: yes
@@ -8,18 +8,10 @@ view: adspend_target {
     sql: ${medium}||${target_date} ;;
   }
 
-  measure: amount {
-    label: "Spend target"
-    description: "This field is only available in total or when breaking out spend by medium"
-    view_label: "Daily Adspend"
-    value_format: "$#,##0"
-    type: sum
-    sql: ${TABLE}."AMOUNT" ;;
-  }
-
   dimension_group: target {
     view_label: "Daily Adspend"
     label: "   Target"
+    #hidden: yes
     description: "Use these dates if you are using the adspend target $, otherwise, use ad date."
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -29,8 +21,30 @@ view: adspend_target {
   dimension: medium {
     hidden:  yes
     type: string
-    sql: ${TABLE}."MEDIUM" ;;
+    sql: ${TABLE}.medium ;;
   }
+
+
+  measure: amount {
+    label: "Spend Target ($)"
+    group_label: "Target"
+    description: "This field is only available in total or when breaking out spend by channel or platform"
+    view_label: "Daily Adspend"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${TABLE}.amount ;;
+  }
+
+  measure: spend_k {
+    label: "Spend Target ($K)"
+    group_label: "Target"
+    description: "This field is only available in total or when breaking out spend by channel or platform"
+    view_label: "Daily Adspend"
+    value_format: "$#,##0,\" K\""
+    type: sum
+    sql: ${TABLE}.amount ;;
+  }
+
 
 
 }

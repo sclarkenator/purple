@@ -3,7 +3,7 @@ view: forecast_combined {
 
   derived_table: {
     sql:
-      with zz as (
+      with zzz as (
         --wholesale forecast merged with dates to get a count/day
         select b.date
             , a.sku_id
@@ -49,6 +49,63 @@ view: forecast_combined {
         ) c on c.year_week = a.week
         left join analytics.util.warehouse_date b on b.date >= c.start_date and b.date <= c.end_date
         order by 2, 1
+      ), zz as(
+        select aa.date
+            , aa.sku_id
+            , sum( amount) as total_amount
+            , sum (units) as total_units
+            , sum (case when account = 'MFRM_Ware' then units else 0 end) as MF_Instore_Units
+            , sum (case when account = 'MFRM_DTC' then units else 0 end) as MF_Online_Units
+            , sum (case when account = 'FR' then units else 0 end) as FR_Units
+            , sum (case when account = 'Macys_Ware' then units else 0 end) as Macys_Instore_Units
+            , sum (case when account = 'Macys_DTC' then units else 0 end) as Macys_Online_Units
+            , sum (case when account = 'SCC' then units else 0 end) as SCC_Units
+            , sum (case when account = 'BBB' then units else 0 end) as BBB_Units
+            , sum (case when account = 'Med' then units else 0 end) as Medical_Units
+            , sum (case when account = 'Truck' then units else 0 end) as Trucking_Units
+            , sum (case when account = 'HOM' then amount else 0 end) as HOM_Units
+            , sum (case when account in ('Bloom_Ware','Bloom_DTC') then amount else 0 end) as BD_Units
+            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels','Other') then amount else 0 end) as Other_Units
+            , sum (case when account = 'MFRM_Ware' then amount else 0 end) as MF_Instore_Amount
+            , sum (case when account = 'MFRM_DTC' then amount else 0 end) as MF_Online_Amount
+            , sum (case when account = 'FR' then amount else 0 end) as FR_Amount
+            , sum (case when account = 'Macys_Ware' then amount else 0 end) as Macys_Instore_Amount
+            , sum (case when account = 'Macys_DTC' then amount else 0 end) as Macys_Online_Amount
+            , sum (case when account = 'SCC' then amount else 0 end) as SCC_Amount
+            , sum (case when account = 'BBB' then amount else 0 end) as BBB_Amount
+            , sum (case when account = 'Med' then amount else 0 end) as Medical_Amount
+            , sum (case when account = 'Truck' then amount else 0 end) as Trucking_Amount
+            , sum (case when account = 'HOM' then amount else 0 end) as HOM_Amount
+            , sum (case when account in ('Bloom_Ware','Bloom_DTC') then amount else 0 end) as BD_Amount
+            , sum (case when account in ('City_Furn','Mathis','Raymour','Rooms','Steinhafels','Other') then amount else 0 end) as Other_Amount
+        from (
+         select b.date
+              , a.sku_id
+              , a.account
+              , a.amount/c.days as amount
+              , a.units/c.days as units
+          from analytics.csv_uploads.forecast_wholesale a
+          left join (
+              select distinct a.start_dates
+                  , a.end_date
+                  , b.date
+              from analytics.csv_uploads.forecast_wholesale a
+              left join analytics.util.warehouse_date b on b.date::date >= a.start_dates::date and b.date::date <= a.end_date
+          ) b on b.start_dates = a.start_dates and b.end_date = a.end_date
+          left join (
+            select z.start_dates
+                , count (z.date) as days
+            from (
+              select distinct a.start_dates
+                  , a.end_date
+                  , b.date
+              from analytics.csv_uploads.forecast_wholesale a
+              left join analytics.util.warehouse_date b on b.date::date >= a.start_dates::date and b.date::date <= a.end_date
+              ) z
+              group by z.start_dates
+          ) c on c.start_dates = a.start_dates
+        ) aa
+        group by 1,2
       ), yy as (
         --DTC forecast merged with dates to get a count/day
         --select b.date
@@ -63,7 +120,6 @@ view: forecast_combined {
         --  group by year, WEEK_OF_YEAR
         --) c on c.first_date = a.date
         --left join analytics.util.warehouse_date b on b.year = c.year and b.week_of_year = c.week_of_year
-
         select b.date
             , a.sku_id
             , (a.standard_sales + a.discounted_sales)/c.days as amount

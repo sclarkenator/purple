@@ -197,6 +197,11 @@ measure: upt {
     datatype: timestamp
     sql: ${TABLE}.IN_HAND ;; }
 
+  dimension: Kount_Status {
+    hidden: no
+    type: string
+    sql: ${TABLE}.kount_status ;; }
+
   dimension_group: minimum_ship {
     label: "Minimum Ship by"
     description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay"
