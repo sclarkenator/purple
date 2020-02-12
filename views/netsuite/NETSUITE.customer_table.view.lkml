@@ -95,7 +95,7 @@ view: customer_table {
     when ${TABLE}.hold_reason_id = 2 then 'Future Ship Date'
     when ${TABLE}.hold_reason_id = 3 then 'Chargeback'
     when ${TABLE}.hold_reason_id = 4 then 'Return Issue'
-    else 'other'
+    when ${TABLE}.hold_reason_id is not null  then 'Other'
     end
 
       ;;

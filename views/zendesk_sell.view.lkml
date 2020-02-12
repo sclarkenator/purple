@@ -1,20 +1,18 @@
 view: zendesk_sell {
    derived_table: {
-     sql: select d.deal_id
- , d.contact_id
- , d.user_id
- , d.created_at
- , d.order_id
- , d.order_link
- , d.fraud_risk
- , lk.zendesk_id
- , d.draft_order_name
- , d.RELATED_TRANID
- , nvl(lk.name,u.name) name
- from analytics.customer_care.zendesk_sell_deal d
+     sql: select s.deal_id
+, s.zendesk_sell_user_id user_id
+, d.created_at
+, s.order_id
+, s.order_link
+, s.fraud_risk
+, s.zendesk_sell_user_id as zendesk_id
+, d.draft_order_name
+, nvl(lk.name,u.name) name
+ from analytics.customer_care.inside_sales s
+ left join analytics.customer_care.zendesk_sell_deal d on d.deal_id = s.deal_id
  left join analytics.customer_care.agent_lkp lk on d.user_id = lk.zendesk_sell_user_id
- left join analytics.customer_care.zendesk_sell_user u on d.user_id = u.user_id
- left join analytics.customer_care.zendesk_sell_contact c on d.contact_id = c.contact_id ;;
+ left join analytics.customer_care.zendesk_sell_user u on s.zendesk_sell_user_id = u.user_id ;;
      }
 
   dimension: pending_draft_order{
@@ -25,7 +23,6 @@ view: zendesk_sell {
   }
  dimension: deal_id {
     type: string
-    primary_key: yes
     sql: ${TABLE}.deal_id ;;
   }
   dimension: contact_id {
@@ -46,6 +43,7 @@ view: zendesk_sell {
   }
   dimension: order_id {
     type: string
+    primary_key: yes
     hidden: yes
     sql: ${TABLE}.order_id ;;
   }

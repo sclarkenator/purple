@@ -755,7 +755,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Looking at the trasmitted date that matches the carrier from sales order line"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
       when ${carrier} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
       when ${carrier} = 'Carry Out' then ${created_raw}
@@ -763,11 +763,12 @@ view: sales_order_line {
   }
 
   measure: days_to_trasnmitted {
-    label: "Order to Transmission"
+    label: "Order to Transmitted"
     view_label: "Fulfillment"
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
   }
 
@@ -777,15 +778,17 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
 
   measure: days_to_left_purple_2 {
-    label: "Transmission to Left Purple"
+    label: "Transmitted to Left Purple"
     view_label: "Fulfillment"
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
   }
 
@@ -795,6 +798,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
@@ -805,6 +809,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
   }
 
@@ -814,6 +819,7 @@ view: sales_order_line {
     group_label: "Days between benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
+    value_format: "0.0"
     sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 

@@ -203,7 +203,9 @@ view: l2l_shift_line_1_glue_process {
   measure: average_open_time_measure{
     type: average
     label: "Average Open Time"
-    sql: ${TABLE}.AVERAGE_OPEN_TIME;;
+    sql: case when ${TABLE}.AVERAGE_OPEN_TIME='' then null
+         else ${TABLE}.AVERAGE_OPEN_TIME
+         end ;;
 
   }
 
