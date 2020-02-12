@@ -1406,7 +1406,7 @@ explore: procom_security_daily_customer {
 
   explore: ecommerce {
     from: sessions
-    group_label: "Sales"
+    group_label: " Sales"
     label: "eCommerce"
     view_label: "Sessions"
     description: "Combined Website and Sales Data - Has Shopify US, doesn't have Amazon, Draft orders, others not related to a website visit"
