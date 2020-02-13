@@ -60,7 +60,7 @@ view: fulfillment {
     description: "Date the item left purple"
     #hidden: yes
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: coalesce(${TABLE}.PURPLE_SLA, ${fulfilled_F_raw}) ;; }
 
   dimension_group: in_hand {
@@ -68,7 +68,7 @@ view: fulfillment {
     description: "Date the customer recieved the item"
     #hidden: yes
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: coalesce(${TABLE}.IN_HAND_SLA, ${fulfilled_F_raw}) ;; }
 
   dimension_group: fulfilled_F {
