@@ -542,7 +542,7 @@ explore: conversions_by_campaign { hidden:  yes label: "Conversions by Campaign"
 explore: target_adspend {hidden: yes}
 explore: promotion {hidden:yes}
 
-
+explore: narvarcustomer{hidden:yes}
 explore: narvar_dashboard_track_metrics {
   group_label: "Marketing"
   hidden: yes
