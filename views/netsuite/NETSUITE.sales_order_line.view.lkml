@@ -267,7 +267,7 @@ view: sales_order_line {
     hidden: yes
     description: "Was item fulfilled in SLA window for Left Purple Date to Minimun Ship by Date"
     type: yesno
-    sql:  ${fulfillment.left_purple_date} < ${sales_order_line.min_ship_date_date};;
+    sql:  ${fulfillment.left_purple_date} <= ${sales_order_line.min_ship_date_date} or (${fulfillment.left_purple_date} is null and ${sales_order_line.min_ship_date_date} < current_date) ;;
   }
 
   measure: whlsl_units {
