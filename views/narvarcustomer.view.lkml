@@ -48,7 +48,8 @@ dimension: status{
 }
   measure: avg_stars{
     type: average
-    sql: ${TABLE}.star_rating ;;
+   value_format: "0.0"
+   sql: ${TABLE}.star_rating ;;
   }
   measure: count{
     type: count
