@@ -212,25 +212,33 @@ view: l2l_shift_line_1_glue_process {
   measure: temp_measure{
     type: average
     label: "Temp"
-    sql: ${TABLE}.TEMP ;;
+    sql: case when ${TABLE}.temp='' then null
+         else ${TABLE}.temp
+         end;;
     }
 
   measure: glue_block_test_left_measure {
     type: average
     label: "Glue Block Test Left"
-    sql: ${TABLE}.GLUE_BLOCK_TEST_LEFT ;;
+    sql: case when ${TABLE}.GLUE_BLOCK_TEST_LEFT='' then null
+         else ${TABLE}.GLUE_BLOCK_TEST_LEFT
+         end ;;
   }
 
   measure: glue_block_test_middle_measure {
     type: average
-    label: "Glue Block Test Left"
-    sql: ${TABLE}.GLUE_BLOCK_TEST_MIDDLE ;;
+    label: "Glue Block Test Middle"
+    sql:case when ${TABLE}.GLUE_BLOCK_TEST_MIDDLE='' then null
+         else ${TABLE}.GLUE_BLOCK_TEST_MIDDLE
+         end ;;
   }
 
   measure: glue_block_test_right_measure{
     type: average
-    label: "Glue Block Test Left"
-    sql: ${TABLE}.GLUE_BLOCK_TEST_RIGHT ;;
+    label: "Glue Block Test Right"
+    sql: case when ${TABLE}.GLUE_BLOCK_TEST_RIGHT='' then null
+         else ${TABLE}.GLUE_BLOCK_TEST_RIGHT
+         end;;
   }
 
 }
