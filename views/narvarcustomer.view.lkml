@@ -40,12 +40,18 @@ dimension: status{
   dimension: zipcode{
     type: string
     map_layer_name: us_zipcode_tabulation_areas
-    sql: ${TABLE}.zipcode ;;
+    sql: right('00000'||left(${TABLE}.zipcode,5),5) ;;
 }
   dimension: stars{
     type: string
     sql: ${TABLE}.star_rating ;;
 }
-
+  measure: avg_stars{
+    type: average
+    sql: ${TABLE}.star_rating ;;
+  }
+  measure: count{
+    type: count
+  }
 
 }
