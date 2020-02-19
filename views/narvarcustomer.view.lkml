@@ -6,6 +6,7 @@ view: narvarcustomer {
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
 ,b.carrier
 
+
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
 left join analytics.sales.sales_order c on c.order_id = b.order_id
@@ -16,6 +17,10 @@ where b.order_id is not null ;;
     type: string
     sql: ${TABLE}.carrier ;;
 }
+  dimension: created{
+    type: date_time
+    sql: ${TABLE}.created ;;
+  }
 dimension: status{
   type: string
   sql: ${TABLE}.status ;;
