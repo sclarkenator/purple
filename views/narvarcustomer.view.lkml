@@ -4,6 +4,7 @@ view: narvarcustomer {
 ,b.tracking_numbers, b.order_id,b.item_id
 ,c.customer_id,c.system, c.trandate
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
+,b.carrier
 
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
@@ -11,7 +12,10 @@ left join analytics.sales.sales_order c on c.order_id = b.order_id
 left join analytics_stage.netsuite.customers d on d.customer_id = c.customer_id
 where b.order_id is not null ;;
 }
-
+  dimension: carrier{
+    type: string
+    sql: ${TABLE}.carrier ;;
+}
 dimension: status{
   type: string
   sql: ${TABLE}.status ;;
