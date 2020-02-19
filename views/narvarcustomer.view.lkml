@@ -5,12 +5,14 @@ view: narvarcustomer {
 ,c.customer_id,c.system, c.trandate
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
 ,b.carrier
-
+,e.fips
+,e.county
 
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
 left join analytics.sales.sales_order c on c.order_id = b.order_id
 left join analytics_stage.netsuite.customers d on d.customer_id = c.customer_id
+left join analytics.marketing.fips e on d.zipcode = e.zip
 where b.order_id is not null ;;
 }
   dimension: carrier{
@@ -20,6 +22,14 @@ where b.order_id is not null ;;
   dimension: created{
     type: date_time
     sql: ${TABLE}.created ;;
+  }
+  dimension: fips{
+    type: string
+    sql: ${TABLE}.fips ;;
+    }
+  dimension: county{
+    type: string
+    sql: ${TABLE}.county ;;
   }
 dimension: status{
   type: string
