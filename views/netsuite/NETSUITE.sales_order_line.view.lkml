@@ -621,7 +621,7 @@ view: sales_order_line {
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     #datatype: date
-    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon FBA - US','Amazon-FBA')  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
   dimension: is_fulfilled {
