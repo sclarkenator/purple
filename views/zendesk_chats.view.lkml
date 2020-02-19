@@ -16,6 +16,7 @@ view: zendesk_chats {
   dimension: count_agent {
     type: string
     label: "Total Agent Messages"
+    group_label: "Advanced"
     description: "Count of Messages from Agent"
     sql: ${TABLE}."COUNT_AGENT" ;;
   }
@@ -29,11 +30,12 @@ view: zendesk_chats {
 
   dimension: count_visitor {
     type: number
+    group_label: "Advanced"
     description: "Count of Messages from Visitor"
     sql: ${TABLE}."COUNT_VISITOR" ;;
   }
 
-  dimension_group: created {
+  dimension_group:created {
     type: time
     timeframes: [
       date,
@@ -44,6 +46,7 @@ view: zendesk_chats {
     ]
     convert_tz: yes
     datatype: timestamp
+    label: "  Chat Time"
     description: "Start Time of Chat (MT)"
     sql: ${TABLE}."CREATED" ;;
   }
@@ -62,17 +65,20 @@ view: zendesk_chats {
 
   dimension: duration {
     type: number
+    group_label: "Advanced"
     description: "Chat Duration (seconds)"
     sql: ${TABLE}."DURATION" ;;
   }
 
   dimension: end_timestamp {
     type: date_time
+    group_label: "Advanced"
     sql: ${TABLE}."END_TIMESTAMP" ;;
   }
 
   dimension: missed {
     type: string
+    label: "   * Missed Chat"
     description: "T/F; T if a chat was missed"
       sql: ${TABLE}.MISSED ;;
   }
@@ -97,6 +103,7 @@ view: zendesk_chats {
 
   dimension: started_by {
     type: string
+    group_label: "Advanced"
     description: "Who initiated the chat"
     sql: ${TABLE}."STARTED_BY" ;;
   }
@@ -109,11 +116,13 @@ view: zendesk_chats {
 
   dimension: triggered {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."TRIGGERED" ;;
   }
 
   dimension: triggered_response {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."TRIGGERED_RESPONSE" ;;
   }
 
@@ -125,31 +134,37 @@ view: zendesk_chats {
 
   dimension: unread {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."UNREAD" ;;
   }
 
   dimension: visitor_email {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_EMAIL" ;;
   }
 
   dimension: visitor_id {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_ID" ;;
   }
 
   dimension: visitor_name {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_NAME" ;;
   }
 
   dimension: visitor_notes {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_NOTES" ;;
   }
 
   dimension: visitor_phone {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_PHONE" ;;
   }
 
