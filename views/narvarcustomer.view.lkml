@@ -5,7 +5,7 @@ view: narvarcustomer {
 ,c.customer_id,c.system, c.trandate
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
 ,b.carrier
-,a.created
+
 
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
