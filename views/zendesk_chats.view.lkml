@@ -15,30 +15,45 @@ view: zendesk_chats {
 
   dimension: count_agent {
     type: string
+    label: "Total Agent Messages"
+    group_label: "Advanced"
     description: "Count of Messages from Agent"
     sql: ${TABLE}."COUNT_AGENT" ;;
   }
 
   dimension: count_total {
     type: number
+    label: "Total Messages"
     description: "Total number of messages in conversation"
     sql: ${TABLE}."COUNT_TOTAL" ;;
   }
 
   dimension: count_visitor {
     type: number
+    group_label: "Advanced"
     description: "Count of Messages from Visitor"
     sql: ${TABLE}."COUNT_VISITOR" ;;
   }
 
-  dimension: created {
-    type: date_time
-    description: "Start time of chat"
+  dimension_group:created {
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: yes
+    datatype: timestamp
+    label: "  Chat Time"
+    description: "Start Time of Chat (MT)"
     sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: department_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."DEPARTMENT_ID" ;;
   }
 
@@ -50,18 +65,22 @@ view: zendesk_chats {
 
   dimension: duration {
     type: number
+    group_label: "Advanced"
     description: "Chat Duration (seconds)"
     sql: ${TABLE}."DURATION" ;;
   }
 
   dimension: end_timestamp {
     type: date_time
+    group_label: "Advanced"
     sql: ${TABLE}."END_TIMESTAMP" ;;
   }
 
   dimension: missed {
     type: string
-    sql: ${TABLE}."MISSED" ;;
+    label: "   * Missed Chat"
+    description: "T/F; T if a chat was missed"
+      sql: ${TABLE}.MISSED ;;
   }
 
   dimension: response_time_avg {
@@ -84,6 +103,7 @@ view: zendesk_chats {
 
   dimension: started_by {
     type: string
+    group_label: "Advanced"
     description: "Who initiated the chat"
     sql: ${TABLE}."STARTED_BY" ;;
   }
@@ -96,11 +116,13 @@ view: zendesk_chats {
 
   dimension: triggered {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."TRIGGERED" ;;
   }
 
   dimension: triggered_response {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."TRIGGERED_RESPONSE" ;;
   }
 
@@ -112,31 +134,37 @@ view: zendesk_chats {
 
   dimension: unread {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."UNREAD" ;;
   }
 
   dimension: visitor_email {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_EMAIL" ;;
   }
 
   dimension: visitor_id {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_ID" ;;
   }
 
   dimension: visitor_name {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_NAME" ;;
   }
 
   dimension: visitor_notes {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_NOTES" ;;
   }
 
   dimension: visitor_phone {
     type: string
+    group_label: "Advanced"
     sql: ${TABLE}."VISITOR_PHONE" ;;
   }
 
@@ -149,4 +177,25 @@ view: zendesk_chats {
     type: count
     drill_fields: [visitor_name, department_name]
   }
+  measure: agent_messages {
+    type: sum
+    label: "Count of Agent Messages"
+    sql: ${count_agent} ;;
+  }
+  measure: total_messages {
+    type: sum
+    label: "Count of Total Messages"
+    sql: ${count_total} ;;
+  }
+  measure: visitor_messages {
+    type: sum
+    label: "Count of Visitor Messages"
+    sql: ${count_visitor} ;;
+  }
+  measure: missed_messages {
+    type: sum
+    label: "Count of Missed Chats"
+    sql: case when ${missed} = 'T' then 1 else 0 end ;;
+  }
+
 }

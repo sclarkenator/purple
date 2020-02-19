@@ -649,6 +649,12 @@ explore: rma_status_log {
     relationship: many_to_one}
 }
 
+explore: zendesk_chats {
+  label: "Zendesk Website Chats"
+  group_label: "Customer Care"
+  hidden: yes
+}
+
 explore: ticket {
   hidden: yes
   group_label: "Customer Care"
