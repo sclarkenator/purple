@@ -18,7 +18,7 @@ where b.order_id is not null ;;
     sql: ${TABLE}.carrier ;;
 }
   dimension: created{
-    type: string
+    type: date_time
     sql: ${TABLE}.created ;;
   }
 dimension: status{
