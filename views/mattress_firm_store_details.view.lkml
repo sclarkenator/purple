@@ -9,7 +9,7 @@ view: mattress_firm_store_details {
 
   dimension: store_id {
     primary_key: yes
-    hidden: yes
+    hidden: no
     type:  string
     sql:  ${TABLE}.store ;; }
 
