@@ -25,11 +25,13 @@ where b.order_id is not null ;;
   }
   dimension: fips{
     type: string
+    map_layer_name: us_counties_fips
     sql: ${TABLE}.fips ;;
     }
   dimension: county{
     type: string
-    sql: ${TABLE}.county ;;
+    map_layer_name: us_counties_fips
+    sql: ${TABLE}.county;;
   }
 dimension: status{
   type: string
