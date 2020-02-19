@@ -15,12 +15,14 @@ view: zendesk_chats {
 
   dimension: count_agent {
     type: string
+    label: "Total Agent Messages"
     description: "Count of Messages from Agent"
     sql: ${TABLE}."COUNT_AGENT" ;;
   }
 
   dimension: count_total {
     type: number
+    label: "Total Messages"
     description: "Total number of messages in conversation"
     sql: ${TABLE}."COUNT_TOTAL" ;;
   }
@@ -31,14 +33,24 @@ view: zendesk_chats {
     sql: ${TABLE}."COUNT_VISITOR" ;;
   }
 
-  dimension: created {
-    type: date_time
-    description: "Start time of chat"
+  dimension_group: created {
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: yes
+    datatype: timestamp
+    description: "Start Time of Chat (MT)"
     sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: department_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."DEPARTMENT_ID" ;;
   }
 
@@ -61,7 +73,8 @@ view: zendesk_chats {
 
   dimension: missed {
     type: string
-    sql: ${TABLE}."MISSED" ;;
+    description: "T/F; T if a chat was missed"
+      sql: ${TABLE}.MISSED ;;
   }
 
   dimension: response_time_avg {
@@ -149,4 +162,25 @@ view: zendesk_chats {
     type: count
     drill_fields: [visitor_name, department_name]
   }
+  measure: agent_messages {
+    type: sum
+    label: "Count of Agent Messages"
+    sql: ${count_agent} ;;
+  }
+  measure: total_messages {
+    type: sum
+    label: "Count of Total Messages"
+    sql: ${count_total} ;;
+  }
+  measure: visitor_messages {
+    type: sum
+    label: "Count of Visitor Messages"
+    sql: ${count_visitor} ;;
+  }
+  measure: missed_messages {
+    type: sum
+    label: "Count of Missed Chats"
+    sql: case when ${missed} = 'T' then 1 else 0 end ;;
+  }
+
 }
