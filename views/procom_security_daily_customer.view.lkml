@@ -32,7 +32,7 @@ view: procom_security_daily_customer {
     type: time
     label: "Visit"
     description: "Day customer visited store"
-    timeframes: [raw,hour,time,date,day_of_month,week,month,quarter,quarter_of_year,year]
+    timeframes: [raw,hour,time,date,day_of_week_index,day_of_month,week,month,quarter,quarter_of_year,year]
     sql: ${TABLE}."CREATED" ;;
   }
 
