@@ -1,6 +1,6 @@
 view: narvarcustomer {
   derived_table: {sql:
-   Select a.order_id narvar_id,a.tracking_id,a.status,a.created,a.star_rating
+   Select a.order_id narvar_id,a.tracking_id,a.status,a.created,a.star_rating,a.customer_comment
 ,b.tracking_numbers, b.order_id,b.item_id
 ,c.customer_id,c.system, c.trandate
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
@@ -22,6 +22,10 @@ where b.order_id is not null ;;
   dimension: created{
     type: date_time
     sql: ${TABLE}.created ;;
+    }
+    dimension: Comment{
+      type: string
+      sql: ${TABLE}.customer_comment ;;
   }
   dimension: fips{
     type: string
