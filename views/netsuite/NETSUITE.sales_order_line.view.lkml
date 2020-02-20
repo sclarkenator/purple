@@ -762,125 +762,135 @@ view: sales_order_line {
       else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
   }
 
-  measure: days_to_trasnmitted {
+  measure: order_to_trasnmitted_days {
     label: "Order to Transmitted (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
     sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
   }
 
-  measure: days_to_left_purple {
+  measure: order_to_left_purple_days {
     label: "Order to Left Purple (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
 
-  measure: days_to_left_purple_2 {
+  measure: transmitted_to_left_purple_days {
     label: "Transmitted to Left Purple (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
   }
 
-  measure: days_to_left_purple_3 {
+  measure: transmitted_to_in_hand_days {
     label: "Transmitted to In Hand (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
 
-  measure: days_to_in_hand {
+  measure: order_to_in_hand_days {
     label: "Order to In Hand (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-  measure: days_to_in_hand_2 {
+  measure: left_purple_to_in_hand_days {
     label: "Left Purple to In Hand (days)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-  measure: hours_to_trasnmitted {
+  measure: order_to_transmitted_hours {
     label: " Order to Transmitted (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
     sql: timediff('hour',${created_raw},${transmitted_date_raw}) ;;
   }
 
-  measure: hours_to_left_purple {
+  measure: order_to_left_purple_hours {
     label: " Order to Left Purple (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
 
-  measure: hours_to_left_purple_2 {
+  measure: transmitted_to_left_purple_hours {
     label: " Transmitted to Left Purple (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
   }
 
-  measure: hours_to_left_purple_3 {
+  measure: transmitted_to_in_hand_hours {
     label: " Transmitted to In Hand (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
 
-  measure: hours_to_in_hand {
+  measure: order_to_in_hand_hours {
     label: " Order to In Hand (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${created_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-  measure: hours_to_in_hand_2 {
+  measure: left_purple_to_in_hand_hours {
     label: " Left Purple to In Hand (hours)"
     view_label: "Fulfillment"
-    group_label: "Time between benchmarks"
+    group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
     type: average
     value_format: "0.00"
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 
