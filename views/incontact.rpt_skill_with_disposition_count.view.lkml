@@ -58,7 +58,7 @@ view: rpt_skill_with_disposition_count {
 
   dimension: handle_time {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
@@ -117,8 +117,8 @@ view: rpt_skill_with_disposition_count {
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
-  measure: avg_handle_time {
-    type: average
+  measure: total_handle_time {
+    type: sum
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
