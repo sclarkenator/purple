@@ -52,7 +52,9 @@ view: zendesk_sell {
     type: string
     label: "Agent Name"
     description: "Null if not linked to a deal"
-    sql: ${TABLE}.name;;
+    sql: case when ${TABLE}.name ilike '%Deleted%' then null
+         else ${TABLE}.name
+         end;;
   }
 
   dimension: draft_order_name {

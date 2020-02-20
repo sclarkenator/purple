@@ -4,14 +4,35 @@ view: narvarcustomer {
 ,b.tracking_numbers, b.order_id,b.item_id
 ,c.customer_id,c.system, c.trandate
 ,d.firstname,d.lastname,d.billaddress,d.line1,d.state,d.city,d.zipcode
+,b.carrier
+,e.fips
+,e.county
 
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
 left join analytics.sales.sales_order c on c.order_id = b.order_id
 left join analytics_stage.netsuite.customers d on d.customer_id = c.customer_id
+left join analytics.marketing.fips e on d.zipcode = e.zip
 where b.order_id is not null ;;
 }
-
+  dimension: carrier{
+    type: string
+    sql: ${TABLE}.carrier ;;
+}
+  dimension: created{
+    type: date_time
+    sql: ${TABLE}.created ;;
+  }
+  dimension: fips{
+    type: string
+    map_layer_name: us_counties_fips
+    sql: ${TABLE}.fips ;;
+    }
+  dimension: county{
+    type: string
+    map_layer_name: us_counties_fips
+    sql: ${TABLE}.county;;
+  }
 dimension: status{
   type: string
   sql: ${TABLE}.status ;;
@@ -40,12 +61,19 @@ dimension: status{
   dimension: zipcode{
     type: string
     map_layer_name: us_zipcode_tabulation_areas
-    sql: ${TABLE}.zipcode ;;
+    sql: right('00000'||left(${TABLE}.zipcode,5),5) ;;
 }
   dimension: stars{
     type: string
     sql: ${TABLE}.star_rating ;;
 }
-
+  measure: avg_stars{
+    type: average
+   value_format: "0.0"
+   sql: ${TABLE}.star_rating ;;
+  }
+  measure: count{
+    type: count
+  }
 
 }
