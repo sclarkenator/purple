@@ -1189,14 +1189,6 @@ explore: wholesale {
   always_filter: {
     filters: {field: sales_order.channel      value: "Wholesale"}
   }
-  join: sales_order_line_total {
-    from: sales_order_line
-    view_label: "Sales Order Line"
-    type:left_outer
-    sql_on:${shopify_orders.order_ref}=${sales_order_line_total.order_id}::string;;
-    relationship: one_to_one
-    fields:[total_units]
-  }
 }
 
 explore: wholesale_legacy {
