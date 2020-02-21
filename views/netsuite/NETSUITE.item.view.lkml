@@ -16,7 +16,7 @@ view: item {
     description: "What stage is this item in production?"
     hidden:  yes
     type: string
-    sql: ${TABLE}.classification ;;
+    sql: ${TABLE}.classification_new ;;
   }
 
   dimension: UPC_code {
@@ -501,15 +501,15 @@ view: item {
     group_label: "Advanced"
     description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other)"
     type: string
-    sql: ${TABLE}.classification ;;
+    #sql: ${TABLE}.classification ;;
     case: {
-      when: { sql: ${TABLE}.classification = 'FG' ;; label: "Finished Good" }
-      when: { sql: ${TABLE}.classification = 'FS' ;;label: "Factory Second" }
-      when: { sql: ${TABLE}.classification = 'FGC' ;; label: "Finished Goods Component" }
-      when: { sql: ${TABLE}.classification = 'DSC' ;; label: "Discounts" }
-      when: { sql: ${TABLE}.classification = 'SFG' ;; label: "Semi Finished Goods" }
-      when: { sql: ${TABLE}.classification = 'RAW' ;; label: "Raw Materials" }
-      when: { sql: ${TABLE}.classification = 'PRC' ;; label: "Production Components" }
+      when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
+      when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
+      when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
+      when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
+      when: { sql: ${classification} = 'SFG' ;; label: "Semi Finished Goods" }
+      when: { sql: ${classification} = 'RAW' ;; label: "Raw Materials" }
+      when: { sql: ${classification} = 'PRC' ;; label: "Production Components" }
       else: "Other" } }
 
   dimension: Product_Dimensions {

@@ -855,6 +855,7 @@ explore: sales_order_line{
   label:  "DTC"
   group_label: " Sales"
   view_label: "Sales Order Line"
+  view_name: sales_order_line
   description:  "All sales orders for DTC channel"
   always_join: [fulfillment]
   always_filter: {
@@ -1178,10 +1179,22 @@ explore: sales_order_line{
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 
-
 explore: wholesale {
+  extends: [sales_order_line]
+  label:  "Wholesale"
+  group_label: " Sales"
+  view_label: "Sales Order Line"
+  description:  "All sales orders for wholesale channel"
+  always_join: [fulfillment]
+  always_filter: {
+    filters: {field: sales_order.channel      value: "Wholesale"}
+  }
+}
+
+explore: wholesale_legacy {
   from: sales_order_line
   label:  "Wholesale"
+  hidden: yes
   group_label: " Sales"
   view_label: "Sales Order Line"
   description:  "All sales orders for wholesale channel"
@@ -1199,27 +1212,27 @@ explore: wholesale {
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${wholesale.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+    sql_on: ${wholesale_legacy.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
     relationship: many_to_one}
   join: dma {
     view_label: "Customer"
     type:  left_outer
-    sql_on: ${wholesale.zip} = ${dma.zip} ;;
+    sql_on: ${wholesale_legacy.zip} = ${dma.zip} ;;
     relationship: many_to_one}
   join: item {
     view_label: "Product"
     type: left_outer
-    sql_on: ${wholesale.item_id} = ${item.item_id} ;;
+    sql_on: ${wholesale_legacy.item_id} = ${item.item_id} ;;
     relationship: many_to_one}
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${wholesale.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+    sql_on: ${wholesale_legacy.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: one_to_many}
   join: sales_order {
     view_label: "Sales Header"
     type: left_outer
-    sql_on: ${wholesale.order_system} = ${sales_order.order_system} ;;
+    sql_on: ${wholesale_legacy.order_system} = ${sales_order.order_system} ;;
     relationship: many_to_one}
   join: shopify_orders {
     view_label: "Sales Order Line"
@@ -1230,7 +1243,7 @@ explore: wholesale {
   join: return_order_line {
     view_label: "Returns"
     type: full_outer
-    sql_on: ${wholesale.item_order} = ${return_order_line.item_order} ;;
+    sql_on: ${wholesale_legacy.item_order} = ${return_order_line.item_order} ;;
     relationship: one_to_many}
   join: return_order {
     view_label: "Returns"
@@ -1262,7 +1275,7 @@ explore: wholesale {
   join: retroactive_discount {
     view_label: "Retro Discounts"
     type: left_outer
-    sql_on: ${wholesale.item_order} = ${retroactive_discount.item_order_refund} ;;
+    sql_on: ${wholesale_legacy.item_order} = ${retroactive_discount.item_order_refund} ;;
     relationship: one_to_many}
   join: discount_code {
     view_label: "Retro Discounts"
@@ -1272,7 +1285,7 @@ explore: wholesale {
   join: cancelled_order {
     view_label: "Cancellations"
     type: left_outer
-    sql_on: ${wholesale.item_order} = ${cancelled_order.item_order} ;;
+    sql_on: ${wholesale_legacy.item_order} = ${cancelled_order.item_order} ;;
     relationship: one_to_many}
   join: NETSUITE_cancelled_reason {
     view_label: "Cancellations"
@@ -1303,20 +1316,8 @@ explore: wholesale {
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
     relationship: one_to_one}
-
 }
 
-
-# explore: wholesale_sales {
-#   extends: [sales_order_line_unfiltered] #changed
-#   label:  "Wholesale Extended"
-#   group_label: "Sales"
-#   description:  "All sales orders for wholesale channel"
-#   hidden: yes
-#   always_filter: {
-#     filters: {field: sales_order.channel      value: "Wholesale"}
-#   }
-# }
 
 explore: warranty {
 from: warranty_order
