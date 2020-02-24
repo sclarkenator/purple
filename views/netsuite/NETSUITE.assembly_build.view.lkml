@@ -95,6 +95,12 @@ view: assembly_build {
     sql:  to_timestamp_ntz(${TABLE}.PRODUCED);;
  }
 
+  measure: last_updated_date_produced {
+    type: date
+    sql: MAX(${produced_date}) ;;
+    convert_tz: no
+  }
+
   dimension: Before_today{
     group_label: "Produced Date"
 
