@@ -8,9 +8,10 @@ view: retroactive_discount {
   }
 
   measure: total_retro_discounts {
-    hidden: yes
+    #hidden: yes
+    view_label: "Sales Order Line"
     label: "Total Retro Discounts ($)"
-    description:  "Total of all applied retroactive discounts"
+    description:  "Total of all applied retroactive (deprecated) discounts"
     type:  sum
     sql:  ${TABLE}.amount;; }
 
@@ -19,9 +20,10 @@ view: retroactive_discount {
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: amount {
-    label:  "Discount ($)"
+    label:  "Retro Discount ($)"
+    view_label: "Sales Order Line"
     hidden: yes
-    description: "Discount amount applied at item-level"
+    description: "Old deprecated (retro) discount amounts applied at item-level"
     type: number
     sql: ${TABLE}.AMOUNT ;; }
 
