@@ -954,4 +954,20 @@ view: sales_order_line {
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
   }
 
+#  measure: average_mattress_order_size {
+#    label: "AMOV ($)"
+#    description: "Average total mattress order amount, excluding tax"
+#    type: average
+#    sql_distinct_key: ${sales_order.order_system} ;;
+#    value_format: "$#,##0.00"
+#    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+
+#  measure: average_accessory_order_size {
+#    label: "NAMOV ($)"
+#    description: "Average total accessory order amount, excluding tax"
+#    type: sum
+#    sql_distinct_key: ${sales_order.order_system} ;;
+#    value_format: "$#,##0.00"
+#    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
+
 }
