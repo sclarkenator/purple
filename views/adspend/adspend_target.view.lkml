@@ -36,7 +36,6 @@ view: adspend_target {
     sql: nvl(${TABLE}.medium, ${daily_adspend.medium}) ;;
   }
 
-
   measure: amount {
     label: "Spend Target ($)"
     group_label: "Target"
