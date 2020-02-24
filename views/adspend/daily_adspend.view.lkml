@@ -15,8 +15,14 @@ view: daily_adspend {
   dimension_group: ad {
     label: "  Ad"
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
+
+  dimension: date_raw {
+    hidden: yes
+    type: date_time
+    sql: ${TABLE}.date ;;
+  }
 
   dimension: MTD_flg{
     label: "z - MTD Flag"

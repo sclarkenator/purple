@@ -361,6 +361,13 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  measure: last_updated_date_sales {
+    type: date
+    sql: MAX(${created_date}) ;;
+    convert_tz: no
+  }
+
+
   dimension: day_of_week {
     hidden:  yes
     label:  "Day of Week"

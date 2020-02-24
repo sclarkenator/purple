@@ -624,6 +624,13 @@ view: sales_order_line {
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
+  measure: last_updated_date_fulfilled {
+    view_label: "Fulfillment"
+    type: date
+    sql: MAX(${fulfilled_date}) ;;
+    convert_tz: no
+  }
+
   dimension: is_fulfilled {
     view_label: "Fulfillment"
     label: "     * Is Fulfilled"
