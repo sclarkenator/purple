@@ -27,9 +27,13 @@ view: adspend_target {
     sql: ${TABLE}.date < current_date;; }
 
   dimension: medium {
-    hidden:  yes
+    label: "Target Medium"
+    group_label: "Target"
+    description: "The Medium from the target import"
+    view_label: "Daily Adspend"
+    #hidden:  yes
     type: string
-    sql: ${TABLE}.medium ;;
+    sql: nvl(${TABLE}.medium, ${daily_adspend.medium}) ;;
   }
 
 
