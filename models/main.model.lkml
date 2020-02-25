@@ -1476,12 +1476,20 @@ explore: procom_security_daily_customer {
         relationship: one_to_many
          }
 
+      join: item {
+        view_label: "Product"
+        type: left_outer
+        sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
+        relationship: many_to_one}
+
       join: hotjar_data {
+        view_label: "Post-Purchase Survey"
         type: left_outer
         sql_on:  sales email = hotjar email ;;
         relationship: one_to_one }
 
       join: hotjar_whenheard {
+        view_label: "Post-Purchase Survey"
         type:  left_outer
         sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
         relationship: many_to_one}

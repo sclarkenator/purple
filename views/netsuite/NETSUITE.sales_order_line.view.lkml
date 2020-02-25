@@ -624,6 +624,13 @@ view: sales_order_line {
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
+  measure: last_updated_date_fulfilled {
+    view_label: "Fulfillment"
+    type: date
+    sql: MAX(${fulfilled_date}) ;;
+    convert_tz: no
+  }
+
   dimension: is_fulfilled {
     view_label: "Fulfillment"
     label: "     * Is Fulfilled"
@@ -953,5 +960,21 @@ view: sales_order_line {
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
   }
+
+#  measure: average_mattress_order_size {
+#    label: "AMOV ($)"
+#    description: "Average total mattress order amount, excluding tax"
+#    type: average
+#    sql_distinct_key: ${sales_order.order_system} ;;
+#    value_format: "$#,##0.00"
+#    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+
+#  measure: average_accessory_order_size {
+#    label: "NAMOV ($)"
+#    description: "Average total accessory order amount, excluding tax"
+#    type: sum
+#    sql_distinct_key: ${sales_order.order_system} ;;
+#    value_format: "$#,##0.00"
+#    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
 
 }
