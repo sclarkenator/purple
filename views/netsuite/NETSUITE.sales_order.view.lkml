@@ -200,6 +200,7 @@ measure: upt {
 
   dimension: Kount_Status {
     hidden: no
+    group_label: " Advanced"
     type: string
     sql: ${TABLE}.kount_status ;; }
 

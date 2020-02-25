@@ -18,12 +18,23 @@ view: adspend_target {
     sql: ${TABLE}.date ;;
   }
 
-  dimension: medium {
-    hidden:  yes
-    type: string
-    sql: ${TABLE}.medium ;;
-  }
+  dimension: Before_today{
+    view_label: "Daily Adspend"
+    group_label: "   Target Date"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
 
+  dimension: medium {
+    label: "Target Medium"
+    group_label: "Target"
+    description: "The Medium from the target import"
+    view_label: "Daily Adspend"
+    #hidden:  yes
+    type: string
+    sql: nvl(${TABLE}.medium, ${daily_adspend.medium}) ;;
+  }
 
   measure: amount {
     label: "Spend Target ($)"
