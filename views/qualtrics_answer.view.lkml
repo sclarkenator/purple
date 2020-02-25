@@ -3,7 +3,16 @@ view: qualtrics_answer {
 
   dimension: answer {
     type: string
-    sql: ${TABLE}."ANSWER" ;;
+    sql:
+      case when ${TABLE}."ANSWER" = 'Extremely satisfied' then '1 - Extremely satisfied'
+      when ${TABLE}."ANSWER" = 'Moderately satisfied' then '2 - Moderately satisfied'
+      when ${TABLE}."ANSWER" = 'Slightly satisfied' then '3 - Slightly satisfied'
+      when ${TABLE}."ANSWER" = 'Neither satisfied nor dissatisfied' then '4 - Neither satisfied nor dissatisfied'
+      when ${TABLE}."ANSWER" = 'Slightly dissatisfied' then '5 - Slightly dissatisfied'
+      when ${TABLE}."ANSWER" = 'Moderately dissatisfied' then '6 - Moderately dissatisfied'
+      when ${TABLE}."ANSWER" = 'Extremely dissatisfied' then '7 - Extremely dissatisfied'
+      when ${TABLE}."ANSWER" = 'I did not order/receive that product' then '8 - I did not order/receive that product'
+      else ${TABLE}."ANSWER" end;;
   }
 
   dimension_group: insert_ts {
