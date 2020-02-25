@@ -18,10 +18,10 @@ view: qualtrics_answer {
   dimension: answer_t2b2 {
     type: string
     sql:
-      case when ${TABLE}."ANSWER" = 'Extremely satisfied' then 'Top 2 (Most Satisfied)'
-      when ${TABLE}."ANSWER" = 'Moderately satisfied' then 'Top 2 (Most Satisfied)'
-      when ${TABLE}."ANSWER" = 'Moderately dissatisfied' then 'Bottom 2 (Least Satisfied)'
-      when ${TABLE}."ANSWER" = 'Extremely dissatisfied' then 'Bottom 2 (Least Satisfied)'
+      case when ${TABLE}."ANSWER" = 'Extremely satisfied' then '2 Top (Most Satisfied)'
+      when ${TABLE}."ANSWER" = 'Moderately satisfied' then '2 Top (Most Satisfied)'
+      when ${TABLE}."ANSWER" = 'Moderately dissatisfied' then '2 Bottom (Least Satisfied)'
+      when ${TABLE}."ANSWER" = 'Extremely dissatisfied' then '2 Bottom (Least Satisfied)'
       else ${TABLE}."ANSWER" end;;
   }
 
