@@ -15,6 +15,16 @@ view: qualtrics_answer {
       else ${TABLE}."ANSWER" end;;
   }
 
+  dimension: answer_t2b2 {
+    type: string
+    sql:
+      case when ${TABLE}."ANSWER" = 'Extremely satisfied' then 'Top 2 (Most Satisfied)'
+      when ${TABLE}."ANSWER" = 'Moderately satisfied' then 'Top 2 (Most Satisfied)'
+      when ${TABLE}."ANSWER" = 'Moderately dissatisfied' then 'Bottom 2 (Least Satisfied)'
+      when ${TABLE}."ANSWER" = 'Extremely dissatisfied' then 'Bottom 2 (Least Satisfied)'
+      else ${TABLE}."ANSWER" end;;
+  }
+
   dimension_group: insert_ts {
     type: time
     timeframes: [
