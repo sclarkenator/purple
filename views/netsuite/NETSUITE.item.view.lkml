@@ -16,7 +16,11 @@ view: item {
     description: "What stage is this item in production?"
     hidden:  yes
     type: string
-    sql: ${TABLE}.classification_new ;;
+    sql:
+    case when
+    --split king mattress kits and split king powerbase kits
+        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') then 'FG'
+        else ${TABLE}.classification_new end ;;
   }
 
   dimension: UPC_code {
@@ -503,7 +507,9 @@ view: item {
     type: string
     #sql: ${TABLE}.classification ;;
     case: {
-      when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
+      when: { sql: ${classification} = 'FG' or
+        --split king mattress kits and split king powerbase kits
+        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573');; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
       when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
