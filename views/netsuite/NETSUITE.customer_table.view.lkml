@@ -130,6 +130,10 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'sleep country%' ;; label: "Sleep Country" }
       when: { sql: lower(${TABLE}.companyname) like 'bed bath%' ;; label: "Bed Bath and Beyond" }
       when: { sql: lower(${TABLE}.companyname) like 'hom%furniture%' ;; label: "HOM Furniture Inc." }
+      when: { sql: lower(${TABLE}.companyname) like 'steinhafel%' ;; label: "Steinhafels" }
+      when: { sql: lower(${TABLE}.companyname) like 'raymour%' ;; label: "Raymour" }
+      when: { sql: lower(${TABLE}.companyname) like 'city%furniture%' ;; label: "City Furniture" }
+      when: { sql: lower(${TABLE}.companyname) like 'mathis%' ;; label: "Mathis Brothers" }
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
       when: { sql: lower(${TABLE}.companyname) like 'access%'
         or lower(${TABLE}.companyname) like 'medline%'
