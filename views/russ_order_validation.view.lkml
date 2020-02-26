@@ -1,48 +1,81 @@
 view: russ_order_validation {
   derived_table: {
-    sql: with a as (
-      select distinct EVENT_FEATURES_SHOPIFY_ORDER_ID, event_metrics_revenue/100 as money, max(convert_timezone('America/Denver', timestamp)) event_time
-      from analytics_stage.optimizely.visitor_action va
-      where event_name = 'totalRevenue'
-          and convert_timezone('America/Denver', timestamp)::date >= '2019-11-01'
-      group by 1, 2),
-      h as (
-      select name, subtotal_price, convert_timezone('America/Denver', time)::date the_day, total_discounts
-      from analytics.heap.cart_orders_placed_order
-      where convert_timezone('America/Denver', time)::date >= '2019-11-01'
-      ),
+    sql:
 
-      t as (
-      select distinct "EVENT - UDO - ORDER_ID" order_id, convert_timezone('America/Denver', "EVENT - TIME")::date the_day, "EVENT - UDO - ORDER_SUBTOTAL" subtotal_amt
-      from analytics.TEALIUM.EVENTS_VIEW__ALL_EVENTS__ALL_EVENTs
-      where "EVENT - UDO - ORDER_ID" is not null
-          and convert_timezone('America/Denver', "EVENT - TIME")::date >= '2019-11-01'
-      ),
+    WITH orders as(
+with a as (
+ select EVENT_FEATURES_SHOPIFY_ORDER_ID
+    , MAX(event_metrics_revenue/100) money
+    , max(convert_timezone('America/Denver', timestamp)) event_time
+from OPTIMIZELY_STAGE.OPTIMIZELY.VISITOR_ACTION
+where event_name = 'totalRevenue'
+    and convert_timezone('America/Denver', timestamp)::date >= '2019-11-01'
+group by 1),
+h as (
+select name
+    , MAX(subtotal_price) subtotal_price
+    ,MAX(convert_timezone('America/Denver', time)::date) the_day
+    , MAX(total_discounts) "TOTAL_DISCOUNTS"
+from analytics.heap.cart_orders_placed_order
+where convert_timezone('America/Denver', time)::date >= '2019-11-01'
+GROUP BY 1
+),
 
-      s as (
-      select  trim(s.name) shopify_order_id,
-              s.subtotal_price shopify_revenue,
-              convert_timezone('America/Denver',s.created_at)  s_event_time
-      from analytics_stage.shopify_us_ft."ORDER" s
-      where to_date(convert_timezone('America/Denver',s.created_at)) >= '2019-11-01'
-           and lower(s.source_name) = 'web'
-      )
+t as (
+select "EVENT - UDO - ORDER_ID" order_id
+    , MAX(("EVENT - TIME"::VARCHAR||' 00:00')::TIMESTAMP_LTZ) the_day
+    , MAX("EVENT - UDO - ORDER_SUBTOTAL") subtotal_amt
+from analytics.TEALIUM.EVENTS_VIEW__ALL_EVENTS__ALL_EVENTs
+where "EVENT - UDO - ORDER_ID" is not null
+    and ("EVENT - TIME"::VARCHAR||' 00:00')::TIMESTAMP_LTZ >= '2019-11-01'
+group by 1
+),
 
-      select related_tranid ns_order_id, gross_amt ns_revenue, so.created ns_timestamp
-          , event_features_shopify_order_id o_order_id, money o_revenue, a.event_time o_event_time
-          , h.name h_order_id, h.subtotal_price h_revenue, h.the_day h_event_time, h.total_discounts h_total_discounts
-          , t.order_id t_order_id, t.subtotal_amt t_revenue, t.the_day t_event_time
-          , s.shopify_order_id s_order_id, s.shopify_revenue s_revenue, s_event_time
-      from analytics.sales.sales_order so
-      full outer join a on a.event_features_shopify_order_id = so.related_tranid
-      full outer join h on h.name = so.related_tranid
-      full outer join t on t.order_id = so.related_tranid
-      full outer join s on s.shopify_order_id = so.related_tranid
-      where created::date >= '2019-11-01'
-          and so.source = 'Shopify - US'
-          and warranty != 'T'
-          and exchange != 'T'
-       ;;
+s as (
+select  trim(s.name) shopify_order_id,
+        MAX(s.subtotal_price) shopify_revenue,
+        MAX(convert_timezone('America/Denver',s.created_at))  s_event_time
+from analytics_stage.shopify_us_ft."ORDER" s
+where to_date(convert_timezone('America/Denver',s.created_at)) >= '2019-11-01'
+     and lower(s.source_name) = 'web'
+group by 1
+)
+
+select related_tranid ns_order_id, gross_amt ns_revenue, so.created ns_timestamp
+    , event_features_shopify_order_id o_order_id, money o_revenue, a.event_time o_event_time
+    , h.name h_order_id, h.subtotal_price h_revenue, h.the_day h_event_time, h.total_discounts h_total_discounts
+    , t.order_id t_order_id, t.subtotal_amt t_revenue, t.the_day t_event_time
+    , s.shopify_order_id s_order_id, s.shopify_revenue s_revenue, s_event_time
+    --, gross_amt - money as ns_to_o_revenue_difference, gross_amt - h.subtotal_price ns_to_h_revenue_difference
+from analytics.sales.sales_order so
+JOIN analytics_stage.shopify_us_ft."ORDER" o ON so.etail_order_id = o.id::string
+full outer join a on a.event_features_shopify_order_id = so.related_tranid
+full outer join h on h.name = so.related_tranid
+full outer join t on t.order_id = so.related_tranid
+full outer join s on s.shopify_order_id = so.related_tranid
+where created::date >= '2019-11-01'
+    and so.source = 'Shopify - US'
+    and warranty != 'T'
+    and exchange != 'T'
+    and LOWER(o.source_name) = 'web')
+
+
+ SELECT TO_DATE(NS_TIMESTAMP) "Netsuite_Date"
+ ,  COUNT(NS_ORDER_ID) "Netsuite_Orders"
+ ,  COUNT(O_ORDER_ID) "Optimizely_Orders"
+ ,  COUNT(H_ORDER_ID) "Heap_Orders"
+ ,  COUNT(T_ORDER_ID) "Tealium_Orders"
+ ,  COUNT(S_ORDER_ID) "Shopify_Orders"
+ ,  SUM(NS_REVENUE) "Netsuite_Subtotal"
+ ,  SUM(O_REVENUE) "Optimizely_Subtotal"
+ ,  SUM(H_REVENUE) "Heap_Subtotal"
+ ,  SUM(T_REVENUE) "Tealium_Subtotal"
+ ,  SUM(S_REVENUE) "Shopify_Subtotal"
+ FROM orders
+ GROUP BY 1
+ ORDER BY 1
+
+ ;;
   }
 
   measure: count {
