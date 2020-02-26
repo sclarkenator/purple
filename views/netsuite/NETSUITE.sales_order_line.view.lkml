@@ -1194,7 +1194,8 @@ view: sales_order_line {
 
   measure: average_mattress_order_size {
     label: "Testing: AMOV ($)"
-   description: "Average total mattress order amount, excluding tax"
+    view_label: "Sales Order"
+    description: "Average total mattress order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
@@ -1202,6 +1203,7 @@ view: sales_order_line {
 
   measure: average_accessory_order_size {
     label: "Testing: NAMOV ($)"
+    view_label: "Sales Order"
     description: "Average total accessory order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
