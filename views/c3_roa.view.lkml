@@ -64,7 +64,7 @@ view: c3_roa {
     case: {
       when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER')
                 or ${SOURCE} ilike ('%social media%') ;; label:"social"}
-      when: {sql: ${PLATFORM} in ('YOUTUBE')
+      when: {sql: ${PLATFORM} in ('YOUTUBE.COM')
                 or ${SOURCE} = 'VIDEO'
                 or ${SOURCE} = 'YOUTUBE VIDEOS'
                 or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
