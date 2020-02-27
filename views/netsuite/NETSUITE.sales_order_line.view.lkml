@@ -905,6 +905,10 @@ view: sales_order_line {
     fields: [order_id,item_id,created_date,fulfilled_date]
   }
 
+  set: fulfillment_details {
+    fields: [order_id, item_id, created_date, fulfilled_date, carrier, DTC_carrier, fulfillment.in_hand, fulfillment.left_purple, fulfillment.transmitted_date, order_to_transmitted_sla, order_to_left_purple_sla, transmitted_to_left_purple_sla, order_to_in_hand_sla, left_purple_to_in_hand_sla]
+  }
+
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
