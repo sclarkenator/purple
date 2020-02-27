@@ -49,7 +49,7 @@ view: sales_order_line {
 
   measure: mf_on_time {
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     label: "Mattress Firm Shipped on Time (% of units)"
     description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units)"
     value_format_name: percent_0
@@ -194,7 +194,7 @@ view: sales_order_line {
 
   measure: zSLA_Achievement_prct {
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     label: "SLA $ Achievement %"
     hidden: no
     value_format_name: percent_1
@@ -217,7 +217,7 @@ view: sales_order_line {
 
   measure: Qty_eligible_for_SLA{
     label: "Qty Eligible SLA"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
@@ -232,7 +232,7 @@ view: sales_order_line {
 
   measure: Qty_Fulfilled_in_SLA{
     label: "Qty Fulfilled in SLA"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
@@ -254,7 +254,7 @@ view: sales_order_line {
   measure: SLA_Achievement_prct {
     view_label: "Fulfillment"
     label: "SLA Achievement %"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     hidden: no
     value_format_name: percent_1
     type: number
@@ -281,7 +281,7 @@ view: sales_order_line {
 
   measure: whlsl_on_time {
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     label: "Wholesale Shipped on Time (% of units)"
     description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units)"
     value_format_name: percent_0
@@ -417,7 +417,7 @@ view: sales_order_line {
     hidden: yes
     description: "Percent of line items fulfilled by Purple West within 3 days of order"
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     type: number
     drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
     value_format_name: percent_1
@@ -522,7 +522,7 @@ view: sales_order_line {
   measure: manna_sla_achieved{
     label: "Pilot SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     hidden: no
     description: "Percent of line items fulfilled by Manna within 14 days of order"
     type: number
@@ -576,7 +576,7 @@ view: sales_order_line {
   measure: xpo_sla_achieved{
     label: "XPO SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
-    group_label: "SLA"
+    group_label: "Fulfillment SLA"
     description: "Percent of line items fulfilled by Manna within 1 days of order"
     type: number
     drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
@@ -905,6 +905,10 @@ view: sales_order_line {
     fields: [order_id,item_id,created_date,fulfilled_date]
   }
 
+  set: fulfillment_details {
+    fields: [order_id, item_id, created_date, fulfilled_date, carrier, DTC_carrier, fulfillment.in_hand, fulfillment.left_purple, fulfillment.transmitted_date, order_to_transmitted_sla, order_to_left_purple_sla, transmitted_to_left_purple_sla, order_to_in_hand_sla, left_purple_to_in_hand_sla]
+  }
+
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
@@ -961,20 +965,253 @@ view: sales_order_line {
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
   }
 
-#  measure: average_mattress_order_size {
-#    label: "AMOV ($)"
-#    description: "Average total mattress order amount, excluding tax"
-#    type: average
-#    sql_distinct_key: ${sales_order.order_system} ;;
-#    value_format: "$#,##0.00"
-#    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+  dimension: order_to_transmitted_sla {
+    label: "Order to Transmitted SLA (yes/no)"
+    view_label: "Fulfillment"
+    hidden: yes
+    description: "Was the order to transmitted time within SLA"
+    type: string
+    sql:
+    -- no left purple date
+    case when ${fulfillment.left_purple_raw} is null then null
+        when  ${transmitted_date_raw} <
+            dateadd('hour'
+            --dynamic hours based on carrier
+            , case when ${carrier} in ('XPO', 'Pilot') then 2.5 else 2.5 end
+            --using min ship by if it has one
+            , NVL(${created_raw},${created_raw})
+            )
+        then 'yes'
+        else 'no'
+    end ;;
+  }
 
-#  measure: average_accessory_order_size {
-#    label: "NAMOV ($)"
-#    description: "Average total accessory order amount, excluding tax"
-#    type: sum
-#    sql_distinct_key: ${sales_order.order_system} ;;
-#    value_format: "$#,##0.00"
-#    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
+  measure: order_to_transmitted_in_sla {
+    label: "Order to Transmitted in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_transmitted_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_transmitted_not_in_sla {
+    label: "Order to Transmitted not in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_transmitted_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_transmitted_sla_prct {
+    label: "Order to Transmitted SLA %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${order_to_transmitted_in_sla}/(${order_to_transmitted_in_sla}+${order_to_transmitted_not_in_sla}) ;;
+  }
+
+  dimension: order_to_left_purple_sla {
+    label: "Order to Left Purple SLA (yes/no)"
+    view_label: "Fulfillment"
+    hidden: yes
+    description: "Was the order to left purple time within SLA"
+    type: yesno
+    sql:
+    -- no left purple date
+    case when ${fulfillment.left_purple_raw} is null then null
+        when  ${fulfillment.left_purple_raw} <
+            dateadd('hour'
+            --dynamic hours based on carrier
+            , case when ${carrier} in ('XPO', 'Pilot') then 24 else 24 end
+            --using min ship by if it has one
+            , NVL(${created_raw},${created_raw})
+            )
+        then 'yes'
+        else 'no'
+    end ;;
+  }
+
+  measure: order_to_left_purple_in_sla {
+    label: "Order to Left Purple in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_left_purple_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_left_purple_not_in_sla {
+    label: "Order to Left Purple not in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_left_purple_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_left_purple_sla_prct {
+    label: "Order to Left Purple SLA %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${order_to_transmitted_in_sla}/(${order_to_transmitted_in_sla}+${order_to_transmitted_not_in_sla}) ;;
+  }
+
+  dimension: transmitted_to_left_purple_sla {
+    label: "Transmitted to Left Purple SLA (yes/no)"
+    view_label: "Fulfillment"
+    hidden: yes
+    description: "Was the transmitted to left purple time within SLA"
+    type: yesno
+    sql:
+    -- no left purple date
+    case when ${fulfillment.left_purple_raw} is null then null
+        when  ${fulfillment.left_purple_raw} <
+            dateadd('hour'
+            --dynamic hours based on carrier
+            , case when ${carrier} in ('XPO', 'Pilot') then 21.5 else 21.5 end
+            --using min ship by if it has one
+            , NVL(${transmitted_date_raw},${created_raw})
+            )
+        then 'yes'
+        else 'no'
+    end ;;
+  }
+
+  measure: transmitted_to_left_purple_in_sla {
+    label: "Transmitted to Left Purple in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${transmitted_to_left_purple_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: transmitted_to_left_purple_not_in_sla {
+    label: "Transmitted to Left Purple not in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${transmitted_to_left_purple_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: transmitted_to_left_purple_sla_prct {
+    label: "Transmitted to Left Purple SLA %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${transmitted_to_left_purple_in_sla}/(${transmitted_to_left_purple_in_sla}+${transmitted_to_left_purple_not_in_sla}) ;;
+  }
+
+  dimension: order_to_in_hand_sla {
+    label: "Order to In Hand SLA (yes/no)"
+    view_label: "Fulfillment"
+    hidden: yes
+    description: "Was the order to in hand time within SLA"
+    type: yesno
+    sql:
+    -- no left purple date
+    case when ${fulfillment.left_purple_raw} is null then null
+        when  ${fulfillment.in_hand_raw} <
+            dateadd('hour'
+            --dynamic hours based on carrier
+            , case when ${carrier} in ('XPO', 'Pilot') then 168 else 72 end
+            --using min ship by if it has one
+            , NVL(${created_raw},${created_raw})
+            )
+        then 'yes'
+        else 'no'
+    end ;;
+  }
+
+  measure: order_to_in_hand_in_sla {
+    label: "Order to In Hand in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_in_hand_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_in_hand_not_in_sla {
+    label: "Order to In Hand not in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${order_to_in_hand_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_in_hand_sla_prct {
+    label: "Order to In Hand SLA %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${order_to_in_hand_in_sla}/(${order_to_in_hand_in_sla}+${order_to_in_hand_not_in_sla}) ;;
+  }
+
+  dimension: left_purple_to_in_hand_sla {
+    label: "Left Purple to In Hand SLA (yes/no)"
+    view_label: "Fulfillment"
+    hidden: yes
+    description: "Was the left purple to in hand time within SLA"
+    type: yesno
+    sql:
+    -- no left purple date
+    case when ${fulfillment.left_purple_raw} is null then null
+        when  ${fulfillment.in_hand_raw} <
+            dateadd('hour'
+            --dynamic hours based on carrier
+            , case when ${carrier} in ('XPO', 'Pilot') then 144 else 48 end
+            --using min ship by if it has one
+            , NVL(${fulfillment.left_purple_raw},${created_raw})
+            )
+        then 'yes'
+        else 'no'
+    end ;;
+  }
+
+  measure: left_purple_to_in_hand_in_sla {
+    label: "Left Purple to In Hand in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${left_purple_to_in_hand_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: left_purple_to_in_hand_not_in_sla {
+    label: "Left Purple to In Hand not in SLA (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${left_purple_to_in_hand_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: left_purple_to_in_hand_sla_prct {
+    label: "Left Purple to In Hand SLA %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
+  }
+
+
+  measure: average_mattress_order_size {
+    label: "Testing: AMOV ($)"
+    view_label: "Sales Order"
+    description: "Average total mattress order amount, excluding tax"
+    type: average
+    sql_distinct_key: ${sales_order.order_system} ;;
+    value_format: "$#,##0.00"
+    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+
+  measure: average_accessory_order_size {
+    label: "Testing: NAMOV ($)"
+    view_label: "Sales Order"
+    description: "Average total accessory order amount, excluding tax"
+    type: average
+    sql_distinct_key: ${sales_order.order_system} ;;
+    value_format: "$#,##0.00"
+    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
 
 }
