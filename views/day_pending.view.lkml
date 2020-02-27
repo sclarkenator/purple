@@ -29,12 +29,12 @@ view: day_pending {
 
   dimension: date {
     type: date
-    sql: ${TABLE}date ;;
+    sql: ${TABLE}.date ;;
   }
 
   measure: orders {
     type: average
-    sql: orders ;;
+    sql: ${TABLE}.orders ;;
   }
 
 }
