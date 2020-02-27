@@ -45,7 +45,6 @@ view: accessory_products_to_mattress {
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'CUSHION' THEN 1 ELSE 0 END) cushion_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'SHEETS' THEN 1 ELSE 0 END) sheets_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PROTECTOR' THEN 1 ELSE 0 END) protector_flg
-      ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'BASE' THEN 1 ELSE 0 END) base_flg
       ,max(CASE WHEN MODEL_NAME_LKR = 'POWERBASE' THEN 1 ELSE 0 END) powerbase_flg
       ,max(CASE WHEN MODEL_NAME_LKR = 'PLATFORM' THEN 1 ELSE 0 END) platform_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PILLOW' THEN 1 ELSE 0 END) pillow_flg
@@ -129,14 +128,6 @@ dimension: protector_flg {
   description: "1/0; 1 if there is a protector in this order"
   type: yesno
   sql: ${TABLE}.protector_flg = 1 ;;
-}
-
-dimension: base_flg {
-  label: "a Base"
-  group_label: "Order has:"
-  description: "1/0; 1 if there is a base in this order"
-  type: yesno
-  sql: ${TABLE}.base_flg = 1 ;;
 }
 
 dimension: powerbase_flg {
