@@ -156,6 +156,29 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
     sql: ${TABLE}."TOTAL_CHARGES" ;;
   }
 
+  dimension: hd_status {
+    group_label: "Pilot Info"
+    description: "HD Status"
+    type: string
+    sql: ${TABLE}."HD_STATUS" ;;
+  }
+
+  dimension_group: hd_status_created {
+    label: "Date HD Status Changed"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."HD_STATUS_CREATED" ;;
+  }
+
   measure: count {
     group_label: "Pilot Info"
     type: count
