@@ -905,6 +905,10 @@ view: sales_order_line {
     fields: [order_id,item_id,created_date,fulfilled_date]
   }
 
+  set: fulfillment_details {
+    fields: [order_id, item_id, created_date, fulfilled_date, carrier, DTC_carrier, fulfillment.in_hand, fulfillment.left_purple, fulfillment.transmitted_date, order_to_transmitted_sla, order_to_left_purple_sla, transmitted_to_left_purple_sla, order_to_in_hand_sla, left_purple_to_in_hand_sla]
+  }
+
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
@@ -1199,7 +1203,8 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;;
+  }
 
   measure: average_accessory_order_size {
     label: "Testing: NAMOV ($)"
@@ -1208,6 +1213,17 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;;
+  }
+
+  dimension: sub_channel {
+    label: "DTC Sub-Category"
+    group_label: " Advanced"
+    view_label: "Sales Order"
+    type: string
+    sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
+      when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
+      else 'Website' end;;
+  }
 
 }
