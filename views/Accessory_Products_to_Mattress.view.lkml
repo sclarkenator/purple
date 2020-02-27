@@ -1,7 +1,8 @@
 view: accessory_products_to_mattress {
 
   derived_table: {
-    sql: select a.created::date as order_date
+    sql:
+  select a.created as order_date
     , to_char(a.created, 'YYYY-MM') as created_month
     , a.customer_id
     , a.system
@@ -87,16 +88,19 @@ view: accessory_products_to_mattress {
   ) d on d.date = a.created::date ;;
   }
 
-dimension: order_date {
-  label: "Order Date"
-  description: "Customer Order Date"
-  type: date
-  sql: ${TABLE}.order_date ;;
+
+dimension_group: order_date {
+  label: "Order"
+  description:  "Time and date order was placed"
+  type: time
+  timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+  convert_tz: no
+  datatype: timestamp
+  sql: to_timestamp_ntz(${TABLE}.order_date) ;;
 }
 
 dimension: mattress_flg {
   label: "a Mattress"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a mattress in this order"
   type: yesno
@@ -105,7 +109,6 @@ dimension: mattress_flg {
 
 dimension: cushion_flg {
   label: "a Cushion"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a cushion in this order"
   type: yesno
@@ -114,7 +117,6 @@ dimension: cushion_flg {
 
 dimension: sheets_flg {
   label: "Sheets"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a sheets in this order"
   type: yesno
@@ -123,7 +125,6 @@ dimension: sheets_flg {
 
 dimension: protector_flg {
   label: "a Protector"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a protector in this order"
   type: yesno
@@ -132,7 +133,6 @@ dimension: protector_flg {
 
 dimension: base_flg {
   label: "a Base"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a base in this order"
   type: yesno
@@ -141,7 +141,6 @@ dimension: base_flg {
 
 dimension: powerbase_flg {
   label: "a Powerbase"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a powerbase in this order"
   type: yesno
@@ -150,7 +149,6 @@ dimension: powerbase_flg {
 
 dimension: platform_flg {
   label: "a Platform"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a platform in this order"
   type: yesno
@@ -159,7 +157,6 @@ dimension: platform_flg {
 
 dimension: pillow_flg {
   label: "a Pillow"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a pillow in this order"
   type: yesno
@@ -168,7 +165,6 @@ dimension: pillow_flg {
 
 dimension: blanket_flg {
   label: "a Blanket"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a blanket in this order"
   type: yesno
@@ -177,7 +173,6 @@ dimension: blanket_flg {
 
 dimension: split_king_flg {
   label: "a Split King Powerbase"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a split king powerbase in this order"
   type: yesno
@@ -186,7 +181,6 @@ dimension: split_king_flg {
 
 dimension: harmony_pillow_flg {
   label: "a Harmony Pillow"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a harmony pillow in this order"
   type: yesno
@@ -195,7 +189,6 @@ dimension: harmony_pillow_flg {
 
 dimension: plush_pillow_flg {
   label: "a Cushion"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a plush pillow in this order"
   type: yesno
@@ -204,7 +197,6 @@ dimension: plush_pillow_flg {
 
 dimension: purple_pillow_flg {
   label: "a Purple Pillow"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a purple pillow in this order"
   type: yesno
@@ -213,7 +205,6 @@ dimension: purple_pillow_flg {
 
 dimension: gravity_mask_flg {
   label: "a Gravity Mask"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a gravity mask in this order"
   type: yesno
@@ -222,7 +213,6 @@ dimension: gravity_mask_flg {
 
 dimension: gravity_blanket_flg {
   label: "a Gravity Blanket"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a gravity blanket in this order"
   type: yesno
@@ -231,7 +221,6 @@ dimension: gravity_blanket_flg {
 
 dimension: accordion_platform_flg {
   label: "a Accordion Platform"
-  view_label: ""
   group_label: "Order has:"
   description: "1/0; 1 if there is a accordion platform in this order"
   type: yesno
@@ -246,46 +235,51 @@ dimension: duvet_flg {
   sql: case when ${TABLE}.duvet_flg = 1 ;;
 }
 
-dimension: first_mattress {
-  label: "First Mattress"
-  view_label: ""
-  group_label: "Mattress Purchase Date"
+dimension_group: first_mattress {
+  hidden: yes
+  label: "First Mattress Purchase"
   description: "First mattress purchase date"
-  type: date
-  sql: ${TABLE}.first_mattress ;;
+  type: time
+  timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+  convert_tz: no
+  datatype: timestamp
+  sql: to_timestamp_ntz(${TABLE}.first_mattress);;
 }
 
-dimension: last_mattress {
-  label: "Lst Mattress"
-  group_label: "Mattress Purchase Date"
+dimension_group: last_mattress {
+  hidden: yes
+  label: "Last Mattress Purchase"
   description: "Last mattress purchase date"
-  type: date
-  sql: ${TABLE}.last_mattress ;;
+  type: time
+  timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+  convert_tz: no
+  datatype: timestamp
+  sql: to_timestamp_ntz(${TABLE}.last_mattress);;
 }
 
 dimension: prev_mattress {
+  hidden: yes
   label: "Previoulsy"
   group_label: "Mattress Purchased:"
   description: "Customers purchasesed a mattress previously"
-  hidden: yes
   type: yesno
   sql: ${TABLE}.prev_mattress = 1 ;;
 }
 
 dimension: later_mattress {
+  hidden: yes
   label: "Later"
   group_label: "Mattress Purchased:"
   description: "Customers purchasesed a mattress later"
-  hidden: yes
   type: yesno
   sql: ${TABLE}.later_mattress = 1 ;;
 }
 
 dimension: with_mattress {
+  hidden: yes
   label: "With"
   group_label: "Mattress Purchased:"
   description: "Customers purchasesed with a mattress"
-  hidden: yes
   type: yesno
   sql: ${TABLE}.with_mattress = 1 ;;
 }
@@ -333,22 +327,5 @@ measure: count {
   view_label: "Measures"
   type: count
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
