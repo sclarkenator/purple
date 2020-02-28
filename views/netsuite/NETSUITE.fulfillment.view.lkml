@@ -181,6 +181,7 @@ view: fulfillment {
     hidden: yes
     sql: ${TABLE}.BUNDLE_QUANTITY ;;
   }
+
 #BUNDLE_QUANTITY
 
   measure: total_shipping {

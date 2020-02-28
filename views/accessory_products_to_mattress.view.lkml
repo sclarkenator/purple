@@ -45,7 +45,6 @@ view: accessory_products_to_mattress {
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'CUSHION' THEN 1 ELSE 0 END) cushion_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'SHEETS' THEN 1 ELSE 0 END) sheets_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PROTECTOR' THEN 1 ELSE 0 END) protector_flg
-      ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'BASE' THEN 1 ELSE 0 END) base_flg
       ,max(CASE WHEN MODEL_NAME_LKR = 'POWERBASE' THEN 1 ELSE 0 END) powerbase_flg
       ,max(CASE WHEN MODEL_NAME_LKR = 'PLATFORM' THEN 1 ELSE 0 END) platform_flg
       ,max(CASE WHEN PRODUCT_LINE_NAME_LKR = 'PILLOW' THEN 1 ELSE 0 END) pillow_flg
@@ -104,7 +103,7 @@ dimension: mattress_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a mattress in this order"
   type: yesno
-  sql: case when ${TABLE}.mattress_flg = 1 ;;
+  sql: ${TABLE}.mattress_flg = 1 ;;
 }
 
 dimension: cushion_flg {
@@ -112,7 +111,7 @@ dimension: cushion_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a cushion in this order"
   type: yesno
-   sql: case when ${TABLE}.cushion_flg = 1 ;;
+   sql: ${TABLE}.cushion_flg = 1 ;;
 }
 
 dimension: sheets_flg {
@@ -120,7 +119,7 @@ dimension: sheets_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a sheets in this order"
   type: yesno
-  sql: case when ${TABLE}.sheets_flg = 1 ;;
+  sql: ${TABLE}.sheets_flg = 1 ;;
 }
 
 dimension: protector_flg {
@@ -128,15 +127,7 @@ dimension: protector_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a protector in this order"
   type: yesno
-  sql: case when ${TABLE}.protector_flg = 1 ;;
-}
-
-dimension: base_flg {
-  label: "a Base"
-  group_label: "Order has:"
-  description: "1/0; 1 if there is a base in this order"
-  type: yesno
-  sql: case when ${TABLE}.base_flg = 1 ;;
+  sql: ${TABLE}.protector_flg = 1 ;;
 }
 
 dimension: powerbase_flg {
@@ -144,7 +135,7 @@ dimension: powerbase_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a powerbase in this order"
   type: yesno
-  sql: case when ${TABLE}.powerbase_flg = 1 ;;
+  sql: ${TABLE}.powerbase_flg = 1 ;;
 }
 
 dimension: platform_flg {
@@ -152,7 +143,7 @@ dimension: platform_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a platform in this order"
   type: yesno
-  sql: case when ${TABLE}.platform_flg = 1 ;;
+  sql: ${TABLE}.platform_flg = 1 ;;
 }
 
 dimension: pillow_flg {
@@ -160,7 +151,7 @@ dimension: pillow_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a pillow in this order"
   type: yesno
-  sql: case when ${TABLE}.pillow_flg = 1 ;;
+  sql: ${TABLE}.pillow_flg = 1 ;;
 }
 
 dimension: blanket_flg {
@@ -168,7 +159,7 @@ dimension: blanket_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a blanket in this order"
   type: yesno
-  sql: case when ${TABLE}.blanket_flg = 1 ;;
+  sql: ${TABLE}.blanket_flg = 1 ;;
 }
 
 dimension: split_king_flg {
@@ -176,7 +167,7 @@ dimension: split_king_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a split king powerbase in this order"
   type: yesno
-  sql: case when ${TABLE}.split_king_flg = 1 ;;
+  sql: ${TABLE}.split_king_flg = 1 ;;
 }
 
 dimension: harmony_pillow_flg {
@@ -184,7 +175,7 @@ dimension: harmony_pillow_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a harmony pillow in this order"
   type: yesno
-  sql: case when ${TABLE}.harmony_pillow_flg = 1 ;;
+  sql: ${TABLE}.harmony_pillow_flg = 1 ;;
 }
 
 dimension: plush_pillow_flg {
@@ -192,7 +183,7 @@ dimension: plush_pillow_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a plush pillow in this order"
   type: yesno
-  sql: case when ${TABLE}.plush_pillow_flg = 1 ;;
+  sql: ${TABLE}.plush_pillow_flg = 1 ;;
 }
 
 dimension: purple_pillow_flg {
@@ -200,7 +191,7 @@ dimension: purple_pillow_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a purple pillow in this order"
   type: yesno
-  sql: case when ${TABLE}.purple_pillow_flg = 1 ;;
+  sql: ${TABLE}.purple_pillow_flg = 1 ;;
 }
 
 dimension: gravity_mask_flg {
@@ -208,7 +199,7 @@ dimension: gravity_mask_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a gravity mask in this order"
   type: yesno
-  sql: case when ${TABLE}.gravity_mask_flg = 1 ;;
+  sql: ${TABLE}.gravity_mask_flg = 1 ;;
 }
 
 dimension: gravity_blanket_flg {
@@ -216,7 +207,7 @@ dimension: gravity_blanket_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a gravity blanket in this order"
   type: yesno
-  sql: case when ${TABLE}.gravity_blanket_flg = 1 ;;
+  sql: ${TABLE}.gravity_blanket_flg = 1 ;;
 }
 
 dimension: accordion_platform_flg {
@@ -224,7 +215,7 @@ dimension: accordion_platform_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a accordion platform in this order"
   type: yesno
-  sql: case when ${TABLE}.accordion_platform_flg = 1 ;;
+  sql: ${TABLE}.accordion_platform_flg = 1 ;;
 }
 
 dimension: duvet_flg {
@@ -232,7 +223,7 @@ dimension: duvet_flg {
   group_label: "Order has:"
   description: "1/0; 1 if there is a duvet in this order"
   type: yesno
-  sql: case when ${TABLE}.duvet_flg = 1 ;;
+  sql: ${TABLE}.duvet_flg = 1 ;;
 }
 
 dimension_group: first_mattress {

@@ -776,7 +776,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
-    sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${transmitted_date_raw}::date) ;;
   }
 
   measure: order_to_left_purple_days {
@@ -787,7 +787,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: transmitted_to_left_purple_days {
@@ -798,7 +798,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
+    sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: transmitted_to_in_hand_days {
@@ -809,9 +809,8 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
-
 
   measure: order_to_in_hand_days {
     label: "Order to In Hand (days)"
@@ -821,7 +820,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
 
   measure: left_purple_to_in_hand_days {
@@ -832,10 +831,11 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${fulfillment.left_purple_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
 
   measure: order_to_transmitted_hours {
+    hidden: yes
     label: " Order to Transmitted (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -846,6 +846,7 @@ view: sales_order_line {
   }
 
   measure: order_to_left_purple_hours {
+    hidden: yes
     label: " Order to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -857,6 +858,7 @@ view: sales_order_line {
   }
 
   measure: transmitted_to_left_purple_hours {
+    hidden: yes
     label: " Transmitted to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -868,6 +870,7 @@ view: sales_order_line {
   }
 
   measure: transmitted_to_in_hand_hours {
+    hidden: yes
     label: " Transmitted to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -878,8 +881,8 @@ view: sales_order_line {
     sql: timediff('hour',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-
   measure: order_to_in_hand_hours {
+    hidden: yes
     label: " Order to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -891,6 +894,7 @@ view: sales_order_line {
   }
 
   measure: left_purple_to_in_hand_hours {
+    hidden: yes
     label: " Left Purple to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -1203,7 +1207,8 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;;
+  }
 
   measure: average_accessory_order_size {
     label: "Testing: NAMOV ($)"
@@ -1212,6 +1217,17 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;;
+  }
+
+  dimension: sub_channel {
+    label: "DTC Sub-Category"
+    group_label: " Advanced"
+    view_label: "Sales Order"
+    type: string
+    sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
+      when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
+      else 'Website' end;;
+  }
 
 }
