@@ -401,8 +401,9 @@ explore: starship_fulfillment {
       type: left_outer
       relationship: one_to_one
     }
-    }
+  }
 
+  explore: day_pending { hidden:yes}
 
 
 #-------------------------------------------------------------------

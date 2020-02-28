@@ -1203,7 +1203,8 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;;
+  }
 
   measure: average_accessory_order_size {
     label: "Testing: NAMOV ($)"
@@ -1212,6 +1213,17 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;; }
+    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;;
+  }
+
+  dimension: sub_channel {
+    label: "DTC Sub-Category"
+    group_label: " Advanced"
+    view_label: "Sales Order"
+    type: string
+    sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
+      when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
+      else 'Website' end;;
+  }
 
 }
