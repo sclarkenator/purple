@@ -91,7 +91,9 @@ view: item {
     view_label: "Filters"
     hidden:  yes
     type: yesno
-    sql: ${classification} = 'FG' ;;
+    sql: case when ${classification} = 'FG' or
+    -- split kings classified as KIT rather than FG
+    ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411') then 1 else 0 end ;;
   }
 
   dimension: product_description {
