@@ -19,7 +19,7 @@ view: item {
     sql:
     case when
     --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573')
+        ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') then 'FG'
         -- adds metal frame bases to finished goods
    --     or ${line_raw} = 'FRAME' then 'FG'
         else ${TABLE}.classification_new end ;;
