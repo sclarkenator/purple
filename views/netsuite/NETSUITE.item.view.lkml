@@ -19,7 +19,9 @@ view: item {
     sql:
     case when
     --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') then 'FG'
+        ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or ${line_raw} = 'FRAME' or ( ${category_raw} = 'SEATING' and (${product_description} ilike '%4 PK' or ${product_description} ilike '%6 PK')) then 'FG'
         else ${TABLE}.classification_new end ;;
   }
 
@@ -91,9 +93,7 @@ view: item {
     view_label: "Filters"
     hidden:  yes
     type: yesno
-    sql: case when ${classification} = 'FG' or
-    -- split kings classified as KIT rather than FG
-    ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411') then 1 else 0 end ;;
+    sql: ${classification} = 'FG' ;;
   }
 
   dimension: product_description {
@@ -509,9 +509,7 @@ view: item {
     type: string
     #sql: ${TABLE}.classification ;;
     case: {
-      when: { sql: ${classification} = 'FG' or
-        --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573');; label: "Finished Good" }
+      when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
       when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
