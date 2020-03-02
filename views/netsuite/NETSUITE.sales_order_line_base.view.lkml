@@ -363,6 +363,7 @@ view: sales_order_line_base {
 
   measure: last_updated_date_sales {
     type: date
+    label: "Last Updated Sales"
     sql: MAX(${created_date}) ;;
     convert_tz: no
   }

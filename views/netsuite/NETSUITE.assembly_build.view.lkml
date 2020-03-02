@@ -97,6 +97,7 @@ view: assembly_build {
 
   measure: last_updated_date_produced {
     type: date
+    label: "Last Updated Produced"
     sql: MAX(${produced_date}) ;;
     convert_tz: no
   }

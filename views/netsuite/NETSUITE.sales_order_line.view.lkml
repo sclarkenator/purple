@@ -626,6 +626,7 @@ view: sales_order_line {
 
   measure: last_updated_date_fulfilled {
     view_label: "Fulfillment"
+    label: "Last Updated Fulfilled"
     type: date
     sql: MAX(${fulfilled_date}) ;;
     convert_tz: no
