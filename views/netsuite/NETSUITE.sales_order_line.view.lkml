@@ -776,7 +776,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date"
     type: average
     value_format: "0.00"
-    sql: datediff('day',${created_raw},${transmitted_date_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${transmitted_date_raw}::date) ;;
   }
 
   measure: order_to_left_purple_days {
@@ -787,7 +787,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${created_raw},${fulfillment.left_purple_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: transmitted_to_left_purple_days {
@@ -798,7 +798,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${transmitted_date_raw},${fulfillment.left_purple_raw}) ;;
+    sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: transmitted_to_in_hand_days {
@@ -809,9 +809,8 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
-
 
   measure: order_to_in_hand_days {
     label: "Order to In Hand (days)"
@@ -821,7 +820,7 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${created_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${created_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
 
   measure: left_purple_to_in_hand_days {
@@ -832,10 +831,11 @@ view: sales_order_line {
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
-    sql: datediff('day',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
+    sql: datediff('day',${fulfillment.left_purple_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
 
   measure: order_to_transmitted_hours {
+    hidden: yes
     label: " Order to Transmitted (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -846,6 +846,7 @@ view: sales_order_line {
   }
 
   measure: order_to_left_purple_hours {
+    hidden: yes
     label: " Order to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -857,6 +858,7 @@ view: sales_order_line {
   }
 
   measure: transmitted_to_left_purple_hours {
+    hidden: yes
     label: " Transmitted to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -868,6 +870,7 @@ view: sales_order_line {
   }
 
   measure: transmitted_to_in_hand_hours {
+    hidden: yes
     label: " Transmitted to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -878,8 +881,8 @@ view: sales_order_line {
     sql: timediff('hour',${transmitted_date_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-
   measure: order_to_in_hand_hours {
+    hidden: yes
     label: " Order to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -891,6 +894,7 @@ view: sales_order_line {
   }
 
   measure: left_purple_to_in_hand_hours {
+    hidden: yes
     label: " Left Purple to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
@@ -1021,9 +1025,9 @@ view: sales_order_line {
     -- no left purple date
     case when ${fulfillment.left_purple_raw} is null then null
         when  ${fulfillment.left_purple_raw} <
-            dateadd('hour'
+            dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 24 else 24 end
+            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , NVL(${created_raw},${created_raw})
             )
@@ -1067,9 +1071,9 @@ view: sales_order_line {
     -- no left purple date
     case when ${fulfillment.left_purple_raw} is null then null
         when  ${fulfillment.left_purple_raw} <
-            dateadd('hour'
+            dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 21.5 else 21.5 end
+            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , NVL(${transmitted_date_raw},${created_raw})
             )
@@ -1113,9 +1117,9 @@ view: sales_order_line {
     -- no left purple date
     case when ${fulfillment.left_purple_raw} is null then null
         when  ${fulfillment.in_hand_raw} <
-            dateadd('hour'
+            dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 168 else 72 end
+            , case when ${carrier} in ('XPO', 'Pilot') then 7 else 3 end
             --using min ship by if it has one
             , NVL(${created_raw},${created_raw})
             )
@@ -1159,9 +1163,9 @@ view: sales_order_line {
     -- no left purple date
     case when ${fulfillment.left_purple_raw} is null then null
         when  ${fulfillment.in_hand_raw} <
-            dateadd('hour'
+            dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 144 else 48 end
+            , case when ${carrier} in ('XPO', 'Pilot') then 6 else 2 end
             --using min ship by if it has one
             , NVL(${fulfillment.left_purple_raw},${created_raw})
             )
@@ -1224,6 +1228,45 @@ view: sales_order_line {
     sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
       when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
       else 'Website' end;;
+  }
+
+  dimension: transmitted_sla {
+    hidden: yes
+    label: "Transmitted SLA (yes/no)"
+    view_label: "Fulfillment"
+    description: ""
+    type: yesno
+    sql: ${transmitted_date_raw} <
+      case when dayname(${transmitted_date_raw}) = 'Sunday' then dateadd('day', 1, ${transmitted_date_raw})
+          when dayname(${transmitted_date_raw}) = 'Saturday' then dateadd('day', 2, ${transmitted_date_raw})
+          when dayname(${transmitted_date_raw}) = 'Friday' and hour(${transmitted_date_raw}) > 14 then dateadd('day', 3, ${transmitted_date_raw})
+          when hour(${transmitted_date_raw}) > 14  then dateadd('day', 1, ${transmitted_date_raw})
+          else ${transmitted_date_raw} end ;;
+  }
+
+  measure: order_to_transmitted_in_sla_adj {
+    label: "Order to Transmitted in SLA Adj (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${transmitted_sla} = 'yes' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_transmitted_not_in_sla_adj {
+    label: "Order to Transmitted in SLA Adj (units)"
+    view_label: "Fulfillment"
+    hidden: yes
+    type: sum
+    sql: case when ${transmitted_sla} = 'no' then ${ordered_qty} end ;;
+  }
+
+  measure: order_to_transmitted_in_sla_adj_prct {
+    label: "Order to Transmitted in SLA Adj %"
+    view_label: "Fulfillment"
+    group_label: "SLA Benchmarks %"
+    value_format_name: percent_1
+    type: number
+    sql: ${order_to_transmitted_in_sla_adj}/(${order_to_transmitted_in_sla_adj}+${order_to_transmitted_not_in_sla_adj}) ;;
   }
 
 }
