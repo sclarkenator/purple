@@ -918,14 +918,20 @@ view: sales_order_line {
     label: "Mattress Sales ($)"
     view_label: "Product"
     type: sum
-    sql:  case when ${item.category_raw} = 'MATTRESS' then ${gross_amt} else 0 end ;;
+    sql:  case when ${item.category_raw} = 'MATTRESS'
+    -- Adding split kings here
+    or ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573')
+    then ${gross_amt} else 0 end ;;
   }
 
   measure: mattress_units {
     label: "Mattress Sales (Units)"
     view_label: "Product"
     type: sum
-    sql:  case when ${item.category_raw} = 'MATTRESS' then ${total_units_raw} else 0 end ;;
+    sql:  case when ${item.category_raw} = 'MATTRESS'
+    -- Adding split kings here
+    or ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573')
+    then ${total_units_raw} else 0 end ;;
   }
 
   measure: base_sales {
