@@ -41,7 +41,7 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKETS' THEN 1 ELSE 0 END) BLANKET_FLG
-        ,SUM(CASE WHEN category = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895') then 1 else 0 end) harmony
         ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857') then 1 else 0 end) plush
