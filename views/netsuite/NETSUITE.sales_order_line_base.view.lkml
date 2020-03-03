@@ -363,6 +363,7 @@ view: sales_order_line_base {
 
   measure: last_updated_date_sales {
     type: date
+    label: "Last Updated Sales"
     sql: MAX(${created_date}) ;;
     convert_tz: no
   }
@@ -794,6 +795,10 @@ view: sales_order_line_base {
 
   set: order_details {
     fields: [order_id, sales_order.tranid, created_date, sales_order_line.SLA_Target_date, sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+  }
+
+  set: sales_order_details {
+    fields: [order_id, sales_order.tranid, created_date, customer_table.customer_id, sales_order_line.SLA_Target_date, sales_order.minimum_ship_date, item.product_description, location, sale_order.source, total_units.gross_amt]
   }
 
 }

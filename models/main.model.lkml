@@ -258,6 +258,7 @@ explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
 explore: l2l_quality_yellow_card {hidden: yes}
 explore: l2l_shift_line_1_glue_process {hidden: yes}
+explore: l2l_machine_downtime {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
@@ -400,8 +401,9 @@ explore: starship_fulfillment {
       type: left_outer
       relationship: one_to_one
     }
-    }
+  }
 
+  explore: day_pending { hidden:yes}
 
 
 #-------------------------------------------------------------------
@@ -426,7 +428,7 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
-explore: adspend_target { hidden:yes }
+#explore: adspend_target { hidden:yes }
 
 explore: zipcode_radius {
   hidden: yes
@@ -1187,6 +1189,8 @@ explore: sales_order_line{
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
+explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
+explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
 
 explore: wholesale {
   extends: [sales_order_line]
