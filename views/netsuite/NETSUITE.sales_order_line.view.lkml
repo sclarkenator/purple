@@ -976,19 +976,12 @@ view: sales_order_line {
     hidden: yes
     description: "Was the order to transmitted time within SLA"
     type: string
-    sql:
-    -- no left purple date
-    case when ${fulfillment.left_purple_raw} is null then null
-        when  ${transmitted_date_raw} <
-            dateadd('hour'
-            --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 2.5 else 2.5 end
-            --using min ship by if it has one
-            , NVL(${created_raw},${created_raw})
-            )
-        then 'yes'
-        else 'no'
-    end ;;
+    sql: ${transmitted_date_raw} <
+      case when dayname(${transmitted_date_raw}) = 'Sunday' then dateadd('day', 1, ${transmitted_date_raw})
+          when dayname(${transmitted_date_raw}) = 'Saturday' then dateadd('day', 2, ${transmitted_date_raw})
+          when dayname(${transmitted_date_raw}) = 'Friday' and hour(${transmitted_date_raw}) > 14 then dateadd('day', 3, ${transmitted_date_raw})
+          when hour(${transmitted_date_raw}) > 14  then dateadd('day', 1, ${transmitted_date_raw})
+          else ${transmitted_date_raw} end ;;
   }
 
   measure: order_to_transmitted_in_sla {
@@ -1229,45 +1222,6 @@ view: sales_order_line {
     sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
       when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
       else 'Website' end;;
-  }
-
-  dimension: transmitted_sla {
-    hidden: yes
-    label: "Transmitted SLA (yes/no)"
-    view_label: "Fulfillment"
-    description: ""
-    type: yesno
-    sql: ${transmitted_date_raw} <
-      case when dayname(${transmitted_date_raw}) = 'Sunday' then dateadd('day', 1, ${transmitted_date_raw})
-          when dayname(${transmitted_date_raw}) = 'Saturday' then dateadd('day', 2, ${transmitted_date_raw})
-          when dayname(${transmitted_date_raw}) = 'Friday' and hour(${transmitted_date_raw}) > 14 then dateadd('day', 3, ${transmitted_date_raw})
-          when hour(${transmitted_date_raw}) > 14  then dateadd('day', 1, ${transmitted_date_raw})
-          else ${transmitted_date_raw} end ;;
-  }
-
-  measure: order_to_transmitted_in_sla_adj {
-    label: "Order to Transmitted in SLA Adj (units)"
-    view_label: "Fulfillment"
-    hidden: yes
-    type: sum
-    sql: case when ${transmitted_sla} = 'yes' then ${ordered_qty} end ;;
-  }
-
-  measure: order_to_transmitted_not_in_sla_adj {
-    label: "Order to Transmitted in SLA Adj (units)"
-    view_label: "Fulfillment"
-    hidden: yes
-    type: sum
-    sql: case when ${transmitted_sla} = 'no' then ${ordered_qty} end ;;
-  }
-
-  measure: order_to_transmitted_in_sla_adj_prct {
-    label: "Order to Transmitted in SLA Adj %"
-    view_label: "Fulfillment"
-    group_label: "SLA Benchmarks %"
-    value_format_name: percent_1
-    type: number
-    sql: ${order_to_transmitted_in_sla_adj}/(${order_to_transmitted_in_sla_adj}+${order_to_transmitted_not_in_sla_adj}) ;;
   }
 
 }
