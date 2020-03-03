@@ -1181,6 +1181,7 @@ explore: sales_order_line{
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
+explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
 
 explore: wholesale {
   extends: [sales_order_line]
