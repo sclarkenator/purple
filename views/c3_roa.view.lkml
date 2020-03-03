@@ -9,9 +9,9 @@ view: c3_roa {
 
   dimension: PLATFORM {
     type: string
-    sql: ${TABLE}.PLATFORM ;;
+    sql: case when ${TABLE}.PLATFORM = 'YOUTUBE' then 'YOUTUBE'
+      else ${TABLE}.PLATFORM end ;;
   }
-
 
   dimension: SOURCE {
     type: string
@@ -64,9 +64,11 @@ view: c3_roa {
     case: {
       when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER')
                 or ${SOURCE} ilike ('%social media%') ;; label:"social"}
-      when: {sql: ${PLATFORM} in ('YOUTUBE.COM')
+      when: {sql: ${PLATFORM} in ('YOUTUBE')
                 or ${SOURCE} = 'VIDEO'
                 or ${SOURCE} = 'YOUTUBE VIDEOS'
+                or ${SOURCE} = 'YOUTUBE'
+                or ${SOURCE} = 'YOUTUBE.COM'
                 or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${SOURCE} ilike ('%ispla%')
                 or ${PLATFORM} in ('ACUITY')
