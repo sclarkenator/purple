@@ -579,6 +579,15 @@ explore: narvar_customer_feedback {
   label: "Narvar customer feedback"
 }
 
+  explore: cordial_bulk_message {
+    group_label: "Cordial"
+    hidden: yes
+    label: "Cordial Information"
+    join: cordial_activity{
+      type: left_outer
+      sql_on: ${cordial_bulk_message.bm_id} = ${cordial_activity.bm_id} ;;
+      relationship: one_to_many
+    }}
 
 #-------------------------------------------------------------------
 #
