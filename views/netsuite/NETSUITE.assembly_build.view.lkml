@@ -26,7 +26,15 @@ view: assembly_build {
     hidden: no
     description: "When in NetSuite the Transaction was created"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created::date ;; }
+
+  dimension_group: created_time {
+    label: "   Created"
+    hidden: no
+    description: "When in NetSuite the Transaction was created"
+    type: time
+    timeframes: [raw, time]
     sql: ${TABLE}.created ;; }
 
   dimension_group: deleted {

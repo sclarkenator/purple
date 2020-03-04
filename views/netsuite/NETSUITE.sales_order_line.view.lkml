@@ -918,14 +918,20 @@ view: sales_order_line {
     label: "Mattress Sales ($)"
     view_label: "Product"
     type: sum
-    sql:  case when ${item.category_raw} = 'MATTRESS' then ${gross_amt} else 0 end ;;
+    sql:  case when ${item.category_raw} = 'MATTRESS'
+    -- Adding split kings here
+    or ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573')
+    then ${gross_amt} else 0 end ;;
   }
 
   measure: mattress_units {
     label: "Mattress Sales (Units)"
     view_label: "Product"
     type: sum
-    sql:  case when ${item.category_raw} = 'MATTRESS' then ${total_units_raw} else 0 end ;;
+    sql:  case when ${item.category_raw} = 'MATTRESS'
+    -- Adding split kings here
+    or ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573')
+    then ${total_units_raw} else 0 end ;;
   }
 
   measure: base_sales {
@@ -1017,13 +1023,13 @@ view: sales_order_line {
     type: yesno
     sql:
     -- no left purple date
-    case when ${fulfillment.left_purple_raw} is null then null
+    case when ${fulfillment.left_purple_raw} is null then 'no'
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
             , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
-            , NVL(${created_raw},${created_raw})
+            , ${created_raw}
             )
         then 'yes'
         else 'no'
@@ -1063,7 +1069,7 @@ view: sales_order_line {
     type: yesno
     sql:
     -- no left purple date
-    case when ${fulfillment.left_purple_raw} is null then null
+    case when ${fulfillment.left_purple_raw} is null then 'no'
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
@@ -1109,13 +1115,13 @@ view: sales_order_line {
     type: yesno
     sql:
     -- no left purple date
-    case when ${fulfillment.left_purple_raw} is null then null
+    case when ${fulfillment.in_hand_raw} is null then 'no'
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
             , case when ${carrier} in ('XPO', 'Pilot') then 7 else 3 end
             --using min ship by if it has one
-            , NVL(${created_raw},${created_raw})
+            , ${created_raw}
             )
         then 'yes'
         else 'no'
@@ -1155,7 +1161,7 @@ view: sales_order_line {
     type: yesno
     sql:
     -- no left purple date
-    case when ${fulfillment.left_purple_raw} is null then null
+    case when ${fulfillment.in_hand_raw} is null then 'no'
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
