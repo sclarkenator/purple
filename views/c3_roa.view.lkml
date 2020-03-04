@@ -62,14 +62,14 @@ view: c3_roa {
     description: "Calculated based on source and platform"
     type: string
     case: {
+      when: {sql: ${PLATFORM} in ('YOUTUBE.COM')
+        or ${SOURCE} = 'VIDEO'
+        or ${SOURCE} = 'YOUTUBE VIDEOS'
+        or ${SOURCE} = 'YOUTUBE'
+        or ${SOURCE} = 'YOUTUBE.COM'
+        or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER')
                 or ${SOURCE} ilike ('%social media%') ;; label:"social"}
-      when: {sql: ${PLATFORM} in ('YOUTUBE')
-                or ${SOURCE} = 'VIDEO'
-                or ${SOURCE} = 'YOUTUBE VIDEOS'
-                or ${SOURCE} = 'YOUTUBE'
-                or ${SOURCE} = 'YOUTUBE.COM'
-                or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${SOURCE} ilike ('%ispla%')
                 or ${PLATFORM} in ('ACUITY')
                 or (${PLATFORM} = 'GOOGLE' and ${SOURCE} = 'CROSS-NETWORK')

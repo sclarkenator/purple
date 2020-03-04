@@ -142,7 +142,7 @@ view: daily_adspend {
     label: " Spend Platform"
     description: "What platform for spend (google, facebook, TV, etc.)"
     type:  string
-    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE'
+    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
         else ${TABLE}.platform end ;; }
 
@@ -201,7 +201,7 @@ view: daily_adspend {
     description: "A Channel Managed by Agency Within"
     type: yesno
     sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'display')
-      or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
+      or ${spend_platform} = 'YOUTUBE.COM' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
        ;;
   }
 
