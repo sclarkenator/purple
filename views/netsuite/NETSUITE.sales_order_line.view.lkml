@@ -16,6 +16,7 @@ view: sales_order_line {
     group_label: "Average Days:"
     label: "to Fulfillment"
     description: "Average number of days between order and fulfillment"
+    drill_fields: [fulfillment_details*]
     view_label: "Fulfillment"
     type:  average_distinct
     value_format: "#.0"
@@ -28,6 +29,7 @@ view: sales_order_line {
     label: "Mattress Firm SLA (numerator)"
     hidden: yes
     description: "Total units successfully fulfilled before the ship by date"
+    drill_fields: [fulfillment_details*]
     filters: {
       field: sales_order.customer_id
       value: "2662" }
@@ -40,6 +42,7 @@ view: sales_order_line {
     label: "Mattress Firm SLA (denominator)"
     hidden: yes
     description: "Total units not cancelled before the ship by date"
+    drill_fields: [fulfillment_details*]
     filters: {
       field: sales_order.customer_id
       value: "2662" }
@@ -52,6 +55,7 @@ view: sales_order_line {
     group_label: "Fulfillment SLA"
     label: "Mattress Firm Shipped on Time (% of units)"
     description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units)"
+    drill_fields: [fulfillment_details*]
     value_format_name: percent_0
     type: number
     sql: ${mf_fulfilled}/nullif(${mf_units},0) ;;
@@ -62,6 +66,7 @@ view: sales_order_line {
     label: "Wholesale SLA (old)"
     hidden: yes
     description: "Was the order shipped out by the required ship-by date to arrive on time"
+    drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat_ful_sales_order} ;;
     sql:  case when ${fulfilled_date} <= ${sales_order.ship_by_date} then ${ordered_qty} else 0 end ;;
@@ -166,6 +171,7 @@ view: sales_order_line {
     label: "zQty Eligible SLA"
     hidden:  yes
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: CASE
@@ -179,6 +185,7 @@ view: sales_order_line {
   measure: sales_Fulfilled_in_SLA{
     label: "zQty Fulfilled in SLA"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     hidden:  yes
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
@@ -199,7 +206,7 @@ view: sales_order_line {
     hidden: no
     value_format_name: percent_1
     type: number
-    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    drill_fields: [fulfillment_details*]
     sql: Case when ${sales_eligible_for_SLA} = 0 then 0 Else ${sales_Fulfilled_in_SLA}/${sales_eligible_for_SLA} End ;;
   }
 
@@ -219,6 +226,7 @@ view: sales_order_line {
     label: "Qty Eligible SLA"
     group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
@@ -234,6 +242,7 @@ view: sales_order_line {
     label: "Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
@@ -258,7 +267,7 @@ view: sales_order_line {
     hidden: no
     value_format_name: percent_1
     type: number
-    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date,sales_order.minimum_ship_date,fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
 
@@ -275,6 +284,7 @@ view: sales_order_line {
     label: "Wholesale SLA (units)"
     hidden: yes
     description: "How many items are there on the order to be shipped?"
+    drill_fields: [fulfillment_details*]
     type: sum
     sql: case when ${cancelled_order.cancelled_date} is null or (${cancelled_order.cancelled_date} >  ${sales_order.ship_by_date}) then ${ordered_qty} else 0 end ;;
   }
@@ -284,6 +294,7 @@ view: sales_order_line {
     group_label: "Fulfillment SLA"
     label: "Wholesale Shipped on Time (% of units)"
     description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units)"
+    drill_fields: [fulfillment_details*]
     value_format_name: percent_0
     type: number
     sql: ${whlsl_fulfilled}/nullif(${whlsl_units},0) ;;
@@ -292,6 +303,7 @@ view: sales_order_line {
   measure: amazon_ca_sales {
     label: "Amazon-CA Gross Amount ($0.k)"
     description: "used to generate the sales by channel report"
+    drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
@@ -301,6 +313,7 @@ view: sales_order_line {
   measure: amazon_us_sales {
     label: "Amazon-US Gross Amount ($0.k)"
     description: "used to generate the sales by channel report"
+    drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
@@ -310,6 +323,7 @@ view: sales_order_line {
   measure: shopify_ca_sales {
     label: "Shopify-CA Gross Amount ($0.k)"
     description: "used to generate the sales by channel report"
+    drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
@@ -319,6 +333,7 @@ view: sales_order_line {
   measure: shopify_us_sales {
     label: "Shopify-US GrossAmount ($0.k)"
     description: "US Shopify gross sales as reported in Netsuite"
+    drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
     type: sum
@@ -333,7 +348,7 @@ view: sales_order_line {
     value_format: "$#,##0"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
+    drill_fields: [fulfillment_details*]
     sql: (${total_gross_Amt}/nullif(${total_units},0))*(${total_units}-${fulfillment.count}) ;;
   }
 
@@ -344,7 +359,7 @@ view: sales_order_line {
     description: "Orders placed that have not been fulfilled"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
+    drill_fields: [fulfillment_details*]
     sql: ${total_units}-${fulfillment.count} ;;
   }
 
@@ -356,7 +371,7 @@ view: sales_order_line {
     value_format: "$#,##0"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders,unfulfilled_orders]
+    drill_fields: [fulfillment_details*]
     sql: (${total_gross_Amt}/nullif(${total_units},0))*(${fulfillment.count}) ;;
   }
 
@@ -367,7 +382,7 @@ view: sales_order_line {
     description: "Orders placed that have been fulfilled"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
-    drill_fields: [order_id, sales_order.tranid, created_date, SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt,fulfilled_orders_units,unfulfilled_orders_units]
+    drill_fields: [fulfillment_details*]
     sql: ${fulfillment.count} ;;
   }
 
@@ -396,6 +411,7 @@ view: sales_order_line {
     label: "WEST SLA Eligible (3)"
     description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     hidden: yes
     filters: {
       field: carrier
@@ -419,7 +435,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     type: number
-    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    drill_fields: [fulfillment_details*]
     value_format_name: percent_1
     sql: case when datediff(day,${created_date},current_date) < 4 then null else ${fulfilled_in_SLA}/nullif(${SLA_eligible},0) end ;;
   }
@@ -449,6 +465,7 @@ view: sales_order_line {
     label: "Pilot SLA Eligible (14)"
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     hidden: yes
     filters: {
       field: carrier
@@ -496,6 +513,7 @@ view: sales_order_line {
     label: "Pilot SLA Eligible (14)"
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     hidden: yes
     filters: {
       field: carrier
@@ -526,7 +544,7 @@ view: sales_order_line {
     hidden: no
     description: "Percent of line items fulfilled by Manna within 14 days of order"
     type: number
-    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
+    drill_fields: [fulfillment_details*]
     value_format_name: percent_1
     sql:${manna_fulfilled_in_SLA_14days}/nullif(${manna_SLA_eligible_14days},0) ;;
   }
@@ -556,6 +574,7 @@ view: sales_order_line {
     label: "Manna SLA Eligible (14)"
     description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
     view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
     hidden: yes
     filters: {
       field: carrier
@@ -578,8 +597,8 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     description: "Percent of line items fulfilled by Manna within 1 days of order"
+    drill_fields: [fulfillment_details*]
     type: number
-    drill_fields: [customer_table.customer_id ,order_id, sales_order.tranid, created_date, sales_order.ship_by_date, fulfilled_date, SLA_Target_date ,item.product_description,Qty_Fulfilled_in_SLA ,total_units,SLA_Achievement_prct]
     value_format_name: percent_1
     sql: case when datediff(day,${created_date},current_date) > 14 then ${XPO_fulfilled_in_SLA}/nullif(${XPO_SLA_eligible},0) else null end ;;
   }
@@ -589,6 +608,7 @@ view: sales_order_line {
     label: "Total Standard Cost"
     description: "Total Cost (cost per unit * number of units)"
     group_label: "Product"
+    drill_fields: [sales_order_details*]
     type:  sum
     value_format: "$#,##0"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
@@ -753,6 +773,7 @@ view: sales_order_line {
     label: "Minimum Ship by"
     description: "Merging Minimum Ship By and Ship By fields from netsuite into a single values.  Min then Ship by."
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date}) ;;
@@ -775,6 +796,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql: datediff('day',${created_raw}::date,${transmitted_date_raw}::date) ;;
@@ -785,6 +807,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -796,6 +819,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -807,6 +831,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -818,6 +843,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -829,6 +855,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -841,6 +868,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql: timediff('hour',${created_raw},${transmitted_date_raw}) ;;
@@ -852,6 +880,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -864,6 +893,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -876,6 +906,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -888,6 +919,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
@@ -900,23 +932,17 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
     description: "The average difference between the order date and transmitted date in hours"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${fulfillment.left_purple_raw},${fulfillment.in_hand_raw}) ;;
   }
 
-  set: fulfill_details {
-    fields: [order_id,item_id,created_date,fulfilled_date]
-  }
-
-  set: fulfillment_details {
-    fields: [order_id, item_id, created_date, fulfilled_date, carrier, DTC_carrier, fulfillment.in_hand, fulfillment.left_purple, fulfillment.transmitted_date, order_to_transmitted_sla, order_to_left_purple_sla, transmitted_to_left_purple_sla, order_to_in_hand_sla, left_purple_to_in_hand_sla]
-  }
-
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
     -- Adding split kings here
@@ -927,6 +953,7 @@ view: sales_order_line {
   measure: mattress_units {
     label: "Mattress Sales (Units)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
     -- Adding split kings here
@@ -937,6 +964,7 @@ view: sales_order_line {
   measure: base_sales {
     label: "Base Sales ($)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${gross_amt} else 0 end ;;
   }
@@ -944,6 +972,7 @@ view: sales_order_line {
   measure: base_units {
     label: "Base Sales (Units)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${total_units_raw} else 0 end ;;
   }
@@ -951,6 +980,7 @@ view: sales_order_line {
   measure: bedding_sales {
     label: "Bedding Sales ($)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${gross_amt} else 0 end ;;
   }
@@ -958,6 +988,7 @@ view: sales_order_line {
   measure: bedding_units {
     label: "Bedding Sales (Units)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${total_units_raw} else 0 end ;;
   }
@@ -965,6 +996,7 @@ view: sales_order_line {
   measure: pet_sales {
     label: "Pet Sales ($)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${gross_amt} else 0 end ;;
   }
@@ -972,6 +1004,7 @@ view: sales_order_line {
   measure: pet_units {
     label: "Pet Sales (Units)"
     view_label: "Product"
+    drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
   }
@@ -993,6 +1026,7 @@ view: sales_order_line {
   measure: order_to_transmitted_in_sla {
     label: "Order to Transmitted in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_transmitted_sla} = 'yes' then ${ordered_qty} end ;;
@@ -1001,6 +1035,7 @@ view: sales_order_line {
   measure: order_to_transmitted_not_in_sla {
     label: "Order to Transmitted not in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_transmitted_sla} = 'no' then ${ordered_qty} end ;;
@@ -1010,6 +1045,7 @@ view: sales_order_line {
     label: "Order to Transmitted SLA %"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
+    drill_fields: [sales_order_line.fulfillment_details]
     value_format_name: percent_1
     type: number
     sql: ${order_to_transmitted_in_sla}/(${order_to_transmitted_in_sla}+${order_to_transmitted_not_in_sla}) ;;
@@ -1020,6 +1056,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     hidden: yes
     description: "Was the order to left purple time within SLA"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: yesno
     sql:
     -- no left purple date
@@ -1039,6 +1076,7 @@ view: sales_order_line {
   measure: order_to_left_purple_in_sla {
     label: "Order to Left Purple in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_left_purple_sla} = 'yes' then ${ordered_qty} end ;;
@@ -1047,6 +1085,7 @@ view: sales_order_line {
   measure: order_to_left_purple_not_in_sla {
     label: "Order to Left Purple not in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_left_purple_sla} = 'no' then ${ordered_qty} end ;;
@@ -1056,6 +1095,7 @@ view: sales_order_line {
     label: "Order to Left Purple SLA %"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
+    drill_fields: [sales_order_line.fulfillment_details]
     value_format_name: percent_1
     type: number
     sql: ${order_to_transmitted_in_sla}/(${order_to_transmitted_in_sla}+${order_to_transmitted_not_in_sla}) ;;
@@ -1085,6 +1125,7 @@ view: sales_order_line {
   measure: transmitted_to_left_purple_in_sla {
     label: "Transmitted to Left Purple in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${transmitted_to_left_purple_sla} = 'yes' then ${ordered_qty} end ;;
@@ -1093,6 +1134,7 @@ view: sales_order_line {
   measure: transmitted_to_left_purple_not_in_sla {
     label: "Transmitted to Left Purple not in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${transmitted_to_left_purple_sla} = 'no' then ${ordered_qty} end ;;
@@ -1102,6 +1144,7 @@ view: sales_order_line {
     label: "Transmitted to Left Purple SLA %"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
+    drill_fields: [sales_order_line.fulfillment_details]
     value_format_name: percent_1
     type: number
     sql: ${transmitted_to_left_purple_in_sla}/(${transmitted_to_left_purple_in_sla}+${transmitted_to_left_purple_not_in_sla}) ;;
@@ -1131,6 +1174,7 @@ view: sales_order_line {
   measure: order_to_in_hand_in_sla {
     label: "Order to In Hand in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_in_hand_sla} = 'yes' then ${ordered_qty} end ;;
@@ -1139,6 +1183,7 @@ view: sales_order_line {
   measure: order_to_in_hand_not_in_sla {
     label: "Order to In Hand not in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${order_to_in_hand_sla} = 'no' then ${ordered_qty} end ;;
@@ -1148,6 +1193,7 @@ view: sales_order_line {
     label: "Order to In Hand SLA %"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
+    drill_fields: [sales_order_line.fulfillment_details]
     value_format_name: percent_1
     type: number
     sql: ${order_to_in_hand_in_sla}/(${order_to_in_hand_in_sla}+${order_to_in_hand_not_in_sla}) ;;
@@ -1177,6 +1223,7 @@ view: sales_order_line {
   measure: left_purple_to_in_hand_in_sla {
     label: "Left Purple to In Hand in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${left_purple_to_in_hand_sla} = 'yes' then ${ordered_qty} end ;;
@@ -1185,6 +1232,7 @@ view: sales_order_line {
   measure: left_purple_to_in_hand_not_in_sla {
     label: "Left Purple to In Hand not in SLA (units)"
     view_label: "Fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details]
     hidden: yes
     type: sum
     sql: case when ${left_purple_to_in_hand_sla} = 'no' then ${ordered_qty} end ;;
@@ -1194,6 +1242,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand SLA %"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
+    drill_fields: [sales_order_line.fulfillment_details]
     value_format_name: percent_1
     type: number
     sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
@@ -1228,6 +1277,48 @@ view: sales_order_line {
     sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
       when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
       else 'Website' end;;
+  }
+
+  set: fulfill_details {
+    fields: [fulfill_details*]
+  }
+
+  set: fulfillment_details {
+    fields: [order_id
+      , item_id
+      , created_date
+      , fulfilled_date
+      , carrier
+      , DTC_carrier
+      , fulfillment.in_hand
+      , fulfillment.left_purple
+      , fulfillment.transmitted_date
+      , order_to_transmitted_sla
+      , order_to_left_purple_sla
+      , transmitted_to_left_purple_sla
+      , order_to_in_hand_sla
+      , left_purple_to_in_hand_sla]
+  }
+
+  set: sales_order_details {
+    fields: [order_id
+      , sales_order.tranid
+      , created_date
+      , fulfilled_date
+      , customer_table.customer_id
+      , location, sale_order.source
+      , total_units.gross_amt
+      , item.item_id
+      , item.sku_id
+      , item.category_name
+      , item.line_raw
+      , item.model_raw
+      , item.product_description_raw
+      , item.color
+      , total_gross_Amt_non_rounded
+      , total_units
+      , total_standard_cost
+      , total_discounts]
   }
 
 }

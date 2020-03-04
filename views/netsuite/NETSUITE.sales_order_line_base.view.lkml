@@ -16,6 +16,7 @@ view: sales_order_line_base {
     hidden: yes
     label:  "Avgerage Cost ($)"
     description:  "Average unit cost, only valid looking at item-level data"
+    drill_fields: [order_details*]
     type: average
     value_format_name: decimal_2
     sql:  ${TABLE}.estimated_Cost ;;
@@ -65,6 +66,7 @@ view: sales_order_line_base {
     label:  "Total Discounts ($)"
     value_format:"$#,##0"
     description:  "Total of all applied discounts when order was placed"
+    drill_fields: [order_details*]
     type: sum
     sql:  ${TABLE}.discount_amt ;;
   }
@@ -73,6 +75,7 @@ view: sales_order_line_base {
     label: "Total Line Items"
     description: "Total line items to fulfill"
     hidden: yes
+    drill_fields: [order_details*]
     type: count_distinct
     sql:  ${item_order} ;;
   }
@@ -103,6 +106,7 @@ view: sales_order_line_base {
   measure: dates{
     label: "Count of Days"
     hidden:  yes
+    drill_fields: [order_details*]
     type: count_distinct
     sql: ${TABLE}.Created::date ;;
   }
@@ -364,6 +368,7 @@ view: sales_order_line_base {
   measure: last_updated_date_sales {
     type: date
     label: "Last Updated Sales"
+    drill_fields: [sales_order_line.sales_order_details*]
     sql: MAX(${created_date}) ;;
     convert_tz: no
   }
@@ -442,6 +447,7 @@ view: sales_order_line_base {
   measure: 7_day_sales {
     label: "7 Day Average (units)"
     description: "Units ordered in the last 7 days /7"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden: yes
     type: sum
@@ -455,6 +461,7 @@ view: sales_order_line_base {
   measure: 30_day_sales {
     label: "30 Day Average Sales (units)"
     description: "Units ordered in the last 30 days /30"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden:  yes
     type: sum
@@ -468,6 +475,7 @@ view: sales_order_line_base {
   measure: 60_day_sales {
     label: "60 Day Average Sales (units)"
     description: "Units ordered in the last 60 days /60"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden: yes
     type: sum
@@ -481,6 +489,7 @@ view: sales_order_line_base {
   measure: 90_day_sales {
     label: "90 Day Average Sales (units)"
     description: "Units ordered in the last 90 days /90"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden:  yes
     type: sum
@@ -671,6 +680,7 @@ view: sales_order_line_base {
     hidden: yes
     type: sum
     description: "The average cost of the item at time of order creation."
+    drill_fields: [order_details*]
     value_format: "$#,##0"
     sql: ${TABLE}.AVERAGE_COST ;;
   }
@@ -680,7 +690,7 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Picked (units)"
     type: sum
-    drill_fields: [order_details*]
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
     description: "The Qty of items that are in the picked state"
     sql: ${TABLE}.PICKED ;;
   }
@@ -690,7 +700,7 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Committed (units)"
     type: sum
-    drill_fields: [order_details*]
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
     description: "The Qty of items that are in the committed state"
     sql: ${TABLE}.QUANTITY_COMMITTED ;;
   }
@@ -700,7 +710,7 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Packed (units)"
     type: sum
-    drill_fields: [order_details*]
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
     description: "The Qty of items that are in the packed state"
     sql: ${TABLE}.PACKED ;;
   }
@@ -794,11 +804,7 @@ view: sales_order_line_base {
   }
 
   set: order_details {
-    fields: [order_id, sales_order.tranid, created_date, sales_order_line.SLA_Target_date, sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
-  }
-
-  set: sales_order_details {
-    fields: [order_id, sales_order.tranid, created_date, customer_table.customer_id, sales_order_line.SLA_Target_date, sales_order.minimum_ship_date, item.product_description, location, sale_order.source, total_units.gross_amt]
+    fields: [sales_order_line.sales_order_details*]
   }
 
 }
