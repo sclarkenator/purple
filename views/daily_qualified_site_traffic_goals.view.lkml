@@ -37,6 +37,7 @@ left join c on b.monthdate = c.monthdate
    dimension: date {
      type: date
      sql: ${TABLE}.date ;;
+    primary_key: yes
    }
 
    measure: traffic_goal {
