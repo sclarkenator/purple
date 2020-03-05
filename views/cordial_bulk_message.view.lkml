@@ -192,12 +192,12 @@ view: cordial_bulk_message {
   }
 
   measure: unique_clicks {
-    type: number
+    type: sum
     sql: ${TABLE}."UNIQUE_CLICKS" ;;
   }
 
   measure: unique_opens {
-    type: number
+    type: sum
     sql: ${TABLE}."UNIQUE_OPENS" ;;
   }
 
