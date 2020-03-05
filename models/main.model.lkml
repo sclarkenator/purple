@@ -253,6 +253,21 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: production_goal {
+  group_label: "Production"
+  label: "Production Goals"
+  description: "Production goals by forecast date, item, etc"
+  join: production_goal_by_item {
+    type: left_outer
+    sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
+    relationship: one_to_many}
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${production_goal_by_item.item_id} = ${item.item_id} and ${production_goal_by_item.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}

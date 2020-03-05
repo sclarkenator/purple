@@ -4,12 +4,14 @@ view: cancelled_order {
   measure: units_cancelled {
     label: "      Cancelled Orders (units)"
     description: "Total individual units cancelled"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;; }
 
   measure: orders_cancelled {
     label: "      Cancelled Orders (count)"
     description: "Count (#) of distinct orders with at least 1 item cancelled"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     sql: ${order_id} ;; }
 
@@ -27,6 +29,7 @@ view: cancelled_order {
   measure: amt_cancelled {
     label:  "      Cancelled Orders ($)"
     description: "Total USD amount of cancelled order, excluding taxes"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }

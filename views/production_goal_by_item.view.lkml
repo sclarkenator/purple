@@ -2,19 +2,70 @@ view: production_goal_by_item {
   sql_table_name: "PRODUCTION"."PRODUCTION_GOAL_BY_ITEM"
     ;;
 
+  dimension: pk {
+    label: "Primary key for Production Goal"
+    primary_key: yes
+    hidden: yes
+    type: date
+    sql: ${TABLE}."FORECAST" ;;
+  }
+
   dimension_group: forecast {
+    hidden: yes
+    view_label: "Production Goals"
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}."FORECAST" ;;
+  }
+
+  dimension: item_id {
+    hidden: yes
+    label: "Item ID"
+    view_label: "Production Goals"
+    type: number
+    sql: ${TABLE}."ITEM_ID" ;;
+  }
+
+  dimension: percent_units {
+    hidden: yes
+    label: "Percent of Forecasted Units"
+    view_label: "Production Goals"
+    type: number
+    sql: ${TABLE}."PERCENT_UNITS" ;;
+  }
+
+  dimension: sku_id {
+    hidden: yes
+    label: "SKU ID"
+    view_label: "Production Goals"
+    type: string
+    sql: ${TABLE}."SKU_ID" ;;
+  }
+
+  measure: total_units{
+    label: "Forecasted Units"
+    view_label: "Production Goals"
+    description: "Number of Forecasted Units by SKU"
+    type: sum
+    sql: ${TABLE}."TOTAL_UNITS" ;;
+  }
+
+  measure: units_fg_produced {
+    label: "Finished Goods Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Finished Goods Produced (units) by SKU"
+    type: sum
+    sql: ${TABLE}."UNITS_FG_PRODUCED" ;;
+  }
+
+  measure: units_peak_produced {
+    label: "Peak Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Peaks Produced (units) by SKU"
+    type: sum
+    sql: ${TABLE}."UNITS_PEAK_PRODUCED" ;;
   }
 
   dimension_group: insert_ts {
@@ -30,36 +81,6 @@ view: production_goal_by_item {
       year
     ]
     sql: ${TABLE}."INSERT_TS" ;;
-  }
-
-  dimension: item_id {
-    type: number
-    sql: ${TABLE}."ITEM_ID" ;;
-  }
-
-  dimension: percent_units {
-    type: number
-    sql: ${TABLE}."PERCENT_UNITS" ;;
-  }
-
-  dimension: sku_id {
-    type: string
-    sql: ${TABLE}."SKU_ID" ;;
-  }
-
-  dimension: total_units {
-    type: number
-    sql: ${TABLE}."TOTAL_UNITS" ;;
-  }
-
-  dimension: units_fg_produced {
-    type: number
-    sql: ${TABLE}."UNITS_FG_PRODUCED" ;;
-  }
-
-  dimension: units_peak_produced {
-    type: number
-    sql: ${TABLE}."UNITS_PEAK_PRODUCED" ;;
   }
 
   dimension_group: update_ts {
@@ -78,6 +99,7 @@ view: production_goal_by_item {
   }
 
   measure: count {
+    view_label: "Production Goals"
     type: count
     drill_fields: []
   }

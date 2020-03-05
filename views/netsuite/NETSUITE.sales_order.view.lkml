@@ -25,7 +25,7 @@ view: sales_order {
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
-    drill_fields: [order_id, tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,minimum_ship_date ,item.product_description, sales_order_line.location, source, sales_order_line.total_units,sales_order_line.gross_amt]
+    drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     description: "Distinct Orders"
     sql: ${order_id} ;; }
@@ -34,6 +34,7 @@ view: sales_order {
     label: "Distinct customers"
     description: "Counts distinct email addresses in customer table"
     view_label: "Customer"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     hidden: no
     sql: ${TABLE}.email ;; }
@@ -41,6 +42,7 @@ view: sales_order {
 measure: upt {
   label: "UPT"
   description: "Units per transaction"
+  drill_fields: [sales_order_line.sales_order_details*]
   type: number
   value_format: "#,##0.00"
   sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
@@ -48,6 +50,7 @@ measure: upt {
   measure: average_order_size {
     label: "Average Order Size ($)"
     description: "Average total order amount, excluding tax"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: average
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
@@ -55,6 +58,7 @@ measure: upt {
   measure: max_order_size {
     label: " Max Order Size ($)"
     description: "Max total order amount, excluding tax"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: max
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
@@ -62,6 +66,7 @@ measure: upt {
   measure: min_order_size {
     label: " Min Order Size ($)"
     description: "Min total order amount, excluding tax"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: min
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
@@ -536,6 +541,7 @@ dimension_group: trandate {
     group_label: "Average Days:"
     label: "to Manna Transmission"
     description: "Finds the average time elapsed between Order Date and Manna Transmission Date"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;; }
 

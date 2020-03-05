@@ -81,6 +81,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Mattress"
     description: "1/0 per order; 1 if there was a mattress in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.mattress_flg ;; }
 
@@ -88,6 +89,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Cushion"
     description: "1/0 per order; 1 if there was a cushion in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.cushion_flg ;; }
 
@@ -95,6 +97,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "Sheets"
     description: "1/0 per order; 1 if there were sheets in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.sheets_flg ;; }
 
@@ -102,6 +105,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Mattress Protector"
     description: "1/0 per order; 1 if there was a mattress protector in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.protector_flg ;; }
 
@@ -109,6 +113,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Pillow"
     description: "1/0 per order; 1 if there was a pillow in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.pillow_flg ;; }
 
@@ -117,6 +122,7 @@ view: order_flag {
     label: "a Harmony Pillow"
     hidden: yes
     description: "1/0 per order; 1 if there was a Harmony pillow in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.harmony_pillow_flg ;; }
 
@@ -125,6 +131,7 @@ view: order_flag {
     label: "a Plush Pillow"
     hidden: yes
     description: "1/0 per order; 1 if there was a Plush pillow in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.plush_pillow_flg ;; }
 
@@ -133,6 +140,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Base"
     description: "1/0 per order; 1 if there was a base in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.base_flg ;; }
 
@@ -140,6 +148,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Powerbase"
     description: "1/0 per order; 1 if there was a powerbase in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.powerbase_flg ;; }
 
@@ -147,6 +156,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Platform Base"
     description: "1/0 per order; 1 if there was a platform base in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
 
@@ -155,6 +165,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Blanket"
     description: "1/0 per order; 1 if there was a blanket in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.blanket_flg ;; }
 
@@ -162,6 +173,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "Multiple Mattresses"
     description: "1/0 per order; 1 if there was more than 1 mattress in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.mm_flg ;; }
 
@@ -169,6 +181,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Split King"
     description: "1/0 per order; 1 if multiple twin XL mattresses purchased in this order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: sum
     sql: ${TABLE}.sk_flg ;; }
 
@@ -177,6 +190,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Duvet"
     description: "1/0 per order; 1 if there was a duvet in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.duvet_flg ;; }
 
@@ -185,6 +199,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Gravity Blanket"
     description: "1/0 per order; 1 if there was a gravity blanket in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_blanket_flg ;; }
 
@@ -193,6 +208,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Gravity Mask"
     description: "1/0 per order; 1 if there was a gravity mask in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
 
@@ -201,6 +217,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Accordion Platform"
     description: "1/0 per order; 1 if there was a accordion platform in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.accordion_platform_flg ;; }
 
