@@ -40,8 +40,19 @@ left join c on b.monthdate = c.monthdate
     description: "Use this date for filtering the Qualified Traffic Goal"
     group_label: "Advanced"
      sql: ${TABLE}.date ;;
+    hidden: yes
     primary_key: yes
    }
+
+
+  dimension_group: date_set {
+    type: time
+    label: "Traffic Target"
+    description: "Use this date for filtering the Qualified Traffic Goal"
+    group_label: "Advanced"
+    timeframes: [date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.date ;;
+  }
 
    measure: traffic_goal {
      label: "Qualified Traffic Goal"
