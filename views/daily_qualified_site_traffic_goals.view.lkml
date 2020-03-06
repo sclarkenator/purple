@@ -38,13 +38,14 @@ left join c on b.monthdate = c.monthdate
      type: date
      label: "Target Date"
     description: "Use this date for filtering the Qualified Traffic Goal"
+    group_label: "Advanced"
      sql: ${TABLE}.date ;;
     primary_key: yes
    }
 
    measure: traffic_goal {
      label: "Qualified Traffic Goal"
-     description: "Qualified Traffic needed to hit Sales"
+     description: "Qualified Traffic needed to hit Sales; filter with 'Target Date'"
      type: sum
      sql: ${TABLE}.Traffic_goal ;;
     value_format: "0"
