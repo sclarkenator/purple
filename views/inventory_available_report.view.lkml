@@ -112,8 +112,8 @@ view: inventory_available_report_production_goals {
 view: inventory_available_report {
   derived_table: {
     sql:
-      select d.date
-        , dtc.sku_id as sku_id
+      select coalesce(d.date, dtc.created_date, forecast.date_date, on_hand.created_date, stock_level.created_date, production_goals.forecast_date)::date as date
+        , coalesce(production_goals.sku_id, stock_level.sku_id, on_hand.sku_id, forecast.sku_id, dtc.sku_id) as sku_id
         , dtc.total_units as actual_units
         , forecast.total_units as forecasted_units
         , on_hand.on_hand as units_on_hand
@@ -121,15 +121,16 @@ view: inventory_available_report {
         , production_goals.units_fg_produced as goal_units
       from analytics.util.warehouse_date d
       full outer join ${inventory_available_report_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
-      full outer join ${inventory_available_report_forecast.SQL_TABLE_NAME} forecast  on forecast.date_date::date = coalesce(d.date, dtc.created_date::date)
+      full outer join ${inventory_available_report_forecast.SQL_TABLE_NAME} forecast  on forecast.date_date::date = d.date
         and forecast.sku_id = dtc.sku_id
-      full outer join ${inventory_available_report_inventory_on_hand.SQL_TABLE_NAME} on_hand on on_hand.created_date::date = coalesce(d.date, dtc.created_date::date, forecast.date_date::date)
+      full outer join ${inventory_available_report_inventory_on_hand.SQL_TABLE_NAME} on_hand on on_hand.created_date::date = d.date
         and on_hand.sku_id = coalesce(forecast.sku_id, dtc.sku_id)
-      full outer join ${inventory_available_report_stock_level.SQL_TABLE_NAME} stock_level on stock_level.created_date::date = coalesce(d.date, dtc.created_date::date, forecast.date_date::date, on_hand.created_date::date)
+      full outer join ${inventory_available_report_stock_level.SQL_TABLE_NAME} stock_level on stock_level.created_date::date = d.date
         and stock_level.sku_id = coalesce(on_hand.sku_id, forecast.sku_id, dtc.sku_id)
-      full outer join ${inventory_available_report_production_goals.SQL_TABLE_NAME} production_goals on production_goals.forecast_date::date = coalesce(d.date, dtc.created_date::date, forecast.date_date::date, on_hand.created_date::date, stock_level.created_date::date)
+      full outer join ${inventory_available_report_production_goals.SQL_TABLE_NAME} production_goals on production_goals.forecast_date::date = d.date
         and production_goals.sku_id = coalesce(stock_level.sku_id, on_hand.sku_id, forecast.sku_id, dtc.sku_id)
-      where date::date >= '2019-01-01' and date::date < '2022-01-01'  ;;
+      where coalesce(d.date, dtc.created_date, forecast.date_date, on_hand.created_date, stock_level.created_date, production_goals.forecast_date)::date >= '2019-01-01'
+        and coalesce(d.date, dtc.created_date, forecast.date_date, on_hand.created_date, stock_level.created_date, production_goals.forecast_date)::date < '2022-01-01'  ;;
 
 #      datagroup_trigger: pdt_refresh_6am
     }
