@@ -1356,6 +1356,18 @@ explore: wholesale_legacy {
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
     relationship: one_to_one}
+  join: zendesk_sell {
+    view_label: "Zendesk Sell"
+    type: full_outer
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+    relationship: one_to_one
+  }
+  join: agent_name {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
