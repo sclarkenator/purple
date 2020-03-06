@@ -36,13 +36,17 @@ left join c on b.monthdate = c.monthdate
 
    dimension: date {
      type: date
+     label: "Target Date"
+    description: "Use this date for filtering the Qualified Traffic Goal"
      sql: ${TABLE}.date ;;
     primary_key: yes
    }
 
    measure: traffic_goal {
+     label: "Qualified Traffic Goal"
      description: "Qualified Traffic needed to hit Sales"
      type: sum
      sql: ${TABLE}.Traffic_goal ;;
+    value_format: "0"
    }
  }

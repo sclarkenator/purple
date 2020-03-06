@@ -1521,7 +1521,12 @@ explore: procom_security_daily_customer {
         type:  left_outer
         sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
         relationship: many_to_one}
-
+      join: daily_qualified_site_traffic_goals {
+        view_label: "Sessions"
+        type: full_outer
+        sql_on: ${daily_qualified_site_traffic_goals.date}::date = ${ecommerce.time_date}::date ;;
+        relationship: many_to_one
+        }
   }
 
 #-------------------------------------------------------------------
