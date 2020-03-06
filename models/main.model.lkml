@@ -268,6 +268,18 @@ explore: production_goal {
     relationship: many_to_one }
 }
 
+explore: inventory_available_report {
+  hidden: yes
+  group_label: "Production"
+  label: "Invnetory Available Report"
+  description: "A Inventory Available Report created for Mike S./Andrew C."
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${inventory_available_report.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
