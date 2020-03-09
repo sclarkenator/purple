@@ -1,7 +1,8 @@
 view: narvar_dashboard_notification_clicks_by_category {
 
 
-  sql_table_name: CUSTOMER_CARE.NARVAR_DASHBOARD_EMAILS_ACCEPTED_BY_CAMPAIGN ;;
+ # sql_table_name: CUSTOMER_CARE.NARVAR_DASHBOARD_EMAILS_ACCEPTED_BY_CAMPAIGN ;; not sure why it was this before, but i'm changing it to the below:
+  sql_table_name: CUSTOMER_CARE.narvar_dashboard_notification_clicks_by_category ;;
 
   dimension: week_of {
     type: date
