@@ -6,6 +6,7 @@ view: narvar_dashboard_notification_clicks_by_category {
 
   dimension: week_of {
     type: date
+    hidden: yes
     sql: ${TABLE}."WEEK_OF" ;;
   }
 
@@ -14,18 +15,18 @@ view: narvar_dashboard_notification_clicks_by_category {
     sql: ${TABLE}."CAMPAIGN" ;;
   }
 
-  dimension: footer {
-    type: number
+  measure: footer {
+    type: sum
     sql: ${TABLE}."FOOTER" ;;
   }
 
-  dimension: marketing {
-    type: number
+  measure: marketing {
+    type: sum
     sql: ${TABLE}."MARKETING" ;;
   }
 
-  dimension: tracking {
-    type: number
+  measure: tracking {
+    type: sum
     sql: ${TABLE}."TRACKING" ;;
   }
 
@@ -47,11 +48,13 @@ view: narvar_dashboard_notification_clicks_by_category {
   }
 
   measure: count {
+    hidden: yes
     type: count
   }
 
   dimension: primary_key {
     primary_key: yes
+    hidden: yes
     sql: CONCAT(${week_of},${campaign}) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
