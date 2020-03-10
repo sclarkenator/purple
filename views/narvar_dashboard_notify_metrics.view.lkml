@@ -11,19 +11,19 @@ view: narvar_dashboard_notify_metrics {
 
   measure: accepted_delay_overdue {
     description: "Number of 'Delay Overdue' emails accepted by server (not necessarily opened)"
-    type: number
+    type: sum
     sql: ${TABLE}."ACCEPTED_DELAY_OVERDUE" ;;
   }
 
   measure: accepted_delivered_standard{
     description: "Number of 'Delivered Standard' emails accepted by server (not necessarily opened)"
-    type: number
+    type: sum
     sql: ${TABLE}."ACCEPTED_DELIVERED_STANDARD" ;;
   }
 
   measure: accepted_delivery_anticipation_standard {
     description: "Number of 'Delivery Anticipation' emails accepted by server (not necessarily opened)"
-    type: number
+    type: sum
     sql: ${TABLE}."ACCEPTED_DELIVERY_ANTICIPATION_STANDARD" ;;
   }
 
@@ -35,43 +35,43 @@ view: narvar_dashboard_notify_metrics {
 
   measure: click_distribution_tracking {
     description: "Click Distribution on 'Tracking' area of Narvar dashboard"
-    type: number
+    type: sum
     sql: ${TABLE}."CLICK_DISTRIBUTION_TRACKING" ;;
   }
 
   measure: click_distribution_marketing {
     description: "Click Distribution on 'Marketing' area of Narvar dashboard"
-    type: number
+    type: sum
     sql: ${TABLE}."CLICK_DISTRIBUTION_MARKETING" ;;
   }
 
   measure: click_distribution_footer {
     description: "Click Distribution on 'Footer' area of Narvar dashboard"
-    type: number
+    type: sum
     sql: ${TABLE}."CLICK_DISTRIBUTION_FOOTER" ;;
   }
 
   measure: click_through_rate_delay_overdue {
     description: "Click Through Rate from 'Delay Overdue' campaign emails"
-    type: number
+    type: average
     sql: ${TABLE}."CLICKK_THROUGH_RATE_DELAY_OVERDUE" ;;
   }
 
   measure: click_through_rate_shipment_confirmation {
     description: "Click Through Rate from 'Shipment Confirmation' campaign emails"
-    type: number
+    type: average
     sql: ${TABLE}."CLICKK_THROUGH_RATE_SHIPMENT_CONFIRMATION" ;;
   }
 
   measure: click_through_rate_delivery_anticipation {
     description: "Click Through Rate from 'Delivery Anticipation' campaign emails"
-    type: number
-    sql: ${TABLE}."CLICK_THROUGH_RATE_DELIVERY_ANTICIPATION" ;;
+    type: average
+    sql: ${TABLE}."CLICKK_THROUGH_RATE_DELIVERY_ANTICIPATION" ;;
   }
 
   measure: click_through_rate_delivered {
     description: "Click Through Rate from 'Delivery' campaign emails"
-    type: number
+    type: average
     sql: ${TABLE}."CLICKK_THROUGH_RATE_DELIVERED" ;;
   }
 
@@ -101,7 +101,7 @@ view: narvar_dashboard_notify_metrics {
 
   measure: emails_accepted{
     description: "Number of emails accepted by the email server"
-    type: number
+    type: sum
     sql: ${TABLE}."EMAILS_ACCEPTED" ;;
   }
 
@@ -130,7 +130,7 @@ view: narvar_dashboard_notify_metrics {
   }
 
   measure: total_click {
-    type: number
+    type: sum
     sql: ${TABLE}."TOTAL_CLICK" ;;
   }
 
