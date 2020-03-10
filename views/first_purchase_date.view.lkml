@@ -43,8 +43,9 @@ view: first_purchase_date {
 
         dimension: order_count {
           label: "Order Count"
-          hidden: yes
+          hidden: no
           description: "Count of Orders by Customer Email"
+          view_label: "Sales Order"
           group_label: " Advanced"
           type: number
           sql: ${TABLE}.order_count ;;  }
