@@ -171,7 +171,7 @@ view: daily_adspend {
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql:${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
+      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
       else: "other" }

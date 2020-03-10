@@ -1274,7 +1274,7 @@ view: sales_order_line {
     group_label: " Advanced"
     view_label: "Sales Order"
     type: string
-    sql: case when ${zendesk_sell.inside_sales_order} or  ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
+    sql: case when ${zendesk_sell.inside_sales_order} or ${agent_name.name} is not null or ${sales_order.source} = 'Direct Entry' then 'Inside Sales'
       when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
       else 'Website' end;;
   }

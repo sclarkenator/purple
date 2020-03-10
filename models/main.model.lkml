@@ -268,6 +268,18 @@ explore: production_goal {
     relationship: many_to_one }
 }
 
+explore: inventory_available_report {
+  hidden: yes
+  group_label: "Production"
+  label: "Invnetory Available Report"
+  description: "A Inventory Available Report created for Mike S./Andrew C."
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${inventory_available_report.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
@@ -1344,6 +1356,18 @@ explore: wholesale_legacy {
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
     relationship: one_to_one}
+  join: zendesk_sell {
+    view_label: "Zendesk Sell"
+    type: full_outer
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+    relationship: one_to_one
+  }
+  join: agent_name {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
@@ -1521,7 +1545,12 @@ explore: procom_security_daily_customer {
         type:  left_outer
         sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
         relationship: many_to_one}
-
+      join: daily_qualified_site_traffic_goals {
+        view_label: "Sessions"
+        type: full_outer
+        sql_on: ${daily_qualified_site_traffic_goals.date}::date = ${ecommerce.time_date}::date ;;
+        relationship: many_to_one
+        }
   }
 
 #-------------------------------------------------------------------

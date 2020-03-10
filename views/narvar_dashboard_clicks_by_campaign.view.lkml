@@ -49,6 +49,7 @@ view: narvar_dashboard_clicks_by_campaign {
 
   measure: count {
     type: count
+    hidden: yes
   }
 
 
