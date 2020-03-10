@@ -66,7 +66,7 @@ view: session_facts {
     group_label: "Advanced"
     label: "Session Durations (minutes)"
     type: number
-    sql: extract(epoch from (${TABLE}.session_end_time - ${TABLE}.session_start_time))/60 ;;
+    sql: ((datediff('seconds',session_start_time,session_end_time))/60)::number ;;
     value_format_name: decimal_2 }
 
   dimension: duration_tier {

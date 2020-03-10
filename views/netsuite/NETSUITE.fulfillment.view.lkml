@@ -14,7 +14,7 @@ view: fulfillment {
     }
 
   dimension: fulfillment_id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.FULFILLMENT_ID ;; }
 

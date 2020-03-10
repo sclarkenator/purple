@@ -1248,9 +1248,8 @@ view: sales_order_line {
     sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
   }
 
-
   measure: average_mattress_order_size {
-    label: "Testing: AMOV ($)"
+    label: "AMOV ($)"
     view_label: "Sales Order"
     description: "Average total mattress order amount, excluding tax"
     type: average
@@ -1260,7 +1259,7 @@ view: sales_order_line {
   }
 
   measure: average_accessory_order_size {
-    label: "Testing: NAMOV ($)"
+    label: "NAMOV ($)"
     view_label: "Sales Order"
     description: "Average total accessory order amount, excluding tax"
     type: average
