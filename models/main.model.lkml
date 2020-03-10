@@ -1557,6 +1557,7 @@ explore: procom_security_daily_customer {
         view_label: "Customer"
         type: left_outer
         sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
+        fields: [customer_table.customer_id,customer_table.customer_id,customer_table.email,customer_table.full_name,customer_table.shipping_hold,customer_table.phone,customer_table.hold_reason_id,customer_table.shipping_hold]
         relationship: many_to_one}
       join: first_purchase_date {
         view_label: "Customer"
