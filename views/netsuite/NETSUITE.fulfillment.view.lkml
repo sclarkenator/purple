@@ -162,6 +162,7 @@ view: fulfillment {
     description: "Count of items fulfilled"
     #hidden: yes
     type: sum
+    drill_fields: [sales_order_line.fulfillment_details*]
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
       when nvl(${TABLE}.BUNDLE_QUANTITY,0) > 0 then ${TABLE}.BUNDLE_QUANTITY
       else ${TABLE}.quantity END ;;}
