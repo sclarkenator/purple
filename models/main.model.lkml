@@ -1639,3 +1639,8 @@ explore: procom_security_daily_customer {
       label: "Hour Assumptions"
       description: "% of day's sales by hour for dtc day prediction"
       hidden: yes  }
+
+    explore: owned_retail_target_by_location {
+      hidden: yes
+
+    }
