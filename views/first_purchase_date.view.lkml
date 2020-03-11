@@ -3,7 +3,8 @@ view: first_purchase_date {
       sql: select email,
                   min(to_date(created)) as first_order_date,
                   max(to_date(created)) as last_order_date,
-                  count(order_id) as order_count
+                  count(order_id) as order_count,
+                  sum( case when created > '2018-02-28' then 1 else 0 end ) as orders_post_feb18
                   from sales_order
                   group by email ;;
     }
@@ -49,6 +50,15 @@ view: first_purchase_date {
           group_label: " Advanced"
           type: number
           sql: ${TABLE}.order_count ;;  }
+
+        dimension: orders_post_feb18 {
+          type: number
+          hidden: yes
+          description: "Count of orders after Feb 28, 2018, by customer email"
+          view_label: "Sales Order"
+          group_label: " Advanced"
+          sql: ${TABLE}.orders_post_feb18 ;;
+        }
 
         dimension: order_count_bucket {
           hidden: yes
