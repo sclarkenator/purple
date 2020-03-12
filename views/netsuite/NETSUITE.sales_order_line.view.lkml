@@ -1255,7 +1255,7 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;;
+    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
   measure: average_accessory_order_size {
@@ -1265,7 +1265,7 @@ view: sales_order_line {
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;;
+    sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
   dimension: sub_channel {
