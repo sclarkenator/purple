@@ -1254,7 +1254,7 @@ view: sales_order_line {
     description: "Average total mattress order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
     sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
@@ -1264,7 +1264,7 @@ view: sales_order_line {
     description: "Average total accessory order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
