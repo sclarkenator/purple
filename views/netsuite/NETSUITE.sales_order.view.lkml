@@ -48,12 +48,12 @@ measure: upt {
   sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
 
   measure: average_order_size {
-    label: "Average Order Size ($)"
+    label: "AOV ($)"
     description: "Average total order amount, excluding tax"
     drill_fields: [sales_order_line.sales_order_details*]
     type: average
     value_format: "$#,##0"
-    sql: ${TABLE}.gross_amt ;; }
+    sql:case when ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end;; }
 
   measure: max_order_size {
     label: " Max Order Size ($)"
