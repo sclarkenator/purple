@@ -52,7 +52,7 @@ measure: upt {
     description: "Average total order amount, excluding tax"
     drill_fields: [sales_order_line.sales_order_details*]
     type: average
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: max_order_size {
