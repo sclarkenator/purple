@@ -57,6 +57,7 @@ view: production_goal_by_item {
     view_label: "Production Goals"
     description: "Number of Finished Goods Produced (units) by SKU"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."UNITS_FG_PRODUCED" ;;
   }
 

@@ -12,6 +12,10 @@ view: NETSUITE_cancelled_reason {
     type: string
     label: " Cancel Reason"
     description: "Given reason for cancelling the order or item"
-    sql: ${TABLE}.list_item_name  ;; }
+    sql:
+    case when
+      ${TABLE}.list_item_name = 'FRAUD RISK' then 'Fraud Risk'
+      else ${TABLE}.list_item_name
+    end;; }
 
 }

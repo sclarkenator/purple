@@ -167,11 +167,15 @@ view: daily_adspend {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
-      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"social"}
-      when: {sql:${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO'
+        or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
+        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram')
+        or ${TABLE}.source ilike 'messenger' ;; label:"social"}
+      when: {sql: ${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
+      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA')
+        OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
       else: "other" }
@@ -207,6 +211,14 @@ view: daily_adspend {
 
   dimension: ad_display_type {
     label: "Ad Display Type"
+    hidden:  yes
+    group_label: "Advanced"
+    description: "How ad was presented (Search, Display, Video, TV, etc.)"
+    type:  string
+    sql: ${TABLE}.source ;; }
+
+  dimension: source {
+    label: "Source"
     group_label: "Advanced"
     description: "How ad was presented (Search, Display, Video, TV, etc.)"
     type:  string

@@ -1248,9 +1248,8 @@ view: sales_order_line {
     sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
   }
 
-
   measure: average_mattress_order_size {
-    label: "Testing: AMOV ($)"
+    label: "AMOV ($)"
     view_label: "Sales Order"
     description: "Average total mattress order amount, excluding tax"
     type: average
@@ -1260,7 +1259,7 @@ view: sales_order_line {
   }
 
   measure: average_accessory_order_size {
-    label: "Testing: NAMOV ($)"
+    label: "NAMOV ($)"
     view_label: "Sales Order"
     description: "Average total accessory order amount, excluding tax"
     type: average
@@ -1285,6 +1284,15 @@ view: sales_order_line {
 
   set: fulfillment_details {
     fields: [order_id
+      , customer_table.customer_id
+      , order_id
+      , sales_order.tranid
+      , sales_order.ship_by_date,sales_order.minimum_ship_date
+      , SLA_Target_date
+      , item.product_description
+      , Qty_Fulfilled_in_SLA
+      , total_units
+      , SLA_Achievement_prct
       , item_id
       , created_date
       , fulfilled_date
@@ -1292,12 +1300,7 @@ view: sales_order_line {
       , DTC_carrier
       , fulfillment.in_hand
       , fulfillment.left_purple
-      , fulfillment.transmitted_date
-      , order_to_transmitted_sla
-      , order_to_left_purple_sla
-      , transmitted_to_left_purple_sla
-      , order_to_in_hand_sla
-      , left_purple_to_in_hand_sla]
+      , fulfillment.transmitted_date]
   }
 
   set: sales_order_details {

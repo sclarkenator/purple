@@ -280,6 +280,22 @@ explore: inventory_available_report {
     relationship: many_to_one }
 }
 
+explore: inventory_adjustment {
+  group_label: "Production"
+  label: "Inventory Adjustment"
+  description: "Inventory Adjustment by Item, Line, etc"
+  join: inventory_adjustment_line {
+    type: left_outer
+    sql_on: ${inventory_adjustment.inventory_adjustment_id} = ${inventory_adjustment_line.inventory_adjustment_id} ;;
+    relationship: one_to_many }
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on:  ${inventory_adjustment_line.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
@@ -1551,6 +1567,20 @@ explore: procom_security_daily_customer {
         sql_on: ${daily_qualified_site_traffic_goals.date}::date = ${ecommerce.time_date}::date ;;
         relationship: many_to_one
         }
+
+        # added after table was built
+      join: customer_table {
+        view_label: "Customer"
+        type: left_outer
+        sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
+        fields: [customer_table.customer_id,customer_table.customer_id,customer_table.email,customer_table.full_name,customer_table.shipping_hold,customer_table.phone,customer_table.hold_reason_id,customer_table.shipping_hold]
+        relationship: many_to_one}
+      join: first_purchase_date {
+        view_label: "Customer"
+        type: left_outer
+        sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
+        relationship: one_to_one
+    }
   }
 
 #-------------------------------------------------------------------
