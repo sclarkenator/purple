@@ -56,22 +56,22 @@ view: day_aggregation_dtc_orders {
 view: day_aggregations_wholesale_sales {
   derived_table: {
     explore_source: sales_order_line {
-      column: fulfilled_date {}
+      column: created_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
       filters: { field: sales_order.channel value: "Wholesale"}
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line.fulfilled_date value: "2 years" }
+      filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
-  dimension: fulfilled_date { type: date }
+  dimension: created_date { type: date }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${fulfilled_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
+    sql: CONCAT(${created_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 }
@@ -301,7 +301,7 @@ view: day_aggregations {
         group by date_part('week',d.date)
       ) week on week.week_num = date_part('week',d.date)
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
-      left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.fulfilled_date::date = d.date
+      left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
