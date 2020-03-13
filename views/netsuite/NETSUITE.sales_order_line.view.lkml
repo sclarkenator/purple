@@ -618,7 +618,7 @@ view: sales_order_line {
     label: "Unit Standard Cost"
     group_label: "Advanced"
     type:  number
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql: ${standard_cost.standard_cost} ;;
   }
 
