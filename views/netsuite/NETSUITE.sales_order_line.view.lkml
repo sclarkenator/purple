@@ -614,6 +614,13 @@ view: sales_order_line {
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
+  dimension: unit_standard_cost {
+    label: "Unit Standard Cost"
+    group_label: "Advanced"
+    type:  number
+    value_format: "$#,##0"
+    sql: ${standard_cost.standard_cost} ;;
+  }
 
   dimension: has_standard_cost {
     label: "    * Has Standard Cost"
