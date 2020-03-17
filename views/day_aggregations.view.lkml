@@ -135,14 +135,16 @@ view: day_aggregations_targets {
       column: date_date {}
       column: dtc_target {}
       column: whlsl_target {}
+      column: retail_target {}
     }
   }
   dimension: date_date { type: date }
   measure: dtc_target { type: sum }
   measure: whlsl_target { type: sum }
+  measure: retail_target { type: sum }
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${date_date}, ${dtc_target}, ${whlsl_target}) ;;
+    sql: CONCAT(${date_date}, ${dtc_target}, ${whlsl_target}, ${retail_target}) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 }
@@ -280,6 +282,7 @@ view: day_aggregations {
         , adspend.adspend
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
+        , targets.retail_target as target_retail_amount
         , dtc_returns.total_trial_returns_completed_dollars as dtc_trial_returns
         , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
@@ -485,6 +488,13 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_dtc_amount;; }
+
+  measure: target_retail_amount {
+    label: "Target Retail Amount"
+    description: "Total Retail target from Daily Curve amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.target_retail_amount;; }
 
   measure: target_wholesale_amount {
     label: "Target Wholesale Amount"
