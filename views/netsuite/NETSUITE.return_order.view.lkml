@@ -241,7 +241,6 @@ view: return_order {
     sql: ${TABLE}.return_completed is not NULL ;; }
 
   measure: return_life {
-    group_label: " Advanced"
     description: "Average Days between initiation of return and completion of return (order level)"
     label: "Return Process Lifespan"
     type: average
