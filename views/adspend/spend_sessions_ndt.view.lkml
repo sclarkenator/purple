@@ -98,6 +98,7 @@ view: spend_sessions_ndt {
       full outer join ${sessions_ndt.SQL_TABLE_NAME} sessions
         on sessions.time_date::date = spend.ad_date::date and sessions.utm_campaign = spend.campaign_name
     ;;
+    datagroup_trigger: pdt_refresh_6am
   }
 
   dimension: date {type: date hidden:yes}
