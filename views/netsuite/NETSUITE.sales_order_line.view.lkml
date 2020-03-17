@@ -614,6 +614,12 @@ view: sales_order_line {
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
+  dimension: unit_standard_cost {
+    label: "Unit Standard Cost"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${standard_cost.standard_cost} ;;
+  }
 
   dimension: has_standard_cost {
     label: "    * Has Standard Cost"
@@ -1254,8 +1260,8 @@ view: sales_order_line {
     description: "Average total mattress order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 1 then ${sales_order.gross_amt} end ;;
+    value_format: "$#,##0"
+    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
   measure: average_accessory_order_size {
@@ -1264,8 +1270,8 @@ view: sales_order_line {
     description: "Average total accessory order amount, excluding tax"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0.00"
-    sql: case when ${order_flag.mattress_flg} = 0 then ${sales_order.gross_amt} end ;;
+    value_format: "$#,##0"
+    sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
   dimension: sub_channel {

@@ -240,6 +240,13 @@ view: return_order {
     description: "Date the return was reimbused and fully completed"
     sql: ${TABLE}.return_completed is not NULL ;; }
 
+  measure: return_life {
+    description: "Average Days between initiation of return and completion of return (order level)"
+    label: "Return Process Lifespan"
+    type: average
+    sql: datediff(day,${return_order.created_raw},${TABLE}.return_completed) ;;
+  }
+
   measure: days_from_order_to_complete_return {
     type: average
     hidden: yes

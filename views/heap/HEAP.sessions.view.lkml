@@ -249,6 +249,12 @@ view: sessions {
     type: string
     sql: lower(${TABLE}.utm_campaign) ;; }
 
+  dimension: utm_campaign_raw {
+    hidden: yes
+    type:  string
+    sql:  ${TABLE}.utm_campaign ;;
+  }
+
   dimension: utm_content {
     group_label: "UTM Tags"
     label: "UTM Content"
@@ -262,15 +268,17 @@ view: sessions {
     sql: lower(${TABLE}.utm_medium) ;; }
 
   dimension: medium_bucket {
-    label: "Medium Bucket"
+    label: "Medium"
+    group_label: "Adspend Mapping"
     type: string
-    hidden: yes
-    sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
+    #hidden: yes
+    sql: case when ${utm_medium} in ('sr','search','cpc') then 'search'
           when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' or ${utm_medium} ilike '%instagram%' or ${utm_medium} ilike 'twitter' then 'social'
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
+          when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
-          else ${utm_medium} end ;;
+          else 'other' end ;;
   }
 
   dimension: utm_source {
@@ -280,26 +288,38 @@ view: sessions {
     sql: lower(${TABLE}.utm_source) ;; }
 
   dimension: source_bucket {
-    label: "Source Bucket"
+    label: "Source"
+    group_label: "Adspend Mapping"
     type: string
-    hidden: yes
-    sql: case when ${utm_source} = "go " or ${utm_source} ilike "%google%" then "GOOGLE"
-              when ${utm_source} ilike "%fb%" or ${utm_source} ilike "%faceboo%" then "FACEBOOK"
-              when ${utm_source} ilike "%yahoo%" then "YAHOO"
-              when ${utm_source} ilike "yt"  or  ${utm_source} ilike "%youtube%" then "YOUTUBE"
-              when ${utm_source} ilike "%snapchat%" then "SNAPCHAT"
-              when ${utm_source} ilike "%adwords%" then "ADWORDS"
-              when ${utm_source} ilike "pinterest" then "PINTEREST"
-              when ${utm_source} ilike "bing" then "BING"
-              when ${utm_source} ilike "gemini" then "GEMINI"
-              when ${utm_source} ilike "twitter" then "TWITTER"
-              else ${utm_source} end ;;  }
+    #hidden: yes
+    sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' then 'GOOGLE'
+              when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
+              when ${utm_source} ilike '%yahoo%' then 'YAHOO'
+              when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
+              when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
+              when ${utm_source} ilike '%adwords%' then 'ADWORDS'
+              when ${utm_source} ilike '%pinterest%' then 'PINTEREST'
+              when ${utm_source} ilike '%bing%' then 'BING'
+              when ${utm_source} ilike '%gemini%' then 'GEMINI'
+              when ${utm_source} ilike '%twitter%' then 'TWITTER'
+              else 'OTHER' end ;;
+  }
 
   dimension: utm_term {
     group_label: "UTM Tags"
     label: "UTM Term"
     type: string
     sql: lower(${TABLE}.utm_term) ;; }
+
+  dimension: term_bucket {
+    label: "Campaign Type"
+    group_label: "Adspend Mapping"
+    type: string
+    sql: case when ${utm_term} ilike '%br%' then 'BRAND'
+      when ${utm_term} ilike '%pt%' then 'PROSPECTING'
+      when ${utm_term} = '%rt%' then 'RETARGETING'
+      else 'OTHER' end ;;
+  }
 
   measure: count {
     type: count_distinct

@@ -275,4 +275,22 @@ view: daily_adspend {
     description: "Conversions within 1 day of viewing a page - only for Quora"
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
+
+  dimension: ocean_bucket {
+    hidden: yes
+    case: {
+      when: {sql: ${spend_platform} = 'TV' ;; label: "TV"}
+      when: {sql: ${spend_platform} IN ('FACEBOOK','INSTAGRAM') AND ${campaign_type} <> 'RETARGETING' ;; label: "FB PT"}
+      when: {sql: ${spend_platform} IN ('FACEBOOK','INSTAGRAM') AND ${campaign_type} = 'RETARGETING' ;; label: "FB RT"}
+      when: {sql: ${medium} = 'video' ;; label: "Video"}
+      when: {sql: ${medium} = 'social' ;; label: "Social"}
+      when: {sql: ${medium} = 'search' and ${campaign_type} = 'BRAND' ;; label: "Brand SEM"}
+      when: {sql: ${medium} = 'search' and ${campaign_type} <> 'BRAND' ;; label: "Brand SEM"}
+      when: {sql: ${medium} = 'affiliate' ;; label: "Affiliate"}
+      when: {sql: ${spend_platform} = 'INTEGRAL MEDIA' ;; label: "Outdoor"}
+      when: {sql: ${spend_platform} = 'PODCAST' ;; label: "Audio Channel 1"}
+      when: {sql: ${spend_platform} = 'SPOTIFY' ;; label: "Audio Channel 2"}
+      else: "Other"
+    }
+  }
 }

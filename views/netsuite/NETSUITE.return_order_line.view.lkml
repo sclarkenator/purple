@@ -146,7 +146,7 @@ view: return_order_line {
     sql: ${TABLE}.gross_amt ;; }
 
   measure: days_between {
-    label: "Average Days Between"
+    label: "Return Window (Days)"
     description: "Average number of days between fulfillment and return"
     type: average
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
@@ -154,7 +154,7 @@ view: return_order_line {
   dimension: days_between_dimension {
     label: "Return Window (days)"
     group_label: " Advanced"
-    description: "How many days until product return was initiated?"
+    description: "How many days from receipt until product return was initiated?"
     type: number
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
