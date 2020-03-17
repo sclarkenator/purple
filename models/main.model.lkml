@@ -574,6 +574,7 @@ explore: all_events {
 }
 
 explore: c3_roa {hidden: yes}
+explore: spend_sessions_ndt {hidden: yes}
 explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
 explore: marketing_magazine {hidden: yes}
 explore: sessions {hidden: yes}
