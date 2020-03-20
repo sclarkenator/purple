@@ -899,6 +899,12 @@ explore: qualtrics {hidden:yes
       relationship: many_to_one}
 }
 
+explore: mattress_firm_po_detail {
+  hidden: yes
+  label: "Mattress Firm POD"
+  group_label: "Wholesale"
+}
+
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
   label: "Wholesale Mattress Firm Manual ASN"
