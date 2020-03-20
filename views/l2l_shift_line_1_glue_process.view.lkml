@@ -51,12 +51,12 @@ view: l2l_shift_line_1_glue_process {
     sql: ${TABLE}."DISPATCH_NUM" ;;
   }
 
-  dimension: dwell_tamp_time_1 {
+  dimension: dwell_tamp_time_1_d {
     type: string
     sql: ${TABLE}."DWELL_TAMP_TIME_1" ;;
   }
 
-  dimension: dwell_tamp_time_2 {
+  dimension: dwell_tamp_time_2_d {
     type: string
     sql: ${TABLE}."DWELL_TAMP_TIME_2" ;;
   }
@@ -206,7 +206,6 @@ view: l2l_shift_line_1_glue_process {
     sql: case when ${TABLE}.AVERAGE_OPEN_TIME='' then null
          else ${TABLE}.AVERAGE_OPEN_TIME
          end ;;
-
   }
 
   measure: temp_measure{
@@ -239,6 +238,18 @@ view: l2l_shift_line_1_glue_process {
     sql: case when ${TABLE}.GLUE_BLOCK_TEST_RIGHT='' then null
          else ${TABLE}.GLUE_BLOCK_TEST_RIGHT
          end;;
+  }
+
+  measure: dwell_tamp_time_1 {
+    type: average
+    sql: case when ${TABLE}."DWELL_TAMP_TIME_1" = '' then null
+         else ${TABLE}."DWELL_TAMP_TIME_1" end ;;
+  }
+
+  measure: dwell_tamp_time_2 {
+    type: average
+    sql: case when ${TABLE}."DWELL_TAMP_TIME_2" = '' then null
+      else ${TABLE}."DWELL_TAMP_TIME_2" end ;;
   }
 
 }
