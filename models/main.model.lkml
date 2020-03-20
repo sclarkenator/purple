@@ -1580,8 +1580,13 @@ explore: procom_security_daily_customer {
         view_label: "Customer"
         type: left_outer
         sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
-        relationship: one_to_one
-    }
+        relationship: one_to_one}
+      join: shopify_discount_codes {
+        view_label: "Promo"
+        type: left_outer
+        sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+        relationship: many_to_many}
+
   }
 
 #-------------------------------------------------------------------
