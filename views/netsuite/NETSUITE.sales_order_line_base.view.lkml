@@ -264,6 +264,16 @@ view: sales_order_line_base {
     sql: date_trunc(week, ${TABLE}.Created::date) < date_trunc(week, current_date) ;;
   }
 
+  dimension: current_week_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current week of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) ;;
+
+  }
 
   dimension: prev_week{
     view_label: "Sales Order"
