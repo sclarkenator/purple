@@ -1,5 +1,5 @@
 view: shopify_net_payment {
-  sql_table_name: CUSTOMER_CARE.SHOPIFY_NET_PAYMENT ;;
+  sql_table_name: CUSTOMER_CARE.V_SHOPIFY_NET_PAYMENT ;;
 
   dimension: amt_remaining {
     type: number
