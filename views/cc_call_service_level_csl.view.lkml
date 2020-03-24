@@ -21,25 +21,26 @@ view: cc_call_service_level_csl {
     description: "Contacts within SLA / total first contacts"
     label: "Service Level (dimension version)"
     type: number
-    sql: ${TABLE}.SERVICE_LEVEL / 100 ;;
+    value_format: "0\%"
+    sql: ${TABLE}.SERVICE_LEVEL ;;
   }
 
   measure: contacts_within_SLA {
     description: "Number of first contacts responded to within 30 seconds"
     type: sum
-    sql: ${TABLE}."contacts_within_SLA" ;;
+    sql: ${TABLE}.contacts_within_sla ;;
   }
 
   measure: contacts_outside_sla {
     description: "Number of first contacts not responded to after 30 seconds"
     type: sum
-    sql: ${TABLE}."contacts_outside_sla" ;;
+    sql: ${TABLE}.contacts_outside_sla ;;
   }
 
   measure: first_contacts {
     description: "Number of first contacts after 30 seconds"
     type: sum
-    sql: ${TABLE}."FIRST_CONTACTS" ;;
+    sql: ${TABLE}.FIRST_CONTACTS ;;
   }
 
   measure: service_lvl {
@@ -57,7 +58,7 @@ view: cc_call_service_level_csl {
 
   dimension: skill_name {
     type: string
-    sql: ${TABLE}."SKILL_NAME" ;;
+    sql: ${TABLE}.SKILL_NAME ;;
   }
 
  # set: detail {
