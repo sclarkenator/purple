@@ -65,7 +65,7 @@ explore: oee {
 }
 
 explore: dispatch_info{
-  hidden:  no
+  hidden:  yes
   group_label: "Production"
   label: "L2L Dispatch Data"
   description: "The log of all L2L dispatches"
@@ -74,6 +74,13 @@ explore: dispatch_info{
     sql_on: ${ltol_line.line_id} = ${dispatch_info.MACHINE_LINE_ID} ;;
     relationship: many_to_one
   }
+}
+
+explore: v_dispatch {
+  hidden: no
+  group_label: "Production"
+  label: "L2L Dispatch Data"
+  description: "The log of all L2L dispatches"
 }
 
 explore: ltol_pitch {
