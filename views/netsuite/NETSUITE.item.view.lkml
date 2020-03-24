@@ -25,6 +25,12 @@ view: item {
         else ${TABLE}.classification_new end ;;
   }
 
+  dimension: classification_raw {
+    hidden:  yes
+    type: string
+    sql:  ${TABLE}.classification_new ;;
+  }
+
   dimension: UPC_code {
     label: "UPC Code"
     group_label: "Advanced"
