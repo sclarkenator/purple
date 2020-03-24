@@ -875,6 +875,7 @@ explore: qualtrics {hidden:yes
     relationship: many_to_one
     view_label: "Survey"}}
 
+  explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
 #-------------------------------------------------------------------
 #
