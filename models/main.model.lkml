@@ -1720,7 +1720,7 @@ explore: procom_security_daily_customer {
       hidden: yes  }
 
     explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
-
+    explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
     explore: owned_retail_target_by_location {
       hidden: yes
 
