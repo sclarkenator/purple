@@ -163,6 +163,41 @@ dimension: Primary_key{
     type: sum
     sql: ${TABLE}.AMOUNT ;; }
 
+  measure: first_amount_due {
+    type: sum
+    sql: case
+        when purchase_order.terms = '0' then ${TABLE}.amount
+        when purchase_order.terms = '0% down, 100% 45 days after ETD' then ${TABLE}.amount
+        when purchase_order.terms = '1% 10 Net 30' then ${TABLE}.amount*0.99
+        when purchase_order.terms = '2% 10 Net 30' then ${TABLE}.amount*0.98
+        when purchase_order.terms = '30% down, 70% 60 days after ETD' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '30% down, 70% before shipping' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '2% 10 Net 10' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '30%down/70%atshipdate' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '30% ship, 70% net 30 after ship' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '30%dwn,60%preship10%postinstall' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '50% down bal on deli' then ${TABLE}.amount*0.5
+        when purchase_order.terms = '50%down/50% pre ship' then ${TABLE}.amount*0.5
+        when purchase_order.terms = '50%down/50%before shipment' then ${TABLE}.amount*0.5
+        when purchase_order.terms = 'Due on receipt' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 10' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 35' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 30' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 45' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 60' then ${TABLE}.amount
+        when purchase_order.terms = 'Prepaid' then ${TABLE}.amount
+        when purchase_order.terms = '- None -' then ${TABLE}.amount
+        when purchase_order.terms = '20% down 80 % at shi' then ${TABLE}.amount*0.2
+        when purchase_order.terms = '30% Down, Net 60' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '30% down/70% NET 30' then ${TABLE}.amount*0.3
+        when purchase_order.terms = '40% Down, 60% Pre-Ship' then ${TABLE}.amount*0.4
+        when purchase_order.terms = 'Net 7' then ${TABLE}.amount
+        when purchase_order.terms = 'Net 20' then ${TABLE}.amount
+        when purchase_order.terms = '1/3 dep. 1/3 at ship 1/3 net 30' then ${TABLE}.amount*0.33
+        when purchase_order.terms = '25% Dwn, 65% PreShip, 10% CMPLT' then ${TABLE}.amount*0.25
+        else ${TABLE}.amount*0.95 end ;;
+  }
+
   measure: Total_quantity_received {
     label: "Total Quantity Received (units)"
     description: "Quantity of what is dynamic on what it's totaling based on Unit of Measure"
