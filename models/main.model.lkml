@@ -1719,6 +1719,8 @@ explore: procom_security_daily_customer {
       description: "% of day's sales by hour for dtc day prediction"
       hidden: yes  }
 
+    explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
+
     explore: owned_retail_target_by_location {
       hidden: yes
 
