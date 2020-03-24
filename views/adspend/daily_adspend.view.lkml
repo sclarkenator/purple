@@ -229,6 +229,11 @@ view: daily_adspend {
     type:  string
     sql: ${TABLE}.campaign_name ;; }
 
+  dimension: ad_name {
+    label: "  Ad Name"
+    type:  string
+    sql: ${TABLE}.ad_name ;; }
+
   dimension: campaign_type {
     label: "Campaign Type"
     group_label: "Advanced"
