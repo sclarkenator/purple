@@ -165,6 +165,7 @@ dimension: Primary_key{
 
   measure: first_amount_due {
     type: sum
+    hidden: yes
     sql: case
         when purchase_order.terms = '0' then ${TABLE}.amount
         when purchase_order.terms = '0% down, 100% 45 days after ETD' then ${TABLE}.amount

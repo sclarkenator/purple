@@ -131,7 +131,7 @@ view: purchase_order {
 
   dimension: first_due_date {
     type: date
-    hidden: no
+    hidden: yes
     sql: case
         when ${TABLE}.terms = '0' then ${TABLE}.created
         when ${TABLE}.terms = '0% down, 100% 45 days after ETD' then dateadd(day, 45, ${TABLE}.required_ship_by)
@@ -166,7 +166,7 @@ view: purchase_order {
 
   dimension: second_due_date {
     type: date
-    hidden: no
+    hidden: yes
     sql: case
         when ${TABLE}.terms = '0' then ${TABLE}.created
         when ${TABLE}.terms = '0% down, 100% 45 days after ETD' then dateadd(day, 45, ${TABLE}.required_ship_by)
