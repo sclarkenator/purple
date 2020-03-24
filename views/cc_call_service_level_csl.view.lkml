@@ -47,7 +47,8 @@ view: cc_call_service_level_csl {
     description: "Percent of first contacts responded to within SLA"
     label: "Service Level"
     type: average
-    sql: ${contacts_within_SLA} / ${first_contacts} ;;
+    value_format: "0.0\%"
+    sql: ${TABLE}.SERVICE_LEVEL ;;
   }
 
   measure: total_contacts {
