@@ -580,6 +580,21 @@ explore: all_events {
   }
 }
 
+explore: cordial_activity {
+  group_label: "Marketing"
+  label: "Email (cordial)"
+  join: cordial_message_analytic {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
+    relationship: many_to_one
+  }
+  join: cordial_bulk_message {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
+  relationship: many_to_one
+  }
+}
+
 explore: c3_roa {hidden: yes}
 explore: spend_sessions_ndt {hidden: yes}
 explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
