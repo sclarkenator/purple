@@ -9,32 +9,20 @@ view: cordial_activity {
 
   dimension: bm_id {
     primary_key: yes
+    hidden: yes
     type: string
     sql: ${TABLE}."BM_ID" ;;
   }
 
   dimension: c_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."C_ID" ;;
   }
 
   dimension: email {
     type: string
     sql: ${TABLE}."EMAIL" ;;
-  }
-
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: time {
@@ -49,20 +37,6 @@ view: cordial_activity {
       year
     ]
     sql: ${TABLE}."TIME" ;;
-  }
-
-  dimension_group: update_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
   }
 
   measure: count {

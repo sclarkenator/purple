@@ -2,53 +2,56 @@ view: cordial_message_analytic {
   sql_table_name: "MARKETING"."CORDIAL_MESSAGE_ANALYTIC"
     ;;
 
-  dimension: aov {
-    type: number
+  measure: aov {
+    type: average
     sql: ${TABLE}."AOV" ;;
   }
 
   dimension: bounce_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."BOUNCE_RATE" ;;
   }
 
-  dimension: bounced_hard {
-    type: number
+  measure: bounced_hard {
+    type: sum
     sql: ${TABLE}."BOUNCED_HARD" ;;
   }
 
-  dimension: bounced_soft {
-    type: number
+  measure: bounced_soft {
+    type: sum
     sql: ${TABLE}."BOUNCED_SOFT" ;;
   }
 
-  dimension: bounced_total {
-    type: number
+  measure: bounced_total {
+    type: sum
     sql: ${TABLE}."BOUNCED_TOTAL" ;;
   }
 
   dimension: click_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."CLICK_RATE" ;;
   }
 
-  dimension: click_total {
-    type: number
+  measure: click_total {
+    type: sum
     sql: ${TABLE}."CLICK_TOTAL" ;;
   }
 
-  dimension: clicks_unique {
-    type: number
+  measure: clicks_unique {
+    type: sum
     sql: ${TABLE}."CLICKS_UNIQUE" ;;
   }
 
   dimension: complaint_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."COMPLAINT_RATE" ;;
   }
 
-  dimension: complaints {
-    type: number
+  measure: complaints {
+    type: sum
     sql: ${TABLE}."COMPLAINTS" ;;
   }
 
@@ -59,29 +62,18 @@ view: cordial_message_analytic {
 
   dimension: delivered_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."DELIVERED_RATE" ;;
   }
 
-  dimension: delivered_total {
-    type: number
+  measure: delivered_total {
+    type: sum
     sql: ${TABLE}."DELIVERED_TOTAL" ;;
   }
 
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
-  }
-
   dimension: message_id {
+    hidden: yes
+    primary_key: yes
     type: string
     sql: ${TABLE}."MESSAGE_ID" ;;
   }
@@ -93,31 +85,33 @@ view: cordial_message_analytic {
 
   dimension: open_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."OPEN_RATE" ;;
   }
 
-  dimension: opens_total {
-    type: number
+  measure: opens_total {
+    type: sum
     sql: ${TABLE}."OPENS_TOTAL" ;;
   }
 
-  dimension: opens_unique {
-    type: number
+  measure: opens_unique {
+    type: sum
     sql: ${TABLE}."OPENS_UNIQUE" ;;
   }
 
   dimension: opt_out_rate {
     type: number
+    hidden: yes
     sql: ${TABLE}."OPT_OUT_RATE" ;;
   }
 
-  dimension: opt_outs {
-    type: number
+  measure: opt_outs {
+    type: sum
     sql: ${TABLE}."OPT_OUTS" ;;
   }
 
-  dimension: revenue {
-    type: number
+  measure: revenue {
+    type: sum
     sql: ${TABLE}."REVENUE" ;;
   }
 
@@ -135,8 +129,8 @@ view: cordial_message_analytic {
     sql: ${TABLE}."SENT_DATE" ;;
   }
 
-  dimension: sent_total {
-    type: number
+  measure: sent_total {
+    type: sum
     sql: ${TABLE}."SENT_TOTAL" ;;
   }
 
@@ -145,27 +139,12 @@ view: cordial_message_analytic {
     sql: ${TABLE}."SUBJECT" ;;
   }
 
-  dimension: total_purchases {
-    type: number
+  measure: total_purchases {
+    type: sum
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
-  }
-
-  dimension_group: update_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
   }
 
   measure: count {
     type: count
-    drill_fields: [message_name]
   }
 }
