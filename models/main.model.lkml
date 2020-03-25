@@ -303,8 +303,21 @@ explore: inventory_adjustment {
   }
 }
 
-explore: buildable_quantity {
+explore: bom_demand_matrix {
   hidden:  yes
+  group_label: "Production"
+  label: "Bom Demand Matrix"
+  description: "Number of products we can currently build with remaining components/resources"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${bom_demand_matrix.component_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+}
+
+explore: buildable_quantity {
+  hidden: yes
   group_label: "Production"
   label: "Buildable Quantity"
   description: "Number of products we can currently build with remaining components/resources"
