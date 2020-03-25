@@ -1,6 +1,6 @@
 view: ltol_line {
   label: "L2L Line Information"
-  sql_table_name: PRODUCTION.L2L_LINE ;;
+  sql_table_name: L2L.LINE ;;
 
   dimension: line_id {
     primary_key: yes
