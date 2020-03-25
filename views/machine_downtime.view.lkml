@@ -1,5 +1,5 @@
 view: l2l_machine_downtime {
-  sql_table_name: "PRODUCTION"."MACHINE_DOWNTIME"
+  sql_table_name: "L2L"."MACHINE_DOWNTIME"
     ;;
 
   dimension_group: down {
