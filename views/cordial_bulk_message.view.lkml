@@ -2,23 +2,25 @@ view: cordial_bulk_message {
   sql_table_name: "MARKETING"."CORDIAL_BULK_MESSAGE"
     ;;
 
-  dimension: audience_total {
-    type: number
+  measure: audience_total {
+    type: sum
     sql: ${TABLE}."AUDIENCE_TOTAL" ;;
   }
 
   dimension: bm_id {
     primary_key: yes
+    hidden: yes
     type: string
     sql: ${TABLE}."BM_ID" ;;
   }
 
-  dimension: bounces {
-    type: number
+  measure: bounces {
+    type: sum
     sql: ${TABLE}."BOUNCES" ;;
   }
 
   dimension: bs {
+    hidden: yes
     type: number
     sql: ${TABLE}."BS" ;;
   }
@@ -71,41 +73,13 @@ view: cordial_bulk_message {
     sql: ${TABLE}."FROM_EMAIL" ;;
   }
 
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
-  }
-
-  dimension_group: last_modified {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."LAST_MODIFIED" ;;
-  }
-
   dimension: name {
     type: string
     sql: ${TABLE}."NAME" ;;
   }
 
-  dimension: opt_outs {
-    type: number
+  measure: opt_outs {
+    type: sum
     sql: ${TABLE}."OPT_OUTS" ;;
   }
 
@@ -142,8 +116,8 @@ view: cordial_bulk_message {
     sql: ${TABLE}."SEND_TIME" ;;
   }
 
-  dimension: sent {
-    type: number
+  measure: sent {
+    type: sum
     sql: ${TABLE}."SENT" ;;
   }
 
@@ -201,20 +175,6 @@ view: cordial_bulk_message {
     sql: ${TABLE}."UNIQUE_OPENS" ;;
   }
 
-  dimension_group: update_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
-  }
-
   dimension: utm_campaign {
     type: string
     sql: ${TABLE}."UTM_CAMPAIGN" ;;
@@ -222,6 +182,5 @@ view: cordial_bulk_message {
 
   measure: count {
     type: count
-    drill_fields: [name]
   }
 }

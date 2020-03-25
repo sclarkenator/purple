@@ -453,6 +453,24 @@ explore: starship_fulfillment {
     }
   }
 
+  explore: forecast_combined_new {
+    label: "Forecast New"
+    description: "Combined wholesale and dtc forecast of units and dollars."
+    group_label: "Operations"
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${forecast_combined_new.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    join:fg_to_sfg{
+      view_label: "FG to SFG"
+      sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+      type: left_outer
+      relationship: one_to_one
+    }
+  }
+
   explore: day_pending { hidden:yes}
 
 
@@ -577,6 +595,21 @@ explore: all_events {
     type: left_outer
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
+  }
+}
+
+explore: cordial_activity {
+  group_label: "Marketing"
+  label: "Email (cordial)"
+  join: cordial_message_analytic {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
+    relationship: many_to_one
+  }
+  join: cordial_bulk_message {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
+  relationship: many_to_one
   }
 }
 
