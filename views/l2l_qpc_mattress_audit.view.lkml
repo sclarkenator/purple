@@ -1,5 +1,5 @@
 view: l2l_qpc_mattress_audit {
-  sql_table_name: "L2L"."QPC_MATTRESS_AUDIT"
+  sql_table_name: "L2L"."V_QPC_MATTRESS_AUDIT"
     ;;
 
   dimension: area {
