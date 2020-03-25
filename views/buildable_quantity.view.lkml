@@ -4,7 +4,7 @@
 #   created by Hyrum for visualization
 #-------------------------------------------------------------------
 
-view: bom_demand_matrix {
+view: buildable_quantity {
   sql_table_name: production.bom_demand_matrix ;;
 
   dimension: key {
@@ -14,6 +14,7 @@ view: bom_demand_matrix {
     sql: ${TABLE}.component_id||'-'||${TABLE}.item_id ;;  }
 
   dimension: component_id {
+    hidden: yes
     label: "Component ID"
     description: "Internal ID linking to the item of the product being made"
     type: number
@@ -37,13 +38,13 @@ view: bom_demand_matrix {
     sql: ${TABLE}.base_unit ;;  }
 
   dimension: ROW_NUM_WEST {
-    label: "Row Number West"
+    label: "Compnent Rank West"
     description: "Ordering the components that go into a product by the least available amount at West"
     type: number
     sql: ${TABLE}.ROW_NUM_WEST ;;  }
 
   dimension: ROW_NUM_ALPINE {
-    label: "Row Number Apline"
+    label: "Compnent Rank Apline"
     description: "Ordering the components that go into a product by the least available amount at Apline"
     type: number
     sql: ${TABLE}.ROW_NUM_ALPINE ;;  }
@@ -67,13 +68,13 @@ view: bom_demand_matrix {
     sql: ${TABLE}.AVAILABLE_ALPINE ;;  }
 
   measure: UNITS_WEST {
-    label: "Min Units West"
+    label: "Buildable Units West"
     description: "Available/Quantity Needed.  Minimium units we can create in West."
     type: min
     sql: ${TABLE}.UNITS_WEST ;;  }
 
   measure: UNITS_ALPINE {
-    label: "Min Units Apline"
+    label: "Buildable Units Apline"
     description: "Available/Quantity Needed.  Minimium units we can create in Apline."
     type: min
     sql: ${TABLE}.UNITS_ALPINE ;;  }
