@@ -71,55 +71,55 @@ sql_table_name: sales.forecast ;;
     sql:${TABLE}.units ;; }
 
   measure: total_amount {
-    label: "Gross Sales"
+    label: "Total Amount"
     type:  sum
     value_format: "$#,##0.00"
     sql:${TABLE}.gross_sales ;; }
 
   measure: discount_units {
-    label: "Discount Units"
+    label: "Total Discount Units"
     type:  sum
     value_format: "#,##0"
     sql:${TABLE}.discount_units;; }
 
   measure: discount_sales {
-    label: "Discount Sales"
+    label: "Total Discount Sales"
     type:  sum
     value_format: "$#,##0.00"
     sql:${TABLE}.discount_sales;; }
 
   measure: promo_units {
-    label: "Promo Units"
+    label: "Total Promo Units"
     type:  sum
     value_format: "#,##0"
     sql:${TABLE}.promo__units;; }
 
   measure: total_amount_million {
-    label: "Gross Sales (millions)"
+    label: "Total Amount (millions)"
     type:  sum
     value_format: "$#,##0.00,,\" M\""
     sql:${TABLE}.gross_sales ;; }
 
   measure: wholesale_units {
-    label: "Total Wholesale Units"
+    label: "Wholesale Units"
     type:  sum
     value_format: "#,##0"
     sql: case when ${channel} = 'Wholesale' then ${total_units} else 0 end ;;}
 
   measure: wholesale_amount {
-    label: "Total Wholesale Amount"
+    label: "Wholesale Amount"
     type:  sum
     value_format: "$#,##0.00"
     sql: case when ${channel} = 'Wholesale' then ${total_amount} else 0 end ;;}
 
   measure: dtc_units {
-    label: "Total DTC Units"
+    label: "DTC Units"
     type:  sum
     value_format: "#,##0"
     sql: case when ${channel} = 'DTC' then ${total_units} else 0 end ;;}
 
   measure: dtc_amount {
-    label: "Total DTC Amount"
+    label: "DTC Amount"
     type:  sum
     value_format: "$#,##0.00"
     sql: case when ${channel} = 'DTC' then ${total_amount} else 0 end ;;}
@@ -291,7 +291,7 @@ sql_table_name: sales.forecast ;;
     sql: case when ${account} = 'Owned Retail' then ${total_amount} else 0 end ;;}
 
   measure: to_date {
-    label: "Total Goal to Date"
+    label: "Goal to Date"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: sum
     value_format: "#,##0"
