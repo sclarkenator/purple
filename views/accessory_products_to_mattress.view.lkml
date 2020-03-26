@@ -179,7 +179,7 @@ dimension: harmony_pillow_flg {
 }
 
 dimension: plush_pillow_flg {
-  label: "a Cushion"
+  label: "a Plush Pillow"
   group_label: "Order has:"
   description: "1/0; 1 if there is a plush pillow in this order"
   type: yesno
