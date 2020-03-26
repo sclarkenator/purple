@@ -3,6 +3,7 @@ view: buildable_quantity {
     ;;
 
   dimension: item_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ITEM_ID" ;;
   }
@@ -14,6 +15,7 @@ view: buildable_quantity {
 
   measure: buildable_units {
     type: sum
+    description: "The total number of completed finished goods"
     sql: ${TABLE}."BUILDABLE_UNITS" ;;
   }
 

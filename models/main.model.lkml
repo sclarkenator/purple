@@ -311,7 +311,7 @@ explore: bom_demand_matrix {
   join: item {
     view_label: "Product"
     type: left_outer
-    sql_on: ${bom_demand_matrix.component_id} = ${item.item_id} ;;
+    sql_on: ${bom_demand_matrix.item_id} = ${item.item_id} ;;
     relationship: one_to_one
   }
 }
@@ -325,6 +325,12 @@ explore: buildable_quantity {
     view_label: "Product"
     type: left_outer
     sql_on: ${buildable_quantity.item_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+  join: bom_demand_matrix {
+    view_label: "Buildable Quantity"
+    type: left_outer
+    sql_on: ${buildable_quantity.item_id} = ${bom_demand_matrix.component_id} ;;
     relationship: one_to_one
   }
 }
