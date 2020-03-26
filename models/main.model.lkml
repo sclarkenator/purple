@@ -469,7 +469,7 @@ explore: starship_fulfillment {
 
   explore: forecast_combined {
     label: "Forecast"
-    description: "Combined wholesale and dtc forecast of units and dollars."
+    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
     #hidden: yes
     join: item {
@@ -485,15 +485,15 @@ explore: starship_fulfillment {
     }
   }
 
-  explore: forecast_combined_new {
-    label: "Forecast New"
+  explore: forecast_combined_old {
+    label: "Forecast Old"
     description: "Combined wholesale and dtc forecast of units and dollars."
     group_label: "Operations"
     hidden: yes
     join: item {
       view_label: "Product"
       type: left_outer
-      sql_on: ${forecast_combined_new.sku_id} = ${item.sku_id} ;;
+      sql_on: ${forecast_combined_old.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one}
     join:fg_to_sfg{
       view_label: "FG to SFG"
