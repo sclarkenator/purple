@@ -13,7 +13,6 @@ sql_table_name: sales.forecast ;;
   dimension: Before_today{
     group_label: "Forecast Date"
     label: "z - Is Before Today (mtd)"
-    #hidden:  yes
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
     sql: ${TABLE}.forecast < current_date;; }
@@ -64,16 +63,38 @@ sql_table_name: sales.forecast ;;
     type:  date_time
     sql:${TABLE}.modified ;; }
 
+  dimension: total_units_dimension{
+    type:  number
+    value_format: "#,##0"
+    sql:${TABLE}.total_units ;; }
+
+  dimension: total_amount_dimension{
+    type:  number
+    value_format: "$#,##0"
+    sql:${TABLE}.total_sales ;; }
+
   measure: total_units {
     label: "Total Units"
     type:  sum
     value_format: "#,##0"
-    sql:${TABLE}.units ;; }
+    sql:${TABLE}.total_units ;; }
 
   measure: total_amount {
     label: "Total Amount"
     type:  sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
+    sql:${TABLE}.total_sales ;; }
+
+  measure: standard_units {
+    label: "Total Standard Units"
+    type:  sum
+    value_format: "#,##0"
+    sql:${TABLE}.units ;; }
+
+  measure: standard_amount {
+    label: "Total Standard Sales"
+    type:  sum
+    value_format: "$#,##0"
     sql:${TABLE}.gross_sales ;; }
 
   measure: discount_units {
@@ -85,7 +106,7 @@ sql_table_name: sales.forecast ;;
   measure: discount_sales {
     label: "Total Discount Sales"
     type:  sum
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
     sql:${TABLE}.discount_sales;; }
 
   measure: promo_units {
@@ -104,191 +125,191 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${channel} = 'Wholesale' then ${total_units} else 0 end ;;}
+    sql: case when ${channel} = 'Wholesale' then ${total_units_dimension} else 0 end ;;}
 
   measure: wholesale_amount {
     label: "Wholesale Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${channel} = 'Wholesale' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${channel} = 'Wholesale' then ${total_amount_dimension} else 0 end ;;}
 
   measure: dtc_units {
     label: "DTC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${channel} = 'DTC' then ${total_units} else 0 end ;;}
+    sql: case when ${channel} = 'DTC' then ${total_units_dimension} else 0 end ;;}
 
   measure: dtc_amount {
     label: "DTC Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${channel} = 'DTC' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${channel} = 'DTC' then ${total_amount_dimension} else 0 end ;;}
 
   measure: MF_Instore_Units {
     label: "Wholesale MF Instore Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'MFRM_Ware' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'MFRM_Ware' then ${total_units_dimension} else 0 end ;;}
 
   measure: MF_Instore_Amount {
     label: "Wholesale MF Instore Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'MFRM_Ware' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'MFRM_Ware' then ${total_amount_dimension} else 0 end ;;}
 
   measure: MF_Online_Units {
     label: "Wholesale MF Online Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'MFRM_DTC' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'MFRM_DTC' then ${total_units_dimension} else 0 end ;;}
 
   measure: MF_Online_Amount {
     label: "Wholesale MF Online Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'MFRM_DTC' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'MFRM_DTC' then ${total_amount_dimension} else 0 end ;;}
 
   measure: FR_Units {
     label: "Wholesale FR Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'FR' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'FR' then ${total_units_dimension} else 0 end ;;}
 
   measure: FR_Amount {
     label: "Wholesale FR Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'FR' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'FR' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Macys_Instore_Units {
     label: "Wholesale Macys Instore Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Macys_Ware' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Macys_Ware' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Instore_Amount {
     label: "Wholesale Macys Instore Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Macys_Ware' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Macys_Ware' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Macys_Online_Units {
     label: "Wholesale Macys Online Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Macys_DTC' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Macys_DTC' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Online_Amount {
     label: "Wholesale Macy Online Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Macys_DTC' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Macys_DTC' then ${total_amount_dimension} else 0 end ;;}
 
   measure: SCC_Units {
     label: "Wholesale SCC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'SCC' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'SCC' then ${total_units_dimension} else 0 end ;;}
 
   measure: SCC_Amount {
     label: "Wholesale SCC Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'SCC' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'SCC' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BBB_Units {
     label: "Wholesale BBB Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'BBB' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'BBB' then ${total_units_dimension} else 0 end ;;}
 
   measure: BBB_Amount {
     label: "Wholesale BBB Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'BBB' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'BBB' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Medical_Units {
     label: "Wholesale Medical Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Med' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Med' then ${total_units_dimension} else 0 end ;;}
 
   measure: Medical_Amount {
     label: "Wholesale Medical Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Med' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Med' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Trucking_Units {
     label: "Wholesale Trucking Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Truck' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Truck' then ${total_units_dimension} else 0 end ;;}
 
   measure: Trucking_Amount {
     label: "Wholesale Trucking Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Truck' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Truck' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Other_Units {
     label: "Wholesale Other Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Other' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Other' then ${total_units_dimension} else 0 end ;;}
 
   measure: Other_Amount {
     label: "Wholesale Other Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Other' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Other' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BD_Units {
     label: "Wholesale Bloomingdales Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_units} else 0 end ;;}
+    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_units_dimension} else 0 end ;;}
 
   measure: BD_Amount {
     label: "Wholesale Bloomingdales Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_amount_dimension} else 0 end ;;}
 
   measure: HOM_Units {
     label: "Wholesale HOM Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'HOM' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'HOM' then ${total_units_dimension} else 0 end ;;}
 
   measure: hom_Amount {
     label: "Wholesale HOM Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'HOM' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'HOM' then ${total_amount_dimension} else 0 end ;;}
 
   measure: amazon_units {
     label: "Amazon Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_units} else 0 end ;;}
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_units_dimension} else 0 end ;;}
 
   measure: amazon_amount {
     label: "Amazon Amount"
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_amount_dimension} else 0 end ;;}
 
   measure: retail_units {
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Owned Retail' then ${total_units} else 0 end ;;}
+    sql: case when ${account} = 'Owned Retail' then ${total_units_dimension} else 0 end ;;}
 
   measure: retail_amount {
     type:  sum
-    value_format: "$#,##0.00"
-    sql: case when ${account} = 'Owned Retail' then ${total_amount} else 0 end ;;}
+    value_format: "$#,##0"
+    sql: case when ${account} = 'Owned Retail' then ${total_amount_dimension} else 0 end ;;}
 
   measure: to_date {
     label: "Goal to Date"
@@ -300,7 +321,7 @@ sql_table_name: sales.forecast ;;
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${sku_id}, ${date_date}) ;;
+    sql: CONCAT(${sku_id}, ${date_date}, ${account}, ${channel}) ;;
     hidden: yes
   }
 
