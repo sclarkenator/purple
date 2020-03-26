@@ -119,7 +119,7 @@ sql_table_name: sales.forecast ;;
     label: "Total Amount (millions)"
     type:  sum
     value_format: "$#,##0.00,,\" M\""
-    sql:${TABLE}.gross_sales ;; }
+    sql:${TABLE}.total_sales ;; }
 
   measure: wholesale_units {
     label: "Wholesale Units"
@@ -252,18 +252,6 @@ sql_table_name: sales.forecast ;;
     type:  sum
     value_format: "$#,##0"
     sql: case when ${account} = 'Truck' then ${total_amount_dimension} else 0 end ;;}
-
-  measure: Other_Units {
-    label: "Wholesale Other Units"
-    type:  sum
-    value_format: "#,##0"
-    sql: case when ${account} = 'Other' then ${total_units_dimension} else 0 end ;;}
-
-  measure: Other_Amount {
-    label: "Wholesale Other Amount"
-    type:  sum
-    value_format: "$#,##0"
-    sql: case when ${account} = 'Other' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BD_Units {
     label: "Wholesale Bloomingdales Units"
