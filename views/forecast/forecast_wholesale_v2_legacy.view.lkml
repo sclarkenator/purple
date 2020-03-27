@@ -1,4 +1,4 @@
-view: forecast_wholesale_v2 {
+view: forecast_wholesale_v2_legacy {
   derived_table: {
     sql:
               select b.date
