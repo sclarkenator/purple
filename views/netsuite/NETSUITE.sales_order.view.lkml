@@ -262,12 +262,19 @@ measure: upt {
 
   dimension: is_upgrade {
     group_label: " Advanced"
-    label: "Is Order Upgrade"
-    description: "Yes - this order an upgrade on a previous order"
+    label: "Is Warranty Exchange"
+    description: "Yes - this order is an upgrade from the original order on a warranty claim"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
     type: yesno
     sql: ${TABLE}.IS_UPGRADE = 'T' ;; }
+
+  dimension: is_exchange {
+    group_label: " Advanced"
+    label: "Is Return Exchange"
+    description: "Yes - this order is an exchange from the original order on a return"
+    type: yesno
+    sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
   dimension: memo {
     hidden: yes

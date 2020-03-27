@@ -14,6 +14,7 @@ view: bom_demand_matrix {
     sql: ${TABLE}.component_id||'-'||${TABLE}.item_id ;;  }
 
   dimension: component_id {
+    hidden: yes
     label: "Component ID"
     description: "Internal ID linking to the item of the product being made"
     type: number
@@ -31,49 +32,57 @@ view: bom_demand_matrix {
     sql: ${TABLE}.INGREDIENT ;;  }
 
   dimension: base_unit {
-    label: "Base Unit"
+    hidden: yes
+    label: "Measureing Unit"
     description: "Unit type for measuring (EAS,Oz,Lbs,Ft,Etc)"
     type: string
     sql: ${TABLE}.base_unit ;;  }
 
   dimension: ROW_NUM_WEST {
-    label: "Row Number West"
+    hidden: no
+    label: "Component Rank West"
     description: "Ordering the components that go into a product by the least available amount at West"
     type: number
     sql: ${TABLE}.ROW_NUM_WEST ;;  }
 
   dimension: ROW_NUM_ALPINE {
-    label: "Row Number Apline"
+    hidden: no
+    label: "Component Rank Apline"
     description: "Ordering the components that go into a product by the least available amount at Apline"
     type: number
     sql: ${TABLE}.ROW_NUM_ALPINE ;;  }
 
   measure: quantity {
+    hidden: yes
     label: "Quantity Needed"
     description: "Count of a specifc component needed to create a product"
     type: max
     sql: ${TABLE}.quantity ;;  }
 
   measure: AVAILABLE_WEST {
+    hidden:  yes
     label: "Min Availble West"
     description: "Minimun count of a component available at West"
     type: min
     sql: ${TABLE}.AVAILABLE_WEST ;;  }
 
   measure: AVAILABLE_ALPINE {
+    hidden:  yes
     label: "Min Availble Apline"
     description: "Minimun count of a component available at Alpine"
     type: min
     sql: ${TABLE}.AVAILABLE_ALPINE ;;  }
 
   measure: UNITS_WEST {
-    label: "Min Units West"
+    hidden:  yes
+    label: "Buildable Units West"
     description: "Available/Quantity Needed.  Minimium units we can create in West."
     type: min
     sql: ${TABLE}.UNITS_WEST ;;  }
 
   measure: UNITS_ALPINE {
-    label: "Min Units Apline"
+    hidden:  yes
+    label: "Buildable Units Apline"
     description: "Available/Quantity Needed.  Minimium units we can create in Apline."
     type: min
     sql: ${TABLE}.UNITS_ALPINE ;;  }

@@ -303,6 +303,38 @@ explore: inventory_adjustment {
   }
 }
 
+explore: bom_demand_matrix {
+  hidden:  yes
+  group_label: "Production"
+  label: "Bom Demand Matrix"
+  description: "Number of products we can currently build with remaining components/resources"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${bom_demand_matrix.item_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+}
+
+explore: buildable_quantity {
+  hidden: yes
+  group_label: "Production"
+  label: "Buildable Quantity"
+  description: "Number of products we can currently build with remaining components/resources"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${buildable_quantity.item_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+  join: bom_demand_matrix {
+    view_label: "Buildable Quantity"
+    type: left_outer
+    sql_on: ${buildable_quantity.item_id} = ${bom_demand_matrix.component_id} ;;
+    relationship: one_to_one
+  }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
@@ -437,7 +469,7 @@ explore: starship_fulfillment {
 
   explore: forecast_combined {
     label: "Forecast"
-    description: "Combined wholesale and dtc forecast of units and dollars."
+    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
     #hidden: yes
     join: item {
@@ -453,15 +485,15 @@ explore: starship_fulfillment {
     }
   }
 
-  explore: forecast_combined_new {
-    label: "Forecast New"
+  explore: forecast_combined_old {
+    label: "Forecast Old"
     description: "Combined wholesale and dtc forecast of units and dollars."
     group_label: "Operations"
     hidden: yes
     join: item {
       view_label: "Product"
       type: left_outer
-      sql_on: ${forecast_combined_new.sku_id} = ${item.sku_id} ;;
+      sql_on: ${forecast_combined_old.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one}
     join:fg_to_sfg{
       view_label: "FG to SFG"
@@ -1734,9 +1766,6 @@ explore: procom_security_daily_customer {
     description: "An exported shapshot of inventory by location from netsuite at the end of each month"
     join: item {type:  left_outer sql_on: ${item.item_id} = ${inventory_valuation.item_id} ;; relationship: many_to_one}
     join: warehouse_location {type: left_outer sql_on: ${warehouse_location.location_id} = ${inventory_valuation.location_id} ;; relationship: many_to_one}}
-  explore: bom_demand_matrix {hidden:  yes  label: "Demand Matrix"  group_label: "Operations"
-    description: "Showing components in final products and what's available"
-    join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: executive_report { hidden: yes
