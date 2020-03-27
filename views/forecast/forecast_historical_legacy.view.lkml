@@ -1,4 +1,4 @@
-view: forecast_historical {
+view: forecast_historical_legacy {
 
   derived_table: {
     sql:

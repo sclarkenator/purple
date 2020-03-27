@@ -1,22 +1,33 @@
-view: forecast_retail {
+view: forecast_legacy {
 
   derived_table: {
     sql:
-      select b.date
-          , a.sku_id
-          , coalesce(a.units/c.days_in_dates,0) as total_units
-          , coalesce(a.sales/c.days_in_dates,0) as total_amount
-      from analytics.csv_uploads.FORECAST_or a
-      left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
-      left join (
-        select z.start_date
-          , count (distinct (y.date)) as days_in_dates
-        from  analytics.csv_uploads.FORECAST_or z
-        left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
-        group by z.start_date
-      ) c on c.start_date = a.start_date
-      order by 2, 1
-  ;; }
+       select b.date
+            , a.sku_id
+            , (a.standard_sales + a.discounted_sales)/c.days as amount
+            , (a.standard_units + a.discounted_units)/c.days as paid_units
+            , a.promo_units/days as promo_units
+        from analytics.csv_uploads.forecast_dtc a
+        left join (
+            select distinct a.start_date
+                , a.end_date
+                , b.date
+            from analytics.csv_uploads.forecast_dtc a
+            left join analytics.util.warehouse_date b on b.date::date >= a.start_date::date and b.date::date <= a.end_date
+        ) b on b.start_date = a.start_date and b.end_date = a.end_date
+        left join (
+            select z.start_date
+                , count (z.date) as days
+            from (
+              select distinct a.start_date
+                  , a.end_date
+                  , b.date
+              from analytics.csv_uploads.forecast_dtc a
+              left join analytics.util.warehouse_date b on b.date::date >= a.start_date::date and b.date::date <= a.end_date
+              ) z
+              group by z.start_date
+          ) c on c.start_date = a.start_date
+    ;; }
 
   dimension_group: date {
     label: "Forecast"
@@ -34,10 +45,6 @@ view: forecast_retail {
     type: yesno
     sql: ${TABLE}.date < current_date;; }
 
-  dimension: sku_id {
-    type:  string
-    sql:${TABLE}.sku_id ;; }
-
   dimension: week_bucket{
     group_label: "Forecast Date"
     label: "z - Week Bucket"
@@ -51,27 +58,36 @@ view: forecast_retail {
              WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
 
+  dimension: sku_id {
+    type:  string
+    sql:${TABLE}.sku_id ;;
+    primary_key:yes
+  }
+
+  measure: amount {
+    label: "Total Forecast Amount"
+    type:  sum
+    sql:round(${TABLE}.amount,2) ;; }
+
   measure: total_units {
     label: "Total Units"
     type:  sum
-    value_format: "#,##0"
-    sql:${TABLE}.total_units ;; }
+    sql:round(${TABLE}.paid_units+coalesce(${TABLE}.promo_units,0),2) ;; }
 
-  measure: total_amount {
-    label: "Total Amount"
+  measure: total_paid_units {
+    label: "Total Paid Units"
     type:  sum
-    value_format: "$#,##0.00"
-    sql:${TABLE}.total_amount ;; }
+    sql:round(${TABLE}.paid_units,2) ;; }
+
+  measure: total_promo_units {
+    label: "Total Promo Units"
+    type:  sum
+    sql:round(${TABLE}.promo_units,2) ;; }
 
   measure: to_date {
     label: "Total Goal to Date"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: sum
     sql: round(case when ${TABLE}.date < current_date then ${TABLE}.total_amount else 0 end,2);; }
-
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${sku_id}, ${date_date}) ;;
-    hidden: yes }
 
 }

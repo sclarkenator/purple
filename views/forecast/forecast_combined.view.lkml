@@ -305,7 +305,7 @@ sql_table_name: sales.forecast ;;
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: sum
     value_format: "#,##0"
-    sql: case when ${TABLE}.forecast < current_date then ${TABLE}.total_amount else 0 end;; }
+    sql: case when ${TABLE}.forecast < current_date then ${total_amount_dimension} else 0 end;; }
 
 
   dimension: primary_key {

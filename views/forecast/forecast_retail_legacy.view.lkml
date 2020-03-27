@@ -1,4 +1,4 @@
-view: forecast_amazon {
+view: forecast_retail_legacy {
 
   derived_table: {
     sql:
@@ -6,12 +6,12 @@ view: forecast_amazon {
           , a.sku_id
           , coalesce(a.units/c.days_in_dates,0) as total_units
           , coalesce(a.sales/c.days_in_dates,0) as total_amount
-      from analytics.csv_uploads.FORECAST_amazon a
+      from analytics.csv_uploads.FORECAST_or a
       left join analytics.util.warehouse_date b on b.date >= a.start_date and b.date <= a.end_date
       left join (
         select z.start_date
           , count (distinct (y.date)) as days_in_dates
-        from  analytics.csv_uploads.FORECAST_amazon z
+        from  analytics.csv_uploads.FORECAST_or z
         left join analytics.util.warehouse_date y on y.date >= z.start_date and y.date <= z.end_date
         group by z.start_date
       ) c on c.start_date = a.start_date
@@ -43,13 +43,13 @@ view: forecast_amazon {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-   sql:  CASE WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) THEN 'Current Week'
-           WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
-           WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-           WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
-           WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-           WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;; }
+     sql:  CASE WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) THEN 'Current Week'
+             WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+             WHEN date_trunc(week, ${TABLE}.date::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
+             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+             WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+             ELSE 'Other' END ;; }
 
   measure: total_units {
     label: "Total Units"
@@ -72,7 +72,6 @@ view: forecast_amazon {
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${sku_id}, ${date_date}) ;;
-    hidden: yes
-  }
+    hidden: yes }
 
 }

@@ -1,5 +1,5 @@
 
-view: forecast_combined_old {
+view: forecast_combined_legacy {
 
   derived_table: {
     sql:
