@@ -1,5 +1,5 @@
 view: dispatch_info {
-  sql_table_name: PRODUCTION.DISPATCH_INFO ;;
+  sql_table_name: L2L.V_DISPATCH_INFO ;;
 
   dimension: assigned_techs {
     label: "Assigned Technician"
