@@ -49,7 +49,7 @@ sql_table_name: sales.forecast ;;
     sql: date_trunc(week, ${TABLE}.forecast) = date_trunc(week, current_date) ;;}
 
   dimension: week_bucket{
-    group_label: "Created Date"
+    group_label: "Forecast Date"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
