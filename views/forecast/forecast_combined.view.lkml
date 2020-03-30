@@ -48,6 +48,19 @@ sql_table_name: sales.forecast ;;
     type: yesno
     sql: date_trunc(week, ${TABLE}.forecast) = date_trunc(week, current_date) ;;}
 
+  dimension: week_bucket{
+    group_label: "Created Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+     sql:  CASE WHEN date_trunc(week, ${TABLE}.forecast::date) = date_trunc(week, current_date) THEN 'Current Week'
+             WHEN date_trunc(week, ${TABLE}.forecast::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
+             WHEN date_trunc(week, ${TABLE}.forecast::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
+             WHEN date_trunc(week, ${TABLE}.forecast::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
+             WHEN date_trunc(week, ${TABLE}.forecast::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+             WHEN date_trunc(week, ${TABLE}.forecast::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+             ELSE 'Other' END ;; }
+
   dimension: sku_id {
     type:  string
     sql:${TABLE}.sku_id ;; }
