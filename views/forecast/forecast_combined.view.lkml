@@ -151,13 +151,13 @@ sql_table_name: sales.forecast ;;
     label: "DTC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${channel} = 'DTC' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Website' then ${total_units_dimension} else 0 end ;;}
 
   measure: dtc_amount {
     label: "DTC Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${channel} = 'DTC' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Website' then ${total_amount_dimension} else 0 end ;;}
 
   measure: MF_Instore_Units {
     label: "Wholesale MF Instore Units"
