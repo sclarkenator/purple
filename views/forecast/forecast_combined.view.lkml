@@ -49,7 +49,7 @@ sql_table_name: sales.forecast ;;
     sql: date_trunc(week, ${TABLE}.forecast) = date_trunc(week, current_date) ;;}
 
   dimension: week_bucket{
-    group_label: "Created Date"
+    group_label: "Forecast Date"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
@@ -149,15 +149,17 @@ sql_table_name: sales.forecast ;;
 
   measure: dtc_units {
     label: "DTC Units"
+    description: "Excludes Amazon and Ebay"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${channel} = 'DTC' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Website' then ${total_units_dimension} else 0 end ;;}
 
   measure: dtc_amount {
     label: "DTC Amount"
+    description: "Excludes Amazon and Ebay"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${channel} = 'DTC' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Website' then ${total_amount_dimension} else 0 end ;;}
 
   measure: MF_Instore_Units {
     label: "Wholesale MF Instore Units"

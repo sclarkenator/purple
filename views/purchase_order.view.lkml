@@ -30,18 +30,17 @@ view: purchase_order {
   dimension: container_count{
     type: string
     sql: ${TABLE}."CONTAINER_COUNT" ;;
-    hidden: no
-  }
+    hidden: no}
 
   dimension: entity_id {
     hidden: yes
     type: number
     sql: ${TABLE}.ENTITY_ID ;; }
 
-  dimension: exchange_rate {
-    label: "Exchange Rate"
+  dimension: finals_ship_location {
+    label: "Final Ship Location"
     type: number
-    sql: ${TABLE}.EXCHANGE_RATE ;; }
+    sql: ${TABLE}."FINAL_SHIP_LOCATION" ;; }
 
   dimension_group: insert_ts {
     type: time
