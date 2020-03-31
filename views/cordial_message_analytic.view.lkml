@@ -96,10 +96,15 @@ view: cordial_message_analytic {
   }
 
   dimension: message_id {
-    hidden: yes
+    #hidden: yes
     primary_key: yes
     type: string
     sql: ${TABLE}."MESSAGE_ID" ;;
+  }
+
+  dimension: type {
+    type:  string
+    sql:  case when right(${message_id},2) = 'ot' then 'Batch' else 'Automated' end ;;
   }
 
   dimension: message_name {
