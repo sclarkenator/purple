@@ -200,6 +200,26 @@ view: sessions {
     type: yesno
     sql: date_trunc(week, ${TABLE}.time::date) < date_trunc(week, current_date) ;;}
 
+  dimension: current_week_filter_heap{
+    view_label: "Sessions"
+    group_label: "  Session Time"
+    label: "z - Current Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current week of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(WEEK FROM ${time_date}::date) = EXTRACT(WEEK FROM current_date::date) ;;
+  }
+
+  dimension: current_month_filter_heap{
+    view_label: "Sessions"
+    group_label: "  Session Time"
+    label: "z - Current Month"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current month of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(month FROM ${time_date}::date) = EXTRACT(month FROM current_date::date) ;;
+  }
+
   dimension: prev_week{
     group_label: "  Session Time"
     label: "z - Previous Week"
