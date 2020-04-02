@@ -272,7 +272,16 @@ view: sales_order_line_base {
     description: "Yes/No for if the date is in the current week of the year (for each year)"
     type: yesno
     sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) ;;
+  }
 
+  dimension: current_month_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Month"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current month of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(month FROM ${TABLE}.Created::date) = EXTRACT(month FROM current_date::date) ;;
   }
 
   dimension: prev_week{
