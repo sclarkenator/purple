@@ -1126,15 +1126,6 @@ explore: sales_order_line{
     type: full_outer
     sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
     relationship: many_to_one}
-  join: contribution {
-    type: left_outer
-    sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
-    relationship: one_to_one}
-  join: cm_pivot {
-    view_label: "x-CM waterfall"
-    type: left_outer
-    sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
-    relationship: one_to_many}
   join: state_tax_reconciliation {
     view_label: "State Tax Reconciliation"
     type: left_outer
@@ -1308,7 +1299,12 @@ explore: sales_order_line{
     relationship: one_to_many
     sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
   }
-
+  join: item_price {
+    view_label: "Product"
+    type: left_outer
+    relationship: many_to_many
+    sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
+  }
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
