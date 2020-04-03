@@ -21,6 +21,8 @@ view: order_flag {
       ,case when gravity_mask > 0 then 1 else 0 end gravity_mask_flg
       ,case when gravity_blanket > 0 then 1 else 0 end gravity_blanket_flg
       ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
+      ,case when EYE_MASK_FLG > 0 then 1 else 0 end eye_mask_flg
+      ,case when PET_BED_fLG > 0 then 1 else 0 end pet_bed_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
       ,case when (ff_bundle_pt1 + ff_bundle_pt2 + ff_bundle_pt3 >= 3) OR ff_bundle_pt4 > 0 then 1 else 0 end ff_bundle_flg
       ,case when (pdULTpt1>=2 and pdANYpt2=1) then 1 else 0 end pdULT_flg
@@ -41,6 +43,8 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'PLATFORM' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
+        ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
+        ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
         ,SUM(CASE WHEN category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895') then 1 else 0 end) harmony
@@ -161,7 +165,7 @@ view: order_flag {
     sql:  ${TABLE}.platform_flg ;; }
 
   measure: blanket_orders {
-    hidden:  yes
+    hidden:  no
     group_label: "Total Orders with:"
     label: "a Blanket"
     description: "1/0 per order; 1 if there was a blanket in the order"
@@ -257,11 +261,11 @@ view: order_flag {
     sql: ${TABLE}.protector_flg = 1 ;; }
 
   dimension: base_flg {
-    hidden: yes
+    hidden: no
     group_label: "    * Orders has:"
     label: "a Base"
     description: "1/0; 1 if there is a base in this order"
-    type:  number
+    type:  yesno
     sql: ${TABLE}.base_flg = 1 ;; }
 
   dimension: powerbase_flg {
@@ -290,7 +294,7 @@ view: order_flag {
     group_label: "    * Orders has:"
     label: "a Blanket"
     description: "1/0; 1 if there is a blanket in this order"
-    type:  number
+    type:  yesno
     sql: ${TABLE}.blanket_flg = 1 ;; }
 
   dimension: split_flg {
@@ -378,6 +382,22 @@ view: order_flag {
     type: yesno
     sql: ${TABLE}.duvet_flg > 0 ;; }
 
+  dimension: eye_mask_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Eye Mask"
+    description: "1/0; 1 if there is a Eye Mask in this order"
+    type: yesno
+    sql: ${TABLE}.eye_mask_flg > 0 ;; }
+
+  dimension: pet_bed_flg {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Pet Bed"
+    description: "1/0; 1 if there is a Pet Bed in this order"
+    type: yesno
+    sql: ${TABLE}.pet_bed_flg >0 ;; }
+
   dimension: ff_bundle_flg {
     hidden:  yes
     group_label: "    * Orders has:"
@@ -420,6 +440,5 @@ view: order_flag {
     description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020)"
     type:  yesno
     sql: ${TABLE}.buymsm = 1 ;; }
-
 
 }
