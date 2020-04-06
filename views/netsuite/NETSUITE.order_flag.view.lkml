@@ -140,7 +140,7 @@ view: order_flag {
     sql:  ${TABLE}.plush_pillow_flg ;; }
 
   measure: base_orders {
-    hidden:  yes
+    hidden:  no
     group_label: "Total Orders with:"
     label: "a Base"
     description: "1/0 per order; 1 if there was a base in the order"
