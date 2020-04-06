@@ -45,13 +45,15 @@ view: stella_connect_request {
   }
 
   dimension: ADDITIONAL_QUESTION_RESPONSE {
-    description: ""
-    type: yesno
+    hidden: yes
+    description: "Duplicate of FCR?"
+    type: string
     sql: ${TABLE}.ADDITIONAL_QUESTION_RESPONSE ;;
   }
 
   dimension: ADDITIONAL_QUESTION_COMMENTS {
-    description: ""
+    hidden: yes
+    description: "Duplicate of FCR?"
     type: string
     sql: ${TABLE}.ADDITIONAL_QUESTION_COMMENTS ;;
   }

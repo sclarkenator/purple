@@ -3,6 +3,7 @@ view: refund_mismatch {
 
   dimension: amount_diff {
     type: number
+    value_format: "$0.00"
     sql: ${TABLE}."AMOUNT_DIFF";;
   }
 
@@ -46,6 +47,7 @@ view: refund_mismatch {
   }
 
   dimension: netsuite_amount {
+    value_format: "$0.00"
     type: number
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
