@@ -77,6 +77,24 @@ view: day_aggregations_wholesale_sales {
 }
 
 ######################################################
+#   Retail Sales and Units
+######################################################
+view: day_aggregations_retail_sales {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: created_date {}
+      column: total_gross_Amt_non_rounded {}
+      column: total_units {}
+      filters: { field: sales_order.channel value: "Owned Retail"}
+      filters: { field: item.merchandise value: "No" }
+      filters: { field: item.modified value: "Yes" }
+      filters: { field: sales_order_line.created_date value: "2 years" }
+    }
+  }
+  }
+
+
+######################################################
 #   Forecast Amounts and Units
 ######################################################
 view: day_aggregations_forecast {
@@ -273,6 +291,8 @@ view: day_aggregations {
         , dtc.total_units as dtc_units
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
+        , retail.total_gross_Amt_non_rounded as retail_amount
+        , retail.total_units as retail_units
         , forecast.total_amount as forecast_total_amount
         , forecast.total_units as forecast_total_units
         , forecast.dtc_amount as forecast_dtc_amount
@@ -305,6 +325,7 @@ view: day_aggregations {
       ) week on week.week_num = date_part('week',d.date)
       left join ${day_aggregations_dtc_sales.SQL_TABLE_NAME} dtc on dtc.created_date::date = d.date
       left join ${day_aggregations_wholesale_sales.SQL_TABLE_NAME} wholesale on wholesale.created_date::date = d.date
+      left join ${day_aggregations_retail_sales.SQL_TABLE_NAME} retail on retail.created_date::date = d.date
       left join ${day_aggregations_forecast.SQL_TABLE_NAME} forecast on forecast.date_date::date = d.date
       left join ${day_aggregations_adspend.SQL_TABLE_NAME} adspend on adspend.ad_date::date = d.date
       left join ${day_aggregations_targets.SQL_TABLE_NAME} targets on targets.date_date::date = d.date
@@ -432,6 +453,20 @@ view: day_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.wholesale_units;; }
+
+  measure: retail_amount {
+    label: "Retail Amount"
+    description: "Total Retail sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.retail_amount;; }
+
+  measure: retail_units {
+    label: "Retail Units"
+    description: "Total Retail units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.retail_units;; }
 
   measure: forecast_total_amount {
     label: "Forecast Amount"
