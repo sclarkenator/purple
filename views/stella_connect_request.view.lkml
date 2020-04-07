@@ -45,10 +45,11 @@ view: stella_connect_request {
   }
 
   dimension: ADDITIONAL_QUESTION_RESPONSE {
-    hidden: yes
-    description: "Duplicate of FCR?"
-    type: string
-    sql: ${TABLE}.ADDITIONAL_QUESTION_RESPONSE ;;
+    hidden: no
+    label: "FCR"
+    description: "Did the employee resolve your question in the first call?"
+    type: yesno
+    sql: ${TABLE}.ADDITIONAL_QUESTION_RESPONSE ilike 'Yes';;
   }
 
   dimension: ADDITIONAL_QUESTION_COMMENTS {
@@ -65,6 +66,8 @@ view: stella_connect_request {
   }
 
   dimension: FCR_RESPONSE {
+    hidden: yes
+    label: ""
     description: "First Call Resolution response"
     type: string
     sql: ${TABLE}.FCR_RESPONSE ;;
@@ -89,14 +92,30 @@ view: stella_connect_request {
   }
 
   measure: NPS_RESPONSE_avg {
-    description: "Average Net Promoter Score"
+    description: "Average Net Promoter Score. isn't working yet for some reason"
     type: average
+    hidden: yes
     sql: ${stella_connect_request.NPS_RESPONSE} ;;
   }
 
   measure: STAR_RATING_RESPONSE_avg {
-    description: "Average Star Rating out of 5"
+    description: "Average Star Rating out of 5. isn't working yet for some reason"
     type: average
+    hidden: yes
     sql: ${stella_connect_request.STAR_RATING_RESPONSE} ;;
   }
+
+  measure: FCR_rate {
+    hidden: yes
+    description: "Calcuates FCR rate. isn't working for some reason"
+    type: percent_of_total
+    value_format: "0.0%"
+    sql: (sum(${ADDITIONAL_QUESTION_RESPONSE} ilike 'yes')/sum(${ADDITIONAL_QUESTION_RESPONSE})  ;;
+  }
+
+  measure: count {
+    description: "Distinct Count of Request ID (rows)"
+    type: count_distinct
+    sql: ${request_id} ;;}
+
 }
