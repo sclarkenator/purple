@@ -56,7 +56,7 @@ view: event_facts {
         ON events.event_id = a.event_id
         AND events.event_name = a.event_table_name
        ;;
-      sql_trigger_value: select count(*) from analytics.heap.all_events;;
+      datagroup_trigger: pdt_refresh_6am
     }
 
   measure: count {
