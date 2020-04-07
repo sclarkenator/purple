@@ -6,6 +6,7 @@ select s.deal_id
 , d.created_at
 , s.order_id
 , s.order_link
+, s.RETAIL_AGENT
 , s.fraud_risk
 , s.zendesk_sell_user_id as zendesk_id
 , d.draft_order_name
@@ -94,6 +95,14 @@ select s.deal_id
     type: string
     sql: ${TABLE}.zendesk_id ;;
   }
+
+  dimension: RETAIL_AGENT {
+    type: yesno
+    label: " * Is Retail Agent"
+    description: "Yes if agent is a retail agent"
+    sql: ${TABLE}.RETAIL_AGENT = 'TRUE' ;;
+  }
+
   measure: count{
     type:  count
   }
