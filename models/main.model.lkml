@@ -505,7 +505,10 @@ explore: starship_fulfillment {
 
   explore: day_pending { hidden:yes}
 
-
+  explore: at_risk_amount {
+    label: "At Risk Info"
+    hidden: yes
+  }
 #-------------------------------------------------------------------
 #
 # Marketing explores
@@ -1326,7 +1329,7 @@ explore: sales_order_line{
       type: left_outer
       relationship: many_to_many
       sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
-    }
+  }
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
