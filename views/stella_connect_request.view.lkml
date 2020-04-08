@@ -129,15 +129,15 @@ view: stella_connect_request {
   }
 
   measure: STAR_RATING_RESPONSE_avg {
-    description: "Average Star Rating out of 5. isn't working yet for some reason"
+    description: "In Testing: Average Star Rating out of 5. isn't working yet for some reason"
     type: average
-    hidden: yes
+    hidden: no
     sql: ${stella_connect_request.STAR_RATING_RESPONSE} ;;
   }
 
   measure: FCR_rate {
-    hidden: yes
-    description: "Calcuates FCR rate. isn't working for some reason"
+    hidden: no
+    description: "In Testing: Calcuates FCR rate. isn't working for some reason"
     type: percent_of_total
     value_format: "0.0%"
     sql: (sum(${ADDITIONAL_QUESTION_RESPONSE} ilike 'yes')/sum(${ADDITIONAL_QUESTION_RESPONSE})  ;;
