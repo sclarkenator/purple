@@ -8,6 +8,36 @@ view: stella_connect_request {
     primary_key: yes
    }
 
+  dimension_group: sent  {
+    type: time
+    description: "Date the Evaluation Request was sent to the customer"
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: yes
+    datatype: timestamp
+    sql: ${TABLE}.sent ;;
+  }
+
+  dimension_group: received  {
+    type: time
+    description: "Date the Evaluation Request was received from the customer"
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: yes
+    datatype: timestamp
+    sql: ${TABLE}.received ;;
+  }
+
   dimension: email {
     description: "Customer email address"
     type: string
