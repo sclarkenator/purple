@@ -35,7 +35,7 @@ view: stella_connect_request {
     ]
     convert_tz: yes
     datatype: timestamp
-    sql: ${TABLE}.received ;;
+    sql: ${TABLE}.RECIEVED ;;
   }
 
   dimension: email {
@@ -129,10 +129,11 @@ view: stella_connect_request {
   }
 
   measure: STAR_RATING_RESPONSE_avg {
-    description: "In Testing: Average Star Rating out of 5. isn't working yet for some reason"
+    description: "Average Star Rating out of 5"
     type: average
+    value_format: "0.00"
     hidden: no
-    sql: ${stella_connect_request.STAR_RATING_RESPONSE} ;;
+    sql: case when ${stella_connect_request.STAR_RATING_RESPONSE}>=0 then ${stella_connect_request.STAR_RATING_RESPONSE} end ;;
   }
 
   measure: FCR_rate {
