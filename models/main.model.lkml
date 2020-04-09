@@ -504,11 +504,8 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
+  explore: at_risk_amount {hidden: yes}
 
-  explore: at_risk_amount {
-    label: "At Risk Info"
-    hidden: yes
-  }
 #-------------------------------------------------------------------
 #
 # Marketing explores
