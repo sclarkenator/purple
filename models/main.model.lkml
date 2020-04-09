@@ -504,7 +504,7 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
-
+  explore: at_risk_amount {hidden: yes}
 
 #-------------------------------------------------------------------
 #
@@ -718,17 +718,22 @@ explore: customer_satisfaction_survey {
   group_label: "Customer Care"
   hidden: yes
   description: "Customer satisfaction of interactions with Customer Care agents"
-  join: agent_lkp {
-    type: left_outer
-    sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
-    relationship: many_to_one
-  }
-  join: team_lead_name {
-    type:  left_outer
-    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
-      AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
-      AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
-    relationship: many_to_one
+    join: agent_lkp {
+      type: left_outer
+      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
+      relationship: many_to_one
+    }
+    join: team_lead_name {
+      type:  left_outer
+      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+        AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+      relationship: many_to_one
+    }
+    join: stella_connect_request {
+      type: left_outer
+      sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
+      relationship: many_to_one
     }
 }
 explore: rpt_agent_stats {
@@ -849,6 +854,11 @@ explore: agent_lkp {
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many
+  }
+  join: stella_connect_request {
+    type: left_outer
+    sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
+    relationship: many_to_one
   }
   required_access_grants: [is_customer_care_manager]
 }
@@ -1304,6 +1314,18 @@ explore: sales_order_line{
     type: left_outer
     relationship: many_to_many
     sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
+  }
+    join: v_chat_sales {
+      view_label: "Zendesk Chats"
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${v_chat_sales.order_id} = ${sales_order.order_id} and ${v_chat_sales.system} = ${sales_order.system};;
+  }
+    join: zendesk_chats {
+      view_label: "Zendesk Chats"
+      type: left_outer
+      relationship: many_to_many
+      sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
   }
 }
 

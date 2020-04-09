@@ -1327,7 +1327,8 @@ view: sales_order_line {
       , total_gross_Amt_non_rounded
       , total_units
       , total_standard_cost
-      , total_discounts]
+      , total_discounts
+      , agent_name.merged_name]
   }
 
 }

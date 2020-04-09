@@ -55,6 +55,13 @@ view: inside_sales {
     sql: ${TABLE}.ZENDESK_SELL_USER_ID ;;
   }
 
+  dimension: RETAIL_AGENT {
+    type: yesno
+    label: " * Is Retail Agent"
+    description: "Yes if agent is a retail agent"
+    sql: ${TABLE}.RETAIL_AGENT = 'TRUE' ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
