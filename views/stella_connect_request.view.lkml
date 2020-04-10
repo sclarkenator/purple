@@ -79,7 +79,7 @@ view: stella_connect_request {
     label: "FCR"
     description: "Did the employee resolve your question in the first call?"
     type: yesno
-    sql: ${TABLE}.ADDITIONAL_QUESTION_RESPONSE ilike 'Yes';;
+    sql: case when ${TABLE}.ADDITIONAL_QUESTION_RESPONSE is not null then ${TABLE}.ADDITIONAL_QUESTION_RESPONSE ilike 'Yes' end ;;
   }
 
   dimension: ADDITIONAL_QUESTION_COMMENTS {
@@ -137,11 +137,11 @@ view: stella_connect_request {
   }
 
   measure: FCR_rate {
-    hidden: no
+    hidden: yes
     description: "In Testing: Calcuates FCR rate. isn't working for some reason"
-    type: percent_of_total
+    type: number
     value_format: "0.0%"
-    sql: (sum(${ADDITIONAL_QUESTION_RESPONSE} ilike 'yes')/sum(${ADDITIONAL_QUESTION_RESPONSE})  ;;
+    sql: case when ${ADDITIONAL_QUESTION_RESPONSE} >=0 then (count(${ADDITIONAL_QUESTION_RESPONSE} = 'Yes'))/(count(${ADDITIONAL_QUESTION_RESPONSE})) end ;;
   }
 
   measure: count {
