@@ -15,7 +15,7 @@ view: daily_adspend {
   dimension_group: ad {
     label: "  Ad"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
 
   dimension: date_raw {
@@ -55,7 +55,7 @@ view: daily_adspend {
   dimension: current_week_num{
     group_label: "  Ad Date"
     label: "z - Before Current Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is before the previous week"
     type: yesno
     sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
@@ -64,9 +64,44 @@ view: daily_adspend {
   dimension: prev_week{
     group_label: "  Ad Date"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is the previous week"
     type: yesno
     sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
+
+  dimension_group: current {
+    label: "  Ad"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: current_date ;; }
+
+  dimension: bef_current_week_num {
+    group_label: "  Ad Date"
+    label: "z - Week Number Before Current Week"
+    description: "Yes/No for Ad Date Week of Year is before Current Date Week of Year"
+    type: yesno
+    sql:  ${ad_week_of_year} < ${current_week_of_year} ;; }
+
+  dimension: ytd {
+    group_label: "  Ad Date"
+    label: "z - YTD"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    type: yesno
+    sql:  ${ad_day_of_year} < ${current_day_of_year} ;; }
+
+  dimension: day_offset {
+    group_label: "  Ad Date"
+    label: "z - Day Offset"
+    description: "A difference in day of year, yesterday is a -1 tomorrow is a 1, today is 0.  You'll need to filter by year as it's all years"
+    type: number
+    sql:  ${ad_day_of_year} - ${current_day_of_year} ;; }
+
+  dimension: week_offset {
+    group_label: "  Ad Date"
+    label: "z - Week Offset"
+    description: "A difference in week of year, yesterday is a -1 tomorrow is a 1, today is 0.  You'll need to filter by year as it's all years"
+    type: number
+    sql:  ${ad_week_of_year} - ${current_week_of_year} ;; }
 
   measure: adspend {
     label: "Total Adspend ($k)"
@@ -82,6 +117,19 @@ view: daily_adspend {
     type: number
     value_format: "$#,##0"
     sql: ${adspend} ;;  }
+
+  measure: adspend_no_calc {
+    label: "Total Adspend - No Calc ($)"
+    group_label: "Advanced"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;; }
 
   measure: agency_cost {
     label: "  Agency Cost ($)"
@@ -137,6 +185,20 @@ view: daily_adspend {
     description: "Total clicks for selected channels (online only)"
     type: sum
     sql: ${TABLE}.clicks ;; }
+
+  measure: cpm {
+    label: "  CPM"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/(${impressions}/1000) ;;  }
+
+  measure: cpc {
+    label: "  CPC"
+    description: "Adspend / Total Clicks"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/${clicks} ;;  }
 
   dimension: spend_platform {
     label: " Spend Platform"
