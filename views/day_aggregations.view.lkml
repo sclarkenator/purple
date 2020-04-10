@@ -286,7 +286,7 @@ view: day_aggregations {
   derived_table: {
     sql:
       select d.date
-        , week.start_2019 as week_start_2019
+        , week.start_2020 as week_start_2020
         , dtc.total_gross_Amt_non_rounded as dtc_amount
         , dtc.total_units as dtc_units
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
@@ -316,10 +316,8 @@ view: day_aggregations {
         select date_part('week',d.date) as week_num
             , min (case when year > 2018 then date end) start_2019
             , max (case when year < 2020 then date end) end_2019
-            , min (case when year > 2017 then date end) start_2018
-            , max (case when year < 2019 then date end) end_2018
-            , min (case when year > 2016 then date end) start_2017
-            , max (case when year < 2018 then date end) end_2017
+            , min (case when year > 2019 then date end) start_2020
+            , max (case when year > 2021 then date end) end_2020
         from analytics.util.warehouse_date d
         group by date_part('week',d.date)
       ) week on week.week_num = date_part('week',d.date)
@@ -393,10 +391,10 @@ view: day_aggregations {
 
   dimension: week_2019_start {
     group_label: "Created Date"
-    label: "z - Week Start 2019"
+    label: "z - Week Start 2020"
     description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
     type: string
-    sql: to_char( ${TABLE}.week_start_2019,'MON-DD');; }
+    sql: to_char( ${TABLE}.week_start_2020,'MON-DD');; }
 
   dimension: week_bucket{
     group_label: "Created Date"
