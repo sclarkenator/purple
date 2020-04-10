@@ -384,6 +384,12 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: before_day_of_year {
+    hidden: yes
+    type: yesno
+    sql: dayofyear(${created_raw}) < dayofyear(current_timestamp(1)) ;;
+  }
+
   measure: last_updated_date_sales {
     type: date
     label: "Last Updated Sales"
