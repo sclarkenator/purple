@@ -87,6 +87,7 @@ view: day_aggregations_retail_sales {
       column: total_units {}
       filters: { field: sales_order.channel value: "Owned Retail"}
       filters: { field: item.merchandise value: "No" }
+      filters: { field: item.finished_good_flg value: "Yes, No" }
       filters: { field: item.modified value: "Yes" }
       filters: { field: sales_order_line.created_date value: "2 years" }
     }
