@@ -22,6 +22,20 @@ view: sales_order_line_base {
     sql:  ${TABLE}.estimated_Cost ;;
   }
 
+  measure: min_sales_amt {
+    hidden: yes
+    type: min
+    value_format: "$#,##0.00"
+    sql:  ${TABLE}.gross_amt ;;
+  }
+
+  measure: max_sales_amt {
+    hidden: yes
+    type: max
+    value_format: "$#,##0.00"
+    sql:  ${TABLE}.gross_amt ;;
+  }
+
   measure: total_estimated_cost {
     hidden: yes
     label: "Estimated Costs ($)"
