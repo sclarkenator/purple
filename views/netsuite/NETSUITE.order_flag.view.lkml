@@ -391,7 +391,7 @@ view: order_flag {
     sql: ${TABLE}.eye_mask_flg > 0 ;; }
 
   dimension: pet_bed_flg {
-    hidden: yes
+    hidden: no
     group_label: "    * Orders has:"
     label: "a Pet Bed"
     description: "1/0; 1 if there is a Pet Bed in this order"
