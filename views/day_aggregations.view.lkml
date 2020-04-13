@@ -105,9 +105,11 @@ view: day_aggregations_forecast {
       column: total_amount {}
       column: dtc_amount {}
       column: wholesale_amount {}
+      column: retail_amount {}
       column: total_units {}
       column: dtc_units {}
       column: wholesale_units {}
+      column: retail_units {}
       filters: { field: forecast_combined.date_date value: "2 years" }
     }
   }
@@ -300,6 +302,8 @@ view: day_aggregations {
         , forecast.dtc_units as forecast_dtc_units
         , forecast.wholesale_amount as forecast_wholesale_amount
         , forecast.wholesale_units as forecast_wholesale_units
+        , forecast.retail_amount as forecast_retail_amount
+        , forecast.retail_units as forecast_retail_units
         , adspend.adspend
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
@@ -508,6 +512,20 @@ view: day_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.forecast_wholesale_units;; }
+
+  measure: forecast_retail_amount {
+    label: "Forecast Retail Amount"
+    description: "Total Retail forecast amount aggregated to the day."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.forecast_retail_amount;; }
+
+  measure: forecast_retail_units {
+    label: "Forecast Retail Units"
+    description: "Total Retail forecast units aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.forecast_retail_units;; }
 
   measure: adspend {
     label: "Total Adspend"
