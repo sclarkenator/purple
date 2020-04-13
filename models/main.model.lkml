@@ -1189,6 +1189,12 @@ explore: sales_order_line{
     type:  full_outer
     sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
     relationship: one_to_one}
+  join: mymove {
+    view_label: "Marketing Attribution"
+    type: left_outer
+    sql_on: ${mymove.order_id} = ${sales_order.order_id} and ${mymove.system} = ${sales_order.system} ;;
+    relationship: one_to_one
+  }
   join : slicktext_textword {
     view_label: "Promo"
     type:full_outer
