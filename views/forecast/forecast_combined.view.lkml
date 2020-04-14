@@ -165,85 +165,85 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale MF Instore Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'MFRM_Ware' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Mattress Firm - Warehouse' then ${total_units_dimension} else 0 end ;;}
 
   measure: MF_Instore_Amount {
     label: "Wholesale MF Instore Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'MFRM_Ware' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Mattress Firm - Warehouse' then ${total_amount_dimension} else 0 end ;;}
 
   measure: MF_Online_Units {
     label: "Wholesale MF Online Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'MFRM_DTC' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Mattress Firm - Drop Ship' then ${total_units_dimension} else 0 end ;;}
 
   measure: MF_Online_Amount {
     label: "Wholesale MF Online Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'MFRM_DTC' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Mattress Firm - Drop Ship' then ${total_amount_dimension} else 0 end ;;}
 
   measure: FR_Units {
     label: "Wholesale FR Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'FR' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Furniture Row Warehouse' then ${total_units_dimension} else 0 end ;;}
 
   measure: FR_Amount {
     label: "Wholesale FR Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'FR' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Furniture Row Warehouse' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Macys_Instore_Units {
     label: "Wholesale Macys Instore Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Macys_Ware' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Warehouse' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Instore_Amount {
     label: "Wholesale Macys Instore Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'Macys_Ware' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Warehouse' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Macys_Online_Units {
     label: "Wholesale Macys Online Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Macys_DTC' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Dropship' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Online_Amount {
     label: "Wholesale Macy Online Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'Macys_DTC' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Dropship' then ${total_amount_dimension} else 0 end ;;}
 
   measure: SCC_Units {
     label: "Wholesale SCC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'SCC' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Sleep Country' then ${total_units_dimension} else 0 end ;;}
 
   measure: SCC_Amount {
     label: "Wholesale SCC Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'SCC' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Sleep Country' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BBB_Units {
     label: "Wholesale BBB Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'BBB' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Bed Bath & Beyond - In Store' then ${total_units_dimension} else 0 end ;;}
 
   measure: BBB_Amount {
     label: "Wholesale BBB Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'BBB' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Bed Bath & Beyond - In Store' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Medical_Units {
     label: "Wholesale Medical Units"
@@ -273,25 +273,25 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale Bloomingdales Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Bloomingdales - Dropship', 'Bloomingdales - Warehouse') then ${total_units_dimension} else 0 end ;;}
 
   measure: BD_Amount {
     label: "Wholesale Bloomingdales Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ('Bloom_DTC', 'Bloom_Ware') then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Bloomingdales - Dropship', 'Bloomingdales - Warehouse') then ${total_amount_dimension} else 0 end ;;}
 
   measure: HOM_Units {
     label: "Wholesale HOM Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'HOM' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'HOM Furniture - Warehouse' then ${total_units_dimension} else 0 end ;;}
 
   measure: hom_Amount {
     label: "Wholesale HOM Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'HOM' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'HOM Furniture - Warehouse' then ${total_amount_dimension} else 0 end ;;}
 
   measure: amazon_units {
     label: "Amazon Units"
