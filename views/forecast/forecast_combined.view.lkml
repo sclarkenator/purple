@@ -201,25 +201,25 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale Macys Instore Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = "Macy's - Warehouse" then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Warehouse' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Instore_Amount {
     label: "Wholesale Macys Instore Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = "Macy's - Warehouse" then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Warehouse' then ${total_amount_dimension} else 0 end ;;}
 
   measure: Macys_Online_Units {
     label: "Wholesale Macys Online Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = "Macy's - Dropship" then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Dropship' then ${total_units_dimension} else 0 end ;;}
 
   measure: Macys_Online_Amount {
     label: "Wholesale Macy Online Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = "Macy's - Dropship" then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} = 'Macys - Dropship' then ${total_amount_dimension} else 0 end ;;}
 
   measure: SCC_Units {
     label: "Wholesale SCC Units"
@@ -273,13 +273,13 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale Bloomingdales Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ("Bloomingdale's - Dropship", "Bloomingdale's - Warehouse") then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Bloomingdales - Dropship', 'Bloomingdales - Warehouse') then ${total_units_dimension} else 0 end ;;}
 
   measure: BD_Amount {
     label: "Wholesale Bloomingdales Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ("Bloomingdale's - Dropship", "Bloomingdale's - Warehouse") then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Bloomingdales - Dropship', 'Bloomingdales - Warehouse') then ${total_amount_dimension} else 0 end ;;}
 
   measure: HOM_Units {
     label: "Wholesale HOM Units"
