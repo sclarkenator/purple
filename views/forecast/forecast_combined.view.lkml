@@ -249,25 +249,25 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale Medical Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('Med', 'Access Health','Direct Supply','GelTechCo', 'Marketing Concepts', 'Medline Industries','Nimacare', 'Proline Medical','The Posture Works') then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Med', 'Access Health','Direct Supply','GelTechCo', 'Marketing Concepts', 'Medical - Other', 'Medline - Dropship', 'Medline Industries', 'Medline Industries - Warehouse','Nimacare', 'Proline Medical','The Posture Works', 'Wellco') then ${total_units_dimension} else 0 end ;;}
 
   measure: Medical_Amount {
     label: "Wholesale Medical Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ('Med', 'Access Health','Direct Supply','GelTechCo', 'Marketing Concepts', 'Medline Industries','Nimacare', 'Proline Medical','The Posture Works') then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Med', 'Access Health','Direct Supply','GelTechCo', 'Marketing Concepts', 'Medical - Other', 'Medline - Dropship', 'Medline Industries', 'Medline Industries - Warehouse','Nimacare', 'Proline Medical','The Posture Works', 'Wellco') then ${total_amount_dimension} else 0 end ;;}
 
   measure: Trucking_Units {
     label: "Wholesale Trucking Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('Truck', 'Cushion Portal') then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Truck', 'Cushion Portal', 'DAS Inc') then ${total_units_dimension} else 0 end ;;}
 
   measure: Trucking_Amount {
     label: "Wholesale Trucking Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ('Truck', 'Cushion Portal') then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('Truck', 'Cushion Portal', 'DAS Inc') then ${total_amount_dimension} else 0 end ;;}
 
   measure: BD_Units {
     label: "Wholesale Bloomingdales Units"
