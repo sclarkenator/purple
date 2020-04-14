@@ -12,10 +12,10 @@ view: item {
   }
 
   dimension: classification {
-    label: "Item Classification"
+    label: "NetSuite Item Classification"
+    group_label: "Advanced"
     description: "What stage is this item in production?"
-    hidden:  yes
-    type: string
+    hidden:  no
     sql:
     case when
     --split king mattress kits and split king powerbase kits
