@@ -38,7 +38,7 @@ view: v_usertime_minutes {
 
   measure: head_count {
     type: count_distinct
-    sql: ${TABLE}.user_name ;;
+    sql: ${TABLE}.user_name || ${started_date} ;;
   }
 
   measure: minutes_worked {
