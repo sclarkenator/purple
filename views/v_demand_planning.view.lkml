@@ -8,22 +8,19 @@ view: v_demand_planning {
   }
 
   dimension: year {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}."YEAR" ;;
   }
 
   dimension: week_of_year {
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}."WEEK_OF_YEAR" ;;
   }
 
-  dimension_group: demand_planning {
-    type: time
-    timeframes: [raw, date, week_of_year, month, year]
-    convert_tz: no
-    datatype: date
+  dimension: demand_planning_week {
+    type: date
     sql: ${TABLE}."FIRST_DAY_OF_WEEK" ;;
   }
 
