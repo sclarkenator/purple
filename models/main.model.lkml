@@ -384,6 +384,13 @@ explore: v_demand_planning {
   }
 }
 
+explore: v_usertime_minutes {
+  hidden: yes
+  view_label: "Usertime"
+  label: "Usertime"
+  description: "Shows the amount of time and line an operator worked"
+}
+
 #-------------------------------------------------------------------
 #
 # Operations Explores
