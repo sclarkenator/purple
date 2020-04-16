@@ -33,7 +33,7 @@ view: affiliate_sales_orders {
 
   dimension: order_id_flag {
     view_label: "Sales Order"
-    label: "     * Is Affilate Order"
+    label: "     * Is Affiliate Order"
     type: yesno
     sql: ${order_id} is not NULL ;;
   }
