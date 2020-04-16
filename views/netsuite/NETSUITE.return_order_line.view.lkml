@@ -68,6 +68,11 @@ view: return_order_line {
     sql: ${TABLE}.gross_amt ;;
     drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
 
+  dimension: total_returns_completed_dollars_dim {
+    type: number
+    hidden: yes
+    sql: case when ${return_order.status} = 'Refunded' then ${TABLE}.gross_amt else 0 end;;
+  }
 
   measure: total_trial_returns_completed_dollars {
     type: sum
