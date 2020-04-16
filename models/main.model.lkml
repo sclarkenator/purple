@@ -1362,6 +1362,12 @@ explore: sales_order_line{
       relationship: many_to_many
       sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
   }
+    join: item_return_rate {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${sales_order_line.item_id} = ${item_return_rate.item_id}  ;;
+    }
+
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}

@@ -1284,6 +1284,24 @@ view: sales_order_line {
       else 'Website' end;;
   }
 
+#  measure: modeled_returns {
+#    description:  "Intermediate step so I can use the value in a case statement"
+#    type: number
+#    view_label: "zz Margin Calculations"
+#    hidden: no
+#    sql: ${item_return_rate.return_rate}*${total_gross_Amt} ;;
+#  }
+
+#  measure: return_amt {
+#    label: "Return $"
+#    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average."
+#    view_label: "zz Margin Calculations"
+#    type: number
+#    sql:  case when (${fulfilled_date} is null
+#                or datediff(d,${fulfilled_date},current_date)<130) then ${modeled_returns}
+#                else nvl(${return_order_line.total_returns_completed_dollars},0) end;;
+#  }
+
   set: fulfill_details {
     fields: [fulfill_details*]
   }
