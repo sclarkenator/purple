@@ -1309,12 +1309,21 @@ view: sales_order_line {
     sql: ${item_return_rate.return_rate_dim}*${gross_amt} ;;
   }
 
+  dimension: modeled_returns_dim {
+    description:  "Intermediate step so I can use the value in a case statement"
+    type: number
+    view_label: "zz Margin Calculations"
+    hidden: no
+    #sql_distinct_key: ${pk_concat_ful_sales_order} ;;
+    sql: ${item_return_rate.return_rate_dim}*${gross_amt} ;;
+  }
+
   measure: return_amt {
     label: "Return $"
     description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average."
     view_label: "zz Margin Calculations"
     type: sum
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: ${fulfillment.PK} ;;
     sql:  case when (${fulfilled_date} is null
                 or datediff(d,${fulfilled_date},current_date)<130) then ${item_return_rate.return_rate_dim}*${gross_amt}
                 else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end;;
