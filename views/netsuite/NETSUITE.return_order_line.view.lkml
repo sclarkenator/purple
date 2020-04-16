@@ -68,6 +68,7 @@ view: return_order_line {
     sql: ${TABLE}.gross_amt ;;
     drill_fields: [return_order.return_ref_id, return_order.order_id, sales_order.created, return_order.created_date, return_order.return_completed]}
 
+
   measure: total_trial_returns_completed_dollars {
     type: sum
     hidden: no
