@@ -948,6 +948,8 @@ view: sales_order_line {
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of mattresses sold ($)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
@@ -959,6 +961,8 @@ view: sales_order_line {
   measure: mattress_units {
     label: "Mattress Sales (Units)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of mattresses sold (units)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
@@ -970,6 +974,8 @@ view: sales_order_line {
   measure: base_sales {
     label: "Base Sales ($)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of bases sold ($)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${gross_amt} else 0 end ;;
@@ -978,6 +984,8 @@ view: sales_order_line {
   measure: base_units {
     label: "Base Sales (Units)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of bases sold (units)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${total_units_raw} else 0 end ;;
@@ -986,6 +994,8 @@ view: sales_order_line {
   measure: bedding_sales {
     label: "Bedding Sales ($)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of bedding items sold ($)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${gross_amt} else 0 end ;;
@@ -994,6 +1004,8 @@ view: sales_order_line {
   measure: bedding_units {
     label: "Bedding Sales (Units)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of bedding items sold (units)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${total_units_raw} else 0 end ;;
@@ -1002,6 +1014,8 @@ view: sales_order_line {
   measure: pet_sales {
     label: "Pet Sales ($)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of pet beds sold ($)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${gross_amt} else 0 end ;;
@@ -1010,6 +1024,8 @@ view: sales_order_line {
   measure: pet_units {
     label: "Pet Sales (Units)"
     view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of pet beds sold (units)"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
