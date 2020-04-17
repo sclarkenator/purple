@@ -63,7 +63,7 @@ view: day_aggregations_wholesale_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line.created_date value: "2 years" }
+      #filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
   dimension: created_date { type: date }
@@ -89,7 +89,7 @@ view: day_aggregations_retail_sales {
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes, No" }
       filters: { field: item.modified value: "Yes" }
-      filters: { field: sales_order_line.created_date value: "2 years" }
+      #filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
   }
@@ -110,7 +110,7 @@ view: day_aggregations_forecast {
       column: dtc_units {}
       column: wholesale_units {}
       column: retail_units {}
-      filters: { field: forecast_combined.date_date value: "2 years" }
+      #filters: { field: forecast_combined.date_date value: "2 years" }
     }
   }
   dimension: date_date { type: date }
