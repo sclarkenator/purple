@@ -18,6 +18,7 @@ view: item_price {
     sql: ${TABLE}.sku ;; }
 
   dimension: MSRP {
+    hidden: yes
     label: "MSRP"
     group_label: "Advanced"
     description: "Full retail price, as listed in Shopify. These are date-specific prices and can change for individual items."
@@ -25,6 +26,7 @@ view: item_price {
     sql: ${TABLE}.price ;; }
 
   measure: MSRP_1 {
+    hidden: yes
     description: "MSRP of each item"
     label: "MSRP"
     view_label: "Sales Order Line"

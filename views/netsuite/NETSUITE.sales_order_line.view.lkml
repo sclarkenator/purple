@@ -1300,33 +1300,45 @@ view: sales_order_line {
       else 'Website' end;;
   }
 
-  measure: modeled_returns {
-    description:  "Intermediate step so I can use the value in a case statement"
-    type: sum
-    view_label: "zz Margin Calculations"
-    hidden: no
-    #sql_distinct_key: ${pk_concat_ful_sales_order} ;;
-    sql: ${item_return_rate.return_rate_dim}*${gross_amt} ;;
-  }
-
-  dimension: modeled_returns_dim {
-    description:  "Intermediate step so I can use the value in a case statement"
-    type: number
-    view_label: "zz Margin Calculations"
-    hidden: no
-    #sql_distinct_key: ${pk_concat_ful_sales_order} ;;
-    sql: ${item_return_rate.return_rate_dim}*${gross_amt} ;;
-  }
-
   measure: return_amt {
     label: "Return $"
     description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average."
     view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
     type: sum
     sql_distinct_key: ${fulfillment.PK} ;;
     sql:  case when (${fulfilled_date} is null
                 or datediff(d,${fulfilled_date},current_date)<130) then ${item_return_rate.return_rate_dim}*${gross_amt}
-                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end;;
+                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+  }
+
+  measure: merch_fees {
+    label: "Merchant fees"
+    description: "Estimate of merchant fees for transaction, based on 4.97% blended affirm rate, 15% amazon affiliate rate and 2.55% for all others"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*${gross_amt}
+              when ${sales_order.payment_method} ilike 'AFFIRM' then 0.0497*${gross_amt}
+              else 0.0255*${gross_amt} end ;;
+    }
+
+  measure: direct_affiliate {
+    label: "Affiliate commissions"
+    description: "Actual commission paid on order to affiliate partner"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${affiliate_sales_order.comm_rate} < 0 then 0 else nvl(${affiliate_sales_order.comm_rate},0)*${gross_amt} end ;;
+  }
+
+  measure: warranty_accrual {
+    label: "Warranty"
+    description: "Esimate of future warranty incurred. Calculated at 1% of gross sales"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: 0.01*${gross_amt} ;;
   }
 
   set: fulfill_details {

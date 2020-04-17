@@ -1249,9 +1249,9 @@ explore: sales_order_line{
     sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
     relationship: one_to_one
   }
-  join: affiliate_sales_orders {
+  join: affiliate_sales_order {
     type: left_outer
-    sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
+    sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
     relationship: one_to_one
   }
   join: zipcode_radius {
@@ -1364,8 +1364,15 @@ explore: sales_order_line{
   }
     join: item_return_rate {
       type: left_outer
-      relationship: many_to_one
-      sql_on: ${sales_order_line.item_id} = ${item_return_rate.item_id}  ;;
+      relationship: one_to_one
+      sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+    }
+
+    join: shipping {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
+
     }
 
 }
