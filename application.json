@@ -28,38 +28,43 @@
           "singleValueReference": "dtc"
         },
         {
-          "id": "244",
+          "id": "3554",
           "name": "Wholesale Sales",
           "permalink": "wholesale",
           "singleValueReference": "wholesale"
         },
-
         {
-          "id": "221",
+          "id": "3560",
+          "name": "Retail Sales",
+          "permalink": "retail",
+          "singleValueReference": "retail"
+        },
+        {
+          "id": "3545",
           "name": "Production",
           "permalink": "production",
           "singleValueReference": "prod"
         },
         {
-          "id": "213",
+          "id": "3546",
           "name": "Fulfillment",
           "permalink": "fulfillment",
           "singleValueReference": "fulfillment"
         },
         {
-          "id": "215",
+          "id": "3558",
           "name": "Marketing",
           "permalink": "marketing",
           "singleValueReference": "roa"
         },
         {
-          "id": "214",
+          "id": "3559",
           "name": "Site (Sessions)",
           "permalink": "site",
           "singleValueReference": "site"
         },
         {
-          "id": "247",
+          "id": "3472",
           "name": "Forecast",
           "permalink": "plan",
           "singleValueReference": "plan"
@@ -96,6 +101,17 @@
       "params": "fields=day_aggregations.prev_week,day_aggregations.target_wholesale_amount,day_aggregations.wholesale_amount,day_aggregations.date_week&f[day_aggregations.date_date]=30+days&f[day_aggregations.current_week_num]=Yes&sorts=day_aggregations.date_week+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22custom_color%22%3A%22%22%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22type%22%3A%22single_value%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3A%5B%22day_aggregations.target_wholesale_amount%22%2C%22day_aggregations.wholesale_amount%22%2C%22day_aggregations.prev_week%22%2C%22to_goal%22%5D%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2230%22%2C%22unit%22%3A%22day%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.current_week_num%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22month%22%2C%22label%22%3A%22Month%22%2C%22expression%22%3A%22if%28%24%7Bday_aggregations.prev_week%7D%2C%24%7Bday_aggregations.wholesale_amount%7D%2Coffset%28%24%7Bday_aggregations.target_wholesale_amount%7D%2C-1%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22to_plan%22%2C%22label%22%3A%22to+Plan%22%2C%22expression%22%3A%22%24%7Bday_aggregations.wholesale_amount%7D%5Cn%2F%5Cn%24%7Bday_aggregations.target_wholesale_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
         "fields": {
           "wholesale" : {
+          "inverseChange": false,
+          "field": "month"
+          }
+        }
+        },
+        {
+      "model": "main",
+      "view": "day_aggregations",
+      "params": "fields=day_aggregations.prev_week,day_aggregations.date_week,day_aggregations.retail_amount,day_aggregations.target_retail_amount&f[day_aggregations.date_date]=30+days&f[day_aggregations.current_week_num]=Yes&sorts=day_aggregations.date_week+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22custom_color%22%3A%22%22%2C%22type%22%3A%22single_value%22%2C%22series_types%22%3A%7B%7D%2C%22hidden_fields%22%3A%5B%22day_aggregations.prev_week%22%2C%22day_aggregations.retail_amount%22%2C%22day_aggregations.target_retail_amount%22%5D%2C%22y_axes%22%3A%5B%5D%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2230%22%2C%22unit%22%3A%22day%22%7D%2C%7B%7D%5D%2C%22id%22%3A3%2C%22error%22%3Afalse%7D%5D%2C%22day_aggregations.current_week_num%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22month%22%2C%22label%22%3A%22Month%22%2C%22expression%22%3A%22if%28%24%7Bday_aggregations.prev_week%7D%2C%24%7Bday_aggregations.retail_amount%7D%2Coffset%28%24%7Bday_aggregations.target_retail_amount%7D%2C-1%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22to_plan%22%2C%22label%22%3A%22to+Plan%22%2C%22expression%22%3A%22%24%7Bday_aggregations.retail_amount%7D%5Cn%2F%5Cn%24%7Bday_aggregations.target_retail_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "fields": {
+          "retail" : {
           "inverseChange": false,
           "field": "month"
           }
