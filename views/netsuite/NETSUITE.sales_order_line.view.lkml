@@ -1306,7 +1306,7 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql_distinct_key: ${fulfillment.PK} ;;
+    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
     sql:  case when (${fulfilled_date} is null
                 or datediff(d,${fulfilled_date},current_date)<130) then ${item_return_rate.return_rate_dim}*${gross_amt}
                 else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
