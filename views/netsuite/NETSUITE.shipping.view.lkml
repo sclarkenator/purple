@@ -56,7 +56,7 @@ view: shipping {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql: ${TABLE}."SHIPPING_TOTAL" ;;
+    sql: case when ${mainfreight} > 0 then 5.24 else 0 end  + ${TABLE}."SHIPPING_TOTAL" ;;
   }
 
 }
