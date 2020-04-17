@@ -889,6 +889,13 @@ explore: agent_lkp {
     sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
     relationship: many_to_one
   }
+  join: team_lead_name {
+    type:  left_outer
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+        AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+    relationship: many_to_one
+  }
   required_access_grants: [is_customer_care_manager]
 }
 
