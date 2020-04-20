@@ -1367,7 +1367,6 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
     }
-
     join: shipping {
       type: left_outer
       relationship: one_to_one

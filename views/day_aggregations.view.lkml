@@ -280,6 +280,47 @@ view: day_aggregations_sessions {
   dimension: Sum_non_bounced_session { type: number }
 }
 
+######################################################
+#   Production Goal
+#   https://purple.looker.com/dashboards/3569
+######################################################
+
+view: day_agg_prod_goal {
+  derived_table: {
+    explore_source: production_goal {
+      column: units_fg_produced { field: production_goal_by_item.units_fg_produced }
+      column: forecast_date {}
+      filters: { field: item.category_name value: "MATTRESS" }
+      filters: { field: item.product_description_raw value: "-%SCRIM%" }
+    }
+  }
+  dimension: units_fg_produced { type: number }
+  dimension: forecast_date { type: date }
+}
+
+#if(${assembly_build.produced_week}<date(2019,04,29),5800,
+#  if(${assembly_build.produced_week}<date(2019,08,26),7800,
+#      if(${assembly_build.produced_week}<date(2019,12,31),9800,${production_goal_by_item.units_fg_produced})))
+
+######################################################
+#   Production Goal
+#   https://purple.looker.com/dashboards/3569
+######################################################
+
+view: day_agg_prod_mattress {
+  derived_table: {
+    explore_source: assembly_build {
+      column: Total_Quantity {}
+      column: produced_date {}
+      filters: { field: assembly_build.scrap value: "0" }
+      filters: { field: item.merchandise value: "" }
+      filters: { field: item.category_name value: "MATTRESS" }
+      filters: { field: item.product_description_raw value: "-%SCRIM%" }
+    }
+  }
+  dimension: Total_Quantity { type: number }
+  dimension: produced_date { type: date }
+}
 
 
 ######################################################
@@ -316,6 +357,11 @@ view: day_aggregations {
         , dtc_orders.mattress_orders as unique_mattress_orders
         , sessions.count as sessions_count
         , sessions.Sum_non_bounced_session as non_bounced_sessions
+        , case when prod_goal.units_fg_produced is not null then prod_goal.units_fg_produced
+          when prod_goal.forecast_date::date < '2019-04-29' then 5800
+          when prod_goal.forecast_date::date < '2019-08-26' then 7800
+          else 9800 end as production_target
+        , prod_mat.Total_Quantity as production_mattresses
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -337,6 +383,8 @@ view: day_aggregations {
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
       left join ${day_aggregation_dtc_orders.SQL_TABLE_NAME} dtc_orders on dtc_orders.created_date::date = d.date
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
+      left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
+      left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -602,5 +650,15 @@ view: day_aggregations {
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.non_bounced_sessions ;; }
+
+  measure: production_target {
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.production_target ;; }
+
+  measure: production_mattresses {
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.production_mattresses ;; }
 
 }
