@@ -65,7 +65,7 @@
         },
         {
           "id": "3472",
-          "name": "Forecast",
+          "name": "Forecast (MPE)",
           "permalink": "plan",
           "singleValueReference": "plan"
         }
