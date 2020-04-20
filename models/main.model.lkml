@@ -1530,6 +1530,16 @@ explore: wholesale_legacy {
     sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
     relationship: one_to_one
   }
+  join: affiliate_sales_order {
+    type: left_outer
+    sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
+    relationship: one_to_one
+  }
+  join: item_return_rate {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+  }
   join: agent_name {
     view_label: "Sales Order"
     type: left_outer
