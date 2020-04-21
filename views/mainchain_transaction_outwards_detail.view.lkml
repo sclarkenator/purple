@@ -45,7 +45,9 @@ view: mainchain_transaction_outwards_detail {
   }
 
   dimension: con_note_number {
-    hidden: yes
+    #hidden: yes
+    label: "Con Note Number"
+    description: "Mainfreight Tracking Number"
     group_label: "MainChain"
     type: string
     sql: ${TABLE}."CON_NOTE_NUMBER" ;;

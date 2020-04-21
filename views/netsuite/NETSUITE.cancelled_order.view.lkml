@@ -36,7 +36,8 @@ view: cancelled_order {
 
   dimension: is_cancelled {
     label:  "     * Is Cancelled"
-    description: "Whether the order was cancelled"
+    description: "Whether the order was cancelled
+     sournce(netsuite.canellations)"
     type: yesno
     sql: ${cancelled_date} is not NULL ;; }
 
