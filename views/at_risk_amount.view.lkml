@@ -22,7 +22,7 @@ order by 1,2
   }
 
   dimension_group: date {
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -31,19 +31,19 @@ order by 1,2
   }
 
   dimension: order_id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.order_id ;;
   }
 
   dimension: item_id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.item_id ;;
   }
 
   dimension_group: created {
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -52,7 +52,7 @@ order by 1,2
   }
 
   dimension_group: created14 {
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -69,9 +69,8 @@ order by 1,2
     sql: ${TABLE}.ff ;;
   }
 
-  measure: total_amount {
-    label: "At Risk Amount"
-    group_label: "Sales Order"
+  measure: at_risk_total_amount {
+    view_label: "Sales Order"
     type: sum
     sql: ${TABLE}.total_amount ;;
   }
