@@ -533,7 +533,11 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
-  explore: at_risk_amount {hidden: yes}
+
+  explore: at_risk_amount {
+    hidden: yes
+    label: "At Risk Orders"
+    }
 
 #-------------------------------------------------------------------
 #
@@ -1378,9 +1382,7 @@ explore: sales_order_line{
       type: left_outer
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
-
     }
-
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
