@@ -33,6 +33,11 @@ view: exchange_order_line {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension: key {
+    primary_key: yes
+    sql: ${exchange_order_id}||${replacement_order_id}||${system}||${item_id} ;;
+  }
+
   dimension: exchange_order_id {
     type: number
     hidden:  yes
@@ -124,7 +129,7 @@ view: exchange_order_line {
     label: "Exchanged Units"
     type: count
     #hidden:  yes
-    drill_fields: []
+    sql: ${TABLE}.created ;;
   }
 
   dimension: is_exchanged {
