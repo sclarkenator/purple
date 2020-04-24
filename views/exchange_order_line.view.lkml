@@ -121,8 +121,9 @@ view: exchange_order_line {
   }
 
   measure: count {
+    label: "Exchanged Units"
     type: count
-    hidden:  yes
+    #hidden:  yes
     drill_fields: []
   }
 
