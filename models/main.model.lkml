@@ -537,7 +537,33 @@ explore: starship_fulfillment {
   explore: at_risk_amount {
     hidden: yes
     label: "At Risk Orders"
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${at_risk_amount.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
     }
+    join: sales_order {
+      type: left_outer
+      sql_on: ${at_risk_amount.order_id} = ${sales_order.order_id} ;;
+      relationship: many_to_one
+    }
+    join: sales_order_line {
+      type: left_outer
+      sql_on: ${at_risk_amount.order_id} = ${sales_order_line.order_id} and ${at_risk_amount.item_id} = ${sales_order_line.item_id} ;;
+      relationship: many_to_one
+    }
+    join: fulfillment {
+      type: left_outer
+      sql_on: ${at_risk_amount.order_id} = ${fulfillment.order_id} and ${at_risk_amount.item_id} = ${fulfillment.item_id};;
+      relationship: many_to_one
+    }
+    join: cancelled_order {
+      type: left_outer
+      sql_on: ${at_risk_amount.order_id} = ${cancelled_order.order_id} and ${at_risk_amount.item_id} = ${cancelled_order.item_id} ;;
+      relationship: many_to_one
+    }
+  }
 
 #-------------------------------------------------------------------
 #

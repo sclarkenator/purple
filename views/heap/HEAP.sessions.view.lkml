@@ -341,6 +341,20 @@ view: sessions {
       else 'OTHER' end ;;
   }
 
+  dimension_group: current {
+    label: "  Ad"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: current_date ;; }
+
+  dimension: ytd {
+    group_label: "  Session Time"
+    label: "z - YTD"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    type: yesno
+    sql:  ${time_day_of_year} < ${current_day_of_year} ;; }
+
   measure: count {
     type: count_distinct
     sql: ${TABLE}.session_id ;;}

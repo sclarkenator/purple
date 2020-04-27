@@ -25,15 +25,7 @@ view: c3_roa {
 
   dimension_group: SPEND_DATE {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.SPEND_DATE ;;
   }
 
@@ -87,5 +79,19 @@ view: c3_roa {
                 or ${PLATFORM} in ('BING','YAHOO')
                 or ${SOURCE} in ('SHOPPING') ;; label:"search"}
       else: "other" } }
+
+  dimension_group: current {
+    label: "  Ad"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: current_date ;; }
+
+  dimension: ytd {
+    group_label: "Spend Date"
+    label: "z - YTD"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    type: yesno
+    sql:  ${SPEND_DATE_day_of_year} < ${current_day_of_year} ;; }
 
 }

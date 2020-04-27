@@ -765,6 +765,16 @@ view: sales_order_line {
     value_format_name: "percent_1"
   }
 
+  measure: return_rate_units_exch {
+    group_label: "Return Rates"
+    label: "Return Rate w/o Exchanges (% of units)"
+    description: "(Units returned - Units Exchanged) / Units fulfilled"
+    view_label: "Returns"
+    type: number
+    sql: (${return_order_line.units_returned}-${exchange_order_line.count}) / nullif(${total_units},0) ;;
+    value_format_name: "percent_1"
+  }
+
   measure: return_rate_dollars {
     group_label: "Return Rates"
     label: "Return Rate (% of $)"

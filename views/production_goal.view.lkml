@@ -64,6 +64,14 @@ view: production_goal {
     sql: ${TABLE}."WORK_HOURS" ;;
   }
 
+  measure: work_hours_measure {
+    label: "Work Hours"
+    view_label: "Production Goals"
+    description: "Number of Work Hours per Day"
+    type: sum
+    sql: ${TABLE}."WORK_HOURS" ;;
+  }
+
   dimension: year {
     hidden: yes
     type: number
