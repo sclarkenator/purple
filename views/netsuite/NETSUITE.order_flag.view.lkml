@@ -11,7 +11,7 @@ view: order_flag {
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
-      ,case when FOUNDATION > 0 then 1 else 0 end foundation_flg
+      ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
