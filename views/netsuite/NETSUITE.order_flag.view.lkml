@@ -10,7 +10,7 @@ view: order_flag {
       ,case when PROTECTOR_FLG > 0 then 1 else 0 end protector_flg
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
-      ,case when FRAME_FLG > 0 then 1 else 0 end frame_flg
+      ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
@@ -40,7 +40,7 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
-        ,SUM(CASE WHEN line = 'FRAME' THEN 1 ELSE 0 END) FRAME_FLG
+        ,SUM(CASE WHEN line = 'FRAME' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
@@ -156,13 +156,13 @@ view: order_flag {
     type:  sum
     sql:  ${TABLE}.powerbase_flg ;; }
 
-  measure: frame_orders {
+  measure: platform_orders {
     group_label: "Total Orders with:"
-    label: "a Frame Base"
-    description: "1/0 per order; 1 if there was a frame base in the order"
+    label: "a Platform Base"
+    description: "1/0 per order; 1 if there was a platform base in the order"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
-    sql:  ${TABLE}.frame_flg ;; }
+    sql:  ${TABLE}.platform_flg ;; }
 
   measure: blanket_orders {
     hidden:  no
@@ -275,12 +275,12 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.powerbase_flg = 1 ;; }
 
-  dimension: frame_flg {
+  dimension: platform_flg {
     group_label: "    * Orders has:"
-    label: "a Frame Base"
-    description: "1/0; 1 if there is a frame base in this order"
+    label: "a Platform Base"
+    description: "1/0; 1 if there is a platform base in this order"
     type:  yesno
-    sql: ${TABLE}.frame_flg = 1 ;; }
+    sql: ${TABLE}.platform_flg = 1 ;; }
 
   dimension: pillow_flg {
     group_label: "    * Orders has:"
