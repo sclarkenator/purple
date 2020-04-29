@@ -537,32 +537,6 @@ explore: starship_fulfillment {
   explore: at_risk_amount {
     hidden: yes
     label: "At Risk Orders"
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${at_risk_amount.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-    join: sales_order {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${sales_order.order_id} ;;
-      relationship: many_to_one
-    }
-    join: sales_order_line {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${sales_order_line.order_id} and ${at_risk_amount.item_id} = ${sales_order_line.item_id} ;;
-      relationship: many_to_one
-    }
-    join: fulfillment {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${fulfillment.order_id} and ${at_risk_amount.item_id} = ${fulfillment.item_id};;
-      relationship: many_to_one
-    }
-    join: cancelled_order {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${cancelled_order.order_id} and ${at_risk_amount.item_id} = ${cancelled_order.item_id} ;;
-      relationship: many_to_one
-    }
   }
 
 #-------------------------------------------------------------------
@@ -1810,7 +1784,7 @@ explore: procom_security_daily_customer {
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-
+  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
 
   explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead

@@ -462,6 +462,15 @@ view: day_aggregations {
              WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
 
+  dimension_group: current {
+    label: "Current"
+    description:  "Current Time/Date for calculations"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
 
   measure: dtc_amount {
     label: "DTC Amount"
