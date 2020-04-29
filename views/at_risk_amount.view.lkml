@@ -2,8 +2,9 @@ view: at_risk_amount {
   derived_table: {
     sql:
       select a.date
-    , count(order_id) as total_orders
+    , z.carrier_expected
     , sum(z.total_amount) as total_amount
+    , count(z.order_id) as total_orders
 from util.warehouse_date a
 left join (
    select
@@ -24,6 +25,15 @@ left join (
           then 'AMAZON-US'
         else 'OTHER'
         end as channel_source_buckets
+    , case
+        when sol.location ilike '%mainfreight%'then 'MainFreight'
+        when sol.location ilike '%xpo%'then 'XPO'
+        when sol.location ilike '%pilot%'then 'Pilot'
+        when sol.location is null then 'FBA'
+        when sol.location ilike '%100-%'then 'Purple'
+        when sol.location ilike '%le store%' or sol.location ilike '%showroom%' then 'Store take-with'
+      else 'Other'
+      end as carrier_expected
     , sum(sol.gross_amt) as total_amount
     , min(sol.created::date) as created
     , min(dateadd('day',14,sol.created::date)) as created14
@@ -45,10 +55,10 @@ left join (
     and so.gross_amt >10
     and sol.location != '900 - Employee Store'
     and channel_source_buckets = 'SHOPIFY-US'
-  group by 1,2,3
+  group by 1,2,3,4
 ) z on z.created14 <= a.date and z.ff > a.date and z.cancelled > a.date
 where a.date between '2019-01-01' and current_date
-group by 1
+group by 1,2
 order by 1 desc
     ;;
   }
@@ -62,12 +72,19 @@ order by 1 desc
     sql: ${TABLE}.date ;;
   }
 
+  dimension: carrier_expected {
+    label: "Carrier (expected)"
+    sql: ${TABLE}.carrier_expected ;;
+  }
+
   measure: total_orders {
+    label: "Total Orders at Risk"
     type: sum
     sql: ${TABLE}.total_orders ;;
   }
 
-  measure: at_risk_amount {
+  measure: total_amount {
+    label: "Total Amount at Risk ($)"
     type: sum
     value_format: "$#, ##0.00"
     sql: ${TABLE}.total_amount ;;
