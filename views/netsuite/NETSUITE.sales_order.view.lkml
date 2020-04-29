@@ -146,9 +146,17 @@ measure: upt {
               else 'Other' end ;;  }
 
   dimension: created {
-    hidden: yes
+    #hidden: yes
     type: date_time
     sql: ${TABLE}.CREATED ;; }
+
+  dimension: created_date {
+    label: "Sales Order Created Date"
+    type: date
+    group_label: " Advanced"
+    description: "Created date from netsuite on the sale order"
+    sql: ${created}::date ;;
+  }
 
   dimension: shipping_hold {
     hidden: yes

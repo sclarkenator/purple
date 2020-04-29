@@ -409,6 +409,17 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension_group: current {
+    view_label: "Geography"
+    label: "    Current"
+    description:  "Current Time/Date for calculations"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
+
   dimension: before_day_of_year {
     hidden: yes
     type: yesno
