@@ -97,7 +97,7 @@ view: heap_page_views {
 
   dimension: path {
     label: "Parsed Page URL"
-    group_label: "Advanced"
+#    hidden: yes
     description: "The string after purple.com excluding tags"
     type: string
     sql: ${TABLE}.path ;;
