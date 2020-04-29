@@ -1784,7 +1784,7 @@ explore: procom_security_daily_customer {
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-
+  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
 
   explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
