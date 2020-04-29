@@ -89,10 +89,18 @@ view: heap_page_views {
   dimension: query {
     label: "Query - tag string"
     group_label: "Advanced"
-    description: "The whole tag string after purple.com"
+    description: "The landing page's whole tag string after purple.com"
     view_label: "Sessions"
     type: string
     sql: ${TABLE}.query;;
+  }
+
+  dimension: path {
+    label: "Parsed Page URL"
+    group_label: "Advanced"
+    description: "The string after purple.com excluding tags"
+    type: string
+    sql: ${TABLE}.path ;;
   }
 
   measure: Sum_bounced_session {
