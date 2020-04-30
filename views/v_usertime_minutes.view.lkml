@@ -14,7 +14,7 @@ view: v_usertime_minutes {
 
   dimension_group: start_hour {
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."START_HOUR" ;;
@@ -22,7 +22,7 @@ view: v_usertime_minutes {
 
   dimension_group: started {
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."STARTED" ;;
@@ -30,7 +30,7 @@ view: v_usertime_minutes {
 
   dimension_group: ended {
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."ENDED" ;;
