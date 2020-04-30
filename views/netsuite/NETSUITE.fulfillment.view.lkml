@@ -4,7 +4,15 @@
 #-------------------------------------------------------------------
 
 view: fulfillment {
-  sql_table_name: SALES.FULFILLMENT ;;
+  #sql_table_name: SALES.FULFILLMENT ;;
+  derived_table: {sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by NVL(a.FULFILLMENT_ID,'0') || NVL(a.system,'0') || NVL(a.item_id,'0') || NVL(a.parent_item_id,'0') order by order_id) as rownum
+      from SALES.fulfillment a
+    ) z
+    where z.rownum = 1 ;;
+  }
 
   dimension: PK {
     primary_key: yes

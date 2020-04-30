@@ -1,5 +1,13 @@
 view: transfer_order_line {
-  sql_table_name: PRODUCTION.TRANSFER_ORDER_LINE ;;
+  #sql_table_name: PRODUCTION.TRANSFER_ORDER_LINE ;;
+  derived_table: { sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by ACCOUNT_ID || TRANSFER_ORDER_ID || ITEM_ID order by 1) as rownum
+      from PRODUCTION.transfer_order_line a
+    ) z
+    where z.rownum = 1
+  ;;}
 
 
   dimension: pk {

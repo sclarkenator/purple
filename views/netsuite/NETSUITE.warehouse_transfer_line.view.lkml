@@ -1,5 +1,13 @@
 view: warehouse_transfer_line {
-  sql_table_name: PRODUCTION.WAREHOUSE_TRANSFER_LINE ;;
+  #sql_table_name: PRODUCTION.WAREHOUSE_TRANSFER_LINE ;;
+  derived_table: {sql:
+  select * from (
+    select a.*
+        , row_number () over (partition by a.WAREHOUSE_TRANSFER_ID||a.ITEM_ID order by 1) as rownum
+    from PRODUCTION.WAREHOUSE_TRANSFER_LINE a
+  ) z
+  where z.rownum = 1
+  ;;}
 
   dimension: key {
     primary_key: yes

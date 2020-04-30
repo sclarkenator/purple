@@ -1,5 +1,13 @@
 view: return_order_line {
-  sql_table_name: (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US') ;;
+  #sql_table_name: (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US') ;;
+  derived_table: {sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by a.RETURN_ORDER_ID||a.item_id order by 1) as rownum
+      from SALES.return_order_line a
+    ) z
+    where z.rownum = 1
+    ;;}
 
   dimension: pk {
     primary_key: yes

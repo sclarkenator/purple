@@ -1,9 +1,13 @@
 view: sales_order_line_base {
-  sql_table_name: SALES.SALES_ORDER_LINE ;;
-  #derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
-  #derived_table: {
-  #  sql:select * from sales.sales_order_line where item_id not in ('1682');;
-  #}
+  #sql_table_name: SALES.SALES_ORDER_LINE ;;
+  derived_table: { sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by a.item_id||'-'||a.order_id||'-'||a.system order by 1) as rownum
+      from SALES.sales_order_line a
+    ) z
+    where z.rownum = 1
+  ;;}
 
   dimension: item_order{
     type: string
