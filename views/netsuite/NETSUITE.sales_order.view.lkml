@@ -471,7 +471,7 @@ measure: upt {
     group_label: " Advanced"
     label: "  Order Age (bucket 2)"
     hidden: no
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28)"
     type:  tier
     tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
     style: integer
