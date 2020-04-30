@@ -1548,6 +1548,19 @@ explore: wholesale_legacy {
     sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
     relationship: many_to_one
   }
+  join: exchange_order_line {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
+      and ${sales_order_line.system} = ${exchange_order_line.system} ;;
+    relationship: one_to_many
+  }
+  join: exchange_order {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
