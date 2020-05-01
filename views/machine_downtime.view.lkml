@@ -18,6 +18,7 @@ view: l2l_machine_downtime {
   }
 
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -36,17 +37,18 @@ view: l2l_machine_downtime {
     sql: ${TABLE}."MACHINE_ID" ;;
   }
 
-  dimension: minutes_available {
-    type: number
+  measure: minutes_available {
+    type: sum
     sql: ${TABLE}."MINUTES_AVAILABLE" ;;
   }
 
-  dimension: minutes_down {
-    type: number
+  measure: minutes_down {
+    type: sum
     sql: ${TABLE}."MINUTES_DOWN" ;;
   }
 
   dimension_group: update_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -64,4 +66,5 @@ view: l2l_machine_downtime {
     type: count
     drill_fields: []
   }
+
 }
