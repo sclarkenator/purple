@@ -31,6 +31,7 @@ view: order_flag {
       ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
+    --  ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -67,6 +68,7 @@ view: order_flag {
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
         ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKET')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
           ) THEN 1 else 0 end) buymsm1
+      --  ,sum(case when sku_id in ('') then 1 else 0 end) med_mask
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -430,5 +432,13 @@ view: order_flag {
     description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020)"
     type:  yesno
     sql: ${TABLE}.buymsm = 1 ;; }
+
+#  measure: medical_masks{
+#    group_label: "Total Orders with:"
+#    label: "a Face Mask"
+#    description: "1/0 per order; 1 if there was a Medical Face Mask in the order"
+#    drill_fields: [sales_order_line.sales_order_details*]
+#    type:  sum
+#    sql:  ${TABLE}.medical_mask_flg =1 ;; }
 
 }
