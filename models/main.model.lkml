@@ -391,6 +391,15 @@ explore: v_usertime_minutes {
   description: "Shows the amount of time and line an operator worked"
 }
 
+explore: machine {
+  hidden: yes
+  join: l2l_machine_downtime {
+    type: left_outer
+    sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+    relationship: one_to_many
+  }
+}
+
 #-------------------------------------------------------------------
 #
 # Operations Explores
