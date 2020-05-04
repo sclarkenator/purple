@@ -433,9 +433,9 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.buymsm = 1 ;; }
 
-  measure: medical_masks{
+  dimension: medical_masks{
     group_label: "Total Orders with:"
-    label: "a Medical Face Mask"
+    label: "a Face Mask"
     description: "1/0 per order; 1 if there was a Medical Face Mask in the order"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
