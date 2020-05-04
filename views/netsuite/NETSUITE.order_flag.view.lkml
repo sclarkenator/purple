@@ -434,7 +434,7 @@ view: order_flag {
     sql: ${TABLE}.buymsm = 1 ;; }
 
   dimension: medical_masks{
-    group_label: "Total Orders with:"
+    group_label: "    * Orders has:"
     label: "a Face Mask"
     description: "1/0 per order; 1 if there was a Medical Face Mask in the order"
     drill_fields: [sales_order_line.sales_order_details*]
