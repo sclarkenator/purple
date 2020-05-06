@@ -1,6 +1,12 @@
 view: qualtrics_answer {
   sql_table_name: MARKETING.QUALTRICS_ANSWER ;;
 
+  dimension: survey_response_question_key {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.survey_id||'-'||${TABLE}.response_id||'-'||${TABLE}.question_id;; }
+
   dimension: answer {
     type: string
     sql:
@@ -26,6 +32,7 @@ view: qualtrics_answer {
   }
 
   dimension_group: insert_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -55,11 +62,13 @@ view: qualtrics_answer {
   }
 
   dimension: survey_id {
+    hidden:  yes
     type: string
     sql: ${TABLE}."SURVEY_ID" ;;
   }
 
   dimension_group: update_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
