@@ -1,13 +1,5 @@
 view: cancelled_order {
-  #sql_table_name: SALES.CANCELLED_ORDER ;;
-  derived_table: {sql:
-    select * from (
-      select a.*
-          , row_number () over (partition by a.item_id, a.system, a.order_id order by order_id) as rownum
-      from SALES.CANCELLED_ORDER a
-    ) z
-    where z.rownum = 1;;
-  }
+  sql_table_name: SALES.CANCELLED_ORDER ;;
 
   measure: units_cancelled {
     label: "      Cancelled Orders (units)"

@@ -1,6 +1,12 @@
 view: qualtrics_answer {
   sql_table_name: MARKETING.QUALTRICS_ANSWER ;;
 
+  dimension: survey_response_question_key {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.survey_id||'-'||${TABLE}.response_id||'-'||${TABLE}.question_id;; }
+
   dimension: answer {
     type: string
     sql:
@@ -18,14 +24,14 @@ view: qualtrics_answer {
   dimension: answer_t2b2 {
     type: string
     sql:
-      case when ${TABLE}."ANSWER" = 'Extremely satisfied' then '2 Top (Most Satisfied)'
-      when ${TABLE}."ANSWER" = 'Moderately satisfied' then '2 Top (Most Satisfied)'
-      when ${TABLE}."ANSWER" = 'Moderately dissatisfied' then '2 Bottom (Least Satisfied)'
-      when ${TABLE}."ANSWER" = 'Extremely dissatisfied' then '2 Bottom (Least Satisfied)'
+      case
+      when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then '2 Top (Most Satisfied)'
+      when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then '2 Bottom (Least Satisfied)'
       else ${TABLE}."ANSWER" end;;
   }
 
   dimension_group: insert_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -55,11 +61,13 @@ view: qualtrics_answer {
   }
 
   dimension: survey_id {
+    hidden:  yes
     type: string
     sql: ${TABLE}."SURVEY_ID" ;;
   }
 
   dimension_group: update_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,

@@ -1,13 +1,5 @@
 view: retroactive_discount {
-  #sql_table_name: SALES.RETROACTIVE_DISCOUNT ;;
-  derived_table: {sql:
-    select * from (
-      select a.*
-          , row_number () over (partition by a.item_id||'-'||a.order_id||'-'||a.system||'-'||a.refund_link_id||'-'||a.transaction_type order by 1) as rownum
-      from SALES.RETROACTIVE_DISCOUNT a
-    ) z
-    where z.rownum = 1
-  ;;}
+  sql_table_name: SALES.RETROACTIVE_DISCOUNT ;;
 
   dimension: primary_key{
     primary_key:  yes

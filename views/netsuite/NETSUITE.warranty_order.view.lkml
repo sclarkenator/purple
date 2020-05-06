@@ -1,13 +1,5 @@
 view: warranty_order {
-  #sql_table_name: SALES.WARRANTY_ORDER ;;
-  derived_table: { sql:
-    select * from (
-      select a.*
-          , row_number () over (partition by NVL(a.order_id,0)||a.warranty_order_id||a.replacement_order_id order by 1) as rownum
-      from SALES.warranty_order a
-    ) z
-    where z.rownum > 1 ;;
-  }
+  sql_table_name: SALES.WARRANTY_ORDER ;;
 
   dimension: primary_key {
     primary_key: yes
