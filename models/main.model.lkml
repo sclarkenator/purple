@@ -829,21 +829,27 @@ explore: zendesk_chats {
   hidden: yes
 }
 
-explore: ticket {
+explore: zendesk_ticket {
   hidden: yes
   group_label: "Customer Care"
   label: "Zendesk Tickets"
   description: "Customer ticket details from Zendesk"
   join: group {
     type: full_outer
-    sql_on: ${group.id} = ${ticket.group_id} ;;
+    sql_on: ${group.id} = ${zendesk_ticket.group_id} ;;
     relationship: many_to_one
   }
   join: user {
     view_label: "Assignee"
     type: left_outer
-    sql_on: ${user.id} = ${ticket.assignee_id} ;;
+    sql_on: ${user.id} = ${zendesk_ticket.assignee_id} ;;
     relationship: many_to_one
+  }
+  join: zendesk_ticket_comment {
+    view_label: "Ticket Comments"
+    type: left_outer
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_ticket_comment.ticket_id} ;;
+    relationship: one_to_many
   }
 #     join: ticket_form_history {
 #       type: full_outer
@@ -980,24 +986,26 @@ explore: exchange_items {hidden: yes
     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
     relationship: many_to_one
     view_label: "Exchange Item"}}
-explore: qualtrics {hidden:yes
-  from: qualtrics_answer
-    view_label: "Answer"
-  join: qualtrics_response {
-    type: left_outer
-    sql_on: ${qualtrics.response_id = ${qualtrics_response.response_id} and ${qualtrics.survey_id = ${qualtrics_response.survey_id} ;;
-    relationship: many_to_one
-    view_label: "Response"}
-  join: qualtrics_customer {
-    type: left_outer
-    sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
-    relationship: many_to_one
-    view_label: "Customer"}
-  join: qualtrics_survey {
-    type: left_outer
-    sql_on: ${qualtrics.survey_id} = ${qualtrics_survey.id} ;;
-    relationship: many_to_one
-    view_label: "Survey"}}
+
+  explore: qualtrics {
+    hidden:yes
+    from: qualtrics_survey
+    view_label: "Survey"
+    join: qualtrics_response {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
+      relationship: one_to_many
+      view_label: "Response"}
+    join: qualtrics_customer {
+      type: left_outer
+      sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+      relationship: many_to_one
+      view_label: "Customer"}
+    join: qualtrics_answer {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+      relationship: one_to_many
+      view_label: "Answer"}}
 
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
@@ -1626,6 +1634,8 @@ explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" gro
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
+explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
 explore: warranty_timeline {
   label: "Warranty Timeline"
   group_label: "Accounting"
