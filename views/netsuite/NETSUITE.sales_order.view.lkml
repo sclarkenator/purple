@@ -340,7 +340,9 @@ measure: upt {
     hidden: no
     link: {
       label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+      }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: string
