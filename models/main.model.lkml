@@ -986,24 +986,26 @@ explore: exchange_items {hidden: yes
     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
     relationship: many_to_one
     view_label: "Exchange Item"}}
-explore: qualtrics {hidden:yes
-  from: qualtrics_answer
-    view_label: "Answer"
-  join: qualtrics_response {
-    type: left_outer
-    sql_on: ${qualtrics.response_id = ${qualtrics_response.response_id} and ${qualtrics.survey_id = ${qualtrics_response.survey_id} ;;
-    relationship: many_to_one
-    view_label: "Response"}
-  join: qualtrics_customer {
-    type: left_outer
-    sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
-    relationship: many_to_one
-    view_label: "Customer"}
-  join: qualtrics_survey {
-    type: left_outer
-    sql_on: ${qualtrics.survey_id} = ${qualtrics_survey.id} ;;
-    relationship: many_to_one
-    view_label: "Survey"}}
+
+  explore: qualtrics {
+    hidden:yes
+    from: qualtrics_survey
+    view_label: "Survey"
+    join: qualtrics_response {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
+      relationship: one_to_many
+      view_label: "Response"}
+    join: qualtrics_customer {
+      type: left_outer
+      sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+      relationship: many_to_one
+      view_label: "Customer"}
+    join: qualtrics_answer {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+      relationship: one_to_many
+      view_label: "Answer"}}
 
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
