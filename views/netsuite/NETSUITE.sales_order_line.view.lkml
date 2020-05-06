@@ -1352,6 +1352,17 @@ view: sales_order_line {
     sql: 0.01*${gross_amt} ;;
   }
 
+  measure: roa_sales {
+    label: "Gross Sales - for ROAs"
+    group_label: "Gross Sales"
+    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale."
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}
+      when ${sales_order.channel_id} = 2 then ${gross_amt}*0.5
+      else 0 end;;
+  }
+
   set: fulfill_details {
     fields: [fulfill_details*]
   }

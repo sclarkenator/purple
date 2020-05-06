@@ -435,6 +435,7 @@ view: sales_order_line_base {
 
   measure: last_updated_date_sales {
     type: date
+    hidden: yes
     label: "Last Updated Sales"
     drill_fields: [sales_order_line.sales_order_details*]
     sql: MAX(${created_date}) ;;

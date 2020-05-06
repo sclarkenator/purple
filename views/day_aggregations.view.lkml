@@ -362,6 +362,7 @@ view: day_aggregations {
           when prod_goal.forecast_date::date < '2019-08-26' then 7800
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
+        , dtc.total_gross_Amt_non_rounded + retail.total_gross_Amt_non_rounded + (wholesale.total_gross_Amt_non_rounded * 0.50) as roas_sales
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -585,7 +586,7 @@ view: day_aggregations {
     sql: ${TABLE}.forecast_retail_units;; }
 
   measure: adspend {
-    label: "Total Adspend"
+    label: "Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -631,43 +632,70 @@ view: day_aggregations {
     sql: ${TABLE}.dtc_refunds;; }
 
   measure: adspend_target {
-    label: "Adspend Target"
+    label: "Target Adspend"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_target;; }
 
   measure: total_unique_orders {
-    label: "Total Unique DTC Orders"
+    label: "DTC Orders"
+    description: "Count of Distinct Order for DTC"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.total_unique_orders ;; }
 
  measure: unique_mattress_orders {
-   label: "Total Unique DTC Mattress Orders"
+   label: "DTC Mattress Orders"
+  description: "Total Unique DTC Mattress Orders"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.unique_mattress_orders ;; }
 
  measure: sessions_count {
-   label: "Total Site Sessions"
+   label: "Sessions"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.sessions_count ;; }
 
  measure: non_bounced_sessions {
-   label: "Total Non-Bounced Site Sessions"
+   label: "Sessions -  Non-Bounced"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.non_bounced_sessions ;; }
 
   measure: production_target {
+    label: "Target Mattress Production"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.production_target ;; }
 
   measure: production_mattresses {
+    label: "Mattress Production"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.production_mattresses ;; }
+
+  measure: roas_sales {
+    label: "ROAs - Total Sales"
+    description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.roas_sales;; }
+
+  measure: roas {
+    label: "ROAs - Full"
+    description: "Retun on Adspend (total roas salse/adspend)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${roas_sales}/${adspend} ;;
+    }
+
+  measure: dtc_roas {
+    label: "ROAs - DTC"
+    description: "Retun on Adspend (total roas salse/adspend)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${dtc_amount}/${adspend} ;;
+  }
 
 }
