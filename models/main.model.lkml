@@ -987,7 +987,7 @@ explore: exchange_items {hidden: yes
     view_label: "Survey"
     join: qualtrics_response {
       type: left_outer
-      sql_on: ${qualtrics.id = ${qualtrics_response.survey_id} ;;
+      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
       relationship: one_to_many
       view_label: "Response"}
     join: qualtrics_customer {
@@ -997,7 +997,7 @@ explore: exchange_items {hidden: yes
       view_label: "Customer"}
     join: qualtrics_answer {
       type: left_outer
-      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics.response_id = ${qualtrics_response.response_id} ;;
+      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
       relationship: one_to_many
       view_label: "Answer"}}
 
