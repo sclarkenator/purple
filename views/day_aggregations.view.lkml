@@ -592,6 +592,13 @@ view: day_aggregations {
     value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
+  measure: adspend_k {
+    label: "Adspend ($K)"
+    description: "Total adspend aggregated to the day."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.adspend;; }
+
   measure: target_dtc_amount {
     label: "Target DTC Amount"
     description: "Total DTC target from Daily Curve amount aggregated to the day."
@@ -696,6 +703,22 @@ view: day_aggregations {
     type: number
     value_format: "$#,##0.00"
     sql: ${dtc_amount}/${adspend} ;;
+  }
+
+  measure: target_roas_sales {
+    label: "Target ROAs Sales"
+    description: "DTC Target + Retail Target + 50% of Wholesale Target"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50) ;;
+  }
+
+  measure: target_roas {
+    label: "Target ROAs"
+    description: "DTC Target + Retail Target + 50% of Wholesale Target /Adspend Target"
+    type: number
+    value_format: "$#,##0.00"
+    sql: (${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50))/${adspend_target} ;;
   }
 
 }
