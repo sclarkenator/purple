@@ -592,6 +592,13 @@ view: day_aggregations {
     value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
+  measure: adspend_k {
+    label: "Adspend ($K)"
+    description: "Total adspend aggregated to the day."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.adspend;; }
+
   measure: target_dtc_amount {
     label: "Target DTC Amount"
     description: "Total DTC target from Daily Curve amount aggregated to the day."
