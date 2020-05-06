@@ -1,7 +1,13 @@
 view: qualtrics_response {
   sql_table_name: MARKETING.QUALTRICS_RESPONSE ;;
 
-  dimension: distribution_channel {
+  dimension: survey_response_key {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.survey_id||'-'||${TABLE}.response_id;; }
+
+ dimension: distribution_channel {
     type: string
     sql: ${TABLE}."DISTRIBUTION_CHANNEL" ;;
   }
@@ -31,6 +37,7 @@ view: qualtrics_response {
   }
 
   dimension_group: insert_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -104,11 +111,13 @@ view: qualtrics_response {
   }
 
   dimension: survey_id {
-    type: string
+   hidden:  yes
+   type: string
     sql: ${TABLE}."SURVEY_ID" ;;
   }
 
   dimension_group: update_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,

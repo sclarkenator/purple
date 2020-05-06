@@ -4,6 +4,7 @@ view: qualtrics_survey {
 
   dimension: id {
     primary_key: yes
+    hidden: yes
     type: string
     sql: ${TABLE}."ID" ;;
   }
@@ -24,6 +25,7 @@ view: qualtrics_survey {
 
   dimension_group: insert_ts {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -38,6 +40,7 @@ view: qualtrics_survey {
 
   dimension_group: last_modified {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -56,6 +59,7 @@ view: qualtrics_survey {
   }
 
   dimension_group: update_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
