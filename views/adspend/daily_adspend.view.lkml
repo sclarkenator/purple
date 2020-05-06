@@ -237,7 +237,7 @@ view: daily_adspend {
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: ${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA')
-        OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
+        OR ${TABLE}.source in ('CINEMA','TV') ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
       else: "other" }

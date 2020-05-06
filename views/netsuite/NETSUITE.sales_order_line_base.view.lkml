@@ -1,13 +1,5 @@
 view: sales_order_line_base {
-  #sql_table_name: SALES.SALES_ORDER_LINE ;;
-  derived_table: { sql:
-    select * from (
-      select a.*
-          , row_number () over (partition by a.item_id||'-'||a.order_id||'-'||a.system order by 1) as rownum
-      from SALES.sales_order_line a
-    ) z
-    where z.rownum = 1
-  ;;}
+  sql_table_name: SALES.SALES_ORDER_LINE ;;
 
   dimension: item_order{
     type: string

@@ -1,13 +1,5 @@
 view: warranty_order_line {
-  #sql_table_name: sales.warranty_order_line ;;
-  derived_table: {sql:
-    select * from (
-      select a.*
-          , row_number () over (partition by NVL(a.item_id,'0')||'-'||NVL(a.order_id,'0')||'-'||NVL(a.system,'-')||NVL(a.created_ts,'0') order by 1) as rownum
-      from SALES.warranty_order_line a
-    ) z
-    where z.rownum = 1
-  ;; }
+  sql_table_name: sales.warranty_order_line ;;
 
   dimension: primary_key {
     type: string
