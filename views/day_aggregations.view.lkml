@@ -705,4 +705,20 @@ view: day_aggregations {
     sql: ${dtc_amount}/${adspend} ;;
   }
 
+  measure: target_roas_sales {
+    label: "Target ROAs Sales"
+    description: "DTC Target + Retail Target + 50% of Wholesale Target"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50) ;;
+  }
+
+  measure: target_roas {
+    label: "Target ROAs"
+    description: "DTC Target + Retail Target + 50% of Wholesale Target /Adspend Target"
+    type: number
+    value_format: "$#,##0.00"
+    sql: (${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50))/${adspend_target} ;;
+  }
+
 }
