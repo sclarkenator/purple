@@ -135,15 +135,17 @@ view: day_aggregations_adspend {
     explore_source: daily_adspend {
       column: ad_date {}
       column: adspend {}
+      column: amount { field: adspend_target.amount }
     }
   }
   dimension: ad_date { type: date }
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${ad_date}) ;;
+  #dimension: primary_key {
+  #  primary_key: yes
+  #  sql: CONCAT(${ad_date}) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
-  }
+  #}
   measure: adspend { type: sum }
+  measure: amount {type: sum}
 }
 
 
@@ -346,6 +348,7 @@ view: day_aggregations {
         , forecast.retail_amount as forecast_retail_amount
         , forecast.retail_units as forecast_retail_units
         , adspend.adspend
+        , adspend.amount as adspend_adspend_target
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
         , targets.retail_target as target_retail_amount
@@ -642,7 +645,7 @@ view: day_aggregations {
     label: "Target Adspend"
     type: sum
     value_format: "$#,##0,\" K\""
-    sql: ${TABLE}.adspend_target;; }
+    sql: ${TABLE}.adspend_adspend_target;; }
 
   measure: total_unique_orders {
     label: "DTC Orders"
