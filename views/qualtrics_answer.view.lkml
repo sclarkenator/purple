@@ -122,7 +122,7 @@ view: qualtrics_answer {
   measure: nps_score {
     type: number
     label: "NPS Score"
-    sql: ((${nps_promoter}/${nps_response_count})-(${nps_detractor}/${nps_response_count}))*100 ;;
+    sql: case when ${nps_response_count} < 1 then 0 else ((${nps_promoter}/${nps_response_count})-(${nps_detractor}/${nps_response_count}))*100 end ;;
     }
 
 
