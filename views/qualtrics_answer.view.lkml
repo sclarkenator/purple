@@ -26,7 +26,7 @@ view: qualtrics_answer {
     sql:
       case
       when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then '2 Top (Most Satisfied)'
-      when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied' then '2 Bottom (Least Satisfied)'
+      when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then '2 Bottom (Least Satisfied)'
       else ${TABLE}."ANSWER" end;;
   }
 
