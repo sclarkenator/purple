@@ -85,4 +85,45 @@ view: qualtrics_answer {
     type: count
     drill_fields: [question_name]
   }
+
+  measure: nps_promoter {
+    type: count_distinct
+    label: "Promoter Count"
+    filters: {field: answer value: "Promoter"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
+    sql: ${TABLE}.response_id  ;;
+  }
+
+  measure: nps_passive {
+    type: count_distinct
+    label: "Passive Count"
+    filters: {field: answer value: "Passive"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
+    sql: ${TABLE}.response_id ;;
+  }
+
+  measure: nps_detractor {
+    type: count_distinct
+    label: "Detractor Count"
+    filters: {field: answer value: "Detractor"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
+    sql: ${TABLE}.response_id ;;
+  }
+
+    measure: nps_response_count {
+      type: count_distinct
+      label: "NPS Respondent Count"
+      filters: {field: answer value: "Promoter, Passive, Detractor"}
+      filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
+      sql: ${TABLE}.response_id ;;
+    }
+
+
+  measure: nps_score {
+    type: number
+    label: "NPS Score"
+    sql: case when ${nps_response_count} < 1 then 0 else ((${nps_promoter}/${nps_response_count})-(${nps_detractor}/${nps_response_count}))*100 end ;;
+    }
+
+
 }

@@ -1005,7 +1005,12 @@ explore: exchange_items {hidden: yes
       type: left_outer
       sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
       relationship: one_to_many
-      view_label: "Answer"}}
+      view_label: "Answer"}
+    join: item {
+      view_label: "Product"
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      type: left_outer
+      relationship: many_to_one}}
 
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 

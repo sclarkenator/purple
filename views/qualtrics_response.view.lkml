@@ -14,6 +14,7 @@ view: qualtrics_response {
 
   dimension: duration_in_seconds {
     type: number
+    hidden: yes
     sql: ${TABLE}."DURATION_IN_SECONDS" ;;
   }
 
