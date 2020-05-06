@@ -829,21 +829,27 @@ explore: zendesk_chats {
   hidden: yes
 }
 
-explore: ticket {
+explore: zendesk_ticket {
   hidden: yes
   group_label: "Customer Care"
   label: "Zendesk Tickets"
   description: "Customer ticket details from Zendesk"
   join: group {
     type: full_outer
-    sql_on: ${group.id} = ${ticket.group_id} ;;
+    sql_on: ${group.id} = ${zendesk_ticket.group_id} ;;
     relationship: many_to_one
   }
   join: user {
     view_label: "Assignee"
     type: left_outer
-    sql_on: ${user.id} = ${ticket.assignee_id} ;;
+    sql_on: ${user.id} = ${zendesk_ticket.assignee_id} ;;
     relationship: many_to_one
+  }
+  join: zendesk_ticket_comment {
+    view_label: "Ticket Comments"
+    type: left_outer
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_ticket_comment.ticket_id} ;;
+    relationship: one_to_many
   }
 #     join: ticket_form_history {
 #       type: full_outer
