@@ -135,11 +135,6 @@ view: l2l_quality_yellow_card {
     sql: ${TABLE}."PRODUCT" ;;
   }
 
-  dimension: quantity {
-    type: string
-    sql: ${TABLE}."QUANTITY" ;;
-  }
-
   dimension: shift {
     type: string
     sql: ${TABLE}."SHIFT" ;;
@@ -169,6 +164,11 @@ view: l2l_quality_yellow_card {
     type: string
     sql: ${TABLE}."WORKORDER_NUM" ;;
   }
+
+  measure: quantity {
+    type: sum
+    sql: case when ${TABLE}."QUANTITY" >= 100 then 1 else ${TABLE}."QUANTITY" end ;;
+    }
 
   measure: count {
     type: count
