@@ -3,21 +3,27 @@ view: cancelled_order {
 
   measure: units_cancelled {
     label: "      Cancelled Orders (units)"
-    description: "Total individual units cancelled"
+    description: "Total individual units cancelled.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.cancelled_qty  ;; }
 
   measure: orders_cancelled {
     label: "      Cancelled Orders (count)"
-    description: "Count (#) of distinct orders with at least 1 item cancelled"
+    description: "Count (#) of distinct orders with at least 1 item cancelled.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     sql: ${order_id} ;; }
 
   measure: orders_cancelled_and_refunded {
     label: "Cancelled and Refunded Orders (count)"
-    description: "Count (#) of distinct orders with at least 1 item cancelled where a refund has been given"
+    description: "Count (#) of distinct orders with at least 1 item cancelled where a refund has been given.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: count_distinct
     filters: {
       field: refunded
@@ -28,7 +34,9 @@ view: cancelled_order {
 
   measure: amt_cancelled {
     label:  "      Cancelled Orders ($)"
-    description: "Total USD amount of cancelled order, excluding taxes"
+    description: "Total USD amount of cancelled order, excluding taxes.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     drill_fields: [sales_order_line.sales_order_details*]
     type: sum
     value_format: "$#,##0.00"
@@ -36,8 +44,9 @@ view: cancelled_order {
 
   dimension: is_cancelled {
     label:  "     * Is Cancelled"
-    description: "Whether the order was cancelled
-     sournce(netsuite.canellations)"
+    description: "Whether the order was cancelled.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: yesno
     sql: ${cancelled_date} is not NULL ;; }
 
@@ -125,7 +134,9 @@ view: cancelled_order {
 
   dimension_group: cancelled {
     label: "   Cancelled"
-    description: "Date order was cancelled. Cancelled time is available for full-order cancellations."
+    description: "Date order was cancelled. Cancelled time is available for full-order cancellations.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -136,7 +147,9 @@ view: cancelled_order {
     group_label: "Advanced"
     view_label: "Cancellations"
     label:  "Cancellation Type"
-    description:  "Full order or partial order"
+    description:  "Full order or partial order.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: string
     sql: ${TABLE}.CANCELLED_ORDER_TYPE ;; }
 
@@ -164,19 +177,28 @@ view: cancelled_order {
 
   dimension: item_id {
     type: number
-    #hidden: yes
+    hidden: yes
+    group_label: "Advanced"
+    description: "Netsuite's Internal Item ID.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     sql: ${TABLE}.ITEM_ID ;; }
 
   dimension: gross_amt {
     label:  "Total Cancelled ($)"
-    description: "Total $ returned to customer, excluding shipping and freight"
+    description: "Total $ returned to customer, excluding shipping and freight.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type:  number
     group_label: "Advanced"
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: gross_amt_tier {
     label:  "Total Cancelled (bucket)"
-    description: "Total $ returned to customer, excluding shipping and freight (0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000)"
+    description: "Total $ returned to customer, excluding shipping and freight (0,1,100,500,1000,1500,2000,2500,
+      3000,3500,4000,4500,5000).
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: tier
     style:  integer
     group_label: "Advanced"
@@ -184,7 +206,11 @@ view: cancelled_order {
     sql: ${TABLE}.gross_amt ;;}
 
   dimension: order_id {
-    #hidden:  yes
+    hidden:  yes
+    group_label: "Advanced"
+    description: "Netsuite's Internal Order ID.
+      Source: netsuite.cancelled_order
+      Snowflake: analytics.sales.cancelled_order"
     type: number
     sql: ${TABLE}.ORDER_ID ;; }
 
@@ -214,7 +240,8 @@ view: cancelled_order {
     sql: ${TABLE}.SHOPIFY_DISCOUNT_CODE ;; }
 
   dimension: system {
-    #hidden:  yes
+    hidden:  yes
+    group_label: "Advanced"
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 
