@@ -30,6 +30,7 @@ view: qualtrics_answer {
       else ${TABLE}."ANSWER" end;;
   }
 
+
   dimension_group: insert_ts {
     hidden:  yes
     type: time
@@ -90,7 +91,6 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Promoter Count"
     filters: {field: answer value: "Promoter"}
-    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id  ;;
   }
 
@@ -98,7 +98,6 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Passive Count"
     filters: {field: answer value: "Passive"}
-    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id ;;
   }
 
@@ -106,7 +105,6 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Detractor Count"
     filters: {field: answer value: "Detractor"}
-    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id ;;
   }
 
@@ -114,7 +112,6 @@ view: qualtrics_answer {
       type: count_distinct
       label: "NPS Respondent Count"
       filters: {field: answer value: "Promoter, Passive, Detractor"}
-      filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
       sql: ${TABLE}.response_id ;;
     }
 
