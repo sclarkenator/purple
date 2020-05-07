@@ -22,12 +22,14 @@ view: qualtrics_answer {
   }
 
   dimension: answer_t2b2 {
+    label: "Answer Buckets "
     type: string
     sql:
       case
-      when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then '2 Top (Most Satisfied)'
-      when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then '2 Bottom (Least Satisfied)'
-      else ${TABLE}."ANSWER" end;;
+      when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then 'Satisfied (Top 2)'
+      when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then 'Dissatisfied (Bottom 2)'
+      when ${TABLE}."ANSWER" = 'I did not order/receive that product' then 'N/A'
+      else 'Passive' end;;
   }
 
 
@@ -91,6 +93,7 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Promoter Count"
     filters: {field: answer value: "Promoter"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id  ;;
   }
 
@@ -98,6 +101,7 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Passive Count"
     filters: {field: answer value: "Passive"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id ;;
   }
 
@@ -105,6 +109,7 @@ view: qualtrics_answer {
     type: count_distinct
     label: "Detractor Count"
     filters: {field: answer value: "Detractor"}
+    filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
     sql: ${TABLE}.response_id ;;
   }
 
@@ -112,6 +117,7 @@ view: qualtrics_answer {
       type: count_distinct
       label: "NPS Respondent Count"
       filters: {field: answer value: "Promoter, Passive, Detractor"}
+      filters: {field: question_id value: "On a scale from 0-10 how likely are you to recommend Purple to a friend or colleague? - Group"}
       sql: ${TABLE}.response_id ;;
     }
 
