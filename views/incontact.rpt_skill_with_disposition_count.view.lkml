@@ -2,12 +2,14 @@ view: rpt_skill_with_disposition_count {
   sql_table_name: CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT ;;
 
   dimension: abandon_time {
+    description: "How long a person was in queue before abandoning the call (without speaking to an agent)"
     type: number
     hidden: yes
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   dimension: acw_time {
+    description: "After Call Work Time (making notes, etc. before they're available for another call)"
     type: number
     hidden: yes
     sql: ${TABLE}."ACW_TIME" ;;
@@ -42,11 +44,13 @@ view: rpt_skill_with_disposition_count {
   }
 
   dimension: contact_info_from {
+    description: "Person initiating the call (Purple if Outbound call, Customer if Inbound call)"
     type: string
     sql: ${TABLE}."CONTACT_INFO_FROM" ;;
   }
 
   dimension: contact_info_to {
+    description: "Receiver of call (Purple if Inbound call, Customer if Outbound call)"
     type: string
     sql: ${TABLE}."CONTACT_INFO_TO" ;;
   }
@@ -57,12 +61,14 @@ view: rpt_skill_with_disposition_count {
   }
 
   dimension: handle_time {
+    description: "Talk time + Hold time"
     type: number
     hidden: no
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
   dimension: hold_time {
+    description: "Time customer was on hold (not in queue)"
     type: number
     hidden: yes
     sql: ${TABLE}."HOLD_TIME" ;;
@@ -108,11 +114,13 @@ view: rpt_skill_with_disposition_count {
 
 
   measure: avg_abandon_time {
+    hidden: yes
     type: average
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   measure: avg_acw_time {
+    hidden: yes
     type: number
     sql: ${TABLE}."ACW_TIME" ;;
   }
@@ -123,6 +131,7 @@ view: rpt_skill_with_disposition_count {
   }
 
   measure: avg_hold_time {
+    hidden: yes
     type: number
     sql: ${TABLE}."HOLD_TIME" ;;
   }
@@ -130,6 +139,7 @@ view: rpt_skill_with_disposition_count {
 
 
   measure: count {
+    description: "Number of phone calls"
     type: count
     drill_fields: []
   }
