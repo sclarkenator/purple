@@ -127,9 +127,9 @@ view: exchange_order_line {
 
   measure: count {
     label: "Exchanged Units"
-    type: count
+    type: count_distinct
     #hidden:  yes
-    sql: ${TABLE}.created ;;
+    sql: ${key} ;;
   }
 
   dimension: is_exchanged {

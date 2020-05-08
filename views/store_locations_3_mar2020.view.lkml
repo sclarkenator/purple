@@ -1,6 +1,7 @@
 view: store_locations_3_mar2020 {
-  sql_table_name: "CSV_UPLOADS"."STORE_LOCATIONS_3MAR2020"
-    ;;
+ ## sql_table_name: "CSV_UPLOADS"."STORE_LOCATIONS_3MAR2020"
+  sql_table_name: "CSV_UPLOADS"."STORE_LOCATIONS_7MAY2020"
+   ;;
 
   dimension: account_description {
     type: string
@@ -34,6 +35,7 @@ view: store_locations_3_mar2020 {
 
   dimension: interal_id {
     primary_key: yes
+    label: "Internal ID"
     type: string
     sql: ${TABLE}."INTERAL_ID" ;;
   }

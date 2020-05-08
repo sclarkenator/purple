@@ -57,16 +57,8 @@ where z.row_num = 1;;
 
   dimension_group: created {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."CREATED"::date ;;
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: createdby {
@@ -169,31 +161,14 @@ where z.row_num = 1;;
 
   dimension_group: pitch_end {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."PITCH_END"::date ;;
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}."PITCH_END" ;;
   }
 
   dimension_group: pitch_start {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      hour,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."PITCH_START"::date ;;
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}."PITCH_START" ;;
   }
 
   measure: Total_planned_operator_count {
@@ -227,16 +202,8 @@ where z.row_num = 1;;
 
   dimension_group: shift_start {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."SHIFT_START_DATE"::date ;;
+    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}."SHIFT_START_DATE" ;;
   }
 
   dimension: site {

@@ -11,6 +11,7 @@ view: order_flag {
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
+      ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
@@ -20,7 +21,6 @@ view: order_flag {
       ,case when purple_pillow > 0 then 1 else 0 end purple_pillow_flg
       ,case when gravity_mask > 0 then 1 else 0 end gravity_mask_flg
       ,case when gravity_blanket > 0 then 1 else 0 end gravity_blanket_flg
-      ,case when accordion_platform > 0 then 1 else 0 end accordion_platform_flg
       ,case when EYE_MASK_FLG > 0 then 1 else 0 end eye_mask_flg
       ,case when PET_BED_fLG > 0 then 1 else 0 end pet_bed_flg
       ,case when duvet > 0 then 1 else 0 end duvet_flg
@@ -31,6 +31,7 @@ view: order_flag {
       ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
+      ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -40,7 +41,8 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
-        ,SUM(CASE WHEN line = 'FRAME' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
@@ -52,8 +54,6 @@ view: order_flag {
         ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855') then 1 else 0 end) purple_pillow
         ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
         ,sum(case when sku_id in ('AC-10-38-13050') then 1 else 0 end) gravity_blanket
-        ,sum(case when sku_id in ('AC-10-38-45867','AC-10-38-45866','AC-10-38-45865','AC-10-38-45864','AC-10-38-45863','AC-10-38-45862','AC-10-38-45868','AC-10-38-45869','AC-10-38-45870','AC-10-38-45871','AC-10-38-45872','AC-10-38-45873',
-                                  '10-38-45867','10-38-45866','10-38-45865','10-38-45864','10-38-45863','10-38-45862','10-38-45868','10-38-45869','10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 1 else 0 end) accordion_platform
         ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
                                   '10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
@@ -68,6 +68,7 @@ view: order_flag {
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
         ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKET')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
           ) THEN 1 else 0 end) buymsm1
+        ,sum(case when sku_id in ('10-47-20000','10-47-20002','10-47-20001') then 1 else 0 end) med_mask
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -159,10 +160,19 @@ view: order_flag {
   measure: platform_orders {
     group_label: "Total Orders with:"
     label: "a Platform Base"
-    description: "1/0 per order; 1 if there was a platform base in the order"
+    description: "1/0 per order; 1 if there was a platform base (Metal/Clip Metal) in the order"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
+
+  measure: foundation_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Foundation"
+    description: "1/0 per order; 1 if there was a Foundation in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.foundation_flg ;; }
 
   measure: blanket_orders {
     hidden:  no
@@ -215,15 +225,6 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
-
-  measure: accordion_platfrom_flg {
-    hidden: yes
-    group_label: "Total Orders with:"
-    label: "a Accordion Platform"
-    description: "1/0 per order; 1 if there was a accordion platform in the order"
-    drill_fields: [sales_order_line.sales_order_details*]
-    type:  sum
-    sql:  ${TABLE}.accordion_platform_flg ;; }
 
   dimension: mattress_flg {
     group_label: "    * Orders has:"
@@ -278,9 +279,16 @@ view: order_flag {
   dimension: platform_flg {
     group_label: "    * Orders has:"
     label: "a Platform Base"
-    description: "1/0; 1 if there is a platform base in this order"
+    description: "1/0; 1 if there is a platform base (Metal/Clip Metal) in this order"
     type:  yesno
     sql: ${TABLE}.platform_flg = 1 ;; }
+
+  dimension: foundation_flg {
+    group_label: "    * Orders has:"
+    label: "a Foundation Base"
+    description: "1/0; 1 if there is a Foundation Base in this order"
+    type: yesno
+    sql: ${TABLE}.foundation_flg = 1 ;; }
 
   dimension: pillow_flg {
     group_label: "    * Orders has:"
@@ -358,22 +366,6 @@ view: order_flag {
     type: yesno
     sql: ${TABLE}.gravity_blanket_flg > 0 ;; }
 
-  dimension: accordion_platform_flg {
-    hidden: yes
-    group_label: "    * Orders has:"
-    label: "a Accordion Base"
-    description: "1/0; 1 if there is a Accordion Base in this order"
-    type: yesno
-    sql: ${TABLE}.accordion_platform_flg > 0 ;; }
-
-  dimension: foundation_base_flg {
-    hidden: yes
-    group_label: "    * Orders has:"
-    label: "a Foundation Base"
-    description: "1/0; 1 if there is a Foundation Base in this order"
-    type: yesno
-    sql: ${TABLE}.foundation_base_flg > 0 ;; }
-
   dimension: duvet_flg {
     hidden: yes
     group_label: "    * Orders has:"
@@ -440,5 +432,13 @@ view: order_flag {
     description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020)"
     type:  yesno
     sql: ${TABLE}.buymsm = 1 ;; }
+
+  dimension: medical_masks{
+    group_label: "    * Orders has:"
+    label: "a Face Mask"
+    description: "1/0 per order; 1 if there was a Medical Face Mask in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.medical_mask_flg =1 ;; }
 
 }

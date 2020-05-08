@@ -391,6 +391,15 @@ explore: v_usertime_minutes {
   description: "Shows the amount of time and line an operator worked"
 }
 
+explore: machine {
+  hidden: yes
+  join: l2l_machine_downtime {
+    type: left_outer
+    sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+    relationship: one_to_many
+  }
+}
+
 #-------------------------------------------------------------------
 #
 # Operations Explores
@@ -537,32 +546,6 @@ explore: starship_fulfillment {
   explore: at_risk_amount {
     hidden: yes
     label: "At Risk Orders"
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${at_risk_amount.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-    join: sales_order {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${sales_order.order_id} ;;
-      relationship: many_to_one
-    }
-    join: sales_order_line {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${sales_order_line.order_id} and ${at_risk_amount.item_id} = ${sales_order_line.item_id} ;;
-      relationship: many_to_one
-    }
-    join: fulfillment {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${fulfillment.order_id} and ${at_risk_amount.item_id} = ${fulfillment.item_id};;
-      relationship: many_to_one
-    }
-    join: cancelled_order {
-      type: left_outer
-      sql_on: ${at_risk_amount.order_id} = ${cancelled_order.order_id} and ${at_risk_amount.item_id} = ${cancelled_order.item_id} ;;
-      relationship: many_to_one
-    }
   }
 
 #-------------------------------------------------------------------
@@ -680,7 +663,7 @@ explore: all_events {
   join: heap_page_views {
     type: left_outer
     sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
-    relationship: one_to_one
+    relationship: one_to_many
   }
   join: date_meta {
     type: left_outer
@@ -846,21 +829,27 @@ explore: zendesk_chats {
   hidden: yes
 }
 
-explore: ticket {
+explore: zendesk_ticket {
   hidden: yes
   group_label: "Customer Care"
   label: "Zendesk Tickets"
   description: "Customer ticket details from Zendesk"
   join: group {
     type: full_outer
-    sql_on: ${group.id} = ${ticket.group_id} ;;
+    sql_on: ${group.id} = ${zendesk_ticket.group_id} ;;
     relationship: many_to_one
   }
   join: user {
     view_label: "Assignee"
     type: left_outer
-    sql_on: ${user.id} = ${ticket.assignee_id} ;;
+    sql_on: ${user.id} = ${zendesk_ticket.assignee_id} ;;
     relationship: many_to_one
+  }
+  join: zendesk_ticket_comment {
+    view_label: "Ticket Comments"
+    type: left_outer
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_ticket_comment.ticket_id} ;;
+    relationship: one_to_many
   }
 #     join: ticket_form_history {
 #       type: full_outer
@@ -997,24 +986,31 @@ explore: exchange_items {hidden: yes
     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
     relationship: many_to_one
     view_label: "Exchange Item"}}
-explore: qualtrics {hidden:yes
-  from: qualtrics_answer
-    view_label: "Answer"
-  join: qualtrics_response {
-    type: left_outer
-    sql_on: ${qualtrics.response_id = ${qualtrics_response.response_id} and ${qualtrics.survey_id = ${qualtrics_response.survey_id} ;;
-    relationship: many_to_one
-    view_label: "Response"}
-  join: qualtrics_customer {
-    type: left_outer
-    sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
-    relationship: many_to_one
-    view_label: "Customer"}
-  join: qualtrics_survey {
-    type: left_outer
-    sql_on: ${qualtrics.survey_id} = ${qualtrics_survey.id} ;;
-    relationship: many_to_one
-    view_label: "Survey"}}
+
+  explore: qualtrics {
+    hidden:yes
+    from: qualtrics_survey
+    view_label: "Survey"
+    join: qualtrics_response {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
+      relationship: one_to_many
+      view_label: "Response"}
+    join: qualtrics_customer {
+      type: left_outer
+      sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+      relationship: many_to_one
+      view_label: "Customer"}
+    join: qualtrics_answer {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+      relationship: one_to_many
+      view_label: "Answer"}
+    join: item {
+      view_label: "Product"
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      type: left_outer
+      relationship: many_to_one}}
 
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
@@ -1574,6 +1570,19 @@ explore: wholesale_legacy {
     sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
     relationship: many_to_one
   }
+  join: exchange_order_line {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
+      and ${sales_order_line.system} = ${exchange_order_line.system} ;;
+    relationship: one_to_many
+  }
+  join: exchange_order {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
@@ -1630,6 +1639,8 @@ explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" gro
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
+explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
 explore: warranty_timeline {
   label: "Warranty Timeline"
   group_label: "Accounting"
@@ -1810,7 +1821,7 @@ explore: procom_security_daily_customer {
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-
+  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
 
   explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead

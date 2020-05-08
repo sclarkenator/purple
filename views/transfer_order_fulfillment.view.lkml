@@ -1,5 +1,13 @@
 view: transfer_order_fulfillment {
-  sql_table_name: PRODUCTION.TRANSFER_ORDER_FULFILLMENT ;;
+  #sql_table_name: PRODUCTION.TRANSFER_ORDER_FULFILLMENT ;;
+  derived_table: {sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by TRANSFER_ORDER_FULFILLMENT_ID order by 1) as rownum
+      from PRODUCTION.TRANSFER_ORDER_FULFILLMENT a
+    ) z
+    where z.rownum = 1
+  ;;}
 
   dimension: transfer_order_fulfillment_id {
     primary_key: yes

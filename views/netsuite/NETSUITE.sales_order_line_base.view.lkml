@@ -1,9 +1,5 @@
 view: sales_order_line_base {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
-  #derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
-  #derived_table: {
-  #  sql:select * from sales.sales_order_line where item_id not in ('1682');;
-  #}
 
   dimension: item_order{
     type: string
@@ -409,6 +405,28 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension_group: shift_time{
+    hidden: yes
+    label: "Shift Timescale"
+    description: "Adjusts the Produced time to make 0700 to 0000. This sets the beginning of the day as the beginning of the shift. 0000 - 0100 is the first hour of the AM shift."
+    type: time
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(Dateadd(hour,-7,${TABLE}.Created));;
+  }
+
+  dimension_group: current {
+    view_label: "Geography"
+    label: "    Current"
+    description:  "Current Time/Date for calculations"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
+
   dimension: before_day_of_year {
     hidden: yes
     type: yesno
@@ -417,6 +435,7 @@ view: sales_order_line_base {
 
   measure: last_updated_date_sales {
     type: date
+    hidden: yes
     label: "Last Updated Sales"
     drill_fields: [sales_order_line.sales_order_details*]
     sql: MAX(${created_date}) ;;

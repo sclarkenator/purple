@@ -25,6 +25,14 @@ view: sales_targets {
     sql: ${TABLE}.WHLSL ;;
   }
 
+  measure: roas_target {
+    label: "ROAS Sales Target"
+    description: "100% of DTC and Owned Retail + 50% of Wholesale"
+    value_format: "$#,##0"
+    type: sum
+    sql: (${TABLE}.WHLSL *0.50) + ${TABLE}.RETAIL + ${TABLE}.DTC ;;
+  }
+
   measure: days {
     label: "Days in month"
     description: "This is the number of days in the month by any of the applied fields"

@@ -698,7 +698,9 @@ view: sales_order_line {
   measure: days_to_cancel_measure {
     view_label: "Cancellations"
     label: "      Avg days from order to cancellation"
-    description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
+    description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed.
+      Source: netsuite.sales_order_line
+      Snowflake: analytics.sales.sales_order_line"
     type: average
     sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;;
   }
@@ -1350,6 +1352,17 @@ view: sales_order_line {
     value_format: "$#,##0"
     type: sum
     sql: 0.01*${gross_amt} ;;
+  }
+
+  measure: roa_sales {
+    label: "Gross Sales - for ROAs"
+    group_label: "Gross Sales"
+    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale."
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}
+      when ${sales_order.channel_id} = 2 then ${gross_amt}*0.5
+      else 0 end;;
   }
 
   set: fulfill_details {

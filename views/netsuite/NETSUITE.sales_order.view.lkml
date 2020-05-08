@@ -146,9 +146,17 @@ measure: upt {
               else 'Other' end ;;  }
 
   dimension: created {
-    hidden: yes
+    #hidden: yes
     type: date_time
     sql: ${TABLE}.CREATED ;; }
+
+  dimension: created_date {
+    label: "Sales Order Created Date"
+    type: date
+    group_label: " Advanced"
+    description: "Created date from netsuite on the sale order"
+    sql: ${created}::date ;;
+  }
 
   dimension: shipping_hold {
     hidden: yes
@@ -332,7 +340,9 @@ measure: upt {
     hidden: no
     link: {
       label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+      }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
     type: string
@@ -463,7 +473,7 @@ measure: upt {
     group_label: " Advanced"
     label: "  Order Age (bucket 2)"
     hidden: no
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28)"
     type:  tier
     tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
     style: integer

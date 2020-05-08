@@ -3,7 +3,15 @@
 #-------------------------------------------------------------------
 
 view: purchase_order_line {
-  sql_table_name: PRODUCTION.PURCHASE_ORDER_LINE ;;
+  #sql_table_name: PRODUCTION.PURCHASE_ORDER_LINE ;;
+  derived_table: {sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by PURCHASE_ORDER_ID || PURCHASE_ORDER_LINE_ID order by 1) as rownum
+      from PRODUCTION.purchase_order_line a
+    ) z
+    where z.rownum = 1
+  ;;}
 
 dimension: Primary_key{
   primary_key: yes
