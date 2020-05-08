@@ -33,7 +33,7 @@ view: store_locations_3_mar2020 {
     sql: ${TABLE}."FULL_ADDRESS" ;;
   }
 
-  dimension: interal_id {
+  dimension: internal_id {
     primary_key: yes
     type: string
     sql: ${TABLE}."INTERAL_ID" ;;
