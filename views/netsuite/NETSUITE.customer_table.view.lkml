@@ -3,7 +3,8 @@ view: customer_table {
 
   dimension: customer_id {
     label: "Customer ID"
-    description: "Hyperlink to customer record in netsuite by internal id"
+    description: "Hyperlink to customer record in netsuite by internal id.
+      Source:netsuite.customers"
     group_label: " Advanced"
     type: string
     primary_key: yes
@@ -13,13 +14,15 @@ view: customer_table {
   dimension: companyname {
     label: "Wholesale Customer Name"
     group_label: "Wholesale"
-    description: "Company Name from netsuite"
+    description: "Company Name from netsuite.
+      Source:netsuite.customers"
     type: string
     sql: ${TABLE}.companyname ;; }
 
   dimension: full_name {
     label: "Customer Name"
-    description: "Merging first and last name from netsuite"
+    description: "Merging first and last name from netsuite.
+      Source: netsuite.customers"
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));;
     required_access_grants:[can_view_pii] }
@@ -40,7 +43,8 @@ view: customer_table {
     label: "Account Manager"
     group_label: "Wholesale"
     #hidden: yes
-    description: "Wholesale - Taking the account manager from the customer account"
+    description: "Wholesale - Taking the account manager from the customer account.
+      Source:netsuite.customers"
     type: string
     sql:  ${account_manager.full_name};; }
 
@@ -48,13 +52,17 @@ view: customer_table {
     label: "Sales Manager"
     group_label: "Wholesale"
     #hidden: yes
-    description: "Wholesale - Taking the sales manager from the customer account"
+    description: "Wholesale - Taking the sales manager from the customer account.
+      Source:netsuite.customers"
     type: string
     sql:  ${sales_manager.full_name};; }
 
   dimension: email {
     hidden:  no
+    group_label: " Advanced"
     label: "Customer Email"
+    description: "Customer Email Address on the Netsuite customer record.
+      Source:netsuite.customers"
     type: string
     sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes'
               THEN ${TABLE}.email
@@ -65,7 +73,8 @@ view: customer_table {
   dimension: phone {
     hidden:  no
     label: "Customer Phone"
-    description: "Looking first at Home Phone, then at Mobile"
+    description: "Looking first at Home Phone, then at Mobile.
+      Source: netsuite.customers"
     type: string
     sql: nvl(${TABLE}.home_phone,${TABLE}.mobile_phone) ;;
     required_access_grants:[can_view_pii] }
@@ -73,14 +82,16 @@ view: customer_table {
   dimension: mf_or_other {
     label: "Is Mattress Firm"
     hidden: yes
-    description: "Yes is Mattress Firm"
+    description: "Yes is Mattress Firm.
+      Source: netsuite.customers"
     type: yesno
     sql: ${customer_id}=2662 ;;}
 
   dimension: shipping_hold {
     view_label: "Customer"
-    label: "Shipping Hold"
-    description: "True/False True if there is a shipping hold"
+    label: " * Is Shipping Hold (Yes/No)"
+    description: "Whether the Customer has a shipping hold on their account.
+      Source: netsuite.customers"
     type: string
     sql: ${TABLE}.SHIPPING_HOLD
     ;;
@@ -88,8 +99,10 @@ view: customer_table {
 
   dimension: hold_reason_id {
     view_label: "Customer"
+    group_label: " Advanced"
     label: "Shipping Hold Reason"
-    description: "Reason For Shipping Hold"
+    description: "Reason For Shipping Hold.
+      Source:netsuite.customers"
     type: string
     sql: case when ${TABLE}.hold_reason_id = 1 then 'Potential Fraud'
     when ${TABLE}.hold_reason_id = 2 then 'Future Ship Date'
@@ -105,7 +118,8 @@ view: customer_table {
     label: "Wholesale Top Customers"
     group_label: "Wholesale"
     hidden: yes
-    description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace)"
+    description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace).
+      Source: netsuite.customers"
     case: {
       when: { label: "Mattress Firm" sql: lower(companyname) = 'mattress firm' ;; }
       when: { label: "Sam's Club" sql: lower(companyname) like 'sam%club%' ;; }
@@ -122,7 +136,8 @@ view: customer_table {
   dimension: wholesale_type {
     label: "Top Wholesale Customers"
     group_label: "Wholesale"
-    description: "List of top wholesale customers for forecasting"
+    description: "List of top wholesale customers for forecasting.
+      Source:netsuite.customers"
     case: {
       when: { sql: lower(${TABLE}.companyname) like 'mattress%firm%' ;;  label: "Mattress Firm" }
       when: { sql: lower(${TABLE}.companyname) like 'furniture%row%' ;; label: "Furniture Row" }

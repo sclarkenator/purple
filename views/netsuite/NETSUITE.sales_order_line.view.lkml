@@ -699,8 +699,7 @@ view: sales_order_line {
     view_label: "Cancellations"
     label: "      Avg days from order to cancellation"
     description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed.
-      Source: netsuite.sales_order_line
-      Snowflake: analytics.sales.sales_order_line"
+      Source: netsuite.sales_order_line"
     type: average
     sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;;
   }
