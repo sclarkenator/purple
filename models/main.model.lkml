@@ -762,7 +762,7 @@ explore: customer_satisfaction_survey {
   description: "Customer satisfaction of interactions with Customer Care agents"
     join: agent_lkp {
       type: left_outer
-      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
+      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
@@ -954,7 +954,7 @@ explore: cc_agent_data {
     relationship:  one_to_many}
   join: customer_satisfaction_survey {
     type: left_outer
-    sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
   join: team_lead_name {
     type:  left_outer
