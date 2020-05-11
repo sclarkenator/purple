@@ -365,7 +365,7 @@ view: day_aggregations {
           when prod_goal.forecast_date::date < '2019-08-26' then 7800
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
-        , dtc.total_gross_Amt_non_rounded + retail.total_gross_Amt_non_rounded + (wholesale.total_gross_Amt_non_rounded * 0.50) as roas_sales
+        , (dtc_amount + retail_amount + (wholesale_amount * 0.50)) as roas_sales
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
