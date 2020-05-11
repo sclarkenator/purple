@@ -868,6 +868,11 @@ explore: rpt_skill_with_disposition_count {
   label: "Inbound Calls"
   group_label: "Customer Care"
   description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
+  join:  magazine_numbers {
+    type: full_outer
+    sql_on: ${magazine_numbers.phone_number} = ${rpt_skill_with_disposition_count.contact_info_to} and
+      ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date ;;
+    relationship: many_to_many}
 }
 
 explore: agent_lkp {

@@ -43,6 +43,14 @@ view: rpt_skill_with_disposition_count {
     sql: ${TABLE}."CAPTURED" ;;
   }
 
+  dimension: inbound_flag {
+    label: "     * Is Inbound Call (Yes / No)"
+    type: yesno
+    description: "Yes if Purple received the call / the call is inbound.
+      Source: incontact. rpt_skill_with_disposition_count"
+    sql: substring(${contact_info_to},0,3) = 888;;
+  }
+
   dimension: contact_info_from {
     description: "Person initiating the call (Purple if Outbound call, Customer if Inbound call)"
     type: string
