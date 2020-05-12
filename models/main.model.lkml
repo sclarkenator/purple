@@ -1410,6 +1410,15 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
+    join: rpt_skill_with_disposition_count {
+      type: left_outer
+      relationship: many_to_many
+      sql_on: case when ${rpt_skill_with_disposition_count.inbound_flag} = yes then
+      ${rpt_skill_with_disposition_count.contact_info_from} = ${customer_table.phone} and
+        DATEDIFF(day, ${rpt_skill_with_disposition_count.reported_date}::date, ${sales_order.created}::date) = 0
+        else ${calls_to_orders.contact_info_to} = ${customer_table.phone} and
+        DATEDIFF(day, ${rpt_skill_with_disposition_count.reported_date}::date, ${sales_order.created}::date) = 0;;
+    }
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}

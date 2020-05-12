@@ -48,7 +48,7 @@ view: rpt_skill_with_disposition_count {
     type: yesno
     description: "Yes if Purple received the call / the call is inbound.
       Source: incontact. rpt_skill_with_disposition_count"
-    sql: substring(${contact_info_to},0,3) = 888;;
+    sql: substring(${contact_info_to}) = 888;;
   }
 
   dimension: contact_info_from {
