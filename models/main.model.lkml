@@ -870,11 +870,28 @@ explore: rpt_skill_with_disposition_count {
   description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
   join:  magazine_numbers {
     type: full_outer
-    sql_on: ${magazine_numbers.phone_number} = ${rpt_skill_with_disposition_count.contact_info_to} and
-      ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date ;;
+    sql_on: ${magazine_numbers.phone_number}::text = ${rpt_skill_with_disposition_count.contact_info_to}::text
+    --and  ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date
+    ;;
     relationship: many_to_many}
+  join: customer_table{
+    type: left_outer
+    relationship: many_to_many
+    sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}
+          else ${rpt_skill_with_disposition_count.contact_info_to} end
+          = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone},'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
+  }
+join: sales_order {
+  type: left_outer
+  relationship: one_to_many
+  sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
 }
-
+join: sales_order_line_base {
+  type: left_outer
+  relationship: one_to_many
+  sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+}
+}
 explore: agent_lkp {
   hidden: yes
   label: "Agents"
@@ -1409,15 +1426,6 @@ explore: sales_order_line{
       type: left_outer
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
-    }
-    join: rpt_skill_with_disposition_count {
-      type: left_outer
-      relationship: many_to_many
-      sql_on: case when ${rpt_skill_with_disposition_count.inbound_flag} = yes then
-      ${rpt_skill_with_disposition_count.contact_info_from} = ${customer_table.phone} and
-        DATEDIFF(day, ${rpt_skill_with_disposition_count.reported_date}::date, ${sales_order.created}::date) = 0
-        else ${calls_to_orders.contact_info_to} = ${customer_table.phone} and
-        DATEDIFF(day, ${rpt_skill_with_disposition_count.reported_date}::date, ${sales_order.created}::date) = 0;;
     }
 }
 
