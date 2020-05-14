@@ -891,6 +891,10 @@ join: sales_order_line_base {
   relationship: one_to_many
   sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
 }
+  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+    sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+  join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+    sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
 }
 explore: agent_lkp {
   hidden: yes
