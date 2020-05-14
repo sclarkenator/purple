@@ -83,7 +83,7 @@ view: stella_connect_request {
   }
 
   dimension: ADDITIONAL_QUESTION_COMMENTS {
-    hidden: yes
+    hidden: no
     description: "Duplicate of FCR?"
     type: string
     sql: ${TABLE}.ADDITIONAL_QUESTION_COMMENTS ;;
@@ -96,7 +96,7 @@ view: stella_connect_request {
   }
 
   dimension: FCR_RESPONSE {
-    hidden: yes
+    hidden: no
     label: ""
     description: "First Call Resolution response"
     type: string
@@ -124,7 +124,7 @@ view: stella_connect_request {
   measure: NPS_RESPONSE_avg {
     description: "Average Net Promoter Score. isn't working yet for some reason"
     type: average
-    hidden: yes
+    hidden: no
     sql: ${stella_connect_request.NPS_RESPONSE} ;;
   }
 
@@ -137,7 +137,7 @@ view: stella_connect_request {
   }
 
   measure: FCR_rate {
-    hidden: yes
+    hidden: no
     description: "In Testing: Calcuates FCR rate. isn't working for some reason"
     type: number
     value_format: "0.0%"
