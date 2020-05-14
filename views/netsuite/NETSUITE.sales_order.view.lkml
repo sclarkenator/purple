@@ -41,15 +41,6 @@ view: sales_order {
     hidden: no
     sql: ${TABLE}.email ;; }
 
-measure: upt {
-  label: "UPT"
-  description: "Units per transaction
-    Source: netsuite.sales_order"
-  drill_fields: [sales_order_line.sales_order_details*]
-  type: number
-  value_format: "#,##0.00"
-  sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
-
   measure: average_order_size {
     label: "AOV ($)"
     description: "Average total order amount, excluding tax.
