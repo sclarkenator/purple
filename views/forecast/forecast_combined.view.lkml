@@ -137,7 +137,7 @@ sql_table_name: sales.forecast ;;
     label: "Total Promo Units"
     type:  sum
     value_format: "#,##0"
-    sql:${TABLE}.promo__units;; }
+    sql:${TABLE}.promo_units;; }
 
   measure: standard_unit_cost{
     label: "Standard Unit Cost"
