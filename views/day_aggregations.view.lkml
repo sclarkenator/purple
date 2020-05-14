@@ -688,9 +688,11 @@ view: day_aggregations {
   measure: roas_sales {
     label: "ROAs - Total Sales"
     description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
-    type: sum
+    type: number
     value_format: "$#,##0"
-    sql: ${TABLE}.roas_sales;; }
+    sql:  ${dtc_amount}+${retail_amount}+(${wholesale_amount}*.5);;
+    #sql: ${TABLE}.roas_sales;;
+    }
 
   measure: roas {
     label: "ROAs - Full"

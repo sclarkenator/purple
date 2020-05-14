@@ -1301,6 +1301,16 @@ view: sales_order_line {
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
+  measure: upt {
+    label: "UPT"
+    view_label: "Sales Order"
+    description: "Units per transaction
+    Source: netsuite.sales_order"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
+  }
+
   dimension: sub_channel {
     label: "DTC Sub-Category"
     group_label: " Advanced"
