@@ -877,9 +877,9 @@ explore: rpt_skill_with_disposition_count {
   join: customer_table{
     type: left_outer
     relationship: many_to_many
-    sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}
-          else ${rpt_skill_with_disposition_count.contact_info_to} end
-          = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone},'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
+    sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}::text
+          else ${rpt_skill_with_disposition_count.contact_info_to}::text end
+          = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
   }
 join: sales_order {
   type: left_outer

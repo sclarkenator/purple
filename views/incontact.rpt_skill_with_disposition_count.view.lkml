@@ -1,5 +1,15 @@
 view: rpt_skill_with_disposition_count {
-  sql_table_name: CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT ;;
+  ##sql_table_name: CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT ;;
+derived_table: {
+  sql: select * from CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT where captured::date < '2050-01-01' ;;
+}
+
+dimension: primary_key {
+  type: string
+  hidden: yes
+  primary_key: yes
+  sql: ${TABLE}.captured || ${TABLE}.contact_info_from ;;
+}
 
   dimension: abandon_time {
     description: "How long a person was in queue before abandoning the call (without speaking to an agent)"
@@ -18,7 +28,6 @@ view: rpt_skill_with_disposition_count {
   dimension: agent {
     type: string
     hidden: yes #unhide this for agent based tables, I'm just using this view for disposition things right now
-    primary_key: yes
     sql: ${TABLE}."AGENT" ;;
   }
 
@@ -48,7 +57,7 @@ view: rpt_skill_with_disposition_count {
     type: yesno
     description: "Yes if Purple received the call / the call is inbound.
       Source: incontact. rpt_skill_with_disposition_count"
-    sql: substring(${contact_info_to},0,3) = 888;;
+    sql: substring(${contact_info_to},0,3) = '888';;
   }
 
   dimension: contact_info_from {
@@ -149,6 +158,6 @@ view: rpt_skill_with_disposition_count {
   measure: count {
     description: "Number of phone calls"
     type: count
-    drill_fields: []
+
   }
 }
