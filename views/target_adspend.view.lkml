@@ -1,5 +1,5 @@
 view: target_adspend {
-  sql_table_name: CSV_UPLOADS.adspend_target ;;
+  sql_table_name: CSV_UPLOADS.ADSPEND_TARGETS ;;
 
   measure: amount {
     type: sum

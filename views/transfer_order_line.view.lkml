@@ -58,7 +58,9 @@ view: transfer_order_line {
       raw,
       date,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]

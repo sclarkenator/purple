@@ -688,11 +688,20 @@ view: day_aggregations {
   measure: roas_sales {
     label: "ROAs - Total Sales"
     description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
+    #type: number
+    type:  sum
+    value_format: "$#,##0"
+    #sql:  ${dtc_amount}+${retail_amount}+(${wholesale_amount}*.5);;
+    sql: ${TABLE}.roas_sales;;
+    }
+
+  measure: roas_sales_calc {
+    label: "ROAs - Total Sales (test)"
+    description: "Calculations done in lookML not sql"
     type: number
     value_format: "$#,##0"
-    sql:  ${dtc_amount}+${retail_amount}+(${wholesale_amount}*.5);;
-    #sql: ${TABLE}.roas_sales;;
-    }
+    sql:  nvl(${dtc_amount},0)+nvl(${retail_amount},0)+(nvl(${wholesale_amount},0)*.5);;
+  }
 
   measure: roas {
     label: "ROAs - Full"
