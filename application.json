@@ -278,6 +278,20 @@
       "permalink": "dash6",
       "enabledByDefault": true,
       "pages": [
+         {
+          "name": "Executive Report",
+          "permalink": "dash12",
+          "type": "dashboardCollection",
+          "dashboardCollection": {
+            "dashboards": [
+              {
+                "id": "3623",
+                "name": "Sales",
+                "permalink": "sales"
+              }
+            ]
+          }
+        },
         {
           "name": "Tactical",
           "permalink": "dash7",
