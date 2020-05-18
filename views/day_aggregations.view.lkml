@@ -695,6 +695,14 @@ view: day_aggregations {
     sql: ${TABLE}.roas_sales;;
     }
 
+  measure: roas_sales_calc {
+    label: "ROAs - Total Sales (test)"
+    description: "Calculations done in lookML not sql"
+    type: number
+    value_format: "$#,##0"
+    sql:  nvl(${dtc_amount},0)+nvl(${retail_amount},0)+(nvl(${wholesale_amount},0)*.5);;
+  }
+
   measure: roas {
     label: "ROAs - Full"
     description: "Retun on Adspend (total roas salse/adspend)"
