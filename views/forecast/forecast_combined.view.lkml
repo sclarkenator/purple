@@ -87,6 +87,16 @@ sql_table_name: sales.forecast ;;
     value_format: "$#,##0"
     sql:${TABLE}.total_sales ;; }
 
+  dimension: standard_units_dimension {
+    type:  number
+    value_format: "#,##0"
+    sql:${TABLE}.units ;; }
+
+  dimension: standard_amount_dimension {
+    type:  number
+    value_format: "$#,##0"
+    sql:${TABLE}.gross_sales ;; }
+
   measure: total_units {
     label: "Total Units"
     type:  sum
@@ -127,7 +137,28 @@ sql_table_name: sales.forecast ;;
     label: "Total Promo Units"
     type:  sum
     value_format: "#,##0"
-    sql:${TABLE}.promo__units;; }
+    sql:${TABLE}.promo_units;; }
+
+  measure: standard_unit_cost{
+    label: "Standard Unit Cost"
+   hidden: yes
+    type:  number
+    value_format: "#,##0"
+    sql: ${standard_amount}/${standard_units} ;; }
+
+  measure: full_sales_amount{
+    label: "Full Sales Amount"
+    description: "Taking the standard unit cost and multiplying by all units to give the $ amount if no discounts were given on the discounted units"
+    hidden: yes
+    type:  number
+    value_format: "#,##0"
+    sql: (${standard_unit_cost}*${total_units}) ;; }
+
+  measure: forecasted_dtc_discount{
+    label: "Forecasted DTC Discount"
+    value_format: "0.00\%"
+    type:  number
+    sql: (1-(${total_amount}/${full_sales_amount}));; }
 
   measure: total_amount_million {
     label: "Total Amount (millions)"

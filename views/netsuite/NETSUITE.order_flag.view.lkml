@@ -32,6 +32,7 @@ view: order_flag {
       , mattress_ordered
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
       ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
+      ,case when pillow_booster > 0 then 1 else 0 end pillow_booster_flg
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -69,6 +70,7 @@ view: order_flag {
         ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKET')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
           ) THEN 1 else 0 end) buymsm1
         ,sum(case when sku_id in ('10-47-20000','10-47-20002','10-47-20001') then 1 else 0 end) med_mask
+        ,sum(case when sku_id in('10-31-12863','10-31-13100') then 1 else 0 end) pillow_booster
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -440,5 +442,13 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.medical_mask_flg =1 ;; }
+
+  dimension: pillow_booster_flag{
+    group_label: "    * Orders has:"
+    label: "a Pillow Booster"
+    description: "1/0 per order; 1 if there was a Pillow Booster in the order"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.pillow_booster_flg =1 ;; }
 
 }

@@ -365,7 +365,7 @@ view: day_aggregations {
           when prod_goal.forecast_date::date < '2019-08-26' then 7800
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
-        , dtc.total_gross_Amt_non_rounded + retail.total_gross_Amt_non_rounded + (wholesale.total_gross_Amt_non_rounded * 0.50) as roas_sales
+        , (nvl(dtc_amount,0) + nvl(retail_amount,0) + (nvl(wholesale_amount,0) * 0.50)) as roas_sales
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -688,9 +688,20 @@ view: day_aggregations {
   measure: roas_sales {
     label: "ROAs - Total Sales"
     description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
-    type: sum
+    #type: number
+    type:  sum
     value_format: "$#,##0"
-    sql: ${TABLE}.roas_sales;; }
+    #sql:  ${dtc_amount}+${retail_amount}+(${wholesale_amount}*.5);;
+    sql: ${TABLE}.roas_sales;;
+    }
+
+  measure: roas_sales_calc {
+    label: "ROAs - Total Sales (test)"
+    description: "Calculations done in lookML not sql"
+    type: number
+    value_format: "$#,##0"
+    sql:  nvl(${dtc_amount},0)+nvl(${retail_amount},0)+(nvl(${wholesale_amount},0)*.5);;
+  }
 
   measure: roas {
     label: "ROAs - Full"
@@ -713,7 +724,7 @@ view: day_aggregations {
     description: "DTC Target + Retail Target + 50% of Wholesale Target"
     type: number
     value_format: "$#,##0.00"
-    sql: ${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50) ;;
+    sql: nvl(${target_dtc_amount},0)+nvl(${target_retail_amount},0)+(nvl(${target_wholesale_amount},0)*0.50) ;;
   }
 
   measure: target_roas {
@@ -721,7 +732,7 @@ view: day_aggregations {
     description: "DTC Target + Retail Target + 50% of Wholesale Target /Adspend Target"
     type: number
     value_format: "$#,##0.00"
-    sql: (${target_dtc_amount}+${target_retail_amount}+(${target_wholesale_amount}*0.50))/${adspend_target} ;;
+    sql: ${target_roas_sales}/${adspend_target} ;;
   }
 
 }

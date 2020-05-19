@@ -762,7 +762,7 @@ explore: customer_satisfaction_survey {
   description: "Customer satisfaction of interactions with Customer Care agents"
     join: agent_lkp {
       type: left_outer
-      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
+      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
@@ -868,8 +868,34 @@ explore: rpt_skill_with_disposition_count {
   label: "Inbound Calls"
   group_label: "Customer Care"
   description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
+  join:  magazine_numbers {
+    type: full_outer
+    sql_on: ${magazine_numbers.phone_number}::text = ${rpt_skill_with_disposition_count.contact_info_to}::text
+    --and  ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date
+    ;;
+    relationship: many_to_many}
+  join: customer_table{
+    type: left_outer
+    relationship: many_to_many
+    sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}::text
+          else ${rpt_skill_with_disposition_count.contact_info_to}::text end
+          = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
+  }
+join: sales_order {
+  type: left_outer
+  relationship: one_to_many
+  sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
 }
-
+join: sales_order_line_base {
+  type: left_outer
+  relationship: one_to_many
+  sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+}
+  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+    sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+  join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+    sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+}
 explore: agent_lkp {
   hidden: yes
   label: "Agents"
@@ -954,7 +980,7 @@ explore: cc_agent_data {
     relationship:  one_to_many}
   join: customer_satisfaction_survey {
     type: left_outer
-    sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
   join: team_lead_name {
     type:  left_outer
@@ -1092,7 +1118,7 @@ explore: sales_order_line{
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} and ${fulfillment.status} = 'Shipped' ;;
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: one_to_many}
   join: visible {
     view_label: "Fulfillment"

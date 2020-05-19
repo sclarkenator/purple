@@ -31,12 +31,14 @@ view: sf_zipcode_facts {
 
   dimension: city {
     group_label: "Customer Address"
+    description: "Source: looker.zipcode"
     type: string
     sql: ${TABLE}.city ;;
   }
 
   dimension: state {
     group_label: "Customer Address"
+    description: "Source: looker.zipcode"
     hidden: yes
     type: string
     sql: ${TABLE}.state;;
@@ -46,7 +48,8 @@ view: sf_zipcode_facts {
     hidden: yes
     view_label: "Geography"
     label: "City"
-    description: "Ship-to city for order"
+    description: "Ship-to city for order.
+      Source: looker.zipcode"
     type: string
     sql: ${TABLE}.city ;;
   }
@@ -55,7 +58,8 @@ view: sf_zipcode_facts {
     hidden: yes
     view_label: "Geography"
     label: "State"
-    description: "Ship-to state"
+    description: "Ship-to state.
+      Source: looker.zipcode"
     type: string
     map_layer_name: us_states
     sql: ${TABLE}.state ;;
@@ -73,7 +77,8 @@ view: sf_zipcode_facts {
     hidden: yes
     label: "US Region"
     view_label: "Geography"
-    description: "Geographic grouping based on ship-to state"
+    description: "Geographic grouping based on ship-to state.
+      Source: looker.zipcode"
     type: string
     case: {
       when: {
@@ -111,7 +116,8 @@ view: sf_zipcode_facts {
     label: "US Region"
     hidden:  yes
     view_label: "Geography"
-    description: "Geographic grouping based on ship-to state"
+    description: "Geographic grouping based on ship-to state.
+      Source: looker.zipcode"
     type: string
     sql: case when ${TABLE}.state = 'CA'
               then 'California'

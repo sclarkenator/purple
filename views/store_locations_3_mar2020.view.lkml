@@ -35,6 +35,7 @@ view: store_locations_3_mar2020 {
 
   dimension: interal_id {
     primary_key: yes
+    label: "Internal ID"
     type: string
     sql: ${TABLE}."INTERAL_ID" ;;
   }

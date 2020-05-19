@@ -1,14 +1,41 @@
 view: customer_satisfaction_survey {
   sql_table_name: CUSTOMER_CARE.CUSTOMER_SATISFACTION_SURVEY ;;
 
-  dimension: agent {
-    type: string
-    sql: ${TABLE}."AGENT" ;;
+  dimension: agent_csat {
+    type: number
+    label: "Agent CSAT Score"
+    description: "CSAT score give by customer. Range 0 to 5.
+      Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."AGENT_CSAT" ;;
 
+  }
+
+  dimension: agent_id {
+    type: number
+    sql: ${TABLE}."AGENT_ID" ;;
+  }
+
+  dimension: areas_of_excellence_response {
+    type: string
+    label: "Areas of Excellence"
+    description: "Areas of Excellence give by customer.
+      Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."AREAS_OF_EXCELLENCE_RESPONSE" ;;
+  }
+
+  dimension: areas_of_improvement_response {
+    type: string
+    label: "Areas of Improvement"
+    description: "Areas of Improvement give by customer.
+      Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."AREAS_OF_IMPROVEMENT_RESPONSE" ;;
   }
 
   dimension: comments {
     type: string
+    label: "Customer Comment"
+    description: "Free response comment by customer.
+      Source: stella_connect.customer_satisfaction_survey"
     sql: ${TABLE}."COMMENTS" ;;
   }
 
@@ -25,73 +52,44 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."CREATED" ;;
   }
 
-  dimension: email {
+  dimension: customer_email {
     type: string
-    sql: ${TABLE}."EMAIL" ;;
+    label: "Customer Email"
+    description: "Customer email for CSAT survey.
+      Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."CUSTOMER_EMAIL" ;;
   }
 
-  dimension: agent_id {
-    type: number
-    sql: ${TABLE}."AGENT_ID" ;;
-  }
-
-
-  dimension: ip_address {
+  dimension: fcr_comment {
     type: string
-    hidden: yes
-    sql: ${TABLE}."IP_ADDRESS" ;;
+    #label: "Customer Email"
+    description: "
+    Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."FCR_COMMENT" ;;
   }
 
-  dimension: key {
+  dimension: fcr_response {
     type: string
-    sql: ${TABLE}."KEY" ;;
+    #label: "Customer Email"
+    description: "
+    Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."FCR_RESPONSE" ;;
   }
 
-  dimension: likely_to_recommend {
+  dimension: nps_comment {
     type: string
-    sql: ${TABLE}."LIKELY_TO_RECOMMEND" ;;
+    #label: "Customer Email"
+    description: "
+    Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."NPS_COMMENT" ;;
   }
 
-  dimension: questions_answered_by_rep {
+  dimension: nps_response {
     type: string
-    sql: ${TABLE}."QUESTIONS_ANSWERED_BY_REP" ;;
-  }
-
-  dimension: satisfied_with_rep {
-    type: string
-    sql: ${TABLE}."SATISFIED_WITH_REP" ;;
-  }
-
-  dimension: source {
-    type: string
-    sql: ${TABLE}."SOURCE" ;;
-  }
-
-  dimension: survey_id {
-    type: string
-    primary_key: yes
-    sql: ${TABLE}."SURVEY_ID" ;;
-  }
-
-  dimension: ticket_id {
-    type: string
-    sql: ${TABLE}."TICKET_ID" ;;
-  }
-
-  measure : sum_of_yes
-  {
-   label: "Count of Yes of First Call Resolution"
-    type:  count
-   filters:{
-      field: questions_answered_by_rep
-      value: "Yes"
-    }
-  }
-
-  measure: percentage_yes {
-    label: "Percentage of First Calls Resolved"
-    sql: (round(CASE WHEN coalesce(${count},0) != 0 THEN ${sum_of_yes}/${count} else NULL END , 2)*100)  ;;
-    value_format: "0.00\%"
+    #label: "Customer Email"
+    description: "
+    Source: stella_connect.customer_satisfaction_survey"
+    sql: ${TABLE}."NPS_RESPONSE" ;;
   }
 
   measure: count {

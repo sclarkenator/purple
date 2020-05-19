@@ -699,8 +699,7 @@ view: sales_order_line {
     view_label: "Cancellations"
     label: "      Avg days from order to cancellation"
     description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed.
-      Source: netsuite.sales_order_line
-      Snowflake: analytics.sales.sales_order_line"
+      Source: netsuite.sales_order_line"
     type: average
     sql: datediff(d,${created_date},${cancelled_order.cancelled_date}) ;;
   }
@@ -1300,6 +1299,16 @@ view: sales_order_line {
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0"
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
+  }
+
+  measure: upt {
+    label: "UPT"
+    view_label: "Sales Order"
+    description: "Units per transaction
+    Source: netsuite.sales_order"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
   }
 
   dimension: sub_channel {

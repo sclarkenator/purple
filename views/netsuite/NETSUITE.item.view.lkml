@@ -492,6 +492,10 @@ view: item {
         --powerbases
         when ${sku_clean} in ('10-38-12946','10-38-12949') then '10-38-12953'
         when ${sku_clean} = '10-38-12939' then '10-38-12948'
+        --Pillow 2.0
+        when ${sku_clean} = '10-31-12863' then '10-31-12855'
+        --Plush Pillow
+        when ${sku_clean} = '10-31-12862' then '10-31-12857'
         else ${sku_clean} end ;;
   }
 
