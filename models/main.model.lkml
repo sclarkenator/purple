@@ -1040,7 +1040,7 @@ explore: exchange_items {hidden: yes
    join: customer_table {
     view_label: "Customer"
     type: left_outer
-    sql_on: ${customer_table.customer_id} = ${qualtrics_response.netsuite_customer_id} ;;
+    sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
     relationship: many_to_one}
     }
 
