@@ -1044,6 +1044,7 @@ explore: exchange_items {hidden: yes
     relationship: many_to_one}
     }
 
+  explore: events_view__all_events__all_events {hidden:yes}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
 #-------------------------------------------------------------------
