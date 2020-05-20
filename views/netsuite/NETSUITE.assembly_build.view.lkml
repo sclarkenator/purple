@@ -26,7 +26,7 @@ view: assembly_build {
     hidden: no
     description: "When in NetSuite the Transaction was created"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created::date ;; }
 
   dimension_group: created_time {
@@ -97,7 +97,7 @@ view: assembly_build {
   dimension_group: produced {
     type: time
     description: "A mixed timestamp between created and when the iPad reported it created. iPad first then if no data created timestamp"
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql:  to_timestamp_ntz(${TABLE}.PRODUCED);;
