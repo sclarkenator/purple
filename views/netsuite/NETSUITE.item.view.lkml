@@ -501,8 +501,8 @@ view: item {
 
   dimension: ecommerce_categories {
     type: string
-    description: "Custom Product Bucketing for the eCommerce team's reporting.
-    Source: LookML SQL Satement"
+    description: "Custom Product Bucketing for the eCommerce team's reporting. Bucketed by SKUs.
+    Source: netsuite.item"
     group_label: "Advanced"
     hidden: no
     sql:
