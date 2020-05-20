@@ -1026,7 +1026,7 @@ explore: exchange_items {hidden: yes
       type: left_outer
       sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
       relationship: many_to_one
-      view_label: "Customer"}
+      view_label: "Qualtrics Customer"}
     join: qualtrics_answer {
       type: left_outer
       sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
@@ -1036,7 +1036,13 @@ explore: exchange_items {hidden: yes
       view_label: "Product"
       sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
       type: left_outer
-      relationship: many_to_one}}
+      relationship: many_to_one}
+   join: customer_table {
+    view_label: "Customer"
+    type: left_outer
+    sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
+    relationship: many_to_one}
+    }
 
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 

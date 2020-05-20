@@ -144,7 +144,7 @@ sql_table_name: sales.forecast ;;
    hidden: yes
     type:  number
     value_format: "#,##0"
-    sql: ${standard_amount}/${standard_units} ;; }
+    sql: ${standard_amount}/nvl(${standard_units},0) ;; }
 
   measure: full_sales_amount{
     label: "Full Sales Amount"
