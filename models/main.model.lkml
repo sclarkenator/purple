@@ -1054,6 +1054,14 @@ explore: exchange_items {hidden: yes
     type: left_outer
     sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
     relationship: many_to_one}
+   join: sales_order {
+      type:  left_outer
+      sql_on: ${qualtrics_response.order_id} = ${sales_order.order_id} ;;
+      relationship: one_to_one }
+   join: sales_order_line_base {
+      type:  left_outer
+      sql_on: ${qualtrics_response.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+      relationship: one_to_many}
     }
 
   explore: events_view__all_events__all_events {hidden:yes}
