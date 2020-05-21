@@ -49,6 +49,7 @@ view: hotjar_whenheard {
     sql: ${TABLE}."TOKEN" ;; }
 
   measure: count {
+    hidden: yes
     type: count }
 
 }
