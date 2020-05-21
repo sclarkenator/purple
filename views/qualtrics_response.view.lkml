@@ -1,5 +1,12 @@
 view: qualtrics_response {
-  sql_table_name: MARKETING.QUALTRICS_RESPONSE ;;
+ # sql_table_name: MARKETING.QUALTRICS_RESPONSE ;;
+
+derived_table: {
+  sql: select *
+      , row_number () over (partition by latest_sales_order_id order by end_date) as row_num
+      , case when row_number () over (partition by latest_sales_order_id order by end_date) = 1 then latest_sales_order_id end as order_id
+ from ANALYTICS.MARKETING.QUALTRICS_RESPONSE;;
+}
 
   dimension: survey_response_key {
     hidden: yes
@@ -60,6 +67,12 @@ view: qualtrics_response {
   dimension: latest_sales_order_id {
     type: string
     sql: ${TABLE}."LATEST_SALES_ORDER_ID" ;;
+  }
+
+  dimension: order_id {
+    type: string
+    description: "Removes duplicate latest_sales_order_id instances and uses the first survey response for said order"
+    sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: netsuite_customer_id {
