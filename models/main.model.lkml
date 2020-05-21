@@ -592,19 +592,24 @@ explore: hotjar_data {
   group_label: "Marketing"
   label: "Hotjar Survey Results"
   description: "Results form Hotjar post-purchase survey"
+  view_label: "Survey Data"
   join: hotjar_whenheard {
+    view_label: "Survey Data"
     type:  left_outer
     sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
     relationship: many_to_one}
   join: shopify_orders {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: []}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-    relationship: one_to_one}
+    relationship: one_to_one
+    fields: [-unique_customers]}
   join: order_flag {
+    view_label: "Sales Order"
     type: left_outer
     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
     relationship:  one_to_one}
@@ -612,22 +617,29 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
     relationship: one_to_many
-    fields: [sales_order_line.zip]
-  }
+    fields: []}
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: []}
   join: zcta5 {
     view_label: "Geography"
     type:  left_outer
     sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: [zcta5.fulfillment_region_1,zcta5.state_1]}
   join: dma {
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+    relationship: many_to_many
+    fields: [dma.dma_name]}
+  join: shopify_discount_codes {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
     relationship: many_to_many}
   }
 
@@ -1044,6 +1056,7 @@ explore: exchange_items {hidden: yes
     relationship: many_to_one}
     }
 
+  explore: events_view__all_events__all_events {hidden:yes}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
 #-------------------------------------------------------------------
