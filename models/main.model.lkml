@@ -1056,11 +1056,11 @@ explore: exchange_items {hidden: yes
     relationship: many_to_one}
    join: sales_order {
       type:  left_outer
-      sql_on: ${qualtrics_response.order_id} = ${sales_order.order_id} ;;
+      sql_on: ${qualtrics_response.order_id}::text = ${sales_order.order_id}::text ;;
       relationship: one_to_one }
    join: sales_order_line_base {
       type:  left_outer
-      sql_on: ${qualtrics_response.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+      sql_on: ${qualtrics_response.order_id}::text = ${sales_order_line_base.order_id}::text and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
       relationship: one_to_many}
     }
 
