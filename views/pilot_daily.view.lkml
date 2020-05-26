@@ -10,6 +10,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension: order_id {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}.order_id ;;
   }
@@ -17,13 +18,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension: appointment {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."APPOINTMENT" ;;
   }
 
   dimension: appointment_date {
     group_label: "Pilot Info"
-    description: "Pilot Appointment Date"
+    description: "Pilot Appointment Date. Source:pilot.pilot_daily"
     type: date
     sql: case when ${TABLE}."APPOINTMENT" = 'NULL' then null else left(${TABLE}."APPOINTMENT",10)::date end ;;
   }
@@ -31,6 +33,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension: consignee_city {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."CONSIGNEE_CITY" ;;
   }
@@ -38,6 +41,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension: consignee_ref {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."CONSIGNEE_REF" ;;
   }
@@ -45,6 +49,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension_group: entry {
     hidden: yes
     label: "Pilot Entry Date"
+    description: "Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
@@ -61,6 +66,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension_group: pickup {
     hidden: yes
     label: "Pilot Pickup Date"
+    description: "Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
@@ -77,14 +83,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: pieces {
     group_label: "Pilot Info"
-    description: "Number of Pieces"
+    description: "Number of Pieces. Source:pilot.pilot_daily"
     type: number
     sql: ${TABLE}."PIECES" ;;
   }
 
   dimension: pilot_shipment_id {
     group_label: "Pilot Info"
-    description: "Pilot Shipment ID"
+    description: "Pilot Shipment ID. Source:pilot.pilot_daily"
     type: number
     sql: ${TABLE}."PILOT_SHIPMENT_ID" ;;
   }
@@ -92,6 +98,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension_group: pod {
     hidden: yes
     label: "Pilot POD Date"
+    description: "Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
@@ -107,14 +114,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: shipper_city {
     group_label: "Pilot Info"
-    description: "Shipper City Name"
+    description: "Shipper City Name. Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."SHIPPER_CITY" ;;
   }
 
   dimension: shipper_ref {
     group_label: "Pilot Info"
-    description: "Shipper Reference ID"
+    description: "Shipper Reference ID. Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."SHIPPER_REF" ;;
   }
@@ -122,13 +129,14 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension: signature {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."SIGNATURE" ;;
   }
 
   dimension: status {
     group_label: "Pilot Info"
-    description: "Delivery Status"
+    description: "Delivery Status. Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."STATUS" ;;
   }
@@ -136,6 +144,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
   dimension_group: status_ts {
     hidden: yes
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
@@ -151,20 +160,21 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension: total_charges {
     group_label: "Pilot Info"
-    description: "Total Number of Charges"
+    description: "Total Number of Charges. Source:pilot.pilot_daily"
     type: number
     sql: ${TABLE}."TOTAL_CHARGES" ;;
   }
 
   dimension: hd_status {
     group_label: "Pilot Info"
-    description: "HD Status"
+    description: "HD Status. Source:pilot.pilot_daily"
     type: string
     sql: ${TABLE}."HD_STATUS" ;;
   }
 
   dimension_group: hd_status_created {
     label: "Date HD Status Changed"
+    description: "Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
@@ -181,6 +191,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   measure: count {
     group_label: "Pilot Info"
+    description: "Source:pilot.pilot_daily"
     type: count
     drill_fields: []
   }

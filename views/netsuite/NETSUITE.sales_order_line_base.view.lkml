@@ -202,7 +202,7 @@ view: sales_order_line_base {
     label: "City"
     group_label: "Customer Address"
     view_label: "Customer"
-    hidden: yes
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.CITY ;;
   }
@@ -725,7 +725,7 @@ view: sales_order_line_base {
     label:  "Fulfillment Warehouse"
     group_label: " Advanced"
     description:  "Warehouse that order was fulfilled out of.
-      Source: netsuite.sales_order_line"
+      Source:netsuite.sales_order_line"
     view_label: "Fulfillment"
     type: string
     sql: ${TABLE}.LOCATION ;;
@@ -821,8 +821,7 @@ view: sales_order_line_base {
     label: "Picked (units)"
     type: sum
     drill_fields: [order_details*, sales_order_line.fulfill_details*]
-    description: "The Qty of items that are in the picked state.
-      Source: netsuite.sales_order_line"
+    description: "The Qty of items that are in the picked state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.PICKED ;;
   }
 
@@ -832,8 +831,7 @@ view: sales_order_line_base {
     label: "Committed (units)"
     type: sum
     drill_fields: [order_details*, sales_order_line.fulfill_details*]
-    description: "The Qty of items that are in the committed state.
-      Source: netsuite.sales_order_line"
+    description: "The Qty of items that are in the committed state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.QUANTITY_COMMITTED ;;
   }
 
@@ -843,8 +841,7 @@ view: sales_order_line_base {
     label: "Packed (units)"
     type: sum
     drill_fields: [order_details*, sales_order_line.fulfill_details*]
-    description: "The Qty of items that are in the packed state.
-      Source: netsuite.sales_order_line"
+    description: "The Qty of items that are in the packed state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.PACKED ;;
   }
 
@@ -885,9 +882,10 @@ view: sales_order_line_base {
 
   dimension: carrier {
     view_label: "Fulfillment"
-    label: "   Carrier (expected)"
+    group_label: " Advanced"
+    label: "Carrier (expected)"
     description: "Derived field based on fulfillment location.
-      Source: netsuite.sales_order_line"
+      Source:netsuite.sales_order_line"
     #hidden: yes
     type: string
     sql: case
@@ -905,7 +903,7 @@ view: sales_order_line_base {
     group_label: " Advanced"
     label: "Carrier (Grouping)"
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot.
-      Source: netsuite.sales_order_line"
+      Source:netsuite.sales_order_line"
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;;

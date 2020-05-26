@@ -33,7 +33,7 @@ view: fulfillment_dates {
     group_label: "Average Days:"
     hidden: yes
     label: "Order to Fulfillment"
-    description: "A calculations between the order date and first item fulfilled"
+    description: "A calculations between the order date and first item fulfilled. Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     type:  average   #sum??
     value_format: "#,##0.00"
     sql:${TABLE}.days_to_ff ;; }
@@ -41,7 +41,7 @@ view: fulfillment_dates {
   measure: days_between_ff {
     group_label: "Average Days:"
     label: "Between 1st & Last Fulfillment"
-    description: "A calculations between the first item and last item fulfilled"
+    description: "A calculations between the first item and last item fulfilled. Source:netsuite.(fulfillment,cancelled_order)"
     type:  average   #sum??
     sql:${TABLE}.days_between_ff ;; }
 
@@ -49,7 +49,7 @@ view: fulfillment_dates {
     hidden: yes
     group_label: "Average Days Between"
     label: "Order to Last Fulfilled Item"
-    description: "A calculations between the order date and last item fulfilled"
+    description: "A calculations between the order date and last item fulfilled. Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     type:  average   #sum??
     sql:${TABLE}.days_to_last_ff ;; }
 
@@ -62,28 +62,28 @@ view: fulfillment_dates {
   dimension: days_to_ff_dimension {
     group_label: " Advanced"
     label: "Order to Fulfillment"
-    description: "A calculations between the order date and first item fulfilled"
+    description: "A calculations between the order date and first item fulfilled. Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     type:  number
     sql:${TABLE}.days_to_ff ;; }
 
   dimension: days_between_ff_dimension {
     group_label: " Advanced"
     label: "First to Last Fulfillment"
-    description: "A calculations between the first item and last item fulfilled"
+    description: "A calculations between the first item and last item fulfilled. Source:netsuite.(fulfillment,cancelled_order)"
     type:  number
     sql:${TABLE}.days_between_ff ;; }
 
   dimension: days_to_last_ff_dimension {
     group_label: " Advanced"
     label: "Order to last Fulfilled item"
-    description: "A calculations between the order date and last item fulfilled"
+    description: "A calculations between the order date and last item fulfilled. Source:netsuite.(fulfillment,cancelled_order)"
     type:  number
     sql:${TABLE}.days_to_last_ff ;; }
 
   dimension: days_between_ff_sla {
     group_label: "Difference in Days"
     label: "3 Day Fulfillment SLA"
-    description: "More than 3 Days between fulfillment of first and last item"
+    description: "More than 3 Days between fulfillment of first and last item. Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     hidden:  yes
     type:  yesno
     sql: NVL(${TABLE}.days_between_ff,0) <= 3 ;; }
@@ -92,7 +92,7 @@ view: fulfillment_dates {
   dimension: days_to_ff_sla {
     group_label: "Difference in Days"
     label: "14 Day Fulfillment SLA"
-    description: "More than 14 days between order date and the first fulfilled item"
+    description: "More than 14 days between order date and the first fulfilled item. Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     hidden: yes
     type:  yesno
     sql: NVL(${TABLE}.days_to_ff,0) <= 14 ;; }
@@ -100,7 +100,7 @@ view: fulfillment_dates {
   dimension: days_to_ff_tier {
     group_label: "Difference in Days"
     label: "Order and First Item Fulfilled (buckets)"
-    description: "Bucketing the caclulation between order date and first item fulfilled (0,1,3,7,14,21,28)"
+    description: "Bucketing the caclulation between order date and first item fulfilled (0,1,3,7,14,21,28). Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     type: tier
     hidden:  yes
     style: integer
@@ -110,7 +110,7 @@ view: fulfillment_dates {
   dimension: days_between_ff_tier {
     group_label: "Difference in Days"
     label: "First and Last Item Fulfilled (buckets)"
-    description: "Bucketing the caclulation between the first and last item fulfilled (0,1,3,7,14,21,28)"
+    description: "Bucketing the caclulation between the first and last item fulfilled (0,1,3,7,14,21,28). Source:netsuite.(sales_order,fulfillment,cancelled_order)"
     hidden:  yes
     type: tier
     style: integer
