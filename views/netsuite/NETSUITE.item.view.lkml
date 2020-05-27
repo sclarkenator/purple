@@ -437,7 +437,8 @@ view: item {
     label: " Mattress Size"
     description:  "Size of product (mattress, sheet, protector etc.)"
     type: string
-    sql: ${TABLE}.SIZE_lkr  ;;}
+    sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
+          else ${TABLE}.SIZE_lkr end ;; }
 
   ## case: {
     ##  when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
