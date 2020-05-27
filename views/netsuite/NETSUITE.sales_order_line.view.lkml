@@ -1197,7 +1197,7 @@ view: sales_order_line {
     label: "Order to In Hand SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the order to in hand time within SLA. Source: netsuite.sales_order_line"
+    description: "Was the order to in hand time within SLA. Source: looker calculation"
     type: yesno
     sql:
     -- no left purple date
@@ -1246,7 +1246,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the left purple to in hand time within SLA. Source: netsuite.sales_order_line"
+    description: "Was the left purple to in hand time within SLA. Source: looker calculation"
     type: yesno
     sql:
     -- no left purple date
@@ -1282,7 +1282,7 @@ view: sales_order_line {
   }
 
   measure: left_purple_to_in_hand_sla_prct {
-    label: "Left Purple to In Hand SLA %"
+    label: "Left Purple to In Hand SLA %. Source: looker calculation"
     view_label: "Fulfillment"
     group_label: "SLA Benchmarks %"
     drill_fields: [sales_order_line.fulfillment_details]
@@ -1294,7 +1294,7 @@ view: sales_order_line {
   measure: average_mattress_order_size {
     label: "AMOV ($)"
     view_label: "Sales Order"
-    description: "Average total mattress order amount, excluding tax. Source: netsuite.sales_order_line"
+    description: "Average total mattress order amount, excluding tax. Source: looker calculation"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0"
@@ -1304,7 +1304,7 @@ view: sales_order_line {
   measure: average_accessory_order_size {
     label: "NAMOV ($)"
     view_label: "Sales Order"
-    description: "Average total accessory order amount, excluding tax. Source: netsuite.sales_order_line"
+    description: "Average total accessory order amount, excluding tax. Source: looker calculation"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0"
@@ -1314,7 +1314,7 @@ view: sales_order_line {
   measure: upt {
     label: "UPT"
     view_label: "Sales Order"
-    description: "Units per transaction. Source: netsuite.sales_order"
+    description: "Units per transaction. Source: looker calculation"
     type: number
     value_format: "#,##0.00"
     sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
@@ -1333,7 +1333,7 @@ view: sales_order_line {
 
   measure: return_amt {
     label: "Return $"
-    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: netsuite.sales_order_line"
+    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker calculation"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum

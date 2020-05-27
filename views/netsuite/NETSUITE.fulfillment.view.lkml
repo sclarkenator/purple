@@ -176,7 +176,7 @@ view: fulfillment {
   measure: bundle_count {
     group_label: " Advanced"
     label: "Bundeled Units Fulfilled"
-    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units. Source:netsuite.fulfillment"
+    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units. Source:looker calculation"
     #hidden: yes
     type: sum
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
