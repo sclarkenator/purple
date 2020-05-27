@@ -435,16 +435,18 @@ view: item {
 
   dimension: size {
     label: " Mattress Size"
-    description:  "TwinXL, Full, Queen, King, Cal-King or Other"
+    description:  "Size of product (mattress, sheet, protector etc.)"
     type: string
-    case: {
-      when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'KING' ;; label: "KING" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;; label: "CAL KING" }
-      else: "Other" } }
+    sql: ${TABLE}.SIZE_lkr  ;;}
+
+  ## case: {
+    ##  when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
+      ##when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
+      ##when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
+      ##when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
+      ##when: { sql: ${TABLE}.SIZE_lkr = 'KING' ;; label: "KING" }
+      ##when: { sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;; label: "CAL KING" }
+      ##else: "Other" } }
 
   dimension: sku_id {
     label: "SKU ID"
