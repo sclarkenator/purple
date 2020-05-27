@@ -299,11 +299,11 @@ view: roas_pdt {
 
 
   measure: adspend {
-    label: "Adspend ($)"
+    label: "Adspend ($k)"
     description: "Total Adspend - beware filtering by non adspend fields"
     type: sum
-    #value_format: "$#,##0,\" K\""
-    value_format: "$#,##0"
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
     sql: ${TABLE}.adspend ;;
   }
 
@@ -319,7 +319,7 @@ view: roas_pdt {
     label: "Clicks (#)"
     description: "Total Clicks - beware filtering by non adspend fields"
     type: sum
-    value_format: "#,##0,"
+    value_format: "#,##0,\" K\""
     sql: ${TABLE}.clicks ;;
   }
 
@@ -343,34 +343,34 @@ view: roas_pdt {
     label: "Orders (#)"
     description: "Total Orders - beware filtering by non sales fields"
     type: sum
-    value_format: "#,##0,"
+    value_format: "#,##0"
     sql: ${TABLE}.orders ;;
   }
 
   measure: sales {
-    label: "Gross Sales ($)"
+    label: "Gross Sales ($k)"
     description: "Total Gross Sales - beware filtering by non sales fields"
     type: sum
-    #value_format: "$#,##0,\" K\""
-    value_format: "$#,##0"
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
     sql: ${TABLE}.sales ;;
   }
 
   measure: c3_cohort_sales {
-    label: "C3 Cohort Sales ($)"
+    label: "C3 Cohort Sales ($k)"
     description: "Total C3 Sales from adspend date (cohort) - beware filtering by non C3 fields"
     type: sum
-    #value_format: "$#,##0,\" K\""
-    value_format: "$#,##0"
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
     sql: ${TABLE}.c3_cohort_sales ;;
   }
 
   measure: c3_trended_sales {
-    label: "C3 Trended Sales ($)"
+    label: "C3 Trended Sales ($k)"
     description: "Total C3 Sales from sale/purchase date (trended) - beware filtering by non C3 fields"
     type: sum
-    #value_format: "$#,##0,\" K\""
-    value_format: "$#,##0"
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
     sql: ${TABLE}.c3_trended_sales ;;
   }
 
