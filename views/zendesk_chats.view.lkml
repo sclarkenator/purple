@@ -9,6 +9,7 @@ view: zendesk_chats {
 
   dimension: chat_id {
     type: string
+    primary_key: yes
     description: "ID number for chat conversation"
     sql: ${TABLE}."CHAT_ID" ;;
   }

@@ -570,6 +570,7 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
+explore: roas_pdt { hidden: yes}
 #explore: adspend_target { hidden:yes }
 
 explore: zipcode_radius {
