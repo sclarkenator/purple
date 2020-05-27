@@ -4,7 +4,7 @@ view: visible {
   dimension_group: delivery {
     group_label: "Visible SCM"
     label: "Visible delivery"
-    description: "Date Visible delivered load to recipient"
+    description: "Date Visible delivered load to recipient. Source: visible.visible"
     type: time
     timeframes: [
       raw,
@@ -22,7 +22,7 @@ view: visible {
   dimension_group: in_hand {
     group_label: "Visible SCM"
     label: "Visible in-hand"
-    description: "Date Visible takes load"
+    description: "Date Visible takes load. Source:visible.visible"
     type: time
     timeframes: [
       raw,
@@ -61,7 +61,7 @@ view: visible {
   dimension: load_id {
     group_label: "Visible SCM"
     label: "Visible load_id"
-    description: "Visible SCM load_id"
+    description: "Visible SCM load_id. Source: visible.visible"
     type: string
     sql: ${TABLE}."LOAD_ID" ;;
   }
@@ -80,7 +80,7 @@ view: visible {
 
   measure: quantity_on_load{
     label: "Load size (qty)"
-    description: "Number of items on Visible load"
+    description: "Number of items on Visible load. Source: visible.visible"
     type: sum
     hidden: yes
     sql: ${TABLE}."QUANTITY" ;;

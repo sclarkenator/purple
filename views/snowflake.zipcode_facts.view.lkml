@@ -32,6 +32,7 @@ view: sf_zipcode_facts {
   dimension: city {
     group_label: "Customer Address"
     description: "Source: looker.zipcode"
+    hidden: yes
     type: string
     sql: ${TABLE}.city ;;
   }

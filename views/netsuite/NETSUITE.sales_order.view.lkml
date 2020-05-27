@@ -2,9 +2,8 @@ view: sales_order {
   sql_table_name: SALES.SALES_ORDER ;;
 
   dimension: valid_address{
-    label: "Is address valid?"
-    description: "Address validation field: yes/no/blank.
-      Source: netsuite.sales_order"
+    label: "     * Is Address Valid? (Yes/No)"
+    description: "Has the address been validated? Source: netsuite.sales_order"
     type: string
     hidden:  no
     view_label: "Fulfillment"
@@ -176,17 +175,18 @@ view: sales_order {
     sql: ${TABLE}.CREATED_BY_ID ;; }
 
   dimension: 3PL_MSFID {
-    label: "3PL MSFID"
     view_label: "Fulfillment"
     group_label: " Advanced"
+    label: "3PL MSFID"
     description: "The Pilot Order ID
-      Source: netsuite.sales_order"
+      Source:netsuite.sales_order"
     hidden: no
     type: string
     sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
   dimension: showroom {
     group_label: " Advanced"
+    label: "Showroom"
     description: "Flag for orders made in the Alpine Showroom.
       Source: netsuite.sales_order"
     type: yesno
@@ -220,6 +220,8 @@ view: sales_order {
   dimension: Kount_Status {
     hidden: no
     group_label: " Advanced"
+    label: "Kount Status"
+    description: "Kount Fraud Status. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.kount_status ;; }
 
@@ -279,9 +281,8 @@ view: sales_order {
 
   dimension: is_upgrade {
     group_label: " Advanced"
-    label: "Is Warranty Exchange"
-    description: "Yes - this order is an upgrade from the original order on a warranty claim.
-      Source: netsuite.sales_order"
+    label: "Is Warranty Exchange (Yes/No)"
+    description: "Yes - this order is an upgrade from the original order on a warranty claim. Source: netsuite.sales_order"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
     type: yesno
@@ -289,9 +290,8 @@ view: sales_order {
 
   dimension: is_exchange {
     group_label: " Advanced"
-    label: "Is Return Exchange"
-    description: "Yes - this order is an exchange from the original order on a return.
-      Source: netsuite.sales_order"
+    label: "Is Return Exchange (Yes/N0)"
+    description: "Yes - this order is an exchange from the original order on a return. Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
@@ -307,9 +307,8 @@ view: sales_order {
 
   dimension: gross_amt {
     group_label: " Advanced"
-    label:  "Gross Order Size ($)"
-    description: "Total gross sales for all items on order, excluding taxes.
-      Source: netsuite.sales_order"
+    label:"Gross Order Size ($)"
+    description: "Total gross sales for all items on order, excluding taxes. Source: netsuite.sales_order"
     type: number
     sql: ${TABLE}.gross_amt ;;  }
 
@@ -359,8 +358,7 @@ view: sales_order {
       icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
       }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
-    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite.
-      Source: netsuite.sales_order"
+    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.ORDER_ID ;; }
 
@@ -374,8 +372,7 @@ view: sales_order {
   dimension: payment_method {
     group_label: " Advanced"
     label: "Order Payment Method (shopify)"
-    description: "The customer's method of payment.
-      Source: netsuite.sales_order"
+    description: "The customer's method of payment. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
 
@@ -394,8 +391,7 @@ view: sales_order {
   dimension: related_tranid {
     group_label: " Advanced"
     label: "Related Transaction ID"
-    description: "Netsuite's internal related transaction id
-      Source: netsuite.sales_order"
+    description: "Netsuite's internal related transaction id. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
@@ -479,9 +475,9 @@ view: sales_order {
   dimension: order_age_bucket {
     view_label: "Fulfillment"
     group_label: " Advanced"
-    label: "  Order Age (bucket)"
+    label: "Order Age (bucket)"
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)
-      Source: netsuite.sales_order"
+      Source:netsuite.sales_order"
     type:  tier
     tiers: [1,2,3,4,5,6,7,11,15,21]
     style: integer
@@ -495,7 +491,7 @@ view: sales_order {
   dimension: order_age_bucket2 {
     view_label: "Fulfillment"
     group_label: " Advanced"
-    label: "  Order Age (bucket 2)"
+    label: "Order Age (bucket 2)"
     hidden: no
     description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28)
       Source: netsuite.sales_order"
@@ -589,7 +585,7 @@ dimension_group: trandate {
     group_label: "Average Days:"
     label: "to Manna Transmission"
     description: "Finds the average time elapsed between Order Date and Manna Transmission Date
-      Source: netsuite.sales_order"
+      Source:netsuite.sales_order"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;; }

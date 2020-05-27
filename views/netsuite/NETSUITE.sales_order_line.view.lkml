@@ -7,7 +7,7 @@ view: sales_order_line {
     view_label: "Sales Order"
     group_label: " Advanced"
     label: "Payment Method"
-    description: "Blank is no special cirumstance.  Values include Affirm, Progressive, Paypal, etc"
+    description: "Blank is no special cirumstance.  Values include Affirm, Progressive, Paypal, etc. Source: netsuite.sales_order_line"
     type: string
     sql: sales_order.payment_method ;;
   }
@@ -15,7 +15,7 @@ view: sales_order_line {
   measure: avg_days_to_fulfill {
     group_label: "Average Days:"
     label: "to Fulfillment"
-    description: "Average number of days between order and fulfillment"
+    description: "Average number of days between order and fulfillment. Source:netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     view_label: "Fulfillment"
     type:  average_distinct
@@ -28,7 +28,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Mattress Firm SLA (numerator)"
     hidden: yes
-    description: "Total units successfully fulfilled before the ship by date"
+    description: "Total units successfully fulfilled before the ship by date. Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     filters: {
       field: sales_order.customer_id
@@ -41,7 +41,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Mattress Firm SLA (denominator)"
     hidden: yes
-    description: "Total units not cancelled before the ship by date"
+    description: "Total units not cancelled before the ship by date. Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     filters: {
       field: sales_order.customer_id
@@ -54,7 +54,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     label: "Mattress Firm Shipped on Time (% of units)"
-    description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units)"
+    description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units). Source:netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     value_format_name: percent_0
     type: number
@@ -65,7 +65,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Wholesale SLA (old)"
     hidden: yes
-    description: "Was the order shipped out by the required ship-by date to arrive on time"
+    description: "Was the order shipped out by the required ship-by date to arrive on time. Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat_ful_sales_order} ;;
@@ -125,6 +125,7 @@ view: sales_order_line {
   dimension_group: SLA_Target {
     label: "SLA Target"
     view_label: "Fulfillment"
+    description: "Source: netsuite.sales_order_line"
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -136,7 +137,7 @@ view: sales_order_line {
     group_label: " Advanced"
     label: "Days Past SLA Target Buckets"
     view_label: "Fulfillment"
-    description: "# days in realtion to Target date"
+    description: "# days in realtion to Target date. Source: netsuite.sales_order_line"
     type: tier
     style: integer
     tiers: [1,2,3,4,5,6,7,11,15,21]
@@ -203,6 +204,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     label: "SLA $ Achievement %"
+    description: "Source: netsuite.sales_order_line"
     hidden: no
     value_format_name: percent_1
     type: number
@@ -226,6 +228,7 @@ view: sales_order_line {
     label: "Qty Eligible SLA"
     group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
+    description: "Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
@@ -242,6 +245,7 @@ view: sales_order_line {
     label: "Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA"
     view_label: "Fulfillment"
+    description: "Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
@@ -254,7 +258,7 @@ view: sales_order_line {
 
   dimension: SLA_fulfilled {
     label: "     * Is Fulfilled in SLA"
-    description: "Was item fulfilled in SLA window"
+    description: "Was item fulfilled in SLA window. Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     type: yesno
     sql: nvl(${cancelled_order.cancelled_date},'2099-01-01') >= ${fulfilled_date} AND ${fulfilled_date} <= ${Due_Date} ;;
@@ -264,6 +268,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "SLA Achievement %"
     group_label: "Fulfillment SLA"
+    description: "Source: netsuite.sales_order_line"
     hidden: no
     value_format_name: percent_1
     type: number
@@ -274,7 +279,7 @@ view: sales_order_line {
   dimension: picked_packed_sla {
     label: "Picked/Packed is Fulfilled in SLA"
     hidden: yes
-    description: "Was item fulfilled in SLA window for Left Purple Date to Minimun Ship by Date"
+    description: "Was item fulfilled in SLA window for Left Purple Date to Minimun Ship by Date. Source: netsuite.sales_order_line"
     type: yesno
     sql:  ${fulfillment.left_purple_date} <= ${sales_order_line.min_ship_date_date} or (${fulfillment.left_purple_date} is null and ${sales_order_line.min_ship_date_date} < current_date) ;;
   }
@@ -283,7 +288,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Wholesale SLA (units)"
     hidden: yes
-    description: "How many items are there on the order to be shipped?"
+    description: "How many items are there on the order to be shipped? Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     type: sum
     sql: case when ${cancelled_order.cancelled_date} is null or (${cancelled_order.cancelled_date} >  ${sales_order.ship_by_date}) then ${ordered_qty} else 0 end ;;
@@ -293,7 +298,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     label: "Wholesale Shipped on Time (% of units)"
-    description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units)"
+    description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units). Source:netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     value_format_name: percent_0
     type: number
@@ -302,7 +307,7 @@ view: sales_order_line {
 
   measure: amazon_ca_sales {
     label: "Amazon-CA Gross Amount ($0.k)"
-    description: "used to generate the sales by channel report"
+    description: "used to generate the sales by channel report. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
@@ -312,7 +317,7 @@ view: sales_order_line {
 
   measure: amazon_us_sales {
     label: "Amazon-US Gross Amount ($0.k)"
-    description: "used to generate the sales by channel report"
+    description: "used to generate the sales by channel report. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
@@ -322,7 +327,7 @@ view: sales_order_line {
 
   measure: shopify_ca_sales {
     label: "Shopify-CA Gross Amount ($0.k)"
-    description: "used to generate the sales by channel report"
+    description: "used to generate the sales by channel report. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
@@ -332,7 +337,7 @@ view: sales_order_line {
 
   measure: shopify_us_sales {
     label: "Shopify-US GrossAmount ($0.k)"
-    description: "US Shopify gross sales as reported in Netsuite"
+    description: "US Shopify gross sales as reported in Netsuite. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     hidden: yes
     value_format: "$#,##0,\" K\""
@@ -344,7 +349,7 @@ view: sales_order_line {
     group_label: "Gross Sales Unfulfilled"
     label: "Unfulfilled Units ($)"
     view_label: "Fulfillment"
-    description: "Orders placed that have not been fulfilled"
+    description: "Orders placed that have not been fulfilled. Source: netsuite.sales_order_line"
     value_format: "$#,##0"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
@@ -356,7 +361,7 @@ view: sales_order_line {
     group_label: "Gross Sales Unfulfilled"
     view_label: "Fulfillment"
     label: "Unfulfilled Orders (units)"
-    description: "Orders placed that have not been fulfilled"
+    description: "Orders placed that have not been fulfilled. Source:netsuite.sales_order_line"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [fulfillment_details*]
@@ -367,7 +372,7 @@ view: sales_order_line {
     group_label: "Gross Sales Fulfilled"
     view_label: "Fulfillment"
     label: "Fulfilled Orders ($)"
-    description: "Orders placed that have been fulfilled"
+    description: "Orders placed that have been fulfilled. Source:netsuite.sales_order_line"
     value_format: "$#,##0"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
@@ -379,7 +384,7 @@ view: sales_order_line {
     group_label: "Gross Sales Fulfilled"
     view_label: "Fulfillment"
     label: "Fulfilled Orders (units)"
-    description: "Orders placed that have been fulfilled"
+    description: "Orders placed that have been fulfilled. Source: netsuite.sales_order_line"
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [fulfillment_details*]
@@ -390,7 +395,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "West Fulfillment SLA"
     hidden: yes
-    description: "Was the order fulfilled from Purple West within 3 days of order (as per website)?"
+    description: "Was the order fulfilled from Purple West within 3 days of order (as per website)? Source: netsuite.sales_order_line"
     filters: {
       field: carrier
       value: "-Pilot,-XPO"
@@ -409,7 +414,7 @@ view: sales_order_line {
 
   measure: SLA_eligible {
     label: "WEST SLA Eligible (3)"
-    description: "Was this line item available to fulfill (not cancelled) within the SLA window?"
+    description: "Was this line item available to fulfill (not cancelled) within the SLA window? Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
     hidden: yes
@@ -431,7 +436,7 @@ view: sales_order_line {
   measure: SLA_achieved{
     label: "West SLA Achievement (% in 3 days)"
     hidden: yes
-    description: "Percent of line items fulfilled by Purple West within 3 days of order"
+    description: "Percent of line items fulfilled by Purple West within 3 days of order. Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     type: number
@@ -444,7 +449,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Pilot Fulfillment SLA"
     hidden: yes
-    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)? Source: netsuite.sales_order_line"
     filters: {
       field: carrier
       value: "Pilot,Manna"
@@ -463,7 +468,7 @@ view: sales_order_line {
 
   measure: manna_SLA_eligible {
     label: "Pilot SLA Eligible (14)"
-    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window? Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
     hidden: yes
@@ -486,7 +491,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "Pilot Fulfillment SLA"
     hidden: yes
-    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)? Source: netsuite.sales_order_line"
     filters: {
       field: carrier
       value: "Pilot,Manna"
@@ -511,7 +516,7 @@ view: sales_order_line {
 
   measure: manna_SLA_eligible_14days {
     label: "Pilot SLA Eligible (14)"
-    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window? Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
     hidden: yes
@@ -542,7 +547,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
     hidden: no
-    description: "Percent of line items fulfilled by Manna within 14 days of order"
+    description: "Percent of line items fulfilled by Manna within 14 days of order. Source: netsuite.sales_order_line"
     type: number
     drill_fields: [fulfillment_details*]
     value_format_name: percent_1
@@ -553,7 +558,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     label: "XPO Fulfillment SLA"
     hidden: yes
-    description: "Was this item fulfilled from Manna within 14 days of order (as per website)?"
+    description: "Was this item fulfilled from Manna within 14 days of order (as per website)? Source: netsuite.sales_order_line"
     filters: {
       field: carrier
       value: "XPO"
@@ -572,7 +577,7 @@ view: sales_order_line {
 
   measure: XPO_SLA_eligible {
     label: "Manna SLA Eligible (14)"
-    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window?"
+    description: "Was this Manna line item available to fulfill (not cancelled) within the SLA window? Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
     hidden: yes
@@ -596,7 +601,7 @@ view: sales_order_line {
     label: "XPO SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA"
-    description: "Percent of line items fulfilled by Manna within 1 days of order"
+    description: "Percent of line items fulfilled by Manna within 1 days of order. Source: netsuite.sales_order_line"
     drill_fields: [fulfillment_details*]
     type: number
     value_format_name: percent_1
@@ -606,7 +611,7 @@ view: sales_order_line {
   measure: total_standard_cost {
     #hidden: yes
     label: "Total Standard Cost"
-    description: "Total Cost (cost per unit * number of units)"
+    description: "Total Cost (cost per unit * number of units). Source: netsuite.sales_order_line"
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
@@ -624,14 +629,15 @@ view: sales_order_line {
   dimension: has_standard_cost {
     label: "    * Has Standard Cost"
     type: yesno
-    description: "Data exists for what it costs Purple to make the product"
+    description: "Data exists for what it costs Purple to make the product. Source: netsuite.sales_order_line"
     sql: ${standard_cost.standard_cost} is not null ;;
   }
 
   dimension: days_to_cancel {
     view_label: "Cancellations"
     label: "# days from order"
-    description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed"
+    description: "Number of days after initial order was placed that the order was cancelled. 0 means the order was cancelled on the day it was placed.
+      Source: netsuite.sales_order_line"
     type: tier
     style: integer
     hidden:  yes
@@ -642,7 +648,8 @@ view: sales_order_line {
   dimension_group: fulfilled {
     view_label: "Fulfillment"
     label: "    Fulfilled"
-    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
+    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
+      Source: netsuite.sales_order_line"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -652,7 +659,9 @@ view: sales_order_line {
 
   measure: last_updated_date_fulfilled {
     view_label: "Fulfillment"
-    label: "Last Updated Fulfilled"
+    group_label: " Advanced"
+    label: "Last Updated Fulfilled."
+    description: "Source: netsuite.sales_order_line"
     type: date
     sql: MAX(${fulfilled_date}) ;;
     convert_tz: no
@@ -661,7 +670,7 @@ view: sales_order_line {
   dimension: is_fulfilled {
     view_label: "Fulfillment"
     label: "     * Is Fulfilled"
-    description:  "Has order been fulfilled"
+    description:  "Has order been fulfilled? Source:netsuite.sales_order_line"
     type: yesno
     sql: ${fulfilled_date} is not null;;
   }
@@ -669,8 +678,9 @@ view: sales_order_line {
   dimension: fulfilled_status {
     view_label: "Fulfillment"
     #hidden: yes
-    label: "   Status"
-    description: "Fulfillment status - On Time, Late, Open, Late (open)"
+    group_label: " Advanced"
+    label: "Status"
+    description: "Fulfillment status - On Time, Late, Open, Late (open). Source:netsuite.sales_order_line"
     type: string
     sql:
       CASE
@@ -709,7 +719,7 @@ view: sales_order_line {
     label: "z - Month to Date (current year)"
     #hidden:  yes
     view_label: "Fulfillment"
-    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports. Source: netsuite.sales_order_line"
     type: yesno
     sql: ${fulfilled_raw}::date <= current_date and month(${fulfilled_raw}::date) = month(dateadd(day,-1,current_date)) and year(${fulfilled_raw}::date) = year(current_date) ;;
   }
@@ -718,7 +728,7 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Is Before Today (mtd)"
-    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports. Source: netsuite.sales_order_line"
     type: yesno
     sql: ${fulfilled_raw}::date < current_date;;
   }
@@ -727,7 +737,7 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Before Current Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days. Source: netsuite.sales_order_line"
     type: yesno
     sql: date_trunc(week, ${fulfilled_raw}::date) < date_trunc(week, current_date) ;;
   }
@@ -736,7 +746,7 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days. Source: netsuite.sales_order_line"
     type: yesno
     sql:  date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
@@ -745,7 +755,7 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Week Bucket"
-    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
     sql:  CASE WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, current_date) THEN 'Current Week'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
@@ -759,7 +769,7 @@ view: sales_order_line {
   measure: return_rate_units {
     group_label: "Return Rates"
     label: "Return Rate (% of units)"
-    description: "Units returned/Units fulfilled"
+    description: "Units returned/Units fulfilled. Source: netsuite.sales_order_line"
     view_label: "Returns"
     type: number
     sql: ${return_order_line.units_returned} / nullif(${total_units},0) ;;
@@ -769,7 +779,7 @@ view: sales_order_line {
   measure: return_rate_units_exch {
     group_label: "Return Rates"
     label: "Return Rate w/o Exchanges (% of units)"
-    description: "(Units returned - Units Exchanged) / Units fulfilled"
+    description: "(Units returned - Units Exchanged) / Units fulfilled. Source: netsuite.sales_order_line"
     view_label: "Returns"
     type: number
     sql: (${return_order_line.units_returned}-${exchange_order_line.count}) / nullif(${total_units},0) ;;
@@ -779,7 +789,7 @@ view: sales_order_line {
   measure: return_rate_dollars {
     group_label: "Return Rates"
     label: "Return Rate (% of $)"
-    description: "Total $ returned / Total $ fulfilled"
+    description: "Total $ returned / Total $ fulfilled. Source: netsuite.sales_order_line"
     view_label: "Returns"
     type: number
     sql: ${return_order_line.total_gross_amt} / nullif(${total_gross_Amt},0) ;;
@@ -788,7 +798,7 @@ view: sales_order_line {
 
   dimension_group: min_ship_date {
     label: "Minimum Ship by"
-    description: "Merging Minimum Ship By and Ship By fields from netsuite into a single values.  Min then Ship by."
+    description: "Merging Minimum Ship By and Ship By fields from netsuite into a single values.  Min then Ship by. Source:netsuite.sales_order_line"
     view_label: "Fulfillment"
     drill_fields: [sales_order_line.fulfillment_details]
     type: time
@@ -799,7 +809,7 @@ view: sales_order_line {
   dimension_group: transmitted_date {
     label: "Transmitted"
     view_label: "Fulfillment"
-    description: "Looking at the trasmitted date that matches the carrier from sales order line"
+    description: "Looking at the trasmitted date that matches the carrier from sales order line. Source:netsuite.sales_order_line"
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
@@ -812,7 +822,7 @@ view: sales_order_line {
     label: "Order to Transmitted (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -823,7 +833,7 @@ view: sales_order_line {
     label: "Order to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -835,7 +845,7 @@ view: sales_order_line {
     label: "Transmitted to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -847,7 +857,7 @@ view: sales_order_line {
     label: "Transmitted to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -859,7 +869,7 @@ view: sales_order_line {
     label: "Order to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -871,7 +881,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date"
+    description: "The average difference between the order date and transmitted date. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -884,7 +894,7 @@ view: sales_order_line {
     label: " Order to Transmitted (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -896,7 +906,7 @@ view: sales_order_line {
     label: " Order to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -909,7 +919,7 @@ view: sales_order_line {
     label: " Transmitted to Left Purple (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -922,7 +932,7 @@ view: sales_order_line {
     label: " Transmitted to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -935,7 +945,7 @@ view: sales_order_line {
     label: " Order to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -948,7 +958,7 @@ view: sales_order_line {
     label: " Left Purple to In Hand (hours)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date in hours"
+    description: "The average difference between the order date and transmitted date in hours. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -960,7 +970,7 @@ view: sales_order_line {
     label: "Mattress Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of mattresses sold ($)"
+    description: "Total amount of mattresses sold ($). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
@@ -973,7 +983,7 @@ view: sales_order_line {
     label: "Mattress Sales (Units)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of mattresses sold (units)"
+    description: "Total amount of mattresses sold (units). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'MATTRESS'
@@ -986,7 +996,7 @@ view: sales_order_line {
     label: "Base Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of bases sold ($)"
+    description: "Total amount of bases sold ($). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${gross_amt} else 0 end ;;
@@ -996,7 +1006,7 @@ view: sales_order_line {
     label: "Base Sales (Units)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of bases sold (units)"
+    description: "Total amount of bases sold (units). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BASE' then ${total_units_raw} else 0 end ;;
@@ -1006,7 +1016,7 @@ view: sales_order_line {
     label: "Bedding Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of bedding items sold ($)"
+    description: "Total amount of bedding items sold ($). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${gross_amt} else 0 end ;;
@@ -1016,7 +1026,7 @@ view: sales_order_line {
     label: "Bedding Sales (Units)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of bedding items sold (units)"
+    description: "Total amount of bedding items sold (units). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'BEDDING' then ${total_units_raw} else 0 end ;;
@@ -1026,7 +1036,7 @@ view: sales_order_line {
     label: "Pet Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of pet beds sold ($)"
+    description: "Total amount of pet beds sold ($). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${gross_amt} else 0 end ;;
@@ -1036,7 +1046,7 @@ view: sales_order_line {
     label: "Pet Sales (Units)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
-    description: "Total amount of pet beds sold (units)"
+    description: "Total amount of pet beds sold (units). Source: netsuite.sales_order_line"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${total_units_raw} else 0 end ;;
@@ -1046,7 +1056,7 @@ view: sales_order_line {
     label: "Order to Transmitted SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the order to transmitted time within SLA"
+    description: "Was the order to transmitted time within SLA. Source: netsuite.sales_order_line"
     type: string
     sql: ${transmitted_date_raw} <
       case when dayname(${transmitted_date_raw}) = 'Sunday' then dateadd('day', 1, ${transmitted_date_raw})
@@ -1088,7 +1098,7 @@ view: sales_order_line {
     label: "Order to Left Purple SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the order to left purple time within SLA"
+    description: "Was the order to left purple time within SLA. Source: netsuite.sales_order_line"
     drill_fields: [sales_order_line.fulfillment_details]
     type: yesno
     sql:
@@ -1138,7 +1148,7 @@ view: sales_order_line {
     label: "Transmitted to Left Purple SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the transmitted to left purple time within SLA"
+    description: "Was the transmitted to left purple time within SLA. Source: netsuite.sales_order_line"
     type: yesno
     sql:
     -- no left purple date
@@ -1187,7 +1197,7 @@ view: sales_order_line {
     label: "Order to In Hand SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the order to in hand time within SLA"
+    description: "Was the order to in hand time within SLA. Source: netsuite.sales_order_line"
     type: yesno
     sql:
     -- no left purple date
@@ -1236,7 +1246,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand SLA (yes/no)"
     view_label: "Fulfillment"
     hidden: yes
-    description: "Was the left purple to in hand time within SLA"
+    description: "Was the left purple to in hand time within SLA. Source: netsuite.sales_order_line"
     type: yesno
     sql:
     -- no left purple date
@@ -1284,7 +1294,7 @@ view: sales_order_line {
   measure: average_mattress_order_size {
     label: "AMOV ($)"
     view_label: "Sales Order"
-    description: "Average total mattress order amount, excluding tax"
+    description: "Average total mattress order amount, excluding tax. Source: netsuite.sales_order_line"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0"
@@ -1294,7 +1304,7 @@ view: sales_order_line {
   measure: average_accessory_order_size {
     label: "NAMOV ($)"
     view_label: "Sales Order"
-    description: "Average total accessory order amount, excluding tax"
+    description: "Average total accessory order amount, excluding tax. Source: netsuite.sales_order_line"
     type: average
     sql_distinct_key: ${sales_order.order_system} ;;
     value_format: "$#,##0"
@@ -1304,8 +1314,7 @@ view: sales_order_line {
   measure: upt {
     label: "UPT"
     view_label: "Sales Order"
-    description: "Units per transaction
-    Source: netsuite.sales_order"
+    description: "Units per transaction. Source: netsuite.sales_order"
     type: number
     value_format: "#,##0.00"
     sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
@@ -1324,7 +1333,7 @@ view: sales_order_line {
 
   measure: return_amt {
     label: "Return $"
-    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average."
+    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: netsuite.sales_order_line"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
@@ -1336,7 +1345,8 @@ view: sales_order_line {
 
   measure: merch_fees {
     label: "Merchant fees"
-    description: "Estimate of merchant fees for transaction, based on 4.97% blended affirm rate, 15% amazon affiliate rate and 2.55% for all others"
+    description: "Estimate of merchant fees for transaction, based on 4.97% blended affirm rate, 15% amazon affiliate rate and 2.55% for all others.
+      Source: netsuite.sales_order_line"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
@@ -1347,7 +1357,7 @@ view: sales_order_line {
 
   measure: direct_affiliate {
     label: "Affiliate commissions"
-    description: "Actual commission paid on order to affiliate partner"
+    description: "Actual commission paid on order to affiliate partner. Source: netsuite.sales_order_line"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
@@ -1356,7 +1366,7 @@ view: sales_order_line {
 
   measure: warranty_accrual {
     label: "Warranty"
-    description: "Esimate of future warranty incurred. Calculated at 1% of gross sales"
+    description: "Esimate of future warranty incurred. Calculated at 1% of gross sales. Source: netsuite.sales_order_line"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
@@ -1366,7 +1376,7 @@ view: sales_order_line {
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
-    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale."
+    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale. Source: netsuite.sales_order_line"
     value_format: "$#,##0"
     type: sum
     sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}

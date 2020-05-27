@@ -591,7 +591,7 @@ explore: weekly_acquisition_report_snapchat  {
 
 explore: hotjar_data {
   group_label: "Marketing"
-  label: "Hotjar Survey Results"
+  label: "Post-purchase survey results"
   description: "Results form Hotjar post-purchase survey"
   view_label: "Survey Data"
   join: hotjar_whenheard {
@@ -603,16 +603,21 @@ explore: hotjar_data {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
     relationship: many_to_one
-    fields: []}
+    fields: [shopify_orders.call_in_order_Flag]}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship:  one_to_one}
+  join: first_order_flag {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
     relationship:  one_to_one}
   join: sales_order_line {
     type:  left_outer

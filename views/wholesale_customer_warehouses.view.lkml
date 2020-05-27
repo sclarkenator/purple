@@ -18,6 +18,7 @@ view: wholesale_customer_warehouses {
   dimension: companyname {
     view_label: "Fulfillment"
     label: " Company name"
+    description: "Source: netsuite. wholesale_customer_warehouses"
     group_label: "Wholesale receiving warehouse"
     type: string
     sql: ${TABLE}."companyname" ;;
