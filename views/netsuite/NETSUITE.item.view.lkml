@@ -406,17 +406,19 @@ view: item {
     label: " Product Color"
     description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc)"
     type: string
-    sql: case when ${product_description_raw} ilike '%GREY' then 'GREY'
-      when ${product_description_raw} ilike '%CHARCL' then 'CHARCOAL'
-      when ${product_description_raw} ilike '%SLATE' then 'SLATE'
-      when ${product_description_raw} ilike '%SAND' then 'SAND'
-      when ${product_description_raw} ilike '%WHITE' then 'WHITE'
-      when ${product_description_raw} ilike '%PURPLE' then 'PURPLE'
-      when ${product_description_raw} ilike '%NATURAL' then 'NATURAL OAT'
-      when ${product_description_raw} ilike '%STORMY' then 'STORMY GRAY'
-      when ${product_description_raw} ilike '%SOFT' then 'SOFT LILAC'
-      when ${product_description_raw} ilike '%MORNING' then 'MORNING MIST'
-      when ${product_description_raw} ilike '%DEEP' then 'DEEP PURPLE'
+    sql: case when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'GREY'
+      when ${product_description_raw} ilike '%CHARCL%' then 'CHARCOAL'
+      when ${product_description_raw} ilike '%SLATE%' then 'SLATE'
+      when ${product_description_raw} ilike '%SAND%' then 'SAND'
+      when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'WHITE'
+      when ${product_description_raw} ilike '%TRUE WHITE%' then 'TRUE WHITE'
+      when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'PURPLE'
+      when ${product_description_raw} ilike '%NATURAL OAT%' then 'NATURAL OAT'
+      when ${product_description_raw} ilike '%NATURAL GREY%' then 'NATURAL GREY'
+      when ${product_description_raw} ilike '%STORMY%' then 'STORMY GREY'
+      when ${product_description_raw} ilike '%SOFT LILAC%' then 'SOFT LILAC'
+      when ${product_description_raw} ilike '%MORNING%' then 'MORNING MIST'
+      when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
       else null end ;; }
 
   dimension: created_ts {
