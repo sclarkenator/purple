@@ -42,19 +42,13 @@ view: zendesk_chats {
 
   dimension_group:created {
     type: time
-    timeframes: [
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [date,week,month,quarter,year,hour_of_day]
     convert_tz: yes
-    datatype: timestamp
-    group_label: "Advanced - Chats"
-    label: "  Chat Time"
+    datatype: datetime
+    ##group_label: "Advanced - Chats"
+    label: "  Chat"
     description: "Start Time of Chat (MT). Source: zendesk_chats.zendesk_chats"
-    sql: ${TABLE}."CREATED" ;;
+    sql: to_timestamp(${TABLE}."CREATED") ;;
   }
 
   dimension: department_id {
@@ -67,8 +61,8 @@ view: zendesk_chats {
 
   dimension: department_name {
     type: string
-    group_label: "Advanced - Chats"
-    label: "Department Name"
+    ##group_label: "Advanced - Chats"
+    label: "   Department Name"
     description: "Department who took the chat. Source: zendesk_chats.zendesk_chats"
     sql: ${TABLE}."DEPARTMENT_NAME" ;;
   }
@@ -89,7 +83,7 @@ view: zendesk_chats {
 
   dimension: missed {
     type: string
-    group_label: "Advanced - Chats"
+    ##group_label: "Advanced - Chats"
     label: "   * Missed Chat? (T/F)"
     description: "T if a chat was missed. Source: zendesk_chats.zendesk_chats"
       sql: ${TABLE}.MISSED ;;
