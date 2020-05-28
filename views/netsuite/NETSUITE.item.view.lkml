@@ -435,7 +435,7 @@ view: item {
 
   dimension: size {
     label: " Product Size"
-    description:  "Size of product (mattress, sheet, protector, base etc.)"
+    description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.)"
     type: string
     sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
           else ${TABLE}.SIZE_lkr end ;; }
