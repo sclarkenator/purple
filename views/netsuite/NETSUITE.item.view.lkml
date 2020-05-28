@@ -434,8 +434,8 @@ view: item {
   }
 
   dimension: size {
-    label: " Mattress Size"
-    description:  "Size of product (mattress, sheet, protector etc.)"
+    label: " Product Size"
+    description:  "Size of product (mattress, sheet, protector, base etc.)"
     type: string
     sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
           else ${TABLE}.SIZE_lkr end ;; }
