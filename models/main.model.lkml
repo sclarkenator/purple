@@ -909,21 +909,28 @@ explore: rpt_skill_with_disposition_count {
           else ${rpt_skill_with_disposition_count.contact_info_to}::text end
           = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
   }
-join: sales_order {
-  type: left_outer
-  relationship: one_to_many
-  sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
-}
-join: sales_order_line_base {
-  type: left_outer
-  relationship: one_to_many
-  sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
-}
+  join: sales_order {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
+  }
+  join: sales_order_line_base {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+  }
+  join: v_wholesale_manager {
+    view_label: "Customer"
+    type:left_outer
+    relationship:one_to_one
+    sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  }
  ## join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
  ##   sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-  join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-    sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+  ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+    ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
 }
+
 explore: agent_lkp {
   hidden: yes
   label: "Agents"
@@ -1292,10 +1299,15 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
     relationship: one_to_one}
+  join: v_wholesale_manager {
+      view_label: "Customer"
+      type:left_outer
+      sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+      relationship:one_to_one}
   ##join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
     ##sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-    join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-      sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+    ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
+      ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
   join: warranty_order {
       view_label: "Warranties"
       type: full_outer
@@ -1609,10 +1621,16 @@ explore: wholesale_legacy {
     type: left_outer
     sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
     relationship: one_to_one}
+  join: v_wholesale_manager {
+    view_label: "Customer"
+    type:left_outer
+    relationship:one_to_one
+    sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  }
   ##join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-   ## sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-  join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-    sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+    ##sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
+  ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
+    ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
     join: standard_cost {
       view_label: "Product"
       type: left_outer
