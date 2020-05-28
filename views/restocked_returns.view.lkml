@@ -40,14 +40,14 @@ view: restocked_returns {
 
   dimension: total_restocked_items {
     label: "    * Is Restocked"
-    description: "in units"
+    description: "In units. Source:netsuite.receipt_restock"
     type: yesno
     sql: ${TABLE}."RESTOCKED_ITEMS" is not NULL ;;
       }
 
   measure: total_restocked_items_units {
     label: " Total Restocked (units)"
-    description: "How many units have been restocked"
+    description: "How many units have been restocked. Source:netsuite.receipt_restock"
     type: sum
     sql: ${TABLE}."RESTOCKED_ITEMS" ;;
   }

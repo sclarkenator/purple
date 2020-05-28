@@ -11,7 +11,7 @@ view: return_order {
 
   dimension: return_order_id {
     #label: "Return Order ID"
-    #description:  "This is the return_order_id to search on in Netsuite"
+    #description:  "This is the return_order_id to search on in Netsuite. Source: netsuite.return_order"
     hidden: yes
     #primary_key: yes
     type: number
@@ -24,7 +24,7 @@ view: return_order {
 
   dimension: channel_id {
     #label: "Returns Channel ID"
-    #description: "Channel ID just on the returned orders. (1 = DTC, 2 = Wholesale)"
+    #description: "Channel ID just on the returned orders. (1 = DTC, 2 = Wholesale). Source: netsuite.return_order"
     hidden: yes
     type: number
     sql: ${TABLE}.CHANNEL_ID ;; }
@@ -39,7 +39,7 @@ view: return_order {
   dimension_group: created {
     type: time
     label:  "   Return Intiated"
-    description:"Date/time that RMA was initiated"
+    description:"Date/time that RMA was initiated. Source: netsuite.return_order"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
@@ -47,8 +47,8 @@ view: return_order {
 
   dimension: created_date_filter {
     type: yesno
-    label:  "   * Return Intiated"
-    description:"Date/time that RMA was initiated"
+    label:  "   * Is Return Intiated (Yes/No)"
+    description:"Date/time that RMA was initiated. Source: netsuite.return_order"
 
     sql: to_timestamp_ntz(${TABLE}.CREATED) is not NULL ;;}
 
@@ -123,13 +123,13 @@ view: return_order {
   dimension: return_ref_id {
     label:"RMA Number"
     group_label: " Advanced"
-    description:  "RMA number of return (Return Ref ID)"
+    description:  "RMA number of return (Return Ref ID). Source: netsuite.return_order"
     type: string
     sql: ${TABLE}.RETURN_REF_ID ;; }
 
   dimension_group: return_trial_expiry {
     label: "Return Trial Expiration"
-    description: "When the trial return period expires. Generally 100 days from when customer RECEIVED order for mattresses"
+    description: "When the trial return period expires. Generally 100 days from when customer RECEIVED order for mattresses. Source: netsuite.return_order"
     hidden: yes
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -151,8 +151,9 @@ view: return_order {
     sql: ${TABLE}.RMA_RETURN_FORM_SENT ;; }
 
   dimension: rma_return_type {
+    group_label: " Advanced"
     label:  "   Return Type"
-    description: "Return type: Trial / Non-trial"
+    description: "Return type: Trial / Non-trial. Source: netsuite.return_order"
     type: string
     sql: ${TABLE}.RMA_RETURN_TYPE ;; }
 
@@ -190,15 +191,16 @@ view: return_order {
     sql: ${TABLE}.SHIPPING_ITEM_ID ;; }
 
   dimension: status {
+    group_label: " Advanced"
     label: "   Status of Return"
-    description: "Refunded, cancelled, in process, etc."
+    description: "Refunded, cancelled, in process, etc. Source: netsuite.return_order"
     type: string
     sql: ${TABLE}.STATUS ;; }
 
   dimension: was_returned {
-    label: "* Was Returned - Trial Return"
     group_label: " Advanced"
-    description: "Indicates if a trial return was completed and refunded"
+    label: "* Was Returned - Trial Return"
+    description: "Indicates if a trial return was completed and refunded. Source:netsuite.return_order"
     type: yesno
     sql: ${TABLE}.STATUS = 'Refunded' and ${TABLE}.RMA_RETURN_TYPE = 'Trial' ;;
   }
@@ -227,7 +229,7 @@ view: return_order {
     label: "   Return Completed"
     type: time
     hidden: no
-    description: "Date the return was reimbused and fully completed"
+    description: "Date the return was reimbused and fully completed. Source:netsuite.return_order"
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -236,12 +238,12 @@ view: return_order {
   dimension: return_completed {
     type: yesno
     hidden: no
-    label: "   * Return Completed"
-    description: "Date the return was reimbused and fully completed"
+    label: "   * Is Return Completed"
+    description: "Date the return was reimbused and fully completed. Source:netsuite.return_order"
     sql: ${TABLE}.return_completed is not NULL ;; }
 
   measure: return_life {
-    description: "Average Days between initiation of return and completion of return (order level)"
+    description: "Average Days between initiation of return and completion of return (order level). Source:looker.calculation"
     label: "Return Process Lifespan"
     type: average
     sql: datediff(day,${return_order.created_raw},${TABLE}.return_completed) ;;
@@ -250,14 +252,14 @@ view: return_order {
   measure: days_from_order_to_complete_return {
     type: average
     hidden: yes
-    description: "Days from when the customer ordered to when a return was completed (refunded)"
+    description: "Days from when the customer ordered to when a return was completed (refunded). Source: looker.calculation"
     sql: datediff('day', ${sales_order_line.created_raw}, ${TABLE}.return_completed) ;;
   }
 
   dimension: days_from_fulfillment_to_complete_return {
     type: number
     hidden: yes
-    description: "Days from when the item was fulfilled to when a return was completed (refunded)"
+    description: "Days from when the item was fulfilled to when a return was completed (refunded). Source: looker.calculation"
     sql: datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) ;;
   }
 
@@ -270,6 +272,7 @@ view: return_order {
   dimension: days_from_fulfillment_to_complete_return_buckets  {
     type: string
     group_label: " Advanced"
+    description: "Source: looker.calculation"
     sql: case when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 30 then '30 Days or Less'
             when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 60 then '31-60 Days'
             when datediff('day', ${sales_order_line.fulfilled_raw}, ${TABLE}.return_completed) <= 100 then '61-100 Days'

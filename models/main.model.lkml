@@ -925,10 +925,6 @@ explore: rpt_skill_with_disposition_count {
     relationship:one_to_one
     sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
   }
- ## join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
- ##   sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-  ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-    ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
 }
 
 explore: agent_lkp {
@@ -1304,10 +1300,6 @@ explore: sales_order_line{
       type:left_outer
       sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
       relationship:one_to_one}
-  ##join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-    ##sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-    ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-      ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
   join: warranty_order {
       view_label: "Warranties"
       type: full_outer
@@ -1627,10 +1619,6 @@ explore: wholesale_legacy {
     relationship:one_to_one
     sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
   }
-  ##join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-    ##sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-  ##join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-    ##sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
     join: standard_cost {
       view_label: "Product"
       type: left_outer
