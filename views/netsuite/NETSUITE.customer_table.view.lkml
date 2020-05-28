@@ -39,23 +39,23 @@ view: customer_table {
     sql:  ${TABLE}.lastname ;;
     required_access_grants:[can_view_pii] }
 
-  dimension: account_manager {
-    label: "Account Manager"
-    group_label: "Wholesale"
+##  dimension: account_manager {
+   ## label: "Account Manager"
+   ## group_label: "Wholesale"
     #hidden: yes
-    description: "Wholesale - Taking the account manager from the customer account.
-      Source:netsuite.customers"
-    type: string
-    sql:  ${account_manager.full_name};; }
+   ## description: "Wholesale - Taking the account manager from the customer account.
+   ##   Source:netsuite.customers"
+  ##  type: string
+   ## sql:  ${account_manager.full_name};; }
 
-  dimension: sales_manager {
-    label: "Sales Manager"
-    group_label: "Wholesale"
+  #dimension: sales_manager {
+  #  label: "Sales Manager"
+   # group_label: "Wholesale"
     #hidden: yes
-    description: "Wholesale - Taking the sales manager from the customer account.
-      Source:netsuite.customers"
-    type: string
-    sql:  ${sales_manager.full_name};; }
+   # description: "Wholesale - Taking the sales manager from the customer account.
+   #   Source:netsuite.customers"
+   # type: string
+   # sql:  ${sales_manager.full_name};; }
 
   dimension: email {
     hidden:  no
