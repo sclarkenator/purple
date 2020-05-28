@@ -441,20 +441,13 @@ view: item {
   }
 
   dimension: size {
-    label: " Mattress Size"
-    description:  "Size of product (mattress, sheet, protector etc.). Source: looker calculation"
+    label: " Product Size"
+    description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.). Source: looker calculation"
     type: string
     sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
-          else ${TABLE}.SIZE_lkr end ;; }
+              when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
+              else ${TABLE}.SIZE_lkr end ;; }
 
-  ## case: {
-    ##  when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'KING' ;; label: "KING" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;; label: "CAL KING" }
-      ##else: "Other" } }
 
   dimension: sku_id {
     label: "SKU ID"
