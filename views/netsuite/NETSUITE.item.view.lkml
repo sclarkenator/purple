@@ -440,14 +440,6 @@ view: item {
     sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
           else ${TABLE}.SIZE_lkr end ;; }
 
-  ## case: {
-    ##  when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'KING' ;; label: "KING" }
-      ##when: { sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;; label: "CAL KING" }
-      ##else: "Other" } }
 
   dimension: sku_id {
     label: "SKU ID"
