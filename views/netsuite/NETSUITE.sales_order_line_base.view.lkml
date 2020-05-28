@@ -874,7 +874,7 @@ view: sales_order_line_base {
     view_label: "Geography"
     label: "Zipcode (5)"
     description: "5-digit ship-to zipcode.
-      Source: netsuite.sales_order_line"
+      Source:netsuite.sales_order_line"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;;

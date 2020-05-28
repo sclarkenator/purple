@@ -21,14 +21,14 @@ order by 1 ;;
   dimension: us_flag {
     view_label: "Geography"
     label: "     * In US (Yes / No)"
-    description: "Order placed for delivery in US"
+    description: "Order placed for delivery in US. Source: looker_datablock"
     sql: case when ${TABLE}.zipcode is null then 0 else 1 end ;;
   }
 
   dimension: zipcode {
     label: "Zip code (5)"
     hidden:  yes
-    description: "5-digit US zip code"
+    description: "5-digit US zip code. Source: looker_datablock"
     view_label: "Geography"
     type: string
     sql: ${TABLE}.zipcode ;;
@@ -47,7 +47,7 @@ order by 1 ;;
   dimension: state_1 {
     view_label: "Geography"
     label: "State"
-    description: "Ship-to state"
+    description: "Ship-to state. Source:looker_datablock"
     type: string
     map_layer_name: us_states
     sql: ${TABLE}.st ;;
@@ -56,7 +56,7 @@ order by 1 ;;
   dimension: fulfillment_region_1 {
     label: "US Region"
     view_label: "Geography"
-    description: "Geographic grouping based on ship-to state"
+    description: "Geographic grouping based on ship-to state. Source:looker_datablock calculation"
     type: string
     case: {
       when: {
@@ -104,14 +104,14 @@ order by 1 ;;
 
   measure:  population {
     view_label: "Geography"
-    description: "Population from 2015 ACS"
+    description: "Population from 2015 ACS. Source:looker_datablock"
     type: sum
     sql: ${TABLE}.pop ;;
   }
 
   measure:  households {
     view_label: "Geography"
-    description: "Total households from 2015 ACS"
+    description: "Total households from 2015 ACS. Source: looker_datablock"
     type: sum
     sql: ${TABLE}.hhld ;;
   }

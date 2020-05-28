@@ -11,7 +11,7 @@ view: highjump_fulfillment {
 
   dimension:  transaction_number {
     label: "NetSuite Tran ID"
-    description: "NetSuite Transaction ID"
+    description: "NetSuite Transaction ID. Source: highjump.highjump_fulfillment"
     type: string
     hidden:  no
     sql: ${TABLE}.transaction_number ;;
@@ -19,7 +19,7 @@ view: highjump_fulfillment {
 
   dimension: sku {
     label: "SKU ID"
-    description: "Product SKU ID"
+    description: "Product SKU ID. Source: highjump.highjump_fulfillment"
     type: string
     hidden: no
     sql: ${TABLE}.sku_id ;;
@@ -27,7 +27,7 @@ view: highjump_fulfillment {
 
   dimension:  source_order_number {
     label: "Related Tran ID"
-    description: "Shopify Order Number"
+    description: "Shopify Order Number. Source: highjump.highjump_fulfillment"
     type: string
     hidden:  no
     sql: ${TABLE}.source_order_number ;;
@@ -35,7 +35,7 @@ view: highjump_fulfillment {
 
   dimension:  required {
     label: "Order Date"
-    description: "Date the item was ordered"
+    description: "Date the item was ordered. Source: highjump.highjump_fulfillment"
     type: date
     hidden:  no
     sql: ${TABLE}.required ;;
@@ -43,7 +43,7 @@ view: highjump_fulfillment {
 
   dimension:  shipped {
     label: "Ship Date"
-    description: "Time the Order was shipped"
+    description: "Time the Order was shipped. Source: highjump.highjump_fulfillment"
     type: date
     hidden:  no
     sql: ${TABLE}.shipped ;;
@@ -51,7 +51,7 @@ view: highjump_fulfillment {
 
   dimension:  tracking_number {
     label: "Tracking Number"
-    description: "Item's Shipping Tracking Number"
+    description: "Item's Shipping Tracking Number. Source: highjump.highjump_fulfillment"
     type: string
     hidden:  no
     sql: ${TABLE}.tracking_number ;;
@@ -59,7 +59,7 @@ view: highjump_fulfillment {
 
   dimension: quantity {
     label: "Quantity"
-    description: "Number of Units"
+    description: "Number of Units. Source: highjump.highjump_fulfillment"
     type:  number
     hidden:  no
     sql: ${TABLE}.quantity ;;

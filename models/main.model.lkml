@@ -1393,13 +1393,13 @@ explore: sales_order_line{
     relationship: many_to_one
   }
   join: zendesk_sell {
-    view_label: "Zendesk Sell"
+    view_label: "Zendesk"
     type: full_outer
     sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
     relationship: one_to_one
   }
   join: zendesk_sell_deal {
-    view_label: "Zendesk Sell"
+    view_label: "Zendesk"
     type: full_outer
     sql_on: ${zendesk_sell.deal_id}=${zendesk_sell_deal.deal_id};;
     relationship: one_to_one
@@ -1459,13 +1459,13 @@ explore: sales_order_line{
     sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
   }
     join: v_chat_sales {
-      view_label: "Zendesk Chats"
+      view_label: "Zendesk"
       type: left_outer
       relationship: one_to_one
       sql_on: ${v_chat_sales.order_id} = ${sales_order.order_id} and ${v_chat_sales.system} = ${sales_order.system};;
   }
     join: zendesk_chats {
-      view_label: "Zendesk Chats"
+      view_label: "Zendesk"
       type: left_outer
       relationship: many_to_many
       sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
