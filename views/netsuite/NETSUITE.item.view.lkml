@@ -438,7 +438,8 @@ view: item {
     description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.)"
     type: string
     sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
-          else ${TABLE}.SIZE_lkr end ;; }
+              when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
+              else ${TABLE}.SIZE_lkr end ;; }
 
 
   dimension: sku_id {
