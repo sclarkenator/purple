@@ -143,7 +143,7 @@ sql_table_name: sales.forecast ;;
     label: "Standard Unit Cost"
    hidden: no
     type:  number
-    value_format: "#,##0"
+    value_format: "$#,##0"
     sql: coalesce(${standard_amount}/ nullif(${standard_units},0),0) ;; }
 
   measure: full_sales_amount{
@@ -151,11 +151,12 @@ sql_table_name: sales.forecast ;;
     description: "Taking the standard unit cost and multiplying by all units to give the $ amount if no discounts were given on the discounted units"
     hidden: no
     type:  number
-    value_format: "#,##0"
+    value_format: "$#,##0"
     sql: (${standard_unit_cost}*${total_units}) ;; }
 
   measure: forecasted_dtc_discount{
     label: "Forecasted DTC Discount"
+    description: "Implied Discount Rate. Use only with DTC. Calculated by 1-(total sales/hypotheitcal total sales at full price)"
     value_format: "0.0%"
     type:  number
     sql: coalesce((1-(${total_amount}/nullif(${full_sales_amount},0))),0);; }
