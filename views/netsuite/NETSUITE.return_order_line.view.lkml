@@ -14,14 +14,14 @@ view: return_order_line {
   measure: units_returned {
     group_label: "Return Amounts"
     label: "Total Returns (units)"
-    description: "Total individual items returned"
+    description: "Total individual items returned. Source: netsuite.return_order_line"
     type: sum
     sql: ${TABLE}.return_qty ;; }
 
   measure: trial_units_returned {
     group_label: "Return Amounts"
     label: "Total Trial Returns (units)"
-    description: "Total individual items returned as a trial return"
+    description: "Total individual items returned as a trial return. Source:looker.calculation"
     type: sum
     filters: {
       field: return_order.rma_return_type
@@ -33,7 +33,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Trial Returns Completed (units)"
-    description: "Trial returns completed and reimbursed"
+    description: "Trial returns completed and reimbursed. Source:looker.calculation"
     filters: {
       field: return_order.rma_return_type
       value: "Trial"}
@@ -48,7 +48,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Returns Completed (units)"
-    description: "Trial returns completed and reimbursed"
+    description: "Trial returns completed and reimbursed. Source:looker.calculation"
     filters: {
       field: return_order.status
       value: "Refunded"}
@@ -60,7 +60,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Returns Completed ($)"
-    description: "Returns completed and reimbursed, Trial and Non-trial"
+    description: "Returns completed and reimbursed, Trial and Non-trial. Source: looker.calculation"
     value_format: "$#,##0"
     filters: {
       field: return_order.status
@@ -79,7 +79,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Trial Returns Completed ($)"
-    description: "Trial returns completed and reimbursed"
+    description: "Trial returns completed and reimbursed. Source:looker.calculation"
     value_format: "$#,##0"
     filters: {
       field: return_order.rma_return_type
@@ -95,7 +95,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Non-trial Returns Completed ($)"
-    description: "Non-trial returns completed and reimbursed"
+    description: "Non-trial returns completed and reimbursed. Source:looker.calculation"
     value_format: "$#,##0"
     filters: {
       field: return_order.rma_return_type
@@ -112,7 +112,7 @@ view: return_order_line {
     hidden: no
     group_label: "Return Amounts"
     label: "Total Trial Returns Completed within 60 Days (units)"
-    description: "Trial returns completed within 60 days of fulfillment"
+    description: "Trial returns completed within 60 days of fulfillment. Source:looker.calculation"
     ##sql: case when ${return_order.status} = "Refunded"
     ##      and ${return_order.rma_return_type} = "Trial"
     ##      and ${return_order.days_from_fulfillment_to_complete_return} <=60 then ${TABLE}.return_qty
@@ -131,6 +131,7 @@ view: return_order_line {
 
   measure: average_gross_return {
     label: "Average Gross Returns"
+    description: "Source: netsuite.return_order_line"
     type: average
     sql: ${TABLE}.gross_amt ;;
     hidden:yes}
@@ -138,7 +139,7 @@ view: return_order_line {
   measure: total_gross_amt {
     group_label: "Return Amounts"
     label:  "Total Returns ($0.k)"
-    description: "Total $ returned, excluding tax and freight"
+    description: "Total $ returned, excluding tax and freight. Source:netsuite.return_order_line"
     type: sum
     value_format: "0,\" K\""
     sql: ${TABLE}.gross_amt ;; }
@@ -146,21 +147,21 @@ view: return_order_line {
   measure: total_gross_amt_1 {
     group_label: "Return Amounts"
     label:  "Total Returns ($)"
-    description: "Total $ returned, excluding tax and freight"
+    description: "Total $ returned, excluding tax and freight. Source:netsuite.return_order_line"
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: days_between {
     label: "Return Window (Days)"
-    description: "Average number of days between fulfillment and return"
+    description: "Average number of days between fulfillment and return. Source:looker.calculation"
     type: average
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
   dimension: days_between_dimension {
     label: "Return Window (days)"
     group_label: " Advanced"
-    description: "How many days from receipt until product return was initiated?"
+    description: "How many days from receipt until product return was initiated? Source: looker.calculation"
     type: number
     sql: datediff(day,${return_order.customer_receipt_date},${return_order.created_raw}) ;; }
 
@@ -168,7 +169,7 @@ view: return_order_line {
     label: "Return Aging Buckets"
     group_label: " Advanced"
     view_label: "Returns"
-    description: "What aging bucket the order was returned in (30,60,90,120)"
+    description: "What aging bucket the order was returned in (30,60,90,120). Source:looker.calculation"
     type: tier
     style: integer
     tiers: [30,60,90,120]
@@ -177,7 +178,7 @@ view: return_order_line {
   dimension: days_between_buckets_extended{
     group_label: "Return Aging Buckets"
     label: "60"
-    description: "What aging bucket the order was returned in (60,120,180,240,300,360)"
+    description: "What aging bucket the order was returned in (60,120,180,240,300,360). Source: looker.calculation"
     type: tier
     style: integer
     hidden: yes
@@ -187,7 +188,7 @@ view: return_order_line {
   dimension: days_between_week_buckets{
     group_label: "Return Aging Buckets"
     label: "07"
-    description: "What aging bucket the order was returned in (7,14,21,28,35,42,49,56)"
+    description: "What aging bucket the order was returned in (7,14,21,28,35,42,49,56). Source: looker.calculation"
     type: tier
     style: integer
     hidden: yes
@@ -207,8 +208,8 @@ view: return_order_line {
 
   measure: 7_day_sales {
     hidden: yes
-    #label: "7 Day Sales ($)"
-    #description: "7 day average daily cancelled $"
+    label: "7 Day Sales ($)"
+    description: "7 day average daily cancelled $. Source: looker.calculation"
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -218,7 +219,7 @@ view: return_order_line {
 
   measure: 60_day_sales {
     hidden:  yes
-    #description: "60-day average daily cancelled $"
+    description: "60-day average daily cancelled $. Source: looker.calculation"
     type: sum
     value_format_name: decimal_0
     filters: {
@@ -293,7 +294,7 @@ view: return_order_line {
   dimension: gross_amt {
     label: "Amount Returned ($)"
     group_label: " Advanced"
-    description: "Gross amount ($) being returned"
+    description: "Gross amount ($) being returned. Source: netsuite.return_order_line"
     type: number
     sql: ${TABLE}.gross_amt ;; }
 
@@ -325,7 +326,7 @@ view: return_order_line {
 
   dimension: return_qty {
     label: "Quantity Returned (units)"
-    description:  "Total units returned"
+    description:  "Total units returned. Source:netsuite.return_order_line"
     type: number
     sql: ${TABLE}.RETURN_QTY ;;
     group_label:" Advanced"
@@ -334,14 +335,13 @@ view: return_order_line {
   dimension: revenue_item {
     label: "   * Is Revenue Item"
     group_label: " Advanced"
-    description: "Yes if return amount tied to a revenue item"
+    description: "Yes if return amount tied to a revenue item. Source:netsuite.return_order_line"
     type: yesno
     sql: ${TABLE}.REVENUE_ITEM ;; }
 
   dimension_group: shipment_received {
     label: "Return Shipment Recieved"
-    description: "Date when the returned item was recieved by Purple"
-    #hidden: yes
+    description: "Date when the returned item was recieved by Purple. Source: netsuite.return_order_line"
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no

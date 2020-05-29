@@ -35,6 +35,7 @@ view: exchange_order_line {
 
   dimension: key {
     primary_key: yes
+    hidden: yes
     sql: ${exchange_order_id}||${replacement_order_id}||${system}||${item_id} ;;
   }
 
@@ -127,14 +128,15 @@ view: exchange_order_line {
 
   measure: count {
     label: "Exchanged Units"
+    description: "Count of units exchanged. Source:netsuite.exchange_order_line"
     type: count_distinct
     #hidden:  yes
     sql: ${key} ;;
   }
 
   dimension: is_exchanged {
-    label: "     * Is Exchanged"
-    description: "Exchange order has been created"
+    label: "     * Is Exchanged (Yes/No)"
+    description: "Exchange order has been created. Source:netsuite.exchange_order_line"
     type: yesno
     sql: ${TABLE}.CREATED is not null ;;
   }
