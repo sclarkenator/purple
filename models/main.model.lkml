@@ -1023,6 +1023,7 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
+explore: target_dtc {hidden: yes}
 explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
 explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
