@@ -20,7 +20,12 @@ view: transfer_order {
   dimension: Container_count{
     type: string
     sql: ${TABLE}."CONTAINER_COUNT" ;;
-    hidden: no
+    hidden: yes
+  }
+
+  measure: total_container_count{
+    type: sum
+    sql: ${TABLE}."CONTAINER_COUNT" ;;
   }
 
   dimension: amount_unbilled {
@@ -31,47 +36,26 @@ view: transfer_order {
 
   dimension_group: carrier_eta {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."CARRIER_ETA" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."CARRIER_ETA" );;
   }
 
   dimension_group: closed {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."CLOSED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."CLOSED") ;;
   }
 
   dimension_group: created {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    sql: ${TABLE}."CREATED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."CREATED" );;
   }
 
   dimension: department_id {
@@ -81,17 +65,10 @@ view: transfer_order {
 
   dimension_group: estimated_ship {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."ESTIMATED_SHIP" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."ESTIMATED_SHIP" );;
   }
 
   dimension: incoterm {
@@ -100,6 +77,7 @@ view: transfer_order {
   }
 
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -121,32 +99,18 @@ view: transfer_order {
 
   dimension_group: modified {
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    sql: ${TABLE}."MODIFIED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."MODIFIED" );;
   }
 
   dimension_group: received {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."RECEIVED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."RECEIVED" );;
   }
 
   dimension: receiving_location_id {
@@ -156,17 +120,10 @@ view: transfer_order {
 
   dimension_group: sales_effective {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."SALES_EFFECTIVE" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."SALES_EFFECTIVE" );;
   }
 
   dimension: ship_address {
@@ -191,17 +148,10 @@ view: transfer_order {
 
   dimension_group: trandate {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."TRANDATE" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."TRANDATE" );;
   }
 
   dimension: Document_Number {
@@ -215,6 +165,7 @@ view: transfer_order {
   }
 
   dimension_group: update_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
