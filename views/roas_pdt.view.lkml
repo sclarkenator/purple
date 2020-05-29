@@ -182,6 +182,7 @@ view: roas_pdt {
       , TRENDED_AMOUNT as c3_trended_sales
     from ${c3_pdt.SQL_TABLE_NAME}
     ;;
+  datagroup_trigger: pdt_refresh_6am
   }
 
   dimension: date {
