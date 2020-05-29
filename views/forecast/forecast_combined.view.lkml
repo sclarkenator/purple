@@ -156,7 +156,7 @@ sql_table_name: sales.forecast ;;
 
   measure: forecasted_dtc_discount{
     label: "Forecasted DTC Discount"
-    value_format: "0.00\%"
+    value_format: "0.0%"
     type:  number
     sql: coalesce((1-(${total_amount}/nullif(${full_sales_amount},0))),0);; }
 
