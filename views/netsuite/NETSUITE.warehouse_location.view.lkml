@@ -30,7 +30,7 @@ view: warehouse_location {
   dimension: DTC_carrier {
     label: "Carrier (Grouping)"
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot.
-    Source:netsuite.sales_order_line"
+    Source:netsuite.warehouse_location"
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;;
