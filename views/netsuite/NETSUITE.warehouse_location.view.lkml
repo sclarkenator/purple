@@ -11,6 +11,31 @@ view: warehouse_location {
       type: string
       sql: ${TABLE}.name ;; }
 
+  dimension: carrier {
+    label: "Carrier (expected)"
+    description: "Derived field based on fulfillment location.
+    Source:netsuite.warehouse_location"
+    #hidden: yes
+    type: string
+    sql: case
+          when ${location_name} ilike '%mainfreight%' then 'MainFreight'
+          when ${location_name} ilike '%xpo%' then 'XPO'
+          when ${location_name} ilike '%pilot%' then 'Pilot'
+          when ${location_name} is null then 'FBA'
+          when ${location_name} ilike '%100-%' then 'Purple'
+          when ${location_name} ilike '%le store%' or ${location_name} ilike '%howroom%' then 'Store take-with'
+          else 'Other' end ;;
+  }
+
+  dimension: DTC_carrier {
+    label: "Carrier (Grouping)"
+    description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot.
+    Source:netsuite.sales_order_line"
+    hidden: no
+    type: string
+    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;;
+  }
+
   dimension: location_Active {
     label: "* Inactive Locations Included (Yes/ No)"
     type: string
