@@ -1347,8 +1347,74 @@ view: sales_order_line {
       else 'Other' end;;
   }
 
+  measure: adj_gross_amt {
+    ##added by Scott on 6/1/20
+    label: " 5 - Adjusted gross sales"
+    description: "GWP items split allocation between to free product, netted from main product. Current through 5/28/2020.
+    Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: nvl(${TABLE}.adjusted_gross_amt,0) ;;
+  }
+
+  measure: order_discounts {
+    ##added by Scott on 6/1/20
+    label: " 2 - Order-level discounts"
+    description: "Order-level discounts such as MD, MED, FR with promotional discounts removed. Current through 5/31/2020
+    Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: nvl(${TABLE}.order_discount_amt,0) ;;
+  }
+
+  measure: promo_discounts {
+    ##added by Scott on 6/1/20
+    label: " 3 - Promotional discounts"
+    description: "Total promotional discounts applied to order. This includes call center promo-matching. Current through 5/31/2020.
+    Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: nvl(${TABLE}.adjusted_discount_amt,0) ;;
+  }
+
+  measure: cc_discounts {
+    ##added by Scott on 6/1/20
+    label: " 4 - Call center discounts"
+    description: "These are special discounts applied at the call center as apologies or other free product. Current through 5/31/2020.
+    Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: nvl(${TABLE}.cc_discount,0) ;;
+  }
+
+  measure: full_IMU {
+    ##added by Scott on 6/1/20
+    label: " 1 - IMU"
+    description: "This is the MSRP or full, pre-discounted price of the item. Current through 5/31/2020.
+    Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${pre_discount_amt} ;;
+  }
+
+  measure: COGS {
+    #hidden: yes
+    label: " 6 - Total Standard Cost"
+    description: "Total Cost (cost per unit * number of units). Source: netsuite.sales_order_line"
+    view_label: "zz Margin Calculations"
+    drill_fields: [sales_order_details*]
+    type:  number
+    value_format: "$#,##0"
+    sql:  ${total_standard_cost} ;;
+  }
+
   measure: return_amt {
-    label: "Return $"
+    label: " 7 - Return $"
     description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
@@ -1360,7 +1426,7 @@ view: sales_order_line {
   }
 
   measure: merch_fees {
-    label: "Merchant fees"
+    label: " 9 - Merchant fees"
     description: "Estimate of merchant fees for transaction, based on 4.97% blended affirm rate, 15% amazon affiliate rate and 2.55% for all others.
       Source: looker.calculation"
     view_label: "zz Margin Calculations"
@@ -1368,11 +1434,12 @@ view: sales_order_line {
     type: sum
     sql: case when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*${gross_amt}
               when ${sales_order.payment_method} ilike 'AFFIRM' then 0.0497*${gross_amt}
+              when ${sales_order.payment_method} ilike 'SPLITIT' then .04*${gross_amt}
               else 0.0255*${gross_amt} end ;;
     }
 
   measure: direct_affiliate {
-    label: "Affiliate commissions"
+    label: "10 - Affiliate commissions"
     description: "Actual commission paid on order to affiliate partner. Source: looker.calculation"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
@@ -1381,7 +1448,7 @@ view: sales_order_line {
   }
 
   measure: warranty_accrual {
-    label: "Warranty"
+    label: "11 - Warranty"
     description: "Esimate of future warranty incurred. Calculated at 1% of gross sales. Source: looker.calculation"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
