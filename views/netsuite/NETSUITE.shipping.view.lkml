@@ -51,7 +51,7 @@ view: shipping {
   }
 
   measure: shipping_total {
-    label: "Total Freight"
+    label: " 8 - Total Freight"
     description: "This is the total shipping charges incurred across all shipping partners for any individual order/item combo."
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
