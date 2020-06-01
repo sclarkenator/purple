@@ -608,7 +608,7 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
