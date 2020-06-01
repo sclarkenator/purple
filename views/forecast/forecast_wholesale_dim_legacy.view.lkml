@@ -1,4 +1,4 @@
-view: forecast_wholesale_dim_legacy {
+view: forecast_wholesale_dim {
 
   derived_table: {
     sql:

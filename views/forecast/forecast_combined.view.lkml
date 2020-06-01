@@ -73,6 +73,37 @@ sql_table_name: sales.forecast ;;
     type:  string
     sql:${TABLE}.account ;; }
 
+  dimension: top_customers {
+    label: "Wholesale Accout Name (merged)"
+    type:  string
+    case: {
+      when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online') ;;  label: "Mattress Firm" }
+      when: { sql: ${TABLE}.account in ('Furniture Row') ;;  label: "Furniture Row" }
+      when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online') ;;  label: "Macy's" }
+      when: { sql: ${TABLE}.account in ('Sleep Country Canada') ;;  label: "Sleep Country" }
+      when: { sql: ${TABLE}.account in ('Bed, Bath & Beyond') ;; label: "Bed Bath and Beyond" }
+      when: { sql: ${TABLE}.account in ('Medical') ;; label: "Medical Cushions" }
+      when: { sql: ${TABLE}.account in ('Trucking') ;; label: "Trucking" }
+      else: "Other" } }
+
+  dimension: account_manager {
+    label: "Wholesale Accout Manager"
+    type:  string
+    case: {
+      when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online') ;;  label: "Jordan Petersen" }
+      when: { sql: ${TABLE}.account in ('Furniture Row','Bed, Bath & Beyond') ;;  label: "Jodee Blue" }
+      when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online','Medical','Trucking') ;;  label: "Taylor Brown" }
+      else: "Other" } }
+
+  dimension: sales_manager {
+    label: "Wholesale Sales Manager"
+    type:  string
+    case: {
+      when: { sql: ${TABLE}.account in ('Mattress Firm Instore','Mattress Firm Online','Medical') ;;  label: "Daniel Hill" }
+      when: { sql: ${TABLE}.account in ('Furniture Row','Bed, Bath & Beyond') ;;  label: "Mike Hessing" }
+      when: { sql: ${TABLE}.account in ('Macys Instore','Macys Online','Trucking') ;;  label: "Mike Riley" }
+      else: "Other" } }
+
   dimension: last_modified{
     type:  date_time
     sql:${TABLE}.modified ;; }
