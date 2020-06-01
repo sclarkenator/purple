@@ -64,7 +64,7 @@ view: shopify_orders {
     view_label: "Sales Order"
     #group_label: " Advanced"
     label: "     * Is Call center order"
-    description: "Draft orders created by call center agents"
+    description: "Draft orders created by call center agents. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.user_id is not null and ${sales_order.showroom} = 'FALSE' ;;
   }

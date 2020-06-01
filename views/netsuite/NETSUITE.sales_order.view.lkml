@@ -74,9 +74,9 @@ view: sales_order {
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: channel_source {
-    label: "   Order Source (buckets)"
-    description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other).
-      Source: netsuite.sales_order"
+    group_label: " Advanced"
+    label: "Order Source (buckets)"
+    description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other). Source: netsuite.sales_order"
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
               or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%us%'))
@@ -122,7 +122,8 @@ view: sales_order {
               else 'Other' end  ;; }
 
   dimension: channel2 {
-    label: "  Channel"
+    group_label: " Advanced"
+    label: "Channel"
     description:  "Which Netsuite Channel was the order processed through (DTC, Wholesale, Owned Retail, etc).
       Source: netsuite.sales_order"
     type: string
@@ -146,7 +147,7 @@ view: sales_order {
               else 'Other' end ;;  }
 
   dimension: created {
-    #hidden: yes
+    hidden: yes
     type: date_time
     sql: ${TABLE}.CREATED ;; }
 
@@ -308,14 +309,14 @@ view: sales_order {
   dimension: gross_amt {
     group_label: " Advanced"
     label:"Gross Order Size ($)"
-    description: "Total gross sales for all items on order, excluding taxes. Source: netsuite.sales_order"
+    description: "Total gross sales for all items on order, excluding taxes. Source:netsuite.sales_order"
     type: number
     sql: ${TABLE}.gross_amt ;;  }
 
   dimension: Order_size_buckets{
-    label: "   Order Size (buckets)"
-    description: "Different price buckets for total gross order amount (150,600,1000,1500,2500).
-      Source: netsuite.sales_order"
+    group_label: " Advanced"
+    label: "Order Size (buckets)"
+    description: "Different price buckets for total gross order amount (150,600,1000,1500,2500). Source:netsuite.sales_order"
     hidden:   no
     type:  tier
     style: integer
@@ -324,8 +325,7 @@ view: sales_order {
 
   dimension: Order_size_buckets_v2{
     label: "Order Size (buckets)"
-    description: "$500 price  (500/1000/1500/etc)
-      Source: netsuite.sales_order"
+    description: "$500 price  (500/1000/1500/etc). Source: netsuite.sales_order"
     hidden:  yes
     type:  tier
     style: integer
@@ -334,8 +334,7 @@ view: sales_order {
 
   dimension: Order_size_buckets_v3{
     label: "Order Size (buckets by 100)"
-    description: "Different price buckets for total gross order amount, by 100 increments.
-      Source: netsuite.sales_order"
+    description: "Different price buckets for total gross order amount, by 100 increments. Source: netsuite.sales_order"
     hidden:   yes
     type:  tier
     style: integer

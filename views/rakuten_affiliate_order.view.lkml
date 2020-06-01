@@ -12,12 +12,14 @@ view: affiliate_sales_order {
     type: string
     view_label: "Sales Order"
     group_label: " Advanced"
+    description: "Source: rakuten.rakuten_affliate_order"
     sql: ${TABLE}.publisher_name ;;
   }
 
   dimension: order_id_flag {
     view_label: "Sales Order"
     label: "     * Is Affiliate Order"
+    description: "Source: rakuten.rakuten_affliate_order"
     type: yesno
     sql: ${order_id} is not NULL ;;
   }

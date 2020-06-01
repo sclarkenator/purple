@@ -690,16 +690,18 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-  #aggregate_table: weekly_sessions {
-  #  materialization: {
-  #    datagroup_trigger: pdt_refresh_6am
-  #  }
-  #  query: {
-  #    dimensions: [sessions.time_week] # <-- orders.region field
-  #    measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-  #    timezone: America/Denver
-  #  }
-  #}
+  aggregate_table: weekly_sessions {
+    materialization: {
+      #sql_trigger_value: SELECT CURDATE() ;;
+      datagroup_trigger: pdt_refresh_6am
+    }
+    query: {
+      dimensions: [sessions.time_week]
+      measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
+      filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
+      timezone: America/Denver
+    }
+  }
 }
 
 explore: cordial_activity {

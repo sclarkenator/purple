@@ -106,17 +106,17 @@ view: heap_page_views_web_analytics {
 
   measure: event_id {
     label: "Pageviews"
-    type: sum
+    type: count_distinct
   }
   measure: session_id {
     label: "Sessions"
-    type: sum
+    type: count_distinct
   }
   measure: pages_per_session {
-
     type: number
     value_format_name: decimal_2
     sql: ${event_id}/${session_id} ;;
+    #sql: count(distinct ${TABLE}.{event_id})/count(distinct ${TABLE}.{session_id}) ;;
   }
 
   measure: primary_metric {

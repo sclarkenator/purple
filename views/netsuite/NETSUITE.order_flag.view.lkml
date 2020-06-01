@@ -87,7 +87,7 @@ view: order_flag {
   measure: mattress_orders {
     group_label: "Total Orders with:"
     label: "a Mattress"
-    description: "1/0 per order; 1 if there was a mattress in the order"
+    description: "1/0 per order; 1 if there was a mattress in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.mattress_flg ;; }
@@ -95,7 +95,7 @@ view: order_flag {
   measure: cushion_orders {
     group_label: "Total Orders with:"
     label: "a Cushion"
-    description: "1/0 per order; 1 if there was a cushion in the order"
+    description: "1/0 per order; 1 if there was a cushion in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.cushion_flg ;; }
@@ -103,7 +103,7 @@ view: order_flag {
   measure: sheets_orders {
     group_label: "Total Orders with:"
     label: "Sheets"
-    description: "1/0 per order; 1 if there were sheets in the order"
+    description: "1/0 per order; 1 if there were sheets in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.sheets_flg ;; }
@@ -111,7 +111,7 @@ view: order_flag {
   measure: protector_orders {
     group_label: "Total Orders with:"
     label: "a Mattress Protector"
-    description: "1/0 per order; 1 if there was a mattress protector in the order"
+    description: "1/0 per order; 1 if there was a mattress protector in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.protector_flg ;; }
@@ -119,7 +119,7 @@ view: order_flag {
   measure: pillow_orders {
     group_label: "Total Orders with:"
     label: "a Pillow"
-    description: "1/0 per order; 1 if there was a pillow in the order"
+    description: "1/0 per order; 1 if there was a pillow in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.pillow_flg ;; }
@@ -128,7 +128,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Harmony Pillow"
     hidden: yes
-    description: "1/0 per order; 1 if there was a Harmony pillow in the order"
+    description: "1/0 per order; 1 if there was a Harmony pillow in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.harmony_pillow_flg ;; }
@@ -137,7 +137,7 @@ view: order_flag {
     group_label: "Total Orders with:"
     label: "a Plush Pillow"
     hidden: yes
-    description: "1/0 per order; 1 if there was a Plush pillow in the order"
+    description: "1/0 per order; 1 if there was a Plush pillow in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.plush_pillow_flg ;; }
@@ -146,7 +146,7 @@ view: order_flag {
     hidden:  no
     group_label: "Total Orders with:"
     label: "a Base"
-    description: "1/0 per order; 1 if there was a base in the order"
+    description: "1/0 per order; 1 if there was a base in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.base_flg ;; }
@@ -154,7 +154,7 @@ view: order_flag {
   measure: powerbase_orders {
     group_label: "Total Orders with:"
     label: "a Powerbase"
-    description: "1/0 per order; 1 if there was a powerbase in the order"
+    description: "1/0 per order; 1 if there was a powerbase in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.powerbase_flg ;; }
@@ -162,7 +162,7 @@ view: order_flag {
   measure: platform_orders {
     group_label: "Total Orders with:"
     label: "a Platform Base"
-    description: "1/0 per order; 1 if there was a platform base (Metal/Clip Metal) in the order"
+    description: "1/0 per order; 1 if there was a platform base (Metal/Clip Metal) in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
@@ -171,7 +171,7 @@ view: order_flag {
     hidden: no
     group_label: "Total Orders with:"
     label: "a Foundation"
-    description: "1/0 per order; 1 if there was a Foundation in the order"
+    description: "1/0 per order; 1 if there was a Foundation in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.foundation_flg ;; }
@@ -180,7 +180,7 @@ view: order_flag {
     hidden:  no
     group_label: "Total Orders with:"
     label: "a Blanket"
-    description: "1/0 per order; 1 if there was a blanket in the order"
+    description: "1/0 per order; 1 if there was a blanket in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.blanket_flg ;; }
@@ -188,7 +188,7 @@ view: order_flag {
   measure: mm_orders {
     group_label: "Total Orders with:"
     label: "Multiple Mattresses"
-    description: "1/0 per order; 1 if there was more than 1 mattress in the order"
+    description: "1/0 per order; 1 if there was more than 1 mattress in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.mm_flg ;; }
@@ -196,7 +196,7 @@ view: order_flag {
   measure: split_king_orders {
     group_label: "Total Orders with:"
     label: "a Split King"
-    description: "1/0 per order; 1 if multiple twin XL mattresses purchased in this order"
+    description: "1/0 per order; 1 if multiple twin XL mattresses purchased in this order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type: sum
     sql: ${TABLE}.sk_flg ;; }
@@ -205,7 +205,7 @@ view: order_flag {
     hidden: yes
     group_label: "Total Orders with:"
     label: "a Duvet"
-    description: "1/0 per order; 1 if there was a duvet in the order"
+    description: "1/0 per order; 1 if there was a duvet in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.duvet_flg ;; }
@@ -214,7 +214,7 @@ view: order_flag {
     hidden: yes
     group_label: "Total Orders with:"
     label: "a Gravity Blanket"
-    description: "1/0 per order; 1 if there was a gravity blanket in the order"
+    description: "1/0 per order; 1 if there was a gravity blanket in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_blanket_flg ;; }
@@ -223,7 +223,7 @@ view: order_flag {
     hidden: yes
     group_label: "Total Orders with:"
     label: "a Gravity Mask"
-    description: "1/0 per order; 1 if there was a gravity mask in the order"
+    description: "1/0 per order; 1 if there was a gravity mask in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
@@ -231,35 +231,35 @@ view: order_flag {
   dimension: mattress_flg {
     group_label: "    * Orders has:"
     label: "a Mattress"
-    description: "1/0; 1 if there is a mattress in this order"
+    description: "1/0; 1 if there is a mattress in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.mattress_flg = 1 ;; }
 
   dimension: hybird_mattress_flg {
     group_label: "    * Orders has:"
     label: "a Hybrid Mattress"
-    description: "1/0; 1 if there is a hybrid or hybrid premier mattress in this order"
+    description: "1/0; 1 if there is a hybrid or hybrid premier mattress in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.hybrid_mattress_flg = 1 ;; }
 
   dimension: cushion_flg {
     group_label: "    * Orders has:"
     label: "a Cushion"
-    description: "1/0; 1 if there is a cushion in this order"
+    description: "1/0; 1 if there is a cushion in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.cushion_flg = 1 ;; }
 
   dimension: sheets_flg {
     group_label: "    * Orders has:"
     label: "Sheets"
-    description: "1/0; 1 if there are sheets in this order"
+    description: "1/0; 1 if there are sheets in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.sheets_flg = 1 ;; }
 
   dimension: protector_flg {
     group_label: "    * Orders has:"
     label: "a Mattress Protector"
-    description: "1/0; 1 if there is a mattress protector in this order"
+    description: "1/0; 1 if there is a mattress protector in this order. Source:looker.calculation"
     type:  yesno
     sql: ${TABLE}.protector_flg = 1 ;; }
 
@@ -267,35 +267,35 @@ view: order_flag {
     hidden: no
     group_label: "    * Orders has:"
     label: "a Base"
-    description: "1/0; 1 if there is a base in this order"
+    description: "1/0; 1 if there is a base in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.base_flg = 1 ;; }
 
   dimension: powerbase_flg {
     group_label: "    * Orders has:"
     label: "a Powerbase"
-    description: "1/0; 1 if there is a powerbase in this order"
+    description: "1/0; 1 if there is a powerbase in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.powerbase_flg = 1 ;; }
 
   dimension: platform_flg {
     group_label: "    * Orders has:"
     label: "a Platform Base"
-    description: "1/0; 1 if there is a platform base (Metal/Clip Metal) in this order"
+    description: "1/0; 1 if there is a platform base (Metal/Clip Metal) in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.platform_flg = 1 ;; }
 
   dimension: foundation_flg {
     group_label: "    * Orders has:"
     label: "a Foundation Base"
-    description: "1/0; 1 if there is a Foundation Base in this order"
+    description: "1/0; 1 if there is a Foundation Base in this order. Source:looker.calculation"
     type: yesno
     sql: ${TABLE}.foundation_flg = 1 ;; }
 
   dimension: pillow_flg {
     group_label: "    * Orders has:"
     label: "a Pillow"
-    description: "1/0; 1 if there is a pillow in this order"
+    description: "1/0; 1 if there is a pillow in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.pillow_flg = 1 ;; }
 
@@ -303,27 +303,27 @@ view: order_flag {
     hidden:  yes
     group_label: "    * Orders has:"
     label: "a Blanket"
-    description: "1/0; 1 if there is a blanket in this order"
+    description: "1/0; 1 if there is a blanket in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.blanket_flg = 1 ;; }
 
   dimension: split_flg {
     group_label: "    * Orders has:"
     label: "a Split King"
-    description: "1/0; 1 if there is are multiple twin XL mattresses purchased in this order"
+    description: "1/0; 1 if there is are multiple twin XL mattresses purchased in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.sk_flg > 0 ;; }
 
   dimension: mm_orders_flg {
     group_label: "    * Orders has:"
     label: "Multiple Mattresses"
-    description: "1/0; 1 if there is more than 1 mattress in the order"
+    description: "1/0; 1 if there is more than 1 mattress in the order. Source:looker.calculation"
     type:  yesno
     sql:  ${TABLE}.mm_flg = 1 ;; }
 
   dimension: mattress_count {
     group_label: " Advanced"
-    description: "Number of mattresses in the order"
+    description: "Number of mattresses in the order. Source: looker.calculation"
     type: number
     sql: ${TABLE}.mattress_ordered ;;
   }
@@ -332,7 +332,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Harmony Pillow"
-    description: "1/0; 1 if there is a Harmony Pillow in this order"
+    description: "1/0; 1 if there is a Harmony Pillow in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.harmony_pillow_flg > 0 ;; }
 
@@ -340,7 +340,7 @@ view: order_flag {
     hidden:  yes
     group_label: "    * Orders has:"
     label: "a Plush Pillow"
-    description: "1/0; 1 if there is a Plush Pillow in this order"
+    description: "1/0; 1 if there is a Plush Pillow in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.plush_pillow_flg > 0 ;; }
 
@@ -348,7 +348,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Purple Pillow"
-    description: "1/0; 1 if there is a Purple Pillow (Purple 2.0, has only purple grid) in this order"
+    description: "1/0; 1 if there is a Purple Pillow (Purple 2.0, has only purple grid) in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.purple_pillow_flg > 0 ;; }
 
@@ -356,7 +356,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Gavity Mask"
-    description: "1/0; 1 if there is a Gravity Mask in this order"
+    description: "1/0; 1 if there is a Gravity Mask in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.gravity_mask_flg > 0 ;; }
 
@@ -364,7 +364,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Gravity Blanket"
-    description: "1/0; 1 if there is a Gravity Blanket in this order"
+    description: "1/0; 1 if there is a Gravity Blanket in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.gravity_blanket_flg > 0 ;; }
 
@@ -372,7 +372,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Duvet"
-    description: "1/0; 1 if there is a Duvet in this order"
+    description: "1/0; 1 if there is a Duvet in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.duvet_flg > 0 ;; }
 
@@ -380,7 +380,7 @@ view: order_flag {
     hidden: yes
     group_label: "    * Orders has:"
     label: "a Eye Mask"
-    description: "1/0; 1 if there is a Eye Mask in this order"
+    description: "1/0; 1 if there is a Eye Mask in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.eye_mask_flg > 0 ;; }
 
@@ -388,7 +388,7 @@ view: order_flag {
     hidden: no
     group_label: "    * Orders has:"
     label: "a Pet Bed"
-    description: "1/0; 1 if there is a Pet Bed in this order"
+    description: "1/0; 1 if there is a Pet Bed in this order. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.pet_bed_flg >0 ;; }
 
@@ -396,49 +396,49 @@ view: order_flag {
     hidden:  yes
     group_label: "    * Orders has:"
     label: "a Fall Flash Bundle"
-    description: "1/0; 1 if there is a Fall Flash BUndle in this order"
+    description: "1/0; 1 if there is a Fall Flash BUndle in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.ff_bundle_flg = 1 ;; }
 
   dimension: pdULT_flg {
     hidden:  yes
     group_label: "    * Orders has:"
-    description: "yesno; yes if there is a pillow-duvet ultimate bundle in this order (1/21/2020-2/14/2020)"
+    description: "yesno; yes if there is a pillow-duvet ultimate bundle in this order (1/21/2020-2/14/2020). Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.pdULT_flg = 1 ;; }
 
   dimension: pdDEL_flg {
     hidden:  yes
     group_label: "    * Orders has:"
-    description: "yesno; yes if there is a pillow-duvet deluxe bundle in this order (1/21/2020-2/14/2020)"
+    description: "yesno; yes if there is a pillow-duvet deluxe bundle in this order (1/21/2020-2/14/2020). Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.pdDEL_flg = 1 ;; }
 
   dimension: pdESS_flg {
     hidden:  yes
     group_label: "    * Orders has:"
-    description: "yesno; yes if there is a pillow-duvet essential bundle in this order (1/21/2020-2/14/2020)"
+    description: "yesno; yes if there is a pillow-duvet essential bundle in this order (1/21/2020-2/14/2020). Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.pdESS_flg = 1 ;; }
 
   dimension: weightedtwo_flg {
     hidden:  yes
     group_label: "    * Orders has:"
-    description: "yesno; yes if there is a discounted gravity blanket and 2 free masks in this order (1/21/2020-2/14/2020)"
+    description: "yesno; yes if there is a discounted gravity blanket and 2 free masks in this order (1/21/2020-2/14/2020). Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.weightedtwo_flg = 1 ;; }
 
   dimension: buymoresavemore {
     hidden:  yes
     group_label: "    * Orders has:"
-    description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020)"
+    description: "yesno; yes if the order qualifies for the 'Buy More Save More' promotion (1/21/2020-2/14/2020). Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.buymsm = 1 ;; }
 
   dimension: medical_masks{
     group_label: "    * Orders has:"
     label: "a Face Mask"
-    description: "1/0 per order; 1 if there was a Medical Face Mask in the order"
+    description: "1/0 per order; 1 if there was a Medical Face Mask in the order. Source: looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.medical_mask_flg =1 ;; }
@@ -446,7 +446,7 @@ view: order_flag {
   dimension: pillow_booster_flag{
     group_label: "    * Orders has:"
     label: "a Pillow Booster"
-    description: "1/0 per order; 1 if there was a Pillow Booster in the order"
+    description: "1/0 per order; 1 if there was a Pillow Booster in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.pillow_booster_flg =1 ;; }
