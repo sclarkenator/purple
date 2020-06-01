@@ -649,6 +649,8 @@ explore: hotjar_data {
     relationship: many_to_many}
   }
 
+explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics"  group_label: "Marketing"  description: "Test for Web Analytics"}
+
 explore: all_events {
   label: "All Events (heap)"
   group_label: "Marketing"
