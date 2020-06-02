@@ -1306,26 +1306,6 @@ view: sales_order_line {
     sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
   }
 
-  measure: average_mattress_order_size {
-    label: "AMOV ($)"
-    view_label: "Sales Order"
-    description: "Average total mattress order amount, excluding tax. Source: looker.calculation"
-    type: average
-    sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0"
-    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
-  }
-
-  measure: average_accessory_order_size {
-    label: "NAMOV ($)"
-    view_label: "Sales Order"
-    description: "Average total accessory order amount, excluding tax. Source: looker.calculation"
-    type: average
-    sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0"
-    sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
-  }
-
   measure: upt {
     label: "UPT"
     view_label: "Sales Order"
