@@ -1521,6 +1521,13 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
+    join: acquisition_recent_customer_test_segments {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      view_label: "Customer"
+    }
+
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
