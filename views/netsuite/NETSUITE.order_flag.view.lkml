@@ -451,4 +451,25 @@ view: order_flag {
     type:  yesno
     sql:  ${TABLE}.pillow_booster_flg =1 ;; }
 
+  measure: average_mattress_order_size {
+    label: "AMOV ($)"
+    view_label: "Sales Order"
+    description: "Average total mattress order amount, excluding tax. Source: looker.calculation"
+    type: average
+    sql_distinct_key: ${sales_order.order_system} ;;
+    value_format: "$#,##0"
+    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
+  }
+
+  measure: average_accessory_order_size {
+    label: "NAMOV ($)"
+    view_label: "Sales Order"
+    description: "Average total accessory order amount, excluding tax. Source: looker.calculation"
+    type: average
+    sql_distinct_key: ${sales_order.order_system} ;;
+    value_format: "$#,##0"
+    sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
+  }
+
+
 }

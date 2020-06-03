@@ -1,6 +1,6 @@
-view: heap_page_views_web_analytics {
+## Created by Blake Walton 2020-05-29
 
-   # Or, you could make this view a derived table, like this:
+view: heap_page_views_web_analytics {
    derived_table: {
      sql: select
         user_id,session_id,event_id,time as event_time
@@ -113,9 +113,10 @@ view: heap_page_views_web_analytics {
     type: count_distinct
   }
   measure: pages_per_session {
+    sql: count(distinct ${TABLE}.event_id)/count(distinct ${TABLE}.session_id) ;;
     type: number
-    value_format_name: decimal_2
-    sql: ${event_id}/${session_id} ;;
+    #value_format_name: decimal_2
+
     #sql: count(distinct ${TABLE}.{event_id})/count(distinct ${TABLE}.{session_id}) ;;
   }
 

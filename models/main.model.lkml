@@ -649,7 +649,9 @@ explore: hotjar_data {
     relationship: many_to_many}
   }
 
-explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics"  group_label: "Marketing"  description: "Test for Web Analytics"}
+explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
+
+explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}
 
 explore: all_events {
   label: "All Events (heap)"
@@ -691,18 +693,48 @@ explore: all_events {
     relationship: one_to_many
   }
   aggregate_table: weekly_sessions {
-    materialization: {
-      #sql_trigger_value: SELECT CURDATE() ;;
-      datagroup_trigger: pdt_refresh_6am
-    }
     query: {
       dimensions: [sessions.time_week]
       measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
       filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
       timezone: America/Denver
     }
+    materialization: {
+      #sql_trigger_value: SELECT CURDATE() ;;
+      datagroup_trigger: pdt_refresh_6am
+    }
   }
+  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+    query: {
+      dimensions: [sessions.time_week_of_year, sessions.time_year]
+      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+      timezone: "America/Denver"
+    }
+
+    materialization: {
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+
 }
+
+  explore: funnel_explorer {
+    hidden: yes
+    group_label: "Marketing"
+    label: "HEAP Funnel"
+    join: sessions {
+      type: left_outer
+      sql_on: ${funnel_explorer.session_unique_id} = ${sessions.session_unique_id} ;;
+      relationship: one_to_one
+    }
+    join: session_facts {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${sessions.session_unique_id} = ${session_facts.session_unique_id} ;;
+      relationship: one_to_one
+    }
+  }
 
 explore: cordial_activity {
   group_label: "Marketing"
