@@ -289,6 +289,11 @@ view: qualtrics_customer {
     sql: ${TABLE}."STATE" ;;
   }
 
+  dimension: SURVEY_VALUES {
+    type: string
+    sql: ${TABLE}."SURVEY_VALUES" ;;
+  }
+
   dimension: total_amount_return_orders {
     type: number
     sql: ${TABLE}."TOTAL_AMOUNT_RETURN_ORDERS" ;;
