@@ -1309,7 +1309,7 @@ view: sales_order_line {
   measure: upt {
     label: "UPT"
     view_label: "Sales Order"
-    description: "Units per transaction. Source: looker.calculation"
+    description: "Units per transaction. Source:looker.calculation"
     type: number
     value_format: "#,##0.00"
     sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;

@@ -24,10 +24,9 @@ view: sales_order {
 
   measure: total_orders {
     label: "Total Unique Orders"
-    #description:"Unique orders placed"
+    description: "Distinct Orders. Source:netsuite.sales_order"
     drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
-    description: "Distinct Orders"
     sql: ${order_id} ;; }
 
   measure: unique_customers {
@@ -75,7 +74,7 @@ view: sales_order {
 
   dimension: channel_source {
     group_label: " Advanced"
-    label: "Order Source (buckets)"
+    label: " Order Source (buckets)"
     description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other). Source: netsuite.sales_order"
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
@@ -155,8 +154,7 @@ view: sales_order {
     label: "Sales Order Created Date"
     type: date
     group_label: " Advanced"
-    description: "Created date from netsuite on the sale order.
-      Source: netsuite.sales_order"
+    description: "Created date from netsuite on the sale order. Source:netsuite.sales_order"
     sql: ${created}::date ;;
   }
 
@@ -186,10 +184,10 @@ view: sales_order {
     sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
   dimension: showroom {
+    hidden: yes
     group_label: " Advanced"
     label: "Showroom"
-    description: "Flag for orders made in the Alpine Showroom.
-      Source: netsuite.sales_order"
+    description: "Flag for orders made in the Alpine Showroom. Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.showroom ;; }
 
@@ -222,7 +220,7 @@ view: sales_order {
     hidden: no
     group_label: " Advanced"
     label: "Kount Status"
-    description: "Kount Fraud Status. Source: netsuite.sales_order"
+    description: "Kount Fraud Status. Source:netsuite.sales_order"
     type: string
     sql: ${TABLE}.kount_status ;; }
 
@@ -282,7 +280,7 @@ view: sales_order {
 
   dimension: is_upgrade {
     group_label: " Advanced"
-    label: "Is Warranty Exchange (Yes/No)"
+    label: "  * Is Warranty Exchange"
     description: "Yes - this order is an upgrade from the original order on a warranty claim. Source: netsuite.sales_order"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
@@ -291,7 +289,7 @@ view: sales_order {
 
   dimension: is_exchange {
     group_label: " Advanced"
-    label: "Is Return Exchange (Yes/N0)"
+    label: "  * Is Return Exchange"
     description: "Yes - this order is an exchange from the original order on a return. Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
@@ -315,7 +313,7 @@ view: sales_order {
 
   dimension: Order_size_buckets{
     group_label: " Advanced"
-    label: "Order Size (buckets)"
+    label: " Order Size (buckets)"
     description: "Different price buckets for total gross order amount (150,600,1000,1500,2500). Source:netsuite.sales_order"
     hidden:   no
     type:  tier
@@ -350,6 +348,8 @@ view: sales_order {
   dimension: order_id {
     group_label: " Advanced"
     label: "Order ID"
+    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite.
+      Source:netsuite.sales_order"
     hidden: no
     link: {
       label: "Netsuite"
@@ -357,7 +357,6 @@ view: sales_order {
       icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
       }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
-    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.ORDER_ID ;; }
 
@@ -371,7 +370,7 @@ view: sales_order {
   dimension: payment_method {
     group_label: " Advanced"
     label: "Order Payment Method (shopify)"
-    description: "The customer's method of payment. Source: netsuite.sales_order"
+    description: "The customer's method of payment. Source:netsuite.sales_order"
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
 
@@ -390,7 +389,7 @@ view: sales_order {
   dimension: related_tranid {
     group_label: " Advanced"
     label: "Related Transaction ID"
-    description: "Netsuite's internal related transaction id. Source: netsuite.sales_order"
+    description: "Netsuite's internal related transaction id. Source:netsuite.sales_order"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
@@ -443,8 +442,7 @@ view: sales_order {
   dimension: status {
     group_label: " Advanced"
     label: "Status"
-    description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc
-      Source: netsuite.sales_order"
+    description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc. Source:netsuite.sales_order"
     #hidden:  yes
     type: string
     sql: ${TABLE}.STATUS ;; }
@@ -452,8 +450,7 @@ view: sales_order {
   dimension: system {
     group_label: " Advanced"
     label: "System"
-    description: "System the order originated in. (Amazon, Shopify, Netsuite)
-      Source: netsuite.sales_order"
+    description: "System the order originated in. (Amazon, Shopify, Netsuite). Source:netsuite.sales_order"
     #hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
@@ -465,8 +462,7 @@ view: sales_order {
 
   measure: tax_amt_total {
     label: "Total Tax ($)"
-    description: "Amount of Tax Collected
-      Source: netsuite.sales_order"
+    description: "Amount of Tax Collected Source:netsuite.sales_order"
     #hidden: yes
     type: sum
     sql: ${TABLE}.TAX_AMT ;; }
@@ -564,9 +560,8 @@ dimension_group: trandate {
 
   dimension: warranty_order_flg {
     group_label: " Advanced"
-    label: "Is Warranty Order"
-    description: "Yes if this order has a warranty replacement.
-      Source: netsuite.sales_order"
+    label: "  * Is Warranty Order"
+    description: "Yes if this order has a warranty replacement. Source:netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.WARRANTY_CLAIM_ID is not null or ${TABLE}.warranty = 'T' ;; }
 
@@ -625,8 +620,7 @@ dimension_group: trandate {
 
   dimension: store_id {
     label: "Retail store ID"
-    description: "Netsuite retail store ID
-      Source: netsuite.sales_order"
+    description: "Netsuite retail store ID. Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
     type: string
@@ -635,8 +629,7 @@ dimension_group: trandate {
   }
 dimension: store_name{
   label: "Store Name"
-  description: "Manually grouped from store ID
-    Source: netsuite.sales_order"
+  description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
   group_label: " Advanced"
   view_label: "Sales Order"
   type: string

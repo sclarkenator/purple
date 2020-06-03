@@ -27,7 +27,7 @@ dimension: shopify_id {
 dimension: name {
   label: "CC Agent Name"
   group_label: " Advanced"
-  description: "The name of this agent. Source: incontact.agent_lkp"
+  description: "The name of this agent. Source:incontact.agent_lkp"
   type:  string
   sql: ${TABLE}.name ;;
 }
@@ -35,7 +35,7 @@ dimension: name {
   dimension: merged_name{
     group_label: " Advanced"
     label: "CC/ZD Agent Name"
-    description: "The name of this agent. Source: incontact.agent_lkp"
+    description: "The name of this agent. Source:incontact.agent_lkp"
     type:  string
     sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
   }
