@@ -1155,15 +1155,15 @@ explore: exchange_items {hidden: yes
         join: sales_order_line_base {
           type:  inner
           sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
-          relationship: many_to_one}
+          relationship: one_to_many}
         join: item {
           view_label: "Product"
           sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
           type: inner
-          relationship: one_to_many}
+          relationship: many_to_one}
         join: zendesk_sell {
           view_label: "Zendesk Sell"
-          type: inner
+          type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
       }
