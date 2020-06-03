@@ -235,7 +235,7 @@ view: daily_adspend {
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
-      when: {sql: ${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
+      when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA','MYMOVE-LLC')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE');; label: "native" }
