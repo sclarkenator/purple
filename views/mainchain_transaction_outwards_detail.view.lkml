@@ -10,7 +10,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: carrier {
     group_label: "MainChain"
-    description: "Name of Carrier"
+    description: "Name of Carrier. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."CARRIER" ;;
   }
@@ -45,7 +45,9 @@ view: mainchain_transaction_outwards_detail {
   }
 
   dimension: con_note_number {
-    hidden: yes
+    #hidden: yes
+    label: "Con Note Number"
+    description: "Mainfreight Tracking Number. Source:mainfreight. mainchain_transaction _outwards_detail"
     group_label: "MainChain"
     type: string
     sql: ${TABLE}."CON_NOTE_NUMBER" ;;
@@ -67,7 +69,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension_group: finalised {
     label: "Mainchain Finalised"
-    description: "Mainchain Finalised Date"
+    description: "Mainchain Finalised Date. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: time
     timeframes: [
       raw,
@@ -100,14 +102,14 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: line_volume {
     group_label: "MainChain"
-    description: "Line Volume"
+    description: "Line Volume. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."LINE_VOLUME" ;;
   }
 
   dimension: line_weight {
     group_label: "MainChain"
-    description: "Line Weight"
+    description: "Line Weight. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."LINE_WEIGHT" ;;
   }
@@ -130,14 +132,14 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: order_line_number {
     group_label: "MainChain"
-    description: "Order Line ID Number"
+    description: "Order Line ID Number. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."ORDER_LINE_NUMBER" ;;
   }
 
   dimension: order_status {
     group_label: "MainChain"
-    description: "Status of Order (Confirm Sent, Entered, Deleted, etc)"
+    description: "Status of Order (Confirm Sent, Entered, Deleted, etc). Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."ORDER_STATUS" ;;
   }
@@ -175,7 +177,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: related_tranid {
     group_label: "MainChain"
-    description: "Related Transaction ID"
+    description: "Related Transaction ID. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."RELATED_TRANID" ;;
   }
@@ -234,49 +236,49 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: total_warehouse_line_volume {
     group_label: "MainChain"
-    description: "Total Amount of Warehouse Line Volume"
+    description: "Total Amount of Warehouse Line Volume. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."TOTAL_WAREHOUSE_LINE_VOLUME" ;;
   }
 
   dimension: total_warehouse_line_weight {
     group_label: "MainChain"
-    description: "Total Weight of Warehouse Line Weight"
+    description: "Total Weight of Warehouse Line Weight. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."TOTAL_WAREHOUSE_LINE_WEIGHT" ;;
   }
 
   dimension: total_warehouse_units_despatched {
     group_label: "MainChain"
-    description: "Number of Warehouse Units Dispatched"
+    description: "Number of Warehouse Units Dispatched. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."TOTAL_WAREHOUSE_UNITS_DESPATCHED" ;;
   }
 
   dimension: tranid {
     group_label: "MainChain"
-    description: "Transaction ID"
+    description: "Transaction ID. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."TRANID" ;;
   }
 
   dimension: unit_pack_type {
     group_label: "MainChain"
-    description: "Pack Type of Unit (Unit, Each, etc)"
+    description: "Pack Type of Unit (Unit, Each, etc). Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."UNIT_PACK_TYPE" ;;
   }
 
   dimension: units_despatched {
     group_label: "MainChain"
-    description: "Number of Units Dispatched"
+    description: "Number of Units Dispatched. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."UNITS_DESPATCHED" ;;
   }
 
   dimension: units_ordered {
     group_label: "MainChain"
-    description: "Number of Units Ordered"
+    description: "Number of Units Ordered. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: number
     sql: ${TABLE}."UNITS_ORDERED" ;;
   }
@@ -313,7 +315,7 @@ view: mainchain_transaction_outwards_detail {
 
   dimension: warehouse {
     group_label: "MainChain"
-    description: "Warehouse Name"
+    description: "Warehouse Name. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: string
     sql: ${TABLE}."WAREHOUSE" ;;
   }
@@ -327,13 +329,14 @@ view: mainchain_transaction_outwards_detail {
 
   measure: total_units_despatched {
     group_label: "MainChain"
+    description: "Source:mainfreight. mainchain_transaction _outwards_detail"
     type: sum
     sql: ${TABLE}."UNITS_DESPATCHED" ;;
   }
 
   measure: total_units_ordered {
     group_label: "MainChain"
-    description: "Total Units Ordered"
+    description: "Total Units Ordered. Source:mainfreight. mainchain_transaction _outwards_detail"
     drill_fields: [sales_order.order_id, sales_order.tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,sales_order.minimum_ship_date ,item.product_description, sales_order_line.location, sales_order.source, total_units_ordered]
     type: sum
     sql: ${TABLE}."UNITS_ORDERED" ;;
@@ -348,7 +351,7 @@ view: mainchain_transaction_outwards_detail {
 
   measure: distinct_tran {
     group_label: "MainChain"
-    description: "Count of Distinct Transaction ID's"
+    description: "Count of Distinct Transaction ID's. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: count_distinct
     sql: ${tranid} ;;
     drill_fields: [order_id,tranid,order_status,carrier,ordered_date,sku_id,units_despatched,units_ordered,con_note_number]
@@ -356,7 +359,7 @@ view: mainchain_transaction_outwards_detail {
 
   measure: count {
     group_label: "MainChain"
-    description: "Count"
+    description: "Count. Source:mainfreight. mainchain_transaction _outwards_detail"
     type: count
     drill_fields: [consignee_name]
   }

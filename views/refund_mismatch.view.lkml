@@ -3,6 +3,7 @@ view: refund_mismatch {
 
   dimension: amount_diff {
     type: number
+    value_format: "$0.00"
     sql: ${TABLE}."AMOUNT_DIFF";;
   }
 
@@ -46,6 +47,7 @@ view: refund_mismatch {
   }
 
   dimension: netsuite_amount {
+    value_format: "$0.00"
     type: number
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
@@ -95,7 +97,9 @@ view: refund_mismatch {
     primary_key: yes
     link: {
       label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{url_type._value}}rfnd.nl?id={{transaction_id._value}}&whence="}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{url_type._value}}rfnd.nl?id={{transaction_id._value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+      }
     sql: ${TABLE}."RELATED_TRANID";;
   }
 
@@ -138,8 +142,10 @@ view: refund_mismatch {
   dimension: transaction_number {
     type: string
     link: {
-    label: "Shopify"
-    url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{shopify_order_id._value}}"}
+      label: "Shopify"
+      url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{shopify_order_id._value}}"
+      icon_url: "https://www.google.com/s2/favicons?domain=www.shopify.com"
+    }
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
   }
 

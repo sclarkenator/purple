@@ -3,7 +3,7 @@ view: agent_name {
 
 
 dimension: incontact_id {
-  description: "The InContact ID for this agent"
+  description: "The InContact ID for this agent. Source: incontact.agent_lkp"
   type:  number
   hidden: yes
   sql: ${TABLE}.incontact_id ;;
@@ -11,31 +11,31 @@ dimension: incontact_id {
 }
 
 dimension: zendesk_id {
-  description: "The ZenDesk ID for this agent"
+  description: "The ZenDesk ID for this agent. Source: incontact.agent_lkp"
   type:  number
   hidden: yes
   sql: ${TABLE}.zendesk_id ;;
 }
 
 dimension: shopify_id {
-  description: "The Shopify ID for this agent"
+  description: "The Shopify ID for this agent. Source: incontact.agent_lkp"
   type:  number
   hidden: yes
   sql: ${TABLE}.shopify_id ;;
 }
 
 dimension: name {
-  description: "The name of this agent"
   label: "CC Agent Name"
   group_label: " Advanced"
+  description: "The name of this agent. Source: incontact.agent_lkp"
   type:  string
   sql: ${TABLE}.name ;;
 }
 
   dimension: merged_name{
-    description: "The name of this agent"
-    label: "CC/ZD Agent Name"
     group_label: " Advanced"
+    label: "CC/ZD Agent Name"
+    description: "The name of this agent. Source: incontact.agent_lkp"
     type:  string
     sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
   }

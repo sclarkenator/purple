@@ -11,10 +11,17 @@ view: sessions {
   #sql_table_name: heap.sessions ;;
 
   dimension: session_id {
-    primary_key: yes
+    #primary_key: yes
     hidden: yes
     type: string
     sql: ${TABLE}.session_id ;; }
+
+  dimension: session_unique_id {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${session_id} || '-' || ${user_id} ;;
+  }
 
   dimension: app_name {
     label: "App Name"
@@ -116,6 +123,11 @@ view: sessions {
     hidden: yes
     sql: ${TABLE}.library ;; }
 
+  dimension: phone_model {
+    hidden: yes
+    sql: ${TABLE}.phone_model ;;
+  }
+
   dimension: platform {
     label: "Platform"
     group_label: "Advanced"
@@ -149,6 +161,19 @@ view: sessions {
           else left(${TABLE}.referrer,16)||'*' end ;; }
   #https://purple.com
 
+  dimension: referrer_domain {
+    hidden: yes
+    sql: split_part(${referrer},'/',3) ;;
+  }
+
+#   dimension: referrer_domain_mapped {
+#     sql: CASE WHEN ${referrer_domain} like '%facebook%' THEN 'facebook' WHEN ${referrer_domain} like '%google%' THEN 'google' ELSE ${referrer_domain} END ;;
+#     html: {{ linked_value }}
+#       <a href="/dashboards/heap_block::referrer_dashboard?referrer_domain={{ value | encode_uri }}" target="_new">
+#       <img src="/images/qr-graph-line@2x.png" height=20 width=20></a>
+#       ;;
+#   }
+
   dimension: region {
     label: "Region"
     type: string
@@ -164,7 +189,7 @@ view: sessions {
   dimension_group: time {
     group_label: "  Session Time"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute]
     sql: ${TABLE}.time ;; }
 
   dimension: last_30{
@@ -199,6 +224,26 @@ view: sessions {
     description: "Yes/No for if the date is in the last 30 days"
     type: yesno
     sql: date_trunc(week, ${TABLE}.time::date) < date_trunc(week, current_date) ;;}
+
+  dimension: current_week_filter_heap{
+    view_label: "Sessions"
+    group_label: "  Session Time"
+    label: "z - Current Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current week of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(WEEK FROM ${time_date}::date) = EXTRACT(WEEK FROM current_date::date) ;;
+  }
+
+  dimension: current_month_filter_heap{
+    view_label: "Sessions"
+    group_label: "  Session Time"
+    label: "z - Current Month"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current month of the year (for each year)"
+    type: yesno
+    sql: EXTRACT(month FROM ${time_date}::date) = EXTRACT(month FROM current_date::date) ;;
+  }
 
   dimension: prev_week{
     group_label: "  Session Time"
@@ -238,8 +283,8 @@ view: sessions {
           when ${utm_medium} ilike 'sh' or ${utm_medium} ilike 'shopping' then 'shopping'
           when ${utm_medium} ilike 'af' or ${utm_medium} ilike 'ir' or ${utm_medium} ilike '%affiliate%' then 'affiliate'
           when ${utm_medium} ilike 'em' or ${utm_medium} ilike 'email' or ${referrer} ilike '%mail.%' or ${referrer} ilike '%outlook.live%' then 'email'
-          when ${utm_medium} is null and (referrer ilike '%google%' or ${referrer} ilike '%bing%' or ${referrer} ilike '%yahoo%' or ${referrer} ilike '%ask%' or ${referrer} ilike '%aol%' or ${referrer} ilike '%msn%' or ${referrer} ilike '%yendex%' or ${referrer} ilike '%duckduck%') then 'organic'
-          when ${utm_medium} ilike 'rf' or ${utm_medium} ilike 'referral' or ${utm_medium} ilike '%partner platfo%' or lower(referrer) not like '%purple%' then 'referral'
+          when ${utm_medium} is null and (${referrer} ilike '%google%' or ${referrer} ilike '%bing%' or ${referrer} ilike '%yahoo%' or ${referrer} ilike '%ask%' or ${referrer} ilike '%aol%' or ${referrer} ilike '%msn%' or ${referrer} ilike '%yendex%' or ${referrer} ilike '%duckduck%') then 'organic'
+          when ${utm_medium} ilike 'rf' or ${utm_medium} ilike 'referral' or ${utm_medium} ilike '%partner platfo%' or lower(${referrer}) not like '%purple%' then 'referral'
           when (${referrer} ilike '%purple%' and ${utm_medium} is null) or ${referrer} is null then 'direct' else 'undefined' end ;;
   }
 
@@ -248,6 +293,12 @@ view: sessions {
     label: "UTM Campaign"
     type: string
     sql: lower(${TABLE}.utm_campaign) ;; }
+
+  dimension: utm_campaign_raw {
+    hidden: yes
+    type:  string
+    sql:  ${TABLE}.utm_campaign ;;
+  }
 
   dimension: utm_content {
     group_label: "UTM Tags"
@@ -262,15 +313,17 @@ view: sessions {
     sql: lower(${TABLE}.utm_medium) ;; }
 
   dimension: medium_bucket {
-    label: "Medium Bucket"
+    label: "Medium"
+    group_label: "Adspend Mapping"
     type: string
-    hidden: yes
-    sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
+    #hidden: yes
+    sql: case when ${utm_medium} in ('sr','search','cpc') then 'search'
           when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' or ${utm_medium} ilike '%instagram%' or ${utm_medium} ilike 'twitter' then 'social'
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
+          when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
-          else ${utm_medium} end ;;
+          else 'other' end ;;
   }
 
   dimension: utm_source {
@@ -280,26 +333,58 @@ view: sessions {
     sql: lower(${TABLE}.utm_source) ;; }
 
   dimension: source_bucket {
-    label: "Source Bucket"
+    label: "Source"
+    group_label: "Adspend Mapping"
     type: string
+    #hidden: yes
+    sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' then 'GOOGLE'
+              when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
+              when ${utm_source} ilike '%yahoo%' then 'YAHOO'
+              when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
+              when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
+              when ${utm_source} ilike '%adwords%' then 'ADWORDS'
+              when ${utm_source} ilike '%pinterest%' then 'PINTEREST'
+              when ${utm_source} ilike '%bing%' then 'BING'
+              when ${utm_source} ilike '%gemini%' then 'GEMINI'
+              when ${utm_source} ilike '%twitter%' then 'TWITTER'
+              else 'OTHER' end ;;
+  }
+
+  dimension: source_medium {
     hidden: yes
-    sql: case when ${utm_source} = "go " or ${utm_source} ilike "%google%" then "GOOGLE"
-              when ${utm_source} ilike "%fb%" or ${utm_source} ilike "%faceboo%" then "FACEBOOK"
-              when ${utm_source} ilike "%yahoo%" then "YAHOO"
-              when ${utm_source} ilike "yt"  or  ${utm_source} ilike "%youtube%" then "YOUTUBE"
-              when ${utm_source} ilike "%snapchat%" then "SNAPCHAT"
-              when ${utm_source} ilike "%adwords%" then "ADWORDS"
-              when ${utm_source} ilike "pinterest" then "PINTEREST"
-              when ${utm_source} ilike "bing" then "BING"
-              when ${utm_source} ilike "gemini" then "GEMINI"
-              when ${utm_source} ilike "twitter" then "TWITTER"
-              else ${utm_source} end ;;  }
+    type: string
+    sql: ${utm_source} || '/' || ${utm_medium} ;;
+  }
 
   dimension: utm_term {
     group_label: "UTM Tags"
     label: "UTM Term"
     type: string
     sql: lower(${TABLE}.utm_term) ;; }
+
+  dimension: term_bucket {
+    label: "Campaign Type"
+    group_label: "Adspend Mapping"
+    type: string
+    sql: case when ${utm_term} ilike '%br%' then 'BRAND'
+      when ${utm_term} ilike '%pt%' then 'PROSPECTING'
+      when ${utm_term} = '%rt%' then 'RETARGETING'
+      else 'OTHER' end ;;
+  }
+
+  dimension_group: current {
+    label: "  Ad"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: current_date ;; }
+
+  dimension: ytd {
+    group_label: "  Session Time"
+    label: "z - YTD"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    type: yesno
+    sql:  ${time_day_of_year} < ${current_day_of_year} ;; }
 
   measure: count {
     type: count_distinct
@@ -315,6 +400,13 @@ view: sessions {
     label: "Distinct Users"
     type: count_distinct
     sql:  ${TABLE}.user_id ;;
+  }
+
+  measure: average_sessions_per_user {
+    hidden: yes
+    type: number
+    sql: ${count}::float/nullif(${distinct_users},0) ;;
+    value_format_name: decimal_1
   }
 
   # ----- Sets of fields for drilling ------

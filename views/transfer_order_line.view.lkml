@@ -1,5 +1,13 @@
 view: transfer_order_line {
-  sql_table_name: PRODUCTION.TRANSFER_ORDER_LINE ;;
+  #sql_table_name: PRODUCTION.TRANSFER_ORDER_LINE ;;
+  derived_table: { sql:
+    select * from (
+      select a.*
+          , row_number () over (partition by ACCOUNT_ID || TRANSFER_ORDER_ID || ITEM_ID order by 1) as rownum
+      from PRODUCTION.transfer_order_line a
+    ) z
+    where z.rownum = 1
+  ;;}
 
 
   dimension: pk {
@@ -15,51 +23,42 @@ view: transfer_order_line {
   }
 
   dimension: amount_received {
+    hidden: yes
     type: number
     sql: ${TABLE}."AMOUNT_RECEIVED" ;;
   }
 
   dimension: amount_shipped {
+    hidden: yes
     type: number
     sql: ${TABLE}."AMOUNT_SHIPPED" ;;
   }
 
   dimension: committed_qty {
+    hidden: yes
     type: number
     sql: ${TABLE}."COMMITTED_QTY" ;;
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    sql: ${TABLE}."CREATED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."CREATED" );;
   }
 
   dimension_group: expected_receipt {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."EXPECTED_RECEIPT" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."EXPECTED_RECEIPT") ;;
   }
 
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -74,6 +73,7 @@ view: transfer_order_line {
   }
 
   dimension: item_count {
+    hidden: yes
     type: number
     sql: ${TABLE}."ITEM_COUNT" ;;
   }
@@ -84,6 +84,7 @@ view: transfer_order_line {
   }
 
   dimension: item_unit_price {
+    hidden: yes
     type: number
     sql: ${TABLE}."ITEM_UNIT_PRICE" ;;
   }
@@ -94,48 +95,37 @@ view: transfer_order_line {
   }
 
   dimension: packed_qty {
+    hidden: yes
     type: number
     sql: ${TABLE}."PACKED_QTY" ;;
   }
 
   dimension: picked_qty {
+    hidden: yes
     type: number
     sql: ${TABLE}."PICKED_QTY" ;;
   }
 
   dimension: received_qty {
+    hidden: yes
     type: number
     sql: ${TABLE}."RECEIVED_QTY" ;;
   }
 
   dimension_group: shipment_received {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."SHIPMENT_RECEIVED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."SHIPMENT_RECEIVED") ;;
   }
 
   dimension_group: shipped {
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}."SHIPPED" ;;
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."SHIPPED") ;;
   }
 
   dimension: transfer_order_id {

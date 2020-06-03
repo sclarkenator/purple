@@ -54,7 +54,7 @@ view: v_fedex_to_xpo {
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
-  dimension_group: scheduled_deliver {
+  dimension_group: scheduled_delivery {
     type: time
     timeframes: [
       raw,
@@ -65,7 +65,7 @@ view: v_fedex_to_xpo {
       quarter,
       year
     ]
-    sql: ${TABLE}."SCHEDULED_DELIVER" ;;
+    sql: ${TABLE}."SCHEDULED_DELIVERY" ;;
   }
 
   dimension: shipping_cost {
@@ -73,9 +73,9 @@ view: v_fedex_to_xpo {
     sql: ${TABLE}."SHIPPING_COST" ;;
   }
 
-  dimension: tracking_numbers {
+  dimension: tracking_number {
     type: string
-    sql: ${TABLE}."TRACKING_NUMBERS" ;;
+    sql: ${TABLE}."TRACKING_NUMBER" ;;
   }
 
   dimension_group: xpo_delivered {
@@ -147,6 +147,11 @@ view: v_fedex_to_xpo {
   dimension: status {
     type:  string
     sql: ${TABLE}.status ;;
+  }
+
+  dimension: last_mile_hub {
+    type:  string
+    sql: ${TABLE}."LAST_MILE_HUB" ;;
   }
 
   measure: count {

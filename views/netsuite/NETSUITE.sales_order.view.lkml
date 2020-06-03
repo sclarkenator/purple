@@ -2,8 +2,8 @@ view: sales_order {
   sql_table_name: SALES.SALES_ORDER ;;
 
   dimension: valid_address{
-    label: "Is address valid?"
-    description: "Address validation field: yes/no/blank"
+    label: "     * Is Address Valid? (Yes/No)"
+    description: "Has the address been validated? Source: netsuite.sales_order"
     type: string
     hidden:  no
     view_label: "Fulfillment"
@@ -25,43 +25,44 @@ view: sales_order {
   measure: total_orders {
     label: "Total Unique Orders"
     #description:"Unique orders placed"
-    drill_fields: [order_id, tranid,sales_order_line.created_date,sales_order_line.SLA_Target_date,minimum_ship_date ,item.product_description, sales_order_line.location, source, sales_order_line.total_units,sales_order_line.gross_amt]
+    drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     description: "Distinct Orders"
     sql: ${order_id} ;; }
 
   measure: unique_customers {
     label: "Distinct customers"
-    description: "Counts distinct email addresses in customer table"
+    description: "Counts distinct email addresses in customer table.
+      Source: netsuite.sales_order"
     view_label: "Customer"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     hidden: no
     sql: ${TABLE}.email ;; }
 
-measure: upt {
-  label: "UPT"
-  description: "Units per transaction"
-  type: number
-  value_format: "#,##0.00"
-  sql: ${sales_order_line.total_units}/count (distinct ${order_id}) ;; }
-
   measure: average_order_size {
-    label: "Average Order Size ($)"
-    description: "Average total order amount, excluding tax"
+    label: "AOV ($)"
+    description: "Average total order amount, excluding tax.
+      Source: netsuite.sales_order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: average
-    value_format: "$#,##0.00"
-    sql: ${TABLE}.gross_amt ;; }
+    value_format: "$#,##0"
+    sql:case when ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end;; }
 
   measure: max_order_size {
     label: " Max Order Size ($)"
-    description: "Max total order amount, excluding tax"
+    description: "Max total order amount, excluding tax.
+      Source: netsuite.sales_order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: max
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
 
   measure: min_order_size {
     label: " Min Order Size ($)"
-    description: "Min total order amount, excluding tax"
+    description: "Min total order amount, excluding tax.
+      Source: netsuite.sales_order"
+    drill_fields: [sales_order_line.sales_order_details*]
     type: min
     value_format: "$#,##0.00"
     sql: ${TABLE}.gross_amt ;; }
@@ -73,8 +74,9 @@ measure: upt {
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
 
   dimension: channel_source {
-    label: "   Order Source (buckets)"
-    description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other)"
+    group_label: " Advanced"
+    label: "Order Source (buckets)"
+    description: "Merging the order source and system (Shopify US, Shopify CA, Amazon US, Amazon CA, Other). Source: netsuite.sales_order"
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
               or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%us%'))
@@ -93,7 +95,8 @@ measure: upt {
   dimension: Amazon_fulfillment{
     group_label: " Advanced"
     label: "Amazon Fulfillment"
-    description: "Whether the purchase from amazon was deliverd by amazon or purple"
+    description: "Whether the purchase from amazon was deliverd by amazon or purple.
+      Source: netsuite.sales_order"
     case: {
       when: { sql: lower(${TABLE}.source) like ('%fbm%') ;;  label: "Purple" }
       when: { sql: lower(${TABLE}.source) like ('%fba%') ;;  label: "Amazon" }
@@ -119,8 +122,10 @@ measure: upt {
               else 'Other' end  ;; }
 
   dimension: channel2 {
-    label: "  Channel"
-    description:  "Which Netsuite Channel was the order processed through (DTC, Wholesale, Owned Retail, etc)"
+    group_label: " Advanced"
+    label: "Channel"
+    description:  "Which Netsuite Channel was the order processed through (DTC, Wholesale, Owned Retail, etc).
+      Source: netsuite.sales_order"
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
@@ -130,9 +135,11 @@ measure: upt {
               else 'Other' end  ;; }
 
   dimension: dtc_channel_sub_category {
-    label: "  DTC Channel Sub-Category"
+    label: "DTC Channel Sub-Category"
     group_label: " Advanced"
-    description: "Which DTC Sub-Category was the order processed through (Merchandise, Shopify, Direct Entry, etc)"
+    hidden: yes
+    description: "Which DTC Sub-Category was the order processed through (Merchandise, Shopify, Direct Entry, etc).
+      Source: netsuite.sales_order"
     type: string
     sql: case when ${source} = 'Amazon-FBM-US' OR ${source} = 'Amazon-FBA' OR ${source} = 'Amazon FBA - US' OR ${source} = 'eBay' then 'Merchant'
               when ${source} = 'SHOPIFY-US Historical' OR ${source} = 'SHOPIFY-CA' OR ${source} = 'Shopify - US' OR ${source} = 'Shopify - Canada' then 'Shopify'
@@ -144,12 +151,22 @@ measure: upt {
     type: date_time
     sql: ${TABLE}.CREATED ;; }
 
+  dimension: created_date {
+    label: "Sales Order Created Date"
+    type: date
+    group_label: " Advanced"
+    description: "Created date from netsuite on the sale order.
+      Source: netsuite.sales_order"
+    sql: ${created}::date ;;
+  }
+
   dimension: shipping_hold {
     hidden: yes
     group_label: " Advanced"
     view_label: "Fulfillment"
     label: "Shipping Hold?"
-    description: "T/F T if there is a shipping hold"
+    description: "T/F T if there is a shipping hold.
+      Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.SHIPPING_HOLD ;; }
 
@@ -159,17 +176,20 @@ measure: upt {
     sql: ${TABLE}.CREATED_BY_ID ;; }
 
   dimension: 3PL_MSFID {
-    label: "3PL MSFID"
     view_label: "Fulfillment"
     group_label: " Advanced"
-    description: "The Pilot Order ID"
+    label: "3PL MSFID"
+    description: "The Pilot Order ID
+      Source:netsuite.sales_order"
     hidden: no
     type: string
     sql: ${TABLE}."3PL_MSFID_ESONUS" ;; }
 
   dimension: showroom {
     group_label: " Advanced"
-    description: "Flag for orders made in the Alpine Showroom"
+    label: "Showroom"
+    description: "Flag for orders made in the Alpine Showroom.
+      Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.showroom ;; }
 
@@ -201,12 +221,15 @@ measure: upt {
   dimension: Kount_Status {
     hidden: no
     group_label: " Advanced"
+    label: "Kount Status"
+    description: "Kount Fraud Status. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.kount_status ;; }
 
   dimension_group: minimum_ship {
     label: "Minimum Ship by"
-    description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay"
+    description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay.
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     hidden: yes
     type: time
@@ -217,7 +240,8 @@ measure: upt {
 
   dimension_group: ship_by {
     label: "Ship by"
-    description: "This is the date order must be fulfilled by to arrive as expected (used by wholesale)"
+    description: "This is the date order must be fulfilled by to arrive as expected (used by wholesale).
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     hidden: yes
     type: time
@@ -228,7 +252,8 @@ measure: upt {
 
   dimension_group: ship_by_2 {
     label: "Ship by and Minimum Ship"
-    description: "Picking the date in the future of the created date"
+    description: "Picking the date in the future of the created date.
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type: time
     hidden: yes
@@ -240,7 +265,8 @@ measure: upt {
 
   dimension_group: ship_order_by {
     label: "Ship by or Order"
-    description: "Using ship by date unless blank then order date"
+    description: "Using ship by date unless blank then order date.
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type:time
     hidden: yes
@@ -256,12 +282,19 @@ measure: upt {
 
   dimension: is_upgrade {
     group_label: " Advanced"
-    label: "Is Order Upgrade"
-    description: "Yes - this order an upgrade on a previous order"
+    label: "Is Warranty Exchange (Yes/No)"
+    description: "Yes - this order is an upgrade from the original order on a warranty claim. Source: netsuite.sales_order"
     #type: string
     #sql: ${TABLE}.IS_UPGRADE ;; }
     type: yesno
     sql: ${TABLE}.IS_UPGRADE = 'T' ;; }
+
+  dimension: is_exchange {
+    group_label: " Advanced"
+    label: "Is Return Exchange (Yes/N0)"
+    description: "Yes - this order is an exchange from the original order on a return. Source: netsuite.sales_order"
+    type: yesno
+    sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
   dimension: memo {
     hidden: yes
@@ -275,14 +308,15 @@ measure: upt {
 
   dimension: gross_amt {
     group_label: " Advanced"
-    label:  "Gross Order Size ($)"
-    description: "Total gross sales for all items on order, excluding taxes."
+    label:"Gross Order Size ($)"
+    description: "Total gross sales for all items on order, excluding taxes. Source:netsuite.sales_order"
     type: number
     sql: ${TABLE}.gross_amt ;;  }
 
   dimension: Order_size_buckets{
-    label: "   Order Size (buckets)"
-    description: "Different price buckets for total gross order amount (150,600,1000,1500,2500)"
+    group_label: " Advanced"
+    label: "Order Size (buckets)"
+    description: "Different price buckets for total gross order amount (150,600,1000,1500,2500). Source:netsuite.sales_order"
     hidden:   no
     type:  tier
     style: integer
@@ -291,7 +325,7 @@ measure: upt {
 
   dimension: Order_size_buckets_v2{
     label: "Order Size (buckets)"
-    description: "$500 price  (500/1000/1500/etc)"
+    description: "$500 price  (500/1000/1500/etc). Source: netsuite.sales_order"
     hidden:  yes
     type:  tier
     style: integer
@@ -300,7 +334,7 @@ measure: upt {
 
   dimension: Order_size_buckets_v3{
     label: "Order Size (buckets by 100)"
-    description: "Different price buckets for total gross order amount, by 100 increments"
+    description: "Different price buckets for total gross order amount, by 100 increments. Source: netsuite.sales_order"
     hidden:   yes
     type:  tier
     style: integer
@@ -319,9 +353,11 @@ measure: upt {
     hidden: no
     link: {
       label: "Netsuite"
-      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="}
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+      }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
-    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
+    description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.ORDER_ID ;; }
 
@@ -335,13 +371,14 @@ measure: upt {
   dimension: payment_method {
     group_label: " Advanced"
     label: "Order Payment Method (shopify)"
-    description: "For Shopify-US orders only. The customer's method of payment"
+    description: "The customer's method of payment. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
 
   dimension: payment_method_flag {
     label: "     * Is Financed"
-    description: "For Shopify-US orders only. Payment with Affirm or Progressive"
+    description: "For Shopify-US orders only. Payment with Affirm or Progressive.
+      Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
 
@@ -353,7 +390,7 @@ measure: upt {
   dimension: related_tranid {
     group_label: " Advanced"
     label: "Related Transaction ID"
-    description: "Netsuite's internal related transaction id"
+    description: "Netsuite's internal related transaction id. Source: netsuite.sales_order"
     type: string
     sql: ${TABLE}.RELATED_TRANID ;; }
 
@@ -397,7 +434,8 @@ measure: upt {
   dimension: source {
     group_label: " Advanced"
     label:  "Order Source"
-    description: "System where order was placed"
+    description: "System where order was placed
+      Source: netsuite.sales_order"
     #hidden: yes
     type: string
     sql: ${TABLE}.SOURCE ;; }
@@ -405,7 +443,8 @@ measure: upt {
   dimension: status {
     group_label: " Advanced"
     label: "Status"
-    description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc"
+    description: "Billed, Shipped, Closed, Cancelled, Pending Fullfillment, etc
+      Source: netsuite.sales_order"
     #hidden:  yes
     type: string
     sql: ${TABLE}.STATUS ;; }
@@ -413,7 +452,8 @@ measure: upt {
   dimension: system {
     group_label: " Advanced"
     label: "System"
-    description: "System the order originated in. (Amazon, Shopify, Netsuite)"
+    description: "System the order originated in. (Amazon, Shopify, Netsuite)
+      Source: netsuite.sales_order"
     #hidden: yes
     type: string
     sql: ${TABLE}.SYSTEM ;; }
@@ -425,7 +465,8 @@ measure: upt {
 
   measure: tax_amt_total {
     label: "Total Tax ($)"
-    description: "Amount of Tax Collected"
+    description: "Amount of Tax Collected
+      Source: netsuite.sales_order"
     #hidden: yes
     type: sum
     sql: ${TABLE}.TAX_AMT ;; }
@@ -433,8 +474,9 @@ measure: upt {
   dimension: order_age_bucket {
     view_label: "Fulfillment"
     group_label: " Advanced"
-    label: "  Order Age (bucket)"
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    label: "Order Age (bucket)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)
+      Source:netsuite.sales_order"
     type:  tier
     tiers: [1,2,3,4,5,6,7,11,15,21]
     style: integer
@@ -448,9 +490,10 @@ measure: upt {
   dimension: order_age_bucket2 {
     view_label: "Fulfillment"
     group_label: " Advanced"
-    label: "  Order Age (bucket 2)"
+    label: "Order Age (bucket 2)"
     hidden: no
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,11,15,21)"
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28)
+      Source: netsuite.sales_order"
     type:  tier
     tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,28]
     style: integer
@@ -463,7 +506,8 @@ measure: upt {
 
   dimension: order_age_raw {
     label: "Order Age Raw"
-    description: "Number of days between today and when order was placed"
+    description: "Number of days between today and when order was placed
+      Source: netsuite.sales_order"
     hidden:  yes
     type:  number
     sql: datediff(day,
@@ -483,10 +527,13 @@ dimension_group: trandate {
   dimension: tranid {
     label: "Transaction ID"
     group_label: " Advanced"
-    description: "Netsuite's Sale Order Number"
+    description: "Netsuite's Sale Order Number
+      Source: netsuite.sales_order"
     link: {
       label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="}
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+      }
     type: string
     sql: ${TABLE}.TRANID ;; }
 
@@ -518,14 +565,16 @@ dimension_group: trandate {
   dimension: warranty_order_flg {
     group_label: " Advanced"
     label: "Is Warranty Order"
-    description: "Yes if this order has a warranty replacement"
+    description: "Yes if this order has a warranty replacement.
+      Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.WARRANTY_CLAIM_ID is not null or ${TABLE}.warranty = 'T' ;; }
 
   dimension: manna_transmission {
     label: "Manna Transmission"
     hidden: yes
-    description: "At the sales header level this is confirmation/acceptance from manna to netsuite that they will start the process of fulfillment"
+    description: "At the sales header level this is confirmation/acceptance from manna to netsuite that they will start the process of fulfillment.
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type: date
     sql: ${TABLE}.manna_transmission ;; }
@@ -534,14 +583,17 @@ dimension_group: trandate {
     view_label: "Fulfillment"
     group_label: "Average Days:"
     label: "to Manna Transmission"
-    description: "Finds the average time elapsed between Order Date and Manna Transmission Date"
+    description: "Finds the average time elapsed between Order Date and Manna Transmission Date
+      Source:netsuite.sales_order"
+    drill_fields: [sales_order_line.fulfillment_details]
     type: average
     sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;; }
 
   dimension: manna_transmission_succ {
     label: "Is Manna Transmission Success"
     hidden: yes
-    description: "Yes if an order has successfully transmitted to Manna"
+    description: "Yes if an order has successfully transmitted to Manna
+      Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type: yesno
     sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';; }
@@ -573,7 +625,8 @@ dimension_group: trandate {
 
   dimension: store_id {
     label: "Retail store ID"
-    description: "Netsuite retail store ID"
+    description: "Netsuite retail store ID
+      Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
     type: string
@@ -582,7 +635,8 @@ dimension_group: trandate {
   }
 dimension: store_name{
   label: "Store Name"
-  description: "Manually grouped from store ID"
+  description: "Manually grouped from store ID
+    Source: netsuite.sales_order"
   group_label: " Advanced"
   view_label: "Sales Order"
   type: string
@@ -597,7 +651,8 @@ dimension: store_name{
 
   dimension: date_diff_yoy {
     hidden:  yes
-    description: "Used as a filter to compare periods of time to the same time period last year only (doesn't work for 2 years ago). Ex. - Last 90 days this year to those days last year"
+    description: "Used as a filter to compare periods of time to the same time period last year only (doesn't work for 2 years ago). Ex. - Last 90 days this year to those days last year
+      Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
     type: number

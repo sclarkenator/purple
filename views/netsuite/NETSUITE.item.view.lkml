@@ -5,28 +5,39 @@ view: item {
     primary_key: yes
     label: "Item ID"
     group_label: "Advanced"
-    description: "Internal Netsuite ID"
-    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+    description: "Internal Netsuite ID. Source:netsuite.item"
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     type: number
     sql: ${TABLE}.ITEM_ID ;;
   }
 
   dimension: classification {
-    label: "Item Classification"
-    description: "What stage is this item in production?"
-    hidden:  yes
-    type: string
+    label: "NetSuite Item Classification"
+    group_label: "Advanced"
+    description: "What stage is this item in production?. Source:looker.calculation"
+    hidden:  no
     sql:
     case when
     --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') then 'FG'
+        ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or ${line_raw} = 'FRAME' or ( ${category_raw} = 'SEATING' and (${product_description} ilike '%4 PK' or ${product_description} ilike '%6 PK')) then 'FG'
         else ${TABLE}.classification_new end ;;
+  }
+
+  dimension: classification_raw {
+    hidden:  yes
+    type: string
+    sql:  ${TABLE}.classification_new ;;
   }
 
   dimension: UPC_code {
     label: "UPC Code"
     group_label: "Advanced"
-    description: "What UPC code has been assigned"
+    description: "What UPC code has been assigned. Source: netsuite.item"
     hidden:  no
     type: string
     sql: ${TABLE}.UPC_CODE ;;
@@ -35,7 +46,7 @@ view: item {
   dimension: type {
     label: "Type"
     hidden: yes
-    description: "Item Type"
+    description: "Item Type. Source: netsuite.item"
     type: string
     sql: ${TABLE}.type ;;
   }
@@ -50,7 +61,7 @@ view: item {
   dimension: BASE_UNIT {
     label: "NetSuite Base Unit"
     group_label: "Advanced"
-    description: "Used to show what unit non-each items are stored in"
+    description: "Used to show what unit non-each items are stored in. Source:netsuite.item"
     type: string
     sql: ${TABLE}.base_unit ;;
   }
@@ -65,7 +76,7 @@ view: item {
 
   dimension: merchandise2 {
     label: "   * Is Merchandising"
-    description: "Yes is a merchandising product for wholesale"
+    description: "Yes is a merchandising product for wholesale. Source: netsuite.item"
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;;
   }
@@ -81,7 +92,7 @@ view: item {
   dimension: modified2 {
     label: "Includes Modifications"
     hidden: yes
-    description: "Yes is indicating product attributes have been manually set by BI"
+    description: "Yes is indicating product attributes have been manually set by BI. Source: analytics.item"
     type: yesno
     sql: ${TABLE}.bi_update = 1 ;;
   }
@@ -96,33 +107,36 @@ view: item {
 
   dimension: product_description {
     label:  "  Product Name"
-    description: "from Netsuite, with a hyperlink to the product"
+    description: "from Netsuite, with a hyperlink to the product. Source: netsuite.item"
     type: string
 ##    link: {
 ##      label: "NetSuite"
-##      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+##      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+##      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     sql: ${product_description_raw} ;;
   }
 
   dimension: product_description_legacy {
     hidden: yes
     label:  "  Product Name Legacy"
-    description: "from Netsuite, with a hyperlink to the product"
+    description: "from Netsuite, with a hyperlink to the product. Source: netsuite.item"
     type: string
 ##    link: {
 ##      label: "NetSuite"
-##      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+##      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+##      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;;}
 
   dimension: product_name {
     label:  "3. Name"
     hidden: yes
     group_label: "Forecast Product Hierarchy"
-    description: "from Netsuite, with a hyperlink to the product"
+    description: "from Netsuite, with a hyperlink to the product. Source: netsuite.item"
     type: string
    # link: {
-   # label: "NetSuite"
-    #  url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+   #  label: "NetSuite"
+   #  url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+   #  icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     sql: ${product_description_raw} ;;
   }
 
@@ -130,17 +144,18 @@ view: item {
     hidden: yes
     label:  "3. Name Legacy"
     group_label: "Forecast Product Hierarchy"
-    description: "from Netsuite, with a hyperlink to the product"
+    description: "from Netsuite, with a hyperlink to the product. Source: netsuite.item"
     type: string
     link: {
       label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     sql: ${TABLE}.PRODUCT_DESCRIPTION_LKR ;; }
 
   dimension: model_name {
     hidden:  no
     label:  " Model"
-    description: "Original, H2, H3, H4, or Other"
+    description: "Original, H2, H3, H4, or Other. Source: netsuite.item"
     drill_fields: [product_description]
     type: string
     sql: ${model_raw} ;;
@@ -149,7 +164,7 @@ view: item {
   dimension: mattress_model_name {
     hidden:  yes
     label:  " Mattress Model Name"
-    description: "4, 3, 2, Original"
+    description: "4, 3, 2, Original. Source: looker calculation"
     drill_fields: [product_description]
     type: string
     case: {
@@ -162,7 +177,7 @@ view: item {
   dimension: model_name_legacy {
     hidden:  yes
     label:  " Mattress Model Legacy"
-    description: "Original, P2, P3, P4, Powerbase, or Other"
+    description: "Original, P2, P3, P4, Powerbase, or Other. Source: looker calculation"
     drill_fields: [product_description]
     type: string
     case: {
@@ -184,7 +199,7 @@ view: item {
 
   dimension: product_line_name {
     label: "   Production buckets"
-    description: "Type of product (mattress, pillow, cushion, etc.)"
+    description: "Type of product (mattress, pillow, cushion, etc.). Source: netsuite.item"
     type: string
     sql: ${line_raw} ;;
   }
@@ -192,7 +207,7 @@ view: item {
   dimension: product_line_name_legacy {
     hidden: yes
     label: "   Production buckets Legacy"
-    description: "Type of product (mattress, pillow, cushion, etc.)"
+    description: "Type of product (mattress, pillow, cushion, etc.). Source: netsuite.item"
     type: string
     sql: ${TABLE}.PRODUCT_LINE_NAME_lkr ;; }
 
@@ -200,7 +215,7 @@ view: item {
     label: "1. Buckets"
     hidden: yes
     group_label: "Forecast Product Hierarchy"
-    description: "Grouping the type of products into Mattress, Bedding, Bases, and Other"
+    description: "Grouping the type of products into Mattress, Bedding, Bases, and Other. Source: looker calculation"
     type: string
     case: {
       when: { sql:  ${category_raw} = 'MATTRESS' ;; label: "Mattress" }
@@ -212,7 +227,7 @@ view: item {
     hidden: yes
     label: "1 Buckets Legacy"
     group_label: "Forecast Product Hierarchy Legacy"
-    description: "Grouping the type of products into Mattress, Top, Bottom, and Other"
+    description: "Grouping the type of products into Mattress, Top, Bottom, and Other. Source: looker calculation"
     type: string
     case: {
       when: { sql:  ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' ;; label: "Mattress" }
@@ -224,7 +239,7 @@ view: item {
     label: "2. Type"
     hidden: yes
     group_label: "Forecast Product Hierarchy"
-    description: "Type of product (hybrid, original mattress, pillow, cushion, etc.)"
+    description: "Type of product (hybrid, original mattress, pillow, cushion, etc.). Source: looker calculation"
     type: string
     sql: case when  ${category_raw} = 'MATTRESS' and ${line_raw} = 'FOAM' then 'Original'
            when  ${category_raw} = 'MATTRESS' and ${line_raw} <> 'FOAM' and ${line_raw} <> 'COIL' then 'Hybrid'
@@ -235,7 +250,7 @@ view: item {
     hidden: yes
     label: "2. Type"
     group_label: "Forecast Product Hierarchy Legacy"
-    description: "Type of product (new mattress, original mattress, pillow, cushion, etc.)"
+    description: "Type of product (new mattress, original mattress, pillow, cushion, etc.). Source: looker calculation"
     type: string
     sql: case when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr = '%ORIGINAL%'  then 'Original'
      when ${TABLE}.PRODUCT_LINE_NAME_lkr = 'MATTRESS' and ${TABLE}.model_name_lkr <> 'ORIGINAL' and ${TABLE}.model_name_lkr <> 'NEW ORIGINAL' then 'New Mattress'
@@ -244,7 +259,7 @@ view: item {
   dimension: product_line_name_with_bases_breakout {
     hidden: yes
     label: "Product Type with Bases Breakout Legacy"
-    description: "Type of product (mattress, pillow, cushion, etc.)"
+    description: "Type of product (mattress, pillow, cushion, etc.). Source: looker calculation"
     type: string
     sql: case when ${line_raw} = 'POWERBASE' then 'POWERBASE'
               when ${line_raw} = 'PLATFORM' then 'PLATFORM'
@@ -254,7 +269,7 @@ view: item {
   dimension: product_line_name_with_bases_breakout_legacy {
     hidden: yes
     label: "Product Type with Bases Breakout Legacy"
-    description: "Type of product (mattress, pillow, cushion, etc.)"
+    description: "Type of product (mattress, pillow, cushion, etc.). Source: looker calculation"
     type: string
     sql: case when ${TABLE}.MODEL_NAME_lkr = 'POWERBASE' then 'POWERBASE'
               when ${TABLE}.MODEL_NAME_lkr = 'PLATFORM' then 'PLATFORM'
@@ -263,7 +278,7 @@ view: item {
   dimension: product_line_model_name {
     hidden: yes
     label: "Product/Model (bucket)"
-    description: "Pillow, Powerbase, Original, P2, P3, P4, or Other"
+    description: "Pillow, Powerbase, Original, P2, P3, P4, or Other. Source: looker calculation"
     type: string
     case: {
       when: { sql: ${line_raw} = 'FOAM' ;; label: "ORIGINAL" }
@@ -278,7 +293,7 @@ view: item {
   dimension: product_line_model_name_legacy {
     hidden: yes
     label: "Product/Model (bucket) Legacy"
-    description: "Pillow, Powerbase, Original, P2, P3, P4, or Other"
+    description: "Pillow, Powerbase, Original, P2, P3, P4, or Other. Source: looker calculation"
     type: string
     case: {
       when: { sql: ${TABLE}.model_name_lkr = 'ORIGINAL' ;; label: "ORIGINAL" }
@@ -294,7 +309,7 @@ view: item {
     hidden: yes
     view_label: "Fulfillment"
     label: "Is Fulfilled by Manna"
-    description: "Yes is an item normally fulfilled by Manna (hybrid or powerbase)"
+    description: "Yes is an item normally fulfilled by Manna (hybrid or powerbase). Source: looker calculation"
     type: yesno
     sql: ${is_original_New_mattress} = 'Hybrid' or ${line_raw} = 'POWERBASE' ;;
   }
@@ -302,15 +317,15 @@ view: item {
   dimension: manna_fulfilled_legacy {
     hidden: yes
     view_label: "Fulfillment"
-    label: "Is Fulfilled by Manna Legacy"
-    description: "Yes is an item normally fulfilled by Manna (new mattress or powerbase)"
+    label: "* Is Fulfilled by Manna Legacy"
+    description: "Yes is an item normally fulfilled by Manna (new mattress or powerbase). Source: looker calculation"
     type: yesno
     sql: ${is_original_New_mattress} = 'New Mattress' or ${TABLE}.model_name_lkr = 'POWERBASE' ;; }
 
   dimension: is_mattress {
     hidden: yes
-    label: "Is Mattress"
-    description: "Yes is a mattress"
+    label: "* Is Mattress"
+    description: "Yes is a mattress. Source: looker calculation"
     type: yesno
     sql:  ${category_raw} = 'MATTRESS' ;;
   }
@@ -318,14 +333,14 @@ view: item {
   dimension: is_mattress_legacy {
     hidden: yes
     label: "Is Mattress"
-    description: "Yes is a mattress Legacy"
+    description: "Yes is a mattress Legacy. Source: looker calculation"
     type: yesno
     sql: ${product_line_name} = 'MATTRESS' ;; }
 
   dimension: is_original_New_mattress {
     label: "Original or Hybrid"
     hidden: yes
-    description: "Buckets with an option of Original, Hybrid or Other"
+    description: "Buckets with an option of Original, Hybrid or Other. Source: looker calculation"
     type: string
     sql: case
       when  ${category_raw} = 'MATTRESS' and ${line_raw} = 'FOAM' then 'Original'
@@ -336,7 +351,7 @@ view: item {
   dimension: is_original_New_mattress_legacy {
     label: "Original or New Mattress Legacy"
     hidden: yes
-    description: "Buckets with an option of Original, New Mattress or Other"
+    description: "Buckets with an option of Original, New Mattress or Other. Source: looker calculation"
     type: string
     sql: case
       when ${product_line_name} = 'MATTRESS' and ${TABLE}.model_name_lkr = 'ORIGINAL'  then 'Original'
@@ -358,7 +373,7 @@ view: item {
     #hidden: yes
     group_label: "Product Hierarchy"
     label: "1. Category"
-    description:  "Mattress/Bedding/Bases/Seating/Other"
+    description:  "Mattress/Bedding/Bases/Seating/Other. Source: netsuite.item"
     type: string
     sql: ${category_raw} ;;
   }
@@ -366,7 +381,7 @@ view: item {
   dimension: category_name_legacy {
     hidden: yes
     label: "Category Legacy"
-    description:  "Sit / Sleep / Stand"
+    description:  "Sit / Sleep / Stand. Source: netsuite.item"
     type: string
     sql: ${TABLE}.CATEGORY_NAME_lkr ;; }
 
@@ -375,40 +390,42 @@ view: item {
   dimension: line_raw {
     group_label: "Product Hierarchy"
     label: "2. Line"
-    description: "Original/Hybird, Pillow/Bedding, Platform/Powerbase, etc"
+    description: "Original/Hybird, Pillow/Bedding, Platform/Powerbase, etc. Source:netsuite.item"
     #hidden: yes
     sql: ${TABLE}.line ;;
   }
   dimension: model_raw {
     group_label: "Product Hierarchy"
     label: "3. Model"
-    description: "Original/Hybird, Harmony/Plush, etc"
+    description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
     #hidden: yes
     sql: ${TABLE}.model ;;
   }
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
     label: "4. Name"
-    description: "Product Description"
+    description: "Product Description. Source:netsuite.item"
     #hidden: yes
     sql: ${TABLE}.product_description ;;
   }
 
   dimension: color {
     label: " Product Color"
-    description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc)"
+    description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: looker calculation"
     type: string
-    sql: case when ${product_description_raw} ilike '%GREY' then 'GREY'
-      when ${product_description_raw} ilike '%CHARCL' then 'CHARCOAL'
-      when ${product_description_raw} ilike '%SLATE' then 'SLATE'
-      when ${product_description_raw} ilike '%SAND' then 'SAND'
-      when ${product_description_raw} ilike '%WHITE' then 'WHITE'
-      when ${product_description_raw} ilike '%PURPLE' then 'PURPLE'
-      when ${product_description_raw} ilike '%NATURAL' then 'NATURAL OAT'
-      when ${product_description_raw} ilike '%STORMY' then 'STORMY GRAY'
-      when ${product_description_raw} ilike '%SOFT' then 'SOFT LILAC'
-      when ${product_description_raw} ilike '%MORNING' then 'MORNING MIST'
-      when ${product_description_raw} ilike '%DEEP' then 'DEEP PURPLE'
+    sql: case when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'GREY'
+      when ${product_description_raw} ilike '%CHARCL%' then 'CHARCOAL'
+      when ${product_description_raw} ilike '%SLATE%' then 'SLATE'
+      when ${product_description_raw} ilike '%SAND%' then 'SAND'
+      when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'WHITE'
+      when ${product_description_raw} ilike '%TRUE WHITE%' then 'TRUE WHITE'
+      when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'PURPLE'
+      when ${product_description_raw} ilike '%NATURAL OAT%' then 'NATURAL OAT'
+      when ${product_description_raw} ilike '%NATURAL GREY%' then 'NATURAL GREY'
+      when ${product_description_raw} ilike '%STORMY%' then 'STORMY GREY'
+      when ${product_description_raw} ilike '%SOFT LILAC%' then 'SOFT LILAC'
+      when ${product_description_raw} ilike '%MORNING%' then 'MORNING MIST'
+      when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
       else null end ;; }
 
   dimension: created_ts {
@@ -424,23 +441,22 @@ view: item {
   }
 
   dimension: size {
-    label: " Mattress Size"
-    description:  "TwinXL, Full, Queen, King, Cal-King or Other"
+    label: " Product Size"
+    description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.). Source: looker calculation"
     type: string
-    case: {
-      when: { sql: ${TABLE}.SIZE_lkr = 'TWIN' ;; label: "TWIN" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'TWIN XL' ;; label: "TWIN XL" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'FULL' ;; label: "FULL" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'QUEEN' ;; label: "QUEEN" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'KING' ;; label: "KING" }
-      when: { sql: ${TABLE}.SIZE_lkr = 'CAL KING' ;; label: "CAL KING" }
-      else: "Other" } }
+    sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
+              when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
+              else ${TABLE}.SIZE_lkr end ;; }
+
 
   dimension: sku_id {
     label: "SKU ID"
     group_label: "Advanced"
-    description: "SKU ID for item (XX-XX-XXXXXX)"
-    link: { label: "NetSuite" url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}" }
+    description: "SKU ID for item (XX-XX-XXXXXX). Source: netsuite.item"
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     type: string
     sql: ${TABLE}.SKU_ID ;;
   }
@@ -484,7 +500,76 @@ view: item {
         --powerbases
         when ${sku_clean} in ('10-38-12946','10-38-12949') then '10-38-12953'
         when ${sku_clean} = '10-38-12939' then '10-38-12948'
+        --Pillow 2.0
+        when ${sku_clean} = '10-31-12863' then '10-31-12855'
+        --Plush Pillow
+        when ${sku_clean} = '10-31-12862' then '10-31-12857'
         else ${sku_clean} end ;;
+  }
+
+  dimension: ecommerce_categories {
+    type: string
+    description: "Custom Product Bucketing for the eCommerce team's reporting. Bucketed by SKUs.
+    Source:netsuite.item"
+    group_label: "Advanced"
+    hidden: no
+    sql:
+      case
+        --Bedding--
+        when ${sku_clean} = '10-38-13050' then 'Gravity Blanket'
+        when ${sku_clean} = '10-38-13001' then 'Purple Blanket'
+        when ${sku_clean} in ('10-38-13025','10-38-13030','10-38-13020','10-38-13010','10-38-13015','10-38-13005') then 'Duvet'
+
+        when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
+        when ${sku_clean} in ('10-31-12890','10-31-12895') then 'Harmony Pillow'
+        when ${sku_clean} in ('10-31-12860','10-31-12857') then 'Plush Pillow'
+        when ${sku_clean} in ('10-31-12855','10-31-12854') then 'Purple Pillow'
+        when ${sku_clean} in ('10-38-22823','10-38-12850','10-38-12793','10-38-12809','10-38-12786','10-38-12849','10-38-12823',
+          '10-38-12816','10-38-12779','10-38-12790','10-38-12789','10-38-12787','10-38-12788','10-38-12848','10-38-12830','10-38-12847','10-38-12762') then 'Purple Sheets'
+        when ${sku_clean} in ('10-38-22846','10-38-22856','10-38-22851','10-38-22836','10-38-22841','10-38-22831','10-38-22848','10-38-22858','10-38-22853','10-38-22838',
+          '10-38-22843','10-38-22833','10-38-22847','10-38-22857','10-38-22852','10-38-22837','10-38-22842','10-38-22832','10-38-22849','10-38-22859','10-38-22854','10-38-22839',
+          '10-38-22844','10-38-22834','10-38-22845','10-38-22855','10-38-22850','10-38-22835','10-38-22840','10-38-22830') then 'SoftStretch Sheets'
+        when ${sku_clean} in ('10-38-22870','10-38-22864','10-38-22871','10-38-22865','10-38-22866','10-38-22860','10-38-22869','10-38-22863','10-38-22867','10-38-22861',
+          '10-38-22868','10-38-22862') then 'SoftStretch Pillowcase'
+        when ${sku_clean} in ('10-38-12717','10-38-12748','10-38-12755','10-38-12694','10-38-12700','10-38-12731','10-38-12724','10-38-13919','10-38-13731',
+          '10-38-13748','10-38-13900','10-38-13917','10-38-13918','10-38-13924','10-38-13994') then 'Protector'
+
+        --Cushions--
+        when ${sku_clean} in ('10-41-12585','10-41-12378','10-41-12582','10-41-12540','10-41-12574','10-41-12583','10-41-12572','10-41-12496',
+          '10-41-12573','10-41-12533','10-41-12584','10-41-12576','10-41-12519','10-41-12564','10-41-12557') then 'Cushion'
+
+        --Other--
+        when ${sku_clean} in ('10-46-10096','10-46-10751','10-46-10089','10-46-10737','10-46-10072','10-46-10102') then 'Non-Brand'
+        when ${sku_clean} = '10-21-68268' then 'Eye Mask'
+        when ${sku_clean} in ('10-38-12894','10-22-10220','10-22-10330','10-22-10110','10-38-12897','10-38-12896',
+          '10-38-12876','10-38-12875','10-38-12878','10-31-12856','10-31-13100','10-38-12904','10-38-12905','10-38-12906','10-38-73826',
+          '10-38-73828','10-38-73829','10-38-73832','10-38-73833','10-38-73834','10-38-73835','10-38-73843','10-38-73844','10-38-73845',
+          '10-38-73846','10-38-73851','10-38-73852') then 'Replacement Parts and Hardware'
+        when ${sku_clean} in ('10-11-18300','10-38-12554','10-38-12554','10-38-13764','10-38-13779','10-38-13780','10-38-13781',
+          '10-38-13786','10-38-13787','10-38-13788','10-38-13794','10-38-13795','10-38-13809','10-38-13810','10-38-13811','10-38-13816',
+          '10-38-13818','10-38-13824','10-38-13825','10-38-13832','10-38-13847','10-38-13849','10-38-13892','10-38-13956','10-38-13957','10-38-13959','10-38-13960') then 'Misc'
+        when ${sku_clean} = '10-31-12910' then 'Harmony Spare'
+        when ${sku_clean} in ('10-25-18265','10-50-18265','10-11-18264','10-11-18273') then 'Purple Squishies'
+        when ${sku_clean} in ('10-47-20000','10-47-20001','10-47-20002') then 'Face Mask'
+
+        --Beds--
+        when ${sku_clean} in ('10-21-60008','10-21-60018','10-21-60003','10-21-60002','10-21-60001','10-21-60007','10-21-70007',
+          '10-21-60006','10-21-70006','10-21-60028','10-21-60005') then 'Hybrid 2'
+        when ${sku_clean} in ('10-21-60012','10-21-60019','10-21-60011','10-21-60010','10-21-60038','10-21-60009') then 'Hybrid 3'
+        when ${sku_clean} in ('10-21-60016','10-21-60020','10-21-60015','10-21-60014','10-21-60058','10-21-60013') then 'Hybrid 4'
+        when ${sku_clean} in ('10-21-12638','10-21-12617','10-21-12960','10-21-23960','10-21-12620','10-21-23620','10-21-12632',
+          '10-21-23632','10-21-12625','10-21-23625','10-21-23638','10-21-23617','10-21-12618','10-21-23618') then 'Purple Mattress'
+        when ${sku_clean} in ('10-22-10300','10-22-10200','10-22-10100') then 'Pet Bed'
+
+       --Bases--
+        when ${sku_clean} in ('10-38-45862','10-38-45864','10-38-45865','10-38-45866','10-38-45867','10-38-45868','10-38-45869',
+          '10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 'Foundation'
+        when ${sku_clean} in ('10-38-52822','10-38-52893','10-38-52815','10-38-52846','10-38-52892','10-38-82822',
+          '10-38-82893','10-38-82895','10-38-73825','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
+          '10-38-92892','10-38-82890','10-38-12822','10-38-12893','10-38-12815','10-38-12846','10-38-12892','10-38-52891') then 'Metal Platform'
+        when ${sku_clean} in ('10-21-13027','10-38-12946','10-38-12939','10-38-12948','10-38-12955','10-38-12952') then 'Powerbase'
+
+        else 'unspecified' end ;;
   }
 
   dimension: update_ts {
@@ -495,6 +580,7 @@ view: item {
 
   dimension: Inactive {
     label: "   * Inactive Item?"
+    description: "Source: netsuite.item"
     hidden: no
     type: yesno
     sql: Case when ${TABLE}.inactive = 1 Then true else false End ;;
@@ -503,13 +589,12 @@ view: item {
   dimension: Classification_Groups{
     label: "Classification (buckets)"
     group_label: "Advanced"
-    description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other)"
+    description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other).
+      Source: looker calculation"
     type: string
     #sql: ${TABLE}.classification ;;
     case: {
-      when: { sql: ${classification} = 'FG' or
-        --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573');; label: "Finished Good" }
+      when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
       when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
@@ -521,7 +606,7 @@ view: item {
   dimension: Product_Dimensions {
     hidden: yes
     label: "Product Dimensions"
-    description: "Product size dimensions for cushions. Ex: 24 inches x 18 Inches"
+    description: "Product size dimensions for cushions. Ex: 24 inches x 18 Inches. Source: netsuite.item"
     type: string
     sql: ${TABLE}.DIMENSIONS ;;
   }

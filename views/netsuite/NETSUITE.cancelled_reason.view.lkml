@@ -10,8 +10,14 @@ view: NETSUITE_cancelled_reason {
 
   dimension: list_name {
     type: string
+    group_label: "Advanced"
     label: " Cancel Reason"
-    description: "Given reason for cancelling the order or item"
-    sql: ${TABLE}.list_item_name  ;; }
+    description: "Given reason for cancelling the order or item.
+      Source:netsuite.shopify_cancel_reason_list"
+    sql:
+    case when
+      ${TABLE}.list_item_name = 'FRAUD RISK' then 'Fraud Risk'
+      else ${TABLE}.list_item_name
+    end;; }
 
 }

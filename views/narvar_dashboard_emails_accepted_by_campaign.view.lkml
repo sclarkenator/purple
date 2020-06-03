@@ -13,28 +13,28 @@ view: narvar_dashboard_emails_accepted_by_campaign {
     primary_key: yes
   }
 
-  dimension: delay_overdue {
-    type: number
+  measure: delay_overdue {
+    type: sum
     sql: ${TABLE}."DELAY_OVERDUE" ;;
   }
 
-  dimension: delivered_standard {
-    type: number
+  measure: delivered_standard {
+    type: sum
     sql: ${TABLE}."DELIVERED_STANDARD" ;;
   }
 
-  dimension: delivery_anticipation_standard {
-    type: number
+  measure: delivery_anticipation_standard {
+    type: sum
     sql: ${TABLE}."DELIVERY_ANTICIPATION_STANDARD" ;;
   }
 
-  dimension: just_shipped {
-    type: number
+  measure: just_shipped {
+    type: sum
     sql: ${TABLE}."JUST_SHIPPED" ;;
   }
 
-  dimension: shipment_confirmation_standard {
-    type: number
+  measure: shipment_confirmation_standard {
+    type: sum
     sql: ${TABLE}."SHIPMENT_CONFIRMATION_STANDARD" ;;
   }
 

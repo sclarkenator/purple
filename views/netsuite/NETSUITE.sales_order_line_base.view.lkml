@@ -1,9 +1,5 @@
 view: sales_order_line_base {
   sql_table_name: SALES.SALES_ORDER_LINE ;;
-  #derived_table: {sql:select * from sales.sales_order_line where item_id not in ('815068010072','1680','1681','1682');;}
-  #derived_table: {
-  #  sql:select * from sales.sales_order_line where item_id not in ('1682');;
-  #}
 
   dimension: item_order{
     type: string
@@ -15,16 +11,33 @@ view: sales_order_line_base {
   measure: avg_cost {
     hidden: yes
     label:  "Avgerage Cost ($)"
-    description:  "Average unit cost, only valid looking at item-level data"
+    description:  "Average unit cost, only valid looking at item-level data.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     type: average
     value_format_name: decimal_2
     sql:  ${TABLE}.estimated_Cost ;;
   }
 
+  measure: min_sales_amt {
+    hidden: yes
+    type: min
+    value_format: "$#,##0.00"
+    sql:  ${TABLE}.gross_amt ;;
+  }
+
+  measure: max_sales_amt {
+    hidden: yes
+    type: max
+    value_format: "$#,##0.00"
+    sql:  ${TABLE}.gross_amt ;;
+  }
+
   measure: total_estimated_cost {
     hidden: yes
     label: "Estimated Costs ($)"
-    description: "Estimated cost value from NetSuite for the cost of materials"
+    description: "Estimated cost value from NetSuite for the cost of materials.
+      Source: netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0.00"
@@ -34,7 +47,8 @@ view: sales_order_line_base {
   measure: total_gross_Amt {
     group_label: "Gross Sales"
     label:  "Gross Sales ($0.k)"
-    description:  "Total the customer paid, excluding tax and freight, in $K"
+    description:  "Total the customer paid, excluding tax and freight, in $K.
+      Source: netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0,\" K\""
@@ -44,7 +58,8 @@ view: sales_order_line_base {
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $"
+    description:  "Total the customer paid, excluding tax and freight, in $.
+      Source: netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0"
@@ -54,7 +69,8 @@ view: sales_order_line_base {
   measure: gross_gross_Amt {
     hidden:  yes
     label:  "Gross-Gross Sales ($0.k)"
-    description:  "Total the customer paid plus value of discounts they received, excluding tax and freight"
+    description:  "Total the customer paid plus value of discounts they received, excluding tax and freight.
+      Source: netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0,\" K\""
@@ -64,15 +80,19 @@ view: sales_order_line_base {
   measure: total_discounts {
     label:  "Total Discounts ($)"
     value_format:"$#,##0"
-    description:  "Total of all applied discounts when order was placed"
+    description:  "Total of all applied discounts when order was placed.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     type: sum
     sql:  ${TABLE}.discount_amt ;;
   }
 
   measure: total_line_item {
     label: "Total Line Items"
-    description: "Total line items to fulfill"
+    description: "Total line items to fulfill.
+      Source: netsuite.sales_order_line"
     hidden: yes
+    drill_fields: [order_details*]
     type: count_distinct
     sql:  ${item_order} ;;
   }
@@ -80,7 +100,8 @@ view: sales_order_line_base {
   measure: total_units {
     group_label: "Gross Sales"
     label:  "Gross Sales (units)"
-    description: "Total units purchased, before returns and cancellations"
+    description: "Total units purchased, before returns and cancellations.
+      Source: netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     sql:  ${TABLE}.ordered_qty ;;
@@ -94,7 +115,8 @@ view: sales_order_line_base {
   dimension: total_units_dem {
     group_label: " Advanced"
     label:  "Gross Sales (units) (dimension version)"
-    description: "Dimension version: Total units purchased, before returns and cancellations"
+    description: "Dimension version: Total units purchased, before returns and cancellations.
+      Source: netsuite.sales_order_line"
     type: number
     drill_fields: [order_details*]
     sql:  ${TABLE}.ordered_qty ;;
@@ -103,13 +125,15 @@ view: sales_order_line_base {
   measure: dates{
     label: "Count of Days"
     hidden:  yes
+    drill_fields: [order_details*]
     type: count_distinct
     sql: ${TABLE}.Created::date ;;
   }
 
   dimension: order_age_bucket_2 {
     label: "Order Age Orginal (bucket)"
-    description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14)"
+    description: "Number of days between today and min ship date or when order was placed (1,2,3,4,5,6,7,14).
+      Source: netsuite.sales_order_line"
     hidden: yes
     type:  tier
     tiers: [1,2,3,4,5,6,7,14]
@@ -121,7 +145,8 @@ view: sales_order_line_base {
     view_label: "Fulfillment"
     label: "Manna Order Age (Bucket)"
     hidden: yes
-    description: "Number of days between today and when order was placed for Manna (7,14,21,28,35,42)"
+    description: "Number of days between today and when order was placed for Manna (7,14,21,28,35,42).
+      Source: netsuite.sales_order_line"
     type:  tier
     tiers: [7,14,21,28,35,42]
     style: integer
@@ -146,14 +171,16 @@ view: sales_order_line_base {
 
   dimension: free_item {
     label: "     * Zero Dollar Items (promo/free)"
-    description: "Yes if this item is free" #with purchase of mattress
+    description: "Yes if this item is free.
+      Source: netsuite.sales_order_line" #with purchase of mattress
     type: yesno
     sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;;
   }
 
   dimension: discounted_item {
     label: "     * Is Discounted"
-    description: "Yes if this item had any discount, including if free"
+    description: "Yes if this item had any discount, including if free.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: (${discount_amt} > 0)  ;;
   }
@@ -175,7 +202,7 @@ view: sales_order_line_base {
     label: "City"
     group_label: "Customer Address"
     view_label: "Customer"
-    hidden: yes
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.CITY ;;
   }
@@ -201,7 +228,8 @@ view: sales_order_line_base {
     view_label: "Sales Order"
     label: "z - Is Before Today (mtd)"
     hidden:  yes
-    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: ${TABLE}.Created < current_date and month(${TABLE}.Created) = month(dateadd(day,-1,current_date)) and year(${TABLE}.Created) = year(current_date) ;;
   }
@@ -211,7 +239,8 @@ view: sales_order_line_base {
     group_label: "    Order Date"
     label: "z - Is Before Today (mtd)"
     #hidden:  yes
-    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: ${TABLE}.Created < current_date;;
   }
@@ -220,7 +249,8 @@ view: sales_order_line_base {
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Week Bucket"
-    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    description: "Grouping by week, for comparing last week, to the week before, to last year.
+      Source: netsuite.sales_order_line"
     type: string
     sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
            WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
@@ -245,7 +275,8 @@ view: sales_order_line_base {
     group_label: "    Order Date"
     label: "z - Last 30 Days"
     #hidden:  yes
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: ${TABLE}.Created > dateadd(day,-30,current_date);;
   }
@@ -255,25 +286,72 @@ view: sales_order_line_base {
     group_label: "    Order Date"
     label: "z - Before Current Week"
     #hidden:  yes
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: date_trunc(week, ${TABLE}.Created::date) < date_trunc(week, current_date) ;;
   }
 
+  dimension: current_day_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Day"
+    #hidden:  yes
+    description: "Yes/No for if the date is on the current day of week and week of the year (for each year).
+      Source: netsuite.sales_order_line"
+    type: yesno
+    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) and
+      EXTRACT(DOW FROM ${TABLE}.Created::date) = EXTRACT(DOW FROM current_date::date) ;;
+  }
+
+  dimension: current_week_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Week"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current week of the year (for each year).
+      Source: netsuite.sales_order_line"
+    type: yesno
+    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) ;;
+  }
+
+  dimension: current_month_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Month"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current month of the year (for each year).
+      Source: netsuite.sales_order_line"
+    type: yesno
+    sql: EXTRACT(month FROM ${TABLE}.Created::date) = EXTRACT(month FROM current_date::date) ;;
+  }
+
+  dimension: current_quarter_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Quarter"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current quarter of the year (for each year).
+    Source: netsuite.sales_order_line"
+    type: yesno
+    sql: EXTRACT(quarter FROM ${TABLE}.Created::date) = EXTRACT(quarter FROM current_date::date) ;;
+  }
 
   dimension: prev_week{
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Previous Week"
     #hidden:  yes
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
 
   dimension: promo_date_bucket {
     label: "Promo Date Buckets"
-    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
+    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving.
+      Source: netsuite.sales_order_line"
     group_label: " Advanced"
     hidden: yes
     sql: case
@@ -300,7 +378,8 @@ view: sales_order_line_base {
 
   dimension: promo_date_holiday {
     label: "Promo Date Holliday"
-    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving"
+    description: "A manual bucketing of the major promos; Memorial Day, Labor day, and Thanksgiving.
+      Source: netsuite.sales_order_line"
     group_label: " Advanced"
     hidden: yes
     sql: case
@@ -317,7 +396,8 @@ view: sales_order_line_base {
 
   dimension: promo_date_type {
     label: "Promo Date Type"
-    description: "A manual bucketing of the major promos in types; Week Before, Promo Period, Holliday"
+    description: "A manual bucketing of the major promos in types; Week Before, Promo Period, Holliday.
+      Source: netsuite.sales_order_line"
     group_label: " Advanced"
     hidden: yes
     sql: case
@@ -345,7 +425,8 @@ view: sales_order_line_base {
 
   dimension: Shipping_Addresee{
     hidden:  yes
-    description: "The name on the shipping address"
+    description: "The name on the shipping address.
+      Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.Ship_company;;
   }
@@ -353,16 +434,50 @@ view: sales_order_line_base {
   dimension_group: created {
     view_label: "Sales Order"
     label: "    Order"
-    description:  "Time and date order was placed"
+    description:  "Time and date order was placed.
+      Source: netsuite.sales_order_line"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension_group: shift_time{
+    hidden: yes
+    label: "Shift Timescale"
+    description: "Adjusts the Produced time to make 0700 to 0000. This sets the beginning of the day as the beginning of the shift. 0000 - 0100 is the first hour of the AM shift.
+      Source: netsuite.sales_order_line"
+    type: time
+    timeframes: [raw, time, date,hour_of_day, day_of_week, day_of_month, week, week_of_year,hour, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(Dateadd(hour,-7,${TABLE}.Created));;
+  }
+
+  dimension_group: current {
+    view_label: "Geography"
+    label: "    Current"
+    description:  "Current Time/Date for calculations.
+      Source: netsuite.sales_order_line"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
+
+  dimension: before_day_of_year {
+    hidden: yes
+    type: yesno
+    sql: dayofyear(${created_raw}) < dayofyear(current_timestamp(1)) ;;
+  }
+
   measure: last_updated_date_sales {
     type: date
+    hidden: yes
+    label: "Last Updated Sales"
+    drill_fields: [sales_order_line.sales_order_details*]
     sql: MAX(${created_date}) ;;
     convert_tz: no
   }
@@ -371,7 +486,8 @@ view: sales_order_line_base {
   dimension: day_of_week {
     hidden:  yes
     label:  "Day of Week"
-    description: "Abbreviated day of week (Sun, Mon, Tue, etc)"
+    description: "Abbreviated day of week (Sun, Mon, Tue, etc).
+      Source: netsuite.sales_order_line"
     type: string
     case: {
       when: { sql: ${created_day_of_week} = 'Monday' ;; label: "Mon" }
@@ -386,7 +502,8 @@ view: sales_order_line_base {
   dimension: dayofquarterindex {   #returns day of quarter index int 1-92
     type: number
     view_label: "Sales Order"
-    description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32"
+    description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32.
+      Source: netsuite.sales_order_line"
     group_label: "    Order Date"
     label: "Day of Quarter"
     sql: DATEDIFF('day',date_trunc('quarter',${created_raw}),${created_date}) + 1 ;;
@@ -440,7 +557,9 @@ view: sales_order_line_base {
 
   measure: 7_day_sales {
     label: "7 Day Average (units)"
-    description: "Units ordered in the last 7 days /7"
+    description: "Units ordered in the last 7 days /7.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden: yes
     type: sum
@@ -453,7 +572,9 @@ view: sales_order_line_base {
 
   measure: 30_day_sales {
     label: "30 Day Average Sales (units)"
-    description: "Units ordered in the last 30 days /30"
+    description: "Units ordered in the last 30 days /30.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden:  yes
     type: sum
@@ -466,7 +587,9 @@ view: sales_order_line_base {
 
   measure: 60_day_sales {
     label: "60 Day Average Sales (units)"
-    description: "Units ordered in the last 60 days /60"
+    description: "Units ordered in the last 60 days /60.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden: yes
     type: sum
@@ -479,7 +602,9 @@ view: sales_order_line_base {
 
   measure: 90_day_sales {
     label: "90 Day Average Sales (units)"
-    description: "Units ordered in the last 90 days /90"
+    description: "Units ordered in the last 90 days /90.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     #view_label: "Time-slice totals"
     hidden:  yes
     type: sum
@@ -494,7 +619,8 @@ view: sales_order_line_base {
     label: "Is in Last 7 Day"
     #view_label:  "x - report filters"
     hidden: yes
-    description: "Filter to show just most recent 7 completed days"
+    description: "Filter to show just most recent 7 completed days.
+      Source: netsuite.sales_order_line"
     type: yesno
     sql: ${created_date} between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;
   }
@@ -516,14 +642,16 @@ view: sales_order_line_base {
 
   dimension: department_id {
     hidden: yes
-    description: "Internal department IDs (accounting)"
+    description: "Internal department IDs (accounting).
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.DEPARTMENT_ID ;;
   }
 
   dimension: discount_amt {
     hidden: yes
-    description:  "Amount of discount to individual items applied at initial order"
+    description:  "Amount of discount to individual items applied at initial order
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.DISCOUNT_AMT ;;
   }
@@ -543,7 +671,8 @@ view: sales_order_line_base {
   dimension: estimated_cost {
     hidden: yes
     label: "Estimated COGS"
-    description: "Estimated COGS, excluding freight"
+    description: "Estimated COGS, excluding freight.
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.ESTIMATED_COST ;;
   }
@@ -551,7 +680,8 @@ view: sales_order_line_base {
   dimension: retail_order_line_id {
     hidden:  yes
     label: "Shopify Order Line ID"
-    description: "You can use this ID to look up orders in Shopify"
+    description: "You can use this ID to look up orders in Shopify
+      Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.ETAIL_ORDER_LINE_ID ;;
   }
@@ -560,7 +690,8 @@ view: sales_order_line_base {
     view_label: "Fulfillment"
     label: "    Fulfilled1"
     hidden:  yes
-    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
+    description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
+      Source: netsuite.sales_order_line"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -570,7 +701,8 @@ view: sales_order_line_base {
 
   dimension: fulfillment_method {
     label: "Fulfillment Method"
-    description: "Use Shipping Provider instead"
+    description: "Use Shipping Provider instead.
+      Source: netsuite.sales_order_line"
     view_label: "Fulfillment"
     hidden:  yes
     type: string
@@ -592,7 +724,8 @@ view: sales_order_line_base {
   dimension: location {
     label:  "Fulfillment Warehouse"
     group_label: " Advanced"
-    description:  "Warehouse that order was fulfilled out of"
+    description:  "Warehouse that order was fulfilled out of.
+      Source:netsuite.sales_order_line"
     view_label: "Fulfillment"
     type: string
     sql: ${TABLE}.LOCATION ;;
@@ -601,7 +734,8 @@ view: sales_order_line_base {
   dimension: memo {
     group_label: " Advanced"
     label:  "Memo"
-    description:  "Notes field from the Shopify Draft Order Line"
+    description:  "Notes field from the Shopify Draft Order Line.
+      Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.memo ;;
   }
@@ -609,7 +743,8 @@ view: sales_order_line_base {
   dimension: gross_amt {
     group_label: " Advanced"
     label: "Gross Sales Item Level ($)"
-    description: "Gross sales is what the customer paid on initial order per sku, net of discounts, excluding tax, freight or other fees"
+    description: "Gross sales is what the customer paid on initial order per sku, net of discounts, excluding tax, freight or other fees.
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.gross_amt ;;
   }
@@ -617,14 +752,16 @@ view: sales_order_line_base {
   dimension: order_id {
     hidden: yes
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
-    description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite."
+    description: "This is Netsuite's transaction ID. This will be a hyperlink to the sales order in Netsuite.
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: ordered_qty {
     hidden: yes
-    description: "Gross Sales (units)"
+    description: "Gross Sales (units)
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.ORDERED_QTY ;;
   }
@@ -632,7 +769,8 @@ view: sales_order_line_base {
   dimension: pre_discount_amt {
     hidden:  yes
     label: "Pre-Discounted Price"
-    description: "Price of item before any discounts or promotions are applied"
+    description: "Price of item before any discounts or promotions are applied.
+      Source: netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.PRE_DISCOUNT_AMT ;;
   }
@@ -655,7 +793,8 @@ view: sales_order_line_base {
   dimension: system {
     hidden: yes
     label: "Source System"
-    description: "This is the system the data came from"
+    description: "This is the system the data came from.
+      Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.SYSTEM ;;
   }
@@ -669,7 +808,9 @@ view: sales_order_line_base {
   measure: Total_Average_Cost{
     hidden: yes
     type: sum
-    description: "The average cost of the item at time of order creation."
+    description: "The average cost of the item at time of order creation.
+      Source: netsuite.sales_order_line"
+    drill_fields: [order_details*]
     value_format: "$#,##0"
     sql: ${TABLE}.AVERAGE_COST ;;
   }
@@ -679,8 +820,8 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Picked (units)"
     type: sum
-    drill_fields: [order_details*]
-    description: "The Qty of items that are in the picked state"
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
+    description: "The Qty of items that are in the picked state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.PICKED ;;
   }
 
@@ -689,8 +830,8 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Committed (units)"
     type: sum
-    drill_fields: [order_details*]
-    description: "The Qty of items that are in the committed state"
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
+    description: "The Qty of items that are in the committed state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.QUANTITY_COMMITTED ;;
   }
 
@@ -699,8 +840,8 @@ view: sales_order_line_base {
     group_label: "By Status"
     label: "Packed (units)"
     type: sum
-    drill_fields: [order_details*]
-    description: "The Qty of items that are in the packed state"
+    drill_fields: [order_details*, sales_order_line.fulfill_details*]
+    description: "The Qty of items that are in the packed state. Source:netsuite.sales_order_line"
     sql: ${TABLE}.PACKED ;;
   }
 
@@ -713,6 +854,7 @@ view: sales_order_line_base {
   dimension: state {
     view_label: "Customer"
     group_label: "Customer Address"
+    description: "Source: netsuite.sales_order_line"
     type: string
     map_layer_name: us_states
     sql: ${TABLE}.STATE ;;
@@ -722,6 +864,7 @@ view: sales_order_line_base {
     view_label: "Customer"
     group_label: "Customer Address"
     label: "Zipcode (5)"
+    description: "Source: netsuite.sales_order_line"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;;
@@ -730,7 +873,8 @@ view: sales_order_line_base {
   dimension: zip_1 {
     view_label: "Geography"
     label: "Zipcode (5)"
-    description: "5-digit ship-to zipcode"
+    description: "5-digit ship-to zipcode.
+      Source:netsuite.sales_order_line"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;;
@@ -738,8 +882,10 @@ view: sales_order_line_base {
 
   dimension: carrier {
     view_label: "Fulfillment"
-    label: "   Carrier (expected)"
-    description: "Derived field based on fulfillment location."
+    group_label: " Advanced"
+    label: "Carrier (expected)"
+    description: "Derived field based on fulfillment location.
+      Source:netsuite.sales_order_line"
     #hidden: yes
     type: string
     sql: case
@@ -756,7 +902,8 @@ view: sales_order_line_base {
     view_label: "Fulfillment"
     group_label: " Advanced"
     label: "Carrier (Grouping)"
-    description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot"
+    description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot.
+      Source:netsuite.sales_order_line"
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;;
@@ -766,7 +913,8 @@ view: sales_order_line_base {
     hidden: yes
     group_label: "Created Date"
     label: "z - Week Start 2019"
-    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date."
+    description: "Looking at the week of year for grouping (including all time) but only showing 2019 week start date.
+      Source: netsuite.sales_order_line"
     type: string
     sql: to_char( ${TABLE}.created,'MON-DD');;
   }
@@ -775,7 +923,8 @@ view: sales_order_line_base {
     hidden: no
     group_label: " Advanced"
     view_label: "Fulfillment"
-    description: "Shipping method from shopify "
+    description: "Shipping method from shopify.
+      Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.line_shipping_method;;
   }
@@ -793,7 +942,7 @@ view: sales_order_line_base {
   }
 
   set: order_details {
-    fields: [order_id, sales_order.tranid, created_date, sales_order_line.SLA_Target_date, sales_order.minimum_ship_date ,item.product_description, location, sales_order.source, total_units,gross_amt]
+    fields: [sales_order_line.sales_order_details*]
   }
 
 }

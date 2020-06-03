@@ -1,5 +1,5 @@
 view: l2_l_checklists {
-  sql_table_name: PRODUCTION.L2L_CHECKLISTS ;;
+  sql_table_name: L2L.CHECKLIST ;;
   drill_fields: [id]
 
   dimension: id {

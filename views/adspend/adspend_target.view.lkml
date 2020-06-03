@@ -28,7 +28,7 @@ view: adspend_target {
 
   dimension: medium {
     label: "Target Medium"
-    group_label: "Target"
+    #group_label: "Target"
     description: "The Medium from the target import"
     view_label: "Daily Adspend"
     #hidden:  yes

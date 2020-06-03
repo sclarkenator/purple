@@ -21,6 +21,8 @@ view: hotjar_data {
     sql: ${TABLE}.token ;;  }
 
   dimension_group: created {
+    label: "Order"
+    description: "Date order placed/Survey taken"
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no

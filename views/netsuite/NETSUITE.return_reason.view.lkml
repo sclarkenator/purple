@@ -8,6 +8,7 @@ view: return_reason {
     sql: ${TABLE}.LIST_ID ;; }
 
   dimension: return_reason {
+    ###this is garbage data. I'm working on the real return reasons with Nate C. -Scott
     label:"Return Reason"
     description: "Reason customer gives for returning that item"
     type:  string

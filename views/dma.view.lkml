@@ -5,7 +5,7 @@
 #-------------------------------------------------------------------
 
 view: dma {
-  sql_table_name: analytics.marketing.DMA_FIPS_LKP ;;
+  sql_table_name: analytics.marketing.V_DMA_FIPS_LKP ;;
 
   dimension: primary_key {
     primary_key: yes
@@ -16,7 +16,7 @@ view: dma {
 
   dimension: dma_name {
     label: "DMA"
-    description: "Designated Marketing Area - derived from zipcode"
+    description: "Designated Marketing Area - derived from zipcode. Source:nielson.v_dma_fips_lkp"
     type: string
     view_label: "Geography"
     sql: ${TABLE}.dma_name ;;
@@ -40,7 +40,7 @@ view: dma {
     hidden: no
     label: "Assigned condition"
     view_label: "Geography"
-    description: "Condition grouping for various treatments in Q4 geo-holdout test"
+    description: "Condition grouping for various treatments in Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -133,7 +133,7 @@ view: dma {
     hidden: no
     label: "Markets with 2x TV"
     view_label: "Geography"
-    description: "Social prospecting spend group for Q4 geo-holdout test"
+    description: "Social prospecting spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -150,7 +150,7 @@ view: dma {
     hidden: no
     label: "FB/Insta pt spend"
     view_label: "Geography"
-    description: "Social prospecting spend group for Q4 geo-holdout test"
+    description: "Social prospecting spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -174,7 +174,7 @@ view: dma {
     hidden: no
     label: "YouTube pt spend"
     view_label: "Geography"
-    description: "YouTube prospecting spend group for Q4 geo-holdout test"
+    description: "YouTube prospecting spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -198,7 +198,7 @@ view: dma {
     hidden: no
     label: "FB/Insta rt spend"
     view_label: "Geography"
-    description: "FB and Instagram retargeting spend group for Q4 geo-holdout test"
+    description: "FB and Instagram retargeting spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -226,7 +226,7 @@ view: dma {
     hidden: no
     label: "YouTube rt spend"
     view_label: "Geography"
-    description: "YouTube retargeting spend group for Q4 geo-holdout test"
+    description: "YouTube retargeting spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -254,7 +254,7 @@ view: dma {
     hidden: no
     label: "Brand search spend"
     view_label: "Geography"
-    description: "Branded search spend group for Q4 geo-holdout test"
+    description: "Branded search spend group for Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
     case: {
@@ -289,7 +289,7 @@ view: dma {
 
   dimension: County {
     view_label: "Geography"
-    description:"Name of the County the Zipcode is in"
+    description:"Name of the County the Zipcode is in.  Source: nielson.v_dma_fips_lkp"
     type: string
     hidden: no
     sql: ${TABLE}.county ;;
@@ -298,7 +298,7 @@ view: dma {
   dimension: FIPS {
     label: "FIPS Code"
     view_label: "Geography"
-    description: "The County FIPS number (combination of a state ID and County ID"
+    description: "The County FIPS number (combination of a state ID and County ID.  Source:nielson.v_dma_fips_lkp"
     type: string
     map_layer_name: us_counties_fips
     hidden: no
@@ -306,7 +306,7 @@ view: dma {
   }
 
   dimension: Class {
-    description: "A technical classification of the county see more here https://www2.census.gov/geo/pdfs/reference/ClassCodes.pdf"
+    description: "A technical classification of the county see more here https://www2.census.gov/geo/pdfs/reference/ClassCodes.pdf.  Source: nielson.v_dma_fips_lkp"
     type: string
     hidden: yes
     sql: ${TABLE}.Class ;;

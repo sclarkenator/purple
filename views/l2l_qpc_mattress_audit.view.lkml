@@ -1,5 +1,5 @@
 view: l2l_qpc_mattress_audit {
-  sql_table_name: "L2L"."QPC_MATTRESS_AUDIT"
+  sql_table_name: "L2L"."V_QPC_MATTRESS_AUDIT"
     ;;
 
   dimension: area {
@@ -8,7 +8,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: cover_fit {
-    type: average
+    type: sum
     sql: case when ${TABLE}.COVER_FIT ='FAIL' OR ${TABLE}.COVER_FIT= '0' then 0
               when ${TABLE}.COVER_FIT ='PASS' OR ${TABLE}.COVER_FIT= '1' then 1
               else null
@@ -16,7 +16,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: cover_rips_tears {
-    type: average
+    type: sum
     sql: case when ${TABLE}."COVER_RIPS_TEARS"  ='FAIL' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '0' then 0
     when ${TABLE}."COVER_RIPS_TEARS"='PASS' OR ${TABLE}."COVER_RIPS_TEARS" = '1' then 1
     else null
@@ -24,7 +24,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: cover_stains {
-    type: average
+    type: sum
     sql: case when ${TABLE}.COVER_STAINS ='FAIL' OR ${TABLE}.COVER_STAINS= '0' then 0
               when ${TABLE}.COVER_STAINS ='PASS' OR ${TABLE}.COVER_STAINS= '1' then 1
               else null
@@ -61,7 +61,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: fire_sock_holes_rips_glue {
-    type: average
+    type: sum
     sql: case when ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE ='FAIL' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '0' then 0
               when ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE ='PASS' OR ${TABLE}.FIRE_SOCK_HOLES_RIPS_GLUE= '1' then 1
               else null
@@ -69,7 +69,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: fire_sock_seam {
-    type: average
+    type: sum
     sql: case when ${TABLE}.FIRE_SOCK_SEAM ='FAIL' OR ${TABLE}.FIRE_SOCK_SEAM= '0' then 0
               when ${TABLE}.FIRE_SOCK_SEAM ='PASS' OR ${TABLE}.FIRE_SOCK_SEAM= '1' then 1
               else null
@@ -77,7 +77,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: foam_puckered {
-    type: average
+    type: sum
     sql: case when ${TABLE}.FOAM_PUCKERED ='FAIL' OR ${TABLE}.FOAM_PUCKERED= '0' then 0
               when ${TABLE}.FOAM_PUCKERED ='PASS' OR ${TABLE}.FOAM_PUCKERED= '1' then 1
               else null
@@ -85,7 +85,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: foam_recovery {
-    type: average
+    type: sum
     sql: case when ${TABLE}.FOAM_RECOVERY ='FAIL' OR ${TABLE}.FOAM_RECOVERY= '0' then 0
               when ${TABLE}.FOAM_RECOVERY ='PASS' OR ${TABLE}.FOAM_RECOVERY= '1' then 1
               else null
@@ -94,7 +94,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: foam_tears_holes {
-    type: average
+    type: sum
     sql: case when ${TABLE}.foam_tears_holes ='FAIL' OR ${TABLE}.foam_tears_holes= '0' then 0
               when ${TABLE}.foam_tears_holes ='PASS' OR ${TABLE}.foam_tears_holes= '1' then 1
               else null
@@ -102,7 +102,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: hep_adhesion {
-    type: average
+    type: sum
     sql: case when ${TABLE}.HEP_ADHESION ='FAIL' OR ${TABLE}.HEP_ADHESION= '0' then 0
               when ${TABLE}.HEP_ADHESION ='PASS' OR ${TABLE}.HEP_ADHESION= '1' then 1
               else null
@@ -110,7 +110,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: hep_alignment {
-    type: average
+    type: sum
     sql: case when ${TABLE}.HEP_ALIGNMENT ='FAIL' OR ${TABLE}.HEP_ALIGNMENT= '0' then 0
               when ${TABLE}.HEP_ALIGNMENT ='PASS' OR ${TABLE}.HEP_ALIGNMENT= '1' then 1
               else null
@@ -118,7 +118,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: hep_gaps_to_foam_rails {
-    type: average
+    type: sum
     sql: case when ${TABLE}.hep_gaps_to_foam_rails ='FAIL' OR ${TABLE}.hep_gaps_to_foam_rails= '0' then 0
               when ${TABLE}.hep_gaps_to_foam_rails ='PASS' OR ${TABLE}.hep_gaps_to_foam_rails= '1' then 1
               else null
@@ -126,7 +126,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: hep_tears_voids {
-    type: average
+      type: sum
     sql: case when ${TABLE}.hep_tears_voids ='FAIL' OR ${TABLE}.hep_tears_voids= '0' then 0
               when ${TABLE}.hep_tears_voids ='PASS' OR ${TABLE}.hep_tears_voids= '1' then 1
               else null
@@ -134,7 +134,7 @@ view: l2l_qpc_mattress_audit {
   }
 
   measure: law_tag_date {
-    type: average
+    type: sum
     sql:case when ${TABLE}.law_tag_date ='FAIL' OR ${TABLE}.law_tag_date= '0' then 0
               when ${TABLE}.law_tag_date ='PASS' OR ${TABLE}.law_tag_date= '1' then 1
               else null

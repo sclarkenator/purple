@@ -15,7 +15,7 @@ view: daily_adspend {
   dimension_group: ad {
     label: "  Ad"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
 
   dimension: date_raw {
@@ -55,7 +55,7 @@ view: daily_adspend {
   dimension: current_week_num{
     group_label: "  Ad Date"
     label: "z - Before Current Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is before the previous week"
     type: yesno
     sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
     #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
@@ -64,9 +64,44 @@ view: daily_adspend {
   dimension: prev_week{
     group_label: "  Ad Date"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is the previous week"
     type: yesno
     sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
+
+  dimension_group: current {
+    label: "  Ad"
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: current_date ;; }
+
+  dimension: bef_current_week_num {
+    group_label: "  Ad Date"
+    label: "z - Week Number Before Current Week"
+    description: "Yes/No for Ad Date Week of Year is before Current Date Week of Year"
+    type: yesno
+    sql:  ${ad_week_of_year} < ${current_week_of_year} ;; }
+
+  dimension: ytd {
+    group_label: "  Ad Date"
+    label: "z - YTD"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    type: yesno
+    sql:  ${ad_day_of_year} < ${current_day_of_year} ;; }
+
+  dimension: day_offset {
+    group_label: "  Ad Date"
+    label: "z - Day Offset"
+    description: "A difference in day of year, yesterday is a -1 tomorrow is a 1, today is 0.  You'll need to filter by year as it's all years"
+    type: number
+    sql:  ${ad_day_of_year} - ${current_day_of_year} ;; }
+
+  dimension: week_offset {
+    group_label: "  Ad Date"
+    label: "z - Week Offset"
+    description: "A difference in week of year, yesterday is a -1 tomorrow is a 1, today is 0.  You'll need to filter by year as it's all years"
+    type: number
+    sql:  ${ad_week_of_year} - ${current_week_of_year} ;; }
 
   measure: adspend {
     label: "Total Adspend ($k)"
@@ -82,6 +117,19 @@ view: daily_adspend {
     type: number
     value_format: "$#,##0"
     sql: ${adspend} ;;  }
+
+  measure: adspend_no_calc {
+    label: "Total Adspend - No Calc ($)"
+    group_label: "Advanced"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;; }
 
   measure: agency_cost {
     label: "  Agency Cost ($)"
@@ -138,11 +186,25 @@ view: daily_adspend {
     type: sum
     sql: ${TABLE}.clicks ;; }
 
+  measure: cpm {
+    label: "  CPM"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/(${impressions}/1000) ;;  }
+
+  measure: cpc {
+    label: "  CPC"
+    description: "Adspend / Total Clicks"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/${clicks} ;;  }
+
   dimension: spend_platform {
     label: " Spend Platform"
     description: "What platform for spend (google, facebook, TV, etc.)"
     type:  string
-    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE'
+    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
         else ${TABLE}.platform end ;; }
 
@@ -154,7 +216,7 @@ view: daily_adspend {
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
-      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','') ;; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','OCEAN MEDIA'') ;; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
       when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
       when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
@@ -167,12 +229,16 @@ view: daily_adspend {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source = 'VIDEO' or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
-      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY') or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram') or ${TABLE}.source ilike 'messenger' ;; label:"social"}
-      when: {sql:${TABLE}.source ilike ('%earc%') or ${campaign_name} ilike 'NB%' or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY') OR ${TABLE}.source = 'CINEMA' ;; label:"traditional"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source = 'Native';; label: "native" }
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
+        or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
+        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER') OR ${TABLE}.source ilike ('instagram')
+        or ${TABLE}.source ilike 'messenger' ;; label:"social"}
+      when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
+      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA','MYMOVE-LLC')
+        OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
+      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE');; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
       else: "other" }
   }
@@ -201,12 +267,20 @@ view: daily_adspend {
     description: "A Channel Managed by Agency Within"
     type: yesno
     sql: (${spend_platform} = 'GOOGLE' and ${medium} = 'display')
-      or ${spend_platform} = 'YOUTUBE' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
+      or ${spend_platform} = 'YOUTUBE.COM' or ${spend_platform} = 'FACEBOOK' or ${spend_platform} = 'INSTAGRAM'
        ;;
   }
 
   dimension: ad_display_type {
     label: "Ad Display Type"
+    hidden:  yes
+    group_label: "Advanced"
+    description: "How ad was presented (Search, Display, Video, TV, etc.)"
+    type:  string
+    sql: ${TABLE}.source ;; }
+
+  dimension: source {
+    label: "Source"
     group_label: "Advanced"
     description: "How ad was presented (Search, Display, Video, TV, etc.)"
     type:  string
@@ -216,6 +290,11 @@ view: daily_adspend {
     label: "  Campaign Name"
     type:  string
     sql: ${TABLE}.campaign_name ;; }
+
+  dimension: ad_name {
+    label: "  Ad Name"
+    type:  string
+    sql: ${TABLE}.ad_name ;; }
 
   dimension: campaign_type {
     label: "Campaign Type"
@@ -263,4 +342,22 @@ view: daily_adspend {
     description: "Conversions within 1 day of viewing a page - only for Quora"
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
+
+  dimension: ocean_bucket {
+    hidden: yes
+    case: {
+      when: {sql: ${spend_platform} = 'TV' ;; label: "TV"}
+      when: {sql: ${spend_platform} IN ('FACEBOOK','INSTAGRAM') AND ${campaign_type} <> 'RETARGETING' ;; label: "FB PT"}
+      when: {sql: ${spend_platform} IN ('FACEBOOK','INSTAGRAM') AND ${campaign_type} = 'RETARGETING' ;; label: "FB RT"}
+      when: {sql: ${medium} = 'video' ;; label: "Video"}
+      when: {sql: ${medium} = 'social' ;; label: "Social"}
+      when: {sql: ${medium} = 'search' and ${campaign_type} = 'BRAND' ;; label: "Brand SEM"}
+      when: {sql: ${medium} = 'search' and ${campaign_type} <> 'BRAND' ;; label: "Brand SEM"}
+      when: {sql: ${medium} = 'affiliate' ;; label: "Affiliate"}
+      when: {sql: ${spend_platform} = 'INTEGRAL MEDIA' ;; label: "Outdoor"}
+      when: {sql: ${spend_platform} = 'PODCAST' ;; label: "Audio Channel 1"}
+      when: {sql: ${spend_platform} = 'SPOTIFY' ;; label: "Audio Channel 2"}
+      else: "Other"
+    }
+  }
 }

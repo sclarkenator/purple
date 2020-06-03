@@ -23,28 +23,29 @@ view: shopify_discount_codes {
     }
 
     dimension: used_promo {
-      label: "     * Used Promo Code"
       view_label: "Sales Order"
+      label: "     * Used Promo Code"
+      description: "Source: shopify.shopify_discount_code"
       type: yesno
       sql: ${TABLE}.promo is not null;;
     }
 
     dimension: promo {
       group_label: " Advanced"
-      #description: "Full Promo Code in Shopify"
-      #hidden:  yes
       view_label: "Sales Order"
       label: "Full Promo Code Used (shopify)"
+      description: "Full Promo Code in Shopify. Source:shopify.shopify_discount_code"
+      #hidden:  yes
       type: string
       sql: ${TABLE}.promo ;;
     }
 
   dimension: promo_bucket {
-    #group_label: " Advanced"
-    description: "Promo Code Used in Shopify, bucketed (removed unique key)"
-    #hidden:  yes
     view_label: "Sales Order"
-    label: "  Promo Code (bucket)"
+    group_label: " Advanced"
+    label: "Promo Code (bucket)"
+    description: "Promo Code Used in Shopify, bucketed (removed unique key). Source: shopify.shopify_discount_code"
+    #hidden:  yes
     type: string
     sql: split_part(${TABLE}.promo,'-',1) ;;
   }

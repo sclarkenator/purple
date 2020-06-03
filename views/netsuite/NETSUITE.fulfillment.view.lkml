@@ -14,7 +14,10 @@ view: fulfillment {
     }
 
   dimension: fulfillment_id {
-    hidden: yes
+    hidden: no
+    group_label: " Advanced"
+    label: "Fulfillment ID"
+    description: "Netsuite Internal Fulillment ID. Source: netsuite.fulfillment"
     type: string
     sql: ${TABLE}.FULFILLMENT_ID ;; }
 
@@ -34,9 +37,10 @@ view: fulfillment {
     sql: ${TABLE}.status ;; }
 
   dimension: carrier {
-    label: "   Carrier (actual)"
+    group_label: " Advanced"
+    label: "Carrier (actual)"
     #hidden: yes
-    description: "Shipping provider was used to fulfill this part of the order"
+    description: "Shipping provider was used to fulfill this part of the order. Source:netsuite.fulfillment"
     type: string
     sql: ${TABLE}.carrier ;;  }
 
@@ -57,7 +61,7 @@ view: fulfillment {
 
   dimension_group: left_purple {
     label: "Left Purple"
-    description: "Date the item left purple"
+    description: "Date the item left purple.Source:netsuite.fulfillment"
     #hidden: yes
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -65,7 +69,7 @@ view: fulfillment {
 
   dimension_group: in_hand {
     label: "In Hand"
-    description: "Date the customer recieved the item"
+    description: "Date the customer recieved the item. Source: netsuite.fulfillment"
     #hidden: yes
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
@@ -153,15 +157,18 @@ view: fulfillment {
 
   dimension: tracking_numbers {
     group_label: " Advanced"
-    description: "Carrier tracking numbers"
+    label: "Tracking Numbers"
+    description: "Carrier tracking numbers. Source:netsuite.fulfillment"
     type: string
     sql: ${TABLE}.tracking_numbers ;;}
 
   measure: count {
+    group_label: " Advanced"
     label: "Units Fulfilled"
-    description: "Count of items fulfilled"
+    description: "Count of items fulfilled. Source:netsuite.fulfillment"
     #hidden: yes
     type: sum
+    drill_fields: [sales_order_line.fulfillment_details*]
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
       when nvl(${TABLE}.BUNDLE_QUANTITY,0) > 0 then ${TABLE}.BUNDLE_QUANTITY
       else ${TABLE}.quantity END ;;}
@@ -169,7 +176,7 @@ view: fulfillment {
   measure: bundle_count {
     group_label: " Advanced"
     label: "Bundeled Units Fulfilled"
-    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units"
+    description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units. Source:looker calculation"
     #hidden: yes
     type: sum
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
@@ -181,12 +188,14 @@ view: fulfillment {
     hidden: yes
     sql: ${TABLE}.BUNDLE_QUANTITY ;;
   }
+
 #BUNDLE_QUANTITY
 
   measure: total_shipping {
+    group_label: " Advanced"
     label: "Total Direct Shipping Costs"
     #hidden: yes
-    description: "Direct shipping costs incurred, not including last-mile or other transfer costs"
+    description: "Direct shipping costs incurred, not including last-mile or other transfer costs. Source: netsuite.fulfillment"
     type: sum
     sql: ${TABLE}.shipping ;; }
 

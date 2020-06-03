@@ -65,7 +65,7 @@ explore: oee {
 }
 
 explore: dispatch_info{
-  hidden:  no
+  hidden:  yes
   group_label: "Production"
   label: "L2L Dispatch Data"
   description: "The log of all L2L dispatches"
@@ -74,6 +74,13 @@ explore: dispatch_info{
     sql_on: ${ltol_line.line_id} = ${dispatch_info.MACHINE_LINE_ID} ;;
     relationship: many_to_one
   }
+}
+
+explore: v_dispatch {
+  hidden: no
+  group_label: "Production"
+  label: "L2L Dispatch Data"
+  description: "The log of all L2L dispatches"
 }
 
 explore: ltol_pitch {
@@ -253,11 +260,87 @@ explore: inventory_snap {
     relationship: many_to_one}
 }
 
+explore: production_goal {
+  group_label: "Production"
+  label: "Production Goals"
+  description: "Production goals by forecast date, item, etc"
+  join: production_goal_by_item {
+    type: left_outer
+    sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
+    relationship: one_to_many}
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${production_goal_by_item.item_id} = ${item.item_id} and ${production_goal_by_item.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+}
+
+explore: inventory_available_report {
+  hidden: yes
+  group_label: "Production"
+  label: "Invnetory Available Report"
+  description: "A Inventory Available Report created for Mike S./Andrew C."
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${inventory_available_report.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+}
+
+explore: inventory_adjustment {
+  group_label: "Production"
+  label: "Inventory Adjustment"
+  description: "Inventory Adjustment by Item, Line, etc"
+  join: inventory_adjustment_line {
+    type: left_outer
+    sql_on: ${inventory_adjustment.inventory_adjustment_id} = ${inventory_adjustment_line.inventory_adjustment_id} ;;
+    relationship: one_to_many }
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on:  ${inventory_adjustment_line.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: bom_demand_matrix {
+  hidden:  yes
+  group_label: "Production"
+  label: "Bom Demand Matrix"
+  description: "Number of products we can currently build with remaining components/resources"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${bom_demand_matrix.item_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+}
+
+explore: buildable_quantity {
+  hidden: yes
+  group_label: "Production"
+  label: "Buildable Quantity"
+  description: "Number of products we can currently build with remaining components/resources"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${buildable_quantity.item_id} = ${item.item_id} ;;
+    relationship: one_to_one
+  }
+  join: bom_demand_matrix {
+    view_label: "Buildable Quantity"
+    type: left_outer
+    sql_on: ${buildable_quantity.item_id} = ${bom_demand_matrix.component_id} ;;
+    relationship: one_to_one
+  }
+}
+
 explore: l2_l_checklist_answers {hidden: yes}
 explore: l2_l_checklists {hidden: yes}
 explore: l2l_qpc_mattress_audit {hidden: yes}
 explore: l2l_quality_yellow_card {hidden: yes}
 explore: l2l_shift_line_1_glue_process {hidden: yes}
+explore: l2l_machine_downtime {hidden: yes}
 explore: inventory_reconciliation { hidden: yes}
 explore: po_and_to_inbound {hidden: yes}
 explore: inventory_recon_sub_locations {hidden:yes}
@@ -278,6 +361,44 @@ explore: pilot_daily_report {hidden:yes}
 #    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
 #    relationship:many_to_one}
 #  }
+
+explore: v_demand_planning {
+  hidden: yes
+  view_label: "Demand Planning"
+  label: "Demand Planning"
+  description: ""
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${v_demand_planning.item_id} = ${item.item_id} ;;
+    relationship: many_to_one
+  }
+  join: inventory {
+    type: left_outer
+    sql_on: ${v_demand_planning.item_id} = ${inventory.item_id} ;;
+    relationship: many_to_one
+  }
+  join: warehouse_location {
+    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: v_usertime_minutes {
+  hidden: yes
+  view_label: "Usertime"
+  label: "Usertime"
+  description: "Shows the amount of time and line an operator worked"
+}
+
+explore: machine {
+  hidden: yes
+  join: l2l_machine_downtime {
+    type: left_outer
+    sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+    relationship: one_to_many
+  }
+}
 
 #-------------------------------------------------------------------
 #
@@ -386,7 +507,7 @@ explore: starship_fulfillment {
 
   explore: forecast_combined {
     label: "Forecast"
-    description: "Combined wholesale and dtc forecast of units and dollars."
+    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
     #hidden: yes
     join: item {
@@ -400,9 +521,32 @@ explore: starship_fulfillment {
       type: left_outer
       relationship: one_to_one
     }
+  }
+
+  explore: forecast_combined_legacy {
+    label: "Forecast Old"
+    description: "Combined wholesale and dtc forecast of units and dollars."
+    group_label: "Operations"
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${forecast_combined_legacy.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    join:fg_to_sfg{
+      view_label: "FG to SFG"
+      sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+      type: left_outer
+      relationship: one_to_one
     }
+  }
 
+  explore: day_pending { hidden:yes}
 
+  explore: at_risk_amount {
+    hidden: yes
+    label: "At Risk Orders"
+  }
 
 #-------------------------------------------------------------------
 #
@@ -426,7 +570,8 @@ explore: daily_adspend {
     relationship: many_to_one}
 }
 
-explore: adspend_target { hidden:yes }
+explore: roas_pdt { hidden: yes}
+#explore: adspend_target { hidden:yes }
 
 explore: zipcode_radius {
   hidden: yes
@@ -446,46 +591,67 @@ explore: weekly_acquisition_report_snapchat  {
 
 explore: hotjar_data {
   group_label: "Marketing"
-  label: "Hotjar Survey Results"
+  label: "Post-purchase survey results"
   description: "Results form Hotjar post-purchase survey"
+  view_label: "Survey Data"
   join: hotjar_whenheard {
+    view_label: "Survey Data"
     type:  left_outer
     sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
     relationship: many_to_one}
   join: shopify_orders {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: [shopify_orders.call_in_order_Flag]}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-    relationship: one_to_one}
+    relationship: one_to_one
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
   join: order_flag {
+    view_label: "Sales Order"
     type: left_outer
     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship:  one_to_one}
+  join: first_order_flag {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
     relationship:  one_to_one}
   join: sales_order_line {
     type:  left_outer
     sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
     relationship: one_to_many
-    fields: [sales_order_line.zip]
-  }
+    fields: []}
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: []}
   join: zcta5 {
     view_label: "Geography"
     type:  left_outer
     sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
-    relationship: many_to_one}
+    relationship: many_to_one
+    fields: [zcta5.fulfillment_region_1,zcta5.state_1]}
   join: dma {
     view_label: "Customer"
     type:  left_outer
     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+    relationship: many_to_many
+    fields: [dma.dma_name]}
+  join: shopify_discount_codes {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
     relationship: many_to_many}
   }
+
+explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
+
+explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}
 
 explore: all_events {
   label: "All Events (heap)"
@@ -519,16 +685,74 @@ explore: all_events {
   join: heap_page_views {
     type: left_outer
     sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
-    relationship: one_to_one
+    relationship: one_to_many
   }
   join: date_meta {
     type: left_outer
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
+  aggregate_table: weekly_sessions {
+    query: {
+      dimensions: [sessions.time_week]
+      measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
+      filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
+      timezone: America/Denver
+    }
+    materialization: {
+      #sql_trigger_value: SELECT CURDATE() ;;
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+    query: {
+      dimensions: [sessions.time_week_of_year, sessions.time_year]
+      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+      timezone: "America/Denver"
+    }
+
+    materialization: {
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+
+}
+
+  explore: funnel_explorer {
+    hidden: yes
+    group_label: "Marketing"
+    label: "HEAP Funnel"
+    join: sessions {
+      type: left_outer
+      sql_on: ${funnel_explorer.session_unique_id} = ${sessions.session_unique_id} ;;
+      relationship: one_to_one
+    }
+    join: session_facts {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${sessions.session_unique_id} = ${session_facts.session_unique_id} ;;
+      relationship: one_to_one
+    }
+  }
+
+explore: cordial_activity {
+  group_label: "Marketing"
+  label: "Email (cordial)"
+  join: cordial_message_analytic {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
+    relationship: many_to_one
+  }
+  join: cordial_bulk_message {
+    type: left_outer
+    sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
+  relationship: many_to_one
+  }
 }
 
 explore: c3_roa {hidden: yes}
+explore: spend_sessions_ndt {hidden: yes}
 explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
 explore: marketing_magazine {hidden: yes}
 explore: sessions {hidden: yes}
@@ -579,6 +803,15 @@ explore: narvar_customer_feedback {
   label: "Narvar customer feedback"
 }
 
+  explore: cordial_bulk_message {
+    group_label: "Cordial"
+    hidden: yes
+    label: "Cordial Information"
+    join: cordial_activity{
+      type: left_outer
+      sql_on: ${cordial_bulk_message.bm_id} = ${cordial_activity.bm_id} ;;
+      relationship: one_to_many
+    }}
 
 #-------------------------------------------------------------------
 #
@@ -591,17 +824,22 @@ explore: customer_satisfaction_survey {
   group_label: "Customer Care"
   hidden: yes
   description: "Customer satisfaction of interactions with Customer Care agents"
-  join: agent_lkp {
-    type: left_outer
-    sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.zendesk_id} ;;
-    relationship: many_to_one
-  }
-  join: team_lead_name {
-    type:  left_outer
-    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
-      AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
-      AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
-    relationship: many_to_one
+    join: agent_lkp {
+      type: left_outer
+      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
+      relationship: many_to_one
+    }
+    join: team_lead_name {
+      type:  left_outer
+      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+        AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+      relationship: many_to_one
+    }
+    join: stella_connect_request {
+      type: left_outer
+      sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
+      relationship: many_to_one
     }
 }
 explore: rpt_agent_stats {
@@ -655,21 +893,27 @@ explore: zendesk_chats {
   hidden: yes
 }
 
-explore: ticket {
+explore: zendesk_ticket {
   hidden: yes
   group_label: "Customer Care"
   label: "Zendesk Tickets"
   description: "Customer ticket details from Zendesk"
   join: group {
     type: full_outer
-    sql_on: ${group.id} = ${ticket.group_id} ;;
+    sql_on: ${group.id} = ${zendesk_ticket.group_id} ;;
     relationship: many_to_one
   }
   join: user {
     view_label: "Assignee"
     type: left_outer
-    sql_on: ${user.id} = ${ticket.assignee_id} ;;
+    sql_on: ${user.id} = ${zendesk_ticket.assignee_id} ;;
     relationship: many_to_one
+  }
+  join: zendesk_ticket_comment {
+    view_label: "Ticket Comments"
+    type: left_outer
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_ticket_comment.ticket_id} ;;
+    relationship: one_to_many
   }
 #     join: ticket_form_history {
 #       type: full_outer
@@ -688,6 +932,35 @@ explore: rpt_skill_with_disposition_count {
   label: "Inbound Calls"
   group_label: "Customer Care"
   description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
+  join:  magazine_numbers {
+    type: full_outer
+    sql_on: ${magazine_numbers.phone_number}::text = ${rpt_skill_with_disposition_count.contact_info_to}::text
+    --and  ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date
+    ;;
+    relationship: many_to_many}
+  join: customer_table{
+    type: left_outer
+    relationship: many_to_many
+    sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}::text
+          else ${rpt_skill_with_disposition_count.contact_info_to}::text end
+          = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
+  }
+  join: sales_order {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
+  }
+  join: sales_order_line_base {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+  }
+  join: v_wholesale_manager {
+    view_label: "Customer"
+    type:left_outer
+    relationship:one_to_one
+    sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  }
 }
 
 explore: agent_lkp {
@@ -722,6 +995,18 @@ explore: agent_lkp {
     type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many
+  }
+  join: stella_connect_request {
+    type: left_outer
+    sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
+    relationship: many_to_one
+  }
+  join: team_lead_name {
+    type:  left_outer
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+        AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+    relationship: many_to_one
   }
   required_access_grants: [is_customer_care_manager]
 }
@@ -762,7 +1047,7 @@ explore: cc_agent_data {
     relationship:  one_to_many}
   join: customer_satisfaction_survey {
     type: left_outer
-    sql_on: ${cc_agent_data.zendesk_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
     relationship:  one_to_many}
   join: team_lead_name {
     type:  left_outer
@@ -774,6 +1059,7 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
+explore: target_dtc {hidden: yes}
 explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
 explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
 explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
@@ -794,25 +1080,48 @@ explore: exchange_items {hidden: yes
     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
     relationship: many_to_one
     view_label: "Exchange Item"}}
-explore: qualtrics {hidden:yes
-  from: qualtrics_answer
-    view_label: "Answer"
-  join: qualtrics_response {
-    type: left_outer
-    sql_on: ${qualtrics.response_id = ${qualtrics_response.response_id} and ${qualtrics.survey_id = ${qualtrics_response.survey_id} ;;
-    relationship: many_to_one
-    view_label: "Response"}
-  join: qualtrics_customer {
-    type: left_outer
-    sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
-    relationship: many_to_one
-    view_label: "Customer"}
-  join: qualtrics_survey {
-    type: left_outer
-    sql_on: ${qualtrics.survey_id} = ${qualtrics_survey.id} ;;
-    relationship: many_to_one
-    view_label: "Survey"}}
 
+  explore: qualtrics {
+    hidden:yes
+    from: qualtrics_survey
+    view_label: "Survey"
+    join: qualtrics_response {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
+      relationship: one_to_many
+      view_label: "Response"}
+    join: qualtrics_customer {
+      type: left_outer
+      sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+      relationship: many_to_one
+      view_label: "Qualtrics Customer"}
+    join: qualtrics_answer {
+      type: left_outer
+      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+      relationship: one_to_many
+      view_label: "Answer"}
+    join: item {
+      view_label: "Product"
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      type: left_outer
+      relationship: many_to_one}
+   join: customer_table {
+    view_label: "Customer"
+    type: left_outer
+    sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
+    relationship: many_to_one}
+   join: sales_order {
+      type:  left_outer
+      sql_on: ${qualtrics_response.order_id}::text = ${sales_order.order_id}::text ;;
+      relationship: one_to_one }
+   join: sales_order_line_base {
+      type:  left_outer
+      sql_on: ${qualtrics_response.order_id}::text = ${sales_order_line_base.order_id}::text and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
+      relationship: one_to_many}
+    }
+
+  explore: events_view__all_events__all_events {hidden:yes}
+  explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 
 
       explore: qualtrics1 {
@@ -890,6 +1199,12 @@ explore: qualtrics {hidden:yes
       relationship: many_to_one}
 }
 
+explore: mattress_firm_po_detail {
+  hidden: yes
+  label: "Mattress Firm POD"
+  group_label: "Wholesale"
+}
+
 explore: wholesale_mfrm_manual_asn  {
   hidden:  yes
   label: "Wholesale Mattress Firm Manual ASN"
@@ -932,7 +1247,7 @@ explore: sales_order_line{
   join: fulfillment {
     view_label: "Fulfillment"
     type: left_outer
-    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} and ${fulfillment.status} = 'Shipped' ;;
+    sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
     relationship: one_to_many}
   join: visible {
     view_label: "Fulfillment"
@@ -1038,15 +1353,6 @@ explore: sales_order_line{
     type: full_outer
     sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
     relationship: many_to_one}
-  join: contribution {
-    type: left_outer
-    sql_on: ${contribution.contribution_pk} = ${sales_order_line.item_order} ;;
-    relationship: one_to_one}
-  join: cm_pivot {
-    view_label: "x-CM waterfall"
-    type: left_outer
-    sql_on: ${cm_pivot.contribution_pk} = ${sales_order_line.item_order} ;;
-    relationship: one_to_many}
   join: state_tax_reconciliation {
     view_label: "State Tax Reconciliation"
     type: left_outer
@@ -1072,10 +1378,11 @@ explore: sales_order_line{
     type: left_outer
     sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
     relationship: one_to_one}
-  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-    sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-    join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:many_to_one
-      sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+  join: v_wholesale_manager {
+      view_label: "Customer"
+      type:left_outer
+      sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+      relationship:one_to_one}
   join: warranty_order {
       view_label: "Warranties"
       type: full_outer
@@ -1100,6 +1407,12 @@ explore: sales_order_line{
     type:  full_outer
     sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
     relationship: one_to_one}
+  join: mymove {
+    view_label: "Marketing Attribution"
+    type: left_outer
+    sql_on: ${mymove.order_id} = ${sales_order.order_id} and ${mymove.system} = ${sales_order.system} ;;
+    relationship: one_to_one
+  }
   join : slicktext_textword {
     view_label: "Promo"
     type:full_outer
@@ -1125,9 +1438,9 @@ explore: sales_order_line{
     sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
     relationship: one_to_one
   }
-  join: affiliate_sales_orders {
+  join: affiliate_sales_order {
     type: left_outer
-    sql_on: ${sales_order.order_id}=${affiliate_sales_orders.order_id} ;;
+    sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
     relationship: one_to_one
   }
   join: zipcode_radius {
@@ -1167,9 +1480,15 @@ explore: sales_order_line{
     relationship: many_to_one
   }
   join: zendesk_sell {
-    view_label: "Zendesk Sell"
+    view_label: "Zendesk"
     type: full_outer
     sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+    relationship: one_to_one
+  }
+  join: zendesk_sell_deal {
+    view_label: "Zendesk"
+    type: full_outer
+    sql_on: ${zendesk_sell.deal_id}=${zendesk_sell_deal.deal_id};;
     relationship: one_to_one
   }
   join: warranty_original_information {
@@ -1220,10 +1539,46 @@ explore: sales_order_line{
     relationship: one_to_many
     sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
   }
+  join: item_price {
+    view_label: "Product"
+    type: left_outer
+    relationship: many_to_many
+    sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
+  }
+    join: v_chat_sales {
+      view_label: "Zendesk"
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${v_chat_sales.order_id} = ${sales_order.order_id} and ${v_chat_sales.system} = ${sales_order.system};;
+  }
+    join: zendesk_chats {
+      view_label: "Zendesk"
+      type: left_outer
+      relationship: many_to_many
+      sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
+  }
+    join: item_return_rate {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+    }
+    join: shipping {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
+    }
+    join: acquisition_recent_customer_test_segments {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      view_label: "Customer"
+    }
 
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
+explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
+explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
 
 explore: wholesale {
   extends: [sales_order_line]
@@ -1348,10 +1703,12 @@ explore: wholesale_legacy {
     type: left_outer
     sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
     relationship: one_to_one}
-  join: account_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-    sql_on: ${customer_table.account_manager_id} = ${account_manager.entity_id} ;;}
-  join: sales_manager { from: entity view_label: "Customer" type:left_outer relationship:one_to_one
-    sql_on: ${customer_table.sales_manager_id} = ${sales_manager.entity_id} ;;}
+  join: v_wholesale_manager {
+    view_label: "Customer"
+    type:left_outer
+    relationship:one_to_one
+    sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  }
     join: standard_cost {
       view_label: "Product"
       type: left_outer
@@ -1362,6 +1719,41 @@ explore: wholesale_legacy {
     type: left_outer
     sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
     relationship: one_to_one}
+  join: zendesk_sell {
+    view_label: "Zendesk Sell"
+    type: full_outer
+    sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+    relationship: one_to_one
+  }
+  join: affiliate_sales_order {
+    type: left_outer
+    sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
+    relationship: one_to_one
+  }
+  join: item_return_rate {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+  }
+  join: agent_name {
+    view_label: "Sales Order"
+    type: left_outer
+    sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+    relationship: many_to_one
+  }
+  join: exchange_order_line {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
+      and ${sales_order_line.system} = ${exchange_order_line.system} ;;
+    relationship: one_to_many
+  }
+  join: exchange_order {
+    view_label: "Returns"
+    type: left_outer
+    sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
+    relationship: many_to_one
+  }
 }
 
 
@@ -1418,6 +1810,8 @@ explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" gro
 explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
+explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
 explore: warranty_timeline {
   label: "Warranty Timeline"
   group_label: "Accounting"
@@ -1539,6 +1933,30 @@ explore: procom_security_daily_customer {
         type:  left_outer
         sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
         relationship: many_to_one}
+      join: daily_qualified_site_traffic_goals {
+        view_label: "Sessions"
+        type: full_outer
+        sql_on: ${daily_qualified_site_traffic_goals.date}::date = ${ecommerce.time_date}::date ;;
+        relationship: many_to_one
+        }
+
+        # added after table was built
+      join: customer_table {
+        view_label: "Customer"
+        type: left_outer
+        sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
+        fields: [customer_table.customer_id,customer_table.customer_id,customer_table.email,customer_table.full_name,customer_table.shipping_hold,customer_table.phone,customer_table.hold_reason_id,customer_table.shipping_hold]
+        relationship: many_to_one}
+      join: first_purchase_date {
+        view_label: "Customer"
+        type: left_outer
+        sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
+        relationship: one_to_one}
+      join: shopify_discount_codes {
+        view_label: "Promo"
+        type: left_outer
+        sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+        relationship: many_to_many}
 
   }
 
@@ -1546,22 +1964,22 @@ explore: procom_security_daily_customer {
 # Old/Bad Explores
 #-------------------------------------------------------------------
 
-  explore: forecast_historical {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
+  explore: forecast_historical_legacy {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_historical.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_dtc { from: forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
-    join: forecast_wholesale {type: full_outer sql_on: ${forecast_dtc.sku_id} = ${forecast_wholesale.sku_id} and ${forecast_dtc.date_date} = ${forecast_wholesale.date_date};; relationship: one_to_one}
-    join: item {view_label: "Product" type: left_outer sql_on: coalesce(${forecast_wholesale.sku_id},${forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_retail {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_retail.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_amazon {hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_wholesale {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-      join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_historical_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale_dim_legacy {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  #explore: forecast_dtc { from: forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
+   # join: forecast_wholesale_legacy {type: full_outer sql_on: ${forecast_dtc.sku_id} = ${forecast_wholesale_legacy.sku_id} and ${forecast_dtc.date_date} = ${forecast_wholesale_legacy.date_date};; relationship: one_to_one}
+    #join: item {view_label: "Product" type: left_outer sql_on: coalesce(${forecast_wholesale_legacy.sku_id},${forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_retail_legacy {label: "Retail Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_retail_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_legacy_amazon {hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_legacy_amazon.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_legacy {label: "DTC Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale_legacy {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+      join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   explore: wholesale_stores {hidden: yes}
   explore: deleted_fulfillment {hidden: yes}
   explore: problem_order {hidden: yes label: "List of orders that are problematic, either for fraud, or excessive refunds/returns"}
@@ -1574,7 +1992,7 @@ explore: procom_security_daily_customer {
     join: progressive_funded_lease {type:  left_outer sql_on:  ${progressive.lease_id} = ${progressive_funded_lease.lease_id} ;;
       relationship: one_to_one}}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-
+  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: nps_survey_06_dec2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
 
   explore: customer_nps_dec_2019 {hidden:yes} #old explore, use nps_survey_dec2019 instead
@@ -1640,9 +2058,6 @@ explore: procom_security_daily_customer {
     description: "An exported shapshot of inventory by location from netsuite at the end of each month"
     join: item {type:  left_outer sql_on: ${item.item_id} = ${inventory_valuation.item_id} ;; relationship: many_to_one}
     join: warehouse_location {type: left_outer sql_on: ${warehouse_location.location_id} = ${inventory_valuation.location_id} ;; relationship: many_to_one}}
-  explore: bom_demand_matrix {hidden:  yes  label: "Demand Matrix"  group_label: "Operations"
-    description: "Showing components in final products and what's available"
-    join: item {view_label: "Item" type: left_outer sql_on: ${item.item_id} = ${bom_demand_matrix.component_id} ;; relationship: one_to_one}}
   explore: shipping_times_for_web { hidden: yes group_label: "In Testing" label: "Estimated Fulfillment Times for Web" description: "For use on the web site to give customers an estimate of how long it will take their products to fulfill"
     join: item { type: inner sql_on: ${shipping_times_for_web.item_id} = ${item.item_id} ;; relationship: one_to_one}}
   explore: executive_report { hidden: yes
@@ -1657,3 +2072,10 @@ explore: procom_security_daily_customer {
       label: "Hour Assumptions"
       description: "% of day's sales by hour for dtc day prediction"
       hidden: yes  }
+
+    explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
+    explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
+    explore: owned_retail_target_by_location {
+      hidden: yes
+
+    }

@@ -1,13 +1,27 @@
 view: qualtrics_response {
-  sql_table_name: MARKETING.QUALTRICS_RESPONSE ;;
+ # sql_table_name: MARKETING.QUALTRICS_RESPONSE ;;
 
-  dimension: distribution_channel {
+derived_table: {
+  sql: select *
+      , row_number () over (partition by latest_sales_order_id order by end_date) as row_num
+      , case when row_number () over (partition by latest_sales_order_id order by end_date) = 1 then latest_sales_order_id end as order_id
+ from ANALYTICS.MARKETING.QUALTRICS_RESPONSE;;
+}
+
+  dimension: survey_response_key {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.survey_id||'-'||${TABLE}.response_id;; }
+
+ dimension: distribution_channel {
     type: string
     sql: ${TABLE}."DISTRIBUTION_CHANNEL" ;;
   }
 
   dimension: duration_in_seconds {
     type: number
+    hidden: yes
     sql: ${TABLE}."DURATION_IN_SECONDS" ;;
   }
 
@@ -31,6 +45,7 @@ view: qualtrics_response {
   }
 
   dimension_group: insert_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -52,6 +67,12 @@ view: qualtrics_response {
   dimension: latest_sales_order_id {
     type: string
     sql: ${TABLE}."LATEST_SALES_ORDER_ID" ;;
+  }
+
+  dimension: order_id {
+    type: string
+    description: "Removes duplicate latest_sales_order_id instances and uses the first survey response for said order"
+    sql: ${TABLE}.ORDER_ID ;;
   }
 
   dimension: netsuite_customer_id {
@@ -104,11 +125,13 @@ view: qualtrics_response {
   }
 
   dimension: survey_id {
-    type: string
+   hidden:  yes
+   type: string
     sql: ${TABLE}."SURVEY_ID" ;;
   }
 
   dimension_group: update_ts {
+    hidden:  yes
     type: time
     timeframes: [
       raw,

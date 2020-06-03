@@ -3,7 +3,8 @@ view: first_purchase_date {
       sql: select email,
                   min(to_date(created)) as first_order_date,
                   max(to_date(created)) as last_order_date,
-                  count(order_id) as order_count
+                  count(order_id) as order_count,
+                  sum( case when created > '2018-02-28' then 1 else 0 end ) as orders_post_feb18
                   from sales_order
                   group by email ;;
     }
@@ -17,21 +18,24 @@ view: first_purchase_date {
 
         dimension: first_order_date {
           label: "First Purchase Date"
-          description: "Customers First Purchase Date"
+          description: "Customers First Purchase Date.
+            Source: netsuite.sales_order"
           group_label: " Advanced"
           type: date
           sql: ${TABLE}.first_order_date ;; }
 
         dimension: last_order_date {
           label: "Last Purchase Date"
-          description: "Customers Last Purchase Date"
+          description: "Customers Last Purchase Date.
+            Source: netsuite.sales_order"
           group_label: " Advanced"
           type: date
           sql: ${TABLE}.last_order_date ;;  }
 
         dimension: customer_age_bucket {
           label: "Customer Age Bucket"
-          description: "Customer Age by <12 mon, 12-18 mon, 18-24 mon, 24+ mon"
+          description: "Customer Age by <12 mon, 12-18 mon, 18-24 mon, 24+ mon.
+            Source:netsuite.sales_order"
           group_label: " Advanced"
           type: string
           sql:  case
@@ -43,16 +47,29 @@ view: first_purchase_date {
 
         dimension: order_count {
           label: "Order Count"
-          hidden: yes
-          description: "Count of Orders by Customer Email"
+          hidden: no
+          description: "Count of Orders by Customer Email.
+            Source: netsuite.sales_order"
+          view_label: "Sales Order"
           group_label: " Advanced"
           type: number
           sql: ${TABLE}.order_count ;;  }
 
+        dimension: orders_post_feb18 {
+          type: number
+          hidden: yes
+          description: "Count of orders after Feb 28, 2018, by customer email.
+            Source: netsuite.sales_order"
+          view_label: "Sales Order"
+          group_label: " Advanced"
+          sql: ${TABLE}.orders_post_feb18 ;;
+        }
+
         dimension: order_count_bucket {
           hidden: yes
           label: "Order Count Bucket"
-          description: "Count of Orders by Bucket (1 order, 2 orders, etc.)"
+          description: "Count of Orders by Bucket (1 order, 2 orders, etc.).
+            Source: netsuite.sales_order"
           group_label: " Advanced"
           type: string
           sql: case

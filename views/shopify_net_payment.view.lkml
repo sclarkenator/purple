@@ -1,9 +1,10 @@
 view: shopify_net_payment {
-  sql_table_name: CUSTOMER_CARE.SHOPIFY_NET_PAYMENT ;;
+  sql_table_name: CUSTOMER_CARE.V_SHOPIFY_NET_PAYMENT ;;
 
   dimension: amt_remaining {
     type: number
     sql: ${TABLE}."AMT_REMAINING" ;;
+    value_format: "$0.00"
   }
 
   dimension_group: created {
@@ -32,6 +33,7 @@ view: shopify_net_payment {
   dimension: original_amount {
     type: number
     sql: ${TABLE}."ORIGINAL_AMOUNT" ;;
+    value_format: "$0.00"
   }
 
   dimension: payement_method {

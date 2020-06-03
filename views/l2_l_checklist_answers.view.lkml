@@ -1,5 +1,5 @@
 view: l2_l_checklist_answers {
-  sql_table_name: PRODUCTION.L2L_CHECKLIST_ANSWERS ;;
+  sql_table_name: L2L.CHECKLIST_ANSWER ;;
   drill_fields: [id]
 
   dimension: id {

@@ -1,6 +1,6 @@
 view: ltol_line {
   label: "L2L Line Information"
-  sql_table_name: PRODUCTION.L2L_LINE ;;
+  sql_table_name: L2L.LINE ;;
 
   dimension: line_id {
     primary_key: yes
@@ -119,8 +119,11 @@ view: ltol_line {
 
   dimension: site {
     hidden: no
-    type: number
-    sql: ${TABLE}."SITE" ;;
+    type: string
+    sql: case when ${TABLE}.SITE = '2' then 'West'
+                   when ${TABLE}.SITE = '3' then 'Alpine'
+                   else 'Other'
+              end;;
   }
 
   dimension_group: update_ts {
