@@ -12,7 +12,7 @@ view: affiliate_sales_order {
     type: string
     view_label: "Sales Order"
     group_label: " Advanced"
-    description: "Source: rakuten.rakuten_affliate_order"
+    description: "Source:rakuten.rakuten_affliate_order"
     sql: ${TABLE}.publisher_name ;;
   }
 

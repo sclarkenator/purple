@@ -48,8 +48,7 @@ view: first_purchase_date {
         dimension: order_count {
           label: "Order Count"
           hidden: no
-          description: "Count of Orders by Customer Email.
-            Source: netsuite.sales_order"
+          description: "Count of Orders by Customer Email. Source: looker.calculation"
           view_label: "Sales Order"
           group_label: " Advanced"
           type: number
