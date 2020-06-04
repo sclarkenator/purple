@@ -33,6 +33,44 @@ view: order_flag {
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
       ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
       ,case when pillow_booster > 0 then 1 else 0 end pillow_booster_flg
+
+
+      -- adding for ecommerce bundles
+           ,case when ( harmonytwobund >0 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( plushtwobund >0 ) then 1 else 0 end plushtwobund_flg
+     ,case when ( purplepillowtwobund >0 ) then 1 else 0 end purplepillowtwobund_flg
+     ,case when ( boostertwobund >0 ) then 1 else 0 end boostertwobund_flg
+     ,case when ( sleepmasktwobund >0 ) then 1 else 0 end sleepmasktwobund_flg
+     ,case when ( royalcushtwobund >0 ) then 1 else 0 end royalcushtwobund_flg
+     ,case when ( simplycushtwobund >0 ) then 1 else 0 end simplycushtwobund_flg
+     ,case when ( portcushtwobund >0 ) then 1 else 0 end portcushtwobund_flg
+     ,case when ( everywherecushtwobund >0 ) then 1 else 0 end everywherecushtwobund_flg
+     ,case when ( ultimate_cushion >0 ) then 1 else 0 end ultimate_cushion_flg
+     ,case when ( double_cushion >0 ) then 1 else 0 end double_cushion_flg
+     ,case when ( back_cushion >0 ) then 1 else 0 end back_cushion_flg
+     ,case when ( original_sheets >0 ) then 1 else 0 end original_sheets_flg
+     ,case when ( softstretch_sheets >0 ) then 1 else 0 end softstretch_sheets_flg
+     ,case when ( royal_cushion >0 ) then 1 else 0 end royal_cushion_flg
+     ,case when ( simply_cushion >0 ) then 1 else 0 end simply_cushion_flg
+     ,case when ( portable_cushion >0 ) then 1 else 0 end portable_cushion_flg
+     ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
+-- bundles
+     ,case when ( harmonytwobund > 0 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
+     ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
+     ,case when ( double_cushion > 0 and purple_pillow_flg >0) then 1 else 0 end bundle3_flg
+     ,case when ( duvet > 0 and plush_pillow_flg >0) then 1 else 0 end bundle4_flg
+     ,case when ( gravity_blanket > 0 and sleepmasktwobund >0) then 1 else 0 end bundle5_flg
+     ,case when ( everywhere_cushion_flg > 0 and simply_cushion >0) then 1 else 0 end bundle6_flg
+     ,case when ( plushtwobund >= 1) then 1 else 0 end bundle7_flg
+     ,case when ( royal_cushion_flg > 0 and purple_pillow_flg >0) then 1 else 0 end bundle8_flg
+     ,case when ( duvet > 0 and sleepmasktwobund >0) then 1 else 0 end bundle9_flg
+     ,case when ( simply_cushion > 0 and back_cushion_flg >0) then 1 else 0 end bundle10_flg
+     ,case when ( harmonytwobund > 0 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
+     ,case when ( purplepillowtwobund > 0 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
+     ,case when ( purplepillowtwobund >= 1) then 1 else 0 end bundle13_flg
+     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmonytwobund >0) then 1 else 0 end bundle14_flg
+     ,case when ( harmonytwobund > 0 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -54,7 +92,7 @@ view: order_flag {
         ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857') then 1 else 0 end) plush
         ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855') then 1 else 0 end) purple_pillow
         ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
-        ,sum(case when sku_id in ('AC-10-38-13050') then 1 else 0 end) gravity_blanket
+        ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
                                   '10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
@@ -71,6 +109,30 @@ view: order_flag {
           ) THEN 1 else 0 end) buymsm1
         ,sum(case when sku_id in ('10-47-20000','10-47-20002','10-47-20001') then 1 else 0 end) med_mask
         ,sum(case when sku_id in('10-31-12863','10-31-13100') then 1 else 0 end) pillow_booster
+
+        --adding for ecommerce bundles
+
+-- new item flags
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
+ ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
+ ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
+-- 2's
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
+ ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
+
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
       left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
@@ -94,7 +156,7 @@ view: order_flag {
 
   measure: cushion_orders {
     group_label: "Total Orders with:"
-    label: "a Cushion"
+    label: "a Cushion - Any"
     description: "1/0 per order; 1 if there was a cushion in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
@@ -102,7 +164,7 @@ view: order_flag {
 
   measure: sheets_orders {
     group_label: "Total Orders with:"
-    label: "Sheets"
+    label: "Sheets - Any"
     description: "1/0 per order; 1 if there were sheets in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
@@ -244,14 +306,14 @@ view: order_flag {
 
   dimension: cushion_flg {
     group_label: "    * Orders has:"
-    label: "a Cushion"
+    label: "a Cushion - Any"
     description: "1/0; 1 if there is a cushion in this order. Source:looker.calculation"
     type:  yesno
     sql: ${TABLE}.cushion_flg = 1 ;; }
 
   dimension: sheets_flg {
     group_label: "    * Orders has:"
-    label: "Sheets"
+    label: "Sheets - Any"
     description: "1/0; 1 if there are sheets in this order. Source:looker.calculation"
     type:  yesno
     sql: ${TABLE}.sheets_flg = 1 ;; }
@@ -471,5 +533,391 @@ view: order_flag {
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
+#  adding for ecommerce categories and same update
+  measure: ultimate_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Ultimate"
+    description: "1/0 per order; 1 if the order contains an Ultimate Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.ultimate_cushion_flg  ;; }
+
+  measure: double_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Double"
+    description: "1/0 per order; 1 if the order contains a Double Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.double_cushion_flg ;; }
+
+  measure: back_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Back"
+    description: "1/0 per order; 1 if the order contains a Back Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.back_cushion_flg ;; }
+
+  measure: original_sheets_orders {
+    group_label: "Total Orders with:"
+    label: "Sheets - Original"
+    description: "1/0 per order; 1 if the order contains a set of Original Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.original_sheets_flg ;; }
+
+  measure: softstretch_sheets_orders {
+    group_label: "Total Orders with:"
+    label: "Sheets - Softstretch"
+    description: "1/0 per order; 1 if the order contains a set of Softstretch Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.softstretch_sheets_flg ;; }
+
+  measure: royal_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Royal"
+    description: "1/0 per order; 1 if the order contains a Royal Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.royal_cushion_flg ;; }
+
+  measure: simply_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Simply"
+    description: "1/0 per order; 1 if the order contains a Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.simply_cushion_flg ;; }
+
+  measure: portable_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Portable"
+    description: "1/0 per order; 1 if the order contains a Portable Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.portable_cushion_flg ;; }
+
+  measure: everywhere_cushion_orders {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Everywhere"
+    description: "1/0 per order; 1 if the order contains an Everywhere Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.everywhere_cushion_flg ;; }
+
+  dimension: ultimate_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Ultimate"
+    description: "1/0 per order; 1 if the order contains an Ultimate Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.ultimate_cushion_flg =1  ;; }
+
+  dimension: double_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Double"
+    description: "1/0 per order; 1 if the order contains a Double Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.double_cushion_flg =1 ;; }
+
+  dimension: back_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Back"
+    description: "1/0 per order; 1 if the order contains a Back Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.back_cushion_flg=1 ;; }
+
+  dimension: original_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "Sheets - Original"
+    description: "1/0 per order; 1 if the order contains a set of Original Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.original_sheets_flg =1;; }
+
+  dimension: softstretch_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "Sheets - Softstretch"
+    description: "1/0 per order; 1 if the order contains a set of Softstretch Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.softstretch_sheets_flg=1 ;; }
+
+  dimension: royal_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Royal"
+    description: "1/0 per order; 1 if the order contains a Royal Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.royal_cushion_flg=1 ;; }
+
+  dimension: simply_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Simply"
+    description: "1/0 per order; 1 if the order contains a Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.simply_cushion_flg=1 ;; }
+
+  dimension: portable_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Portable"
+    description: "1/0 per order; 1 if the order contains a Portable Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.portable_cushion_flg=1 ;; }
+
+  dimension: everywhere_cushion_flag {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Everywhere"
+    description: "1/0 per order; 1 if the order contains an Everywhere Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.everywhere_cushion_flg =1 ;; }
+
+# Bundle flags and measures
+  dimension: bundle1_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 1"
+    description: "1/0 per order; 1 if the order contains at least (2) Harmony Pillows (1) Purple Sheets (1) Mattress Protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle1_flg=1 ;; }
+
+  dimension: bundle2_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 2"
+    description: "1/0 per order; 1 if the order contains at least (1) Double Cushion (1) Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle2_flg =1;; }
+
+  dimension: bundle3_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 3"
+    description: "1/0 per order; 1 if the order contains at least (1) Double Cushion (1) Purple Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle3_flg=1 ;; }
+
+  dimension: bundle4_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 4"
+    description: "1/0 per order; 1 if the order contains at least (1) Duvet (1) Plush Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle4_flg=1 ;; }
+
+  dimension: bundle5_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 5"
+    description: "1/0 per order; 1 if the order contains at least (1) Weighted Blanket (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle5_flg=1 ;; }
+
+  dimension: bundle6_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 6"
+    description: "1/0 per order; 1 if the order contains at least (1) Everywhere Cushion (1) Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle6_flg=1 ;; }
+
+  dimension: bundle7_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 7"
+    description: "1/0 per order; 1 if the order contains at least (2) Plush Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle7_flg=1 ;; }
+
+  dimension: bundle8_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 8"
+    description: "1/0 per order; 1 if the order contains at least (1) Royal Cushion (1) Purple Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle8_flg=1 ;; }
+
+  dimension: bundle9_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 9"
+    description: "1/0 per order; 1 if the order contains at least (1) Duvet  (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle9_flg=1 ;; }
+
+  dimension: bundle10_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 10"
+    description: "1/0 per order; 1 if the order contains at least (1) Simply Cushion (1) Back Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle10_flg=1 ;; }
+
+  dimension: bundle11_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 11"
+    description: "1/0 per order; 1 if the order contains at least (2) Harmony Pillows (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle11_flg=1 ;; }
+
+  dimension: bundle12_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 12"
+    description: "1/0 per order; 1 if the order contains at least (2) Purple Pillows (1) Softstretch Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle12_flg=1 ;; }
+
+  dimension: bundle13_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 13"
+    description: "1/0 per order; 1 if the order contains at least (2) Purple Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle13_flg=1 ;; }
+
+  dimension: bundle14_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 14"
+    description: "1/0 per order; 1 if the order contains at least (1) Foundation (1) Mattress Protector (1) SoftStretch Sheets (2) Harmony Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle14_flg=1 ;; }
+
+  dimension: bundle15_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Bundle 15"
+    description: "1/0 per order; 1 if the order contains at least (2) Harmony Pillows (1) SoftstretchSheets (1) Mattress Protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bundle15_flg=1 ;; }
+
+# measures
+  measure: bundle1_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 1"
+    description: "Orders that contain at least (2) Harmony Pillows (1) Purple Sheets (1) Mattress Protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle1_flg ;; }
+
+  measure: bundle2_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 2"
+    description: "Orders that contain at least (1) Double Cushion (1) Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle2_flg ;; }
+
+  measure: bundle3_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 3"
+    description: "Orders that contain at least (1) Double Cushion (1) Purple Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle3_flg ;; }
+
+  measure: bundle4_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 4"
+    description: "Orders that contain at least (1) Duvet (1) Plush Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle4_flg ;; }
+
+  measure: bundle5_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 5"
+    description: "Orders that contain at least (1) Weighted Blanket (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle5_flg ;; }
+
+  measure: bundle6_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 6"
+    description: "Orders that contain at least (1) Everywhere Cushion (1) Simply Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle6_flg ;; }
+
+  measure: bundle7_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 7"
+    description: "Orders that contain at least (2) Plush Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle7_flg ;; }
+
+  measure: bundle8_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 8"
+    description: "Orders that contain at least (1) Royal Cushion (1) Purple Pillow. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle8_flg ;; }
+
+  measure: bundle9_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: " Bundle 9"
+    description: "Orders that contain at least (1) Duvet  (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle9_flg ;; }
+
+  measure: bundle10_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 10"
+    description: "Orders that contain at least (1) Simply Cushion (1) Back Cushion. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle10_flg ;; }
+
+  measure: bundle11_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 11"
+    description: "Orders that contain at least (2) Harmony Pillows (2) Sleep Masks. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle11_flg ;; }
+
+  measure: bundle12_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 12"
+    description: "Orders that contain at least (2) Purple Pillows (1) Softstretch Sheets. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle12_flg ;; }
+
+  measure: bundle13_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 13"
+    description: "Orders that contain at least (2) Purple Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle13_flg ;; }
+
+  measure: bundle14_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 14"
+    description: "Orders that contain at least (1) Foundation (1) Mattress Protector (1) SoftStretch Sheets (2) Harmony Pillows. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle14_flg ;; }
+
+  measure: bundle15_orders {
+    group_label: "eComm Bundle Order Counts"
+    label: "Bundle 15"
+    description: "Orders that contain at least (2) Harmony Pillows (1) SoftstretchSheets (1) Mattress Protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bundle15_flg ;; }
 
 }
