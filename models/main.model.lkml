@@ -1143,27 +1143,22 @@ explore: exchange_items {hidden: yes
           sql_on: ${qualtrics1.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
           relationship: one_to_many
           view_label: "Answer"}
-        join: customer_table {
-          view_label: "Customer"
-          type: inner
-          sql_on: upper(${customer_table.email}) = upper(${qualtrics_response.recipient_email}) ;;
-          relationship: many_to_many}
         join: sales_order {
           type:  inner
-          sql_on: ${customer_table.customer_id}::int = ${sales_order.customer_id} ;;
-          relationship: one_to_one }
+          sql_on: upper(${qualtrics_response.recipient_email}) = upper(${sales_order.email}) ;;
+          relationship: many_to_many }
         join: sales_order_line_base {
           type:  inner
           sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
-          relationship: many_to_one}
+          relationship: one_to_many}
         join: item {
           view_label: "Product"
           sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
           type: inner
-          relationship: one_to_many}
+          relationship: many_to_one}
         join: zendesk_sell {
           view_label: "Zendesk Sell"
-          type: inner
+          type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
       }
