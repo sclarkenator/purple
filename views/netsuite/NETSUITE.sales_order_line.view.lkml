@@ -611,7 +611,7 @@ view: sales_order_line {
   measure: total_standard_cost {
     #hidden: yes
     label: "Total Standard Cost"
-    description: "Total Cost (cost per unit * number of units). Source: netsuite.sales_order_line"
+    description: "Total Cost (cost per unit * number of units). Source:netsuite.sales_order_line"
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
@@ -620,7 +620,9 @@ view: sales_order_line {
   }
 
   dimension: unit_standard_cost {
+    group_label: " Advanced"
     label: "Unit Standard Cost"
+    description: "Source:netsuite.item_standard_cost"
     type:  number
     value_format: "$#,##0.00"
     sql: ${standard_cost.standard_cost} ;;
@@ -629,7 +631,7 @@ view: sales_order_line {
   dimension: has_standard_cost {
     label: "    * Has Standard Cost"
     type: yesno
-    description: "Data exists for what it costs Purple to make the product. Source: netsuite.sales_order_line"
+    description: "Data exists for what it costs Purple to make the product. Source:netsuite.sales_order_line"
     sql: ${standard_cost.standard_cost} is not null ;;
   }
 
@@ -692,7 +694,7 @@ view: sales_order_line {
   }
 
   dimension: wholesale_packed {
-    label: "Is Wholesale and Packed"
+    label: "  * Is Wholesale and Packed"
     description: "Source: looker.calculation"
     type: yesno
     #hidden: yes
@@ -700,7 +702,7 @@ view: sales_order_line {
   }
 
   dimension: xpo_pilot_packed {
-    label: "Is Pilot or XPO and Packed"
+    label: "  * Is Pilot or XPO and Packed"
     description: "Source: looker.calculation"
     type: yesno
     #hidden: yes
@@ -1439,7 +1441,7 @@ view: sales_order_line {
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
-    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale. Source: looker.calculation"
+    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale. Source:looker.calculation"
     value_format: "$#,##0"
     type: sum
     sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}
