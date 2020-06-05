@@ -31,6 +31,7 @@ view: qualtrics_answer {
       when ${TABLE}."ANSWER" in ('Slightly certain','Slightly helpful','Somewhat disagree','Somewhat unlikely','4') then '4'
       when ${TABLE}."ANSWER" in ('Not certain at all','Not helpful at all','Strongly disagree','Extremely unlikely','5') then '5'
       when ${TABLE}."ANSWER" in ('More','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25') then '6+'
+      else '99'
       end;;
   }
 
