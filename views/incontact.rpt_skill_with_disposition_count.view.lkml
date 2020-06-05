@@ -144,6 +144,7 @@ dimension: primary_key {
 
   measure: total_handle_time {
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 

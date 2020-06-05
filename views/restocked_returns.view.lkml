@@ -46,6 +46,7 @@ view: restocked_returns {
       }
 
   measure: total_restocked_items_units {
+    group_label: " Advanced"
     label: " Total Restocked (units)"
     description: "How many units have been restocked. Source:netsuite.receipt_restock"
     type: sum

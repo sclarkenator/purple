@@ -8,8 +8,9 @@ view: warranty_reason {
     sql: ${TABLE}.LIST_ID ;; }
 
   dimension: return_reason {
-    label:"  Warranty Reason"
-    description: "Reason customer gives for submitting warranty claim on that item"
+    group_label: " Advanced"
+    label:"Warranty Reason"
+    description: "Reason customer gives for submitting warranty claim on that item. Source: netsuite.update_warrany_reasons"
     type:  string
     sql:  upper(${TABLE}.list_item_name) ;; }
 

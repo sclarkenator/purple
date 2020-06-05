@@ -40,7 +40,7 @@ view: warranty_order_line {
   dimension: memo {
     group_label: " Advanced"
     label: "Line Memo"
-    description: "The line level notes on the warranty order"
+    description: "The line level notes on the warranty order. Source:netsuite.warranty_order_line"
     type: string
     sql: ${TABLE}.MEMO ;; }
 
@@ -50,15 +50,17 @@ view: warranty_order_line {
     sql: ${TABLE}.ORDER_ID ;; }
 
   measure: quantity {
+    group_label: " Advanced"
     label: "Total Warranties Initiated (units)"
-    description: "Units for which a warranty was created"
+    description: "Units for which a warranty was created. Source:netsuite.warranty_order_line"
     type: sum
     #drill_fields: [sales_order_line.order_id,sales_order_line.created_date,warranty_order.created_date,item.model_name,item.size,item.product_name,warranty_reason.return_reason]
     sql: ${TABLE}.QUANTITY ;; }
 
   measure: quantity_complete {
+    group_label: " Advanced"
     label: "Total Warranties Completed (units)"
-    description: "Units from warranties where the warranty has been completed"
+    description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
     filters: {
       field: warranty_order.status

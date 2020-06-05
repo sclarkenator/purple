@@ -43,7 +43,7 @@ view: warranty_original_information {
     dimension: fulfilled_date {
       label: "Original Fulfillment"
       group_label: " Advanced"
-      description: "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale"
+      description: "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale. Source: looker.calculation"
       type: date
       sql: ${TABLE}.fulfilled_date ;;
     }
@@ -110,7 +110,7 @@ view: warranty_original_information {
 
     dimension: order_id {
       group_label: " Advanced"
-      description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite."
+      description: "This is Netsuite's internal ID. This will be a hyperlink to the sales order in Netsuite. Source:netsuite.sales_order"
       type: number
       sql: ${TABLE}.order_id ;;
     }
@@ -124,7 +124,7 @@ view: warranty_original_information {
     dimension: sales_created_date {
       label: "Original Sales Order"
       group_label: " Advanced"
-      description: "Time and date original order was placed"
+      description: "Time and date original order was placed. Source: netsuite.sales_order_line"
       type: date
       sql: ${TABLE}.s_created_date ;;
     }
@@ -137,7 +137,7 @@ view: warranty_original_information {
   dimension: channel {
     label: "Original Channel"
     group_label: " Advanced"
-    description: "Original Channel"
+    description: "Original Channel. Source:netsuite.sales_order"
     type: string
     sql: ${TABLE}.channel ;;
   }

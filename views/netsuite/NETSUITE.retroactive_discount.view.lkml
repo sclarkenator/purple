@@ -11,7 +11,7 @@ view: retroactive_discount {
     #hidden: yes
     view_label: "Sales Order Line"
     label: "Total Retro Discounts ($)"
-    description:  "Total of all applied retroactive (deprecated) discounts"
+    description:  "Total of all applied retroactive (deprecated) discounts. Source: netsuite.retroactive_discount"
     type:  sum
     sql:  ${TABLE}.amount;; }
 
