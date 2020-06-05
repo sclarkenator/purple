@@ -21,10 +21,22 @@ view: qualtrics_answer {
       else ${TABLE}."ANSWER" end;;
   }
 
+  dimension: answer_order {
+    label: "Answer order"
+    type: number
+    sql:
+      case when ${TABLE}."ANSWER" = 'Extremely certain' then '1'
+      when ${TABLE}."ANSWER" = 'Very certain' then '2'
+      when ${TABLE}."ANSWER" = 'Moderately certain' then '3'
+      when ${TABLE}."ANSWER" = 'Slightly certain' then '4'
+      when ${TABLE}."ANSWER" = 'Not certain at all' then '5'
+      end;;
+  }
+
   dimension: answer_t2b2 {
     label: "Answer Buckets "
     type: string
-    sql:
+    sql:Slightly certain
       case
       when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then 'Satisfied (Top 2)'
       when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then 'Dissatisfied (Bottom 2)'
