@@ -27,6 +27,7 @@ view: referral_sales_orders {
   dimension: order_id_flag {
     view_label: "Sales Order"
     label: "     * Is Referral Order"
+    description: "Source: c3.referral_sales_orders"
     type:  yesno
     sql: ${order_id_referral} is not NULL  ;;
   }

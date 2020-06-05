@@ -98,39 +98,39 @@ view: customer_satisfaction_survey {
     drill_fields: []
   }
 
-  measure: averge_likely_to_recommend {
-    label: "Average Likelihood to Recommend"
-    type: average
-    #value_format: "0.##"
-    sql: ${TABLE}."LIKELY_TO_RECOMMEND" ;;
-  }
-
-  measure: percent_likely_to_recommend_10 {
-    label: "Percent with Likelihood to Recommend of 10"
-    type: number
-    value_format: "0.0%"
-    sql: sum(case when  ${TABLE}."LIKELY_TO_RECOMMEND" = 10 then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
-  }
-
-  measure: average_statisfied_with_rep {
-    label: "Average CSAT"
-    type: average
-    value_format: "0.##"
-    sql: ${TABLE}."SATISFIED_WITH_REP" ;;
-  }
-
-  measure: Percent_CSAT_10 {
-    label: "Percent with CSAT of 10"
-    type: number
-    value_format: "0.0%"
-    sql: sum(case when  ${TABLE}."SATISFIED_WITH_REP" = 10 then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
-  }
-
-  measure: percent_questions_answered_by_rep {
-    label: "Percent Questions Answered"
-    description: "Percent of respondents who said yes, that their questions had been answered by the rep"
-    type: number
-    value_format: "0.0%"
-    sql: sum(case when lower(${TABLE}."QUESTIONS_ANSWERED_BY_REP") = 'yes' then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
-  }
+#   measure: averge_likely_to_recommend {
+#     label: "Average Likelihood to Recommend"
+#     type: average
+#     #value_format: "0.##"
+#     sql: ${TABLE}."LIKELY_TO_RECOMMEND" ;;
+#   }
+#
+#   measure: percent_likely_to_recommend_10 {
+#     label: "Percent with Likelihood to Recommend of 10"
+#     type: number
+#     value_format: "0.0%"
+#     sql: sum(case when  ${TABLE}."LIKELY_TO_RECOMMEND" = 10 then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
+#   }
+#
+#   measure: average_statisfied_with_rep {
+#     label: "Average CSAT"
+#     type: average
+#     value_format: "0.##"
+#     sql: ${TABLE}."SATISFIED_WITH_REP" ;;
+#   }
+#
+#   measure: Percent_CSAT_10 {
+#     label: "Percent with CSAT of 10"
+#     type: number
+#     value_format: "0.0%"
+#     sql: sum(case when  ${TABLE}."SATISFIED_WITH_REP" = 10 then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
+#   }
+#
+#   measure: percent_questions_answered_by_rep {
+#     label: "Percent Questions Answered"
+#     description: "Percent of respondents who said yes, that their questions had been answered by the rep"
+#     type: number
+#     value_format: "0.0%"
+#     sql: sum(case when lower(${TABLE}."QUESTIONS_ANSWERED_BY_REP") = 'yes' then 1 else 0 end) / count(${TABLE}."SURVEY_ID") ;;
+#   }
 }

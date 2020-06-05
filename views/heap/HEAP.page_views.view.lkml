@@ -28,7 +28,7 @@ view: heap_page_views {
 
   dimension_group: session_time {
     description: "Time the Session Began"
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no

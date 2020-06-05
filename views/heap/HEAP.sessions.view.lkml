@@ -11,10 +11,17 @@ view: sessions {
   #sql_table_name: heap.sessions ;;
 
   dimension: session_id {
-    primary_key: yes
+    #primary_key: yes
     hidden: yes
     type: string
     sql: ${TABLE}.session_id ;; }
+
+  dimension: session_unique_id {
+    hidden: yes
+    type: string
+    primary_key: yes
+    sql: ${session_id} || '-' || ${user_id} ;;
+  }
 
   dimension: app_name {
     label: "App Name"
@@ -116,6 +123,11 @@ view: sessions {
     hidden: yes
     sql: ${TABLE}.library ;; }
 
+  dimension: phone_model {
+    hidden: yes
+    sql: ${TABLE}.phone_model ;;
+  }
+
   dimension: platform {
     label: "Platform"
     group_label: "Advanced"
@@ -148,6 +160,19 @@ view: sessions {
           when ${TABLE}.referrer ilike ('%instagram%') then 'https://instagram.com/*'
           else left(${TABLE}.referrer,16)||'*' end ;; }
   #https://purple.com
+
+  dimension: referrer_domain {
+    hidden: yes
+    sql: split_part(${referrer},'/',3) ;;
+  }
+
+#   dimension: referrer_domain_mapped {
+#     sql: CASE WHEN ${referrer_domain} like '%facebook%' THEN 'facebook' WHEN ${referrer_domain} like '%google%' THEN 'google' ELSE ${referrer_domain} END ;;
+#     html: {{ linked_value }}
+#       <a href="/dashboards/heap_block::referrer_dashboard?referrer_domain={{ value | encode_uri }}" target="_new">
+#       <img src="/images/qr-graph-line@2x.png" height=20 width=20></a>
+#       ;;
+#   }
 
   dimension: region {
     label: "Region"
@@ -325,6 +350,12 @@ view: sessions {
               else 'OTHER' end ;;
   }
 
+  dimension: source_medium {
+    hidden: yes
+    type: string
+    sql: ${utm_source} || '/' || ${utm_medium} ;;
+  }
+
   dimension: utm_term {
     group_label: "UTM Tags"
     label: "UTM Term"
@@ -369,6 +400,13 @@ view: sessions {
     label: "Distinct Users"
     type: count_distinct
     sql:  ${TABLE}.user_id ;;
+  }
+
+  measure: average_sessions_per_user {
+    hidden: yes
+    type: number
+    sql: ${count}::float/nullif(${distinct_users},0) ;;
+    value_format_name: decimal_1
   }
 
   # ----- Sets of fields for drilling ------

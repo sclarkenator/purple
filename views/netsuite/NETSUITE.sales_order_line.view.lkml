@@ -611,7 +611,7 @@ view: sales_order_line {
   measure: total_standard_cost {
     #hidden: yes
     label: "Total Standard Cost"
-    description: "Total Cost (cost per unit * number of units). Source: netsuite.sales_order_line"
+    description: "Total Cost (cost per unit * number of units). Source:netsuite.sales_order_line"
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
@@ -620,7 +620,9 @@ view: sales_order_line {
   }
 
   dimension: unit_standard_cost {
+    group_label: " Advanced"
     label: "Unit Standard Cost"
+    description: "Source:netsuite.item_standard_cost"
     type:  number
     value_format: "$#,##0.00"
     sql: ${standard_cost.standard_cost} ;;
@@ -629,7 +631,7 @@ view: sales_order_line {
   dimension: has_standard_cost {
     label: "    * Has Standard Cost"
     type: yesno
-    description: "Data exists for what it costs Purple to make the product. Source: netsuite.sales_order_line"
+    description: "Data exists for what it costs Purple to make the product. Source:netsuite.sales_order_line"
     sql: ${standard_cost.standard_cost} is not null ;;
   }
 
@@ -692,7 +694,7 @@ view: sales_order_line {
   }
 
   dimension: wholesale_packed {
-    label: "Is Wholesale and Packed"
+    label: "  * Is Wholesale and Packed"
     description: "Source: looker.calculation"
     type: yesno
     #hidden: yes
@@ -700,7 +702,7 @@ view: sales_order_line {
   }
 
   dimension: xpo_pilot_packed {
-    label: "Is Pilot or XPO and Packed"
+    label: "  * Is Pilot or XPO and Packed"
     description: "Source: looker.calculation"
     type: yesno
     #hidden: yes
@@ -781,7 +783,7 @@ view: sales_order_line {
   measure: return_rate_units_exch {
     group_label: "Return Rates"
     label: "Return Rate w/o Exchanges (% of units)"
-    description: "(Units returned - Units Exchanged) / Units fulfilled. Source: looker.calculation"
+    description: "(Units returned - Units Exchanged) / Units fulfilled. Source:looker.calculation"
     view_label: "Returns"
     type: number
     sql: (${return_order_line.units_returned}-${exchange_order_line.count}) / nullif(${total_units},0) ;;
@@ -1306,30 +1308,10 @@ view: sales_order_line {
     sql: ${left_purple_to_in_hand_in_sla}/(${left_purple_to_in_hand_in_sla}+${left_purple_to_in_hand_not_in_sla}) ;;
   }
 
-  measure: average_mattress_order_size {
-    label: "AMOV ($)"
-    view_label: "Sales Order"
-    description: "Average total mattress order amount, excluding tax. Source: looker.calculation"
-    type: average
-    sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0"
-    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
-  }
-
-  measure: average_accessory_order_size {
-    label: "NAMOV ($)"
-    view_label: "Sales Order"
-    description: "Average total accessory order amount, excluding tax. Source: looker.calculation"
-    type: average
-    sql_distinct_key: ${sales_order.order_system} ;;
-    value_format: "$#,##0"
-    sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
-  }
-
   measure: upt {
     label: "UPT"
     view_label: "Sales Order"
-    description: "Units per transaction. Source: looker.calculation"
+    description: "Units per transaction. Source:looker.calculation"
     type: number
     value_format: "#,##0.00"
     sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
@@ -1459,7 +1441,7 @@ view: sales_order_line {
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
-    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale. Source: looker.calculation"
+    description: "The sales included in calculating return on adspend (ROAs).  100% of DTC and Owned Retail, 50% of Wholesale. Source:looker.calculation"
     value_format: "$#,##0"
     type: sum
     sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}

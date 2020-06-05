@@ -608,7 +608,7 @@ explore: hotjar_data {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
@@ -649,6 +649,10 @@ explore: hotjar_data {
     relationship: many_to_many}
   }
 
+explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
+
+explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}
+
 explore: all_events {
   label: "All Events (heap)"
   group_label: "Marketing"
@@ -688,17 +692,49 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-  #aggregate_table: weekly_sessions {
-  #  materialization: {
-  #    datagroup_trigger: pdt_refresh_6am
-  #  }
-  #  query: {
-  #    dimensions: [sessions.time_week] # <-- orders.region field
-  #    measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-  #    timezone: America/Denver
-  #  }
-  #}
+  aggregate_table: weekly_sessions {
+    query: {
+      dimensions: [sessions.time_week]
+      measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
+      filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
+      timezone: America/Denver
+    }
+    materialization: {
+      #sql_trigger_value: SELECT CURDATE() ;;
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+    query: {
+      dimensions: [sessions.time_week_of_year, sessions.time_year]
+      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+      timezone: "America/Denver"
+    }
+
+    materialization: {
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+
 }
+
+  explore: funnel_explorer {
+    hidden: yes
+    group_label: "Marketing"
+    label: "HEAP Funnel"
+    join: sessions {
+      type: left_outer
+      sql_on: ${funnel_explorer.session_unique_id} = ${sessions.session_unique_id} ;;
+      relationship: one_to_one
+    }
+    join: session_facts {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${sessions.session_unique_id} = ${session_facts.session_unique_id} ;;
+      relationship: one_to_one
+    }
+  }
 
 explore: cordial_activity {
   group_label: "Marketing"
@@ -1086,6 +1122,47 @@ explore: exchange_items {hidden: yes
 
   explore: events_view__all_events__all_events {hidden:yes}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
+
+
+      explore: qualtrics1 {
+        hidden:yes
+        from: qualtrics_survey
+        view_label: "Survey"
+        join: qualtrics_response {
+          type: inner
+          sql_on: ${qualtrics1.id} = ${qualtrics_response.survey_id} ;;
+          relationship: one_to_many
+          view_label: "Response"}
+        join: qualtrics_customer {
+          type: inner
+          sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+          relationship: many_to_one
+          view_label: "Qualtrics Customer"}
+        join: qualtrics_answer {
+          type: inner
+          sql_on: ${qualtrics1.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+          relationship: one_to_many
+          view_label: "Answer"}
+        join: sales_order {
+          type:  inner
+          sql_on: upper(${qualtrics_response.recipient_email}) = upper(${sales_order.email}) ;;
+          relationship: many_to_many }
+        join: sales_order_line_base {
+          type:  inner
+          sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
+          relationship: one_to_many}
+        join: item {
+          view_label: "Product"
+          sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
+          type: inner
+          relationship: many_to_one}
+        join: zendesk_sell {
+          view_label: "Zendesk Sell"
+          type: full_outer
+          sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+          relationship: one_to_one}
+      }
+
 
 #-------------------------------------------------------------------
 #
@@ -1485,6 +1562,13 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
+    join: acquisition_recent_customer_test_segments {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      view_label: "Customer"
+    }
+
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}

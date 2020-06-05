@@ -47,8 +47,7 @@ view: sales_order_line_base {
   measure: total_gross_Amt {
     group_label: "Gross Sales"
     label:  "Gross Sales ($0.k)"
-    description:  "Total the customer paid, excluding tax and freight, in $K.
-      Source: netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $K. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0,\" K\""
@@ -58,8 +57,7 @@ view: sales_order_line_base {
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $.
-      Source: netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     value_format: "$#,##0"
@@ -80,8 +78,7 @@ view: sales_order_line_base {
   measure: total_discounts {
     label:  "Total Discounts ($)"
     value_format:"$#,##0"
-    description:  "Total of all applied discounts when order was placed.
-      Source: netsuite.sales_order_line"
+    description:  "Total of all applied discounts when order was placed. Source:netsuite.sales_order_line"
     drill_fields: [order_details*]
     type: sum
     sql:  ${TABLE}.discount_amt ;;
@@ -100,14 +97,16 @@ view: sales_order_line_base {
   measure: total_units {
     group_label: "Gross Sales"
     label:  "Gross Sales (units)"
-    description: "Total units purchased, before returns and cancellations.
-      Source: netsuite.sales_order_line"
+    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     sql:  ${TABLE}.ordered_qty ;;
   }
 
   dimension: total_units_raw {
+    hidden: yes
+    group_label: " Advanced"
+    description: "Source: netsuite.sales_order_line"
     type: number
     sql:  ${TABLE}.ordered_qty ;;
   }
@@ -116,7 +115,7 @@ view: sales_order_line_base {
     group_label: " Advanced"
     label:  "Gross Sales (units) (dimension version)"
     description: "Dimension version: Total units purchased, before returns and cancellations.
-      Source: netsuite.sales_order_line"
+      Source:netsuite.sales_order_line"
     type: number
     drill_fields: [order_details*]
     sql:  ${TABLE}.ordered_qty ;;
@@ -171,16 +170,14 @@ view: sales_order_line_base {
 
   dimension: free_item {
     label: "     * Zero Dollar Items (promo/free)"
-    description: "Yes if this item is free.
-      Source: netsuite.sales_order_line" #with purchase of mattress
+    description: "Yes if this item is free. Source:netsuite.sales_order_line" #with purchase of mattress
     type: yesno
     sql: ((${pre_discount_amt} = ${discount_amt}) and ${discount_amt} <> 0) or (${gross_amt} = 0 and ${discount_amt} > 30)  ;;
   }
 
   dimension: discounted_item {
     label: "     * Is Discounted"
-    description: "Yes if this item had any discount, including if free.
-      Source: netsuite.sales_order_line"
+    description: "Yes if this item had any discount, including if free. Source:netsuite.sales_order_line"
     type: yesno
     sql: (${discount_amt} > 0)  ;;
   }
@@ -734,8 +731,7 @@ view: sales_order_line_base {
   dimension: memo {
     group_label: " Advanced"
     label:  "Memo"
-    description:  "Notes field from the Shopify Draft Order Line.
-      Source: netsuite.sales_order_line"
+    description:  "Notes field from the Shopify Draft Order Line. Source:netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.memo ;;
   }
@@ -743,8 +739,8 @@ view: sales_order_line_base {
   dimension: gross_amt {
     group_label: " Advanced"
     label: "Gross Sales Item Level ($)"
-    description: "Gross sales is what the customer paid on initial order per sku, net of discounts, excluding tax, freight or other fees.
-      Source: netsuite.sales_order_line"
+    description: "Gross sales is what the customer paid on initial order per sku, net of discounts, excluding tax,
+    freight or other fees. Source:netsuite.sales_order_line"
     type: number
     sql: ${TABLE}.gross_amt ;;
   }
