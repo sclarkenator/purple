@@ -54,7 +54,7 @@ view: order_flag {
      ,case when ( simply_cushion >0 ) then 1 else 0 end simply_cushion_flg
      ,case when ( portable_cushion >0 ) then 1 else 0 end portable_cushion_flg
      ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
---     ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
+     ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
 -- bundles
      ,case when ( harmonytwobund > 0 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
      ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
@@ -72,9 +72,9 @@ view: order_flag {
      ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmonytwobund >0) then 1 else 0 end bundle14_flg
      ,case when ( harmonytwobund > 0 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
 
---     ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
+     ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
      ,case when ( original_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle17_flg
---     ,case when ( softstretch_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle18_flg
+     ,case when ( softstretch_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle18_flg
      ,case when ( softstretch_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle19_flg
 
     FROM(
@@ -128,7 +128,7 @@ view: order_flag {
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
--- ,sum(case when (sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
+ ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
 -- 2's
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
@@ -139,7 +139,7 @@ view: order_flag {
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
--- ,sum(case when (sku_id in ('10-41-12526' and sol.ORDERED_QTY >=2 ) THEN 1 ELSE 0 END) litecushtwobund
+ ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
 
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
