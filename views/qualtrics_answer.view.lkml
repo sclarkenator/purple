@@ -25,11 +25,12 @@ view: qualtrics_answer {
     label: "Answer order"
     type: number
     sql:
-      case when ${TABLE}."ANSWER" = 'Extremely certain' then '1'
-      when ${TABLE}."ANSWER" = 'Very certain' then '2'
-      when ${TABLE}."ANSWER" = 'Moderately certain' then '3'
-      when ${TABLE}."ANSWER" = 'Slightly certain' then '4'
-      when ${TABLE}."ANSWER" = 'Not certain at all' then '5'
+      case when ${TABLE}."ANSWER" in ('Extremely certain','Extremely helpful','Strongly agree','Extremely likely','1') then '1'
+      when ${TABLE}."ANSWER" in ('Very certain','Very helpful','Somewhat agree','Somewhat likely','2') then '2'
+      when ${TABLE}."ANSWER" in ('Moderately certain','Moderately helpful','Neither agree nor disagree','Neither likely nor unlikely','3') then '3'
+      when ${TABLE}."ANSWER" in ('Slightly certain','Slightly helpful','Somewhat disagree','Somewhat unlikely','4') then '4'
+      when ${TABLE}."ANSWER" in ('Not certain at all','Not helpful at all','Strongly disagree','Extremely unlikely','5') then '5'
+      when ${TABLE}."ANSWER" in ('More','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25') then '6+'
       end;;
   }
 
