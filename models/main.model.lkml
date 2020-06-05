@@ -1878,8 +1878,8 @@ explore: procom_security_daily_customer {
   explore: forecast_historical_legacy {label: "Historical Forecasts" group_label: "Sales" description: "Unioned forecasts with a forecast made date for separating"
     hidden: yes
     join: item {view_label: "Product" type: left_outer sql_on: ${forecast_historical_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
-  explore: forecast_wholesale_dim {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
-    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
+  explore: forecast_wholesale_dim_legacy {label: "Wholesale Forecast" group_label: "In Testing"  hidden: yes
+    join: item {view_label: "Product" type: left_outer sql_on: ${forecast_wholesale_dim_legacy.sku_id} = ${item.sku_id} ;;  relationship: many_to_one}}
   #explore: forecast_dtc { from: forecast label: "Combined Forecast" group_label: "Sales"  hidden: yes
    # join: forecast_wholesale_legacy {type: full_outer sql_on: ${forecast_dtc.sku_id} = ${forecast_wholesale_legacy.sku_id} and ${forecast_dtc.date_date} = ${forecast_wholesale_legacy.date_date};; relationship: one_to_one}
     #join: item {view_label: "Product" type: left_outer sql_on: coalesce(${forecast_wholesale_legacy.sku_id},${forecast_dtc.sku_id}) = ${item.sku_id} ;;  relationship: many_to_one}}
