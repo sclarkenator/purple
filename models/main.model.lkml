@@ -1217,8 +1217,8 @@ explore: sales_order_line{
   always_filter: {
     filters: {field: sales_order.channel      value: "DTC"}
     filters: {field: item.merchandise         value: "No"}
-    filters: {field: item.finished_good_flg   value: "Yes"}
-    filters: {field: item.modified            value: "Yes"}}
+    filters: {field: item.finished_good_flg   value: "Yes"}}
+    #filters: {field: item.modified            value: "Yes"}}
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
@@ -2070,7 +2070,4 @@ explore: procom_security_daily_customer {
 
     explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
     explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
-    explore: owned_retail_target_by_location {
-      hidden: yes
-
-    }
+    explore: owned_retail_target_by_location {hidden: yes }

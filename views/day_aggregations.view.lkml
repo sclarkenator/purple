@@ -10,7 +10,7 @@ view: day_aggregations_dtc_sales {
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
       filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
@@ -41,7 +41,7 @@ view: day_aggregation_dtc_orders {
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: item.product_description value: "-SQUISHY 2.0,-PURPLE SQUISHY MAILER SAMPLE" }
     }
   }
@@ -62,7 +62,7 @@ view: day_aggregations_wholesale_sales {
       filters: { field: sales_order.channel value: "Wholesale"}
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       #filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
@@ -88,7 +88,7 @@ view: day_aggregations_retail_sales {
       filters: { field: sales_order.channel value: "Owned Retail"}
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes, No" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       #filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
@@ -185,7 +185,7 @@ view: day_aggregations_dtc_returns {
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: return_order.return_completed_date value: "2 years" }
     }
   }
@@ -212,7 +212,7 @@ view: day_aggregations_wholesale_returns {
       filters: { field: sales_order.channel value: "Wholesale" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: return_order.return_completed_date value: "2 years" }
     }
   }
@@ -238,7 +238,7 @@ view: day_aggregations_dtc_cancels {
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: cancelled_order.cancelled_date value: "2 years" }
     }
   }
