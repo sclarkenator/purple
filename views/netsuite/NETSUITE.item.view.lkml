@@ -504,6 +504,13 @@ view: item {
         when ${sku_clean} = '10-31-12863' then '10-31-12855'
         --Plush Pillow
         when ${sku_clean} = '10-31-12862' then '10-31-12857'
+        --NOG with OG Cover
+        when ${sku_clean} = '10-21-12970' then '10-21-12960'
+        when ${sku_clean} = '10-21-12967' then '10-21-12620'
+        when ${sku_clean} = '10-21-12969' then '10-21-12632'
+        when ${sku_clean} = '10-21-12968' then '10-21-12625'
+        when ${sku_clean} = '10-21-12965' then '10-21-12617'
+        when ${sku_clean} = '10-21-12966' then '10-21-12618'
         else ${sku_clean} end ;;
   }
 
