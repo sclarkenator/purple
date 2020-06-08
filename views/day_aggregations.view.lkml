@@ -10,7 +10,7 @@ view: day_aggregations_dtc_sales {
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
-      filters: { field: item.modified value: "Yes" }
+      #filters: { field: item.modified value: "Yes" }
       filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
       filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
