@@ -38,7 +38,7 @@ view: qualtrics_answer {
   dimension: answer_t2b2 {
     label: "Answer Buckets "
     type: string
-    sql:Slightly certain
+    sql:
       case
       when ${TABLE}."ANSWER" in ('Extremely satisfied','Moderately satisfied') then 'Satisfied (Top 2)'
       when ${TABLE}."ANSWER" in ('Moderately dissatisfied', 'Extremely dissatisfied') then 'Dissatisfied (Bottom 2)'
