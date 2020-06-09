@@ -22,7 +22,7 @@ view: warranty_original_information {
         LEFT JOIN SALES.FULFILLMENT  AS f ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system and f.status = 'Shipped'
         LEFT JOIN SALES.SALES_ORDER  AS s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
         FULL OUTER JOIN SALES.WARRANTY_ORDER  AS w ON s.ORDER_ID = w.ORDER_ID and s.SYSTEM = w.ORIGINAL_SYSTEM
-        LEFT JOIN ANALYTICS_STAGE.netsuite.UPDATE_WARRANTY_REASONS  AS wr ON w.WARRANTY_REASON_CODE_ID = wr.LIST_ID
+        LEFT JOIN analytics_stage.ns.UPDATE_WARRANTY_REASONS  AS wr ON w.WARRANTY_REASON_CODE_ID = wr.LIST_ID
         LEFT JOIN SALES.SALES_ORDER wso on s.related_tranid =
           case
             when length(replace(REGEXP_SUBSTR(replace(upper(wso.MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O','')) = 4

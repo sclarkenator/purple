@@ -1,5 +1,5 @@
 view: customer_table {
-  sql_table_name: ANALYTICS_STAGE.netsuite.CUSTOMERS ;;
+  sql_table_name: analytics_stage.ns.CUSTOMERS ;;
 
   dimension: customer_id {
     label: "Customer ID"

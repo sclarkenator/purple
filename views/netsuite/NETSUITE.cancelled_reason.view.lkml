@@ -1,5 +1,5 @@
 view: NETSUITE_cancelled_reason {
-  sql_table_name: ANALYTICS_STAGE.netsuite.SHOPIFY_CANCEL_REASON_LIST ;;
+  sql_table_name: analytics_stage.ns.SHOPIFY_CANCEL_REASON_LIST ;;
 
   dimension: list_id {
     type: number
