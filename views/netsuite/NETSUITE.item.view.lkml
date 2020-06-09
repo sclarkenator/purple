@@ -86,7 +86,8 @@ view: item {
     view_label: "Filters"
     hidden: yes
     type: yesno
-    sql: ${TABLE}.bi_update = 1 ;;
+    #sql: ${TABLE}.bi_update = 1 ;;
+    sql:  1 ;;
   }
 
   dimension: modified2 {
