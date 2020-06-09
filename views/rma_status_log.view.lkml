@@ -1,5 +1,5 @@
 view: rma_status_log {
-  sql_table_name: CUSTOMER_CARE.RMA_STATUS_LOG ;;
+  sql_table_name: CUSTOMER_CARE.V_RMA_STATUS_LOG ;;
 
   dimension: amount {
     label: "  Amount"
