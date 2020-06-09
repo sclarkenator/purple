@@ -250,8 +250,8 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-        when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
         Else 0
       END ;;
   }
