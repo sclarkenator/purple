@@ -2,6 +2,7 @@ view: c3_conversion_ft_lt {
   sql_table_name: MARKETING.C3_CONVERSION_FT_LT ;;
 
   dimension: analytics_order_id {
+    description: "Source: c3.c3_conversion_ft_lt"
     type: number
     sql: ${TABLE}."ANALYTICS_ORDER_ID" ;;
     primary_key: yes
@@ -11,11 +12,12 @@ view: c3_conversion_ft_lt {
   dimension: has_touch {
     type: yesno
     label: "  * Has Marketing Touch"
-    description: "If there is a marketing touch on the order.  Most blank will be orders made not on the website (wholesale/retail)"
+    description: "If there is a marketing touch on the order.  Most blank will be orders made not on the website (wholesale/retail). Source:c3.c3_conversion_ft_lt"
     sql: ${TABLE}."ANALYTICS_ORDER_ID" is not null;;
   }
 
   dimension: c3_sales_order_id {
+    description: "Source: c3.c3_conversion_ft_lt"
     type: string
     hidden:  yes
     sql: ${TABLE}."C3_SALES_ORDER_ID" ;;
@@ -23,6 +25,7 @@ view: c3_conversion_ft_lt {
 
   dimension_group: first_touch {
     label: "  First Touch"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: time
     timeframes: [
       raw,
@@ -39,45 +42,46 @@ view: c3_conversion_ft_lt {
 
   dimension: first_touch_platform {
     label: " First Touch Platform"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: string
     sql: ${TABLE}."FIRST_TOUCH_PLATFORM" ;;
   }
 
   dimension: ANY_TOUCH_GOOGLE {
-    label: "Includes a Google Touch"
-    description: "If there is a google touch anywhere in the timeline"
+    label: "  * Includes a Google Touch"
+    description: "If there is a google touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
     sql: ${TABLE}."ANY_TOUCH_GOOGLE" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_FACEBOOK {
-    label: "Includes a Facebook Touch"
-    description: "If there is a facebook touch anywhere in the timeline"
+    label: "  * Includes a Facebook Touch"
+    description: "If there is a facebook touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
     sql: ${TABLE}."ANY_TOUCH_FACEBOOK" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_TV {
-    label: "Includes a TV Touch"
-    description: "If there is a tv touch anywhere in the timeline"
+    label: "  * Includes a TV Touch"
+    description: "If there is a tv touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
     sql: ${TABLE}."ANY_TOUCH_TV" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_YAHOO {
-    label: "Includes a Yahoo Touch"
-    description: "If there is a yahoo touch anywhere in the timeline"
+    label: "  * Includes a Yahoo Touch"
+    description: "If there is a yahoo touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
     sql: ${TABLE}."ANY_TOUCH_YAHOO" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_PINTEREST {
-    label: "Includes a Pinterest Touch"
-    description: "If there is a google touch anywhere in the timeline"
+    label: "  * Includes a Pinterest Touch"
+    description: "If there is a google touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
     sql: ${TABLE}."ANY_TOUCH_PINTEREST" = 'YES' ;;
@@ -85,12 +89,14 @@ view: c3_conversion_ft_lt {
 
   dimension: first_touch_source {
     label: " First Touch Source"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: string
     sql: ${TABLE}."FIRST_TOUCH_SOURCE" ;;
   }
 
   dimension_group: last_touch {
     label: "  Last Touch"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: time
     timeframes: [
       raw,
@@ -107,19 +113,21 @@ view: c3_conversion_ft_lt {
 
   dimension: last_touch_platform {
     label: " Last Touch Platform"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: string
     sql: ${TABLE}."LAST_TOUCH_PLATFORM" ;;
   }
 
   dimension: last_touch_source {
     label: " Last Touch Source"
+    description: "Source: c3.c3_conversion_ft_lt"
     type: string
     sql: ${TABLE}."LAST_TOUCH_SOURCE" ;;
   }
 
   dimension: total_touches {
     type: number
-    description: "Total touchpoints from all channels (not unique per channel)"
+    description: "Total touchpoints from all channels (not unique per channel). Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     sql: ${TABLE}."TOTAL_TOUCHES" ;;
   }
