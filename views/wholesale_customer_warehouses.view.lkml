@@ -1,5 +1,5 @@
 view: wholesale_customer_warehouses {
-  sql_table_name: SALES.WHOLESALE_CUSTOMER_WAREHOUSES ;;
+  sql_table_name: SALES.V_WHOLESALE_CUSTOMER_WAREHOUSES ;;
 
   dimension: Primary_key {
     primary_key: yes
