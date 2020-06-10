@@ -1,5 +1,5 @@
 view: workorder_reconciliation {
-  sql_table_name: PRODUCTION.WORKORDER_RECONCILIATION ;;
+  sql_table_name: PRODUCTION.V_WORKORDER_RECONCILIATION ;;
 
   measure: amt_required_for_one {
     label: "Component QTY Per (Expected)"

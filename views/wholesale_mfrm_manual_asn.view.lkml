@@ -1,5 +1,5 @@
 view: wholesale_mfrm_manual_asn {
-  sql_table_name: MATTRESS_FIRM.WHOLESALE_MFRM_MANUAL_ASN ;;
+  sql_table_name: MATTRESS_FIRM.V_WHOLESALE_MFRM_MANUAL_ASN ;;
 
   dimension_group: actual_ship {
     type: time
