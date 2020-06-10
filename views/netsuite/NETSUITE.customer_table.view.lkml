@@ -125,6 +125,9 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'raymour%' ;; label: "Raymour" }
       when: { sql: lower(${TABLE}.companyname) like 'city%furniture%' ;; label: "City Furniture" }
       when: { sql: lower(${TABLE}.companyname) like 'mathis%' ;; label: "Mathis Brothers" }
+      when: { sql: lower(${TABLE}.companyname) like 'big%sandy%' ;; label: "Big Sandy" }
+      when: { sql: lower(${TABLE}.companyname) like 'rooms%to%go%' ;; label: "Rooms to Go" }
+
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
       when: { sql: lower(${TABLE}.companyname) like 'access%'
         or lower(${TABLE}.companyname) like 'medline%'
