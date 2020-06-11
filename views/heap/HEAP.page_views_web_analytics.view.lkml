@@ -1,4 +1,6 @@
-## Created by Blake Walton 2020-05-29
+#############################
+## Blake Walton 2020-05-29
+#############################
 
 view: heap_page_views_web_analytics {
    derived_table: {

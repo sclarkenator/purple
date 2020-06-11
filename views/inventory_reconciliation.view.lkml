@@ -1,5 +1,5 @@
 view: inventory_reconciliation {
-  sql_table_name: HIGHJUMP.INVENTORY_RECONCILIATION ;;
+  sql_table_name: HIGHJUMP.V_INVENTORY_RECONCILIATION ;;
 
   dimension: average_cost {
     type: number

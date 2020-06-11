@@ -1,4 +1,6 @@
-## Created by Blake Walton 2020-06-02
+#############################
+## Blake Walton 2020-06-02
+#############################
 
 view: funnel_explorer {
   derived_table: {
