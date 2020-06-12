@@ -1,7 +1,3 @@
-##############################
-## Blake Walton 2020-06-11
-## Work in progress
-##############################
 view: order_items_base {
   derived_table: {
     #### TO DO: Create a transaction-item-level table with the following columns:
@@ -19,7 +15,9 @@ view: order_items_base {
       ,so.system,so.created AS order_created_time
       ,i.sku_id as SKU_id
       ,i.description AS SKU_name
+      ,nsi.item_category_id AS category_id
       ,i.category AS category_name
+      ,nsi.item_subcategory_id AS line_id
       ,i.line AS line_name
       --,i.brand AS brand_id
       --,i.brand AS brand_name
@@ -35,6 +33,7 @@ view: order_items_base {
         --ON order_items.inventory_item_id = intermediate_table.id
       JOIN sales.item as i
         ON sol.item_id = i.item_id
+      JOIN analytics_stage.ns.items nsi on i.item_id = nsi.item_id
       WHERE sol.ordered_qty <> 0;;
       #### TO DO: Uncomment this line if you'd like to persist this table for faster query-time performance
 #       datagroup_trigger: daily
@@ -63,9 +62,9 @@ view: order_items_base {
   view: order_items {
     derived_table: {
       sql: SELECT
-              CONCAT(transaction_id,'_',{% parameter order_items_base.product_level %}_name) AS id
+              CONCAT(transaction_id,'_',{% parameter order_items_base.product_level %}_id) AS id
               , transaction_id AS order_id
-              --, {% parameter order_items_base.product_level %}_id as product_id
+              , {% parameter order_items_base.product_level %}_id as product_id
               , {% parameter order_items_base.product_level %}_name AS product
               , user_id as user_id
               , MIN(order_created_time) AS created_at
@@ -77,7 +76,7 @@ view: order_items_base {
             AND UPPER({% parameter order_items_base.product_level %}_name) <> 'UNKNOWN'
             AND {% condition order_purchase_affinity.affinity_timeframe %} order_created_time {% endcondition %}
             ---- TO DO: Replace with filters you want to be able to control the analysis on (e.g. store number, name)
-            AND {% condition order_purchase_affinity.store_name %} store_name {% endcondition %}
+            AND {% condition order_purchase_affinity.channel %} channel {% endcondition %}
             GROUP BY 1,2,3,4,5;;
     }
   }
@@ -227,10 +226,10 @@ view: order_items_base {
 
     #### TO DO: [optional] add any store or other level filters here, or remove this one
 
-    filter: store_name {
+    filter: channel {
       type: string
-      suggest_explore: sales_explore
-      suggest_dimension: sales_table.store_name
+      suggest_explore: sales_order_line
+      suggest_dimension: sales_order.channel
     }
 
     ##### Dimensions #####
