@@ -1161,6 +1161,43 @@ explore: exchange_items {hidden: yes
           type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
+
+          join: users {
+            type: left_outer
+            sql_on: ${qualtrics_customer.email} = ${users._email} ;;
+            relationship: one_to_one }
+          join: all_events {
+            type: left_outer
+            sql_on: ${users.user_id}::string = ${all_events.user_id}::string ;;
+            relationship: one_to_many }
+
+          join: sessions {
+            type: left_outer
+            sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+            relationship: many_to_one }
+          join: session_facts {
+            view_label: "Sessions"
+            type: left_outer
+            sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+            relationship: one_to_one }
+            join: zip_codes_city {
+              type: left_outer
+              sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+              relationship: one_to_one }
+            join: dma {
+              type:  left_outer
+              sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+              relationship: one_to_one }
+            join: heap_page_views {
+              type: left_outer
+              sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+              relationship: one_to_many
+            }
+            join: date_meta {
+              type: left_outer
+              sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+              relationship: one_to_many
+            }
       }
 
 

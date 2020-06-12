@@ -125,7 +125,7 @@ derived_table: {
   }
 
   dimension: survey_id {
-   hidden:  yes
+   hidden:  no
    type: string
     sql: ${TABLE}."SURVEY_ID" ;;
   }
