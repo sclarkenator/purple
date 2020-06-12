@@ -21,7 +21,7 @@ view: users {
     group_label: "User Info"
     label: "Email"
     type: string
-    sql: ${TABLE}._email ;;
+    sql: upper(${TABLE}._email) ;;
   }
 
   dimension: address {
