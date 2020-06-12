@@ -1605,12 +1605,12 @@ explore: sales_order_line{
       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
       view_label: "Customer"
     }
-
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
 explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+explore: max_by_day {hidden: yes label: "Max by Day"}
 
 explore: wholesale {
   extends: [sales_order_line]
