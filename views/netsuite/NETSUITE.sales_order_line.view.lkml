@@ -1449,6 +1449,13 @@ view: sales_order_line {
       else 0 end;;
   }
 
+  measure: max_units {
+    group_label: "Gross Sales"
+    label: "Max Gross Sales (units)"
+    type: sum
+    sql: max(${TABLE}.ordered_qty) over partition by ${item.sku_id} ;;
+  }
+
   set: fulfill_details {
     fields: [fulfill_details*]
   }
