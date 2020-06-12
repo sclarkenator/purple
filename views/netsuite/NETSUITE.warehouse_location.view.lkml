@@ -17,7 +17,7 @@ view: warehouse_location {
     label: "* Inactive Locations Included (Yes/ No)"
     description: "Source: netsuite.location"
     type: string
-    sql: ${TABLE}.INACTIVE;; }
+    sql: ${TABLE}.INACTIVE = 1;; }
 
   dimension: location_name_manna_grouped {
     label: "Warehouse Name (manna grouped)"
