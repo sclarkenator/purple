@@ -56,6 +56,15 @@ view: qualtrics_answer {
   }
 
 
+dimension: confidence_in_purchase {
+  label: "Confidence in purchase"
+  type: string
+  sql: case
+    when ${TABLE}."QUESTION_NAME" = "QCONFIDENCE" and ${TABLE}."ANSWER" in ('Extremely certain','Very certain') then 'Extremely or very certain'
+    when ${TABLE}."QUESTION_NAME" = "QCONFIDENCE" and ${TABLE}."ANSWER" in ('Not certain at all','Slightly certain') then 'Slightly or not at all certain'
+    end;;
+}
+
   dimension_group: insert_ts {
     hidden:  yes
     type: time
