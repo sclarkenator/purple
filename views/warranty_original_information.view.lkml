@@ -22,7 +22,7 @@ view: warranty_original_information {
         LEFT JOIN SALES.FULFILLMENT  AS f ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system and f.status = 'Shipped'
         LEFT JOIN SALES.SALES_ORDER  AS s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
         FULL OUTER JOIN SALES.WARRANTY_ORDER  AS w ON s.ORDER_ID = w.ORDER_ID and s.SYSTEM = w.ORIGINAL_SYSTEM
-        LEFT JOIN ANALYTICS_STAGE.netsuite.UPDATE_WARRANTY_REASONS  AS wr ON w.WARRANTY_REASON_CODE_ID = wr.LIST_ID
+        LEFT JOIN analytics_stage.ns.UPDATE_WARRANTY_REASONS  AS wr ON w.WARRANTY_REASON_CODE_ID = wr.LIST_ID
         LEFT JOIN SALES.SALES_ORDER wso on s.related_tranid =
           case
             when length(replace(REGEXP_SUBSTR(replace(upper(wso.MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O','')) = 4
@@ -37,20 +37,20 @@ view: warranty_original_information {
     dimension: return_reason {
       label: "Original Warranties Warranty Reason"
       group_label: " Advanced"
-      description: "Original Reason customer gives for submitting warranty claim on that item"
+      description: "Original Reason customer gives for submitting warranty claim on that item. Source: netsuite.update_warranty_reasons"
       sql: upper(${TABLE}.return_reason) ;;
     }
     dimension: fulfilled_date {
       label: "Original Fulfillment"
       group_label: " Advanced"
-      description: "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale. Source: looker.calculation"
+      description: "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale. Source:looker.calculation"
       type: date
       sql: ${TABLE}.fulfilled_date ;;
     }
     dimension: total_gross_Amt_non_rounded {
       label: "Original Sales Order Line Gross Sales ($)"
       group_label: " Advanced"
-      description: "Total the customer paid, excluding tax and freight, in $"
+      description: "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
       value_format: "$#,##0"
       type: number
       sql: ${TABLE}.total_gross_Amt_non_rounded ;;
@@ -117,14 +117,14 @@ view: warranty_original_information {
     dimension: warranty_created_date {
       label: "Original Warranty Date"
       group_label: " Advanced"
-      description: "Original Warranty Created"
+      description: "Original Warranty Created. Source:netsuite.warranty_order"
       type: date
       sql: ${TABLE}.w_created_date ;;
     }
     dimension: sales_created_date {
       label: "Original Sales Order"
       group_label: " Advanced"
-      description: "Time and date original order was placed. Source: netsuite.sales_order_line"
+      description: "Time and date original order was placed. Source:netsuite.sales_order_line"
       type: date
       sql: ${TABLE}.s_created_date ;;
     }

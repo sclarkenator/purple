@@ -22,7 +22,7 @@ view: state_tax_reconciliation {
 from sales_order so
     join "ANALYTICS_STAGE"."SHOPIFY_US_FT"."ORDER" spf on spf.name = so.related_tranid
     left join sales_order_line sol on sol.order_id = so.order_id and sol.system = so.system
-    left join analytics_stage.netsuite.customers c on c.customer_id = so.customer_id
+    left join analytics_stage.ns.customers c on c.customer_id = so.customer_id
 where so.created >= '2018-01-01'
 having tax_difference > 0
 order by so.created desc

@@ -1161,6 +1161,43 @@ explore: exchange_items {hidden: yes
           type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
+
+          join: users {
+            type: left_outer
+            sql_on: ${qualtrics_customer.email} = ${users._email} ;;
+            relationship: one_to_one }
+          join: all_events {
+            type: left_outer
+            sql_on: ${users.user_id}::string = ${all_events.user_id}::string ;;
+            relationship: one_to_many }
+
+          join: sessions {
+            type: left_outer
+            sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+            relationship: many_to_one }
+          join: session_facts {
+            view_label: "Sessions"
+            type: left_outer
+            sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+            relationship: one_to_one }
+            join: zip_codes_city {
+              type: left_outer
+              sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+              relationship: one_to_one }
+            join: dma {
+              type:  left_outer
+              sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+              relationship: one_to_one }
+            join: heap_page_views {
+              type: left_outer
+              sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+              relationship: one_to_many
+            }
+            join: date_meta {
+              type: left_outer
+              sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+              relationship: one_to_many
+            }
       }
 
 
@@ -1568,12 +1605,12 @@ explore: sales_order_line{
       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
       view_label: "Customer"
     }
-
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
 explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+explore: max_by_day {hidden: yes label: "Max by Day"}
 
 explore: wholesale {
   extends: [sales_order_line]
@@ -1953,7 +1990,15 @@ explore: procom_security_daily_customer {
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
 
+      join: veritone_pixel_matchback {
+        view_label: "Veritone"
+        type: left_outer
+        sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one
+      }
   }
+
+  explore: veritone_pixel_matchback { hidden:yes}
 
 #-------------------------------------------------------------------
 # Old/Bad Explores

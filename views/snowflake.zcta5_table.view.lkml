@@ -46,6 +46,7 @@ order by 1 ;;
 
   dimension: state_1 {
     view_label: "Geography"
+    group_label: "Advanced"
     label: "State"
     description: "Ship-to state. Source:looker_datablock"
     type: string
@@ -56,6 +57,7 @@ order by 1 ;;
   dimension: fulfillment_region_1 {
     label: "US Region"
     view_label: "Geography"
+    group_label: "Advanced"
     description: "Geographic grouping based on ship-to state. Source:looker_datablock calculation"
     type: string
     case: {

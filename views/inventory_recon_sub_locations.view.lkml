@@ -1,5 +1,5 @@
 view: inventory_recon_sub_locations {
-  sql_table_name: HIGHJUMP.INVENTORY_RECON_SUB_LOCATIONS ;;
+  sql_table_name: HIGHJUMP.V_INVENTORY_RECON_SUB_LOCATIONS ;;
 
   dimension: average_cost {
     type: number
