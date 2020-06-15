@@ -159,10 +159,4 @@ derived_table: {
     type: count
     drill_fields: [recipient_first_name, recipient_last_name]
   }
-
-  measure: response_count {
-    label: "response count"
-    type: count_distinct
-    sql: count(distinct ${TABLE}."response_id") ;;
-  }
 }
