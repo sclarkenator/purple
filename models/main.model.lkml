@@ -1997,7 +1997,15 @@ explore: procom_security_daily_customer {
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
 
+      join: veritone_pixel_matchback {
+        view_label: "Veritone"
+        type: left_outer
+        sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one
+      }
   }
+
+  explore: veritone_pixel_matchback { hidden:yes}
 
 #-------------------------------------------------------------------
 #
