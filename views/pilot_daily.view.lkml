@@ -174,7 +174,7 @@ left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
 
   dimension_group: hd_status_created {
     label: "Date HD Status Changed"
-    description: "Source:pilot.pilot_daily"
+    description: "Last status change in the Pilot data. Source:pilot.pilot_daily"
     type: time
     timeframes: [
       raw,
