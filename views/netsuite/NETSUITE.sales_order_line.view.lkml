@@ -663,7 +663,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: " Advanced"
     label: "Last Updated Fulfilled."
-    description: "Source: netsuite.sales_order_line"
+    description: "Source: looker.calculation"
     type: date
     sql: MAX(${fulfilled_date}) ;;
     convert_tz: no

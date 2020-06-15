@@ -4,6 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
+    include: "/dashboards/**/*.dashboard"
 
 week_start_day: monday
 
@@ -24,6 +25,12 @@ datagroup: pdt_refresh_6am {
   max_cache_age: "24 hours"
 }
 
+named_value_format: curr {
+  value_format: "#,##0.00 \" USD\""
+}
+named_value_format: curr_0 {
+  value_format: "#,##0 \" USD\""
+}
 
 #-------------------------------------------------------------------
 #
@@ -1999,6 +2006,38 @@ explore: procom_security_daily_customer {
   }
 
   explore: veritone_pixel_matchback { hidden:yes}
+
+#-------------------------------------------------------------------
+#
+# Affinity Analysis Block Explore
+#
+#-------------------------------------------------------------------
+
+  explore: order_purchase_affinity {
+    hidden: yes
+    group_label: "Marketing"
+    label: "🔗 Item Affinity"
+    view_label: "Item Affinity"
+
+    always_filter: {
+      filters: {
+        field: affinity_timeframe
+        value: "last 90 days"
+      }
+      filters: {
+        field: order_items_base.product_level
+        #### TO DO: Replace with your most used hierarchy level (defined in the affinity_analysis view)
+        value: "SKU"
+      }
+    }
+
+    join: order_items_base {}
+
+    join: total_orders {
+      type: cross
+      relationship: many_to_one
+    }
+  }
 
 #-------------------------------------------------------------------
 # Old/Bad Explores
