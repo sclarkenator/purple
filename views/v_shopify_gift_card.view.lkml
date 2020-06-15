@@ -32,6 +32,11 @@ view: v_shopify_gift_card {
     sql: ${TABLE}."ETAIL_ORDER_ID" ;;
   }
 
+  dimension: gift_card_last_characters {
+    type: string
+    sql: ${TABLE}."GIFT_CARD_LAST_CHARACTERS" ;;
+  }
+
   dimension: kind {
     type: string
     sql: ${TABLE}."KIND" ;;

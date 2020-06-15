@@ -27,6 +27,7 @@ view: order_items_base {
       ,sol.pre_discount_amt/ordered_qty AS sale_amt
 --      ,sol.sale_price-intermediate_table.cost AS margin_amt
       , 10 AS margin_amt
+      ,gmf.image_link
       FROM sales.sales_order so
       JOIN sales.sales_order_line as sol on so.order_id = sol.order_id and so.system = sol.system
       --JOIN PUBLIC.inventory_items as intermediate_table
@@ -34,6 +35,8 @@ view: order_items_base {
       JOIN sales.item as i
         ON sol.item_id = i.item_id
       JOIN analytics_stage.ns.items nsi on i.item_id = nsi.item_id
+      LEFT JOIN analytics.sales.item_price ip on i.item_id = ip.item_id
+      LEFT JOIN analytics.marketing.google_merchant_feed gmf on gmf.id = ip.id
       WHERE sol.ordered_qty <> 0;;
       #### TO DO: Uncomment this line if you'd like to persist this table for faster query-time performance
 #       datagroup_trigger: daily
