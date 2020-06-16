@@ -1171,7 +1171,7 @@ explore: exchange_items {hidden: yes
 
           join: users {
             type: left_outer
-            sql_on: upper(${qualtrics_customer.email}) = ${users._email} ;;
+            sql_on: upper(${qualtrics_response.recipient_email}) = ${users._email} ;;
             relationship: one_to_one }
           join: all_events {
             type: left_outer
