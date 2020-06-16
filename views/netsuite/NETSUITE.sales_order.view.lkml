@@ -585,13 +585,12 @@ dimension_group: trandate {
     sql:  DateDiff('Day',${TABLE}.CREATED,${TABLE}.manna_transmission) ;; }
 
   dimension: manna_transmission_succ {
-    label: "Is Manna Transmission Success"
+    label: "Is 3PL Transmission Success"
     hidden: yes
-    description: "Yes if an order has successfully transmitted to Manna
-      Source: netsuite.sales_order"
+    description: "Yes if an order has successfully transmitted to 3PL. Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type: yesno
-    sql: ${TABLE}.MANNA_TRANSMISSION_SUCCESS = '1';; }
+    sql: ${TABLE}.IS_3PL_TRANSMISSION_SUCCESS = '1';; }
 
   dimension: bill_of_lading_number {
     label: "Bill of Landing Number"

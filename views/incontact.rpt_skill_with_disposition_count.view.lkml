@@ -1,14 +1,14 @@
 view: rpt_skill_with_disposition_count {
   ##sql_table_name: CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT ;;
 derived_table: {
-  sql: select * from CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT where captured::date < '2050-01-01' ;;
+  sql: select * from CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT where contacted::date < '2050-01-01' ;;
 }
 
 dimension: primary_key {
   type: string
   hidden: yes
   primary_key: yes
-  sql: ${TABLE}.captured || ${TABLE}.contact_info_from ;;
+  sql: ${TABLE}.contacted || ${TABLE}.contact_info_from ;;
 }
 
   dimension: abandon_time {
@@ -37,19 +37,22 @@ dimension: primary_key {
     sql: ${TABLE}."AVG_INQUEUE_TIME" ;;
   }
 
-  dimension_group: captured {
+  dimension_group: contacted {
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [
       raw,
       time,
+      hour,
+      hour_of_day,
       date,
+      day_of_week,
       week,
       month,
       quarter,
       year
     ]
-    sql: ${TABLE}."CAPTURED" ;;
+    sql: ${TABLE}."CONTACTED" ;;
   }
 
   dimension: inbound_flag {
@@ -121,6 +124,7 @@ dimension: primary_key {
     ]
     convert_tz: no
     datatype: date
+    hidden: yes
     sql: ${TABLE}."REPORTED" ;;
   }
 
@@ -149,8 +153,8 @@ dimension: primary_key {
   }
 
   measure: avg_hold_time {
-    hidden: yes
-    type: number
+    hidden: no
+    type: average
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 

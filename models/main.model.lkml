@@ -4,6 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
+    include: "/dashboards/**/*.dashboard"
 
 week_start_day: monday
 
@@ -24,6 +25,12 @@ datagroup: pdt_refresh_6am {
   max_cache_age: "24 hours"
 }
 
+named_value_format: curr {
+  value_format: "#,##0.00 \" USD\""
+}
+named_value_format: curr_0 {
+  value_format: "#,##0 \" USD\""
+}
 
 #-------------------------------------------------------------------
 #
@@ -1161,6 +1168,43 @@ explore: exchange_items {hidden: yes
           type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
+
+          join: users {
+            type: left_outer
+            sql_on: upper(${qualtrics_customer.email}) = ${users._email} ;;
+            relationship: one_to_one }
+          join: all_events {
+            type: left_outer
+            sql_on: ${users.user_id}::string = ${all_events.user_id}::string ;;
+            relationship: one_to_many }
+
+          join: sessions {
+            type: left_outer
+            sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+            relationship: many_to_one }
+          join: session_facts {
+            view_label: "Sessions"
+            type: left_outer
+            sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+            relationship: one_to_one }
+            join: zip_codes_city {
+              type: left_outer
+              sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+              relationship: one_to_one }
+            join: dma {
+              type:  left_outer
+              sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+              relationship: one_to_one }
+            join: heap_page_views {
+              type: left_outer
+              sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+              relationship: one_to_many
+            }
+            join: date_meta {
+              type: left_outer
+              sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+              relationship: one_to_many
+            }
       }
 
 
@@ -1217,8 +1261,8 @@ explore: sales_order_line{
   always_filter: {
     filters: {field: sales_order.channel      value: "DTC"}
     filters: {field: item.merchandise         value: "No"}
-    filters: {field: item.finished_good_flg   value: "Yes"}
-    filters: {field: item.modified            value: "Yes"}}
+    filters: {field: item.finished_good_flg   value: "Yes"}}
+    #filters: {field: item.modified            value: "Yes"}}
   join: sf_zipcode_facts {
     view_label: "Customer"
     type:  left_outer
@@ -1568,12 +1612,12 @@ explore: sales_order_line{
       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
       view_label: "Customer"
     }
-
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
 explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+explore: max_by_day {hidden: yes label: "Max by Day"}
 
 explore: wholesale {
   extends: [sales_order_line]
@@ -1980,6 +2024,46 @@ explore: procom_security_daily_customer {
 #       sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
 #       relationship: one_to_one }
 
+      join: veritone_pixel_matchback {
+        view_label: "Veritone"
+        type: left_outer
+        sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one
+      }
+  }
+
+  explore: veritone_pixel_matchback { hidden:yes}
+
+#-------------------------------------------------------------------
+#
+# Affinity Analysis Block Explore
+#
+#-------------------------------------------------------------------
+
+  explore: order_purchase_affinity {
+    hidden: yes
+    group_label: "Marketing"
+    label: "🔗 Item Affinity"
+    view_label: "Item Affinity"
+
+    always_filter: {
+      filters: {
+        field: affinity_timeframe
+        value: "last 90 days"
+      }
+      filters: {
+        field: order_items_base.product_level
+        #### TO DO: Replace with your most used hierarchy level (defined in the affinity_analysis view)
+        value: "SKU"
+      }
+    }
+
+    join: order_items_base {}
+
+    join: total_orders {
+      type: cross
+      relationship: many_to_one
+    }
   }
 
 #-------------------------------------------------------------------
@@ -2097,7 +2181,4 @@ explore: procom_security_daily_customer {
 
     explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
     explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
-    explore: owned_retail_target_by_location {
-      hidden: yes
-
-    }
+    explore: owned_retail_target_by_location {hidden: yes }

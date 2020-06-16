@@ -1,5 +1,5 @@
 view: warranty_reason {
-  sql_table_name:  ANALYTICS_STAGE.netsuite.UPDATE_WARRANTY_REASONS ;;
+  sql_table_name:  analytics_stage.ns.UPDATE_WARRANTY_REASONS ;;
 
   dimension: list_id {
     type: number

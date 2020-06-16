@@ -1,5 +1,5 @@
 view: outbound {
-  sql_table_name: HIGHJUMP.OUTBOUND ;;
+  sql_table_name: HIGHJUMP.V_OUTBOUND ;;
 
   dimension_group: hj_created {
     type: time
