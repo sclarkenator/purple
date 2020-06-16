@@ -1952,6 +1952,33 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
+#     Stuff Russ added to do more thorough device type research - Waiting for Blake's approval to release
+#     join: return_order_line {
+#       view_label: "Returns"
+#       type: full_outer
+#       sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
+#       relationship: one_to_many}
+#     join: return_order {
+#       view_label: "Returns"
+#       type: full_outer
+#       required_joins: [return_order_line]
+#       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+#       relationship: many_to_one}
+#     join: return_reason {
+#       view_label: "Returns"
+#       type: full_outer
+#       sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+#       relationship: many_to_one}
+#     join: return_option {
+#       view_label: "Returns"
+#       type: left_outer
+#       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+#       relationship: many_to_one}
+#     join: cancelled_order {
+#       view_label: "Cancellations"
+#       type: left_outer
+#       sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
+#       relationship: one_to_one }
 
   }
 
