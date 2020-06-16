@@ -124,7 +124,8 @@ view: order_items_base {
       LEFT JOIN analytics.sales.item_price ip on i.item_id = ip.item_id
       LEFT JOIN analytics.marketing.google_merchant_feed gmf on gmf.id = ip.id
       LEFT JOIN contribution c on sol.item_id = c.item_id and so.channel_id = c.channel_id
-      WHERE sol.ordered_qty <> 0;;
+      WHERE sol.ordered_qty <> 0
+        and so.channel_id = 1;;
       #### TO DO: Uncomment this line if you'd like to persist this table for faster query-time performance
 #       datagroup_trigger: daily
     }
