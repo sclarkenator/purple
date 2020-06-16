@@ -1964,7 +1964,7 @@ explore: procom_security_daily_customer {
       join: hotjar_data {
         view_label: "Post-Purchase Survey"
         type: left_outer
-        sql_on:  sales email = hotjar email ;;
+        sql_on:  ${ecommerce1.checkout_token} = ${hotjar_data.token} ;;
         relationship: one_to_one }
 
       join: hotjar_whenheard {
