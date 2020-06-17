@@ -445,9 +445,9 @@ view: item {
     label: " Product Size"
     description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.). Source: looker calculation"
     type: string
-    sql: case when ${TABLE}.SIZE_lkr = 'NA' OR ${TABLE}.SIZE_lkr is null then 'OTHER'
+    sql: case when ${TABLE}.size = 'NA' OR ${TABLE}.size is null then 'OTHER'
               when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
-              else ${TABLE}.SIZE_lkr end ;; }
+              else ${TABLE}.size end ;; }
 
 
   dimension: sku_id {
