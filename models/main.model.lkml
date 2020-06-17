@@ -1562,12 +1562,18 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
-    join: acquisition_recent_customer_test_segments {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
-      view_label: "Customer"
-    }
+#     join: acquisition_recent_customer_test_segments {
+#       type: left_outer
+#       relationship: one_to_one
+#       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${sales_order.email} ;;
+#       view_label: "Customer"
+#     }
+#     join: acquisition_test_purchasers {
+#       type: left_outer
+#       relationship: one_to_one
+#       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${acquisition_test_purchasers.email} and ${sales_order.related_tranid} = ${acquisition_test_purchasers.related_tranid}  ;;
+#       view_label: "Customer"
+#     }
 
 }
 
