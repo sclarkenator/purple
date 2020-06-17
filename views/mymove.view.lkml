@@ -52,7 +52,7 @@ view: mymove {
     view_label: "Marketing Attribution"
     group_label: "Advanced"
     label: "My Move - Age Bucket"
-    description: "Days between create in my move and order (7/30/60/60+)"
+    description: "Days between create in my move and order (7/30/60/60+). Source:looker.calculation"
     type: string
     sql: case when ${TABLE}.days_old is null then 'NA'
       when ${TABLE}.days_old <= 7 then '0-7'

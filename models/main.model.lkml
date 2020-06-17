@@ -4,6 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
+    include: "/dashboards/**/*.dashboard"
 
 week_start_day: monday
 
@@ -24,6 +25,12 @@ datagroup: pdt_refresh_6am {
   max_cache_age: "24 hours"
 }
 
+named_value_format: curr {
+  value_format: "#,##0.00 \" USD\""
+}
+named_value_format: curr_0 {
+  value_format: "#,##0 \" USD\""
+}
 
 #-------------------------------------------------------------------
 #
@@ -1161,6 +1168,43 @@ explore: exchange_items {hidden: yes
           type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
+
+          join: users {
+            type: left_outer
+            sql_on: upper(${qualtrics_response.recipient_email}) = ${users._email} ;;
+            relationship: one_to_one }
+          join: all_events {
+            type: left_outer
+            sql_on: ${users.user_id}::string = ${all_events.user_id}::string ;;
+            relationship: one_to_many }
+
+          join: sessions {
+            type: left_outer
+            sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+            relationship: many_to_one }
+          join: session_facts {
+            view_label: "Sessions"
+            type: left_outer
+            sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+            relationship: one_to_one }
+            join: zip_codes_city {
+              type: left_outer
+              sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+              relationship: one_to_one }
+            join: dma {
+              type:  left_outer
+              sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+              relationship: one_to_one }
+            join: heap_page_views {
+              type: left_outer
+              sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+              relationship: one_to_many
+            }
+            join: date_meta {
+              type: left_outer
+              sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+              relationship: one_to_many
+            }
       }
 
 
@@ -1562,24 +1606,20 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
-#     join: acquisition_recent_customer_test_segments {
-#       type: left_outer
-#       relationship: one_to_one
-#       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${sales_order.email} ;;
-#       view_label: "Customer"
-#     }
-#     join: acquisition_test_purchasers {
-#       type: left_outer
-#       relationship: one_to_one
-#       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${acquisition_test_purchasers.email} and ${sales_order.related_tranid} = ${acquisition_test_purchasers.related_tranid}  ;;
-#       view_label: "Customer"
-#     }
+
+    join: acquisition_recent_customer_test_segments {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      view_label: "Customer"
+    }
 
 }
 
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
 explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+explore: max_by_day {hidden: yes label: "Max by Day"}
 
 explore: wholesale {
   extends: [sales_order_line]
@@ -1903,7 +1943,7 @@ explore: procom_security_daily_customer {
       join: sales_order {
         type:  left_outer
         sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
-        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total]
+        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total, sales_order.order_type_hyperlink]
         relationship: one_to_one }
 
       join: order_flag {
@@ -1926,7 +1966,7 @@ explore: procom_security_daily_customer {
       join: hotjar_data {
         view_label: "Post-Purchase Survey"
         type: left_outer
-        sql_on:  sales email = hotjar email ;;
+        sql_on:  ${ecommerce1.checkout_token} = ${hotjar_data.token} ;;
         relationship: one_to_one }
 
       join: hotjar_whenheard {
@@ -1958,7 +1998,74 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
+#     Stuff Russ added to do more thorough device type research - Waiting for Blake's approval to release
+#     join: return_order_line {
+#       view_label: "Returns"
+#       type: full_outer
+#       sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
+#       relationship: one_to_many}
+#     join: return_order {
+#       view_label: "Returns"
+#       type: full_outer
+#       required_joins: [return_order_line]
+#       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+#       relationship: many_to_one}
+#     join: return_reason {
+#       view_label: "Returns"
+#       type: full_outer
+#       sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+#       relationship: many_to_one}
+#     join: return_option {
+#       view_label: "Returns"
+#       type: left_outer
+#       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+#       relationship: many_to_one}
+#     join: cancelled_order {
+#       view_label: "Cancellations"
+#       type: left_outer
+#       sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
+#       relationship: one_to_one }
 
+      join: veritone_pixel_matchback {
+        view_label: "Veritone"
+        type: left_outer
+        sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one
+      }
+  }
+
+  explore: veritone_pixel_matchback { hidden:yes}
+
+#-------------------------------------------------------------------
+#
+# Affinity Analysis Block Explore
+#
+#-------------------------------------------------------------------
+
+  explore: order_purchase_affinity {
+    hidden: yes
+    group_label: "Marketing"
+    label: "🔗 Item Affinity"
+    view_label: "Item Affinity"
+
+    always_filter: {
+      filters: {
+        field: affinity_timeframe
+        value: "last 90 days"
+      }
+      filters: {
+        field: order_items_base.product_level
+        #### TO DO: Replace with your most used hierarchy level (defined in the affinity_analysis view)
+        value: "SKU"
+      }
+    }
+
+    join: order_items_base {}
+
+    join: total_orders {
+      type: cross
+      relationship: many_to_one
+    }
   }
 
 #-------------------------------------------------------------------

@@ -21,7 +21,7 @@ view: users {
     group_label: "User Info"
     label: "Email"
     type: string
-    sql: ${TABLE}._email ;;
+    sql: upper(coalesce(${TABLE}._email,${TABLE}.email)) ;;
   }
 
   dimension: address {
@@ -152,6 +152,7 @@ view: users {
   }
 
   dimension: email {
+    hidden:yes
     group_label: "User Info"
     type: string
     sql: ${TABLE}.email ;;
