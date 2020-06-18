@@ -1205,6 +1205,12 @@ explore: exchange_items {hidden: yes
               sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
               relationship: one_to_many
             }
+        join: qualtrics_answer_flag {
+          type: left_outer
+          sql_on: ${qualtrics_response.response_id} = ${qualtrics_answer_flag.response_id} ;;
+          relationship: one_to_one
+          view_label: "Response"}
+
       }
 
 
@@ -1606,7 +1612,6 @@ explore: sales_order_line{
       relationship: one_to_one
       sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
     }
-
     join: acquisition_recent_customer_test_segments {
       type: left_outer
       relationship: one_to_one
