@@ -778,6 +778,7 @@ explore: email_mymove_contact {
   join: item {
     type: left_outer
     sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+    relationship: many_to_one
   }
 }
 
