@@ -1618,6 +1618,12 @@ explore: sales_order_line{
       sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
       view_label: "Customer"
     }
+    join: acquisition_test_purchasers {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order.order_system} = ${acquisition_test_purchasers.order_system} ;;
+      view_label: "Customer"
+    }
 
 }
 
