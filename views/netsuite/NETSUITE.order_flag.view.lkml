@@ -77,6 +77,15 @@ view: order_flag {
      ,case when ( softstretch_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle18_flg
      ,case when ( softstretch_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle19_flg
 
+    --BAR / BARB
+     ,case when small_mattress > 0 then 1 else 0 end small_mattress_flg
+     ,case when large_mattress > 0 then 1 else 0 end large_mattress_flg
+     ,case when anytwopillows > 0 then 1 else 0 end anytwopillows_flg
+     ,case when anyonepillow > 0 then 1 else 0 end anyonepillow_flg
+     ,case when (large_mattress > 0 and anytwopillows > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_large
+     ,case when (small_mattress > 0 and anyonepillow > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_small
+     ,case when ((bar_small + bar_large > 0) and BASE_FLG > 0 ) then 1 else 0 end barb_flg
+
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -140,6 +149,12 @@ view: order_flag {
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
  ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
  ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
+
+-- BAR / BARB
+ ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
+ ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
+ ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
+ ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
 
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
@@ -1007,5 +1022,44 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.bundle19_flg ;; }
+
+  # BAR / BARB
+  measure: bar_orders {
+    group_label: "Total Orders with:"
+    label: "a BAR Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress, 2+ pillows, sheets, and a protector;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bar_large +  ${TABLE}.bar_small ;; }
+
+  dimension: bar_flag {
+    group_label: "    * Orders has:"
+    label: "a BAR Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress (including split king), 2+ pillows, sheets, and a protector;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bar_small + ${TABLE}.bar_large > 0  ;; }
+
+
+  measure: barb_orders {
+    group_label: "Total Orders with:"
+    label: "a BARB Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress, 2+ pillows, sheets, a protector, and a base;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector, a base. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.barb_flg ;; }
+
+  dimension: barb_flag {
+    group_label: "    * Orders has:"
+    label: "a BARB Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress (including split king), 2+ pillows, sheets, protector, and a base;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector, a base. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.barb_flg = 1  ;; }
+
 
 }
