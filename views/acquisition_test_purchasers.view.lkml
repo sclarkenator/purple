@@ -135,6 +135,8 @@ WITH a AS (
     CASE WHEN 'yes' = 'yes' THEN customer_table.email ELSE '**********' || '@' || SPLIT_PART (customer_table.email, '@', 2) END AS "EMAIL"
     , SALES_ORDER.CREATED
     , SALES_ORDER.RELATED_TRANID
+    , SALES_ORDER.ORDER_ID
+    , SALES_ORDER.SYSTEM
   FROM
     SALES.SALES_ORDER_LINE AS SALES_ORDER_LINE
     LEFT JOIN SALES.ITEM AS ITEM ON sales_order_line.ITEM_ID = item.ITEM_ID
@@ -244,7 +246,7 @@ WITH a AS (
     )
 )
 
-SELECT b.EMAIL, b.RELATED_TRANID
+SELECT b.EMAIL, b.RELATED_TRANID,b.ORDER_ID,b.SYSTEM
 FROM a JOIN b ON a.EMAIL = b.EMAIL
 WHERE b.CREATED > a.CREATED
   AND a.CREATED::DATE >= '2020-06-02'
@@ -253,7 +255,7 @@ WHERE b.CREATED > a.CREATED
 UNION
 
 -- THE BELOW QUERY IS FOR ANYONE THAT PURCHASED BEFORE 6/2 AND AGAIN AFTER 6/2
-SELECT EMAIL, RELATED_TRANID
+SELECT EMAIL, RELATED_TRANID,ORDER_ID,SYSTEM
 FROM  analytics.sales.sales_order S
 WHERE TRANDATE >= '2020-06-02'::DATE
   AND EMAIL IN (
@@ -376,6 +378,7 @@ WHERE TRANDATE >= '2020-06-02'::DATE
 
       ;;
    }
+
   dimension: email {
     type: string
     hidden: yes
@@ -390,10 +393,16 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     description: "Distinct count of email addresses for acquisition test purchasers"
   }
 
-  dimension: email_primary_key{
+  # dimension: email_primary_key{
+  #   primary_key: yes
+  #   hidden: yes
+  #   sql: ${TABLE}.email||${TABLE}.related_tranid ;;
+  # }
+
+  dimension: order_system {
     primary_key: yes
     hidden: yes
-    sql: ${TABLE}.email||${TABLE}.related_tranid ;;
+    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
   dimension: related_tranid{
@@ -402,7 +411,12 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     sql: ${TABLE}.related_tranid ;;
   }
 
-
-
-
+  dimension: test_purchase {
+    group_label: " Advanced"
+    label: "     * Made Purchase"
+    description: "The customer in the A/B test made a purchase. Source: looker.calculation"
+    type: yesno
+    sql: ${TABLE}.order_id||${TABLE}.system is not NULL ;;
   }
+
+}
