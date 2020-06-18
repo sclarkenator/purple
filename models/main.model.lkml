@@ -758,6 +758,29 @@ explore: cordial_activity {
   }
 }
 
+explore: email_mymove_contact {
+  hidden: yes
+  join: email_fluent_contact {
+    type: full_outer
+    sql_on: ${email_mymove_contact.email} = ${email_fluent_contact.email} ;;
+    relationship: one_to_one
+  }
+  join: sales_order {
+    type: left_outer
+    sql_on: ${sales_order.email} = NVL(${email_mymove_contact.email},${email_fluent_contact.email}) ;;
+    relationship: many_to_one
+  }
+  join: sales_order_line_base {
+    type: left_outer
+    sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+    relationship: one_to_many
+  }
+  join: item {
+    type: left_outer
+    sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+  }
+}
+
 explore: c3_roa {hidden: yes}
 explore: spend_sessions_ndt {hidden: yes}
 explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
