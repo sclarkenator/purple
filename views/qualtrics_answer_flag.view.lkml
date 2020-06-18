@@ -22,10 +22,10 @@ view: qualtrics_answer_flag {
     sql: ${TABLE}."RESPONSE_ID" ;;
   }
 
-  dimension: Very_certain { description: "Source: looker.calculation" type: yesno sql: ${TABLE}."VERY_CERTAIN" ;; }
-  dimension: Moderately_certain { description: "Source: looker.calculation" type: yesno sql: ${TABLE}."MODERATELY_CERTAIN" ;; }
-  dimension: Not_certain_at_all { description: "Source: looker.calculation" type: yesno sql: ${TABLE}."NOT_CERTAIN_AT_ALL" ;; }
-  dimension: Extremely_certain { description: "Source: looker.calculation" type: yesno sql: ${TABLE}."EXTREMELY_CERTAIN" ;; }
-  dimension: Slightly_certain { description: "Source: looker.calculation" type: yesno sql: ${TABLE}."SLIGHTLY_CERTAIN" ;; }
+  dimension: Very_certain { group_label: "Answer Flags" description: "Source: looker.calculation" type: yesno sql: ${TABLE}."VERY_CERTAIN" ;; }
+  dimension: Moderately_certain { group_label: "Answer Flags" description: "Source: looker.calculation" type: yesno sql: ${TABLE}."MODERATELY_CERTAIN" ;; }
+  dimension: Not_certain_at_all { group_label: "Answer Flags" description: "Source: looker.calculation" type: yesno sql: ${TABLE}."NOT_CERTAIN_AT_ALL" ;; }
+  dimension: Extremely_certain { group_label: "Answer Flags" description: "Source: looker.calculation" type: yesno sql: ${TABLE}."EXTREMELY_CERTAIN" ;; }
+  dimension: Slightly_certain { group_label: "Answer Flags" description: "Source: looker.calculation" type: yesno sql: ${TABLE}."SLIGHTLY_CERTAIN" ;; }
 
  }
