@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------
 
 view: entity {
-  sql_table_name: analytics_stage.ns.entity ;;
+  sql_table_name: analytics_stage.netsuite.entity ;;
 
   dimension: entity_id {
     primary_key: yes

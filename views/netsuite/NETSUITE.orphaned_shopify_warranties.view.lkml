@@ -6,7 +6,7 @@ view: orphaned_shopify_warranties {
         select
           SPLIT_PART(list_item_name, ' - ', 1) as mod_code,
           SPLIT_PART(list_item_name, ' - ', 3) as description
-        from analytics_stage.ns.discount_code_list
+        from analytics_stage.netsuite.discount_code_list
         where list_item_name like 'RPL%'
       ), nr as (
         select
