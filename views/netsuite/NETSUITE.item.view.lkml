@@ -512,6 +512,8 @@ view: item {
         when ${sku_clean} = '10-21-12968' then '10-21-12625'
         when ${sku_clean} = '10-21-12965' then '10-21-12617'
         when ${sku_clean} = '10-21-12966' then '10-21-12618'
+        --Harmony Vita
+        when ${sku_clean} = '10-31-12891' then '10-31-12890'
         else ${sku_clean} end ;;
   }
 
