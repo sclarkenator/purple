@@ -104,15 +104,22 @@ view: heap_page_views {
   }
 
   measure: Sum_bounced_session {
-    type: sum_distinct
-    sql: case when ${TABLE}.count_pages_viewed = 1 THEN 1 Else 0 End;;
+    type: count_distinct
+    sql: ${session_id};;
+    filters: [bounced: "yes"]
     view_label: "Sessions" }
 
   measure: Sum_non_bounced_session {
     type: count_distinct
-    sql: case when ${TABLE}.count_pages_viewed > 1 THEN ${session_id} End;;
+    sql: ${session_id};;
+    filters: [bounced: "no"]
     view_label: "Sessions" }
 
+  measure: percent_qualified {
+    type: number
+    sql: 1.0*${Sum_non_bounced_session}/NULLIF(${Sum_bounced_session}+${Sum_non_bounced_session},0) ;;
+    value_format_name: percent_1
+    }
 }
 
 
