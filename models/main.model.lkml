@@ -780,6 +780,11 @@ explore: email_mymove_contact {
     sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
     relationship: many_to_one
   }
+  join: order_flag {
+    type: left_outer
+    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: c3_roa {hidden: yes}
@@ -1090,6 +1095,21 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
+explore: cc_activities {hidden: yes}
+explore: cc_deals {hidden: yes
+  join: sales_order {
+    type:left_outer
+    relationship: one_to_one
+    sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;}
+  join: sales_order_line_base {
+    type: left_outer
+    relationship:one_to_many
+    sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;}
+  join: order_flag {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;}
+  }
 explore: target_dtc {hidden: yes}
 explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
 explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
