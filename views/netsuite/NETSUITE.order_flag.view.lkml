@@ -86,6 +86,11 @@ view: order_flag {
      ,case when (small_mattress > 0 and anyonepillow > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_small
      ,case when ((bar_small + bar_large > 0) and BASE_FLG > 0 ) then 1 else 0 end barb_flg
 
+    -- Hybrid Matress Sizes
+     ,case when hybrid2 > 0 then 1 else 0 end hybrid2_flg
+     ,case when hybrid3 > 0 then 1 else 0 end hybrid3_flg
+     ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
+
     FROM(
       select sol.order_id
         ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -155,6 +160,11 @@ view: order_flag {
  ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
  ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
  ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+
+-- Hybrid Mattresses
+ ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
+ ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
+ ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
 
         from sales_order_line sol
       left join item on item.item_id = sol.item_id
@@ -1060,6 +1070,48 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.barb_flg = 1  ;; }
+
+  dimension: hybrid2_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 2"
+    description: "1/0; 1 if there is a Hybrid 2 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid2_flg = 1 ;; }
+
+  dimension: hybrid3_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 3"
+    description: "1/0; 1 if there is a Hybrid 3 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid3_flg = 1 ;; }
+
+  dimension: hybrid4_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 4"
+    description: "1/0; 1 if there is a Hybrid 4 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid4_flg = 1 ;; }
+
+  measure: hybrid2_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 2"
+    description: "Count of Orders with a Hybrid 2 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid2_flg ;; }
+
+  measure: hybrid3_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 3"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid3_flg ;; }
+
+  measure: hybrid4_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 4"
+    description: "Count of Orders with a Hybrid 4 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid4_flg ;; }
 
 
 }
