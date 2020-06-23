@@ -4,8 +4,9 @@
 #-------------------------------------------------------------------
 
 view: event_facts {
-  derived_table: {
-    sql:  analytics.heap.event_facts ;;
+  sql_table_name: analytics.heap.event_facts ;;
+  # derived_table: {
+  #   sql:  analytics.heap.event_facts ;;
 #     sql: WITH
 #         event_count AS (
 #             SELECT
@@ -58,7 +59,8 @@ view: event_facts {
 #         AND events.event_name = a.event_table_name
 #        ;;
 #      datagroup_trigger: pdt_refresh_6am
-    }
+    # }
+
 
   measure: count {
     type: count

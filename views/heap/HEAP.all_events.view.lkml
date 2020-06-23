@@ -4,10 +4,11 @@
 #-------------------------------------------------------------------
 
 view: all_events {
-  derived_table: {
-    sql: select * from heap.all_events;;
-    datagroup_trigger: pdt_refresh_6am
-  }
+  # derived_table: {
+  #   sql: select * from heap.all_events;;
+  #   datagroup_trigger: pdt_refresh_6am
+  # }
+  sql_table_name: HEAP.ALL_EVENTS ;;
 
   dimension: event_id {
     hidden: yes

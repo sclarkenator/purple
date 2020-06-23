@@ -1,5 +1,5 @@
 view: return_option {
-  sql_table_name: analytics_stage.ns.return_option_list ;;
+  sql_table_name: analytics_stage.netsuite.return_option_list ;;
 
   dimension: list_id {
     type: number

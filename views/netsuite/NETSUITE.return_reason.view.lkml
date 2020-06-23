@@ -1,5 +1,5 @@
 view: return_reason {
-  sql_table_name: analytics_stage.ns.UPDATED_RETURN_REASONS ;;
+  sql_table_name: analytics_stage.netsuite.UPDATED_RETURN_REASONS ;;
 
   dimension: list_id {
     type: number

@@ -23,4 +23,12 @@ view: acquisition_recent_customer_test_segments {
     drill_fields: []
     hidden: yes
   }
+
+  dimension: test_purchase {
+    group_label: " Advanced"
+    label: "     * Acquisition Test"
+    description: "The customer is in the A/B test. Source: looker.calculation"
+    type: yesno
+    sql: ${TABLE}."CUSTOMER_EMAIL" is not NULL ;;
+  }
 }

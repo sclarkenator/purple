@@ -699,18 +699,18 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-  aggregate_table: weekly_sessions {
-    query: {
-      dimensions: [sessions.time_week]
-      measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-      filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
-      timezone: America/Denver
-    }
-    materialization: {
-      #sql_trigger_value: SELECT CURDATE() ;;
-      datagroup_trigger: pdt_refresh_6am
-    }
-  }
+#   aggregate_table: weekly_sessions {
+#     query: {
+#       dimensions: [sessions.time_week]
+#       measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
+#       filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
+#       timezone: America/Denver
+#     }
+#     materialization: {
+#       #sql_trigger_value: SELECT CURDATE() ;;
+#       datagroup_trigger: pdt_refresh_6am
+#    }
+#   }
   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
     query: {
       dimensions: [sessions.time_week_of_year, sessions.time_year]
@@ -725,6 +725,13 @@ explore: all_events {
   }
 
 }
+
+  explore: pageviews_bounced_pdt {
+    group_label: "Marketing"
+    label: "Pageviews Bounced"
+    hidden: yes
+
+  }
 
   explore: funnel_explorer {
     hidden: yes
@@ -2053,40 +2060,57 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
-#     Stuff Russ added to do more thorough device type research - Waiting for Blake's approval to release
-#     join: return_order_line {
-#       view_label: "Returns"
-#       type: full_outer
-#       sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
-#       relationship: one_to_many}
-#     join: return_order {
-#       view_label: "Returns"
-#       type: full_outer
-#       required_joins: [return_order_line]
-#       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
-#       relationship: many_to_one}
-#     join: return_reason {
-#       view_label: "Returns"
-#       type: full_outer
-#       sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
-#       relationship: many_to_one}
-#     join: return_option {
-#       view_label: "Returns"
-#       type: left_outer
-#       sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
-#       relationship: many_to_one}
-#     join: cancelled_order {
-#       view_label: "Cancellations"
-#       type: left_outer
-#       sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
-#       relationship: one_to_one }
-
+#       join: return_order_line {
+#         view_label: "Returns"
+#         type: full_outer
+#         sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
+#         relationship: one_to_many}
+#       join: return_order {
+#         view_label: "Returns"
+#         type: full_outer
+#         required_joins: [return_order_line]
+#         sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+#         relationship: many_to_one}
+#       join: return_reason {
+#         view_label: "Returns"
+#         type: full_outer
+#         sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+#         relationship: many_to_one}
+#       join: return_option {
+#         view_label: "Returns"
+#         type: left_outer
+#         sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+#         relationship: many_to_one}
+#       join: cancelled_order {
+#         view_label: "Cancellations"
+#         type: left_outer
+#         sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
+#         relationship: one_to_one }
       join: veritone_pixel_matchback {
         view_label: "Veritone"
         type: left_outer
         sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one}
+      join: qualtrics_response {
+        type: inner
+        sql_on: upper(${sales_order.email}) = upper(${qualtrics_response.recipient_email}) ;;
+        relationship: many_to_many
+        view_label: "Response"}
+      join: qualtrics_survey {
+        type: inner
+        sql_on: ${qualtrics_response.survey_id} = ${qualtrics_survey.id};;
+        relationship: one_to_many
+        view_label: "Survey"}
+      join: qualtrics_customer {
+        type: inner
+        sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
         relationship: many_to_one
-      }
+        view_label: "Qualtrics Customer"}
+      join: qualtrics_answer {
+        type: inner
+        sql_on: ${qualtrics_survey.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+        relationship: one_to_many
+        view_label: "Answer"}
   }
 
   explore: veritone_pixel_matchback { hidden:yes}

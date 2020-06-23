@@ -6,10 +6,7 @@ view: acquisition_test_purchasers {
 
 
 --- Orders on or after 6/2 that qualify people to be part of the test
-
-
---- Orders on or after 6/2 that qualify people to be part of the test
-WITH a AS (
+  WITH a AS (
     SELECT
     CASE WHEN 'yes' = 'yes' THEN customer_table.email ELSE '**********' || '@' || SPLIT_PART (customer_table.email, '@', 2) END AS "EMAIL"
     , MIN(SALES_ORDER.CREATED) "CREATED"
@@ -29,7 +26,7 @@ WITH a AS (
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN ANALYTICS_STAGE.ns.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(
@@ -137,6 +134,7 @@ WITH a AS (
     , SALES_ORDER.RELATED_TRANID
     , SALES_ORDER.ORDER_ID
     , SALES_ORDER.SYSTEM
+    , SALES_ORDER.WARRANTY
   FROM
     SALES.SALES_ORDER_LINE AS SALES_ORDER_LINE
     LEFT JOIN SALES.ITEM AS ITEM ON sales_order_line.ITEM_ID = item.ITEM_ID
@@ -153,7 +151,7 @@ WITH a AS (
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN ANALYTICS_STAGE.NS.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(
@@ -164,7 +162,7 @@ WITH a AS (
     LEFT JOIN SALES.EXCHANGE_ORDER_LINE AS EXCHANGE_ORDER_LINE ON sales_order_line.ORDER_ID = (exchange_order_line."ORDER_ID")
     AND sales_order_line.ITEM_ID = (exchange_order_line."ITEM_ID")
     AND sales_order_line.SYSTEM = (exchange_order_line."SYSTEM")
-  WHERE
+  WHERE sales_order_line.gross_amt > 0 AND
     (((to_timestamp_ntz(sales_order_line.Created)) >= ((DATEADD('day', 0, '2020-06-02'::DATE)))
         AND(to_timestamp_ntz(sales_order_line.Created)) < (CURRENT_DATE()::DATE))
     )
@@ -246,18 +244,25 @@ WITH a AS (
     )
 )
 
-SELECT b.EMAIL, b.RELATED_TRANID,b.ORDER_ID,b.SYSTEM
+SELECT b.EMAIL, b.RELATED_TRANID,b.ORDER_ID,b.SYSTEM, b.warranty
 FROM a JOIN b ON a.EMAIL = b.EMAIL
 WHERE b.CREATED > a.CREATED
   AND a.CREATED::DATE >= '2020-06-02'
+  AND b.warranty = 'F'
 
 
 UNION
 
 -- THE BELOW QUERY IS FOR ANYONE THAT PURCHASED BEFORE 6/2 AND AGAIN AFTER 6/2
-SELECT EMAIL, RELATED_TRANID,ORDER_ID,SYSTEM
+SELECT EMAIL
+    ,RELATED_TRANID
+    ,ORDER_ID
+    ,SYSTEM
+    ,warranty
 FROM  analytics.sales.sales_order S
 WHERE TRANDATE >= '2020-06-02'::DATE
+  AND warranty = 'F'
+  AND gross_amt > 0
   AND EMAIL IN (
   SELECT
     CASE WHEN 'yes' = 'yes' THEN customer_table.email ELSE '**********' || '@' || SPLIT_PART (customer_table.email, '@', 2) END AS "EMAIL"
@@ -277,7 +282,7 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN ANALYTICS_STAGE.ns.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(
@@ -373,9 +378,7 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     )
   GROUP BY
     1
-  ORDER BY 1
-)
-
+  ORDER BY 1)
       ;;
    }
 
