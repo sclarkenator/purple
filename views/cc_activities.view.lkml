@@ -16,7 +16,7 @@ select z.activity_type
 from (
 --CHATS
   select 'chat' as activity_type , t.ticket_id, t.assignee_id, t.requester_id, c.created, t.status, c.department_name, 'Yes' as inbound, c.duration
-  from customer_care.zendesk_chats c
+  from customer_care.v_zendesk_chats c
   left join customer_care.zendesk_ticket t on t.ticket_id = c.zendesk_ticket_id
   --where c.created::date = '2020-06-18'
   UNION ALL
