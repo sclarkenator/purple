@@ -1489,7 +1489,7 @@ explore: sales_order_line{
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
-    sql_on: ${warranty_order_line.system} = ${warranty_order.original_system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+    sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: many_to_many}
   join: warranty_reason {
