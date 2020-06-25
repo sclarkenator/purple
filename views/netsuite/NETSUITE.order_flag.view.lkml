@@ -110,8 +110,8 @@ view: order_flag {
         ,SUM(CASE WHEN category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857') then 1 else 0 end) plush
-        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855') then 1 else 0 end) purple_pillow
+        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857','10-31-12862') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855','10-31-12863') then 1 else 0 end) purple_pillow
         ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
         ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
