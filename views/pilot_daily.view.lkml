@@ -1,10 +1,16 @@
 view: pilot_daily {
   derived_table: { sql:
-    select nvl(s.order_id, s2.order_id) as order_id
+    select t.*
+from (select nvl(s.order_id, s2.order_id) as order_id
+    , sol.item_id
+    , p.hd_status_created as status_date
     , p.*
-from shipping.pilot_daily p
-left join sales.sales_order s on s.related_tranid = '#' || p.CONSIGNEE_REF
-left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string ;;
+    , row_number() over(partition by s.order_id, sol.item_id order by p.hd_status_created::date desc) as rn
+    from shipping.pilot_daily p
+    left join sales.sales_order s on s.related_tranid = '#' || p.CONSIGNEE_REF
+    left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string
+    left join sales.sales_order_line sol on nvl(s.order_id, s2.order_id) = sol.order_id) as t
+    where rn = 1;;
   }
 
   dimension: order_id {
