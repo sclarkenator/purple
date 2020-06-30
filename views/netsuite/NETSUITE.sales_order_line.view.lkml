@@ -694,6 +694,8 @@ view: sales_order_line {
   }
 
   dimension: wholesale_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Wholesale and Packed"
     description: "Source: looker.calculation"
     type: yesno
@@ -702,6 +704,8 @@ view: sales_order_line {
   }
 
   dimension: xpo_pilot_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Pilot or XPO and Packed"
     description: "Source: looker.calculation"
     type: yesno
