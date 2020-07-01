@@ -11,6 +11,7 @@ view: order_flag {
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
+      ,case when sumo > 0 then 1 else 0 end sumo_flg
       ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
@@ -102,6 +103,7 @@ view: order_flag {
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
         ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
@@ -263,6 +265,14 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
+
+  measure: sumo_orders{
+    group_label: "Total Orders with:"
+    label: "a Sumo Metal Base"
+    description: "1/0 per order; 1 if there was a platform base (Metal) in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.sumo_flg ;; }
 
   measure: foundation_orders {
     hidden: no
@@ -1094,7 +1104,14 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.hybrid4_flg = 1 ;; }
 
-  measure: hybrid2_orders {
+  measure: hybird_mattress_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid Mattress"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid_mattress_flg ;; }
+
+ measure: hybrid2_orders {
     group_label: "Total Orders with:"
     label: "a Hybrid 2"
     description: "Count of Orders with a Hybrid 2 Mattress. Source: looker.calculation"
