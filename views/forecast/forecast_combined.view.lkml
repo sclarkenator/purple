@@ -289,13 +289,13 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale SCC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Sleep Country' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} ilike '%Sleep Country%' then ${total_units_dimension} else 0 end ;;}
 
   measure: SCC_Amount {
     label: "Wholesale SCC Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'Sleep Country' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} ilike '%Sleep Country%' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BBB_Units {
     label: "Wholesale BBB Units"
