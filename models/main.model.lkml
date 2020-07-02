@@ -549,6 +549,20 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
+  explore: contribution  {
+    hidden:yes
+    join: item {
+      type:left_outer
+      sql_on: ${item_id} = ${item.item_id};;
+      relationship: one_to_one
+      }
+    join: sales_order {
+      type: left_outer
+      sql_on: ${order_id} = ${sales_order.order_id}  ;;
+      relationship: many_to_one
+    }
+  }
+
 
   explore: at_risk_amount {
     hidden: yes
