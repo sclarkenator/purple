@@ -73,7 +73,7 @@ view: contribution {
     view_label: "Contribution Margin"
     label: "6 - Shipping (old)"
     description: "All shipping expenses tied to fulfilling an item"
-    value_format: "#,##0"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}."FREIGHT" ;;
   }
