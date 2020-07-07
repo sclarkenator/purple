@@ -120,7 +120,7 @@ view: order_items_base {
       JOIN sales.sales_order_line as sol on so.order_id = sol.order_id and so.system = sol.system
       JOIN sales.item as i
         ON sol.item_id = i.item_id
-      JOIN analytics_stage.netsuite.items nsi on i.item_id = nsi.item_id
+      JOIN analytics_stage.ns.items nsi on i.item_id = nsi.item_id
       LEFT JOIN analytics.sales.item_price ip on i.item_id = ip.item_id
       LEFT JOIN analytics.marketing.google_merchant_feed gmf on gmf.id = ip.id
       LEFT JOIN contribution c on sol.item_id = c.item_id and so.channel_id = c.channel_id

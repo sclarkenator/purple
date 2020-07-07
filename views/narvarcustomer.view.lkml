@@ -11,7 +11,7 @@ view: narvarcustomer {
 from analytics.customer_care.narvar_customer_feedback a
 left join analytics.sales.fulfillment b on a.tracking_id = b.tracking_numbers
 left join analytics.sales.sales_order c on c.order_id = b.order_id
-left join analytics_stage.netsuite.customers d on d.customer_id = c.customer_id
+left join analytics_stage.ns.customers d on d.customer_id = c.customer_id
 left join analytics.marketing.fips e on d.zipcode = e.zip
 where b.order_id is not null ;;
 }
