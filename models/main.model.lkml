@@ -1680,7 +1680,7 @@ explore: sales_order_line{
     join: acquisition_recent_customer_test_segments {
       type: left_outer
       relationship: one_to_one
-      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email_join} ;;
       view_label: "Customer"
     }
     join: acquisition_test_purchasers {
