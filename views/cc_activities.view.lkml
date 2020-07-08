@@ -10,18 +10,21 @@ view: cc_activities {
         , c.duration
         , a.name as agent_name
         , a.email as agent_email
-        , case when a.zendesk_sell_user_id is not null and a.created <= t.created then 'sales' when a.zendesk_id is null then 'none' else 'support' end as team
+        , case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales' when a.zendesk_id is null then 'none' else 'support' end as team
         , u.email
         , u.phone
+        , a.created as user_created
     from customer_care.zendesk_ticket t
     left join analytics_stage.zendesk.ticket_tag ta on ta.ticket_id = t.ticket_id and ta.tag = 'nic_phone'
     left join customer_care.v_zendesk_chats c on c.zendesk_ticket_id = t.ticket_id
     left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
     left join analytics_stage.zendesk.user u on u.id = t.requester_id
-    where --t.created::date = '2020-06-24' and
+    left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
+    where --t.created::date = '2019-06-24' and
         case when ta.tag = 'nic_phone' then 'call'
         when c.chat_id is not null then 'chat'
         when t.via_channel in ('email','facebook') then 'email' end is not null
+        and a.zendesk_sell_user_id is not null
 
    ;;}
 # OLD SQL
@@ -84,7 +87,7 @@ view: cc_activities {
   dimension_group: activity {
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: ${TABLE}.created::date ;; }
 
   dimension: status {
     type:  string

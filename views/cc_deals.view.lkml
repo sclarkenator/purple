@@ -53,9 +53,9 @@ view: cc_deals {
   dimension: source_clean {
     type:  string
     sql: case when ${TABLE}.source_name ilike ('%chat%') then 'chat'
-      when ${TABLE}.source_name ilike ('%call%') or ${TABLE}.source_name in ('Magazine Ad') then 'call'
-      when ${TABLE}.source_name ilike ('%email%') or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk') then 'email'
-      when ${TABLE}.source_name ilike ('%facebook%')  then 'facebook'
+      when ${TABLE}.source_name ilike ('%call%') or ${TABLE}.source_name in ('Magazine Ad','Transfer from Support') then 'call'
+      when ${TABLE}.source_name ilike ('%email%') or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk')
+        or ${TABLE}.source_name ilike ('%facebook%')  then 'email'
       else 'other' end;;
   }
 

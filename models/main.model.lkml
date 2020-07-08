@@ -549,6 +549,20 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
+  explore: contribution  {
+    hidden:yes
+    join: item {
+      type:left_outer
+      sql_on: ${item_id} = ${item.item_id};;
+      relationship: one_to_one
+      }
+    join: sales_order {
+      type: left_outer
+      sql_on: ${order_id} = ${sales_order.order_id}  ;;
+      relationship: many_to_one
+    }
+  }
+
 
   explore: at_risk_amount {
     hidden: yes
@@ -1666,7 +1680,7 @@ explore: sales_order_line{
     join: acquisition_recent_customer_test_segments {
       type: left_outer
       relationship: one_to_one
-      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email_join} ;;
       view_label: "Customer"
     }
     join: acquisition_test_purchasers {

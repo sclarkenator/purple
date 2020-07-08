@@ -26,7 +26,7 @@ view: acquisition_test_purchasers {
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.ns.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(
@@ -151,7 +151,7 @@ view: acquisition_test_purchasers {
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.ns.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(
@@ -282,7 +282,7 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     ) FULL
     OUTER JOIN SALES.WARRANTY_ORDER AS WARRANTY_ORDER ON sales_order.ORDER_ID = warranty_order.ORDER_ID
     AND sales_order.SYSTEM = warranty_order.ORIGINAL_SYSTEM
-    LEFT JOIN analytics_stage.netsuite.CUSTOMERS AS customer_table ON (
+    LEFT JOIN analytics_stage.ns.CUSTOMERS AS customer_table ON (
       customer_table.customer_id::INT
     ) = sales_order.CUSTOMER_ID
     LEFT JOIN SALES.CANCELLED_ORDER AS CANCELLED_ORDER ON(

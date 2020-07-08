@@ -1,5 +1,5 @@
 view: customer_table {
-  sql_table_name: analytics_stage.netsuite.CUSTOMERS ;;
+  sql_table_name: analytics_stage.ns.CUSTOMERS ;;
 
   dimension: customer_id {
     label: "Customer ID"
@@ -50,6 +50,12 @@ view: customer_table {
               ELSE '**********' || '@' || SPLIT_PART(${TABLE}.email, '@', 2)
             END ;;
     }
+
+  dimension: email_join {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.email ;;
+  }
 
   dimension: phone {
     hidden:  no
