@@ -709,18 +709,8 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-#   aggregate_table: weekly_sessions {
-#     query: {
-#       dimensions: [sessions.time_week]
-#       measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-#       filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
-#       timezone: America/Denver
-#     }
-#     materialization: {
-#       #sql_trigger_value: SELECT CURDATE() ;;
-#       datagroup_trigger: pdt_refresh_6am
-#    }
-#   }
+## I commented this out to see if performance changes
+### Blake
 #   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
 #     query: {
 #       dimensions: [sessions.time_week_of_year, sessions.time_year]
