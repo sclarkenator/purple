@@ -721,18 +721,18 @@ explore: all_events {
 #       datagroup_trigger: pdt_refresh_6am
 #    }
 #   }
-  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
-    query: {
-      dimensions: [sessions.time_week_of_year, sessions.time_year]
-      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
-      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
-      timezone: "America/Denver"
-    }
-
-    materialization: {
-      datagroup_trigger: pdt_refresh_6am
-    }
-  }
+#   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+#     query: {
+#       dimensions: [sessions.time_week_of_year, sessions.time_year]
+#       measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+#       filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+#       timezone: "America/Denver"
+#     }
+#
+#     materialization: {
+#       datagroup_trigger: pdt_refresh_6am
+#     }
+#   }
 
 }
 
