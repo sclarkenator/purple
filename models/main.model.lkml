@@ -620,12 +620,12 @@ explore: hotjar_data {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
     relationship: many_to_one
-    fields: [shopify_orders.call_in_order_Flag]}
+    fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_at_date, shopify_orders.gross_sales]}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink, sales_order.average_order_size, sales_order.Order_size_buckets, sales_order.created_date]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
