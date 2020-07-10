@@ -663,7 +663,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     group_label: " Advanced"
     label: "Last Updated Fulfilled."
-    description: "Source: netsuite.sales_order_line"
+    description: "Source: looker.calculation"
     type: date
     sql: MAX(${fulfilled_date}) ;;
     convert_tz: no
@@ -694,6 +694,8 @@ view: sales_order_line {
   }
 
   dimension: wholesale_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Wholesale and Packed"
     description: "Source: looker.calculation"
     type: yesno
@@ -702,6 +704,8 @@ view: sales_order_line {
   }
 
   dimension: xpo_pilot_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Pilot or XPO and Packed"
     description: "Source: looker.calculation"
     type: yesno
@@ -973,6 +977,7 @@ view: sales_order_line {
   measure: mattress_sales {
     label: "Mattress Sales ($)"
     view_label: "Product"
+    value_format: "$#,##0"
     group_label: "Products Sold ($/Units)"
     description: "Total amount of mattresses sold ($). Source: looker.calculation"
     drill_fields: [sales_order_details*]
@@ -1000,6 +1005,7 @@ view: sales_order_line {
     label: "Base Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
+    value_format: "$#,##0"
     description: "Total amount of bases sold ($). Source: looker.calculation"
     drill_fields: [sales_order_details*]
     type: sum
@@ -1020,6 +1026,7 @@ view: sales_order_line {
     label: "Bedding Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
+    value_format: "$#,##0"
     description: "Total amount of bedding items sold ($). Source:looker.calculation"
     drill_fields: [sales_order_details*]
     type: sum
@@ -1040,10 +1047,32 @@ view: sales_order_line {
     label: "Pet Sales ($)"
     view_label: "Product"
     group_label: "Products Sold ($/Units)"
+    value_format: "$#,##0"
     description: "Total amount of pet beds sold ($). Source: looker.calculation"
     drill_fields: [sales_order_details*]
     type: sum
     sql:  case when ${item.category_raw} = 'PET' then ${gross_amt} else 0 end ;;
+  }
+
+  measure: ppe_units {
+    label: "PPE Sales (Units)"
+    view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    description: "Total amount of PPE sold (units). Source: looker.calculation"
+    drill_fields: [sales_order_details*]
+    type: sum
+    sql:  case when ${item.category_raw} = 'PPE' then ${total_units_raw} else 0 end ;;
+  }
+
+  measure: ppe_sales {
+    label: "PPE Sales ($)"
+    view_label: "Product"
+    group_label: "Products Sold ($/Units)"
+    value_format: "$#,##0"
+    description: "Total amount of PPE sold ($). Source: looker.calculation"
+    drill_fields: [sales_order_details*]
+    type: sum
+    sql:  case when ${item.category_raw} = 'PPE' then ${gross_amt} else 0 end ;;
   }
 
   measure: pet_units {
@@ -1447,6 +1476,13 @@ view: sales_order_line {
     sql: case when ${sales_order.channel_id} in (1,5) then ${gross_amt}
       when ${sales_order.channel_id} = 2 then ${gross_amt}*0.5
       else 0 end;;
+  }
+
+  measure: max_units {
+    group_label: "Gross Sales"
+    label: "Max Gross Sales (units)"
+    type: sum
+    sql: max(${TABLE}.ordered_qty) over partition by ${item.sku_id} ;;
   }
 
   set: fulfill_details {

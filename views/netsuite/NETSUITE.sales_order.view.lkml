@@ -358,7 +358,7 @@ view: sales_order {
       }
     #html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/{{order_type_hyperlink._value}}.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     type: string
-    sql: ${TABLE}.ORDER_ID ;; }
+    sql: ${TABLE}.order_id ;; }
 
   dimension: order_id_count{
     group_label: " Advanced"
@@ -379,7 +379,7 @@ view: sales_order {
     description: "For Shopify-US orders only. Payment with Affirm or Progressive.
       Source: netsuite.sales_order"
     type: yesno
-    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
+    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
@@ -391,7 +391,7 @@ view: sales_order {
     label: "Related Transaction ID"
     description: "Netsuite's internal related transaction id. Source:netsuite.sales_order"
     type: string
-    sql: ${TABLE}.RELATED_TRANID ;; }
+    sql: ${TABLE}.related_tranid ;; }
 
   dimension_group: sales_effective {
     hidden: yes

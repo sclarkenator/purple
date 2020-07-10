@@ -180,6 +180,15 @@ view: sessions {
     group_label: "Advanced"
     sql: ${TABLE}.region ;; }
 
+  dimension: in_canada {
+    label: "In Canada"
+    type: yesno
+    description: " 'Yes' if Region is one of the 13 Canadian provinces or territories, otherwise 'No'"
+    group_label: "Advanced"
+    sql: case when ${TABLE}.region in ('Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia',
+        'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Northwest Territories', 'Nunavut', 'Yukon')
+        then true else false end ;; }
+
   dimension: search_keyword {
     label: "Search Keyword"
     group_label: "Advanced"
@@ -322,6 +331,7 @@ view: sessions {
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} = 'sh' or ${utm_medium} ilike '%shopping%' then 'shopping'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
           else 'other' end ;;
   }

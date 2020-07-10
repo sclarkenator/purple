@@ -51,6 +51,12 @@ view: customer_table {
             END ;;
     }
 
+  dimension: email_join {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.email ;;
+  }
+
   dimension: phone {
     hidden:  no
     label: "Customer Phone"

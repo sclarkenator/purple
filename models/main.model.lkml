@@ -4,6 +4,7 @@
 
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
+    include: "/dashboards/**/*.dashboard"
 
 week_start_day: monday
 
@@ -24,6 +25,12 @@ datagroup: pdt_refresh_6am {
   max_cache_age: "24 hours"
 }
 
+named_value_format: curr {
+  value_format: "#,##0.00 \" USD\""
+}
+named_value_format: curr_0 {
+  value_format: "#,##0 \" USD\""
+}
 
 #-------------------------------------------------------------------
 #
@@ -467,10 +474,6 @@ explore: v_fedex_to_xpo {
 #    group_label: "Production"
 #  }
 
-  explore: fulfillment_amazon{
-    hidden:  yes
-    group_label: "Production"
-  }
 
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
@@ -542,6 +545,20 @@ explore: starship_fulfillment {
   }
 
   explore: day_pending { hidden:yes}
+  explore: contribution  {
+    hidden:yes
+    join: item {
+      type:left_outer
+      sql_on: ${item_id} = ${item.item_id};;
+      relationship: one_to_one
+      }
+    join: sales_order {
+      type: left_outer
+      sql_on: ${order_id} = ${sales_order.order_id}  ;;
+      relationship: many_to_one
+    }
+  }
+
 
   explore: at_risk_amount {
     hidden: yes
@@ -603,12 +620,12 @@ explore: hotjar_data {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
     relationship: many_to_one
-    fields: [shopify_orders.call_in_order_Flag]}
+    fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_at_date, shopify_orders.gross_sales]}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink, sales_order.average_order_size, sales_order.Order_size_buckets, sales_order.created_date, sales_order.gross_amt]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
@@ -692,32 +709,29 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-  aggregate_table: weekly_sessions {
-    query: {
-      dimensions: [sessions.time_week]
-      measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-      filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
-      timezone: America/Denver
-    }
-    materialization: {
-      #sql_trigger_value: SELECT CURDATE() ;;
-      datagroup_trigger: pdt_refresh_6am
-    }
-  }
-  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
-    query: {
-      dimensions: [sessions.time_week_of_year, sessions.time_year]
-      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
-      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
-      timezone: "America/Denver"
-    }
-
-    materialization: {
-      datagroup_trigger: pdt_refresh_6am
-    }
-  }
+## I commented this out to see if performance changes
+### Blake
+#   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+#     query: {
+#       dimensions: [sessions.time_week_of_year, sessions.time_year]
+#       measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+#       filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+#       timezone: "America/Denver"
+#     }
+#
+#     materialization: {
+#       datagroup_trigger: pdt_refresh_6am
+#     }
+#   }
 
 }
+
+  explore: pageviews_bounced_pdt {
+    group_label: "Marketing"
+    label: "Pageviews Bounced"
+    hidden: yes
+
+  }
 
   explore: funnel_explorer {
     hidden: yes
@@ -748,6 +762,35 @@ explore: cordial_activity {
     type: left_outer
     sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
   relationship: many_to_one
+  }
+}
+
+explore: email_mymove_contact {
+  hidden: yes
+  join: email_fluent_contact {
+    type: full_outer
+    sql_on: ${email_mymove_contact.email} = ${email_fluent_contact.email} ;;
+    relationship: one_to_one
+  }
+  join: sales_order {
+    type: left_outer
+    sql_on: ${sales_order.email} = NVL(${email_mymove_contact.email},${email_fluent_contact.email}) ;;
+    relationship: many_to_one
+  }
+  join: sales_order_line_base {
+    type: left_outer
+    sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+    relationship: one_to_many
+  }
+  join: item {
+    type: left_outer
+    sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+    relationship: many_to_one
+  }
+  join: order_flag {
+    type: left_outer
+    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship: many_to_one
   }
 }
 
@@ -1059,6 +1102,21 @@ explore: cc_agent_data {
   required_access_grants: [is_customer_care_manager]
 }
 
+explore: cc_activities {hidden: yes}
+explore: cc_deals {hidden: yes
+  join: sales_order {
+    type:left_outer
+    relationship: one_to_one
+    sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;}
+  join: sales_order_line_base {
+    type: left_outer
+    relationship:one_to_many
+    sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;}
+  join: order_flag {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;}
+  }
 explore: target_dtc {hidden: yes}
 explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
 explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
@@ -1161,6 +1219,49 @@ explore: exchange_items {hidden: yes
           type: full_outer
           sql_on: ${zendesk_sell.order_id} = ${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
           relationship: one_to_one}
+
+          join: users {
+            type: left_outer
+            sql_on: upper(${qualtrics_response.recipient_email}) = ${users._email} ;;
+            relationship: one_to_one }
+          join: all_events {
+            type: left_outer
+            sql_on: ${users.user_id}::string = ${all_events.user_id}::string ;;
+            relationship: one_to_many }
+
+          join: sessions {
+            type: left_outer
+            sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+            relationship: many_to_one }
+          join: session_facts {
+            view_label: "Sessions"
+            type: left_outer
+            sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+            relationship: one_to_one }
+            join: zip_codes_city {
+              type: left_outer
+              sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+              relationship: one_to_one }
+            join: dma {
+              type:  left_outer
+              sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+              relationship: one_to_one }
+            join: heap_page_views {
+              type: left_outer
+              sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+              relationship: one_to_many
+            }
+            join: date_meta {
+              type: left_outer
+              sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+              relationship: one_to_many
+            }
+        join: qualtrics_answer_flag {
+          type: left_outer
+          sql_on: ${qualtrics_response.response_id} = ${qualtrics_answer_flag.response_id} ;;
+          relationship: one_to_one
+          view_label: "Response"}
+
       }
 
 
@@ -1388,7 +1489,7 @@ explore: sales_order_line{
   join: warranty_order_line {
     view_label: "Warranties"
     type:  full_outer
-    sql_on: ${warranty_order_line.system} = ${warranty_order.original_system} and ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+    sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
     relationship: many_to_many}
   join: warranty_reason {
@@ -1565,7 +1666,13 @@ explore: sales_order_line{
     join: acquisition_recent_customer_test_segments {
       type: left_outer
       relationship: one_to_one
-      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email} ;;
+      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email_join} ;;
+      view_label: "Customer"
+    }
+    join: acquisition_test_purchasers {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order.order_system} = ${acquisition_test_purchasers.order_system} ;;
       view_label: "Customer"
     }
 
@@ -1574,6 +1681,7 @@ explore: sales_order_line{
 explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
 explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
 explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+explore: max_by_day {hidden: yes label: "Max by Day"}
 
 explore: wholesale {
   extends: [sales_order_line]
@@ -1806,6 +1914,8 @@ explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: 
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
+explore: v_gift_card {label: "Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
 
 explore: warranty_timeline {
   label: "Warranty Timeline"
@@ -1897,7 +2007,7 @@ explore: procom_security_daily_customer {
       join: sales_order {
         type:  left_outer
         sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
-        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total]
+        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total, sales_order.order_type_hyperlink]
         relationship: one_to_one }
 
       join: order_flag {
@@ -1920,7 +2030,7 @@ explore: procom_security_daily_customer {
       join: hotjar_data {
         view_label: "Post-Purchase Survey"
         type: left_outer
-        sql_on:  sales email = hotjar email ;;
+        sql_on:  ${ecommerce1.checkout_token} = ${hotjar_data.token} ;;
         relationship: one_to_one }
 
       join: hotjar_whenheard {
@@ -1952,7 +2062,91 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
+#       join: return_order_line {
+#         view_label: "Returns"
+#         type: full_outer
+#         sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
+#         relationship: one_to_many}
+#       join: return_order {
+#         view_label: "Returns"
+#         type: full_outer
+#         required_joins: [return_order_line]
+#         sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+#         relationship: many_to_one}
+#       join: return_reason {
+#         view_label: "Returns"
+#         type: full_outer
+#         sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+#         relationship: many_to_one}
+#       join: return_option {
+#         view_label: "Returns"
+#         type: left_outer
+#         sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+#         relationship: many_to_one}
+#       join: cancelled_order {
+#         view_label: "Cancellations"
+#         type: left_outer
+#         sql_on: ${sales_order_line_base.item_order} = ${cancelled_order.item_order};;
+#         relationship: one_to_one }
+      join: veritone_pixel_matchback {
+        view_label: "Veritone"
+        type: left_outer
+        sql_on:  ${veritone_pixel_matchback.order_id} = ${sales_order.related_tranid} ;;
+        relationship: many_to_one}
+      join: qualtrics_response {
+        type: inner
+        sql_on: upper(${sales_order.email}) = upper(${qualtrics_response.recipient_email}) ;;
+        relationship: many_to_many
+        view_label: "Response"}
+      join: qualtrics_survey {
+        type: inner
+        sql_on: ${qualtrics_response.survey_id} = ${qualtrics_survey.id};;
+        relationship: one_to_many
+        view_label: "Survey"}
+      join: qualtrics_customer {
+        type: inner
+        sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+        relationship: many_to_one
+        view_label: "Qualtrics Customer"}
+      join: qualtrics_answer {
+        type: inner
+        sql_on: ${qualtrics_survey.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+        relationship: one_to_many
+        view_label: "Answer"}
+  }
 
+  explore: veritone_pixel_matchback { hidden:yes}
+
+#-------------------------------------------------------------------
+#
+# Affinity Analysis Block Explore
+#
+#-------------------------------------------------------------------
+
+  explore: order_purchase_affinity {
+    hidden: yes
+    group_label: "Marketing"
+    label: "🔗 Item Affinity"
+    view_label: "Item Affinity"
+
+    always_filter: {
+      filters: {
+        field: affinity_timeframe
+        value: "last 90 days"
+      }
+      filters: {
+        field: order_items_base.product_level
+        #### TO DO: Replace with your most used hierarchy level (defined in the affinity_analysis view)
+        value: "SKU"
+      }
+    }
+
+    join: order_items_base {}
+
+    join: total_orders {
+      type: cross
+      relationship: many_to_one
+    }
   }
 
 #-------------------------------------------------------------------

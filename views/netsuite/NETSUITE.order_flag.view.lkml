@@ -11,6 +11,7 @@ view: order_flag {
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
+      ,case when sumo > 0 then 1 else 0 end sumo_flg
       ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
@@ -77,9 +78,27 @@ view: order_flag {
      ,case when ( softstretch_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle18_flg
      ,case when ( softstretch_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle19_flg
 
+    --BAR / BARB
+     ,case when small_mattress > 0 then 1 else 0 end small_mattress_flg
+     ,case when large_mattress > 0 then 1 else 0 end large_mattress_flg
+     ,case when anytwopillows > 0 then 1 else 0 end anytwopillows_flg
+     ,case when anyonepillow > 0 then 1 else 0 end anyonepillow_flg
+     ,case when (large_mattress > 0 and anytwopillows > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_large
+     ,case when (small_mattress > 0 and anyonepillow > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_small
+     ,case when ((bar_small + bar_large > 0) and BASE_FLG > 0 ) then 1 else 0 end barb_flg
+
+    -- Hybrid Matress Sizes and Purple Mattress
+     ,case when hybrid2 > 0 then 1 else 0 end hybrid2_flg
+     ,case when hybrid3 > 0 then 1 else 0 end hybrid3_flg
+     ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
+     ,case when purple_mattress >0 then 1 else 0 end purple_mattres_flg
+
+    -- Room Set Completion
+     ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
+
     FROM(
       select sol.order_id
-        ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
+        ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
         ,sum(case when line = 'COIL' or (description like '%HYBRID%' and line = 'KIT') THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
         ,SUM(CASE WHEN line = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
@@ -87,16 +106,17 @@ view: order_flag {
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
         ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
         ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
-        ,SUM(CASE WHEN category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
-        ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857') then 1 else 0 end) plush
-        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855') then 1 else 0 end) purple_pillow
+        ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891') then 1 else 0 end) harmony
+        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857','10-31-12862') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855','10-31-12863') then 1 else 0 end) purple_pillow
         ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
         ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
@@ -118,32 +138,44 @@ view: order_flag {
 
         --adding for ecommerce bundles
 
--- new item flags
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
- ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
- ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
- ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
--- 2's
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
- ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
+        -- new item flags
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
+         ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
+         ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
+         ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
+        -- 2's
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
+         ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
 
-        from sales_order_line sol
-      left join item on item.item_id = sol.item_id
-      left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
+        -- BAR / BARB
+         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
+         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') and line <> 'COVER' THEN 1 ELSE 0 END) large_mattress
+         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
+         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+
+        -- Hybrid Mattresses and Purple Mattress
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
+         ,sum(case when line = 'FOAM' then 1 else 0 end) purple_mattress
+
+      from analytics.sales.sales_order_line sol
+      left join analytics.sales.item on item.item_id = sol.item_id
+      left join analytics.sales.sales_order s on s.order_id = sol.order_id and s.system = sol.system
       GROUP BY 1) ;;
 
     }
@@ -236,6 +268,14 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
+
+  measure: sumo_orders{
+    group_label: "Total Orders with:"
+    label: "a Sumo Metal Base"
+    description: "1/0 per order; 1 if there was a platform base (Metal) in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.sumo_flg ;; }
 
   measure: foundation_orders {
     hidden: no
@@ -1007,5 +1047,114 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.bundle19_flg ;; }
+
+  # BAR / BARB
+  measure: bar_orders {
+    group_label: "Total Orders with:"
+    label: "a BAR Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress, 2+ pillows, sheets, and a protector;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.bar_large +  ${TABLE}.bar_small ;; }
+
+  dimension: bar_flag {
+    group_label: "    * Orders has:"
+    label: "a BAR Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress (including split king), 2+ pillows, sheets, and a protector;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bar_small + ${TABLE}.bar_large > 0  ;; }
+
+
+  measure: barb_orders {
+    group_label: "Total Orders with:"
+    label: "a BARB Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress, 2+ pillows, sheets, a protector, and a base;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector, a base. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.barb_flg ;; }
+
+  dimension: barb_flag {
+    group_label: "    * Orders has:"
+    label: "a BARB Bundle"
+    description: "1/0 per order; 1 if the order contains a Full or larger size mattress (including split king), 2+ pillows, sheets, protector, and a base;
+    or if the order contains a Twin XL/Twin mattress, 1 pillow, sheets, a protector, a base. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.barb_flg = 1  ;; }
+
+  dimension: hybrid2_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 2"
+    description: "1/0; 1 if there is a Hybrid 2 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid2_flg = 1 ;; }
+
+  dimension: hybrid3_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 3"
+    description: "1/0; 1 if there is a Hybrid 3 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid3_flg = 1 ;; }
+
+  dimension: hybrid4_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 4"
+    description: "1/0; 1 if there is a Hybrid 4 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid4_flg = 1 ;; }
+
+  measure: hybird_mattress_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid Mattress"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid_mattress_flg ;; }
+
+ measure: hybrid2_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 2"
+    description: "Count of Orders with a Hybrid 2 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid2_flg ;; }
+
+  measure: hybrid3_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 3"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid3_flg ;; }
+
+  measure: hybrid4_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 4"
+    description: "Count of Orders with a Hybrid 4 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid4_flg ;; }
+
+  dimension: purple_mattress_flag {
+    group_label: "    * Orders has:"
+    label: "a Purple Mattress"
+    description: "1/0; 1 if there is a The Purple Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.purple_mattres_flg = 1 ;; }
+
+  measure: purple_mattress_orders {
+    group_label: "Total Orders with:"
+    label: "a Purple Mattress"
+    description: "Count of Orders with a The Purple Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.purple_mattres_flg ;; }
+
+  dimension: room_set_num {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "Bedset Completion Number"
+    description: "1-5; 1 if there is 1 bedset category in this order, 5 if all bedset categories are in it (Mattress, Sheets, Protector, Base, Pillow). Source: looker.calculation"
+    type:  number
+    sql: ${TABLE}.room_set ;; }
 
 }

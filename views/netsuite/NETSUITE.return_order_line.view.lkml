@@ -49,6 +49,7 @@ view: return_order_line {
     group_label: "Return Amounts"
     label: "Total Returns Completed (units)"
     description: "Trial returns completed and reimbursed. Source:looker.calculation"
+    sql_distinct_key: NVL(${return_order.primary_key},'0')||NVL(${pk},'0') ;;
     filters: {
       field: return_order.status
       value: "Refunded"}

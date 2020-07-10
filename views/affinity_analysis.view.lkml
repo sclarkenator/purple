@@ -1,7 +1,3 @@
-##############################
-## Blake Walton 2020-06-11
-## Work in progress
-##############################
 view: order_items_base {
   derived_table: {
     #### TO DO: Create a transaction-item-level table with the following columns:
@@ -14,28 +10,122 @@ view: order_items_base {
     # -Transaction margin amount
     #### If this info is in different tables that you're joining together (e.g. a trx table to a product hierarchy, as in the example below), you may want to persist the joined table as a PDT if feasible
     #### Make sure to not change the "AS [...]" in the query below, as these column names are used later on
-    sql: SELECT
+    sql:    WITH standard_cost AS (
+        select
+            coalesce(b.item_id, a.item_id) as ac_item_id,
+            a.item_id,
+            max(standard_cost) as cost
+        from sales.item_standard_cost a
+        left join
+            (select
+            right(a.sku_id,11) as clean_sku_id,
+            max(case when a.sku_id like 'AC-%' then a.item_id else null end) as ac_item_id,
+            min(case when length(a.sku_id) = 11 then a.item_id else null end) as item_id
+        from sales.item a
+        group by 1) b on b.ac_item_id = a.item_id
+        group by 1,2
+    ), item_return_rate AS (
+        select
+            trim(i.sku_id,'AC-') sku_id
+            ,nvl(sum(returns),0)/sum(sales) return_rate
+        from
+        (
+        select sol.item_id
+              ,sum(returns) returns
+              ,sum(sol.gross_amt) sales
+        from sales.sales_order_line sol
+        left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
+        left join
+            (select rl.order_id
+                    ,rl.item_id
+                    ,rl.system
+                    ,sum(rl.gross_amt) returns
+             from sales.return_order_line rl
+             join sales.return_order ro on ro.return_order_id = rl.return_order_id
+             where ro.status = 'Refunded'
+             and rl.closed > '2019-10-01'
+             group by 1,2,3
+             order by 4 desc) r
+          on r.order_id = sol.order_id and r.item_id = sol.item_id and r.system = sol.system
+        where datediff(d,sol.fulfilled,current_date)>130 and datediff(d,sol.fulfilled,current_date)<=220
+        and so.channel_id = 1
+        group by 1
+        having sum(sol.gross_amt)>0) s
+        join sales.item i on i.item_id = s.item_id
+        group by 1), contribution as (
+    SELECT
+        item.ITEM_ID,
+        sales_order.CHANNEL_id,
+        COUNT(DISTINCT ( sales_order.ORDER_ID )  ) AS "sales_order.total_orders",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(( sales_order_line.PRE_DISCOUNT_AMT )   ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.full_imu_1",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.order_discount_amt,0)  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.order_discounts",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_discount_amt,0)  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.promo_discounts",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.cc_discount,0)  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.cc_discounts",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty *  ( standard_cost.cost )   ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.cogs_1",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_gross_amt,0)  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.adj_gross_amt",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ( ( (TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(sales_order.CREATED , 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')))  is null
+                    or datediff(d, ( (TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(sales_order.CREATED , 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD'))) ,current_date)<130) then  ( item_return_rate.return_rate ) * ( sales_order_line.gross_amt )
+                    else nvl( ( case when return_order.STATUS = 'Refunded' then return_order_line.gross_amt else 0 end) ,0) end  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(( NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0') ) ||'-'|| ( NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0) ) ||'-'|| ( sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system )   ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(( NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0') ) ||'-'|| ( NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0) ) ||'-'|| ( sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system )   ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.return_amt",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when  ( shipping."MAINFREIGHT" )  > 0 then 5.24 else 0 end  + shipping."SHIPPING_TOTAL"  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(( shipping."ORDER_ID" ) ||'-'|| ( shipping."ITEM_ID" )   ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(( shipping."ORDER_ID" ) ||'-'|| ( shipping."ITEM_ID" )   ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "shipping.shipping_total",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when  ( sales_order.SOURCE )  in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15* ( sales_order_line.gross_amt )
+                  when  ( sales_order.PAYMENT_METHOD )  ilike 'AFFIRM' then 0.0497* ( sales_order_line.gross_amt )
+                  when  ( sales_order.PAYMENT_METHOD )  ilike 'SPLITIT' then .04* ( sales_order_line.gross_amt )
+                  else 0.0255* ( sales_order_line.gross_amt )  end  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.merch_fees",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when  ( (nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)  )  < 0 then 0 else nvl( ( (nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)  ) ,0)* ( sales_order_line.gross_amt )  end  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.direct_affiliate",
+        COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(0.01* ( sales_order_line.gross_amt )   ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system  ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0) AS "sales_order_line.warranty_accrual"
+
+    ,case
+        when "sales_order_line.adj_gross_amt" = 0 then 0
+        else ("sales_order_line.adj_gross_amt"-"sales_order_line.cogs_1"-"sales_order_line.return_amt"-"shipping.shipping_total"-("sales_order_line.merch_fees"+"sales_order_line.direct_affiliate"+"sales_order_line.warranty_accrual"))/"sales_order_line.adj_gross_amt"
+    end as contribution_percent
+
+    FROM SALES.SALES_ORDER_LINE  AS sales_order_line LEFT JOIN SALES.ITEM  AS item ON sales_order_line.ITEM_ID = item.ITEM_ID  LEFT JOIN SALES.FULFILLMENT  AS fulfillment ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (case when fulfillment.parent_item_id = 0 or fulfillment.parent_item_id is null then fulfillment.item_id else fulfillment.parent_item_id end)||'-'||fulfillment.order_id||'-'||fulfillment.system  LEFT JOIN SALES.SALES_ORDER  AS sales_order ON (sales_order_line.order_id||'-'||sales_order_line.system) = (sales_order.order_id||'-'||sales_order.system)  FULL OUTER JOIN (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US')  AS return_order_line ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (return_order_line.item_id||'-'||return_order_line.order_id||'-'||return_order_line.system)  FULL OUTER JOIN SALES.RETURN_ORDER  AS return_order ON return_order_line.RETURN_ORDER_ID = return_order.RETURN_ORDER_ID  LEFT JOIN standard_cost ON standard_cost.item_id = item.ITEM_ID or standard_cost.ac_item_id = item.ITEM_ID LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.RELATED_TRANID=('#'||affiliate_sales_order."ORDER_ID"
+    )  LEFT JOIN item_return_rate ON item.SKU_ID = item_return_rate.sku_id   LEFT JOIN "SALES"."SHIPPING"
+         AS shipping ON sales_order_line.ITEM_ID = (shipping."ITEM_ID") and sales_order_line.ORDER_ID = (shipping."ORDER_ID")
+    WHERE (((to_timestamp_ntz(sales_order_line.Created)  ) >= ((DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE())))) AND (to_timestamp_ntz(sales_order_line.Created)  ) < ((DATEADD('month', 1, DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE()))))))) AND ((TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(sales_order.CREATED , 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')) is not null) AND (((CASE WHEN item.merchandise = 1  THEN 1 ELSE 0 END
+    ) = 0) AND (1 )) AND (((case when
+        --split king mattress kits and split king powerbase kits
+            item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+            -- adds metal frame bases to finished goods
+            or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+            else item.classification_new end
+    ) = 'FG' ) AND ((CASE WHEN sales_order.IS_UPGRADE = 'T'  THEN 1 ELSE 0 END
+    ) = 0) AND (((CASE WHEN sales_order.EXCHANGE = 'T'  THEN 1 ELSE 0 END
+    ) = 0) AND ((CASE WHEN sales_order.WARRANTY_CLAIM_ID is not null or sales_order.warranty = 'T'  THEN 1 ELSE 0 END
+    ) = 0)))
+    GROUP BY 1,2
+    )
+    SELECT
       so.order_id AS transaction_id
       ,so.system,so.created AS order_created_time
       ,i.sku_id as SKU_id
       ,i.description AS SKU_name
+      ,nsi.item_category_id AS category_id
       ,i.category AS category_name
+      ,nsi.item_subcategory_id AS line_id
       ,i.line AS line_name
-      --,i.brand AS brand_id
-      --,i.brand AS brand_name
-      --,i.department AS department_id
-      --,i.brand AS department_name
       ,so.customer_id AS user_id
       ,sol.pre_discount_amt/ordered_qty AS sale_amt
---      ,sol.sale_price-intermediate_table.cost AS margin_amt
-      , 10 AS margin_amt
+      ,((sol.pre_discount_amt/ordered_qty) * c.contribution_percent)::number(15,2) as margin_amt
+      ,gmf.image_link
+      ,case
+        when so.channel_id = 1 then 'DTC'
+        when so.channel_id = 2 then 'Wholesale'
+        when so.channel_id = 3 then 'General'
+        when so.channel_id = 4 then 'Employee Store'
+        when so.channel_id = 5 then 'Owned Retail'
+        else 'Other'
+      end AS Channel
       FROM sales.sales_order so
       JOIN sales.sales_order_line as sol on so.order_id = sol.order_id and so.system = sol.system
-      --JOIN PUBLIC.inventory_items as intermediate_table
-        --ON order_items.inventory_item_id = intermediate_table.id
       JOIN sales.item as i
         ON sol.item_id = i.item_id
-      WHERE sol.ordered_qty <> 0;;
+      JOIN analytics_stage.ns.items nsi on i.item_id = nsi.item_id
+      LEFT JOIN analytics.sales.item_price ip on i.item_id = ip.item_id
+      LEFT JOIN analytics.marketing.google_merchant_feed gmf on gmf.id = ip.id
+      LEFT JOIN contribution c on sol.item_id = c.item_id and so.channel_id = c.channel_id
+      WHERE sol.ordered_qty <> 0
+        and so.channel_id = 1;;
       #### TO DO: Uncomment this line if you'd like to persist this table for faster query-time performance
 #       datagroup_trigger: daily
     }
@@ -63,9 +153,9 @@ view: order_items_base {
   view: order_items {
     derived_table: {
       sql: SELECT
-              CONCAT(transaction_id,'_',{% parameter order_items_base.product_level %}_name) AS id
+              CONCAT(transaction_id,'_',{% parameter order_items_base.product_level %}_id) AS id
               , transaction_id AS order_id
-              --, {% parameter order_items_base.product_level %}_id as product_id
+              , {% parameter order_items_base.product_level %}_id as product_id
               , {% parameter order_items_base.product_level %}_name AS product
               , user_id as user_id
               , MIN(order_created_time) AS created_at
@@ -77,7 +167,7 @@ view: order_items_base {
             AND UPPER({% parameter order_items_base.product_level %}_name) <> 'UNKNOWN'
             AND {% condition order_purchase_affinity.affinity_timeframe %} order_created_time {% endcondition %}
             ---- TO DO: Replace with filters you want to be able to control the analysis on (e.g. store number, name)
-            AND {% condition order_purchase_affinity.store_name %} store_name {% endcondition %}
+            AND {% condition order_purchase_affinity.channel %} channel {% endcondition %}
             GROUP BY 1,2,3,4,5;;
     }
   }
@@ -227,10 +317,10 @@ view: order_items_base {
 
     #### TO DO: [optional] add any store or other level filters here, or remove this one
 
-    filter: store_name {
+    filter: channel {
       type: string
-      suggest_explore: sales_explore
-      suggest_dimension: sales_table.store_name
+      suggest_explore: sales_order_line
+      suggest_dimension: sales_order.channel
     }
 
     ##### Dimensions #####
@@ -238,11 +328,11 @@ view: order_items_base {
     dimension: product_a {
       type: string
       sql: ${TABLE}.product_a ;;
-      link: {
-        label: "Focus on {{rendered_value}}"
-        #### TO DO: Replace "/3" with id of the [...] dashboards
-        url: "/dashboards/retail_model::item_affinity_analysis?Focus%20Product={{ value | encode_uri }}&Product%20Level={{ _filters['order_items_base.product_level'] | url_encode }}&Analysis%20Timeframe={{ _filters['order_purchase_affinity.affinity_timeframe'] | url_encode }}&Store%20Number={{ _filters['order_purchase_affinity.store_number'] | url_encode }}"
-      }
+       link: {
+         label: "Focus on {{rendered_value}}"
+         #### TO DO: Replace "/3" with id of the [...] dashboards
+         url: "/dashboards/main::item_affinity_analysis?Focus%20Product={{ value | encode_uri }}&Product%20Level={{ _filters['order_items_base.product_level'] | url_encode }}&Analysis%20Timeframe={{ _filters['order_purchase_affinity.affinity_timeframe'] | url_encode }}&channel={{ _filters['order_purchase_affinity.channel'] | url_encode }}"
+       }
     }
 
     dimension: product_a_image {

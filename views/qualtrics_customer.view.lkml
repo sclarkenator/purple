@@ -34,7 +34,7 @@ view: qualtrics_customer {
 
   dimension: email {
     type: string
-    sql: ${TABLE}."EMAIL" ;;
+    sql: upper(${TABLE}."EMAIL") ;;
   }
 
   dimension_group: first_encounter {
