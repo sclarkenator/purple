@@ -379,7 +379,7 @@ view: sales_order {
     description: "For Shopify-US orders only. Payment with Affirm or Progressive.
       Source: netsuite.sales_order"
     type: yesno
-    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
+    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
