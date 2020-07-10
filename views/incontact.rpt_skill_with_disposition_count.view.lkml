@@ -48,6 +48,7 @@ dimension: primary_key {
       date,
       day_of_week,
       week,
+      week_of_year,
       month,
       quarter,
       year
@@ -155,7 +156,7 @@ dimension: primary_key {
   measure: avg_hold_time {
     hidden: no
     type: average
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: nvl(${TABLE}."HOLD_TIME",0) ;;
   }
 
 
