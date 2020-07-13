@@ -1914,7 +1914,16 @@ explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: 
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
-explore: v_gift_card {label: "Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
+explore: v_gift_card {
+  label: "Gift Card Transactions"
+  group_label: "Accounting"
+  hidden:yes
+  join: sales_order {
+    type: left_outer
+    sql_on:  ${sales_order.related_tranid} = ${v_gift_card.order_number} ;;
+    relationship: one_to_one}
+  }
 
 
 explore: warranty_timeline {
