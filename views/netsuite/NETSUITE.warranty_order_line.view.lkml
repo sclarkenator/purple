@@ -13,7 +13,9 @@ view: warranty_order_line {
     sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-');; }
 
   dimension_group: closed {
-    hidden: yes
+    hidden: no
+    label: "   Warranty Closed"
+    description: "The Date the Warranty was Closed. Source:netsuite.warranty_order_line"
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
