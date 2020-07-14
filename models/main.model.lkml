@@ -474,10 +474,6 @@ explore: v_fedex_to_xpo {
 #    group_label: "Production"
 #  }
 
-  explore: fulfillment_amazon{
-    hidden:  yes
-    group_label: "Production"
-  }
 
 explore: starship_fulfillment {
   label: "Starship Fulfillments"
@@ -624,12 +620,12 @@ explore: hotjar_data {
     type: inner
     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
     relationship: many_to_one
-    fields: [shopify_orders.call_in_order_Flag]}
+    fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_at_date, shopify_orders.gross_sales]}
   join: sales_order {
     type:  left_outer
     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
     relationship: one_to_one
-    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink]}
+    fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink, sales_order.average_order_size, sales_order.Order_size_buckets, sales_order.created_date, sales_order.gross_amt]}
   join: order_flag {
     view_label: "Sales Order"
     type: left_outer
@@ -713,30 +709,20 @@ explore: all_events {
     sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
     relationship: one_to_many
   }
-#   aggregate_table: weekly_sessions {
+## I commented this out to see if performance changes
+### Blake
+#   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
 #     query: {
-#       dimensions: [sessions.time_week]
-#       measures: [heap_page_views.Sum_non_bounced_session,heap_page_views.Sum_bounced_session]
-#       filters: [sessions.time_date: "52 weeks ago for 52 weeks"]
-#       timezone: America/Denver
+#       dimensions: [sessions.time_week_of_year, sessions.time_year]
+#       measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+#       filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+#       timezone: "America/Denver"
 #     }
+#
 #     materialization: {
-#       #sql_trigger_value: SELECT CURDATE() ;;
 #       datagroup_trigger: pdt_refresh_6am
-#    }
+#     }
 #   }
-  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
-    query: {
-      dimensions: [sessions.time_week_of_year, sessions.time_year]
-      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
-      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
-      timezone: "America/Denver"
-    }
-
-    materialization: {
-      datagroup_trigger: pdt_refresh_6am
-    }
-  }
 
 }
 
@@ -1928,7 +1914,16 @@ explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: 
 explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
 explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
-explore: v_gift_card {label: "Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
+explore: v_gift_card {
+  label: "Gift Card Transactions"
+  group_label: "Accounting"
+  hidden:yes
+  join: sales_order {
+    type: left_outer
+    sql_on:  ${sales_order.related_tranid} = ${v_gift_card.order_number} ;;
+    relationship: one_to_one}
+  }
 
 
 explore: warranty_timeline {

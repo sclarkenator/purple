@@ -93,6 +93,9 @@ view: order_flag {
      ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
      ,case when purple_mattress >0 then 1 else 0 end purple_mattres_flg
 
+    -- Room Set Completion
+     ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
+
     FROM(
       select sol.order_id
         ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -1146,5 +1149,12 @@ view: order_flag {
     type:  sum
     sql: ${TABLE}.purple_mattres_flg ;; }
 
+  dimension: room_set_num {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "Bedset Completion Number"
+    description: "1-5; 1 if there is 1 bedset category in this order, 5 if all bedset categories are in it (Mattress, Sheets, Protector, Base, Pillow). Source: looker.calculation"
+    type:  number
+    sql: ${TABLE}.room_set ;; }
 
 }

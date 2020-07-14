@@ -180,6 +180,15 @@ view: sessions {
     group_label: "Advanced"
     sql: ${TABLE}.region ;; }
 
+  dimension: in_canada {
+    label: "In Canada"
+    type: yesno
+    description: " 'Yes' if Region is one of the 13 Canadian provinces or territories, otherwise 'No'"
+    group_label: "Advanced"
+    sql: case when ${TABLE}.region in ('Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia',
+        'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Northwest Territories', 'Nunavut', 'Yukon')
+        then true else false end ;; }
+
   dimension: search_keyword {
     label: "Search Keyword"
     group_label: "Advanced"
