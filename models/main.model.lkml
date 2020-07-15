@@ -1036,7 +1036,7 @@ explore: agent_lkp {
     relationship: one_to_many}
   join: customer_satisfaction_survey {
     type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
+    sql_on: ${agent_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
     relationship:  one_to_many
   }
   join: stella_connect_request {
