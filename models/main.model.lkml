@@ -1675,6 +1675,18 @@ explore: sales_order_line{
       sql_on: ${sales_order.order_system} = ${acquisition_test_purchasers.order_system} ;;
       view_label: "Customer"
     }
+    join: us_zipcode_mapping {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${sales_order_line.zip} = ${us_zipcode_mapping.zip} ;;
+      relationship: many_to_many
+    }
+    join: us_zipcode {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${us_zipcode_mapping.parent_zcta} = ${us_zipcode.zip} ;;
+      relationship: many_to_many
+    }
 
 }
 
