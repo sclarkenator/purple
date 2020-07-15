@@ -2071,17 +2071,18 @@ explore: procom_security_daily_customer {
         type: left_outer
         sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
-#       join: return_order_line {
-#         view_label: "Returns"
-#         type: full_outer
-#         sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
-#         relationship: one_to_many}
-#       join: return_order {
-#         view_label: "Returns"
-#         type: full_outer
-#         required_joins: [return_order_line]
-#         sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
-#         relationship: many_to_one}
+      # join: return_order_line {
+      #   view_label: "Returns"
+      #   type: full_outer
+      #   sql_on: ${sales_order_line_base.item_order} = ${return_order_line.item_order} ;;
+      #   relationship: one_to_many}
+      # join: return_order {
+      #   view_label: "Returns"
+      #   type: full_outer
+      #   required_joins: [return_order_line]
+      #   sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+      #   fields: [return_order.return_order_id,return_order.assigned_to,return_order.channel_id,return_order.yesterday_flag,return_order.created_date_filter,return_order.entity_id,return_order.item_receipt_condition_id,return_order.last_modified,return_order.memo,return_order.order_id,return_order.payment_method_reference_id,return_order.priority_id,return_order.related_tranid,return_order.replacement_order_link_id,return_order.return_option_id,return_order.return_reason_id,return_order.return_ref_id,return_order.rma_return_form_sent,return_order.rma_return_type,return_order.rma_stretchy_sheet_id,return_order.rmawarranty_ticket_number,return_order.shipping_item_id,return_order.status,return_order.was_returned,return_order.tracking_number,return_order.transaction_number,return_order.warranty_order,return_order.return_completed,return_order.return_completed,return_order.return_life,return_order.law_tag]
+      #   relationship: many_to_one}
 #       join: return_reason {
 #         view_label: "Returns"
 #         type: full_outer

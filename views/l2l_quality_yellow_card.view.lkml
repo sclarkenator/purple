@@ -11,7 +11,7 @@ view: l2l_quality_yellow_card {
     type: string
     description: "Source: l2l.v_quality_yellow_card"
     sql: case when ${TABLE}."BED_SIZE" = 'T' then 'TWIN'
-      when ${TABLE}."BED_SIZE" = 'TXL' then 'TWIN XL'
+      when ${TABLE}."BED_SIZE" = 'TXL' then 'TWINXL'
       when ${TABLE}."BED_SIZE" = 'F' then 'FULL'
       when ${TABLE}."BED_SIZE" = 'Q' then 'QUEEN'
       when ${TABLE}."BED_SIZE" = 'K' then 'KING'
@@ -25,7 +25,7 @@ view: l2l_quality_yellow_card {
     description: "Source: l2l.v_quality_yellow_card"
     sql: case when ${TABLE}."BED_TYPE" = 'OG' THEN 'ORIGINAL PURPLE MATTRESS'
       WHEN ${TABLE}."BED_TYPE" = 'NOG' THEN 'THE PURPLE MATTRESS'
-      WHEN ${TABLE}."BED_TYPE" = '2' THEN 'HYBRID PREMIER 2'
+      WHEN ${TABLE}."BED_TYPE" = '2' THEN 'HYBRID 2'
       WHEN ${TABLE}."BED_TYPE" = '3' THEN 'HYBRID PREMIER 3'
       WHEN ${TABLE}."BED_TYPE" = '4' THEN 'HYBRID PREMIER 4'
       ELSE ${TABLE}."BED_TYPE"

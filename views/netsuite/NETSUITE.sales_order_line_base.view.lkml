@@ -583,6 +583,49 @@ view: sales_order_line_base {
     sql: ${ordered_qty}/90 ;;
   }
 
+    measure: 7_day_sales_dollar {
+      label: "7 Day Average Sales ($)"
+      description: "$ ordered in the last 7 days /7. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden: yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 7_day_window
+        value: "yes" }
+      sql: ${gross_amt}/7 ;;
+    }
+
+    measure: 30_day_sales_dollar {
+      label: "30 Day Average Sales ($)"
+      description: "$ ordered in the last 30 days /30. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden:  yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 30_day_window
+        value: "yes" }
+      sql: ${gross_amt}/30 ;;
+    }
+
+
+    measure: 90_day_sales_dollar {
+      label: "90 Day Average Sales ($)"
+      description: "$ ordered in the last 90 days /90. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden:  yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 90_day_window
+        value: "yes" }
+      sql: ${gross_amt}/90 ;;
+    }
+
   dimension: rolling_7day {
     label: "Is in Last 7 Day"
     #view_label:  "x - report filters"
