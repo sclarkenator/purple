@@ -31,12 +31,12 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."AREAS_OF_IMPROVEMENT_RESPONSE" ;;
   }
 
-  dimension: comments {
+  dimension: comment {
     type: string
     label: "Customer Comment"
     description: "Free response comment by customer.
       Source: stella_connect.customer_satisfaction_survey"
-    sql: ${TABLE}."COMMENTS" ;;
+    sql: ${TABLE}."COMMENT" ;;
   }
 
   dimension_group: created {
