@@ -16,6 +16,7 @@ view: order_flag {
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
+      ,case when PILLOW_ORDERED > 1 then 1 else 0 end mp_flg
       ,case when split_king > 0 then 1 else 0 end sk_flg
       ,case when harmony > 0 then 1 else 0 end harmony_pillow_flg
       ,case when plush > 0 then 1 else 0 end plush_pillow_flg
@@ -113,6 +114,7 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
         ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
         ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN (line = 'PILLOW' and line <> 'BOOSTER') THEN ORDERED_QTY ELSE 0 END) PILLOW_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891') then 1 else 0 end) harmony
         ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857','10-31-12862') then 1 else 0 end) plush
@@ -409,6 +411,14 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.pillow_flg = 1 ;; }
 
+  dimension: mp_orders_flg {
+    group_label: "    * Orders has:"
+    label: "Multiple Pillows"
+    description: "1/0; 1 if there is more than 1 pillow in the order. Source: looker.calculation"
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.mp_flg = 1 ;; }
+
   dimension: blanket_flg {
     hidden:  yes
     group_label: "    * Orders has:"
@@ -436,6 +446,14 @@ view: order_flag {
     description: "Number of mattresses in the order. Source: looker.calculation"
     type: number
     sql: ${TABLE}.mattress_ordered ;;
+  }
+
+  dimension: pillow_count {
+    group_label: " Advanced"
+    hidden: yes
+    description: "Number of pillows in the order. Source: looker.calculation"
+    type: number
+    sql: ${TABLE}.pillow_ordered ;;
   }
 
   dimension: harmony_flg {
