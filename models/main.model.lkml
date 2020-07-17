@@ -233,12 +233,7 @@ access_grant: is_customer_care_manager{
 #
 #-------------------------------------------------------------------
 
-
-explore: procom_security_daily_customer {
-  label: "Procom Customers"
-  group_label: "Retail"
-  hidden:yes
-  }
+# I moved the Retail Explores to Retail.lkml -- Blake
 
 #-------------------------------------------------------------------
 #
@@ -406,8 +401,6 @@ explore: procom_security_daily_customer {
         view_label: "Answer"}
   }
 
-  explore: veritone_pixel_matchback { hidden:yes}
-
 #-------------------------------------------------------------------
 #
 # Affinity Analysis Block Explore
@@ -445,17 +438,3 @@ explore: procom_security_daily_customer {
 #-------------------------------------------------------------------
 
 # I moved the Old/Bad Explores to Old_or_Bad.lkml -- Blake
-
-    explore: russ_order_validation {
-      label: "Order Validation"
-      description: "Constructed table comparing orders from different sources"
-      hidden:yes }
-
-    explore: hour_assumptions {
-      label: "Hour Assumptions"
-      description: "% of day's sales by hour for dtc day prediction"
-      hidden: yes  }
-
-    explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
-    explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
-    explore: owned_retail_target_by_location {hidden: yes }

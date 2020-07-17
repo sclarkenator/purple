@@ -186,7 +186,7 @@ explore: email_mymove_contact {
   explore: sessions {hidden: yes group_label: "Marketing"}
   explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}
   explore: conversions {hidden: yes group_label: "Marketing"}
-
+  explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}
   explore: target_adspend {hidden: yes group_label: "Marketing"}
   explore: promotion {hidden:yes group_label: "Marketing"}
 
@@ -197,7 +197,6 @@ explore: email_mymove_contact {
   explore: narvar_dashboard_notification_clicks_by_category {hidden: yes group_label: "Marketing" label: "Narvar clicks by category"}
   explore: narvar_dashboard_notify_metrics {hidden: yes group_label: "Marketing" label: "Narvar notify metrics"}
   explore: narvar_customer_feedback {hidden: no group_label: "Marketing" label: "Narvar customer feedback"}
-
 
 #-------------------------------------------------------------------
 #

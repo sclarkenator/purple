@@ -437,7 +437,14 @@ include: "/dashboards/**/*.dashboard"
     description: "Sales, Forecast, Adspend, aggregated to a day (for calculating ROAs, and % to Goal)"
     from: day_aggregations
     group_label: " Sales"
-    hidden:no }
+    hidden:no
+  }
+
+  explore: hour_assumptions {
+    label: "Hour Assumptions"
+    description: "% of day's sales by hour for dtc day prediction"
+    hidden: yes
+  }
 
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
   explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
