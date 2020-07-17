@@ -28,6 +28,41 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+  explore: v_gift_card {
+    label: "Gift Card Transactions"
+    group_label: "Accounting"
+    hidden:yes
+    join: sales_order {
+      type: left_outer
+      sql_on:  ${sales_order.related_tranid} = ${v_gift_card.order_number} ;;
+      relationship: one_to_one}
+  }
+
+  explore: warranty_timeline {
+    label: "Warranty Timeline"
+    group_label: "Accounting"
+    hidden:yes
+    join: item {
+      view_label: "Item"
+      type:  left_outer
+      sql_on: ${item.item_id} = ${warranty_timeline.item_id};;
+      relationship: many_to_one}
+  }
+
+  explore: affirm_daily_lto_funnel {hidden:yes group_label: "Accounting"}
+  explore: v_first_data_order_num {label: "FD Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_paypal_order_num {label: "Paypal Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting" hidden:yes}
+  explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
+  explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
+
   explore: v_fit {hidden: yes group_label: "Accounting"}
   explore: fit_problem {hidden: yes group_label: "Accounting"}
   explore: v_fit_affirm {hidden: yes group_label: "Accounting"}
