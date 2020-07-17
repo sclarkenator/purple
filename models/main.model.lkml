@@ -55,373 +55,15 @@ access_grant: is_customer_care_manager{
 #
 #-------------------------------------------------------------------
 
+# I moved the Production Explores to Production.lkml -- Blake
 
+#-------------------------------------------------------------------
+#
+# Accounting Explores
+#
+#-------------------------------------------------------------------
 
-
-
-explore: production_report {
-  label: "iPad Production Data"
-  group_label: "Production"
-  description: "Connection to the iPad database owned by IT, Machine level production data is stored here"
-}
-
-explore: jarom_location_data {
-  hidden:  yes
-}
-
-explore: current_oee {
-  hidden:  yes
-  label: "Current OEE Table"
-  description: "Automatic OEE Dataset in Snowflake"
-  join: iPad_Machine_Table {
-    sql_on: ${iPad_Machine_Table.machine_id} = ${current_oee.machine_id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: oee {
-  hidden:  yes
-  label: "Historical OEE Table"
-  description: "Static OEE Dataset in Snowflake"
-}
-
-explore: dispatch_info{
-  hidden:  yes
-  group_label: "Production"
-  label: "L2L Dispatch Data"
-  description: "The log of all L2L dispatches"
-  join: ltol_line {
-    type: left_outer
-    sql_on: ${ltol_line.line_id} = ${dispatch_info.MACHINE_LINE_ID} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: v_dispatch {
-  hidden: no
-  group_label: "Production"
-  label: "L2L Dispatch Data"
-  description: "The log of all L2L dispatches"
-}
-
-explore: ltol_pitch {
-  label: "L2L Production Pitch Data"
-  group_label: "Production"
-  description: "The Pitch hourly data from L2L"
-  join: ltol_line {
-    type: left_outer
-    sql_on: ${ltol_line.line_id} = ${ltol_pitch.line} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: assembly_build {
-  hidden: no
-  group_label: "Production"
-  label: "Production Assembly Data"
-  description: "NetSuite Header Level Assembly and Unbuild Data. Adding in the Unbuilds provides a better final number of what is produced."
-  always_filter: {
-    filters: {
-      field: scrap
-      value: "0"
-    }
-    filters: {
-      field: item.merchandise
-      value: "0"
-    }
-  }
-  join: item {
-    type: left_outer
-    sql_on: ${assembly_build.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
-  join: warehouse_location {
-    sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: max_machine_capacity {
-  hidden: yes
-  label: "Max Machine Capacity"
-  description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"
-}
-
-explore: project_config {
-  label: "Engineering Projects"
-  description: "Status of engineering projects"
-  hidden: yes
-  join: project_report {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${project_config.project_id} = ${project_report.project_id} ;;
-  }
-}
-
-explore: workorder_reconciliation {
-  label: "Assembly Build Reconcilation"
-  hidden: yes
-  description: "NetSuite Assembly Build consumed parts checked against the ideal consumption"
-  join: item {
-    type: left_outer
-    view_label: "Part Item Information"
-    relationship: many_to_one
-    sql_on: ${workorder_reconciliation.part_item_id} = ${item.item_id} ;;
-  }
-  join: assembly_build {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${workorder_reconciliation.assembly_build_id} = ${assembly_build.assembly_build_id} ;;
-  }
-}
-
-explore: warehouse_transfer {
-  label: "Warehouse Transactions"
-  group_label: "Production"
-  description: "Transactions by warehousing for bin and inventory transfers"
-  hidden: yes
-  join: warehouse_transfer_line {
-    type: inner
-    relationship: one_to_many
-    sql_on: ${warehouse_transfer.warehouse_transfer_id} = ${warehouse_transfer_line.warehouse_transfer_id} ;;
-  }
-  join: warehouse_location {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${warehouse_transfer.SHIPPING_LOCATION_ID} = ${warehouse_location.location_id} ;;
-  }
-  join: item {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${warehouse_transfer_line.item_id} = ${item.item_id} ;;
-  }
-}
-
-explore: v_fit {
-  hidden: yes
-  group_label: "Accounting"}
-explore: fit_problem {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_affirm {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_amazon {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_axomo {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_braintree {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_first_data {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_paypal {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_shopify_payment {
-  hidden: yes
-  group_label: "Accounting"}
-explore: v_fit_stripe {
-  hidden: yes
-  group_label: "Accounting"}
-
-
-explore: finance_bill{
-  hidden: yes
-  group_label: "Accounting"
-  label: "Finance Bill Items"
-  description: "A joined view of finance bill headers and bill line items"
-  join: finance_bill_line {
-    type: left_outer
-    sql_on: ${finance_bill.bill_id}=${finance_bill_line.bill_id} ;;
-    relationship: one_to_many
-    }
-  join: finance_bill_payment {
-    type:  inner
-    sql_on: ${finance_bill.bill_id}=${finance_bill_payment.bill_payment_id} ;;
-    relationship: one_to_one
-  }
-  join: finance_bill_payment_line {
-    type: full_outer
-    sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
-    relationship:  one_to_many
-  }
-}
-
-explore: inventory {
-  group_label: "Production"
-  label: "Current Inventory"
-  description: "Inventory positions, by item by location"
-  always_filter: {
-    filters: {field: warehouse_location.location_Active      value: "No"}}
-  join: item {
-    type: left_outer
-    sql_on: ${inventory.item_id} = ${item.item_id} ;;
-    relationship: many_to_one}
-  join: warehouse_location {
-    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
-    relationship: many_to_one}
-}
-
-explore: inventory_snap {
-  group_label: "Production"
-  label: "Historical Inventory"
-  description: "Inventory positions, by item by location over time"
-  always_filter: {
-    filters: {field: warehouse_location.location_Active      value: "No"}}
-  join: item {
-    type: left_outer
-    sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
-    relationship: many_to_one}
-  join: warehouse_location {
-    sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
-    relationship: many_to_one}
-}
-
-explore: production_goal {
-  group_label: "Production"
-  label: "Production Goals"
-  description: "Production goals by forecast date, item, etc"
-  join: production_goal_by_item {
-    type: left_outer
-    sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
-    relationship: one_to_many}
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${production_goal_by_item.item_id} = ${item.item_id} and ${production_goal_by_item.sku_id} = ${item.sku_id} ;;
-    relationship: many_to_one }
-}
-
-explore: inventory_available_report {
-  hidden: yes
-  group_label: "Production"
-  label: "Invnetory Available Report"
-  description: "A Inventory Available Report created for Mike S./Andrew C."
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${inventory_available_report.sku_id} = ${item.sku_id} ;;
-    relationship: many_to_one }
-}
-
-explore: inventory_adjustment {
-  group_label: "Production"
-  label: "Inventory Adjustment"
-  description: "Inventory Adjustment by Item, Line, etc"
-  join: inventory_adjustment_line {
-    type: left_outer
-    sql_on: ${inventory_adjustment.inventory_adjustment_id} = ${inventory_adjustment_line.inventory_adjustment_id} ;;
-    relationship: one_to_many }
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on:  ${inventory_adjustment_line.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: bom_demand_matrix {
-  hidden:  yes
-  group_label: "Production"
-  label: "Bom Demand Matrix"
-  description: "Number of products we can currently build with remaining components/resources"
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${bom_demand_matrix.item_id} = ${item.item_id} ;;
-    relationship: one_to_one
-  }
-}
-
-explore: buildable_quantity {
-  hidden: yes
-  group_label: "Production"
-  label: "Buildable Quantity"
-  description: "Number of products we can currently build with remaining components/resources"
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${buildable_quantity.item_id} = ${item.item_id} ;;
-    relationship: one_to_one
-  }
-  join: bom_demand_matrix {
-    view_label: "Buildable Quantity"
-    type: left_outer
-    sql_on: ${buildable_quantity.item_id} = ${bom_demand_matrix.component_id} ;;
-    relationship: one_to_one
-  }
-}
-
-explore: l2_l_checklist_answers {hidden: yes}
-explore: l2_l_checklists {hidden: yes}
-explore: l2l_qpc_mattress_audit {hidden: yes}
-explore: l2l_quality_yellow_card {hidden: yes}
-explore: l2l_shift_line_1_glue_process {hidden: yes}
-explore: l2l_machine_downtime {hidden: yes}
-explore: inventory_reconciliation { hidden: yes}
-explore: po_and_to_inbound {hidden: yes}
-explore: inventory_recon_sub_locations {hidden:yes}
-explore: change_mgmt {hidden:yes}
-explore: outbound {hidden:yes}
-explore: pilot_daily_report {hidden:yes}
-explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
-#  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
-# explore: mainchain_transaction_outwards_detail {hidden:yes
-#   join: sales_order{
-#     type: left_outer
-#     sql_on: ${sales_order.tranid} = ${mainchain_transaction_outwards_detail.tranid} ;;
-#     relationship: many_to_one}
-#   join: item {
-#     type: left_outer
-#     sql_on: ${item.sku_id} = ${mainchain_transaction_outwards_detail.sku_id} ;;
-#     relationship: one_to_many}
-#  join: sales_order_line {
-#    type: left_outer
-#    sql_on: ${item.item_id} = ${sales_order_line.item_id} and ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
-#    relationship:many_to_one}
-#  }
-
-explore: v_demand_planning {
-  hidden: yes
-  view_label: "Demand Planning"
-  label: "Demand Planning"
-  description: ""
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${v_demand_planning.item_id} = ${item.item_id} ;;
-    relationship: many_to_one
-  }
-  join: inventory {
-    type: left_outer
-    sql_on: ${v_demand_planning.item_id} = ${inventory.item_id} ;;
-    relationship: many_to_one
-  }
-  join: warehouse_location {
-    sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
-    relationship: many_to_one
-  }
-}
-
-explore: v_usertime_minutes {
-  hidden: yes
-  view_label: "Usertime"
-  label: "Usertime"
-  description: "Shows the amount of time and line an operator worked"
-}
-
-explore: machine {
-  hidden: yes
-  join: l2l_machine_downtime {
-    type: left_outer
-    sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
-    relationship: one_to_many
-  }
-}
+# I moved the Accounting Explores to Accounting.lkml -- Blake
 
 #-------------------------------------------------------------------
 #
@@ -429,7 +71,7 @@ explore: machine {
 #
 #-------------------------------------------------------------------
 
-# I moved the Operations Explores to Operations.lkml
+# I moved the Operations Explores to Operations.lkml -- Blake
 
 #-------------------------------------------------------------------
 #
@@ -437,7 +79,7 @@ explore: machine {
 #
 #-------------------------------------------------------------------
 
-# I moved the Marketing Explores to Marketing.lkml
+# I moved the Marketing Explores to Marketing.lkml -- Blake
 
 #-------------------------------------------------------------------
 #
@@ -445,7 +87,7 @@ explore: machine {
 #
 #-------------------------------------------------------------------
 
-# I moved the Customer Care Explores to customer_care.lkml
+# I moved the Customer Care Explores to customer_care.lkml -- Blake
 
 #-------------------------------------------------------------------
 
@@ -1487,7 +1129,7 @@ explore: procom_security_daily_customer {
 # Old/Bad Explores
 #-------------------------------------------------------------------
 
-
+# I moved the Old/Bad Explores to Old_or_Bad.lkml -- Blake
 
     explore: russ_order_validation {
       label: "Order Validation"
