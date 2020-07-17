@@ -120,6 +120,31 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+explore: email_mymove_contact {
+  #don't use this, use the one above
+  hidden: yes
+  join: sales_order {
+    type: left_outer
+    sql_on: ${sales_order.email} = ${email_mymove_contact.email} ;;
+    relationship: many_to_one
+  }
+  join: sales_order_line_base {
+    type: left_outer
+    sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+    relationship: one_to_many
+  }
+  join: item {
+    type: left_outer
+    sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+    relationship: many_to_one
+  }
+  join: order_flag {
+    type: left_outer
+    sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+    relationship: many_to_one
+  }
+}
+
   explore: cordial_bulk_message {
     group_label: "Cordial"
     hidden: yes
