@@ -96,17 +96,11 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: email_mymove_contact {
+  explore: email_contact_merged {
     hidden: yes
-    group_label: "Marketing"
-    join: email_fluent_contact {
-      type: full_outer
-      sql_on: ${email_mymove_contact.email} = ${email_fluent_contact.email} ;;
-      relationship: one_to_one
-    }
     join: sales_order {
       type: left_outer
-      sql_on: ${sales_order.email} = NVL(${email_mymove_contact.email},${email_fluent_contact.email}) ;;
+      sql_on: ${sales_order.email} = ${email_contact_merged.email} ;;
       relationship: many_to_one
     }
     join: sales_order_line_base {
