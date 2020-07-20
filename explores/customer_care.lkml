@@ -290,4 +290,3 @@ include: "/dashboards/**/*.dashboard"
   explore: zendesk_sell_user {hidden:yes group_label: "Customer Care"}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
   explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
-  explore: v_ns_deleted_lines {hidden: yes group_label:"Customer Care" }
