@@ -6,7 +6,7 @@ view: first_order_flag {
         from
         (select order_id
                 ,system
-                ,rank() over (partition by email order by trandate) order_sequence
+                ,rank() over (partition by email order by created) order_sequence
         from sales_order
         where channel_id = 1)  ;; }
 
