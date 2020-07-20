@@ -48,6 +48,12 @@ view: email_contact_merged {
     sql:  ${TABLE}.zipcode ;;
   }
 
+  dimension: before {
+    label: "Before Netsuite"
+    type: yesno
+    sql: ${created_date} < ${sales_order.created_date} ;;
+  }
+
   measure: count {
     type: count_distinct
     sql: ${email} ;;
