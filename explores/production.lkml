@@ -275,7 +275,6 @@ include: "/dashboards/**/*.dashboard"
   explore: po_and_to_inbound {hidden: yes group_label: "Production"}
   explore: inventory_recon_sub_locations {hidden:yes group_label: "Production"}
   explore: change_mgmt {hidden:yes group_label: "Production"}
-  explore: outbound {hidden:yes group_label: "Production"}
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
