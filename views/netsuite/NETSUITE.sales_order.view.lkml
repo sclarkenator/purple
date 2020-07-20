@@ -376,7 +376,7 @@ view: sales_order {
 
   dimension: payment_method_flag {
     label: "     * Is Financed"
-    description: "For Shopify-US orders only. Payment with Affirm or Progressive.
+    description: "For Shopify-US orders only. Payment with Affirm, Progressive, Splitit, or Zibby.
       Source: netsuite.sales_order"
     type: yesno
     sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
