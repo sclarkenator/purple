@@ -51,7 +51,7 @@ view: email_contact_merged {
   dimension: before {
     label: "Before Netsuite"
     type: yesno
-    sql: ${created_date} < ${sales_order.created_date} ;;
+    sql: ${created_date} < nvl(${sales_order.created_date},'2090-01-01') ;;
   }
 
   measure: count {
