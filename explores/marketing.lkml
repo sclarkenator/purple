@@ -192,10 +192,6 @@ explore: email_mymove_contact {
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
-  explore: narvar_dashboard_clicks_by_campaign {hidden: yes group_label: "Marketing" label: "Narvar clicks by campaign"}
-  explore: narvar_dashboard_emails_accepted_by_campaign {hidden: yes group_label: "Marketing" label: "Narvar emails accepted by campaign"}
-  explore: narvar_dashboard_notification_clicks_by_category {hidden: yes group_label: "Marketing" label: "Narvar clicks by category"}
-  explore: narvar_dashboard_notify_metrics {hidden: yes group_label: "Marketing" label: "Narvar notify metrics"}
   explore: narvar_customer_feedback {hidden: no group_label: "Marketing" label: "Narvar customer feedback"}
 
 #-------------------------------------------------------------------
