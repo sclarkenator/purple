@@ -431,9 +431,9 @@ view: sales_order_line_base {
   }
 
   dimension_group: current {
-    view_label: "Geography"
+    view_label: "Sales Order"
     label: "    Current"
-    description:  "Current Time/Date for calculations. Source: netsuite.sales_order_line"
+    description:  "Current Time/Date for calculations. Source: looker.calculation"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
