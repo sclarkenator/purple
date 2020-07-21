@@ -451,6 +451,8 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
   explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
   explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
