@@ -54,7 +54,7 @@ view: cc_deals {
     type:  string
     sql: case when ${TABLE}.source_name ilike ('%chat%') then 'chat'
       when ${TABLE}.source_name ilike ('%call%') or ${TABLE}.source_name in ('Magazine Ad','Transfer from Support') then 'call'
-      when ${TABLE}.source_name ilike ('%email%') or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk')
+      when ${TABLE}.source_name ilike ('%email%') or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk','MyMOVE')
         or ${TABLE}.source_name ilike ('%facebook%')  then 'email'
       else 'other' end;;
   }
