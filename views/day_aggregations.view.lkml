@@ -490,6 +490,22 @@ view: day_aggregations {
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_amount;; }
 
+  measure: dtc_amount_before_today{
+    label: "DTC Amount Before T"
+    hidden: yes
+    description: "Total DTC sales aggregated to the day."
+    type: sum
+    filters: [date_date: "before today"]
+    value_format: "$#,##0"
+    sql: ${TABLE}.dtc_amount;; }
+
+  measure: dtc_amount_before_today_null{
+    label: "DTC Amount Before Today"
+    description: "Total DTC sales aggregated to the day."
+    type: number
+    value_format: "$#,##0"
+    sql: NULLIF(${dtc_amount_before_today},0);; }
+
   measure: dtc_units {
     label: "DTC Units"
     description: "Total DTC units aggregated to the day."

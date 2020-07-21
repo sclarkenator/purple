@@ -5,7 +5,7 @@
   connection: "analytics_warehouse"
     include: "/views/**/*.view"
     include: "/dashboards/**/*.dashboard"
-    include: "/explores/**/*.lkml"
+    include: "/explores/*.explore"
 
 week_start_day: monday
 
