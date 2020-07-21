@@ -1,6 +1,6 @@
 view: customer_order_history {
    derived_table: {
-    persist_for: "6 hours"
+#    persist_for: "6 hours"
     sql: select email
         ,min(trandate) first_order
         ,sum(case when gross_amt > 0 then 1 else 0 end) total_orders
@@ -38,4 +38,14 @@ group by 1
     datatype: timestamp
     sql: to_date(${TABLE}.first_order) ;;
    }
+
+    dimension: months_from_first_order {
+    label: "Mths since 1st"
+    view_label: "Customer"
+    group_label: " Advanced"
+    description: "Number of months since this customer, identfied by email address, made their first purchase"
+    type: number
+    sql: datediff(month,${first_order_date},${sales_order.trandate}) ;;
+  }
+
  }
