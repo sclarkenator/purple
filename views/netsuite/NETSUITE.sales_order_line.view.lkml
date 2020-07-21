@@ -20,7 +20,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     type:  average_distinct
     value_format: "#.0"
-    sql_distinct_key: ${fulfillment.PK};;
+    sql_distinct_key: ${item_order}||'-'||${fulfillment.PK};;
     sql: datediff(day,${TABLE}.created,${fulfilled_raw}) ;;
   }
 
