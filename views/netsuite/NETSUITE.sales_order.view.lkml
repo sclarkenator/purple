@@ -145,6 +145,15 @@ view: sales_order {
               when ${source} = 'Direct Entry' then 'Direct Entry'
               else 'Other' end ;;  }
 
+  dimension: months_from_first_order {
+    label: "Mths since 1st"
+    view_label: "Customer"
+    group_label: " Advanced"
+    description: "Number of months since this customer, identfied by email address, made their first purchase"
+    type: number
+    sql: datediff(months,${customer_order_history.SQL_TABLE_NAME.first_order},${TABLE}.trandate) ;;
+  }
+
   dimension: created {
     hidden: yes
     type: date_time

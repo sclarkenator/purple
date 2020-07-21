@@ -190,7 +190,7 @@ view: sales_order_line_base {
 
   dimension: city {
     label: "City"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     view_label: "Customer"
     description: "Source: netsuite.sales_order_line"
     type: string
@@ -205,7 +205,7 @@ view: sales_order_line_base {
 
   dimension: country {
     label: "Country"
-    group_label: "Customer address"
+    group_label: "  Customer Address"
     view_label: "Customer"
     hidden: yes
     type: string
@@ -781,7 +781,7 @@ view: sales_order_line_base {
 
   dimension: street_address {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     label: "Street Address"
     description: "Source: netsuite.sales_order_line"
     type: string
@@ -850,7 +850,7 @@ view: sales_order_line_base {
 
   dimension: state {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     description: "Source: netsuite.sales_order_line"
     type: string
     map_layer_name: us_states
@@ -859,7 +859,7 @@ view: sales_order_line_base {
 
   dimension: zip {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     label: "Zipcode (5)"
     description: "Source: netsuite.sales_order_line"
     type: zipcode

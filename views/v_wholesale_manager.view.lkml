@@ -4,7 +4,7 @@ view: v_wholesale_manager {
 
   dimension: account_manager {
     #hidden: yes
-    group_label: "Wholesale"
+    group_label: "  Wholesale"
     label: "Account Manager"
     description: "Wholesale - Taking the account manager from the customer account.
       Source:netsuite.v_wholesale_manager"
@@ -27,7 +27,7 @@ view: v_wholesale_manager {
 
   dimension: sales_manager {
     #hidden: yes
-    group_label: "Wholesale"
+    group_label: "  Wholesale"
     label: "Sales Manager"
     description: "Wholesale - Taking the sales manager from the customer account.
       Source:netsuite.v_wholesale_manager"

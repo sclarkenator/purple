@@ -415,7 +415,7 @@ WHERE TRANDATE >= '2020-06-02'::DATE
   }
 
   dimension: test_purchase {
-    group_label: " Advanced"
+    group_label: "Acquisition email test"
     label: "     * Made Purchase"
     description: "The customer in the A/B test made a purchase. Source: looker.calculation"
     type: yesno

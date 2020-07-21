@@ -2,7 +2,7 @@ view: customer_order_history {
    derived_table: {
     persist_for: "6 hours"
     sql: select email
-        ,min(created) first_order
+        ,min(trandate) first_order
         ,sum(case when gross_amt > 0 then 1 else 0 end) total_orders
 from sales_order
 group by 1
@@ -30,7 +30,7 @@ group by 1
 
    dimension_group: first_order {
     view_label: "Customer"
-    label: "First order"
+    label: " First order"
     description: "Date of customer's first order"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]

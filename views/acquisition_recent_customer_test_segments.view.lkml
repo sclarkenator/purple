@@ -11,7 +11,7 @@ view: acquisition_recent_customer_test_segments {
 
   dimension: segment {
     type: string
-    group_label: " Advanced"
+    group_label: "Acquisition email test"
     label: "Acquisition Test Segment"
     description: "Segments for acquisition recent customers June 2020. Analytics split the
     emails into A and B segments. Source: analytics.aquisitions_recent_customer_test_segments"
@@ -25,7 +25,7 @@ view: acquisition_recent_customer_test_segments {
   }
 
   dimension: test_purchase {
-    group_label: " Advanced"
+    group_label: "Acquisition email test"
     label: "     * Acquisition Test"
     description: "The customer is in the A/B test. Source: looker.calculation"
     type: yesno
