@@ -527,6 +527,22 @@ view: day_aggregations {
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.wholesale_amount;; }
 
+  measure: wholesale_amount_before_today{
+    label: "Wholesale Amount Before T"
+    hidden: yes
+    description: "Total Wholesale sales aggregated to the day."
+    type: sum
+    filters: [date_date: "before today"]
+    value_format: "$#,##0"
+    sql: ${TABLE}.wholesale_amount;; }
+
+  measure: wholesale_amount_before_today_null{
+    label: "Wholesale Amount Before Today"
+    description: "Total Wholesale sales aggregated to the day."
+    type: number
+    value_format: "$#,##0"
+    sql: NULLIF(${wholesale_amount_before_today},0);; }
+
   measure: wholesale_units {
     label: "Wholesale Units"
     description: "Total wholesale units aggregated to the day."
@@ -540,6 +556,22 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.retail_amount;; }
+
+  measure: retail_amount_before_today{
+    label: "Retail Amount Before T"
+    hidden: yes
+    description: "Total Retail sales aggregated to the day."
+    type: sum
+    filters: [date_date: "before today"]
+    value_format: "$#,##0"
+    sql: ${TABLE}.retail_amount;; }
+
+  measure: retail_amount_before_today_null{
+    label: "Retail Amount Before Today"
+    description: "Total Retail sales aggregated to the day."
+    type: number
+    value_format: "$#,##0"
+    sql: NULLIF(${retail_amount_before_today},0);; }
 
   measure: retail_units {
     label: "Retail Units"
@@ -638,6 +670,20 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
+
+  measure: total_target_amount {
+    label: "Total Target Amount"
+    description: "Total target from Daily Curve amount aggregated to the day. Retail, DTC, & Wholesale"
+    type: number
+    value_format: "$#,##0,\" K\""
+    sql: ${target_retail_amount}+${target_dtc_amount}+${target_wholesale_amount};; }
+
+  measure: total_gross_sales {
+    label: "Total Gross Sales"
+    description: "Total Gross Sales. Retail, DTC, & Wholesale"
+    type: number
+    value_format: "$#,##0,\" K\""
+    sql: ${retail_amount_before_today}+${dtc_amount_before_today}+${wholesale_amount_before_today};; }
 
   measure: dtc_nontrial_returns {
     label: "DTC Non-Trial Returns"
