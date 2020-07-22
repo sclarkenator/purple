@@ -190,6 +190,7 @@ sql_table_name: sales.forecast ;;
     label: "Forecasted DTC Discount"
     description: "Implied Discount Rate. Use only with DTC at SKU level. Calculation: 1-(total sales/hypothetical total sales at full price)"
     value_format: "0.0%"
+    hidden: yes
     type:  number
     sql: coalesce((1-(${total_amount}/nullif(${full_sales_amount},0))),0);; }
 
