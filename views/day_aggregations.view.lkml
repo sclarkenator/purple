@@ -159,12 +159,14 @@ view: day_aggregations_targets {
       column: dtc_target {}
       column: whlsl_target {}
       column: retail_target {}
+      column: insidesales_target {}
     }
   }
   dimension: date_date { type: date }
   measure: dtc_target { type: sum }
   measure: whlsl_target { type: sum }
   measure: retail_target { type: sum }
+  measure: insidesales_target { type: sum }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${date_date}, ${dtc_target}, ${whlsl_target}, ${retail_target}) ;;
@@ -352,6 +354,7 @@ view: day_aggregations {
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
         , targets.retail_target as target_retail_amount
+        , targets.insidesales_target as target_insidesales_amount
         , dtc_returns.total_trial_returns_completed_dollars as dtc_trial_returns
         , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
@@ -638,6 +641,15 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
+
+  measure: target_insidesales_amount {
+    label: "Target Insidesales Amount"
+    description: "Ramping percentage of DTC target.  Going from 5% to 15% by Dec 2020."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.target_insidesales_amount;; }
+
+  #target_insidesales_amount
 
   measure: dtc_nontrial_returns {
     label: "DTC Non-Trial Returns"
