@@ -5,6 +5,9 @@ view: customer_order_history {
         ,min(trandate) first_order
         ,sum(case when gross_amt > 0 then 1 else 0 end) total_orders
 from sales_order
+where (exchange = 'F' or exchange is null)
+and (is_upgrade = 'F' or is_upgrade is null)
+and (warranty = 'F' or warranty is null)
 group by 1
        ;;
    }
