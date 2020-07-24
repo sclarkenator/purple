@@ -5,6 +5,9 @@ view: customer_order_history {
         ,min(trandate) first_order
         ,sum(case when gross_amt > 0 then 1 else 0 end) total_orders
 from sales_order
+where (exchange = 'F' or exchange is null)
+and (is_upgrade = 'F' or is_upgrade is null)
+and (warranty = 'F' or warranty is null)
 group by 1
        ;;
    }
@@ -24,8 +27,8 @@ group by 1
     label: "# of orders"
     group_label: " Advanced"
     description: "The total number of non-zero-dollar orders for each customer"
-    type: number
-    sql: ${TABLE}.total_orders ;;
+    type: string
+    sql: case when ${TABLE}.total_orders < 5 then ${TABLE}.total_orders::string else '5+' end;;
     }
 
    dimension_group: first_order {

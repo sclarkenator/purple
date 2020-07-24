@@ -118,6 +118,11 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${sales_order.email} = ${customer_order_history.email} ;;
       relationship: many_to_one}
+    join: customer_first_order {
+      view_label: "Customer"
+      type:  left_outer
+      sql_on: ${sales_order.email} = ${customer_first_order.email} ;;
+      relationship: many_to_one}
     join: retroactive_discount {
       view_label: "Retro Discounts"
       type: left_outer
