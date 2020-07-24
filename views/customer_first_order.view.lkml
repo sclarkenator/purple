@@ -43,16 +43,16 @@ view: customer_first_order {
  }
 
   dimension: first_category {
-    label: "Initial category"
-    description: "The category the customer primarily purchased on their first order. If purchased multiple, the category with the highest initial $ value is used."
+    label: "Initial Category"
+    description: "The category the customer primarily purchased on their first order. If purchased multiple, the category with the highest initial $ value is used. Source: looker.calculation"
     view_label: "Customer"
     group_label: " Advanced"
     type: string
     sql: ${TABLE}.category ;;
   }
   dimension: first_category_model {
-    label: "Initial model"
-    description: "The category and model the customer primarily purchased on their first order. If purchased multiple, the model with the highest initial $ value is used."
+    label: "Initial Model"
+    description: "The category and model the customer primarily purchased on their first order. If purchased multiple, the model with the highest initial $ value is used. Source: looker.calculation"
     view_label: "Customer"
     group_label: " Advanced"
     type: string

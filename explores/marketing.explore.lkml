@@ -82,6 +82,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: cordial_activity {
+    hidden: yes
     group_label: "Marketing"
     label: "Email (cordial)"
     join: cordial_message_analytic {
@@ -192,7 +193,7 @@ explore: email_mymove_contact {
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
-  explore: narvar_customer_feedback {hidden: no group_label: "Marketing" label: "Narvar customer feedback"}
+  explore: narvar_customer_feedback {hidden: yes group_label: "Marketing" label: "Narvar customer feedback"}
 
 #-------------------------------------------------------------------
 #
