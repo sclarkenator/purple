@@ -299,7 +299,7 @@ view: day_agg_prod_goal {
     }
   }
   dimension: units_fg_produced { type: number }
-  dimension: forecast_date { type: date }
+  dimension: forecast_date { type: date primary_key: yes}
 }
 
 #if(${assembly_build.produced_week}<date(2019,04,29),5800,
