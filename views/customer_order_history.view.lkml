@@ -24,8 +24,8 @@ group by 1
     label: "# of orders"
     group_label: " Advanced"
     description: "The total number of non-zero-dollar orders for each customer"
-    type: number
-    sql: ${TABLE}.total_orders ;;
+    type: string
+    sql: case when ${TABLE}.total_orders < 5 then ${TABLE}.total_orders::string else '5+' end;;
     }
 
    dimension_group: first_order {
