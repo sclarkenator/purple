@@ -362,4 +362,27 @@ view: daily_adspend {
       else: "Other"
     }
   }
+
+  dimension: product_focus{
+    hidden: no
+    label: "Product focus"
+    description: "Product category being advertised. Defaults to MATTRESS if no specific category is mentioned in the campaign description."
+    group_label: "Advanced"
+    sql: case when campaign_name ilike '%acc%' then 'BEDDING'
+                when campaign_name ilike '%protector%' then 'BEDDING'
+                when campaign_name ilike '%heet%' then 'BEDDING'
+                when campaign_name ilike '%matt%' then 'MATTRESS'
+                when campaign_name ilike '%illo%' then 'BEDDING'
+                when campaign_name ilike '%armony%' then 'BEDDING'
+                when campaign_name ilike '%ushio%' then 'SEATING'
+                when campaign_name ilike '%desk%' then 'SEATING'
+                when campaign_name ilike '%et b%' then 'PET'
+                when campaign_name ilike '%bedd%' then 'BEDDING'
+                when campaign_name ilike '%rame%' then 'BASE'
+                when campaign_name ilike '%platform%' then 'BASE'
+                when campaign_name ilike '%foundati%' then 'BASE'
+                when campaign_name ilike '%blanket%' then 'BEDDING'
+                when campaign_name ilike '%mask%' then 'MASK'
+                when campaign_name ilike '%bed%' then 'MATTRESS'
+                else 'MATTRESS' end ;;  }
 }
