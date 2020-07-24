@@ -206,6 +206,7 @@ view: daily_adspend {
     type:  string
     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
+        when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
         else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
@@ -237,10 +238,10 @@ view: daily_adspend {
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','POSTIE','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA','MYMOVE-LLC')
+      when: {sql: ${TABLE}.platform in ('TV','HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE');; label: "native" }
-      when: {sql: ${spend_platform} = 'AFFILIATE' ;; label: "affiliate" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE','MYMOVE-LLC','POSTIE') ;; label: "affiliate" }
       else: "other" }
   }
 
