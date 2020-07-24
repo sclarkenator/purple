@@ -3,7 +3,8 @@ view: cc_activities {
   sql:
     --calls (RPT Skills/Incontact)
     select 'call' as activity_type
-        , case when c.campaign = 'Sales Team Phone' and c.skill <> 'Sales Xfer (From Support)' then 'sales' else 'support' end as team
+        , case when c.campaign = 'Sales Team Phone' --and c.skill <> 'Sales Xfer (From Support)'
+          then 'sales' else 'support' end as team
         , c.contacted as created
         , a.name as agent_name
         , a.email as agent_email
@@ -11,9 +12,14 @@ view: cc_activities {
         , case when c.handle_time > 0 then 'F' else 'T' end as missed
         , c.skill
         , null as email
-    from customer_care.rpt_skill_with_disposition_count c
+    from (
+      select row_number () over (partition by c.contacted, c.contact_id order by agent_id desc) as rownum
+          , c.*
+      from customer_care.rpt_skill_with_disposition_count c
+      )  c
     left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
-    --where c.contacted::date between '2020-06-01' and '2020-06-30'
+    where c.rownum = 1
+    --and c.contacted::date between '2020-06-01' and '2020-06-30'
     union
 
     --chats (zendesk tickets)
