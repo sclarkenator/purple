@@ -499,6 +499,18 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
       type: left_outer
       relationship: many_to_one}
+    join: dma {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${mattress_firm_store_details.zipcode} = ${dma.zip} ;;
+      relationship: many_to_many
+      fields: [dma.dma_name]}
+    join: zcta5 {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${mattress_firm_store_details.zipcode} = (${zcta5.zipcode}) AND ${mattress_firm_store_details.state} = ${zcta5.state};;
+      relationship: many_to_one
+      fields: [zcta5.fulfillment_region_1]}
   }
 
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
