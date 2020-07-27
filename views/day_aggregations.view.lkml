@@ -273,16 +273,29 @@ view: day_aggregations_adspend_target {
 
 view: day_aggregations_sessions {
   derived_table: {
-    explore_source: all_events {
-      column: time_date { field: sessions.time_date }
-      column: count { field: sessions.count }
-      column: Sum_non_bounced_session { field: heap_page_views.Sum_non_bounced_session }
+    explore_source: heap_page_views {
+      column: event_time_date {}
+      column: count {}
+      column: Sum_non_bounced_session {}
     }
   }
-  dimension: time_date { type: date }
-  dimension: count { type: number }
-  dimension: Sum_non_bounced_session { type: number }
+  dimension: event_time_date {type: date}
+  dimension: count {type: number}
+  dimension: Sum_non_bounced_session {type: number}
 }
+
+# view: day_aggregations_sessions {
+#   derived_table: {
+#     explore_source: all_events {
+#       column: time_date { field: sessions.time_date }
+#       column: count { field: sessions.count }
+#       column: Sum_non_bounced_session { field: heap_page_views.Sum_non_bounced_session }
+#     }
+#   }
+#   dimension: time_date { type: date }
+#   dimension: count { type: number }
+#   dimension: Sum_non_bounced_session { type: number }
+# }
 
 ######################################################
 #   Production Goal
@@ -389,7 +402,7 @@ view: day_aggregations {
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
       left join ${day_aggregation_dtc_orders.SQL_TABLE_NAME} dtc_orders on dtc_orders.created_date::date = d.date
-      left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
+      left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;

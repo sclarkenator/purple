@@ -103,6 +103,11 @@ view: heap_page_views {
     sql: ${TABLE}.path ;;
   }
 
+  measure: count {
+    type: count_distinct
+    sql: ${session_id};;
+    view_label: "Sessions" }
+
   measure: Sum_bounced_session {
     type: count_distinct
     sql: ${session_id};;
