@@ -1175,4 +1175,12 @@ view: order_flag {
     type:  number
     sql: ${TABLE}.room_set ;; }
 
+  dimension: portcushtwobund_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 20"
+    description: "1/0 per order; 1 if the order contains at least (2) Portable Cushions. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.portcushtwobund_flg=1 ;; }
+
 }
