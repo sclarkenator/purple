@@ -7,7 +7,6 @@ view: pageviews_bounced_pdt {
         column: percent_qualified {}
         column: count {}
         column: session_time_year {}
-#         column: session_time_week_of_year {}
         filters: {
           field: heap_page_views.session_time_date
           value: "after 2019/01/01"
@@ -21,7 +20,6 @@ view: pageviews_bounced_pdt {
       group_label: "Session Time"
     }
     dimension_group: session {
-      #primary_key: yes
       group_label: "Session Time"
       label: "Session Time"
       description: "Time the Session Began"
@@ -33,10 +31,6 @@ view: pageviews_bounced_pdt {
       description: "Time the Session Began"
       type: date_year
     }
-#     dimension: session_time_week_of_year {
-#       description: "Time the Session Began"
-#       type: date_week_of_year
-#     }
     dimension: Sum_non_bounced_session {
       hidden: yes
       type: number
