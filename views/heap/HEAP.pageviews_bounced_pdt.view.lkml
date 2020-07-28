@@ -5,19 +5,38 @@ view: pageviews_bounced_pdt {
         column: Sum_non_bounced_session {}
         column: Sum_bounced_session {}
         column: percent_qualified {}
+        column: count {}
+        column: session_time_year {}
+#         column: session_time_week_of_year {}
         filters: {
           field: heap_page_views.session_time_date
-          value: "52 weeks ago for 52 weeks"
+          value: "after 2019/01/01"
         }
       }
       datagroup_trigger: pdt_refresh_6am
     }
-
     dimension: session_time_week {
       primary_key: yes
-      description: "Time the Session Began"
-      type: date_week
+      hidden: yes
+      group_label: "Session Time"
     }
+    dimension_group: session {
+      #primary_key: yes
+      group_label: "Session Time"
+      label: "Session Time"
+      description: "Time the Session Began"
+      type: time
+      timeframes: [week,week_of_year]
+      sql: ${TABLE}.session_time_week ;;
+    }
+    dimension: session_time_year {
+      description: "Time the Session Began"
+      type: date_year
+    }
+#     dimension: session_time_week_of_year {
+#       description: "Time the Session Began"
+#       type: date_week_of_year
+#     }
     dimension: Sum_non_bounced_session {
       hidden: yes
       type: number
@@ -30,6 +49,14 @@ view: pageviews_bounced_pdt {
       hidden: yes
       value_format: "#,##0.0%"
       type: number
+    }
+    dimension: count {
+      hidden:  yes
+    }
+    measure: session_count {
+      label: "Session Count"
+      type: sum
+      sql: ${count} ;;
     }
     measure: total_non_bounced_session {
       label: "Sessions Total Non Bounced Session"
