@@ -1,5 +1,18 @@
 view: shopify_orders {
-  sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
+  #sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
+  derived_table: {
+    sql:  select
+        ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_us_ft."ORDER"
+      UNION
+      select
+        ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_ca_ft."ORDER"
+      UNION
+      select
+        ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_outlet."ORDER";;
+  }
 
   dimension: id {
     primary_key: yes

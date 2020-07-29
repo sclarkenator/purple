@@ -159,12 +159,14 @@ view: day_aggregations_targets {
       column: dtc_target {}
       column: whlsl_target {}
       column: retail_target {}
+      column: insidesales_target {}
     }
   }
   dimension: date_date { type: date }
   measure: dtc_target { type: sum }
   measure: whlsl_target { type: sum }
   measure: retail_target { type: sum }
+  measure: insidesales_target { type: sum }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${date_date}, ${dtc_target}, ${whlsl_target}, ${retail_target}) ;;
@@ -271,16 +273,29 @@ view: day_aggregations_adspend_target {
 
 view: day_aggregations_sessions {
   derived_table: {
-    explore_source: all_events {
-      column: time_date { field: sessions.time_date }
-      column: count { field: sessions.count }
-      column: Sum_non_bounced_session { field: heap_page_views.Sum_non_bounced_session }
+    explore_source: heap_page_views {
+      column: event_time_date {}
+      column: count {}
+      column: Sum_non_bounced_session {}
     }
   }
-  dimension: time_date { type: date }
-  dimension: count { type: number }
-  dimension: Sum_non_bounced_session { type: number }
+  dimension: event_time_date {type: date}
+  dimension: count {type: number}
+  dimension: Sum_non_bounced_session {type: number}
 }
+
+# view: day_aggregations_sessions {
+#   derived_table: {
+#     explore_source: all_events {
+#       column: time_date { field: sessions.time_date }
+#       column: count { field: sessions.count }
+#       column: Sum_non_bounced_session { field: heap_page_views.Sum_non_bounced_session }
+#     }
+#   }
+#   dimension: time_date { type: date }
+#   dimension: count { type: number }
+#   dimension: Sum_non_bounced_session { type: number }
+# }
 
 ######################################################
 #   Production Goal
@@ -297,7 +312,7 @@ view: day_agg_prod_goal {
     }
   }
   dimension: units_fg_produced { type: number }
-  dimension: forecast_date { type: date }
+  dimension: forecast_date { type: date primary_key: yes}
 }
 
 #if(${assembly_build.produced_week}<date(2019,04,29),5800,
@@ -352,6 +367,7 @@ view: day_aggregations {
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
         , targets.retail_target as target_retail_amount
+        , targets.insidesales_target as target_insidesales_amount
         , dtc_returns.total_trial_returns_completed_dollars as dtc_trial_returns
         , dtc_returns.total_non_trial_returns_completed_dollars as dtc_nontrial_returns
         , dtc_cancels.amt_cancelled_and_refunded as dtc_refunds
@@ -386,7 +402,7 @@ view: day_aggregations {
       left join ${day_aggregations_dtc_cancels.SQL_TABLE_NAME} dtc_cancels on dtc_cancels.cancelled_date::date = d.date
       left join ${day_aggregations_adspend_target.SQL_TABLE_NAME} adspend_target on adspend_target.date_date::date = d.date
       left join ${day_aggregation_dtc_orders.SQL_TABLE_NAME} dtc_orders on dtc_orders.created_date::date = d.date
-      left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.time_date::date = d.date
+      left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
@@ -527,6 +543,22 @@ view: day_aggregations {
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.wholesale_amount;; }
 
+  measure: wholesale_amount_before_today{
+    label: "Wholesale Amount Before T"
+    hidden: yes
+    description: "Total Wholesale sales aggregated to the day."
+    type: sum
+    filters: [date_date: "before today"]
+    value_format: "$#,##0"
+    sql: ${TABLE}.wholesale_amount;; }
+
+  measure: wholesale_amount_before_today_null{
+    label: "Wholesale Amount Before Today"
+    description: "Total Wholesale sales aggregated to the day."
+    type: number
+    value_format: "$#,##0"
+    sql: NULLIF(${wholesale_amount_before_today},0);; }
+
   measure: wholesale_units {
     label: "Wholesale Units"
     description: "Total wholesale units aggregated to the day."
@@ -540,6 +572,22 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.retail_amount;; }
+
+  measure: retail_amount_before_today{
+    label: "Retail Amount Before T"
+    hidden: yes
+    description: "Total Retail sales aggregated to the day."
+    type: sum
+    filters: [date_date: "before today"]
+    value_format: "$#,##0"
+    sql: ${TABLE}.retail_amount;; }
+
+  measure: retail_amount_before_today_null{
+    label: "Retail Amount Before Today"
+    description: "Total Retail sales aggregated to the day."
+    type: number
+    value_format: "$#,##0"
+    sql: NULLIF(${retail_amount_before_today},0);; }
 
   measure: retail_units {
     label: "Retail Units"
@@ -638,6 +686,28 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
+
+
+  measure: target_insidesales_amount {
+    label: "Target Insidesales Amount"
+    description: "Ramping percentage of DTC target.  Going from 5% to 15% by Dec 2020."
+    type: sum
+    value_format: "$#,##0,\" K\""
+    sql: ${TABLE}.target_insidesales_amount;; }
+
+  measure: total_target_amount {
+    label: "Total Target Amount"
+    description: "Total target from Daily Curve amount aggregated to the day. Retail, DTC, & Wholesale"
+    type: number
+    value_format: "$#,##0,\" K\""
+    sql: ${target_retail_amount}+${target_dtc_amount}+${target_wholesale_amount};; }
+
+  measure: total_gross_sales {
+    label: "Total Gross Sales"
+    description: "Total Gross Sales. Retail, DTC, & Wholesale"
+    type: number
+    value_format: "$#,##0,\" K\""
+    sql: ${retail_amount_before_today}+${dtc_amount_before_today}+${wholesale_amount_before_today};; }
 
   measure: dtc_nontrial_returns {
     label: "DTC Non-Trial Returns"

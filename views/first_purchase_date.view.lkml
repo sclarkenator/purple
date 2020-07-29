@@ -17,6 +17,7 @@ view: first_purchase_date {
         }
 
         dimension: first_order_date {
+          hidden:  yes
           label: "First Purchase Date"
           description: "Customers First Purchase Date.
             Source: netsuite.sales_order"
@@ -33,6 +34,7 @@ view: first_purchase_date {
           sql: ${TABLE}.last_order_date ;;  }
 
         dimension: customer_age_bucket {
+          hidden: yes
           label: "Customer Age Bucket"
           description: "Customer Age by <12 mon, 12-18 mon, 18-24 mon, 24+ mon.
             Source:netsuite.sales_order"
@@ -47,7 +49,7 @@ view: first_purchase_date {
 
         dimension: order_count {
           label: "Order Count"
-          hidden: no
+          hidden: yes
           description: "Count of Orders by Customer Email. Source: looker.calculation"
           view_label: "Sales Order"
           group_label: " Advanced"

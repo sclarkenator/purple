@@ -30,7 +30,7 @@ view: sales_order {
     sql: ${order_id} ;; }
 
   measure: unique_customers {
-    label: "Distinct customers"
+    label: "Distinct Customers"
     description: "Counts distinct email addresses in customer table.
       Source: netsuite.sales_order"
     view_label: "Customer"

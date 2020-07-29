@@ -69,6 +69,13 @@ include: "/dashboards/**/*.dashboard"
     join: warehouse_location {
       sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
       relationship: many_to_one
+      type: left_outer
+    }
+    join: day_agg_prod_goal {
+      type: full_outer
+      view_label: "Production Goal"
+      sql_on: ${assembly_build.produced_date} = ${day_agg_prod_goal.forecast_date} ;;
+      relationship: many_to_one
     }
   }
 

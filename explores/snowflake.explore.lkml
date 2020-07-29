@@ -1,6 +1,7 @@
 include: "/views/snowflake.*.view.lkml"
 
 explore: gsod {
+  hidden: yes
   from: sf_gsod
   join: zipcode_station {
     from: sf_zipcode_station
@@ -33,6 +34,7 @@ explore: gsod {
 }
 
 explore: zipcode_county {
+  hidden: yes
   from: sf_zipcode_county
   join: zipcode_facts {
     from: sf_zipcode_facts

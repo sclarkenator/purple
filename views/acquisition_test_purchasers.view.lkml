@@ -386,14 +386,14 @@ WHERE TRANDATE >= '2020-06-02'::DATE
     type: string
     hidden: yes
     sql: ${TABLE}.email ;;
-    description: "email address of people that have purchased as part of the acquisition test"
+    description: "email address of people that have purchased as part of the acquisition test. Source: looker.calculation"
   }
   measure:  email_count{
     type:  count_distinct
     group_label: " Advanced"
-    label: "Distinct email count"
+    label: "Distinct Email Count"
     sql: ${TABLE}.email ;;
-    description: "Distinct count of email addresses for acquisition test purchasers"
+    description: "Distinct count of email addresses for acquisition test purchasers. Source: looker.calculation"
   }
 
   # dimension: email_primary_key{

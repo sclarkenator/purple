@@ -21,7 +21,21 @@ dimension: shopify_id {
   description: "The Shopify ID for this agent. Source: incontact.agent_lkp"
   type:  number
   hidden: yes
+  sql: coalesce(${TABLE}.shopify_id_pos,${TABLE}.shopify_id) ;;
+}
+
+dimension: shopify_id_us {
+  description: "The Shopify ID for this agent. Source: incontact.agent_lkp"
+  type:  number
+  hidden: yes
   sql: ${TABLE}.shopify_id ;;
+}
+
+dimension: shopify_id_pos {
+  description: "The Shopify POS ID for this agent. Source: shopify_pos.agent_lkp"
+  type:  number
+  hidden: yes
+  sql: ${TABLE}.shopify_id_pos ;;
 }
 
 dimension: name {
