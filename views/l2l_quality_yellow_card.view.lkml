@@ -192,7 +192,8 @@ view: l2l_quality_yellow_card {
 
   measure: quantity {
     type: sum
-    sql: case when ${TABLE}."QUANTITY" >= 100 then 1 else ${TABLE}."QUANTITY" end ;;
+    sql: ${TABLE}."QUANTITY" ;;
+    #sql: case when ${TABLE}."QUANTITY" >= 100 then 1 else ${TABLE}."QUANTITY" end ;;
     }
 
   measure: count {

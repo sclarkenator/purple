@@ -456,7 +456,6 @@ view: sales_order_line_base {
     convert_tz: no
   }
 
-
   dimension: day_of_week {
     hidden:  yes
     label:  "Day of Week"
