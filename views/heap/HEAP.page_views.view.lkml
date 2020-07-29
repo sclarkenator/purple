@@ -104,6 +104,7 @@ view: heap_page_views {
   }
 
   measure: count {
+    hidden: yes
     type: count_distinct
     sql: ${session_id};;
     view_label: "Sessions" }
