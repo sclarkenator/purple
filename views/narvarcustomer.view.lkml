@@ -20,7 +20,7 @@ where b.order_id is not null ;;
     sql: ${TABLE}.carrier ;;
 }
   dimension: created{
-    type: date_time
+    type: date
     sql: ${TABLE}.created ;;
     }
     dimension: Comment{
