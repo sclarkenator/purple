@@ -19,10 +19,12 @@ where b.order_id is not null ;;
     type: string
     sql: ${TABLE}.carrier ;;
 }
-  dimension: created{
-    type: date
+  dimension_group: created{
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;;
     }
+
     dimension: Comment{
       type: string
       sql: ${TABLE}.customer_comment ;;
