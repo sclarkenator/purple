@@ -97,6 +97,9 @@ view: order_flag {
     -- Room Set Completion
      ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
 
+    -- For flagging an order based on UPT --
+     ,case when qty > 0 then qty else 0 end upt_dim
+
     FROM(
       select sol.order_id
         ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -174,6 +177,9 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
          ,sum(case when line = 'FOAM' then 1 else 0 end) purple_mattress
+
+    -- For flagging an order based on UPT --
+             ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
 
       from analytics.sales.sales_order_line sol
       left join analytics.sales.item on item.item_id = sol.item_id
@@ -1182,5 +1188,13 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.portcushtwobund_flg=1 ;; }
+
+  dimension: upt_filter {
+    group_label: "    * Orders has:"
+    label: " UPT - Filter "
+    description: "Filters to a specific UPT. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  number
+    sql:  ${TABLE}.upt_dim ;; }
 
 }
