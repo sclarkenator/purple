@@ -104,6 +104,7 @@ view: heap_page_views {
   }
 
   measure: count {
+    hidden: yes
     type: count_distinct
     sql: ${session_id};;
     view_label: "Sessions" }
@@ -119,6 +120,13 @@ view: heap_page_views {
     sql: ${session_id};;
     filters: [bounced: "no"]
     view_label: "Sessions" }
+
+  measure: Sum_non_bounced_session_ly {
+    type: count_distinct
+    sql: ${session_id};;
+    filters: [bounced: "no",session_time_date: "1 years ago",session_time_hour_of_day: "<= 2"]
+    view_label: "Sessions"
+    label: "Sum non Bounced Session LY"}
 
   measure: percent_qualified {
     type: number
