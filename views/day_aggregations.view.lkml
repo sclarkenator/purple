@@ -7,6 +7,8 @@ view: day_aggregations_dtc_sales {
       column: created_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
+      column: insidesales_sales {}
+      column: customer_care_sales {}
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
@@ -21,6 +23,8 @@ view: day_aggregations_dtc_sales {
     convert_tz: no datatype: timestamp }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
+  measure: insidesales_sales {type: sum}
+  measure: customer_care_sales {type: sum}
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${created_date_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
@@ -350,6 +354,8 @@ view: day_aggregations {
         , week.start_2020 as week_start_2020
         , dtc.total_gross_Amt_non_rounded as dtc_amount
         , dtc.total_units as dtc_units
+        , dtc.insidesales_sales as is_sales
+        , dtc.customer_care_sales as cc_sales
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
         , retail.total_gross_Amt_non_rounded as retail_amount
@@ -819,6 +825,22 @@ view: day_aggregations {
     type: number
     value_format: "$#,##0.00"
     sql: ${target_roas_sales}/${adspend_target} ;;
+  }
+
+  measure: is_sales {
+    label: "Sales - Inside Sales ($)"
+    description: "Gross Sales from Inside Sales Team (Does not include customer care)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.is_sales ;;
+  }
+
+  measure: cc_sales {
+    label: "Sales - Customer Care ($)"
+    description: "Gross Sales from Customer Care Team"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.cc_sales ;;
   }
 
 }
