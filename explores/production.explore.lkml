@@ -284,6 +284,7 @@ include: "/dashboards/**/*.dashboard"
   explore: change_mgmt {hidden:yes group_label: "Production"}
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
+  explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes
   #   join: sales_order{
