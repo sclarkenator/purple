@@ -830,7 +830,7 @@ view: day_aggregations {
   measure: is_sales {
     label: "Sales - Inside Sales ($)"
     description: "Gross Sales from Inside Sales Team (Does not include customer care)"
-    type: number
+    type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.is_sales ;;
   }
@@ -838,7 +838,7 @@ view: day_aggregations {
   measure: cc_sales {
     label: "Sales - Customer Care ($)"
     description: "Gross Sales from Customer Care Team"
-    type: number
+    type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.cc_sales ;;
   }
