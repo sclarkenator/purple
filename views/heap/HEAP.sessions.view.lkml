@@ -4,11 +4,11 @@
 #-------------------------------------------------------------------
 
 view: sessions {
-  derived_table: {
-    sql: select * from heap.sessions;;
-    datagroup_trigger: pdt_refresh_6am
-  }
-  #sql_table_name: heap.sessions ;;
+#   derived_table: {
+#     sql: select * from heap.sessions;;
+#     datagroup_trigger: pdt_refresh_6am
+#   }
+  sql_table_name: heap.sessions ;;
 
   dimension: session_id {
     #primary_key: yes
