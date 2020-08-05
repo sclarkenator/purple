@@ -399,6 +399,12 @@ access_grant: is_customer_care_manager{
         sql_on: ${qualtrics_survey.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
         relationship: one_to_many
         view_label: "Answer"}
+      join: hour_assumptions {
+        view_label: "Hour Assumptions"
+        type: left_outer
+        sql_on: ${ecommerce.time_hour_of_day} = ${hour_assumptions.hour};;
+        relationship: many_to_one
+      }
   }
 
 #-------------------------------------------------------------------
