@@ -26,21 +26,6 @@ view: receipt_line {
     sql: ${TABLE}."ACCOUNT" ;;
   }
 
-  dimension: amount {
-    group_label: " Advanced"
-    description: "Source: netsuite.receipt_line"
-    type: number
-    sql: ${TABLE}."AMOUNT" ;;
-  }
-
-  dimension: amount_foreign {
-    hidden:  yes
-    group_label: " Advanced"
-    description: "Source: netsuite.receipt_line"
-    type: number
-    sql: ${TABLE}."AMOUNT_FOREIGN" ;;
-  }
-
   dimension: company_id {
     group_label: " Advanced"
     description: "Source: netsuite.receipt_line"
@@ -121,13 +106,6 @@ view: receipt_line {
     description: "Source: netsuite.receipt_line"
     type: string
     sql: ${TABLE}."IS_LANDED_COST" ;;
-  }
-
-  dimension: item_count {
-    group_label: " Advanced"
-    description: "Source: netsuite.receipt_line"
-    type: number
-    sql: ${TABLE}."ITEM_COUNT" ;;
   }
 
   dimension: item_id {
@@ -213,9 +191,32 @@ view: receipt_line {
     sql: ${TABLE}."UNIT_OF_MEASURE" ;;
   }
 
+  measure: amount {
+    group_label: " Advanced"
+    description: "Source: netsuite.receipt_line"
+    type: sum
+    sql: ${TABLE}."AMOUNT" ;;
+  }
+
+  measure: amount_foreign {
+    hidden:  yes
+    group_label: " Advanced"
+    description: "Source: netsuite.receipt_line"
+    type: sum
+    sql: ${TABLE}."AMOUNT_FOREIGN" ;;
+  }
+
   measure: count {
     hidden: no
+    group_label: " Advanced"
     type: count
     drill_fields: [receipt_line_id]
+  }
+
+  measure: item_count {
+    group_label: " Advanced"
+    description: "Source: netsuite.receipt_line"
+    type: sum
+    sql: ${TABLE}."ITEM_COUNT" ;;
   }
 }

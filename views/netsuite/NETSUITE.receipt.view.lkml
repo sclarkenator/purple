@@ -58,13 +58,6 @@ view: receipt {
     sql: ${TABLE}."ENTITY_NAME" ;;
   }
 
-  dimension: exchange_rate {
-    group_label: " Advanced"
-    description: "Source: netsuite.receipt"
-    type: number
-    sql: ${TABLE}."EXCHANGE_RATE" ;;
-  }
-
   dimension_group: in_hand {
     description: "Source: netsuite.receipt"
     type: time
@@ -220,5 +213,12 @@ view: receipt {
     hidden:  no
     type: count
     drill_fields: [receipt_id, entity_name]
+  }
+
+  measure: exchange_rate {
+    group_label: " Advanced"
+    description: "Source: netsuite.receipt"
+    type: average
+    sql: ${TABLE}."EXCHANGE_RATE" ;;
   }
 }
