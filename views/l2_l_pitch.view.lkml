@@ -57,11 +57,14 @@ where z.row_num = 1;;
 
   dimension_group: created {
     type: time
-    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: createdby {
+    hidden: yes
     type: string
     sql: ${TABLE}."CREATEDBY" ;;
   }
@@ -107,24 +110,20 @@ where z.row_num = 1;;
   dimension_group: lastupdated {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."LASTUPDATED" ;;
   }
 
   dimension: lastupdatedby {
+    hidden: yes
     type: string
     sql: ${TABLE}."LASTUPDATEDBY" ;;
   }
 
   dimension: line {
+    hidden: yes
     type: number
     sql: ${TABLE}."LINE" ;;
   }
@@ -161,13 +160,17 @@ where z.row_num = 1;;
 
   dimension_group: pitch_end {
     type: time
-    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."PITCH_END" ;;
   }
 
   dimension_group: pitch_start {
     type: time
-    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."PITCH_START" ;;
   }
 
@@ -202,7 +205,9 @@ where z.row_num = 1;;
 
   dimension_group: shift_start {
     type: time
-    timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."SHIFT_START_DATE" ;;
   }
 
