@@ -49,12 +49,25 @@ include: "/dashboards/**/*.dashboard"
     join: item {
       view_label: "Item"
       type:  left_outer
-      sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id});;
+      sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id},${receipt_line.item_id});;
       relationship: many_to_one}
     join: vendor {
       type:  left_outer
       sql_on: ${purchase_order.entity_id} = ${vendor.vendor_id} ;;
       relationship: many_to_one}
+    join: receipt {
+      view_label: "Receipt"
+      type:  left_outer
+      sql_on: ${purcahse_and_transfer_ids.id} = ${receipt.original_transaction_id} ;;
+      relationship: many_to_many
+    }
+    join: receipt_line {
+      view_label: "Receipt Line"
+      type:  inner
+      sql_on: ${receipt.receipt_id} = ${receipt_line.receipt_id} and coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id}) = ${receipt_line.item_id}
+      ;;
+      relationship: one_to_many
+    }
   }
 
   explore: starship_fulfillment {

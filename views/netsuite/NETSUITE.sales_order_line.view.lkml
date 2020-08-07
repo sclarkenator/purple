@@ -12,6 +12,15 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
+  measure: asp {
+    hidden: yes
+    label: "ASP"
+    description: "Average Sales Price. Source: looker.calculation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${sales_order_line.total_gross_Amt_non_rounded}/${sales_order_line.total_units} ;;
+  }
+
   measure: avg_days_to_fulfill {
     group_label: "Average Days:"
     label: "to Fulfillment"
@@ -1483,6 +1492,32 @@ view: sales_order_line {
     label: "Max Gross Sales (units)"
     type: sum
     sql: max(${TABLE}.ordered_qty) over partition by ${item.sku_id} ;;
+  }
+
+  measure: insidesales_sales {
+    group_label: "Gross Sales"
+    description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
+    label: "Sales - Inside Sales Team ($)"
+    type: sum
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is not null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${gross_amt} else 0 end;;
+  }
+
+  measure: customer_care_sales {
+    group_label: "Gross Sales"
+    label: "Sales - Customer Care Team ($)"
+    description: "Summing Gross Sales where the order was from a customer care agent. Excluding warranties and exchanges."
+    type: sum
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${gross_amt} else 0 end;;
   }
 
   set: fulfill_details {
