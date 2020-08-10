@@ -110,7 +110,7 @@ view: sales_order {
 
   dimension: channel {
     label: "Channel Filter"
-    hidden: yes
+    hidden: no
     view_label: "Filters"
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
