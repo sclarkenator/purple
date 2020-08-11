@@ -119,6 +119,18 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: one_to_one
     }
+    join: actual_sales {
+      view_label: "Actual Sales"
+      sql_on: ${forecast_combined.date_month} = ${actual_sales.created_month} and ${forecast_combined.channel} = ${actual_sales.channel} and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
+      ;;
+      #
+      type: full_outer
+      relationship: many_to_many
+    }
+  }
+
+  explore:  actual_sales{
+    group_label: "Operations"
   }
 
   explore: forecast_combined_legacy {
