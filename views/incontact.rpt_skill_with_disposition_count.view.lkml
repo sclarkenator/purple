@@ -91,7 +91,14 @@ dimension: primary_key {
   dimension: hold_time {
     description: "Time customer was on hold (not in queue)"
     type: number
-    hidden: yes
+    hidden: no
+    sql: ${TABLE}."HOLD_TIME" ;;
+  }
+
+  dimension: hold_buckets {
+    type: tier
+    tiers: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600  ]
+    style: classic # the default value, could be excluded
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
@@ -153,10 +160,17 @@ dimension: primary_key {
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
+  measure: avg_talk_time {
+    type: average
+    value_format: "#,##0"
+    sql: nvl(${TABLE}."HANDLE_TIME",0) - nvl(${TABLE}."HOLD_TIME",0);;
+  }
+
   measure: avg_hold_time {
     hidden: no
     type: average
-    sql: nvl(${TABLE}."HOLD_TIME",0) ;;
+    sql: case when ${TABLE}."HOLD_TIME" > 0 then ${TABLE}."HOLD_TIME" end
+    ;;
   }
 
 
