@@ -37,7 +37,7 @@ view: mattress_firm_sales {
     primary_key: yes
     hidden: yes
     type: string
-    sql: nvl(${TABLE}.product_id,"000") ||'-'|| ${TABLE}.store ||'-'||${TABLE}.finalized_date;; }
+    sql: nvl(${TABLE}.product_id,"X") ||'-'|| ${TABLE}.store ||'-'||${TABLE}.finalized_date;; }
 
 
   dimension: mf_sku{
