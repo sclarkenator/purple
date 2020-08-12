@@ -505,8 +505,4 @@ view: users {
     type: count
   }
 
-  measure: distinct_users {
-    type: count_distinct
-  }
-
 }
