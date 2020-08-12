@@ -37,8 +37,8 @@ view: mattress_firm_sales {
     primary_key: yes
     hidden: yes
     type: string
-    sql: nvl(${TABLE}.product_id,"X") ||'-'|| ${TABLE}.store ||'-'||${TABLE}.finalized_date;; }
-
+    sql:${TABLE}.product_id ||'-'|| ${TABLE}.store ||'-'||${TABLE}.finalized_date;; }
+# I removed the nvl wrapper on product_id above nvl(product_id,"000") because I was getting an error. I don't have time to fix this right now. Scott
 
   dimension: mf_sku{
     hidden:  yes
