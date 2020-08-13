@@ -33,6 +33,7 @@ view: l2l_machine_downtime {
   }
 
   dimension: machine_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."MACHINE_ID" ;;
   }

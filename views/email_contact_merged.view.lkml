@@ -54,9 +54,15 @@ view: email_contact_merged {
     sql: ${created_date} < nvl(${sales_order.created_date},'2090-01-01') ;;
   }
 
+  dimension: target_strategy {
+    type: number
+    sql:  ${TABLE}.target_strategy ;;
+  }
+
   measure: count {
     type: count_distinct
     sql: ${email} ;;
   }
+
 
 }

@@ -12,6 +12,15 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
+  measure: asp {
+    hidden: yes
+    label: "ASP"
+    description: "Average Sales Price. Source: looker.calculation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${sales_order_line.total_gross_Amt_non_rounded}/${sales_order_line.total_units} ;;
+  }
+
   measure: avg_days_to_fulfill {
     group_label: "Average Days:"
     label: "to Fulfillment"

@@ -109,9 +109,9 @@ view: sales_order {
     sql: ${TABLE}.CHANNEL_id ;; }
 
   dimension: channel {
+    group_label: " Advanced"
     label: "Channel Filter"
-    hidden: yes
-    view_label: "Filters"
+    hidden: no
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
