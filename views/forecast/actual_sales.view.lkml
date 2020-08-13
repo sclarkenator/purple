@@ -63,7 +63,7 @@
     #   sql: ${TABLE}.created_raw ;;
     # }
     dimension: sku_id {
-      hidden: yes
+      hidden: no
       label: "Product SKU ID"
       description: "SKU ID for item (XX-XX-XXXXXX). Source: netsuite.item"
     }
