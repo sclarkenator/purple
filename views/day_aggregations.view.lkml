@@ -19,7 +19,7 @@ view: day_aggregations_dtc_sales {
   }
   #dimension: created_date { type: date }
   dimension_group: created_date { type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, month_num, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no datatype: timestamp }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
@@ -419,7 +419,7 @@ view: day_aggregations {
   dimension_group: date {
     label: "Created"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${date}) ;; }
