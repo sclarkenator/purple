@@ -4,6 +4,7 @@
         column: created_month {}
         column: created_quarter {}
         column: created_year {}
+        column: item_id { field: item.item_id }
         column: sku_id { field: item.sku_id }
         column: channel { field: sales_order.channel }
         column: total_gross_Amt_non_rounded {}
@@ -62,6 +63,11 @@
     #   timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     #   sql: ${TABLE}.created_raw ;;
     # }
+    dimension: item_id {
+      hidden: no
+      label: "Product Item ID"
+      description: "Source: netsuite.item"
+    }
     dimension: sku_id {
       hidden: no
       label: "Product SKU ID"

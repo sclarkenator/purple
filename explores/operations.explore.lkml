@@ -103,11 +103,45 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one  }
   }
 
+#   explore: forecast_combined {
+#     label: "Forecast"
+#     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
+#     group_label: "Operations"
+#     #hidden: yes
+#     join: item {
+#       view_label: "Product"
+#       type: left_outer
+#       sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
+#       relationship: many_to_one}
+#     join:fg_to_sfg{
+#       view_label: "FG to SFG"
+#       sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+#       type: left_outer
+#       relationship: one_to_one
+#     }
+#     join: actual_sales {
+#       view_label: "Actual Sales"
+#       sql_on: ${forecast_combined.date_month} = ${actual_sales.created_month}
+#       and ${forecast_combined.channel} = ${actual_sales.channel}
+#       and ${item.item_id} = ${actual_sales.item_id}
+#       --and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
+#       ;;
+#       #
+#       type: full_outer
+#       relationship: many_to_many
+#     }
+#   }
+
   explore: forecast_combined {
-    label: "Forecast"
+    label: "Forecast New"
+    view_name: date_meta
     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
-    #hidden: yes
+    join: forecast_combined {
+      type: left_outer
+      sql_on: ${date_meta.date_group_month} = ${forecast_combined.date_month} ;;
+      relationship: one_to_many
+    }
     join: item {
       view_label: "Product"
       type: left_outer
@@ -121,12 +155,15 @@ include: "/dashboards/**/*.dashboard"
     }
     join: actual_sales {
       view_label: "Actual Sales"
-      sql_on: ${forecast_combined.date_month} = ${actual_sales.created_month} and ${forecast_combined.channel} = ${actual_sales.channel} and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
-      ;;
-      #
-      type: full_outer
-      relationship: many_to_many
-    }
+      sql_on: ${date_meta.date_group_month} = ${actual_sales.created_month}
+              --and ${forecast_combined.channel} = ${actual_sales.channel}
+              --and ${item.item_id} = ${actual_sales.item_id}
+              --and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
+              ;;
+              #
+        type: full_outer
+        relationship: many_to_many
+      }
   }
 
   explore:  actual_sales{
