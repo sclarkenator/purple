@@ -634,7 +634,7 @@ dimension: store_name{
   label: "Store Name"
   description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
   group_label: " Advanced"
-  view_label: "Sales Order"
+  view_label: "Owned Retail"
   type: string
   sql: case when ${store_id} = 'CA-01' then 'San Diego'
   when ${store_id} = 'CA-02' then 'Santa Clara'
