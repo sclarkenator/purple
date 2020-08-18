@@ -396,7 +396,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${us_zipcode_mapping.parent_zcta} = ${us_zipcode.zip} ;;
       relationship: many_to_many
     }
-
+    join: aura_vision_traffic {
+      view_label: "Owned Retail"
+      type:  left_outer
+      sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
+      relationship: many_to_many
+    }
   }
 
   explore: warranty {
