@@ -509,7 +509,7 @@ include: "/dashboards/**/*.dashboard"
       type:  left_outer
       sql_on: ${mattress_firm_store_details.zipcode} = ${dma.zip} ;;
       relationship: many_to_many
-      fields: [dma.dma_name]}
+      fields: [dma.dma_name,dma.dma_mfrm]}
     join: zcta5 {
       view_label: "Geography"
       type:  left_outer

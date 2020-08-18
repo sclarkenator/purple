@@ -46,6 +46,7 @@ view: dispatch_type {
   }
 
   dimension: description {
+    label: "Dispatch Type Description"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
