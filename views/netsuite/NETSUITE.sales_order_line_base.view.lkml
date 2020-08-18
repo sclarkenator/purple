@@ -418,6 +418,42 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: period_comparison {
+    case: {
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '1 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE());;
+        label: "current_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '53 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '52 week') ;;
+        label: "last_year_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '105 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '104 week') ;;
+        label: "two_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '157 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '156 week') ;;
+        label: "three_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '209 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '208 week') ;;
+        label: "four_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '2 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '1 week') ;; # 8/06
+        label: "last_week"
+      }
+      else: "unknown"
+    }
+  }
+
   dimension_group: shift_time{
     hidden: yes
     label: "Shift Timescale"
