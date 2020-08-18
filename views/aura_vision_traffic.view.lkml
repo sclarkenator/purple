@@ -9,6 +9,7 @@ view: aura_vision_traffic {
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -23,25 +24,29 @@ view: aura_vision_traffic {
   }
 
   dimension: location {
+    hidden: yes
     description: "Source: aura_vision.aura_vision_traffic"
     type: string
     sql: ${TABLE}."LOCATION" ;;
   }
 
   dimension: metric {
+    group_label: " Advanced"
     description: "Source: aura_vision.aura_vision_traffic"
     type: string
     sql: ${TABLE}."METRIC" ;;
   }
 
   dimension: context {
-    description: "Source: aura_vision.aura_vision_traffic"
+    group_label: " Advanced"
+    description: "Location within the store. Source: aura_vision.aura_vision_traffic"
     type: string
     sql: ${TABLE}."CONTEXT" ;;
   }
 
 
   dimension: showroom_name {
+    hidden: yes
     description: "Source: aura_vision.aura_vision_traffic"
     type: string
     sql: ${TABLE}."SHOWROOM_NAME" ;;
@@ -130,6 +135,7 @@ view: aura_vision_traffic {
 
   measure: category_16_to_24_customer {
     group_label: "Category"
+    label: "Age: 16 to 24"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_16_TO_24_CUSTOMER" ;;
@@ -137,6 +143,7 @@ view: aura_vision_traffic {
 
   measure: category_25_to_34_customer {
     group_label: "Category"
+    label: "Age: 25 to 34"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_25_TO_34_CUSTOMER" ;;
@@ -144,6 +151,7 @@ view: aura_vision_traffic {
 
   measure: category_45_to_54_customer {
     group_label: "Category"
+    label: "Age: 45 to 54"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_45_TO_54_CUSTOMER" ;;
@@ -151,6 +159,7 @@ view: aura_vision_traffic {
 
   measure: category_55_to_64_customer {
     group_label: "Category"
+    label: "Age: 55 to 64"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_55_TO_64_CUSTOMER" ;;
@@ -158,6 +167,7 @@ view: aura_vision_traffic {
 
   measure: category_customer {
     group_label: "Category"
+    label: "Customer"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_CUSTOMER" ;;
@@ -165,6 +175,7 @@ view: aura_vision_traffic {
 
   measure: category_female_16_to_24_customer {
     group_label: "Category"
+    label: "Female Age: 16 to 24"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_16_TO_24_CUSTOMER" ;;
@@ -172,6 +183,7 @@ view: aura_vision_traffic {
 
   measure: category_female_25_to_34_customer {
     group_label: "Category"
+    label: "Female Age: 25 to 34"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_25_TO_34_CUSTOMER" ;;
@@ -179,6 +191,7 @@ view: aura_vision_traffic {
 
   measure: category_female_35_to_44_customer {
     group_label: "Category"
+    label: "Female Age: 35 to 44"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_35_TO_44_CUSTOMER" ;;
@@ -186,6 +199,7 @@ view: aura_vision_traffic {
 
   measure: category_female_45_to_54_customer {
     group_label: "Category"
+    label: "Female Age: 45 to 54"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_45_TO_54_CUSTOMER" ;;
@@ -193,6 +207,7 @@ view: aura_vision_traffic {
 
   measure: category_female_55_to_64_customer {
     group_label: "Category"
+    label: "Female Age: 55 to 64"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_55_TO_64_CUSTOMER" ;;
@@ -200,6 +215,7 @@ view: aura_vision_traffic {
 
   measure: category_female_customer {
     group_label: "Category"
+    label: "Female Customer"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_CUSTOMER" ;;
@@ -207,6 +223,7 @@ view: aura_vision_traffic {
 
   measure: category_female_under_15_customer {
     group_label: "Category"
+    label: "Female Age: Under 15"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_FEMALE_UNDER_15_CUSTOMER" ;;
@@ -214,6 +231,7 @@ view: aura_vision_traffic {
 
   measure: category_male_16_to_24_customer {
     group_label: "Category"
+    label: "Male Age: 16 to 24"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_16_TO_24_CUSTOMER" ;;
@@ -221,6 +239,7 @@ view: aura_vision_traffic {
 
   measure: category_male_25_to_34_customer {
     group_label: "Category"
+    label: "Male Age: 25 to 34"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_25_TO_34_CUSTOMER" ;;
@@ -228,6 +247,7 @@ view: aura_vision_traffic {
 
   measure: category_male_35_to_44_customer {
     group_label: "Category"
+    label: "Male Age: 35 to 44"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_35_TO_44_CUSTOMER" ;;
@@ -235,6 +255,7 @@ view: aura_vision_traffic {
 
   measure: category_male_45_to_54_customer {
     group_label: "Category"
+    label: "Male Age: 45 to 54"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_45_TO_54_CUSTOMER" ;;
@@ -242,6 +263,7 @@ view: aura_vision_traffic {
 
   measure: category_male_55_to_64_customer {
     group_label: "Category"
+    label: "Male Age: 55 to 64"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_55_TO_64_CUSTOMER" ;;
@@ -249,6 +271,7 @@ view: aura_vision_traffic {
 
   measure: category_male_customer {
     group_label: "Category"
+    label: "Male Customer"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_CUSTOMER" ;;
@@ -256,6 +279,7 @@ view: aura_vision_traffic {
 
   measure: category_male_under_15_customer {
     group_label: "Category"
+    label: "Male Age: Under 15"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_MALE_UNDER_15_CUSTOMER" ;;
@@ -263,6 +287,7 @@ view: aura_vision_traffic {
 
   measure: category_under_15_customer {
     group_label: "Category"
+    label: "Age: Under 15"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATEGORY_UNDER_15_CUSTOMER" ;;
@@ -270,6 +295,7 @@ view: aura_vision_traffic {
 
   measure: catetory_35_to_44_customer {
     group_label: "Category"
+    label: "Age: 35 to 44"
     description: "Source: aura_vision.aura_vision_traffic"
     type: sum
     sql: ${TABLE}."CATETORY_35_TO_44_CUSTOMER" ;;
@@ -277,11 +303,12 @@ view: aura_vision_traffic {
 
   measure: overall_value {
     description: "Source: aura_vision.aura_vision_traffic"
-    type: number
+    type: sum
     sql: ${TABLE}."OVERALL_VALUE" ;;
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: [showroom_name]
   }
