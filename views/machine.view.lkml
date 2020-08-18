@@ -10,13 +10,17 @@ view: machine {
   }
 
   dimension: area_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."AREA_ID" ;;
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -32,7 +36,6 @@ view: machine {
   }
 
   dimension: down_count {
-    hidden: yes
     type: number
     sql: ${TABLE}."DOWN_COUNT" ;;
   }
@@ -40,7 +43,9 @@ view: machine {
   dimension_group: inactivated {
     hidden: yes
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: CAST(${TABLE}."INACTIVATED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -52,12 +57,12 @@ view: machine {
   }
 
   dimension: line_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."LINE_ID" ;;
   }
 
   dimension: machine_code {
-    hidden: yes
     type: string
     sql: ${TABLE}."MACHINE_CODE" ;;
   }
@@ -81,12 +86,13 @@ view: machine {
   }
 
   dimension: short_description {
-    hidden: yes
+    label: "Display Name"
     type: string
     sql: ${TABLE}."SHORT_DESCRIPTION" ;;
   }
 
   dimension: site_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."SITE_ID" ;;
   }

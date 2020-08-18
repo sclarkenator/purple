@@ -9,8 +9,8 @@ view: ltol_line {
   }
 
   dimension: abbreviation {
+    label: "Display Name"
     type: string
-    hidden: yes
     sql: ${TABLE}."ABBREVIATION" ;;
   }
 
@@ -23,7 +23,7 @@ view: ltol_line {
   dimension: areacode {
     label: "Area Name"
     type: string
-    hidden: no
+    hidden: yes
     sql: ${TABLE}."AREACODE" ;;
   }
 
@@ -34,17 +34,11 @@ view: ltol_line {
   }
 
   dimension_group: created {
-    type: time
     hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."CREATED" ;;
   }
 
@@ -85,17 +79,11 @@ view: ltol_line {
   }
 
   dimension_group: lastupdated {
-    type: time
     hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
     sql: ${TABLE}."LASTUPDATED" ;;
   }
 
@@ -118,7 +106,7 @@ view: ltol_line {
   }
 
   dimension: site {
-    hidden: no
+    hidden: yes
     type: string
     sql: case when ${TABLE}.SITE = '2' then 'West'
                    when ${TABLE}.SITE = '3' then 'Alpine'

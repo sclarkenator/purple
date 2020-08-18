@@ -259,10 +259,60 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: machine {
-    hidden: yes group_label: "Production"
+    hidden: yes
+    group_label: "Production"
     join: l2l_machine_downtime {
       type: left_outer
       sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+      relationship: one_to_many
+    }
+  }
+
+  explore:  area {
+    hidden: yes
+    group_label: "Production"
+    label: "L2L"
+    view_label: "Area"
+    join: ltol_line {
+      view_label: "Line"
+      type: left_outer
+      sql: ${area.site_id} = ${ltol_line.site} and ${area.area_id} = ${ltol_line.area} and ${area.name} = ${ltol_line.areacode} ;;
+      relationship: one_to_many
+    }
+    join: machine {
+      view_label: "Machine"
+      type: left_outer
+      sql:  ${ltol_line.site} = ${machine.site_id} and ${ltol_line.area} = ${machine.area_id} and ${ltol_line.line_id} = ${machine.line_id} ;;
+      relationship: one_to_many
+    }
+    join: l2l_machine_downtime {
+      view_label: "Machine"
+      type: left_outer
+      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+      relationship: one_to_many
+    }
+    join: machine_schedule {
+      view_label: "Machine"
+      type: left_outer
+      sql_on: ${machine.machine_id} = ${machine_schedule.machine} and ${machine.site_id} = ${machine_schedule.site} ;;
+      relationship: one_to_many
+    }
+    join: dispatch {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${machine.machine_id} = ${dispatch.machine_id} ;;
+      relationship: one_to_many
+    }
+    join: dispatch_type {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${dispatch.dispatch_type_id} = ${dispatch_type.dispatch_type_id} ;;
+      relationship: many_to_one
+    }
+    join: ltol_pitch {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${ltol_line.site} = ${ltol_pitch.site} and ${ltol_line.area} = ${ltol_pitch.area} and ${ltol_line.line_id} = ${ltol_pitch.line} ;;
       relationship: one_to_many
     }
   }

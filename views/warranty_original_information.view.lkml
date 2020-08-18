@@ -30,6 +30,15 @@ view: warranty_original_information {
             else replace(REGEXP_SUBSTR(replace(upper(wso.MEMO),' ',''),'[Oo]#?\\d{1,7}'),'O','')
           end ;;
     }
+
+    dimension: PK {
+      primary_key: yes
+      hidden: yes
+      type: string
+      sql:  NVL(${TABLE}.return_reason,'0') || NVL(${TABLE}.fulfilled_date,'1900-01-01') || NVL(${TABLE}.item_id,'0') || NVL(${TABLE}.order_id,'0')
+            || NVL(${TABLE}.w_created_date,'1900-01-01') || NVL(${TABLE}.replacement_order_id,'0') ;;
+    }
+
     dimension: key {
       hidden: yes
       sql: ${TABLE}.order_id || ${TABLE}.item_id ;;
