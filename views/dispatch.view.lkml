@@ -36,6 +36,7 @@ view: dispatch {
   }
 
   dimension: description {
+    label: "Dispatch Description"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
