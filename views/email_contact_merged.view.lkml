@@ -8,7 +8,7 @@ view: email_contact_merged {
               , row_number () over (partition by email order by created) as rn
           from (
             select 'FKL' as source, import_date::date as created, email, zipcode, gender, null as target_strategy
-            from analytics.marketing.fkl_contact
+            from analytics.marketing.find_keep_love
             union
             select 'Fluent' as source, created::date, email, null as zipcode, null as gender, targeting_strategy
             from analytics_stage.marketing_stage.fluent_contact
