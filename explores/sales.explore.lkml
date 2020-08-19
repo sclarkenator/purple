@@ -396,7 +396,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${us_zipcode_mapping.parent_zcta} = ${us_zipcode.zip} ;;
       relationship: many_to_many
     }
-
+    join: aura_vision_traffic {
+      view_label: "Owned Retail"
+      type:  left_outer
+      sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
+      relationship: many_to_many
+    }
   }
 
   explore: warranty {
@@ -504,7 +509,7 @@ include: "/dashboards/**/*.dashboard"
       type:  left_outer
       sql_on: ${mattress_firm_store_details.zipcode} = ${dma.zip} ;;
       relationship: many_to_many
-      fields: [dma.dma_name]}
+      fields: [dma.dma_name,dma.dma_mfrm]}
     join: zcta5 {
       view_label: "Geography"
       type:  left_outer

@@ -26,6 +26,24 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
       relationship:  one_to_many
     }
+    join: account {
+      view_label: "Account"
+      type: left_outer
+      sql_on: ${finance_bill_line.account_id} = ${account.account_id};;
+      relationship:  many_to_one
+    }
+    join: accounting_period {
+      view_label: "Accounting Period"
+      type: left_outer
+      sql_on: ${finance_bill.accounting_period_id} = ${accounting_period.accounting_period_id} ;;
+      relationship:  many_to_one
+    }
+    join: entity {
+      view_label: "Entity"
+      type: left_outer
+      sql_on: ${finance_bill.entity_id} = ${entity.entity_id} ;;
+      relationship: many_to_many
+    }
   }
 
   explore: v_gift_card {

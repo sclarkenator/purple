@@ -1,4 +1,4 @@
-view: bills {
+view: bill_purchase_order {
   derived_table: {
     sql:
       -- OLD BILL QUERY --
