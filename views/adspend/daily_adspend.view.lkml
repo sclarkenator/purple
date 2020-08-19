@@ -200,6 +200,14 @@ view: daily_adspend {
     value_format: "$#,##0.00"
     sql: ${adspend}/${clicks} ;;  }
 
+  measure: ctr {
+    label: "  CTR"
+    description: " (Total Clicks / Total Impressions) *100"
+    type: number
+    value_format: "00.0%"
+    sql: ${clicks}/${impressions}*100;;  }
+
+
   dimension: spend_platform {
     label: " Spend Platform"
     description: "What platform for spend (google, facebook, TV, etc.)"
