@@ -269,7 +269,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:  area {
-    hidden: yes
+    hidden: no
     group_label: "Production"
     label: "L2L"
     view_label: "Area"
