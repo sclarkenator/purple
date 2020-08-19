@@ -102,6 +102,13 @@ dimension: primary_key {
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
+  dimension: in_queue_buckets {
+    type: tier
+    tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240 ]
+    style: classic # the default value, could be excluded
+    sql: ${TABLE}."INQUEUE_TIME" ;;
+  }
+
   dimension_group: insert_ts {
     type: time
     hidden: yes
@@ -116,8 +123,6 @@ dimension: primary_key {
     ]
     sql: ${TABLE}."INSERT_TS" ;;
   }
-
-
 
   dimension_group: reported {
     type: time
