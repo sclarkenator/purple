@@ -36,6 +36,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: ltol_pitch {
+    hidden: yes
     label: "L2L Production Pitch Data"
     group_label: "Production"
     description: "The Pitch hourly data from L2L"
@@ -318,7 +319,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: max_machine_capacity {hidden: yes group_label: "Production" label: "Max Machine Capacity" description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"}
-  explore: v_dispatch {hidden: no group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
+  explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
   explore: jarom_location_data {hidden:  yes group_label: "Production"}
