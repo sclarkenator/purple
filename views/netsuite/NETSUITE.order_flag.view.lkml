@@ -237,7 +237,7 @@ view: order_flag {
   measure: harmony_orders {
     group_label: "Total Orders with:"
     label: "a Harmony Pillow"
-    hidden: yes
+    hidden: no
     description: "1/0 per order; 1 if there was a Harmony pillow in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
