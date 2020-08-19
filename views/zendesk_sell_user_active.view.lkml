@@ -40,7 +40,7 @@
 
   dimension: zendesk_sell_user_id {
     label: "Agent_lkp Zendesk Sell User ID"
-    description: "The total number of orders for each user"
+    description: "Zendesk Sell ID Source: incontact.agent_lkp"
     type: number
     sql: ${TABLE}.zendesk_sell_user_id ;;
   }
