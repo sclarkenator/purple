@@ -4,12 +4,14 @@ view: ltol_line {
 
   dimension: line_id {
     primary_key: yes
+    description: "Source: l2l.line"
     type: number
     sql: ${TABLE}."ID" ;;
   }
 
   dimension: abbreviation {
     label: "Display Name"
+    description: "Source: l2l.line"
     type: string
     sql: ${TABLE}."ABBREVIATION" ;;
   }
@@ -49,16 +51,19 @@ view: ltol_line {
   }
 
   dimension: Line_name {
+    description: "Source: l2l.line"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
 
   dimension: downtime_rate {
+    description: "Source: l2l.line"
     type: number
     sql: ${TABLE}."DOWNTIME_RATE" ;;
   }
 
   dimension: inactive {
+    description: "Source: l2l.line"
     type: string
     sql: ${TABLE}."INACTIVE" ;;
   }

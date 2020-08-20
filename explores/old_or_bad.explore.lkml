@@ -89,8 +89,8 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${item.item_id} = ${purchase_order_line.item_id} ;;  relationship: one_to_many}
     join: purchase_order {view_label: "Purchase Order" type:  left_outer
       sql_on: ${purchase_order_line.purchase_order_id} = ${purchase_order.purchase_order_id}  ;; relationship: many_to_one}
-    join: bills {view_label: "Bills"  type:  left_outer
-      sql_on: ${purchase_order.purchase_order_id} = ${bills.purchase_order_id} ;; relationship: many_to_one}
+    join: bill_purchase_order {view_label: "Bills"  type:  left_outer
+      sql_on: ${purchase_order.purchase_order_id} = ${bill_purchase_order.purchase_order_id} ;; relationship: many_to_one}
     join: transfer_order_line {view_label: "Transfer Order" type:  full_outer
       sql_on: ${transfer_order_line.item_id} = ${item.item_id} ;; relationship: one_to_many}
     join: transfer_order {view_label: "Transfer Order"  type:  left_outer required_joins: [transfer_order_line]
