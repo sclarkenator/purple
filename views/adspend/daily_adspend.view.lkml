@@ -204,8 +204,8 @@ view: daily_adspend {
     label: "  CTR"
     description: " (Total Clicks / Total Impressions) *100"
     type: number
-    value_format: "00.0%"
-    sql: (${clicks}/${impressions})*100;;  }
+    value_format: "00.00%"
+    sql: (${clicks}/${impressions});;  }
 
 
   dimension: spend_platform {
