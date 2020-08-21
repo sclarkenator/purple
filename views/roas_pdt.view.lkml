@@ -281,6 +281,14 @@ view: roas_pdt {
     sql: ${TABLE}.medium ;;
   }
 
+  dimension: campaign_name {
+    label: "Campaign Name (raw)"
+    description: "Data as is from core system (source)"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.campaign_name ;;
+  }
+
   dimension: medium_clean {
     label: " Medium (clean)"
     description: "Transforming the data from each system to match a single format"
