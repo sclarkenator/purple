@@ -17,6 +17,7 @@ view: shopify_discount_codes {
     ;;
   }
 
+
     dimension: shopify_order_id {
       hidden:  yes
       type: string
@@ -24,10 +25,10 @@ view: shopify_discount_codes {
       primary_key: yes
     }
 
-    dimension: shopify_order_name {
+    dimension: etail_order_name {
       hidden:  yes
       type: string
-      sql: ${TABLE}.shopify_order_name ;;
+      sql: ${TABLE}.etail_order_name ;;
     }
 
     dimension: used_promo {

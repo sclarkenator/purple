@@ -345,7 +345,7 @@ access_grant: is_customer_care_manager{
       join: shopify_discount_codes {
         view_label: "Promo"
         type: left_outer
-        sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+        sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
       # join: return_order_line {
       #   view_label: "Returns"
