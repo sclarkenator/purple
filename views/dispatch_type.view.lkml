@@ -11,16 +11,19 @@ view: dispatch_type {
   }
 
   dimension: action_component_required {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."ACTION_COMPONENT_REQUIRED" ;;
   }
 
   dimension: allow_multiple {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."ALLOW_MULTIPLE" ;;
   }
 
   dimension: code {
+    description: "Source: l2l.dispatch_type"
     type: string
     sql: ${TABLE}."CODE" ;;
   }
@@ -41,27 +44,32 @@ view: dispatch_type {
   }
 
   dimension: critical {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."CRITICAL" ;;
   }
 
   dimension: description {
     label: "Dispatch Type Description"
+    description: "Source: l2l.dispatch_type"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
 
   dimension: exclude_production_dashboard {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."EXCLUDE_PRODUCTION_DASHBOARD" ;;
   }
 
   dimension: highlight_critical {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."HIGHLIGHT_CRITICAL" ;;
   }
 
   dimension: impact {
+    description: "Source: l2l.dispatch_type"
     type: number
     sql: ${TABLE}."IMPACT" ;;
   }
@@ -76,36 +84,43 @@ view: dispatch_type {
   }
 
   dimension: inactive {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."INACTIVE" ;;
   }
 
   dimension: open {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."OPEN" ;;
   }
 
   dimension: operator_type {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."OPERATOR_TYPE" ;;
   }
 
   dimension: priority {
+    description: "Source: l2l.dispatch_type"
     type: number
     sql: ${TABLE}."PRIORITY" ;;
   }
 
   dimension: reason_required {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."REASON_REQUIRED" ;;
   }
 
   dimension: require_quality_fields {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."REQUIRE_QUALITY_FIELDS" ;;
   }
 
   dimension: resource_required {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."RESOURCE_REQUIRED" ;;
   }
@@ -117,6 +132,7 @@ view: dispatch_type {
   }
 
   dimension: start_when_dispatched {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."START_WHEN_DISPATCHED" ;;
   }
@@ -158,17 +174,14 @@ view: dispatch_type {
   }
 
   dimension: user_create_type {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."USER_CREATE_TYPE" ;;
   }
 
   dimension: why_required {
+    description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."WHY_REQUIRED" ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: [dispatch_type_id, dispatch.count]
   }
 }
