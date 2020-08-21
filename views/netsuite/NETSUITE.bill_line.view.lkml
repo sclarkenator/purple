@@ -158,22 +158,7 @@ view: finance_bill_line {
     type:  string
     sql: ${TABLE}.required_delivery;;
   }
-  dimension: amount {
-    type:  number
-    sql: ${TABLE}.amount;;
-  }
-  dimension: amount_foreign {
-    type:  number
-    sql: ${TABLE}.amount_foreign;;
-  }
-  dimension: amount_linked {
-    type:  number
-    sql: ${TABLE}.amount_linked;;
-  }
-  dimension: quantity {
-    type:  number
-    sql: ${TABLE}.quantity;;
-  }
+
   dimension: location {
     type:  string
     sql: ${TABLE}.location;;
@@ -241,9 +226,29 @@ view: finance_bill_line {
     primary_key: yes
     sql: CONCAT(${bill_id}, ${bill_line_id}) ;;
   }
-
   measure: count {
     type: count }
+
+  measure: amount {
+    type:  sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.amount;;
+  }
+  measure: amount_foreign {
+    type:  sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.amount_foreign;;
+  }
+  measure: amount_linked {
+    type:  sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.amount_linked;;
+  }
+  measure: quantity {
+    type:  sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.quantity;;
+  }
 
 
 
