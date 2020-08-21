@@ -205,7 +205,7 @@ view: daily_adspend {
     description: " (Total Clicks / Total Impressions) *100"
     type: number
     value_format: "00.0%"
-    sql: ${clicks}/${impressions}*100;;  }
+    sql: (${clicks}/${impressions})*100;;  }
 
 
   dimension: spend_platform {
