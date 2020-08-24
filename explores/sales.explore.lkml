@@ -467,6 +467,38 @@ include: "/dashboards/**/*.dashboard"
   explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
   explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
 
+
+  explore: unbounce {
+    hidden: yes
+    extends: [sales_order_line]
+    label:  "Unbounce"
+    group_label: " Sales"
+    view_label: "Sales Order Line"
+    description:  "All sales orders for wholesale channel"
+    always_join: [fulfillment]
+    join: unbounce_lead {
+      view_label: "Unbounce Leads"
+      sql_on: lower(${unbounce_lead.email_join}) = lower(${customer_table.email_join}) ;;
+      type: left_outer
+      relationship: many_to_many
+    }
+  }
+
+  explore: optimizely {
+    hidden: yes
+    extends: [sales_order_line]
+    label:  "Optimizely"
+    group_label: " Sales"
+    view_label: "Sales Order Line"
+    description:  "All sales orders for wholesale channel"
+    always_join: [fulfillment]
+    join: v_optimizely_conversions {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.related_tranid} = ${sales_order.related_tranid} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+  }
 #-------------------------------------------------------------------
 #
 # Wholesale Explores
