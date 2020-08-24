@@ -1,24 +1,25 @@
 view: zendesk_sell {
-   derived_table: {
-     sql:
-select s.deal_id
-, s.zendesk_sell_user_id user_id
-, d.created_at
-, s.order_id
-, s.order_link
-, s.RETAIL_AGENT
-, s.fraud_risk
---, s.zendesk_sell_user_id as zendesk_id
-, lk.zendesk_id
-, d.draft_order_name
-, nvl(lk.name,u.name) name
- from analytics.customer_care.inside_sales s
- left join analytics.customer_care.zendesk_sell_deal d on d.deal_id = s.deal_id
- left join analytics.customer_care.agent_lkp lk on coalesce(s.zendesk_sell_user_id,d.user_id) = lk.zendesk_sell_user_id
- left join analytics.customer_care.zendesk_sell_user u on s.zendesk_sell_user_id = u.user_id
-
- ;;
-     }
+  sql_table_name: customer_care.v_zendesk_sell ;;
+#    derived_table: {
+#      sql:
+#       select s.deal_id
+#       , s.zendesk_sell_user_id user_id
+#       , d.created_at
+#       , s.order_id
+#       , s.order_link
+#       , s.RETAIL_AGENT
+#       , s.fraud_risk
+#       --, s.zendesk_sell_user_id as zendesk_id
+#       , lk.zendesk_id
+#       , d.draft_order_name
+#       , nvl(lk.name,u.name) name
+#        from analytics.customer_care.inside_sales s
+#        left join analytics.customer_care.zendesk_sell_deal d on d.deal_id = s.deal_id
+#        left join analytics.customer_care.agent_lkp lk on coalesce(s.zendesk_sell_user_id,d.user_id) = lk.zendesk_sell_user_id
+#        left join analytics.customer_care.zendesk_sell_user u on s.zendesk_sell_user_id = u.user_id
+#
+#  ;;
+#      }
 
   dimension: pending_draft_order{
     group_label: "Advanced - Sell"
