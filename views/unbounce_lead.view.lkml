@@ -6,7 +6,7 @@ view: unbounce_lead {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${page_name}|'-'|${url}|'-'|${variant}|'-'|${first_name} ;;
+    sql: ${page_name}||'-'||${url}||'-'||${variant}||'-'||${first_name}||'-'||${last_name}||'-'||${phone_number}||'-'||${email_join}||'-'||${current_address}||'-'||${city}||'-'||${state}||'-'||${zip_code}||'-'||${country}||'-'||${frame_size}||'-'||${bases_purchased}||'-'||${purchased_from}||'-'||${estimated_date_of_purchase} ;;
   }
 
   dimension: city {
@@ -145,6 +145,6 @@ view: unbounce_lead {
     group_item_label: "Bases Purchased (Units)"
     description: "Quantity of bases purchased. Source:unbounce.unbounce_lead"
     type: sum
-    sql: ${TABLE}."QUANTITY_OF_BASES_PURCHASED" ;;
+    sql: replace(${TABLE}."QUANTITY_OF_BASES_PURCHASED",'+','') ;;
   }
 }

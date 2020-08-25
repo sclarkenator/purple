@@ -277,13 +277,13 @@ include: "/dashboards/**/*.dashboard"
     join: ltol_line {
       view_label: "Line"
       type: left_outer
-      sql: ${area.site_id} = ${ltol_line.site} and ${area.area_id} = ${ltol_line.area} and ${area.name} = ${ltol_line.areacode} ;;
+      sql_on: ${area.site_id} = ${ltol_line.site} and ${area.area_id} = ${ltol_line.area} and ${area.name} = ${ltol_line.areacode} ;;
       relationship: one_to_many
     }
     join: machine {
       view_label: "Machine"
       type: left_outer
-      sql:  ${ltol_line.site} = ${machine.site_id} and ${ltol_line.area} = ${machine.area_id} and ${ltol_line.line_id} = ${machine.line_id} ;;
+      sql_on:  ${ltol_line.site} = ${machine.site_id} and ${ltol_line.area} = ${machine.area_id} and ${ltol_line.line_id} = ${machine.line_id} ;;
       relationship: one_to_many
     }
     join: l2l_machine_downtime {
