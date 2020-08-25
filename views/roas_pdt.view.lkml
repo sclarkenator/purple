@@ -276,7 +276,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt') then 'YouTube'
         when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath') then 'Yahoo'
-        when ${TABLE}.platform in ('VERITONE','vr') then 'Veritone'
+        when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
         when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
