@@ -132,10 +132,7 @@ else ${TABLE}."DESCRIPTION" end ;;
   dimension: site {
     hidden: yes
     type: string
-    sql: case when ${TABLE}.SITE = '2' then 'West'
-                   when ${TABLE}.SITE = '3' then 'Alpine'
-                   else 'Other'
-              end;;
+    sql: ${TABLE}."SITE";;
   }
 
   dimension_group: update_ts {
