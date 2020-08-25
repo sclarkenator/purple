@@ -249,7 +249,7 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.platform in ('ACUITY','ac','facebook') then 'Acuity'
+      case when ${TABLE}.platform in ('ACUITY','ac') then 'Acuity'
         when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
@@ -267,6 +267,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('VERITONE','vr') then 'Veritone'
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
+        when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'TV'
         else 'Other' end
       ;;
@@ -278,6 +279,14 @@ view: roas_pdt {
     group_label: "Advanced"
     type: string
     sql: ${TABLE}.medium ;;
+  }
+
+  dimension: campaign_name {
+    label: "Campaign Name (raw)"
+    description: "Data as is from core system (source)"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.campaign_name ;;
   }
 
   dimension: medium_clean {

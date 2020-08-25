@@ -641,7 +641,7 @@ dimension: store_name{
   when ${store_id} = 'CA-03' then 'Santa Monica'
   when ${store_id} = 'WA-01' then 'Seattle'
   when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
-  when ${store_id} = 'UT-01' then 'Showroom'
+  when ${store_id} = 'UT-01' then 'Lehi'
   else ${store_id} end;;
 }
 
