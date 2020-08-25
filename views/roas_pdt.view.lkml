@@ -324,8 +324,7 @@ view: roas_pdt {
     label: "Adspend ($k)"
     description: "Total Adspend - beware filtering by non adspend fields"
     type: sum
-    value_format: "$#,##0,\" K\""
-    #value_format: "$#,##0"
+    value_format: "[>=10000]$#,##0,\" K\";[>=1000]$#,##0.00;$0.00"
     sql: ${TABLE}.adspend ;;
   }
 
