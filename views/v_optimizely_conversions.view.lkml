@@ -2,6 +2,12 @@ view: v_optimizely_conversions {
   sql_table_name: "HEAP"."V_OPTIMIZELY_CONVERSIONS"
     ;;
 
+  dimension: PK {
+    primary_key: yes
+    type: string
+    sql: ${campaign_id}||'-'||${experiment_id}||'-'||${related_tranid}||'-'||${is_holdback};;
+
+  }
   dimension: campaign_id {
     description: "Campaign ID with Optimizely. Source: optimizely.v_optimizely_conversions"
     type: string
