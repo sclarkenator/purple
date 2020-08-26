@@ -103,45 +103,11 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one  }
   }
 
-#   explore: forecast_combined {
-#     label: "Forecast"
-#     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
-#     group_label: "Operations"
-#     #hidden: yes
-#     join: item {
-#       view_label: "Product"
-#       type: left_outer
-#       sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
-#       relationship: many_to_one}
-#     join:fg_to_sfg{
-#       view_label: "FG to SFG"
-#       sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
-#       type: left_outer
-#       relationship: one_to_one
-#     }
-#     join: actual_sales {
-#       view_label: "Actual Sales"
-#       sql_on: ${forecast_combined.date_month} = ${actual_sales.created_month}
-#       and ${forecast_combined.channel} = ${actual_sales.channel}
-#       and ${item.item_id} = ${actual_sales.item_id}
-#       --and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
-#       ;;
-#       #
-#       type: full_outer
-#       relationship: many_to_many
-#     }
-#   }
-
   explore: forecast_combined {
-    label: "Forecast New"
-    view_name: date_meta
+    label: "Forecast"
     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
-    join: forecast_combined {
-      type: left_outer
-      sql_on: ${date_meta.date_group_month} = ${forecast_combined.date_month} ;;
-      relationship: one_to_many
-    }
+    #hidden: yes
     join: item {
       view_label: "Product"
       type: left_outer
@@ -155,19 +121,42 @@ include: "/dashboards/**/*.dashboard"
     }
     join: actual_sales {
       view_label: "Actual Sales"
-      sql_on: ${date_meta.date_group_month} = ${actual_sales.created_month}
-              --and ${forecast_combined.channel} = ${actual_sales.channel}
-              --and ${item.item_id} = ${actual_sales.item_id}
-              --and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
-              ;;
-              #
-        type: full_outer
+      sql_on: ${forecast_combined.date_date} = ${actual_sales.created_date}
+      and ${forecast_combined.channel} = ${actual_sales.channel}
+      and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
+      ;;
+      type: full_outer
+      relationship: many_to_many
+    }
+  }
+
+  explore: monthly_forecast_compared_to_sales {
+    hidden: yes
+    label: "Monthly Forecast Compared to Sales"
+    view_name: date_meta
+    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
+    group_label: "Operations"
+    join: forecast_combined_monthly_rollup {
+      type: left_outer
+      sql_on: ${date_meta.date_group_month} = ${forecast_combined_monthly_rollup.date_month} ;;
+      relationship: many_to_many
+    }
+    join: actual_sales {
+      view_label: "Actual Sales"
+        sql_on: ${date_meta.date_group_month} = ${actual_sales.created_month} ;;
+        type: left_outer
         relationship: many_to_many
       }
   }
 
+  explore: forecast_combined_monthly_rollup {
+    group_label: "Operations"
+    hidden: yes
+  }
+
   explore:  actual_sales{
     group_label: "Operations"
+    hidden: yes
   }
 
   explore: forecast_combined_legacy {

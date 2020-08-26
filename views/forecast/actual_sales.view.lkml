@@ -1,9 +1,7 @@
   view: actual_sales {
     derived_table: {
       explore_source: sales_order_line {
-        column: created_month {}
-        column: created_quarter {}
-        column: created_year {}
+        column: created_date {}
         column: item_id { field: item.item_id }
         column: sku_id { field: item.sku_id }
         column: channel { field: sales_order.channel }
@@ -32,37 +30,16 @@
     dimension: PK {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${created_month}, ${sku_id}, ${channel},${system}) ;;
+      sql: CONCAT(${TABLE}.created_date, ${sku_id}, ${channel},${system}) ;;
     }
-    dimension: created_month {
-      group_label: "Created Date"
-      label: "Sales Order Month"
+    dimension_group: created {
+      hidden: no
+      label: "Sales Order     Order Date"
       description: "Time and date order was placed. Source: netsuite.sales_order_line"
-      type: date_month
-      convert_tz: no
+      type: time
+      timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+      sql: ${TABLE}.created_date ;;
     }
-    dimension: created_quarter {
-      group_label: "Created Date"
-      label: "Sales Order Quarter"
-      description: "Time and date order was placed. Source: netsuite.sales_order_line"
-      type: date_quarter
-      convert_tz: no
-    }
-    dimension: created_year {
-      group_label: "Created Date"
-      label: "Sales Order Year"
-      description: "Time and date order was placed. Source: netsuite.sales_order_line"
-      type: date_year
-      convert_tz: no
-    }
-    # dimension_group: created {
-    #   hidden: no
-    #   label: "Sales Order     Order Date"
-    #   description: "Time and date order was placed. Source: netsuite.sales_order_line"
-    #   type: time
-    #   timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    #   sql: ${TABLE}.created_raw ;;
-    # }
     dimension: item_id {
       hidden: no
       label: "Product Item ID"
@@ -139,5 +116,10 @@
       type: sum
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
+    }
+    measure: total_sku_ids {
+      hidden: yes
+      type: count_distinct
+      sql: ${sku_id} ;;
     }
   }
