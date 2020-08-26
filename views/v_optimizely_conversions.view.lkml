@@ -4,6 +4,7 @@ view: v_optimizely_conversions {
 
   dimension: PK {
     primary_key: yes
+    hidden: yes
     type: string
     sql: ${campaign_id}||'-'||${experiment_id}||'-'||${related_tranid}||'-'||${is_holdback};;
 
