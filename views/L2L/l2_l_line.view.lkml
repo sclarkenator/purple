@@ -69,8 +69,7 @@ when ${TABLE}."DESCRIPTION" = 'Line Three Glue' then 'Glue 3'
 when ${TABLE}."DESCRIPTION" = 'Line Four Glue' then 'Glue 4'
 when ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Roll Pack 1'
 when ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Roll Pack 2'
-when ${TABLE}."DESCRIPTION" = 'Line Three-A Roll Pack' then 'Roll Pack 3-A'
-when ${TABLE}."DESCRIPTION" = 'Line Three-B Roll Pack' then 'Roll Pack 3-B'
+when ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Roll Pack 3'
 when ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Roll Pack 4'
 else ${TABLE}."DESCRIPTION" end ;;
   }
