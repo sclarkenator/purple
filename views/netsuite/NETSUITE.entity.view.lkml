@@ -13,7 +13,7 @@ view: entity {
     sql: ${TABLE}.entity_id ;;}
 
   dimension: full_name {
-    hidden: yes
+    hidden: no
     label: "Full Name"
     sql: ${TABLE}.full_name ;;}
 

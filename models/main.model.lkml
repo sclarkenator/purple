@@ -292,7 +292,7 @@ access_grant: is_customer_care_manager{
       join: sales_order {
         type:  left_outer
         sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
-        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total, sales_order.order_type_hyperlink]
+        fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total, sales_order.order_type_hyperlink,sales_order.etail_order_id]
         relationship: one_to_one }
 
       join: order_flag {
@@ -345,7 +345,7 @@ access_grant: is_customer_care_manager{
       join: shopify_discount_codes {
         view_label: "Promo"
         type: left_outer
-        sql_on: ${shopify_discount_codes.shopify_order_name} = ${sales_order.related_tranid} ;;
+        sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
         relationship: many_to_many}
       # join: return_order_line {
       #   view_label: "Returns"
@@ -405,6 +405,11 @@ access_grant: is_customer_care_manager{
         sql_on: ${ecommerce.time_hour_of_day} = ${hour_assumptions.hour};;
         relationship: many_to_one
       }
+      join: first_order_flag {
+        view_label: "Sales Header"
+        type: left_outer
+        sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+        relationship: one_to_one}
   }
 
 #-------------------------------------------------------------------
