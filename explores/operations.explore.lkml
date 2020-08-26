@@ -112,47 +112,38 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Product"
       type: left_outer
       sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one}
+      relationship: many_to_one }
     join:fg_to_sfg{
       view_label: "FG to SFG"
       sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
       type: left_outer
-      relationship: one_to_one
-    }
+      relationship: one_to_one }
     join: actual_sales {
       view_label: "Actual Sales"
       sql_on: ${forecast_combined.date_date} = ${actual_sales.created_date}
       and ${forecast_combined.channel} = ${actual_sales.channel}
-      and ${forecast_combined.sku_id} = ${actual_sales.sku_id}
-      ;;
-      type: full_outer
-      relationship: many_to_many
-    }
-  }
-
-  explore: monthly_forecast_compared_to_sales {
-    hidden: yes
-    label: "Monthly Forecast Compared to Sales"
-    view_name: date_meta
-    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
-    group_label: "Operations"
-    join: forecast_combined_monthly_rollup {
+      and ${forecast_combined.sku_id} = ${actual_sales.sku_id} ;;
       type: left_outer
-      sql_on: ${date_meta.date_group_month} = ${forecast_combined_monthly_rollup.date_month} ;;
       relationship: many_to_many
+      fields: [actual_sales.channel,actual_sales.item_id,actual_sales.system,actual_sales.total_gross_Amt_amazon,actual_sales.total_gross_Amt_dtc,actual_sales.total_gross_Amt_non_rounded,actual_sales.total_gross_Amt_retail,actual_sales.total_gross_Amt_wholesale,actual_sales.total_units,actual_sales.total_sku_ids]
     }
-    join: actual_sales {
-      view_label: "Actual Sales"
-        sql_on: ${date_meta.date_group_month} = ${actual_sales.created_month} ;;
-        type: left_outer
-        relationship: many_to_many
-      }
   }
 
-  explore: forecast_combined_monthly_rollup {
-    group_label: "Operations"
-    hidden: yes
+explore: forecast_compared_to_actual_sales {
+  view_name: forecast_combined
+  label: "Forecast Compared to Actual Sales"
+  description: "Use this explore to compare entries in Forecast versus Actual Sales."
+  group_label: "Operations"
+  hidden: yes
+  join: actual_sales {
+    view_label: "Actual Sales"
+    sql_on: ${forecast_combined.date_date} = ${actual_sales.created_date}
+      and ${forecast_combined.channel} = ${actual_sales.channel}
+      and ${forecast_combined.sku_id} = ${actual_sales.sku_id} ;;
+    type: full_outer ## NOTE THE FULL OUTER JOIN
+    relationship: many_to_many
   }
+}
 
   explore:  actual_sales{
     group_label: "Operations"

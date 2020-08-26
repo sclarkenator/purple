@@ -51,6 +51,7 @@
       description: "SKU ID for item (XX-XX-XXXXXX). Source: netsuite.item"
     }
     dimension: channel {
+      hidden: yes
       label: "Sales Order Channel Filter"
     }
     dimension: gross_Amt_non_rounded {
