@@ -2,6 +2,7 @@
     derived_table: {
       explore_source: sales_order_line {
         column: created_date {}
+        column: ship_order_by_date { field: sales_order.ship_order_by_date}
         column: item_id { field: item.item_id }
         column: sku_id { field: item.sku_id }
         column: channel { field: sales_order.channel }
@@ -30,7 +31,7 @@
     dimension: PK {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${TABLE}.created_date, ${sku_id}, ${channel},${system}) ;;
+      sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date, ${sku_id}, ${channel},${system}) ;;
     }
     dimension_group: created {
       hidden: no
@@ -39,6 +40,14 @@
       type: time
       timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
       sql: ${TABLE}.created_date ;;
+    }
+    dimension_group: ship_order_by {
+      hidden: yes
+      label: "Fulfillment Ship by or Order Date"
+      description: "Using ship by date unless blank then order date. Source: netsuite.sales_order"
+      type: time
+      timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+      sql: ${TABLE}.ship_order_by_date ;;
     }
     dimension: item_id {
       hidden: no
@@ -75,27 +84,11 @@
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
     }
-    measure: total_units {
-      group_label: "Gross Sales"
-      label:  "Gross Sales (units)"
-      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
-      type: sum
-      sql:  ${units} ;;
-    }
     measure: total_gross_Amt_amazon {
       group_label: "Gross Sales"
       label:  "Gross Sales ($) Amazon"
       description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
       filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
-      type: sum
-      value_format: "$#,##0"
-      sql:  ${gross_Amt_non_rounded} ;;
-    }
-    measure: total_gross_Amt_retail {
-      group_label: "Gross Sales"
-      label:  "Gross Sales ($) Retail"
-      description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
-      filters: [channel: "Owned Retail"]
       type: sum
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
@@ -109,6 +102,15 @@
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
     }
+    measure: total_gross_Amt_retail {
+      group_label: "Gross Sales"
+      label:  "Gross Sales ($) Retail"
+      description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+      filters: [channel: "Owned Retail"]
+      type: sum
+      value_format: "$#,##0"
+      sql:  ${gross_Amt_non_rounded} ;;
+    }
     measure: total_gross_Amt_wholesale {
       group_label: "Gross Sales"
       label:  "Gross Sales ($) Wholesale"
@@ -117,6 +119,45 @@
       type: sum
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
+    }
+    measure: total_units {
+      group_label: "Gross Sales"
+      label:  "Gross Sales (units)"
+      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+      type: sum
+      sql:  ${units} ;;
+    }
+    measure: total_units_amazon {
+      group_label: "Gross Sales"
+      label:  "Gross Sales (units) Amazon"
+      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+      filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
+      type: sum
+      sql:  ${units} ;;
+    }
+    measure: total_units_dtc {
+      group_label: "Gross Sales"
+      label:  "Gross Sales (units) DTC"
+      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+      filters: [channel: "DTC"]
+      type: sum
+      sql:  ${units} ;;
+    }
+    measure: total_units_retail {
+      group_label: "Gross Sales"
+      label:  "Gross Sales (units) Owned Retail"
+      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+      filters: [channel: "Owned Retail"]
+      type: sum
+      sql:  ${units} ;;
+    }
+    measure: total_units_wholesale {
+      group_label: "Gross Sales"
+      label:  "Gross Sales (units) Wholesale"
+      description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+      filters: [channel: "Wholesale"]
+      type: sum
+      sql:  ${units} ;;
     }
     measure: total_sku_ids {
       hidden: yes
