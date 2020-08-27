@@ -70,7 +70,7 @@ view: c3_roa {
       when: {sql: ${CAMPAIGN_NAME} ilike '%ative%'
                 or ${SOURCE} = 'NATIVE';; label: "native" }
       when: {sql: ${PLATFORM} = 'AFFILIATE'
-                or ${PLATFORM} = 'Email' or ${SOURCE} = 'Email';; label: "affiliate" }
+                or ${PLATFORM} = 'EMAIL' or ${SOURCE} = 'EMAIL';; label: "affiliate" }
       when: {sql:  ${SOURCE} ilike 'seo%'
                 or ${SOURCE} ilike ('%organic%')
                 or ${PLATFORM} in ('BLOG');; label:"organic"}

@@ -5,6 +5,7 @@ view: machine {
 
   dimension: machine_id {
     primary_key: yes
+    description: "Source: l2l.machine"
     type: number
     sql: ${TABLE}."MACHINE_ID" ;;
   }
@@ -31,11 +32,13 @@ view: machine {
   }
 
   dimension: description {
+    description: "Source: l2l.machine"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
 
   dimension: down_count {
+    description: "Source: l2l.machine"
     type: number
     sql: ${TABLE}."DOWN_COUNT" ;;
   }
@@ -63,6 +66,7 @@ view: machine {
   }
 
   dimension: machine_code {
+    description: "Source: l2l.machine"
     type: string
     sql: ${TABLE}."MACHINE_CODE" ;;
   }
@@ -86,6 +90,7 @@ view: machine {
   }
 
   dimension: short_description {
+    description: "Source: l2l.machine"
     label: "Display Name"
     type: string
     sql: ${TABLE}."SHORT_DESCRIPTION" ;;

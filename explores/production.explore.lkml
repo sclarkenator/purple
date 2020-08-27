@@ -36,6 +36,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: ltol_pitch {
+    hidden: yes
     label: "L2L Production Pitch Data"
     group_label: "Production"
     description: "The Pitch hourly data from L2L"
@@ -269,20 +270,20 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:  area {
-    hidden: yes
+    hidden: no
     group_label: "Production"
     label: "L2L"
     view_label: "Area"
     join: ltol_line {
       view_label: "Line"
       type: left_outer
-      sql: ${area.site_id} = ${ltol_line.site} and ${area.area_id} = ${ltol_line.area} and ${area.name} = ${ltol_line.areacode} ;;
+      sql_on: ${area.site_id} = ${ltol_line.site} and ${area.area_id} = ${ltol_line.area} and ${area.name} = ${ltol_line.areacode} ;;
       relationship: one_to_many
     }
     join: machine {
       view_label: "Machine"
       type: left_outer
-      sql:  ${ltol_line.site} = ${machine.site_id} and ${ltol_line.area} = ${machine.area_id} and ${ltol_line.line_id} = ${machine.line_id} ;;
+      sql_on:  ${ltol_line.site} = ${machine.site_id} and ${ltol_line.area} = ${machine.area_id} and ${ltol_line.line_id} = ${machine.line_id} ;;
       relationship: one_to_many
     }
     join: l2l_machine_downtime {
@@ -318,7 +319,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: max_machine_capacity {hidden: yes group_label: "Production" label: "Max Machine Capacity" description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"}
-  explore: v_dispatch {hidden: no group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
+  explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
   explore: jarom_location_data {hidden:  yes group_label: "Production"}

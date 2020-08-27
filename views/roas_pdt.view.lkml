@@ -69,6 +69,8 @@ view: sales_pdt {
       column: utm_campaign {}
       column: total_orders { field: sales_order.total_orders }
       column: total_gross_Amt_non_rounded { field: sales_order_line_base.total_gross_Amt_non_rounded }
+      column: new_customer {field: first_order_flag.new_customer}
+      column: repeat_customer {field: first_order_flag.repeat_customer}
       filters: { field: sales_order_line_base.created_date value: "2 years" }
     }
   }
@@ -79,6 +81,8 @@ view: sales_pdt {
   dimension: utm_campaign { type: string }
   dimension: total_orders { type: number }
   dimension: total_gross_Amt_non_rounded { type: number }
+  dimension: new_customer {type: number}
+  dimension: repeat_customer {type: number}
 }
 
 ######################################################
@@ -129,6 +133,8 @@ view: roas_pdt {
       , null as sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
+      , null as new_customer
+      , null as repeat_customer
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -146,6 +152,8 @@ view: roas_pdt {
       , null as sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
+      , null as new_customer
+      , null as repeat_customer
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -163,6 +171,8 @@ view: roas_pdt {
       , total_gross_Amt_non_rounded as sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
+      , new_customer
+      , repeat_customer
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -180,7 +190,9 @@ view: roas_pdt {
       , null as sales
       , ATTRIBUTION_AMOUNT as c3_cohort_sales
       , TRENDED_AMOUNT as c3_trended_sales
-    from ${c3_pdt.SQL_TABLE_NAME}
+      , null as new_customer
+      , null as repeat_customer
+   from ${c3_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
   }
@@ -249,7 +261,7 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.platform in ('ACUITY','ac','facebook') then 'Acuity'
+      case when ${TABLE}.platform in ('ACUITY','ac') then 'Acuity'
         when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
@@ -264,9 +276,10 @@ view: roas_pdt {
         when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt') then 'YouTube'
         when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath') then 'Yahoo'
-        when ${TABLE}.platform in ('VERITONE','vr') then 'Veritone'
+        when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
+        when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'TV'
         else 'Other' end
       ;;
@@ -278,6 +291,14 @@ view: roas_pdt {
     group_label: "Advanced"
     type: string
     sql: ${TABLE}.medium ;;
+  }
+
+  dimension: campaign_name {
+    label: "Campaign Name (raw)"
+    description: "Data as is from core system (source)"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.campaign_name ;;
   }
 
   dimension: medium_clean {
@@ -303,8 +324,7 @@ view: roas_pdt {
     label: "Adspend ($k)"
     description: "Total Adspend - beware filtering by non adspend fields"
     type: sum
-    value_format: "$#,##0,\" K\""
-    #value_format: "$#,##0"
+    value_format: "[>=1000]$###.0\" K\";[>=1000]$#,##0.00;$0.00"
     sql: ${TABLE}.adspend ;;
   }
 
@@ -374,5 +394,27 @@ view: roas_pdt {
     #value_format: "$#,##0"
     sql: ${TABLE}.c3_trended_sales ;;
   }
+  measure: new_customer {
+    label: "New Customer"
+    description: "Count of new customers"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.new_customer ;;
+  }
+  measure: repeat_customer {
+    label: "Repeat Customer"
+    description: "Count of repeat customers"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.repeat_customer ;;
+  }
+  measure: CPA {
+    label: "CPA"
+    description: "Cost per Acquisition (Adpend/Orders)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/${orders} ;;
+  }
+
 
 }

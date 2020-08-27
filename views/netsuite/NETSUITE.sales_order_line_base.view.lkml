@@ -942,6 +942,16 @@ view: sales_order_line_base {
     sql: split_part(${TABLE}.ZIP,'-',1) ;;
   }
 
+ dimension: carrier_raw {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Carrier (raw)"
+    description: "Netsuite Carrier field. Source:netsuite.sales_order_line"
+    #hidden: yes
+    type: string
+    sql: ${TABLE}.CARRIER ;;
+  }
+
   dimension: carrier {
     view_label: "Fulfillment"
     group_label: " Advanced"

@@ -6,11 +6,13 @@ view: machine_schedule {
   dimension: id {
     primary_key: yes
     label: "Scheduled ID"
+    description: "Source: l2l.machine_schedule"
     type: number
     sql: ${TABLE}."ID" ;;
   }
 
   dimension_group: schedule_created {
+    description: "Source: l2l.machine_schedule"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -25,6 +27,7 @@ view: machine_schedule {
   }
 
   dimension_group: schedule_due {
+    description: "Source: l2l.machine_schedule"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -99,16 +102,19 @@ view: machine_schedule {
   }
 
   dimension: occurrencecount {
+    description: "Source: l2l.machine_schedule"
     type: number
     sql: ${TABLE}."OCCURRENCECOUNT" ;;
   }
 
   dimension: open {
+    description: "Source: l2l.machine_schedule"
     type: yesno
     sql: ${TABLE}."OPEN" ;;
   }
 
   dimension_group: scheduled {
+    description: "Source: l2l.machine_schedule"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no

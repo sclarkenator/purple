@@ -634,14 +634,14 @@ dimension: store_name{
   label: "Store Name"
   description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
   group_label: " Advanced"
-  view_label: "Sales Order"
+  view_label: "Owned Retail"
   type: string
   sql: case when ${store_id} = 'CA-01' then 'San Diego'
   when ${store_id} = 'CA-02' then 'Santa Clara'
   when ${store_id} = 'CA-03' then 'Santa Monica'
   when ${store_id} = 'WA-01' then 'Seattle'
   when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
-  when ${store_id} = 'UT-01' then 'Showroom'
+  when ${store_id} = 'UT-01' then 'Lehi'
   else ${store_id} end;;
 }
 
