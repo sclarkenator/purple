@@ -418,6 +418,36 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: is_same_rolling_week {
+    description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.)"
+    type: yesno
+    ## This dimension returns yes if the created_date is in the last 7 days OR is the same last 7 days for all previous years.
+    ## To determine if it is the same week the previous year, we check the week_of_year and the day_of_week_index.
+    ## Note SQL always returns 52 weeks in a year. (ie Sometimes dec 31 is marked week_of_year=1) That is why this works.
+    sql:
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date)::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '1 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '1 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '2 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '2 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '3 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '3 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '4 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '4 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '5 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '5 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '6 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '6 day')::integer - 1 + 7, 7))
+    ;;
+  }
+
   dimension: period_comparison {
     case: {
       when: {
