@@ -387,6 +387,11 @@ sql_table_name: sales.forecast ;;
     value_format: "#,##0"
     sql: case when ${TABLE}.forecast < current_date then ${total_amount_dimension} else 0 end;; }
 
+  measure: total_sku_ids {
+    hidden: yes
+    type: count_distinct
+    sql: ${sku_id} ;;
+  }
 
   dimension: primary_key {
     primary_key: yes
