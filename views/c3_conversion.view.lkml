@@ -1,28 +1,40 @@
 view: c3_conversion {
   sql_table_name: MARKETING.C3_CONVERSION ;;
 
+  dimension: key {
+    type: string
+    hidden: yes
+    primary_key: yes
+    sql: ${order_id} || ${position}  ;;
+  }
+
   dimension: ad {
     type: string
+    hidden: yes
     sql: ${TABLE}."AD" ;;
   }
 
   dimension: ad_id {
     type: string
+    hidden: yes
     sql: ${TABLE}."AD_ID" ;;
   }
 
   dimension: ad_size {
     type: string
+    hidden: yes
     sql: ${TABLE}."AD_SIZE" ;;
   }
 
   dimension: advertiser {
     type: string
+    hidden: yes
     sql: ${TABLE}."ADVERTISER" ;;
   }
 
-  dimension: attribution {
+  dimension: attribution_dim {
     type: number
+    hidden: yes
     sql: ${TABLE}."ATTRIBUTION" ;;
   }
 
@@ -38,26 +50,13 @@ view: c3_conversion {
 
   dimension: creative {
     type: string
+    hidden: yes
     sql: ${TABLE}."CREATIVE" ;;
   }
 
   dimension: group_name {
     type: string
     sql: ${TABLE}."GROUP_NAME" ;;
-  }
-
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension: is_brand {
@@ -91,8 +90,8 @@ view: c3_conversion {
 
   dimension: order_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."ORDER_ID" ;;
-    primary_key: yes
   }
 
   dimension: placement {
@@ -129,8 +128,9 @@ view: c3_conversion {
     sql: ${TABLE}."REFERRING_ID" ;;
   }
 
-  dimension: sale_amount {
+  dimension: sale_amount_dim {
     type: number
+    hidden: yes
     sql: ${TABLE}."SALE_AMOUNT" ;;
   }
 
@@ -139,22 +139,26 @@ view: c3_conversion {
     sql: ${TABLE}."TOUCHPOINT_TYPE" ;;
   }
 
-  dimension_group: update_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."UPDATE_TS" ;;
+  dimension: next_door {
+    type: yesno
+    sql: ${referring_id} ilike ('%nextdoor%') ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [position_name, group_name, network_name]
+  measure: attribution {
+    type: sum
+    sql: ${TABLE}."ATTRIBUTION" ;;
   }
+
+  measure: converter {
+    description: "Count of orders by the last touch"
+    type: sum
+    sql: case when ${position_name} = 'CONVERTER' then 1 else 0 end ;;
+  }
+
+  measure: orders {
+    description: "Count of Distinct orders"
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+
 }
