@@ -429,9 +429,10 @@ view: item {
       when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
       else null end ;; }
 
-  dimension: created_ts {
+  dimension_group: created_ts {
     hidden: yes
-    type: string
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.CREATED_TS ;;
   }
 
