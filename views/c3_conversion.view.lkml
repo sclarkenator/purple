@@ -90,7 +90,6 @@ view: c3_conversion {
 
   dimension: order_id {
     type: number
-    hidden: yes
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
@@ -130,7 +129,6 @@ view: c3_conversion {
 
   dimension: sale_amount_dim {
     type: number
-    hidden: yes
     sql: ${TABLE}."SALE_AMOUNT" ;;
   }
 
