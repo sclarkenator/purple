@@ -13,6 +13,14 @@ view: date_meta {
     hidden: yes
   }
 
+  dimension_group: date_group {
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    sql: ${TABLE}.date ;;
+    hidden: no
+  }
+
   dimension: DAY_OF_QUARTER {
     type: number
     hidden: yes

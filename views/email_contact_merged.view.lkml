@@ -86,5 +86,12 @@ view: email_contact_merged {
     sql: ${email} ;;
   }
 
+  measure: ROAS {
+    label: "ROAS"
+    description: "Gross Sales / Adspend"
+    value_format: "$#,##0.00"
+    type: number
+    sql: ${sales_order_line_base.total_gross_Amt_non_rounded}/${email_contact_merged.spend} ;;
+  }
 
 }

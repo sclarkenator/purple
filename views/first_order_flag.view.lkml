@@ -25,4 +25,21 @@ view: first_order_flag {
           type: string
           sql: ${TABLE}.new_Flg ;;
         }
+        measure: new_customer {
+          view_label: "Customer"
+          sql: ${pk};;
+          filters: [new_flg: "NEW"]
+          type: count_distinct
+          value_format: "#,##0"
+          hidden: yes
+        }
+
+        measure: repeat_customer {
+          view_label: "Customer"
+          sql: ${pk};;
+          filters: [new_flg: "REPEAT"]
+          type: count_distinct
+          value_format: "#,##0"
+          hidden: yes
+        }
 }
