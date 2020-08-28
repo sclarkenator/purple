@@ -88,7 +88,7 @@
       group_label: "Gross Sales"
       label:  "Gross Sales ($) Amazon"
       description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
-      filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
+      filters: [system: "AMAZON"]
       type: sum
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
@@ -131,7 +131,7 @@
       group_label: "Gross Sales"
       label:  "Gross Sales (units) Amazon"
       description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
-      filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
+      filters: [system: "AMAZON"]
       type: sum
       sql:  ${units} ;;
     }
