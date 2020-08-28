@@ -8,7 +8,7 @@
         column: channel { field: sales_order.channel }
         column: total_gross_Amt_non_rounded {}
         column: total_units {}
-        column: system { field: sales_order.system }
+        column: source { field: sales_order.source }
         filters: {
           field: sales_order.channel
           value: ""
@@ -31,7 +31,7 @@
     dimension: PK {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date, ${sku_id}, ${channel},${system}) ;;
+      sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date, ${sku_id}, ${channel},${source}) ;;
     }
     dimension_group: created {
       hidden: no
@@ -73,8 +73,8 @@
       type: number
       sql:  ${TABLE}.total_units ;;
     }
-    dimension: system {
-      description: "System the order originated in. (Amazon, Shopify, Netsuite). Source:netsuite.sales_order"
+    dimension: source {
+      description: "System where order was placed. Source:netsuite.sales_order"
     }
     measure: total_gross_Amt_non_rounded {
       group_label: "Gross Sales"
@@ -88,7 +88,7 @@
       group_label: "Gross Sales"
       label:  "Gross Sales ($) Amazon"
       description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
-      filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
+      filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
       type: sum
       value_format: "$#,##0"
       sql:  ${gross_Amt_non_rounded} ;;
@@ -131,7 +131,7 @@
       group_label: "Gross Sales"
       label:  "Gross Sales (units) Amazon"
       description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
-      filters: [system: "AMAZON-CA, AMAZON-US, AMAZON.COM"]
+      filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
       type: sum
       sql:  ${units} ;;
     }

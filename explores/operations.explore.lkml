@@ -125,7 +125,7 @@ include: "/dashboards/**/*.dashboard"
       and ${forecast_combined.sku_id} = ${actual_sales.sku_id} ;;
       type: left_outer
       relationship: many_to_many
-      fields: [actual_sales.channel,actual_sales.item_id,actual_sales.system,actual_sales.total_gross_Amt_amazon,actual_sales.total_gross_Amt_dtc,actual_sales.total_gross_Amt_non_rounded,actual_sales.total_gross_Amt_retail,actual_sales.total_gross_Amt_wholesale,actual_sales.total_sku_ids,actual_sales.total_units,actual_sales.total_units_amazon,actual_sales.total_units_dtc,actual_sales.total_units_retail,actual_sales.total_units_wholesale]
+      fields: [actual_sales.channel,actual_sales.item_id,actual_sales.source,actual_sales.total_gross_Amt_amazon,actual_sales.total_gross_Amt_dtc,actual_sales.total_gross_Amt_non_rounded,actual_sales.total_gross_Amt_retail,actual_sales.total_gross_Amt_wholesale,actual_sales.total_sku_ids,actual_sales.total_units,actual_sales.total_units_amazon,actual_sales.total_units_dtc,actual_sales.total_units_retail,actual_sales.total_units_wholesale]
     }
     join: actual_sales_by_ship{
       from: actual_sales
@@ -135,7 +135,7 @@ include: "/dashboards/**/*.dashboard"
               and ${forecast_combined.sku_id} = ${actual_sales_by_ship.sku_id} ;;
       type: left_outer
       relationship: many_to_many
-      fields: [actual_sales_by_ship.channel,actual_sales_by_ship.item_id,actual_sales_by_ship.system,actual_sales_by_ship.total_gross_Amt_amazon,actual_sales_by_ship.total_gross_Amt_dtc,actual_sales_by_ship.total_gross_Amt_non_rounded,actual_sales_by_ship.total_gross_Amt_retail,actual_sales_by_ship.total_gross_Amt_wholesale,actual_sales_by_ship.total_sku_ids,actual_sales_by_ship.total_units,actual_sales_by_ship.total_units_amazon,actual_sales_by_ship.total_units_dtc,actual_sales_by_ship.total_units_retail,actual_sales_by_ship.total_units_wholesale]
+      fields: [actual_sales_by_ship.channel,actual_sales_by_ship.item_id,actual_sales_by_ship.source,actual_sales_by_ship.total_gross_Amt_amazon,actual_sales_by_ship.total_gross_Amt_dtc,actual_sales_by_ship.total_gross_Amt_non_rounded,actual_sales_by_ship.total_gross_Amt_retail,actual_sales_by_ship.total_gross_Amt_wholesale,actual_sales_by_ship.total_sku_ids,actual_sales_by_ship.total_units,actual_sales_by_ship.total_units_amazon,actual_sales_by_ship.total_units_dtc,actual_sales_by_ship.total_units_retail,actual_sales_by_ship.total_units_wholesale]
     }
   }
 
