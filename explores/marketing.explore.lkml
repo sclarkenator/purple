@@ -33,6 +33,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "C3 Data"
       type: left_outer
       sql_on: ${c3.order_id} = ${c3_conversion_count.order_id} ;;
+      relationship: one_to_many
     }
   }
 
