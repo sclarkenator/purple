@@ -100,6 +100,9 @@ view: order_flag {
     -- For flagging an order based on UPT --
      ,case when qty > 0 then qty else 0 end upt_dim
 
+    -- finishing up item flags --
+     ,case when light_duvet > 0 then 1 else 0 end light_duvet_flg
+
     FROM(
       select sol.order_id
         ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -154,6 +157,7 @@ view: order_flag {
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
          ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
+         ,sum(case when (model = 'LIGHT DUVET' ) THEN 1 ELSE 0 END) light_duvet
         -- 2's
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
@@ -1196,5 +1200,12 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  number
     sql:  ${TABLE}.upt_dim ;; }
+
+  dimension: light_duvet_flag {
+    group_label: "    * Orders has:"
+    label: "a Light Duvet"
+    description: "1/0; 1 if there is a Lightweight Duvet in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.light_duvet_flg = 1 ;; }
 
 }
