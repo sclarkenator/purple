@@ -97,15 +97,15 @@ dimension: primary_key {
 
   dimension: hold_buckets {
     type: tier
-    tiers: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600  ]
-    style: classic # the default value, could be excluded
+    tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240   ]
+    style: integer # the default value, could be excluded
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
   dimension: in_queue_buckets {
     type: tier
     tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240 ]
-    style: classic # the default value, could be excluded
+    style: integer # the default value, could be excluded
     sql: ${TABLE}."INQUEUE_TIME" ;;
   }
 
