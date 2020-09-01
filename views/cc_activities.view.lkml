@@ -143,8 +143,8 @@ view: cc_activities {
 
   dimension_group: activity {
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created::date ;; }
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created ;; }
 
 
   dimension: duration_dim {
