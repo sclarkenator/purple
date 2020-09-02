@@ -496,7 +496,7 @@ view: item {
         --H3 FLR FS
          when ${sku_clean} = '10-21-90015' then '10-21-60012'
         when ${sku_clean} in ('10-21-90014','10-21-60522') then '10-21-60011'
-        when ${sku_clean} in ('10-21-90013','10-21-60510') then '10-21-60010'
+        when ${sku_clean} in ('10-21-90013','10-21-60510','10-21-22985') then '10-21-60010'
         when ${sku_clean} = '10-21-90012' then '10-21-60019'
         when ${sku_clean} in ('10-21-90011','10-21-60509') then '10-21-60009'
         --H4 FLR FS
