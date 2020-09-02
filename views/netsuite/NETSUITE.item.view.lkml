@@ -532,6 +532,9 @@ view: item {
         when ${sku_clean} = '10-31-12863' then '10-31-12855'
         --Plush Pillow
         when ${sku_clean} = '10-31-12862' then '10-31-12857'
+        --Duvet Washable
+        when ${sku_clean} = '10-38-13016' then '10-38-13015'
+        when ${sku_clean} = '10-38-13011' then '10-38-13010'
         --NOG with OG Cover
         when ${sku_clean} = '10-21-12970' then '10-21-12960'
         when ${sku_clean} = '10-21-12967' then '10-21-12620'
