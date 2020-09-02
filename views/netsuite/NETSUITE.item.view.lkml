@@ -480,6 +480,31 @@ view: item {
         when ${sku_clean} = '10-21-23625' then '10-21-12625'
         when ${sku_clean} = '10-21-23617' then '10-21-12617'
         when ${sku_clean} = '10-21-23618' then '10-21-12618'
+        --TPM FLR FS
+        when ${sku_clean} = '10-21-90026' then '10-21-12960'
+        when ${sku_clean} in ('10-21-23521','10-21-90025') then '10-21-12632'
+        when ${sku_clean} in ('10-21-23520','10-21-90024') then '10-21-12625'
+        when ${sku_clean} = '10-21-90023' then '10-21-12620'
+        when ${sku_clean} in ('10-21-90022','10-21-23630') then '10-21-12618'
+        when ${sku_clean} = '10-21-90021' then '10-21-12617'
+        --H2 FLR FS
+        when ${sku_clean} = '10-21-90010' then '10-21-60008'
+        when ${sku_clean} in ('10-21-90009','10-21-60521') then '10-21-60007'
+        when ${sku_clean} in ('10-21-90008','10-21-60506') then '10-21-60006'
+        when ${sku_clean} = '10-21-90007' then '10-21-60018'
+        when ${sku_clean} in ('10-21-90006','10-21-60506') then '10-21-60005'
+        --H3 FLR FS
+         when ${sku_clean} = '10-21-90015' then '10-21-60012'
+        when ${sku_clean} in ('10-21-90014','10-21-60522') then '10-21-60011'
+        when ${sku_clean} in ('10-21-90013','10-21-60510') then '10-21-60010'
+        when ${sku_clean} = '10-21-90012' then '10-21-60019'
+        when ${sku_clean} in ('10-21-90011','10-21-60509') then '10-21-60009'
+        --H4 FLR FS
+         when ${sku_clean} = '10-21-90020' then '10-21-60016'
+        when ${sku_clean} in ('10-21-90019','10-21-60523') then '10-21-60015'
+        when ${sku_clean} in ('10-21-90018','10-21-60514') then '10-21-60014'
+        when ${sku_clean} = '10-21-90017' then '10-21-60020'
+        when ${sku_clean} in ('10-21-90016','10-21-60513') then '10-21-60013'
         --Platforms
         when ${sku_clean} in ('10-38-82822','10-38-52822') then '10-38-12822'
         when ${sku_clean} in ('10-38-82815','10-38-92892','10-38-92892','10-38-52815') then '10-38-12815'
