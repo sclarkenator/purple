@@ -5,10 +5,13 @@
         column: ship_order_by_date { field: sales_order.ship_order_by_date}
         column: item_id { field: item.item_id }
         column: sku_id { field: item.sku_id }
+        column: child_id { field: forecast_item_kit.child_id }
+        column: child_sku_id { field: forecast_item_kit.child_sku_id }
         column: channel { field: sales_order.channel }
+        column: source { field: sales_order.source }
         column: total_gross_Amt_non_rounded {}
         column: total_units {}
-        column: source { field: sales_order.source }
+        column: kit_qty { field: forecast_item_kit.kit_qty }
         filters: {
           field: sales_order.channel
           value: ""
@@ -53,11 +56,13 @@
       hidden: no
       label: "Product Item ID"
       description: "Source: netsuite.item"
+      sql: NVL(${TABLE}.child_id,${TABLE}.item_id) ;;
     }
     dimension: sku_id {
       hidden: no
       label: "Product SKU ID"
       description: "SKU ID for item (XX-XX-XXXXXX). Source: netsuite.item"
+      sql: NVL(${TABLE}.child_sku_id,${TABLE}.sku_id) ;;
     }
     dimension: channel {
       hidden: yes
@@ -71,7 +76,7 @@
     dimension: units {
       hidden: yes
       type: number
-      sql:  ${TABLE}.total_units ;;
+      sql:  NVL(${TABLE}.kit_qty,${TABLE}.total_units) ;;
     }
     dimension: source {
       description: "System where order was placed. Source:netsuite.sales_order"

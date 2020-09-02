@@ -44,8 +44,9 @@ view: item {
   }
 
   dimension: type {
+    group_label: "Advanced"
     label: "Type"
-    hidden: yes
+    hidden: no
     description: "Item Type. Source: netsuite.item"
     type: string
     sql: ${TABLE}.type ;;
