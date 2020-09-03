@@ -1248,7 +1248,7 @@ view: order_flag {
 
   dimension: all_seasons_duvet_flag {
     group_label: "    * Orders has:"
-    label: "a Light Duvet"
+    label: "an All Seasons Duvet"
     description: "1/0; 1 if there is an All Seasons Duvet in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.all_seasons_duvet_flg = 1 ;; }
