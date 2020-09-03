@@ -102,6 +102,12 @@ view: order_flag {
 
     -- finishing up item flags --
      ,case when light_duvet > 0 then 1 else 0 end light_duvet_flg
+     ,case when kidbed > 0 then 1 else 0 end kid_bed_flg
+     ,case when purpleplusbed > 0 then 1 else 0 end purple_plus_flg
+     ,case when kidpillow > 0 then 1 else 0 end kid_pillow_flg
+     ,case when allseasons_duvet > 0 then 1 else 0 end all_seasons_duvet_flg
+     ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
+     ,case when lifeline > 0 then 1 else 0 end lifeline_flg
 
     FROM(
       select sol.order_id
@@ -158,6 +164,12 @@ view: order_flag {
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
          ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
          ,sum(case when (model = 'LIGHT DUVET' ) THEN 1 ELSE 0 END) light_duvet
+         ,sum(case when (model = 'KIDS BED' ) THEN 1 ELSE 0 END) kidbed
+         ,sum(case when (model = 'PURPLE PLUS' ) THEN 1 ELSE 0 END) purpleplusbed
+         ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
+         ,sum(case when (model = 'ALL SEASONS DUVET' ) THEN 1 ELSE 0 END) allseasons_duvet
+         ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
+         ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
         -- 2's
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
@@ -180,7 +192,7 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
-         ,sum(case when line = 'FOAM' then 1 else 0 end) purple_mattress
+         ,sum(case when model in ('THE PURPLE MATTRESS W/ OG COVER','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS') then 1 else 0 end) purple_mattress
 
     -- For flagging an order based on UPT --
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
@@ -1207,5 +1219,53 @@ view: order_flag {
     description: "1/0; 1 if there is a Lightweight Duvet in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.light_duvet_flg = 1 ;; }
+
+
+  ## new block ##
+
+
+
+  dimension: kid_bed_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Bed"
+    description: "1/0; 1 if there is a Kid Bed in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_bed_flg = 1 ;; }
+
+  dimension: purple_plus_flag {
+    group_label: "    * Orders has:"
+    label: "a Purple Plus Mattress"
+    description: "1/0; 1 if there is a Purple Plus Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.purple_plus_flg = 1 ;; }
+
+  dimension: kid_pillow_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Pillow"
+    description: "1/0; 1 if there is a Kid Pillow in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_pillow_flg = 1 ;; }
+
+  dimension: all_seasons_duvet_flag {
+    group_label: "    * Orders has:"
+    label: "an All Seasons Duvet"
+    description: "1/0; 1 if there is an All Seasons Duvet in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.all_seasons_duvet_flg = 1 ;; }
+
+  dimension: kid_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Sheets"
+    description: "1/0; 1 if there is a Kid Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_sheets_flg = 1 ;; }
+
+  dimension: lifeline_flag {
+    group_label: "    * Orders has:"
+    label: "a Lifeline Mattress"
+    description: "1/0; 1 if there is a Lifeline Mattress in this order. Source: looker.calculation"
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.lifeline_flg = 1 ;; }
 
 }
