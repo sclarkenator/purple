@@ -1077,6 +1077,12 @@ view: sales_order_line_base {
           when ${item_id} in ('3430') then ${TABLE}.ordered_qty*1
           when ${item_id} in ('3497') then ${TABLE}.ordered_qty*1
           when ${item_id} in ('3499') then ${TABLE}.ordered_qty*1
+          --OTHER
+          when ${item_id} in ('11107') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5863') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5862') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5866','5869') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9077') then ${TABLE}.ordered_qty*1
           else ${TABLE}.ordered_qty end;;
     }
 

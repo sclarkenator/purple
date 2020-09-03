@@ -96,7 +96,8 @@ view: item {
     hidden: yes
     description: "Yes is indicating product attributes have been manually set by BI. Source: analytics.item"
     type: yesno
-    sql: ${TABLE}.bi_update = 1 ;;
+    #sql: ${TABLE}.bi_update = 1 ;;
+    sql:  1 ;;
   }
 
   dimension: finished_good_flg {
@@ -764,6 +765,12 @@ view: item {
         when ${item_id} in ('3430') then '3427'
         when ${item_id} in ('3497') then '3491'
         when ${item_id} in ('3499') then '3492'
+        --OTHER
+        when ${item_id} in ('11107') then '8793'
+        when ${item_id} in ('5863') then '5186'
+        when ${item_id} in ('5862') then '5192'
+        when ${item_id} in ('5866','5869') then '5195'
+        when ${item_id} in ('9077') then '7887'
         else ${item_id} end ;;
   }
 
@@ -835,6 +842,13 @@ view: item {
         when ${sku_clean} in ('10-60-29000') then '10-60-10000'
         when ${sku_clean} in ('10-11-18401') then '10-21-12601'
         when ${sku_clean} in ('10-11-18402') then '10-21-12602'
+        --OTHER
+        when ${sku_clean} in ('10-31-12891') then '10-31-12890'
+        when ${sku_clean} in ('10-38-82815') then '10-38-12815'
+        when ${sku_clean} in ('10-38-82846') then '10-38-12846'
+        when ${sku_clean} in ('10-38-82890','10-38-92892') then '10-38-12892'
+        when ${sku_clean} in ('10-21-70007') then '10-21-60007'
+
         else ${sku_clean} end ;;
   }
 
