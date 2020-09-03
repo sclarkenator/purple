@@ -38,7 +38,8 @@ view: order_flag {
 
 
       -- adding for ecommerce bundles
-     ,case when ( harmonytwobund >0 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( harmony_ORDERED > 1 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( softstretch_ORDERED > 1 ) then 1 else 0 end softstretchtwobund_flg
      ,case when ( plushtwobund >0 ) then 1 else 0 end plushtwobund_flg
      ,case when ( purplepillowtwobund >0 ) then 1 else 0 end purplepillowtwobund_flg
      ,case when ( boostertwobund >0 ) then 1 else 0 end boostertwobund_flg
@@ -58,7 +59,7 @@ view: order_flag {
      ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
      ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
 -- bundles
-     ,case when ( harmonytwobund > 0 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
+     ,case when ( harmony_ORDERED > 1 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
      ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
      ,case when ( double_cushion > 0 and purple_pillow_flg >0) then 1 else 0 end bundle3_flg
      ,case when ( duvet > 0 and plush_pillow_flg >0) then 1 else 0 end bundle4_flg
@@ -68,11 +69,11 @@ view: order_flag {
      ,case when ( royal_cushion_flg > 0 and purple_pillow_flg >0) then 1 else 0 end bundle8_flg
      ,case when ( duvet > 0 and sleepmasktwobund >0) then 1 else 0 end bundle9_flg
      ,case when ( simply_cushion > 0 and back_cushion_flg >0) then 1 else 0 end bundle10_flg
-     ,case when ( harmonytwobund > 0 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
+     ,case when ( harmony_ORDERED > 1 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
      ,case when ( purplepillowtwobund > 0 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
      ,case when ( purplepillowtwobund >= 1) then 1 else 0 end bundle13_flg
-     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmonytwobund >0) then 1 else 0 end bundle14_flg
-     ,case when ( harmonytwobund > 0 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmony_ORDERED >1) then 1 else 0 end bundle14_flg
+     ,case when ( harmony_ORDERED > 1 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
 
      ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
      ,case when ( original_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle17_flg
@@ -171,7 +172,8 @@ view: order_flag {
          ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
          ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
         -- 2's
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
+         ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
+         ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
@@ -1267,5 +1269,22 @@ view: order_flag {
     hidden: yes
     type:  yesno
     sql: ${TABLE}.lifeline_flg = 1 ;; }
+
+  dimension: harmonytwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Harmony Pillows"
+    description: "1/0; 1 if there are at least (2) Harmony Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.harmonytwobund_flg = 1 ;; }
+
+  dimension: softstretchtwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Softstretch Sheets"
+    description: "1/0; 1 if there are at least (2) Softstretch Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.softstretchtwobund_flg = 1 ;; }
+
 
 }
