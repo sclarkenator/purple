@@ -410,6 +410,16 @@ view: item {
     sql: ${TABLE}.product_description ;;
   }
 
+  dimension: grid_height {
+    group_label: "Advanced"
+    label: "Grid Height"
+    description: "Source: Looker calculation"
+    sql: case when ${TABLE}.model = 'KIDS BED' or ${TABLE}.model = 'HYBRID 2' or ${TABLE}.model = 'HYBRID 2H' or ${TABLE}.model = 'THE PURPLE MATTRESS' ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS' ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS W/ OG COVER' then '2"'
+      when ${TABLE}.model = 'HYBRID PREMIER 3' then '3"'
+      when ${TABLE}.model = 'HYBRID PREMIER 4' then '4"'
+      else null end ;;
+  }
+
   dimension: color {
     label: " Product Color"
     description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: looker calculation"
