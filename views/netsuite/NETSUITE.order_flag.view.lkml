@@ -1264,6 +1264,7 @@ view: order_flag {
     group_label: "    * Orders has:"
     label: "a Lifeline Mattress"
     description: "1/0; 1 if there is a Lifeline Mattress in this order. Source: looker.calculation"
+    hidden: yes
     type:  yesno
     sql: ${TABLE}.lifeline_flg = 1 ;; }
 
