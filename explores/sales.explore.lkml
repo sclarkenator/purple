@@ -461,6 +461,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+  explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}

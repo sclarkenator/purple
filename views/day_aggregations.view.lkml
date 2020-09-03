@@ -800,7 +800,7 @@ view: day_aggregations {
     description: "Retun on Adspend (total roas salse/adspend)"
     type: number
     value_format: "$#,##0.00"
-    sql: ${roas_sales}/${adspend} ;;
+    sql: ${roas_sales}/NULLIF(${adspend},0) ;;
     }
 
   measure: dtc_roas {
@@ -808,7 +808,7 @@ view: day_aggregations {
     description: "Retun on Adspend (total roas salse/adspend)"
     type: number
     value_format: "$#,##0.00"
-    sql: ${dtc_amount}/${adspend} ;;
+    sql: ${dtc_amount}/NULLIF(${adspend},0) ;;
   }
 
   measure: target_roas_sales {
@@ -824,7 +824,7 @@ view: day_aggregations {
     description: "DTC Target + Retail Target + 50% of Wholesale Target /Adspend Target"
     type: number
     value_format: "$#,##0.00"
-    sql: ${target_roas_sales}/${adspend_target} ;;
+    sql: ${target_roas_sales}/NULLIF(${adspend_target},0) ;;
   }
 
   measure: is_sales {

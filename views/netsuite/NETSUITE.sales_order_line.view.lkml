@@ -177,6 +177,23 @@ view: sales_order_line {
     sql: date_trunc(week, ${Due_Date}::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
 
+  dimension: bundle {
+    type: string
+    hidden:  no
+    view_label: "Sales Order"
+    group_label: " Advanced"
+    label: " Bundle"
+    description: "Bunddle filter"
+    case: {
+      when: {sql: ${order_flag.ultimate_cushion_flag} AND ${order_flag.back_cushion_flag} ;; label: "Ultimate + Back"}
+      when: {sql: ${order_flag.duvet_flg} AND ${order_flag.softstretch_sheets_flag} ;; label: "Duvet + SoftStretch"}
+      when: {sql: ${order_flag.royal_cushion_flag} AND ${order_flag.pet_bed_flg} ;; label: "Royal + Pet Bed"}
+      when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='HARMONY') ;; label: "2 Harmony"}
+      when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='PILLOW 2.0') ;; label: "2 Purple Pillow"}
+      else: "other" }
+  }
+
+
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
     hidden:  yes
