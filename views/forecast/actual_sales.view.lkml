@@ -34,7 +34,7 @@ view: actual_sales {
   dimension: PK {
     primary_key: yes
     hidden: yes
-    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${sku_id}, ${channel},${source}) ;;
+    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${TABLE}.kit_item_id,${TABLE}.kit_sku_id, ${channel},${source}) ;;
   }
   dimension_group: created {
     hidden: no
