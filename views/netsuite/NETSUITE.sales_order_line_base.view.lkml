@@ -1009,6 +1009,77 @@ view: sales_order_line_base {
     sql: ${TABLE}.TRANSMITTED_TO_ID;;
   }
 
+    measure: kit_total_units {
+      description: "This is used for the forecast_combined and actual_sales explore.  It is break the kits/packages back to their child items"
+      type: sum
+      hidden: yes
+      sql:
+        case
+          --BASE
+          when ${item_id} in ('9809') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9816') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9824') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('10391') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('11511') then ${TABLE}.ordered_qty*2
+          --BEDDING
+          when ${item_id} in ('9783') then ${TABLE}.ordered_qty*4
+          when ${item_id} in ('9800') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9813') then ${TABLE}.ordered_qty*2
+          --KIT
+          when ${item_id} in ('9781') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9782') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9785') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9790') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9791') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9794') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9795') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9796') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9798') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9799') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9801') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9802') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9804') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9805') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9806') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9807') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9810') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9814') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9821') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9822') then ${TABLE}.ordered_qty*1
+          --MATTRESS
+          when ${item_id} in ('9786') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9787') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9789') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9792') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9803') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9808') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9815') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9818') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9820') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('11262') then ${TABLE}.ordered_qty*2
+          --SALES SUPPORT
+          when ${item_id} in ('9793') then ${TABLE}.ordered_qty*50
+          when ${item_id} in ('9811') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9817') then ${TABLE}.ordered_qty*10
+          when ${item_id} in ('9823') then ${TABLE}.ordered_qty*25
+          when ${item_id} in ('10281') then ${TABLE}.ordered_qty*60
+          --SEATING
+          when ${item_id} in ('9784') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9788') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9797') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9812') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9819') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9825') then ${TABLE}.ordered_qty*4
+          --Z-MARKETING
+          when ${item_id} in ('3502') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3504') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3429') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3430') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3497') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3499') then ${TABLE}.ordered_qty*1
+          else ${TABLE}.ordered_qty end;;
+    }
+
   set: order_details {
     fields: [sales_order_line.sales_order_details*]
   }

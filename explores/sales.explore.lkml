@@ -402,12 +402,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
       relationship: many_to_many
     }
-    join: forecast_item_kit {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${item.item_id} = ${forecast_item_kit.parent_kit_id} ;;
-      relationship: one_to_many
-    }
+#     join: forecast_item_kit {
+#       view_label: "Product"
+#       type: left_outer
+#       sql_on: ${item.item_id} = ${forecast_item_kit.parent_kit_id} ;;
+#       relationship: one_to_many
+#     }
   }
 
   explore: warranty {
