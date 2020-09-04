@@ -33,7 +33,7 @@ view: shipping {
   }
 
   measure: mainfreight_sum {
-    hidden: no
+    hidden: yes
     type: sum
     sql: ${TABLE}."MAINFREIGHT" ;;
   }
