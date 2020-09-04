@@ -40,8 +40,8 @@ view: order_flag {
       -- adding for ecommerce bundles
      ,case when ( harmony_ORDERED > 1 ) then 1 else 0 end harmonytwobund_flg
      ,case when ( softstretch_ORDERED > 1 ) then 1 else 0 end softstretchtwobund_flg
-     ,case when ( plushtwobund >0 ) then 1 else 0 end plushtwobund_flg
-     ,case when ( purplepillowtwobund >0 ) then 1 else 0 end purplepillowtwobund_flg
+     ,case when ( plush_ORDERED > 1 ) then 1 else 0 end plushtwobund_flg
+     ,case when ( purplepillow_ORDERED > 1 ) then 1 else 0 end purplepillowtwobund_flg
      ,case when ( boostertwobund >0 ) then 1 else 0 end boostertwobund_flg
      ,case when ( sleepmasktwobund >0 ) then 1 else 0 end sleepmasktwobund_flg
      ,case when ( royalcushtwobund >0 ) then 1 else 0 end royalcushtwobund_flg
@@ -65,13 +65,13 @@ view: order_flag {
      ,case when ( duvet > 0 and plush_pillow_flg >0) then 1 else 0 end bundle4_flg
      ,case when ( gravity_blanket > 0 and sleepmasktwobund >0) then 1 else 0 end bundle5_flg
      ,case when ( everywhere_cushion_flg > 0 and simply_cushion >0) then 1 else 0 end bundle6_flg
-     ,case when ( plushtwobund >= 1) then 1 else 0 end bundle7_flg
+     ,case when ( plush_ORDERED > 1) then 1 else 0 end bundle7_flg
      ,case when ( royal_cushion_flg > 0 and purple_pillow_flg >0) then 1 else 0 end bundle8_flg
      ,case when ( duvet > 0 and sleepmasktwobund >0) then 1 else 0 end bundle9_flg
      ,case when ( simply_cushion > 0 and back_cushion_flg >0) then 1 else 0 end bundle10_flg
      ,case when ( harmony_ORDERED > 1 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
-     ,case when ( purplepillowtwobund > 0 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
-     ,case when ( purplepillowtwobund >= 1) then 1 else 0 end bundle13_flg
+     ,case when ( purplepillow_ORDERED > 1 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
+     ,case when ( purplepillow_ORDERED > 1) then 1 else 0 end bundle13_flg
      ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmony_ORDERED >1) then 1 else 0 end bundle14_flg
      ,case when ( harmony_ORDERED > 1 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
 
@@ -174,8 +174,8 @@ view: order_flag {
         -- 2's
          ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
          ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
+         ,sum(case when (line = 'PILLOW' and model = 'PLUSH') THEN ORDERED_QTY ELSE 0 END) plush_ORDERED
+         ,sum(case when (line = 'PILLOW' and model = 'PILLOW 2.0') THEN ORDERED_QTY ELSE 0 END) purplepillow_ORDERED
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
