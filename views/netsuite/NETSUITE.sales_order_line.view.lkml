@@ -1516,6 +1516,7 @@ view: sales_order_line {
     description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
     label: "Sales - Inside Sales Team ($)"
     type: sum
+    value_format: "$#,##0"
     sql: case when ${agent_name.merged_name} is not null
       and ${zendesk_sell.name} is not null
       and NOT ${sales_order.is_exchange}
@@ -1529,6 +1530,7 @@ view: sales_order_line {
     label: "Sales - Customer Care Team ($)"
     description: "Summing Gross Sales where the order was from a customer care agent. Excluding warranties and exchanges."
     type: sum
+    value_format: "$#,##0"
     sql: case when ${agent_name.merged_name} is not null
       and ${zendesk_sell.name} is null
       and NOT ${sales_order.is_exchange}
