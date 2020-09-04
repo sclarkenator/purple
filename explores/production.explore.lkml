@@ -273,6 +273,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: no
     group_label: "Production"
     label: "L2L"
+    description: "A combination of reports pulled from L2L (Leading2Lean) including Machine Downtime, Dispatch, Pitch, etc."
     view_label: "Area"
     join: ltol_line {
       view_label: "Line"

@@ -32,6 +32,12 @@ view: shipping {
     sql: ${TABLE}."MAINFREIGHT" ;;
   }
 
+  measure: mainfreight_sum {
+    hidden: yes
+    type: sum
+    sql: ${TABLE}."MAINFREIGHT" ;;
+  }
+
   dimension: other {
     hidden: yes
     type: number

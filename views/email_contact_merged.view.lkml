@@ -46,13 +46,21 @@ view: email_contact_merged {
     ]
     sql:${TABLE}.created ;;
   }
-
   dimension: email {
+    hidden:  no
+    label: "Customer Email"
     type: string
-    primary_key: yes
-    sql:  ${TABLE}.email ;;
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes'
+              THEN ${TABLE}.email
+              ELSE '**********' || '@' || SPLIT_PART(${TABLE}.email, '@', 2)
+            END ;;
   }
-
+  dimension: email_join {
+    hidden: yes
+    primary_key: yes
+    type: string
+    sql: ${TABLE}.email ;;
+  }
   dimension: source {
     type: string
     sql:  ${TABLE}.source ;;

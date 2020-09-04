@@ -117,7 +117,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
     join: sales_order {
       type: left_outer
-      sql_on: ${sales_order.email} = ${email_contact_merged.email} ;;
+      sql_on: lower(${sales_order.email}) = lower(${email_contact_merged.email_join});;
       relationship: many_to_one
     }
     join: sales_order_line_base {

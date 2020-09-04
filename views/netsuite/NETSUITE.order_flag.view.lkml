@@ -38,9 +38,10 @@ view: order_flag {
 
 
       -- adding for ecommerce bundles
-     ,case when ( harmonytwobund >0 ) then 1 else 0 end harmonytwobund_flg
-     ,case when ( plushtwobund >0 ) then 1 else 0 end plushtwobund_flg
-     ,case when ( purplepillowtwobund >0 ) then 1 else 0 end purplepillowtwobund_flg
+     ,case when ( harmony_ORDERED > 1 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( softstretch_ORDERED > 1 ) then 1 else 0 end softstretchtwobund_flg
+     ,case when ( plush_ORDERED > 1 ) then 1 else 0 end plushtwobund_flg
+     ,case when ( purplepillow_ORDERED > 1 ) then 1 else 0 end purplepillowtwobund_flg
      ,case when ( boostertwobund >0 ) then 1 else 0 end boostertwobund_flg
      ,case when ( sleepmasktwobund >0 ) then 1 else 0 end sleepmasktwobund_flg
      ,case when ( royalcushtwobund >0 ) then 1 else 0 end royalcushtwobund_flg
@@ -58,21 +59,21 @@ view: order_flag {
      ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
      ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
 -- bundles
-     ,case when ( harmonytwobund > 0 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
+     ,case when ( harmony_ORDERED > 1 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
      ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
      ,case when ( double_cushion > 0 and purple_pillow_flg >0) then 1 else 0 end bundle3_flg
      ,case when ( duvet > 0 and plush_pillow_flg >0) then 1 else 0 end bundle4_flg
      ,case when ( gravity_blanket > 0 and sleepmasktwobund >0) then 1 else 0 end bundle5_flg
      ,case when ( everywhere_cushion_flg > 0 and simply_cushion >0) then 1 else 0 end bundle6_flg
-     ,case when ( plushtwobund >= 1) then 1 else 0 end bundle7_flg
+     ,case when ( plush_ORDERED > 1) then 1 else 0 end bundle7_flg
      ,case when ( royal_cushion_flg > 0 and purple_pillow_flg >0) then 1 else 0 end bundle8_flg
      ,case when ( duvet > 0 and sleepmasktwobund >0) then 1 else 0 end bundle9_flg
      ,case when ( simply_cushion > 0 and back_cushion_flg >0) then 1 else 0 end bundle10_flg
-     ,case when ( harmonytwobund > 0 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
-     ,case when ( purplepillowtwobund > 0 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
-     ,case when ( purplepillowtwobund >= 1) then 1 else 0 end bundle13_flg
-     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmonytwobund >0) then 1 else 0 end bundle14_flg
-     ,case when ( harmonytwobund > 0 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+     ,case when ( harmony_ORDERED > 1 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
+     ,case when ( purplepillow_ORDERED > 1 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
+     ,case when ( purplepillow_ORDERED > 1) then 1 else 0 end bundle13_flg
+     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmony_ORDERED >1) then 1 else 0 end bundle14_flg
+     ,case when ( harmony_ORDERED > 1 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
 
      ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
      ,case when ( original_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle17_flg
@@ -102,6 +103,12 @@ view: order_flag {
 
     -- finishing up item flags --
      ,case when light_duvet > 0 then 1 else 0 end light_duvet_flg
+     ,case when kidbed > 0 then 1 else 0 end kid_bed_flg
+     ,case when purpleplusbed > 0 then 1 else 0 end purple_plus_flg
+     ,case when kidpillow > 0 then 1 else 0 end kid_pillow_flg
+     ,case when allseasons_duvet > 0 then 1 else 0 end all_seasons_duvet_flg
+     ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
+     ,case when lifeline > 0 then 1 else 0 end lifeline_flg
 
     FROM(
       select sol.order_id
@@ -158,10 +165,17 @@ view: order_flag {
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
          ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
          ,sum(case when (model = 'LIGHT DUVET' ) THEN 1 ELSE 0 END) light_duvet
+         ,sum(case when (model = 'KIDS BED' ) THEN 1 ELSE 0 END) kidbed
+         ,sum(case when (model = 'PURPLE PLUS' ) THEN 1 ELSE 0 END) purpleplusbed
+         ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
+         ,sum(case when (model = 'ALL SEASONS DUVET' ) THEN 1 ELSE 0 END) allseasons_duvet
+         ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
+         ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
         -- 2's
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
+         ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
+         ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
+         ,sum(case when (line = 'PILLOW' and model = 'PLUSH') THEN ORDERED_QTY ELSE 0 END) plush_ORDERED
+         ,sum(case when (line = 'PILLOW' and model = 'PILLOW 2.0') THEN ORDERED_QTY ELSE 0 END) purplepillow_ORDERED
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
          ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
@@ -180,7 +194,7 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
-         ,sum(case when line = 'FOAM' then 1 else 0 end) purple_mattress
+         ,sum(case when model in ('THE PURPLE MATTRESS W/ OG COVER','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS') then 1 else 0 end) purple_mattress
 
     -- For flagging an order based on UPT --
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
@@ -349,6 +363,33 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
+
+  measure: kid_bed_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Bed"
+    description: "1/0 per order; 1 if there was a kid bed in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_bed_flg ;; }
+
+  measure: kid_pillow_orders{
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Pillow"
+    description: "1/0 per order; 1 if there was a kid pillow in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_pillow_flg ;; }
+
+  measure: kid_sheets_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Sheet"
+    description: "1/0 per order; 1 if there was a kid sheet in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_sheets_flg ;; }
 
   dimension: mattress_flg {
     group_label: "    * Orders has:"
@@ -1207,5 +1248,70 @@ view: order_flag {
     description: "1/0; 1 if there is a Lightweight Duvet in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.light_duvet_flg = 1 ;; }
+
+
+  ## new block ##
+
+
+
+  dimension: kid_bed_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Bed"
+    description: "1/0; 1 if there is a Kid Bed in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_bed_flg = 1 ;; }
+
+  dimension: purple_plus_flag {
+    group_label: "    * Orders has:"
+    label: "a Purple Plus Mattress"
+    description: "1/0; 1 if there is a Purple Plus Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.purple_plus_flg = 1 ;; }
+
+  dimension: kid_pillow_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Pillow"
+    description: "1/0; 1 if there is a Kid Pillow in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_pillow_flg = 1 ;; }
+
+  dimension: all_seasons_duvet_flag {
+    group_label: "    * Orders has:"
+    label: "an All Seasons Duvet"
+    description: "1/0; 1 if there is an All Seasons Duvet in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.all_seasons_duvet_flg = 1 ;; }
+
+  dimension: kid_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Sheets"
+    description: "1/0; 1 if there is a Kid Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_sheets_flg = 1 ;; }
+
+  dimension: lifeline_flag {
+    group_label: "    * Orders has:"
+    label: "a Lifeline Mattress"
+    description: "1/0; 1 if there is a Lifeline Mattress in this order. Source: looker.calculation"
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.lifeline_flg = 1 ;; }
+
+  dimension: harmonytwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Harmony Pillows"
+    description: "1/0; 1 if there are at least (2) Harmony Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.harmonytwobund_flg = 1 ;; }
+
+  dimension: softstretchtwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Softstretch Sheets"
+    description: "1/0; 1 if there are at least (2) Softstretch Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.softstretchtwobund_flg = 1 ;; }
+
 
 }
