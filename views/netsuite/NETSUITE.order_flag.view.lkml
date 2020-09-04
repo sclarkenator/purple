@@ -377,7 +377,7 @@ view: order_flag {
     hidden: no
     group_label: "Total Orders with:"
     label: "a Kid Pillow"
-    description: "1/0 per order; 1 if there was a gravity mask in the order. Source:looker.calculation"
+    description: "1/0 per order; 1 if there was a kid pillow in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.kid_pillow_flg ;; }
@@ -386,7 +386,7 @@ view: order_flag {
     hidden: no
     group_label: "Total Orders with:"
     label: "a Kid Sheet"
-    description: "1/0 per order; 1 if there was a gravity mask in the order. Source:looker.calculation"
+    description: "1/0 per order; 1 if there was a kid sheet in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.kid_sheets_flg ;; }
