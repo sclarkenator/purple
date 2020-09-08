@@ -387,6 +387,33 @@ view: order_flag {
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
 
+  measure: kid_bed_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Bed"
+    description: "1/0 per order; 1 if there was a kid bed in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_bed_flg ;; }
+
+  measure: kid_pillow_orders{
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Pillow"
+    description: "1/0 per order; 1 if there was a kid pillow in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_pillow_flg ;; }
+
+  measure: kid_sheets_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Sheet"
+    description: "1/0 per order; 1 if there was a kid sheet in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_sheets_flg ;; }
+
   dimension: mattress_flg {
     group_label: "    * Orders has:"
     label: "a Mattress"

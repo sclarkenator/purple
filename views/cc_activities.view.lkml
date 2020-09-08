@@ -143,8 +143,20 @@ view: cc_activities {
 
   dimension_group: activity {
     type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created::date  ;; }
+
+  dimension: prev_week{
+    group_label: "Activity Date"
+    label: "z - Previous Week"
+    type: yesno
+    sql:  date_trunc(week, ${TABLE}.created::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
+
+  dimension_group: activity_time {
+    type: time
+    hidden: yes
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: ${TABLE}.created  ;; }
 
 
   dimension: duration_dim {
