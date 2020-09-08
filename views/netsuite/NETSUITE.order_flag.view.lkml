@@ -39,6 +39,7 @@ view: order_flag {
 
       -- adding for ecommerce bundles
      ,case when ( harmony_ORDERED > 1 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( harmony_ORDERED = 1 ) then 1 else 0 end singleharmony_flg
      ,case when ( softstretch_ORDERED > 1 ) then 1 else 0 end softstretchtwobund_flg
      ,case when ( plush_ORDERED > 1 ) then 1 else 0 end plushtwobund_flg
      ,case when ( purplepillow_ORDERED > 1 ) then 1 else 0 end purplepillowtwobund_flg
@@ -74,6 +75,28 @@ view: order_flag {
      ,case when ( purplepillow_ORDERED > 1) then 1 else 0 end bundle13_flg
      ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmony_ORDERED >1) then 1 else 0 end bundle14_flg
      ,case when ( harmony_ORDERED > 1 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+
+      --big 5 og sheets bundles
+     ,case when (harmony_ORDERED = 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end big5_singleharmony_ogsheets_flg
+      --bundle 1 is the 2 harmonies, og sheets, protector bundle
+     ,case when (purplepillow_ORDERED > 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twopurppillow_ogsheets_flg
+     ,case when (plush_ORDERED > 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twoplush_ogsheets_flg
+     --big 5 og sheets with base bundles
+     ,case when (big5_singleharmony_ogsheets_flg > 0 and BASE_FLG > 0) then 1 else 0 end big5_singleharmony_ogsheets_barb_flg
+     ,case when (bundle1_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoharmony_ogsheets_barb_flg
+     ,case when (big5_twopurppillow_ogsheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twopurppillow_ogsheets_barb_flg
+     ,case when (big5_twoplush_ogsheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoplush_ogsheets_barb_flg
+
+     --big 5 SS sheets bundles
+     ,case when (harmony_ORDERED = 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end big5_singleharmony_sssheets_flg
+     --bundle 15 is the 2 harmonies, SS sheets, protector bundle
+     ,case when (purplepillow_ORDERED > 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twopurppillow_sssheets_flg
+     ,case when (plush_ORDERED > 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twoplush_sssheets_flg
+     --big 5 ss sheets with base bundles
+     ,case when (big5_singleharmony_sssheets_flg > 0 and BASE_FLG > 0) then 1 else 0 end big5_singleharmony_sssheets_barb_flg
+     ,case when (bundle15_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoharmony_sssheets_barb_flg
+     ,case when (big5_twopurppillow_sssheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twopurppillow_sssheets_barb_flg
+     ,case when (big5_twoplush_sssheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoplush_sssheets_barb_flg
 
      ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
      ,case when ( original_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle17_flg
@@ -1286,5 +1309,127 @@ view: order_flag {
     hidden: yes
     sql: ${TABLE}.softstretchtwobund_flg = 1 ;; }
 
+  dimension: singleharmony_flag {
+    group_label: "    * Orders has:"
+    label: "A Single Harmony Pillow"
+    description: "1/0; 1 if there is exactly 1 Harmony Pillow in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.singleharmony_flg = 1 ;; }
+
+
+# big 5 bundles
+  dimension: big5_singleharmony_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_ogsheets_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_ogsheets_flg = 1 ;; }
+
+  dimension: big5_twoplush_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_ogsheets_flg = 1 ;; }
+
+  dimension: big5_singleharmony_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoharmony_ogsheets_barb_flg {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Harmony, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Harmony, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoharmony_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoplush_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_ogsheets_barb_flg = 1 ;; }
+
+# big 5 bundles w/ softstretch upgrade
+  dimension: big5_singleharmony_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_sssheets_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_sssheets_flg = 1 ;; }
+
+  dimension: big5_twoplush_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_sssheets_flg = 1 ;; }
+
+  dimension: big5_singleharmony_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoharmony_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Harmony, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Harmony, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoharmony_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoplush_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_sssheets_barb_flg = 1 ;; }
 
 }
