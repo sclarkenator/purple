@@ -15,6 +15,7 @@ view: email_contact_merged {
             union
             select 'MyMove' as source, created::date, email, postal_code as zipcode, null as gender, null as target_strategy
             from analytics.marketing.mymove_contact
+            where created::date >= '2020-03-01'
           ) z
         ) y
         where rn = 1
