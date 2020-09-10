@@ -60,7 +60,7 @@ view: c3_roa {
         or ${SOURCE} = 'YOUTUBE'
         or ${SOURCE} = 'YOUTUBE.COM'
         or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
-      when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER','FB/IG'
+      when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER','FB/IG')
                 or ${SOURCE} ilike ('%social media%') ;; label:"social"}
       when: {sql: ${SOURCE} ilike ('%ispla%')
                 or ${PLATFORM} in ('ACUITY')
