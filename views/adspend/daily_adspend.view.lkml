@@ -223,7 +223,7 @@ view: daily_adspend {
     group_label: "Advanced"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER') ;; label: "Social" }
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER','FB/IG') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
       when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','OCEAN MEDIA') ;; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
@@ -242,13 +242,13 @@ view: daily_adspend {
         or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR') OR ${TABLE}.source ilike ('instagram')
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform in ('TV','HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE');; label: "native" }
+      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA');; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE','POSTIE','MADRIVO','ADWALLET','FKL') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
       else: "other" }
   }
