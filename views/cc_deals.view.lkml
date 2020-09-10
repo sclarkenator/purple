@@ -28,7 +28,7 @@ view: cc_deals {
   dimension_group: created {
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: ${TABLE}.created:: date ;; }
 
   dimension: email {
     type:  string
