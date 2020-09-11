@@ -32,6 +32,7 @@ view: production_goal {
   }
 
   dimension_group: current {
+    view_label: "Production Goals"
     label: "Current"
     description:  "Current Time/Date for calculations"
     type: time
