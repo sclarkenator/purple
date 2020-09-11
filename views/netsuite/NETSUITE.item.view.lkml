@@ -413,11 +413,14 @@ view: item {
     #hidden: yes
     #sql: ${TABLE}.model ;;
     case: {
-      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS';; label: "1"}
-      when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "2"}
-      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "3"}
-      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "4"}
-      else: "5"
+      when: {sql: ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS';; label: "1"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS W/ OG COVER';; label: "2"}
+      when: {sql: ${TABLE}.model = 'KIDS BED';; label: "3"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS';; label: "4"}
+      when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "5"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "6"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "7"}
+      else: "8"
 
     }
   }
