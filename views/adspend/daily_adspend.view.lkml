@@ -393,5 +393,12 @@ view: daily_adspend {
                 when campaign_name ilike '%blanket%' then 'BEDDING'
                 when campaign_name ilike '%mask%' then 'MASK'
                 when campaign_name ilike '%bed%' then 'MATTRESS'
-                else 'MATTRESS' end ;;  }
+                else 'MATTRESS' end ;;
+  }
+  measure: last_updated_date {
+    type: date
+    sql: MAX(${ad_raw}) ;;
+    convert_tz: no
+  }
+
 }
