@@ -1,14 +1,12 @@
 view: actual_sales {
   derived_table: {
+    publish_as_db_view: yes
     explore_source: sales_order_line {
       column: created_date {}
       column: ship_order_by_date { field: sales_order.ship_order_by_date}
-      #column: item_id { field: item.item_id }
-      #column: sku_id { field: item.sku_id }
       column: channel { field: sales_order.channel }
       column: source { field: sales_order.source }
       column: total_gross_Amt_non_rounded {}
-      #column: total_units {}
       column: kit_item_id { field: item.kit_item_id }
       column: kit_sku_id { field: item.kit_sku_id }
       column: kit_total_units {}

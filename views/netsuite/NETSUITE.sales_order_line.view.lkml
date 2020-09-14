@@ -13,7 +13,7 @@ view: sales_order_line {
   }
 
   measure: asp {
-    hidden: yes
+    hidden: no
     label: "ASP"
     description: "Average Sales Price. Source: looker.calculation"
     type: number

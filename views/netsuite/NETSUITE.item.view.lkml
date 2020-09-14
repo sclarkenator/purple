@@ -403,6 +403,26 @@ view: item {
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
     #hidden: yes
     sql: ${TABLE}.model ;;
+    order_by_field: model_raw_order
+  }
+  dimension: model_raw_order {
+    hidden:  yes
+    group_label: "Product Hierarchy"
+    label: "3. Model"
+    description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
+    #hidden: yes
+    #sql: ${TABLE}.model ;;
+    case: {
+      when: {sql: ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS';; label: "1"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS W/ OG COVER';; label: "2"}
+      when: {sql: ${TABLE}.model = 'KIDS BED';; label: "3"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS';; label: "4"}
+      when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "5"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "6"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "7"}
+      else: "8"
+
+    }
   }
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
@@ -416,12 +436,13 @@ view: item {
     group_label: "Advanced"
     label: "Grid Height"
     description: "Source: Looker calculation"
-    sql: case when ${TABLE}.model = 'KIDS BED' or ${TABLE}.model = 'HYBRID 2' or ${TABLE}.model = 'HYBRID 2H'
-        or ${TABLE}.model = 'THE PURPLE MATTRESS' or ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS' or ${TABLE}.model = 'THE PURPLE MATTRESS W/ OG COVER'
-        or ${TABLE}.model = 'PURPLE PLUS'  or ${TABLE}.model = 'LIFELINE MATTRESS' then '2"'
-      when ${TABLE}.model = 'HYBRID PREMIER 3' or ${TABLE}.model = 'REST MATTRESS' then '3"'
-      when ${TABLE}.model = 'HYBRID PREMIER 4' then '4"'
-      else NULL end ;;
+    sql:
+      case
+        when ${TABLE}.model in ('KIDS BED','HYBRID 2','HYBRID 2H','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS','THE PURPLE MATTRESS W/ OG COVER','PURPLE PLUS','LIFELINE MATTRESS') then '2"'
+        when ${TABLE}.model in ('HYBRID PREMIER 3','REST MATTRESS') then '3"'
+        when ${TABLE}.model = 'HYBRID PREMIER 4' then '4"'
+        else NULL
+      end ;;
   }
 
   dimension: color {
