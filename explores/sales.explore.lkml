@@ -406,6 +406,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: warranty {
     from: warranty_order
+    hidden: yes
     fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
     label: "Warranty"
     group_label: " Sales"
@@ -508,6 +509,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: wholesale {
     extends: [sales_order_line]
+    hidden: yes
     label:  "Wholesale"
     group_label: " Sales"
     view_label: "Sales Order Line"
@@ -521,6 +523,7 @@ include: "/dashboards/**/*.dashboard"
   explore: mattress_firm_sales {hidden:no
     label: "Mattress Firm"
     group_label: " Sales"
+    description: "Mattress Firm Stores and Products"
     view_label: "Store Details"
     join: mattress_firm_store_details {
       view_label: "Store Details"
