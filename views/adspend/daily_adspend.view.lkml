@@ -252,7 +252,7 @@ view: daily_adspend {
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA');; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('POSTIE','MADRIVO','ADWALLET','FKL') ;; label: "CRM" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('POSTIE','MADRIVO','ADWALLET','FKL') ;; label: "crm" }
       else: "other" }
   }
 
