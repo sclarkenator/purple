@@ -215,6 +215,8 @@ view: daily_adspend {
     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
+        when ${TABLE}.source = ('CTV') then 'CTV'
+        when ${TABLE}.source = ('TV') then 'TV'
         else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
@@ -225,7 +227,7 @@ view: daily_adspend {
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER','FB/IG') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
-      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','OCEAN MEDIA') ;; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT',) or ${TABLE}.source in ('CTV','TV');; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
       when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
       when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
