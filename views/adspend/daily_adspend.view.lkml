@@ -140,9 +140,9 @@ view: daily_adspend {
     sql: case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date:date < '2020-03-01' then ${TABLE}.spend*.06
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.85
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     }
@@ -154,7 +154,9 @@ view: daily_adspend {
     type: sum
     value_format: "$#,##0"
     sql: case
-      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+      when ${TABLE}.platform in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
       else ${TABLE}.spend
       end ;;
@@ -217,8 +219,6 @@ view: daily_adspend {
     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
-        when ${TABLE}.source = ('CTV') then 'CTV'
-        when ${TABLE}.source = ('TV') then 'TV'
         else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
@@ -250,7 +250,7 @@ view: daily_adspend {
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE')
+      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA');; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
