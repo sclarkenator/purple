@@ -271,7 +271,7 @@ view: daily_adspend {
           when ${medium} ilike 'Shopping' then 'shopping'
           when ${medium} ilike '%Affiliate%' then 'affiliate'
           when ${medium} ilike 'traditional' then 'traditional'
-          when ${medium} ilike 'Email' then 'email'
+          when ${medium} ilike 'crm' then 'crm'
           when ${medium} is null then 'organic'
           when ${medium} ilike 'Referral' then 'referral'
           when ${medium} ilike 'Shopping' then 'shopping'
