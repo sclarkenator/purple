@@ -219,6 +219,8 @@ view: daily_adspend {
     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
+        when ${TABLE}.source = ('CTV') then 'CTV'
+        when ${TABLE}.source = ('TV') then 'TV'
         else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
