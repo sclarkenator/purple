@@ -523,7 +523,7 @@ include: "/dashboards/**/*.dashboard"
   explore: mattress_firm_sales {hidden:no
     label: "Mattress Firm"
     group_label: " Sales"
-    description: "Mattress Firm Stores and Products"
+    description: "Mattress Firm Units Sold by Store"
     view_label: "Store Details"
     join: mattress_firm_store_details {
       view_label: "Store Details"
