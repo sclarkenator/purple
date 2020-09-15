@@ -266,7 +266,7 @@ view: roas_pdt {
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
         when ${TABLE}.platform in ('eb','EBAY') then 'Ebay'
-        when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC') then 'Email'
+        when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
         when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
         when ${TABLE}.platform in ('FACEBOOK','facebook','fb','ig','igshopping','INSTAGRAM','instagram','FB/IG') then 'FB/IG'
         when ${TABLE}.platform in ('go','GOOGLE','google') then 'Google'
@@ -311,7 +311,8 @@ view: roas_pdt {
     sql:
       case when ${TABLE}.medium in ('social','so','facebook') then 'Social'
         when ${TABLE}.medium in ('display','ds') then 'Display'
-        when ${TABLE}.medium in ('traditional','em','sms','tv','tx','email','cinema','au') then 'Traditional'
+        when ${TABLE}.medium in ('traditional','sms','tv','tx','cinema','au') then 'Traditional'
+        when ${TABLE}.medium in ('em', 'email') then 'crm'
         when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
         when ${TABLE}.medium in ('video','vi') then 'Video'
         when ${TABLE}.medium in ('affiliate','af','referral','rf') then 'Affiliate'
