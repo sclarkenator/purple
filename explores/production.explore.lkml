@@ -160,6 +160,11 @@ include: "/dashboards/**/*.dashboard"
     join: warehouse_location {
       sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
       relationship: many_to_one}
+    join: standard_cost {
+      view_label:  "Item"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+      relationship: one_to_one}
   }
 
   explore: production_goal {
