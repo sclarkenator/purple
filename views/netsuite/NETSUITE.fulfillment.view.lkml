@@ -18,6 +18,11 @@ view: fulfillment {
     group_label: " Advanced"
     label: "Fulfillment ID"
     description: "Netsuite Internal Fulillment ID. Source: netsuite.fulfillment"
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/itemship.nl?id={{value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    }
     type: string
     sql: ${TABLE}.FULFILLMENT_ID ;; }
 
