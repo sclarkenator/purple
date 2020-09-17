@@ -47,8 +47,7 @@ include: "/dashboards/**/*.dashboard"
     join: item {
       view_label: "Product"
       sql_on: TRY_CAST(${item.item_id} as INTEGER) = TRY_CAST(${qualtrics_answer.question_name} as INTEGER) or TRY_CAST(${qualtrics_answer.question_id} as INTEGER);;
-      # ${item.item_id}::text = ${qualtrics_answer.question_name} or ${qualtrics_answer.question_id};;
-      # TRY_CAST(item.ITEM_ID as INTEGER) = TRY_CAST(qualtrics_answer.QUESTION_NAME as INTEGER) or TRY_CAST(qualtrics_answer.QUESTION_ID as INTEGER)
+      # ${item.item_id}::text = ${qualtrics_answer.question_name};;
       type: left_outer
       relationship: many_to_one}
     join: customer_table {
