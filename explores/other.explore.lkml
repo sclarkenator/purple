@@ -46,7 +46,8 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Answer"}
     join: item {
       view_label: "Product"
-      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_id};;
+      # TRY_CAST(${item.item_id} as INTEGER) = TRY_CAST(${qualtrics_answer.question_name} as INTEGER) or TRY_CAST(${qualtrics_answer.question_id} as INTEGER);;
       type: left_outer
       relationship: many_to_one}
     join: customer_table {

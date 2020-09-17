@@ -37,7 +37,7 @@ view: v_shopify_refund_status {
   }
 
   measure: amount {
-    type: sum
+    type: max
     sql: ${TABLE}."AMOUNT" ;;
   }
 
@@ -49,6 +49,11 @@ view: v_shopify_refund_status {
   dimension: status {
     type: string
     sql: ${TABLE}."STATUS" ;;
+  }
+
+  dimension: note {
+    type: string
+    sql: ${TABLE}."NOTE" ;;
   }
 
   set: detail {

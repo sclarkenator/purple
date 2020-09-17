@@ -273,10 +273,10 @@ view: roas_pdt {
         when ${TABLE}.platform in ('PINTEREST','pinterest','pinterestk','pt') then 'Pinterest'
         when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
         when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
-         when ${TABLE}.platform in ('tab','TABOOLA') then 'Taboola'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt') then 'YouTube'
+        when ${TABLE}.platform in ('tab','TABOOLA') then 'Taboola'
         when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath') then 'Yahoo'
         when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
+        when ${TABLE}.platform in ('RAKUTEN','rk') then 'Rakuten'
         when ${TABLE}.platform in ('SIMPLIFI','si') then 'Simplifi'
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
@@ -284,6 +284,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'TV'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE') then 'YouTube'
         else 'Other' end
       ;;
   }
