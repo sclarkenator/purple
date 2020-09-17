@@ -88,4 +88,21 @@ view: inventory_snap {
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
 
+  dimension: unit_standard_cost {
+    group_label: " Advanced"
+    label: "Unit Standard Cost"
+    description: "Source:netsuite.item_standard_cost"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${standard_cost.standard_cost} ;;
+  }
+
+  measure: total_standard_cost {
+    label: "Total Standard Cost (On Hand)"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    type:  sum
+    value_format: "$#,##0"
+    sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
+  }
+
 }
