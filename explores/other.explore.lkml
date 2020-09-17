@@ -46,7 +46,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Answer"}
     join: item {
       view_label: "Product"
-      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} or ${qualtrics_answer.question_id};;
       type: left_outer
       relationship: many_to_one}
     join: customer_table {
