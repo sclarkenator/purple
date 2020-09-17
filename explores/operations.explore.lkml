@@ -63,7 +63,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: receipt_line {
       view_label: "Receipt Line"
-      type:  inner
+      type:  left_outer
       sql_on: ${receipt.receipt_id} = ${receipt_line.receipt_id} and coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id}) = ${receipt_line.item_id}
       ;;
       relationship: one_to_many
