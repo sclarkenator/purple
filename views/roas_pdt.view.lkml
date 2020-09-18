@@ -310,14 +310,19 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.medium in ('social','so','facebook') then 'Social'
-        when ${TABLE}.medium in ('display','ds') then 'Display'
-        when ${TABLE}.medium in ('traditional','sms','tv','tx','cinema','au') then 'Traditional'
-        when ${TABLE}.medium in ('em', 'email') then 'crm'
+      case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
+      'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
+        or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
+        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('agility','ACUITY') then 'Display'
+        when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
+        when ${TABLE}.medium in ('traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir') or  ${TABLE}.platform in ('rk','TV') then 'Traditional'
         when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
-        when ${TABLE}.medium in ('video','vi') then 'Video'
-        when ${TABLE}.medium in ('affiliate','af','referral','rf') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt') then 'Native'
+        when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
+        'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
+        'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
+        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube')  then 'Video'
+        when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
+        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
         when ${TABLE}.medium in ('organic')
           or ${TABLE}.medium is null then 'Organic'
         else 'Other' end
