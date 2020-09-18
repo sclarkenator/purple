@@ -10,7 +10,7 @@ view: heap_page_views {
   dimension: session_id {
     hidden: no
     type: string
-    description:  "Unique ID number for an session. Source: heap.session_page_flow.session_id"
+    description:  "Unique ID number for a session. Source: heap.session_page_flow.session_id"
     sql: ${TABLE}.session_id ;;
   }
 
@@ -49,7 +49,7 @@ view: heap_page_views {
   }
 
   dimension: title {
-    description: "Title of Web Page displayed on its tab in the browser. Source: heap.session_page_flow.title"
+    description: "The page's title as displayed on its tab in the browser. Source: heap.session_page_flow.title"
     type: string
     sql: ${TABLE}.title ;;
   }
@@ -76,14 +76,14 @@ view: heap_page_views {
 
   dimension: bounced {
     label: "   * Bounced"
-    description: "Only viewed 1 page. Source: looker.calculation"
+    description: "Yes: Only viewed 1 page. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.count_pages_viewed = 1 ;;
   }
 
   dimension: exit_page {
     label: "Exit Page"
-    description: "Last page viewed before leaving the site. Source: looker.calculation"
+    description: "Yes: Last page viewed before leaving the site. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.exit_page = 1 ;;
   }
