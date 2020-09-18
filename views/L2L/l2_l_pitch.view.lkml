@@ -153,7 +153,7 @@ where z.row_num = 1;;
   measure: operational_availability {
     description: "Source: l2l.pitch"
     type: average
-    value_format: "#0.0"
+    value_format: "0.0\%"
     sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
   }
 
