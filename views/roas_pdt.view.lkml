@@ -313,7 +313,7 @@ view: roas_pdt {
       case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
         or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
-        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('agility','ACUITY') then 'Display'
+        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('agility','ACUITY', 'oa') then 'Display'
         when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
         when ${TABLE}.medium in ('traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir') or  ${TABLE}.platform in ('rk','TV') then 'Traditional'
         when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
