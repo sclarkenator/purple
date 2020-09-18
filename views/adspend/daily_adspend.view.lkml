@@ -254,7 +254,7 @@ view: daily_adspend {
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
       when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA');; label: "native" }
+      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
       when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FlUENT','Fluent', 'LIVEINTENT') ;; label: "crm" }
       else: "other" }
