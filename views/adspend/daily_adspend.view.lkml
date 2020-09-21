@@ -231,7 +231,7 @@ view: daily_adspend {
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER','FB/IG') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
-      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT',) or ${TABLE}.source in ('CTV','TV');; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT') or ${TABLE}.source in ('CTV','TV');; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
       when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
       when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
