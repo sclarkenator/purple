@@ -1,4 +1,3 @@
-
   view: heap_all_events_subset {
     #This view contains only the information related to the heap events: add to cart, purchase, and email capture. Added some for bundle tracking 2/25/2020
     derived_table: {
@@ -14,7 +13,7 @@
     }
 
     dimension: event_id {
-      description: "ID number for each event"
+      description: "ID number for each event. Source: looker calculation"
       view_label: "Sessions"
       group_label: "Events"
       type: string
@@ -22,7 +21,7 @@
     }
 
     dimension: time {
-      description: "Date Time of event"
+      description: "Date Time of event. Source: looker calculation"
       view_label: "Sessions"
       group_label: "Events"
       type: date_time
@@ -30,7 +29,7 @@
     }
 
     dimension: user_id {
-      description: "ID number for each user"
+      description: "ID number for each user. Source: looker calculation"
       view_label: "Sessions"
       group_label: "Events"
       type: string
@@ -38,7 +37,7 @@
     }
 
     dimension: session_id {
-      description: "ID number for the session the event occured in"
+      description: "ID number for the session the event occured in. Source: looker calculation"
       view_label: "Sessions"
       group_label: "Events"
       type: string
@@ -46,12 +45,11 @@
     }
 
     dimension: event_table_name {
-      description: "Name of event"
+      description: "Name of event. Source: looker calculation"
       view_label: "Sessions"
       group_label: "Events"
       type: string
       sql: ${TABLE}.event_table_name ;;
     }
-
 
   }
