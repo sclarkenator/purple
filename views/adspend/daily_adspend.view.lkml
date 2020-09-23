@@ -221,6 +221,9 @@ view: daily_adspend {
         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
         when ${TABLE}.source = ('CTV') then 'CTV'
         when ${TABLE}.source = ('TV') then 'TV'
+        when ${TABLE}.source = ('RADIO') then 'RADIO'
+        when ${TABLE}.source = ('STREAMING') then 'STREAMING'
+        when ${TABLE}.source = ('PODCAST') then 'PODCAST'
         else ${TABLE}.platform end ;; }
 
   dimension: Spend_platform_condensed {
@@ -231,7 +234,7 @@ view: daily_adspend {
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER','FB/IG') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
-      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT',) or ${TABLE}.source in ('CTV','TV');; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','VERITONE') or ${TABLE}.source in ('CTV','TV','RADIO','STREAMING','PODCAST');; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
       when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
       when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
@@ -251,7 +254,7 @@ view: daily_adspend {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
-      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV')
+      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
