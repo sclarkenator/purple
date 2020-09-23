@@ -435,7 +435,7 @@ view: item {
   dimension: grid_height {
     group_label: "Advanced"
     label: "Grid Height"
-    description: "Source: Looker calculation"
+    description: "2, 3, or 4 inch grid height. Source: Looker calculation"
     sql:
       case
         when ${TABLE}.model in ('KIDS BED','HYBRID 2','HYBRID 2H','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS','THE PURPLE MATTRESS W/ OG COVER','PURPLE PLUS','LIFELINE MATTRESS') then '2"'
