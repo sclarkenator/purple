@@ -281,7 +281,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
         when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
-        when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'TV'
+        when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE') then 'YouTube'
