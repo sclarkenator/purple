@@ -316,7 +316,8 @@ view: roas_pdt {
         when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('ACUITY')
           or (${TABLE}.platform in ('agility','ACUITY', 'oa') and ${TABLE}.medium is null)  then 'Display'
         when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
-        when ${TABLE}.medium in ('traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir') or  ${TABLE}.platform in ('rk','TV') then 'Traditional'
+        when ${TABLE}.medium in ('TV','CTV','RADI0','STREAMING','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
+        or  ${TABLE}.platform in ('rk','TV','CTV','RADI0','STREAMING') then 'Traditional'
         when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
         when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',

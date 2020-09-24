@@ -212,19 +212,25 @@ view: daily_adspend {
     sql: (${clicks}/${impressions});;  }
 
 
-  dimension: spend_platform {
+#   #dimension: spend_platform {
+#     label: " Spend Platform"
+#     description: "What platform for spend (google, facebook, TV, etc.)"
+#     type:  string
+#     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
+#         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
+#         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
+#         when ${TABLE}.source = ('CTV') then 'CTV'
+#         when ${TABLE}.source = ('TV') then 'TV'
+#         when ${TABLE}.source = ('RADIO') then 'RADIO'
+#         when ${TABLE}.source = ('STREAMING') then 'STREAMING'
+#         when ${TABLE}.source = ('PODCAST') then 'PODCAST'
+#         else ${TABLE}.platform end ;; }
+
+dimension: spend_platform {
     label: " Spend Platform"
-    description: "What platform for spend (google, facebook, TV, etc.)"
+    description: "What platform for spend (google, facebook, oceanmedia)"
     type:  string
-    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
-        when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
-        when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
-        when ${TABLE}.source = ('CTV') then 'CTV'
-        when ${TABLE}.source = ('TV') then 'TV'
-        when ${TABLE}.source = ('RADIO') then 'RADIO'
-        when ${TABLE}.source = ('STREAMING') then 'STREAMING'
-        when ${TABLE}.source = ('PODCAST') then 'PODCAST'
-        else ${TABLE}.platform end ;; }
+    sql: ${TABLE}.platform;;}
 
   dimension: Spend_platform_condensed {
     label: "Major Spend Platform"
@@ -364,7 +370,8 @@ view: daily_adspend {
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
 
-  dimension: ocean_bucket {
+#For Ocean Media Reporting
+ dimension: ocean_bucket {
     hidden: yes
     case: {
       when: {sql: ${spend_platform} = 'TV' ;; label: "TV"}
