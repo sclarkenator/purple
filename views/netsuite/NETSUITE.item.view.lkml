@@ -100,14 +100,6 @@ view: item {
     sql:  1 ;;
   }
 
-  dimension: finished_good_flg {
-    label: " Is Finished Good Filter"
-    view_label: "Filters"
-    hidden:  yes
-    type: yesno
-    sql: ${classification} = 'FG' ;;
-  }
-
   dimension: product_description {
     label:  "  Product Name"
     description: "from Netsuite, with a hyperlink to the product. Source: netsuite.item"
