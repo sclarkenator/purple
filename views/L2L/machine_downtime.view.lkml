@@ -3,6 +3,7 @@ view: l2l_machine_downtime {
     ;;
 
   dimension_group: down {
+    description: "Source: l2l.machine_downtime"
     type: time
     timeframes: [
       raw,
@@ -33,16 +34,19 @@ view: l2l_machine_downtime {
   }
 
   dimension: machine_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."MACHINE_ID" ;;
   }
 
   measure: minutes_available {
+    description: "Source: l2l.machine_downtime"
     type: sum
     sql: ${TABLE}."MINUTES_AVAILABLE" ;;
   }
 
   measure: minutes_down {
+    description: "Source: l2l.machine_downtime"
     type: sum
     sql: ${TABLE}."MINUTES_DOWN" ;;
   }

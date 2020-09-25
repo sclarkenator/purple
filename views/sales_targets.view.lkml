@@ -33,6 +33,28 @@ view: sales_targets {
     sql: (${TABLE}.WHLSL *0.50) + ${TABLE}.RETAIL + ${TABLE}.DTC ;;
   }
 
+  measure: insidesales_target {
+    label: "Insidesales Sales Target"
+    description: "A ramping % of DTC sales through Dec 2020 capping at 15%"
+    value_format: "$#,##0"
+    type: number
+    sql: case
+        when ${date_date} >= '2020-01-01' and ${date_date} < '2020-02-01' then ${dtc_target} * 0.065
+        when ${date_date} >= '2020-02-01' and ${date_date} < '2020-03-01' then ${dtc_target} * 0.064
+        when ${date_date} >= '2020-03-01' and ${date_date} < '2020-04-01' then ${dtc_target} * 0.066
+        when ${date_date} >= '2020-04-01' and ${date_date} < '2020-05-01' then ${dtc_target} * 0.07
+        when ${date_date} >= '2020-05-01' and ${date_date} < '2020-06-01' then ${dtc_target} * 0.071
+        when ${date_date} >= '2020-06-01' and ${date_date} < '2020-07-01' then ${dtc_target} * 0.094
+        when ${date_date} >= '2020-07-01' and ${date_date} < '2020-08-01' then ${dtc_target} * 0.105
+        when ${date_date} >= '2020-08-01' and ${date_date} < '2020-09-01' then ${dtc_target} * 0.115
+        when ${date_date} >= '2020-09-01' and ${date_date} < '2020-10-01' then ${dtc_target} * 0.125
+        when ${date_date} >= '2020-10-01' and ${date_date} < '2020-11-01' then ${dtc_target} * 0.135
+        when ${date_date} >= '2020-11-01' and ${date_date} < '2020-12-01' then ${dtc_target} * 0.14
+        when ${date_date} >= '2020-12-01' then ${dtc_target} * 0.15
+        else 0 end
+    ;;
+  }
+
   measure: days {
     label: "Days in month"
     description: "This is the number of days in the month by any of the applied fields"

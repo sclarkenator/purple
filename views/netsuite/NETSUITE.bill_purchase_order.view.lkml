@@ -1,4 +1,4 @@
-view: bills {
+view: bill_purchase_order {
   derived_table: {
     sql:
       -- OLD BILL QUERY --
@@ -48,10 +48,10 @@ view: bills {
             l.location
         from analytics.finance.bill b
             left join analytics.finance.bill_line l on b.bill_id = l.bill_id
-            left join analytics_stage.netsuite.accounts a on l.account_id = a.account_id
-            left join analytics_stage.netsuite.entity e on b.entity_id = e.entity_id
+            left join analytics_stage.ns.accounts a on l.account_id = a.account_id
+            left join analytics_stage.ns.entity e on b.entity_id = e.entity_id
             left join analytics.finance.accounting_period p on b.accounting_period_id = p.accounting_period_id
-            left join analytics_stage.netsuite.classes c on l.class_id = c.class_id
+            left join analytics_stage.ns.classes c on l.class_id = c.class_id
             left join analytics.production.purchase_order o on b.purchase_order_id = o.purchase_order_id
       ), t1 as (
         select

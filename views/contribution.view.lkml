@@ -9,24 +9,24 @@ view: contribution {
 
   dimension: order_id {
     type: string
-    hidden:  yes
+    hidden:  no
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
   dimension: item_id {
     type: string
-    hidden:  yes
+    hidden:  no
     sql: ${TABLE}."ITEM_ID" ;;
   }
 
   dimension: system {
-    hidden:  yes
+    hidden:  no
     type: string
     sql: ${TABLE}."SYSTEM" ;;
   }
 
   measure: affiliate_fees {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "7 - Affiliate Fees (old)"
@@ -37,7 +37,7 @@ view: contribution {
   }
 
   measure: cancelled_amt {
-    hidden: yes
+    hidden: no
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
     label: "1 - Cancelled ($) (old)"
@@ -48,7 +48,7 @@ view: contribution {
   }
 
   measure: cogs {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "1 - COGS (old)"
@@ -59,7 +59,7 @@ view: contribution {
   }
 
   measure: contribution {
-    hidden: yes
+    hidden: no
     view_label: "Contribution Margin"
     label: "Contribution ($) (old)"
     description: "Contribution margin, what is left after netting out all item-level costs"
@@ -68,18 +68,18 @@ view: contribution {
     sql: ${TABLE}."CONTRIBUTION_MARGIN" ;;
   }
   measure: freight {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "6 - Shipping (old)"
     description: "All shipping expenses tied to fulfilling an item"
-    value_format: "#,##0"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}."FREIGHT" ;;
   }
 
   measure: freight_in {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "3 - Freight In (old)"
@@ -90,7 +90,7 @@ view: contribution {
   }
 
   measure: gross_amt {
-    hidden: yes
+    hidden: no
     view_label: "Contribution Margin"
     label: "Gross Sales ($) (old)"
     description: "Gross sales"
@@ -100,7 +100,7 @@ view: contribution {
   }
 
   measure: net_amt {
-    hidden: yes
+    hidden: no
     view_label: "Contribution Margin"
     label: "Net Sales ($) (old)"
     description: "Net sales (gross - cancellations - returns - retro discounts"
@@ -110,7 +110,7 @@ view: contribution {
   }
 
   measure: labor {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "2 - Labor (old)"
@@ -121,7 +121,7 @@ view: contribution {
   }
 
   measure: merchant_fees {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "4 - Merchant Fees (old)"
@@ -132,7 +132,7 @@ view: contribution {
   }
 
   measure: net_units {
-    hidden:  yes
+    hidden:  no
     value_format: "#,##0"
     type: sum
     sql: ${TABLE}."NET_UNITS" ;;
@@ -142,14 +142,14 @@ view: contribution {
     view_label: "Contribution Margin"
     label: "Gross units (old)"
     description: "Gross units ordered"
-    hidden: yes
+    hidden: no
     value_format: "#,##0"
     type: sum
     sql: ${TABLE}."ORDERED_QTY" ;;
   }
 
   measure: retro_discount_amt {
-    hidden: yes
+    hidden: no
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
     label: "3 - Retro Discount (old)"
@@ -160,7 +160,7 @@ view: contribution {
   }
 
   measure: return_amt {
-    hidden: yes
+    hidden: no
     group_label: "Gross-to-Net"
     view_label: "Contribution Margin"
     label: "2 - Returns (old)"
@@ -171,7 +171,7 @@ view: contribution {
   }
 
   measure: warranty {
-    hidden: yes
+    hidden: no
     group_label: "Net-to-CM"
     view_label: "Contribution Margin"
     label: "5 - Warranty (old)"

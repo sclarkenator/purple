@@ -1,10 +1,10 @@
 view: customer_table {
-  sql_table_name: analytics_stage.netsuite.CUSTOMERS ;;
+  sql_table_name: analytics_stage.ns.CUSTOMERS ;;
 
   dimension: customer_id {
-    label: "Customer ID"
+    label: "   Customer ID"
     description: "Hyperlink to customer record in netsuite by internal id. Source:netsuite.customers"
-    group_label: " Advanced"
+    group_label: "  Customer details"
     type: string
     primary_key: yes
     html: <a href = "https://system.na2.netsuite.com/app/common/entity/custjob.nl?id={{value}}" target="_blank"> {{value}} </a> ;;
@@ -12,13 +12,14 @@ view: customer_table {
 
   dimension: companyname {
     label: "Wholesale Customer Name"
-    group_label: "Wholesale"
+    group_label: "  Wholesale"
     description: "Company Name from netsuite.
       Source:netsuite.customers"
     type: string
     sql: ${TABLE}.companyname ;; }
 
   dimension: full_name {
+    group_label: "  Customer details"
     label: "Customer Name"
     description: "Merging first and last name from netsuite. Source: netsuite.customers"
     type: string
@@ -26,6 +27,7 @@ view: customer_table {
     required_access_grants:[can_view_pii] }
 
   dimension: first_name {
+    group_label: "  Customer details"
     label: "First Name"
     description: "First name from netsuite. Source: netsuite.customers"
     type: string
@@ -33,6 +35,7 @@ view: customer_table {
     required_access_grants:[can_view_pii] }
 
   dimension: last_name {
+    group_label: "  Customer details"
     label: "Last Name"
     description: "Last name from netsuite. Source: netsuite.customers"
     type: string
@@ -40,8 +43,8 @@ view: customer_table {
     required_access_grants:[can_view_pii] }
 
   dimension: email {
+    group_label: "  Customer details"
     hidden:  no
-    group_label: " Advanced"
     label: "Customer Email"
     description: "Customer Email Address on the Netsuite customer record. Source:netsuite.customers"
     type: string
@@ -51,8 +54,15 @@ view: customer_table {
             END ;;
     }
 
+  dimension: email_join {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.email ;;
+  }
+
   dimension: phone {
     hidden:  no
+    group_label: "  Customer details"
     label: "Customer Phone"
     description: "Looking first at Home Phone, then at Mobile. Source: netsuite.customers"
     type: string
@@ -69,7 +79,7 @@ view: customer_table {
 
   dimension: shipping_hold {
     view_label: "Customer"
-    label: " * Is Shipping Hold (Yes/No)"
+    label: "   * Is Shipping Hold (Yes/No)"
     description: "Whether the Customer has a shipping hold on their account. Source: netsuite.customers"
     type: string
     sql: ${TABLE}.SHIPPING_HOLD
@@ -94,7 +104,7 @@ view: customer_table {
 
   dimension: top_vendors {
     label: "Wholesale Top Customers"
-    group_label: "Wholesale"
+    group_label: "  Wholesale"
     hidden: yes
     description: "List of top wholesale customers (Mattress Firm, Sams Club, BB&B, Medline, TA, Access Health, Miracle Cushion, Iowa 90, Ace). Source: netsuite.customers"
     case: {
@@ -112,7 +122,7 @@ view: customer_table {
 
   dimension: wholesale_type {
     label: "Top Wholesale Customers"
-    group_label: "Wholesale"
+    group_label: "  Wholesale"
     description: "List of top wholesale customers for forecasting. Source:netsuite.customers"
     case: {
       when: { sql: lower(${TABLE}.companyname) like 'mattress%firm%' ;;  label: "Mattress Firm" }

@@ -37,6 +37,16 @@ view: dma {
     sql: ${TABLE}.dma_ID ;;
   }
 
+  dimension: dma_mfrm {
+    type: yesno
+    hidden: no
+    view_label: "Geography"
+    group_label: "Advanced"
+    label: "MFRM DMA?"
+    description: "Locations of Mattress Firm Stores. Source: looker.calculation"
+    sql: ${TABLE}.dma_name in ('Abilene-Sweetwater, TX','Atlanta, GA','Austin, TX','Bakersfield, CA','Baltimore, MD','Beaumont-Port Arthur, TX','Bend, OR','Boise, ID','Boston, MA-Manchester, NH','Bowling Green, KY,Kentucky','Buffalo, NY','Champaign & Springfield-Decatur,IL','Charlotte, NC','Charlottesville, VA','Chattanooga, TN','Chicago, IL','Chico-Redding, CA','Cincinnati, OH','Cleveland-Akron (Canton), OH','Colorado Springs-Pueblo, CO','Columbus, OH','Dallas-Ft. Worth, TX','Denver, CO','Detroit, MI','Erie, PA','Eugene, OR','Flint-Saginaw-Bay City, MI','Fresno-Visalia, CA','Ft. Myers-Naples, FL','Ft. Smith-Fayetteville-Springdale-Rogers, AR','Ft. Wayne, IN','Green Bay-Appleton, WI','Greensboro-High Point-Winston Salem, NC','Greenville-Spartanburg, SC-Asheville, NC-Anderson, SC','Harrisburg-Lancaster-Lebanon-York, PA','Harrisonburg, VA','Hartford & New Haven, CT','Houston, TX','Indianapolis, IN','Jackson, TN','Jacksonville, FL','Jonesboro, AR','Kansas City, MO','Knoxville, TN','La Crosse-Eau Claire, WI','Lafayette, IN','Lincoln & Hastings-Kearney, NE','Los Angeles, CA','Lubbock, TX','Medford-Klamath Falls, OR','Memphis, TN','Miami-Ft. Lauderdale, FL','Milwaukee, WI','Minneapolis-St. Paul, MN','Monterey-Salinas, CA','Nashville, TN','New York, NY','Odessa-Midland, TX','Oklahoma City, OK','Omaha, NE','Orlando-Daytona Beach-Melbourne, FL','Palm Springs, CA','Peoria-Bloomington, IL','Philadelphia, PA','Phoenix, AZ','Portland, OR','Portland-Auburn, ME','Providence, RI-New Bedford, MA','Raleigh-Durham (Fayetteville), NC','Reno, NV','Richmond-Petersburg, VA','Rochester, MN-Mason City, IA-Austin, MN','Sacramento-Stockton-Modesto, CA','Salt Lake City, UT','San Angelo, TX','San Antonio, TX','San Diego, CA','San Francisco-Oakland-San Jose, CA','Seattle-Tacoma, WA','Sherman, TX-Ada, OK','South Bend-Elkhart, IN','Spokane, WA','Springfield, MO','St. Joseph, MO','Tampa-St Petersburg (Sarasota), FL','Terre Haute, IN','Toledo, OH','Topeka, KS','Tyler-Longview(Lufkin & Nacogdoches), TX','Waco-Temple-Bryan, TX','Washington, DC (Hagerstown, MD)','Wausau-Rhinelander, WI','West Palm Beach-Ft. Pierce, FL','Wichita Falls, TX & Lawton, OK','Wilkes Barre-Scranton, PA','Yakima-Pasco-Richland-Kennewick, WA','Youngstown, OH') ;;
+  }
+
   dimension: geo_condition {
     hidden: no
     label: "Assigned condition"

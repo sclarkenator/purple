@@ -232,8 +232,8 @@ view: finance_bill {
     sql: ${TABLE}.exchange_rate;;
   }
   dimension: is_non_posting {
-    type:  yesno
-    sql: ${TABLE}.is_non_posting;;
+    type:  string
+    sql: CASE WHEN ${TABLE}.is_non_posting = 'Yes' THEN 'Yes' ELSE 'No' END;;
   }
   dimension: is_payment_hold{
     type:  yesno

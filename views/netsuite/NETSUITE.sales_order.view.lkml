@@ -30,7 +30,7 @@ view: sales_order {
     sql: ${order_id} ;; }
 
   measure: unique_customers {
-    label: "Distinct customers"
+    label: "Distinct Customers"
     description: "Counts distinct email addresses in customer table.
       Source: netsuite.sales_order"
     view_label: "Customer"
@@ -109,9 +109,9 @@ view: sales_order {
     sql: ${TABLE}.CHANNEL_id ;; }
 
   dimension: channel {
+    group_label: " Advanced"
     label: "Channel Filter"
-    hidden: yes
-    view_label: "Filters"
+    hidden: no
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
@@ -144,6 +144,10 @@ view: sales_order {
               when ${source} = 'SHOPIFY-US Historical' OR ${source} = 'SHOPIFY-CA' OR ${source} = 'Shopify - US' OR ${source} = 'Shopify - Canada' then 'Shopify'
               when ${source} = 'Direct Entry' then 'Direct Entry'
               else 'Other' end ;;  }
+
+  dimension: trandate {
+    hidden: yes
+    sql: ${TABLE}.trandate ;;}
 
   dimension: created {
     hidden: yes
@@ -267,7 +271,7 @@ view: sales_order {
       Source: netsuite.sales_order"
     view_label: "Fulfillment"
     type:time
-    hidden: yes
+    hidden: no
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
@@ -294,6 +298,21 @@ view: sales_order {
     type: yesno
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
+  dimension: is_exchange_upgrade_warranty {
+    hidden:yes
+    group_label: " Advanced"
+    label: "  * Is Return Exchange or Warranty Exchange or Warranty"
+    description: "Source: looker calculation"
+    type: yesno
+    sql:
+      case
+        when ${TABLE}.EXCHANGE = 'T' then 1
+        when ${TABLE}.IS_UPGRADE = 'T' then 1
+        when ${TABLE}.WARRANTY_CLAIM_ID is not null or ${TABLE}.warranty = 'T' then 1
+        else 0
+      end = 1
+    ;;
+  }
   dimension: memo {
     hidden: yes
     type: string
@@ -376,10 +395,10 @@ view: sales_order {
 
   dimension: payment_method_flag {
     label: "     * Is Financed"
-    description: "For Shopify-US orders only. Payment with Affirm or Progressive.
+    description: "For Shopify-US orders only. Payment with Affirm, Progressive, Splitit, or Zibby.
       Source: netsuite.sales_order"
     type: yesno
-    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' ;; }
+    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
 
   dimension: recycle_fee_amt {
     hidden:yes
@@ -630,14 +649,14 @@ dimension: store_name{
   label: "Store Name"
   description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
   group_label: " Advanced"
-  view_label: "Sales Order"
+  view_label: "Owned Retail"
   type: string
   sql: case when ${store_id} = 'CA-01' then 'San Diego'
   when ${store_id} = 'CA-02' then 'Santa Clara'
   when ${store_id} = 'CA-03' then 'Santa Monica'
   when ${store_id} = 'WA-01' then 'Seattle'
   when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
-  when ${store_id} = 'UT-01' then 'Showroom'
+  when ${store_id} = 'UT-01' then 'Lehi'
   else ${store_id} end;;
 }
 

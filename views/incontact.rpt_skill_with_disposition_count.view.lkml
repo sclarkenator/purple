@@ -14,26 +14,26 @@ dimension: primary_key {
   dimension: abandon_time {
     description: "How long a person was in queue before abandoning the call (without speaking to an agent)"
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   dimension: acw_time {
     description: "After Call Work Time (making notes, etc. before they're available for another call)"
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
   dimension: agent {
     type: string
-    hidden: yes #unhide this for agent based tables, I'm just using this view for disposition things right now
+    hidden: no #unhide this for agent based tables, I'm just using this view for disposition things right now
     sql: ${TABLE}."AGENT" ;;
   }
 
   dimension: avg_inqueue_time {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."AVG_INQUEUE_TIME" ;;
   }
 
@@ -48,6 +48,7 @@ dimension: primary_key {
       date,
       day_of_week,
       week,
+      week_of_year,
       month,
       quarter,
       year
@@ -90,8 +91,22 @@ dimension: primary_key {
   dimension: hold_time {
     description: "Time customer was on hold (not in queue)"
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."HOLD_TIME" ;;
+  }
+
+  dimension: hold_buckets {
+    type: tier
+    tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240   ]
+    style: integer # the default value, could be excluded
+    sql: ${TABLE}."HOLD_TIME" ;;
+  }
+
+  dimension: in_queue_buckets {
+    type: tier
+    tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240 ]
+    style: integer # the default value, could be excluded
+    sql: ${TABLE}."INQUEUE_TIME" ;;
   }
 
   dimension_group: insert_ts {
@@ -108,8 +123,6 @@ dimension: primary_key {
     ]
     sql: ${TABLE}."INSERT_TS" ;;
   }
-
-
 
   dimension_group: reported {
     type: time
@@ -135,7 +148,7 @@ dimension: primary_key {
 
 
   measure: avg_abandon_time {
-    hidden: yes
+    hidden: no
     type: average
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
@@ -152,10 +165,17 @@ dimension: primary_key {
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
+  measure: avg_talk_time {
+    type: average
+    value_format: "#,##0"
+    sql: nvl(${TABLE}."HANDLE_TIME",0) - nvl(${TABLE}."HOLD_TIME",0);;
+  }
+
   measure: avg_hold_time {
     hidden: no
     type: average
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: case when ${TABLE}."HOLD_TIME" > 0 then ${TABLE}."HOLD_TIME" end
+    ;;
   }
 
 

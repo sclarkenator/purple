@@ -13,7 +13,9 @@ view: warranty_order_line {
     sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-');; }
 
   dimension_group: closed {
-    hidden: yes
+    hidden: no
+    label: "   Warranty Closed"
+    description: "The Date the Warranty was Closed. Source:netsuite.warranty_order_line"
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -60,12 +62,14 @@ view: warranty_order_line {
   measure: quantity_complete {
     group_label: " Advanced"
     label: "Total Warranties Completed (units)"
-    description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
+    description: "Units from material warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
     filters: {
       field: warranty_order.status
-      value: "Closed"
-    }
+      value: "Closed"}
+    filters:  {
+      field: warranty_order.warranty_type
+      value: "Material"}
     sql: ${TABLE}.QUANTITY ;;
   }
 

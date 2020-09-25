@@ -44,8 +44,9 @@ view: item {
   }
 
   dimension: type {
+    group_label: "Advanced"
     label: "Type"
-    hidden: yes
+    hidden: no
     description: "Item Type. Source: netsuite.item"
     type: string
     sql: ${TABLE}.type ;;
@@ -95,7 +96,8 @@ view: item {
     hidden: yes
     description: "Yes is indicating product attributes have been manually set by BI. Source: analytics.item"
     type: yesno
-    sql: ${TABLE}.bi_update = 1 ;;
+    #sql: ${TABLE}.bi_update = 1 ;;
+    sql:  1 ;;
   }
 
   dimension: finished_good_flg {
@@ -401,6 +403,26 @@ view: item {
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
     #hidden: yes
     sql: ${TABLE}.model ;;
+    order_by_field: model_raw_order
+  }
+  dimension: model_raw_order {
+    hidden:  yes
+    group_label: "Product Hierarchy"
+    label: "3. Model"
+    description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
+    #hidden: yes
+    #sql: ${TABLE}.model ;;
+    case: {
+      when: {sql: ${TABLE}.model = 'ORIGINAL PURPLE MATTRESS';; label: "1"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS W/ OG COVER';; label: "2"}
+      when: {sql: ${TABLE}.model = 'KIDS BED';; label: "3"}
+      when: {sql: ${TABLE}.model = 'THE PURPLE MATTRESS';; label: "4"}
+      when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "5"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "6"}
+      when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "7"}
+      else: "8"
+
+    }
   }
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
@@ -408,6 +430,19 @@ view: item {
     description: "Product Description. Source:netsuite.item"
     #hidden: yes
     sql: ${TABLE}.product_description ;;
+  }
+
+  dimension: grid_height {
+    group_label: "Advanced"
+    label: "Grid Height"
+    description: "2, 3, or 4 inch grid height. Source: Looker calculation"
+    sql:
+      case
+        when ${TABLE}.model in ('KIDS BED','HYBRID 2','HYBRID 2H','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS','THE PURPLE MATTRESS W/ OG COVER','PURPLE PLUS','LIFELINE MATTRESS') then '2"'
+        when ${TABLE}.model in ('HYBRID PREMIER 3','REST MATTRESS') then '3"'
+        when ${TABLE}.model = 'HYBRID PREMIER 4' then '4"'
+        else NULL
+      end ;;
   }
 
   dimension: color {
@@ -429,9 +464,10 @@ view: item {
       when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
       else null end ;; }
 
-  dimension: created_ts {
+  dimension_group: created_ts {
     hidden: yes
-    type: string
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.CREATED_TS ;;
   }
 
@@ -478,6 +514,31 @@ view: item {
         when ${sku_clean} = '10-21-23625' then '10-21-12625'
         when ${sku_clean} = '10-21-23617' then '10-21-12617'
         when ${sku_clean} = '10-21-23618' then '10-21-12618'
+        --TPM FLR FS
+        when ${sku_clean} = '10-21-90026' then '10-21-12960'
+        when ${sku_clean} in ('10-21-23521','10-21-90025') then '10-21-12632'
+        when ${sku_clean} in ('10-21-23520','10-21-90024') then '10-21-12625'
+        when ${sku_clean} = '10-21-90023' then '10-21-12620'
+        when ${sku_clean} in ('10-21-90022','10-21-23630') then '10-21-12618'
+        when ${sku_clean} = '10-21-90021' then '10-21-12617'
+        --H2 FLR FS
+        when ${sku_clean} = '10-21-90010' then '10-21-60008'
+        when ${sku_clean} in ('10-21-90009','10-21-60521') then '10-21-60007'
+        when ${sku_clean} in ('10-21-90008','10-21-60506') then '10-21-60006'
+        when ${sku_clean} = '10-21-90007' then '10-21-60018'
+        when ${sku_clean} in ('10-21-90006','10-21-60506') then '10-21-60005'
+        --H3 FLR FS
+         when ${sku_clean} = '10-21-90015' then '10-21-60012'
+        when ${sku_clean} in ('10-21-90014','10-21-60522') then '10-21-60011'
+        when ${sku_clean} in ('10-21-90013','10-21-60510','10-21-22985') then '10-21-60010'
+        when ${sku_clean} = '10-21-90012' then '10-21-60019'
+        when ${sku_clean} in ('10-21-90011','10-21-60509') then '10-21-60009'
+        --H4 FLR FS
+         when ${sku_clean} = '10-21-90020' then '10-21-60016'
+        when ${sku_clean} in ('10-21-90019','10-21-60523') then '10-21-60015'
+        when ${sku_clean} in ('10-21-90018','10-21-60514') then '10-21-60014'
+        when ${sku_clean} = '10-21-90017' then '10-21-60020'
+        when ${sku_clean} in ('10-21-90016','10-21-60513') then '10-21-60013'
         --Platforms
         when ${sku_clean} in ('10-38-82822','10-38-52822') then '10-38-12822'
         when ${sku_clean} in ('10-38-82815','10-38-92892','10-38-92892','10-38-52815') then '10-38-12815'
@@ -503,8 +564,12 @@ view: item {
         when ${sku_clean} = '10-38-12939' then '10-38-12948'
         --Pillow 2.0
         when ${sku_clean} = '10-31-12863' then '10-31-12855'
+        when ${sku_clean} = '10-31-12870' then '10-31-12855'
         --Plush Pillow
         when ${sku_clean} = '10-31-12862' then '10-31-12857'
+        --Duvet Washable
+        when ${sku_clean} = '10-38-13016' then '10-38-13015'
+        when ${sku_clean} = '10-38-13011' then '10-38-13010'
         --NOG with OG Cover
         when ${sku_clean} = '10-21-12970' then '10-21-12960'
         when ${sku_clean} = '10-21-12967' then '10-21-12620'
@@ -514,6 +579,9 @@ view: item {
         when ${sku_clean} = '10-21-12966' then '10-21-12618'
         --Harmony Vita
         when ${sku_clean} = '10-31-12891' then '10-31-12890'
+        when ${sku_clean} = '10-31-12896' then '10-31-12895'
+        --Booster Back Up
+        when ${sku_clean} = '10-31-13102' then '10-31-13100'
         else ${sku_clean} end ;;
   }
 
@@ -530,10 +598,10 @@ view: item {
         when ${sku_clean} = '10-38-13001' then 'Purple Blanket'
         when ${sku_clean} in ('10-38-13025','10-38-13030','10-38-13020','10-38-13010','10-38-13015','10-38-13005') then 'Duvet'
 
-        when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
+  --      when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
         when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891') then 'Harmony Pillow'
         when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
-        when ${sku_clean} in ('10-31-12855','10-31-12854') then 'Purple Pillow'
+        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
         when ${sku_clean} in ('10-38-22823','10-38-12850','10-38-12793','10-38-12809','10-38-12786','10-38-12849','10-38-12823',
           '10-38-12816','10-38-12779','10-38-12790','10-38-12789','10-38-12787','10-38-12788','10-38-12848','10-38-12830','10-38-12847','10-38-12762') then 'Purple Sheets'
         when ${sku_clean} in ('10-38-22846','10-38-22856','10-38-22851','10-38-22836','10-38-22841','10-38-22831','10-38-22848','10-38-22858','10-38-22853','10-38-22838',
@@ -554,7 +622,7 @@ view: item {
         when ${sku_clean} in ('10-38-12894','10-22-10220','10-22-10330','10-22-10110','10-38-12897','10-38-12896',
           '10-38-12876','10-38-12875','10-38-12878','10-31-12856','10-31-13100','10-38-12904','10-38-12905','10-38-12906','10-38-73826',
           '10-38-73828','10-38-73829','10-38-73832','10-38-73833','10-38-73834','10-38-73835','10-38-73843','10-38-73844','10-38-73845',
-          '10-38-73846','10-38-73851','10-38-73852') then 'Replacement Parts and Hardware'
+          '10-38-73846','10-38-73851','10-38-73852','10-38-73825') then 'Replacement Parts and Hardware'
         when ${sku_clean} in ('10-11-18300','10-38-12554','10-38-12554','10-38-13764','10-38-13779','10-38-13780','10-38-13781',
           '10-38-13786','10-38-13787','10-38-13788','10-38-13794','10-38-13795','10-38-13809','10-38-13810','10-38-13811','10-38-13816',
           '10-38-13818','10-38-13824','10-38-13825','10-38-13832','10-38-13847','10-38-13849','10-38-13892','10-38-13956','10-38-13957','10-38-13959','10-38-13960') then 'Misc'
@@ -569,16 +637,24 @@ view: item {
         when ${sku_clean} in ('10-21-60016','10-21-60020','10-21-60015','10-21-60014','10-21-60058','10-21-60013') then 'Hybrid 4'
         when ${sku_clean} in ('10-21-12638','10-21-12617','10-21-12960','10-21-23960','10-21-12620','10-21-23620','10-21-12632',
           '10-21-23632','10-21-12625','10-21-23625','10-21-23638','10-21-23617','10-21-12618','10-21-23618','10-21-12968',
-          '10-21-12969','10-21-12967','10-21-12966','10-21-12970','10-21-12965') then 'Purple Mattress'
+          '10-21-12969','10-21-12967','10-21-12966','10-21-12970','10-21-12965','10-21-12971') then 'Purple Mattress'
         when ${sku_clean} in ('10-22-10300','10-22-10200','10-22-10100') then 'Pet Bed'
 
        --Bases--
         when ${sku_clean} in ('10-38-45862','10-38-45864','10-38-45865','10-38-45866','10-38-45867','10-38-45868','10-38-45869',
-          '10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 'Foundation'
+          '10-38-45870','10-38-45871','10-38-45872','10-38-45873','10-38-45869','10-38-45863') then 'Foundation'
         when ${sku_clean} in ('10-38-52822','10-38-52893','10-38-52815','10-38-52846','10-38-52892','10-38-82822',
-          '10-38-82893','10-38-82895','10-38-73825','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
-          '10-38-92892','10-38-82890','10-38-12822','10-38-12893','10-38-12815','10-38-12846','10-38-12892','10-38-52891') then 'Metal Platform'
+          '10-38-82893','10-38-82895','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
+          '10-38-92892','10-38-82890','10-38-12822','10-38-12893','10-38-12815','10-38-12846','10-38-12892','10-38-52891','10-38-52891') then 'Metal Platform'
         when ${sku_clean} in ('10-21-13027','10-38-12946','10-38-12939','10-38-12948','10-38-12955','10-38-12952') then 'Powerbase'
+
+        --Kid's Corner--
+        when ${sku_clean} in ('10-21-60524') then 'Kid Mattress'
+        when ${sku_clean} in ('10-38-12854','10-38-12852','10-38-12855') then 'Kid Sheets'
+        when ${sku_clean} in ('10-31-12871','10-31-12873','10-31-12872','10-31-12869') then 'Kid Pillow'
+
+      --Canada Mattress--
+        when ${sku_clean} in ('10-21-22617','10-21-22618','10-21-22620','10-21-22625','10-21-22632','10-21-22960') then 'Canada'
 
         else 'unspecified' end ;;
   }
@@ -596,10 +672,10 @@ view: item {
         when ${sku_clean} = '10-38-13001' then 'Purple Blanket'
         when ${sku_clean} in ('10-38-13025','10-38-13030','10-38-13020','10-38-13010','10-38-13015','10-38-13005') then 'Duvet'
 
-        when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
+    --    when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
         when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891') then 'Harmony Pillow'
         when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
-        when ${sku_clean} in ('10-31-12855','10-31-12854') then 'Purple Pillow'
+        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
         when ${sku_clean} in ('10-38-22823','10-38-12850','10-38-12793','10-38-12809','10-38-12786','10-38-12849','10-38-12823',
           '10-38-12816','10-38-12779','10-38-12790','10-38-12789','10-38-12787','10-38-12788','10-38-12848','10-38-12830','10-38-12847','10-38-12762') then 'Purple Sheets'
         when ${sku_clean} in ('10-38-22846','10-38-22856','10-38-22851','10-38-22836','10-38-22841','10-38-22831','10-38-22848','10-38-22858','10-38-22853','10-38-22838',
@@ -627,7 +703,7 @@ view: item {
         when ${sku_clean} in ('10-38-12894','10-22-10220','10-22-10330','10-22-10110','10-38-12897','10-38-12896',
           '10-38-12876','10-38-12875','10-38-12878','10-31-12856','10-31-13100','10-38-12904','10-38-12905','10-38-12906','10-38-73826',
           '10-38-73828','10-38-73829','10-38-73832','10-38-73833','10-38-73834','10-38-73835','10-38-73843','10-38-73844','10-38-73845',
-          '10-38-73846','10-38-73851','10-38-73852') then 'Replacement Parts and Hardware'
+          '10-38-73846','10-38-73851','10-38-73852','10-38-73825') then 'Replacement Parts and Hardware'
         when ${sku_clean} in ('10-11-18300','10-38-12554','10-38-12554','10-38-13764','10-38-13779','10-38-13780','10-38-13781',
           '10-38-13786','10-38-13787','10-38-13788','10-38-13794','10-38-13795','10-38-13809','10-38-13810','10-38-13811','10-38-13816',
           '10-38-13818','10-38-13824','10-38-13825','10-38-13832','10-38-13847','10-38-13849','10-38-13892','10-38-13956','10-38-13957','10-38-13959','10-38-13960') then 'Misc'
@@ -642,18 +718,173 @@ view: item {
         when ${sku_clean} in ('10-21-60016','10-21-60020','10-21-60015','10-21-60014','10-21-60058','10-21-60013') then 'Hybrid 4'
         when ${sku_clean} in ('10-21-12638','10-21-12617','10-21-12960','10-21-23960','10-21-12620','10-21-23620','10-21-12632',
           '10-21-23632','10-21-12625','10-21-23625','10-21-23638','10-21-23617','10-21-12618','10-21-23618','10-21-12968',
-          '10-21-12969','10-21-12967','10-21-12966','10-21-12970','10-21-12965') then 'Purple Mattress'
+          '10-21-12969','10-21-12967','10-21-12966','10-21-12970','10-21-12965','10-21-12971') then 'Purple Mattress'
         when ${sku_clean} in ('10-22-10300','10-22-10200','10-22-10100') then 'Pet Bed'
 
        --Bases--
         when ${sku_clean} in ('10-38-45862','10-38-45864','10-38-45865','10-38-45866','10-38-45867','10-38-45868','10-38-45869',
           '10-38-45870','10-38-45871','10-38-45872','10-38-45873') then 'Foundation'
         when ${sku_clean} in ('10-38-52822','10-38-52893','10-38-52815','10-38-52846','10-38-52892','10-38-82822',
-          '10-38-82893','10-38-82895','10-38-73825','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
+          '10-38-82893','10-38-82895','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
           '10-38-92892','10-38-82890','10-38-12822','10-38-12893','10-38-12815','10-38-12846','10-38-12892','10-38-52891') then 'Metal Platform'
         when ${sku_clean} in ('10-21-13027','10-38-12946','10-38-12939','10-38-12948','10-38-12955','10-38-12952') then 'Powerbase'
 
         else 'unspecified' end ;;
+  }
+
+  dimension: kit_item_id {
+    description: "This is used for the forecast_combined and actual_sales explore.  It is break the kits/packages back to their child items"
+    type: string
+    hidden: yes
+    sql:
+      case
+        --BASE
+        when ${item_id} in ('9809') then '5749'
+        when ${item_id} in ('9816') then '5194'
+        when ${item_id} in ('9824') then '5750'
+        when ${item_id} in ('10391') then '5947'
+        when ${item_id} in ('11511') then '11508'
+        --BEDDING
+        when ${item_id} in ('9783') then '7580'
+        when ${item_id} in ('9800') then '5923'
+        when ${item_id} in ('9813') then '5174'
+        --KIT
+        when ${item_id} in ('9781') then '5194'
+        when ${item_id} in ('9782') then '5557'
+        when ${item_id} in ('9785') then '7576'
+        when ${item_id} in ('9790') then '5175'
+        when ${item_id} in ('9791') then '7782'
+        when ${item_id} in ('9794') then '5192'
+        when ${item_id} in ('9795') then '7678'
+        when ${item_id} in ('9796') then '7884'
+        when ${item_id} in ('9798') then '5196'
+        when ${item_id} in ('9799') then '5186'
+        when ${item_id} in ('9801') then '5176'
+        when ${item_id} in ('9802') then '5195'
+        when ${item_id} in ('9804') then '5177'
+        when ${item_id} in ('9805') then '5195'
+        when ${item_id} in ('9806') then '7784'
+        when ${item_id} in ('9807') then '7789'
+        when ${item_id} in ('9810') then '7786'
+        when ${item_id} in ('9814') then '5190'
+        when ${item_id} in ('9821') then '5174'
+        when ${item_id} in ('9822') then '7777'
+        --MATTRESS
+        when ${item_id} in ('9786') then '7877'
+        when ${item_id} in ('9787') then '7877'
+        when ${item_id} in ('9789') then '7782'
+        when ${item_id} in ('9792') then '7880'
+        when ${item_id} in ('9803') then '7782'
+        when ${item_id} in ('9808') then '7880'
+        when ${item_id} in ('9815') then '7780'
+        when ${item_id} in ('9818') then '7883'
+        when ${item_id} in ('9820') then '7883'
+        when ${item_id} in ('11262') then '11097'
+        --SALES SUPPORT
+        when ${item_id} in ('9793') then '6993'
+        when ${item_id} in ('9811') then '6993'
+        when ${item_id} in ('9817') then '6993'
+        when ${item_id} in ('9823') then '6993'
+        when ${item_id} in ('10281') then '7376'
+        --SEATING
+        when ${item_id} in ('9784') then '7576'
+        when ${item_id} in ('9788') then '7581'
+        when ${item_id} in ('9797') then '7578'
+        when ${item_id} in ('9812') then '7376'
+        when ${item_id} in ('9819') then '7577'
+        when ${item_id} in ('9825') then '7579'
+        --Z-MARKETING
+        when ${item_id} in ('3502') then '3491'
+        when ${item_id} in ('3504') then '3492'
+        when ${item_id} in ('3429') then '3427'
+        when ${item_id} in ('3430') then '3427'
+        when ${item_id} in ('3497') then '3491'
+        when ${item_id} in ('3499') then '3492'
+        --OTHER
+        when ${item_id} in ('11107') then '8793'
+        when ${item_id} in ('5863') then '5186'
+        when ${item_id} in ('5862') then '5192'
+        when ${item_id} in ('5866','5869') then '5195'
+        when ${item_id} in ('9077') then '7887'
+        else ${item_id} end ;;
+  }
+
+  dimension: kit_sku_id {
+    description: "This is used for the forecast_combined and actual_sales explore.  It is break the kits/packages back to their child items"
+    type: string
+    hidden: yes
+    sql:
+      case
+        --BASE
+        when ${sku_clean} in ('10-38-12951') then '10-38-12948'
+        when ${sku_clean} in ('10-21-13027') then '10-38-12939'
+        when ${sku_clean} in ('10-38-12955') then '10-38-12952'
+        when ${sku_clean} in ('10-38-52894') then '10-38-52846'
+        when ${sku_clean} in ('10-38-12959') then '10-38-12956'
+        --BEDDING
+        when ${sku_clean} in ('10-31-72855') then '10-31-12855'
+        when ${sku_clean} in ('10-38-13918') then '10-38-13924'
+        when ${sku_clean} in ('10-38-13919') then '10-38-12724'
+        --KIT
+        when ${sku_clean} in ('10-38-13939') then '10-38-12939'
+        when ${sku_clean} in ('10-38-13850') then '10-38-12850'
+        when ${sku_clean} in ('10-41-13533') then '10-41-12533'
+        when ${sku_clean} in ('10-38-13717') then '10-38-12717'
+        when ${sku_clean} in ('10-21-13618') then '10-21-12618'
+        when ${sku_clean} in ('10-38-13846') then '10-38-12846'
+        when ${sku_clean} in ('10-31-13855') then '10-31-12854'
+        when ${sku_clean} in ('10-21-60017') then '10-21-60018'
+        when ${sku_clean} in ('10-38-13946') then '10-38-12946'
+        when ${sku_clean} in ('10-38-13815') then '10-38-12815'
+        when ${sku_clean} in ('10-38-13700') then '10-38-12700'
+        when ${sku_clean} in ('10-38-13892') then '10-38-12892'
+        when ${sku_clean} in ('10-38-13694') then '10-38-12694'
+        when ${sku_clean} in ('10-21-13064') then '10-38-12892'
+        when ${sku_clean} in ('10-21-13625') then '10-21-12625'
+        when ${sku_clean} in ('10-21-13960') then '10-21-12960'
+        when ${sku_clean} in ('10-21-13632') then '10-21-12632'
+        when ${sku_clean} in ('10-38-13822') then '10-38-12822'
+        when ${sku_clean} in ('10-38-13724') then '10-38-12724'
+        when ${sku_clean} in ('10-21-12621') then '10-21-12620'
+        --MATTRESS
+        when ${sku_clean} in ('10-21-60058') then '10-21-60013'
+        when ${sku_clean} in ('10-21-12964') then '10-21-60013'
+        when ${sku_clean} in ('10-21-12961') then '10-21-12618'
+        when ${sku_clean} in ('10-21-60028') then '10-21-60005'
+        when ${sku_clean} in ('10-21-12638') then '10-21-12618'
+        when ${sku_clean} in ('10-21-12962') then '10-21-60005'
+        when ${sku_clean} in ('10-21-23638') then '10-21-23618'
+        when ${sku_clean} in ('10-21-60038') then '10-21-60009'
+        when ${sku_clean} in ('10-21-12963') then '10-21-60009'
+        when ${sku_clean} in ('10-21-12971') then '10-21-12966'
+        --SALES SUPPORT
+        when ${sku_clean} in ('10-50-18265') then '10-11-18264'
+        when ${sku_clean} in ('10-02-18265') then '10-11-18264'
+        when ${sku_clean} in ('10-10-18265') then '10-11-18264'
+        when ${sku_clean} in ('10-25-18265') then '10-11-18264'
+        when ${sku_clean} in ('10-41-13610') then '10-41-12571'
+        --SEATING
+        when ${sku_clean} in ('10-41-72533') then '10-41-12533'
+        when ${sku_clean} in ('10-41-72540') then '10-41-12540'
+        when ${sku_clean} in ('10-41-72519') then '10-41-12519'
+        when ${sku_clean} in ('10-41-72571') then '10-41-12571'
+        when ${sku_clean} in ('10-41-72502') then '10-41-12502'
+        when ${sku_clean} in ('10-41-72564') then '10-41-12564'
+        --Z-MARKETING
+        when ${sku_clean} in ('(OLD)10-11-18404') then '10-21-12601'
+        when ${sku_clean} in ('(OLD)10-11-18405') then '10-21-12602'
+        when ${sku_clean} in ('10-60-19000') then '10-60-10000'
+        when ${sku_clean} in ('10-60-29000') then '10-60-10000'
+        when ${sku_clean} in ('10-11-18401') then '10-21-12601'
+        when ${sku_clean} in ('10-11-18402') then '10-21-12602'
+        --OTHER
+        when ${sku_clean} in ('10-31-12891') then '10-31-12890'
+        when ${sku_clean} in ('10-38-82815') then '10-38-12815'
+        when ${sku_clean} in ('10-38-82846') then '10-38-12846'
+        when ${sku_clean} in ('10-38-82890','10-38-92892') then '10-38-12892'
+        when ${sku_clean} in ('10-21-70007') then '10-21-60007'
+
+        else ${sku_clean} end ;;
   }
 
   dimension: update_ts {

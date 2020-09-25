@@ -126,7 +126,7 @@ view: warranty_order {
     label: "Warranty Type"
     description: "Material or Non Material. Source:netsuite.warranty_order"
     type: string
-    sql: ${TABLE}.WARRANTY_TYPE ;;  }
+    sql: NVL(${TABLE}.WARRANTY_TYPE,'') ;;  }
 
   dimension: customer_receipt {
     group_label: " Advanced"

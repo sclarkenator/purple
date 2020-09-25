@@ -12,6 +12,29 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
+  measure: asp_gross_amt {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No"]
+    sql: ${TABLE}.gross_amt ;;
+  }
+
+  measure: asp_total_units {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No"]
+    sql: ${TABLE}.ordered_qty ;;
+  }
+
+  measure: asp {
+    hidden: no
+    label: "ASP"
+    description: "Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
+    type: number
+    value_format: "$#,##0"
+    sql:case when ${asp_total_units} > 0 then ${asp_gross_amt}/${asp_total_units} else 0 end ;;
+  }
+
   measure: avg_days_to_fulfill {
     group_label: "Average Days:"
     label: "to Fulfillment"
@@ -20,7 +43,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     type:  average_distinct
     value_format: "#.0"
-    sql_distinct_key: ${fulfillment.PK};;
+    sql_distinct_key: ${item_order}||'-'||${fulfillment.PK};;
     sql: datediff(day,${TABLE}.created,${fulfilled_raw}) ;;
   }
 
@@ -167,6 +190,23 @@ view: sales_order_line {
     type: yesno
     sql: date_trunc(week, ${Due_Date}::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
+
+  dimension: bundle {
+    type: string
+    hidden:  no
+    view_label: "Sales Order"
+    group_label: " Advanced"
+    label: " Bundle"
+    description: "Bunddle filter"
+    case: {
+      when: {sql: ${order_flag.ultimate_cushion_flag} AND ${order_flag.back_cushion_flag} ;; label: "Ultimate + Back"}
+      when: {sql: ${order_flag.duvet_flg} AND ${order_flag.softstretch_sheets_flag} ;; label: "Duvet + SoftStretch"}
+      when: {sql: ${order_flag.royal_cushion_flag} AND ${order_flag.pet_bed_flg} ;; label: "Royal + Pet Bed"}
+      when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='HARMONY') ;; label: "2 Harmony"}
+      when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='PILLOW 2.0') ;; label: "2 Purple Pillow"}
+      else: "other" }
+  }
+
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
@@ -694,6 +734,8 @@ view: sales_order_line {
   }
 
   dimension: wholesale_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Wholesale and Packed"
     description: "Source: looker.calculation"
     type: yesno
@@ -702,6 +744,8 @@ view: sales_order_line {
   }
 
   dimension: xpo_pilot_packed {
+    group_label: " Advanced"
+    view_label: "Fulfillment"
     label: "  * Is Pilot or XPO and Packed"
     description: "Source: looker.calculation"
     type: yesno
@@ -807,7 +851,7 @@ view: sales_order_line {
     drill_fields: [sales_order_line.fulfillment_details]
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: coalesce(${sales_order.minimum_ship_date},${sales_order.ship_by_date}::date) ;;
+    sql: coalesce(${sales_order.ship_by_date},${sales_order.minimum_ship_date}::date) ;;
   }
 
   dimension_group: transmitted_date {
@@ -1479,6 +1523,34 @@ view: sales_order_line {
     label: "Max Gross Sales (units)"
     type: sum
     sql: max(${TABLE}.ordered_qty) over partition by ${item.sku_id} ;;
+  }
+
+  measure: insidesales_sales {
+    group_label: "Gross Sales"
+    description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
+    label: "Sales - Inside Sales Team ($)"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is not null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${gross_amt} else 0 end;;
+  }
+
+  measure: customer_care_sales {
+    group_label: "Gross Sales"
+    label: "Sales - Customer Care Team ($)"
+    description: "Summing Gross Sales where the order was from a customer care agent. Excluding warranties and exchanges."
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${gross_amt} else 0 end;;
   }
 
   set: fulfill_details {

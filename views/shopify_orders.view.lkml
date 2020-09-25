@@ -1,5 +1,58 @@
+#view: etail_orders {
 view: shopify_orders {
-  sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
+  #sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
+  derived_table: {
+    sql:
+      WITH LINES AS (
+        SELECT
+          ORDER_ID,
+          SUM(PRODUCT_DISCOUNT * ORDERED_QTY)+SUM(CART_DISCOUNT) AS TOTAL_DISCOUNT //Does not include shipping discounts
+        FROM analytics.commerce_tools.ct_order_line
+        GROUP BY ORDER_ID
+      ), ct AS (
+        SELECT
+            o.ORDER_ID AS ID,
+            o.CUSTOMER_ID AS USER_ID,
+            o.CREATED AS CREATED_AT,
+            o.GROSS_AMT AS SUBTOTAL_PRICE,
+            o.TOTAL_GROSS AS TOTAL_PRICE,
+            o.ORDER_NUMBER AS NAME,
+            l.TOTAL_DISCOUNT AS TOTAL_DISCOUNTS,
+            o.TOTAL_TAX AS TOTAL_TAX,
+            o.SESSION_ID AS CHECKOUT_TOKEN
+        FROM analytics.commerce_tools.ct_order o
+        INNER JOIN LINES l ON o.ORDER_ID = l.ORDER_ID
+      )
+      select
+        'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_us_ft."ORDER"
+      UNION
+      select
+        'Shopify CA' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_ca_ft."ORDER"
+      UNION
+      select
+        'Shopify Outlet' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from analytics_stage.shopify_outlet."ORDER"
+      UNION
+      select
+        'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+      from ct
+    ;;
+#     sql:
+#       select
+#         ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+#       from analytics_stage.shopify_us_ft."ORDER"
+#       UNION
+#       select
+#         ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+#       from analytics_stage.shopify_ca_ft."ORDER"
+#       UNION
+#       select
+#         ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+#       from analytics_stage.shopify_outlet."ORDER"
+#     ;;
+  }
 
   dimension: id {
     primary_key: yes
@@ -67,6 +120,12 @@ view: shopify_orders {
     description: "Draft orders created by call center agents. Source: looker.calculation"
     type: yesno
     sql: ${TABLE}.user_id is not null and ${sales_order.showroom} = 'FALSE' ;;
+  }
+
+  dimension: scr {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.scr ;;
   }
 
   dimension: tax_match {

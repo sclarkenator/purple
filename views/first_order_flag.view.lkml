@@ -6,7 +6,7 @@ view: first_order_flag {
         from
         (select order_id
                 ,system
-                ,rank() over (partition by email order by trandate) order_sequence
+                ,rank() over (partition by email order by created) order_sequence
         from sales_order
         where channel_id = 1)  ;; }
 
@@ -24,5 +24,22 @@ view: first_order_flag {
           description: "New or repeat for this email address? Source: looker.calculation"
           type: string
           sql: ${TABLE}.new_Flg ;;
+        }
+        measure: new_customer {
+          view_label: "Customer"
+          sql: ${pk};;
+          filters: [new_flg: "NEW"]
+          type: count_distinct
+          value_format: "#,##0"
+          hidden: yes
+        }
+
+        measure: repeat_customer {
+          view_label: "Customer"
+          sql: ${pk};;
+          filters: [new_flg: "REPEAT"]
+          type: count_distinct
+          value_format: "#,##0"
+          hidden: yes
         }
 }

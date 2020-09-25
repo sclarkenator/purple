@@ -4,11 +4,11 @@
 #-------------------------------------------------------------------
 
 view: sessions {
-  derived_table: {
-    sql: select * from heap.sessions;;
-    datagroup_trigger: pdt_refresh_6am
-  }
-  #sql_table_name: heap.sessions ;;
+#   derived_table: {
+#     sql: select * from heap.sessions;;
+#     datagroup_trigger: pdt_refresh_6am
+#   }
+  sql_table_name: heap.sessions ;;
 
   dimension: session_id {
     #primary_key: yes
@@ -25,18 +25,21 @@ view: sessions {
 
   dimension: app_name {
     label: "App Name"
+    description: "Source: HEAP.sessions"
     type: string
     group_label: "Advanced"
     sql: ${TABLE}.app_name ;; }
 
   dimension: app_version {
     label: "App Version"
+    description: "Source: HEAP.sessions"
     type: string
     hidden:  yes
     sql: ${TABLE}.app_version ;; }
 
   dimension: browser {
     label: "Browser"
+    description: "Source: HEAP.sessions"
     type: string
     group_label: "Advanced"
     sql: ${TABLE}.browser ;; }
@@ -44,6 +47,7 @@ view: sessions {
   dimension: browser_bucket {
     label: "Browser Bucket"
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     type: string
     sql: case when ${browser} ilike ('%Chrome%') then 'Chrome'
               when ${browser} ilike ('%Safari%') then 'Safari'
@@ -62,6 +66,7 @@ view: sessions {
 
   dimension: carrier {
     label: "Carrier"
+    description: "Source: HEAP.sessions"
     type: string
     group_label: "Advanced"
     sql: ${TABLE}.carrier ;; }
@@ -69,12 +74,14 @@ view: sessions {
   dimension: city {
     group_label: "Advanced"
     label: "City"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.city ;; }
 
   dimension: country {
     group_label: "Advanced"
     label: "Country"
+    description: "Source: HEAP.sessions"
     map_layer_name: countries
     type: string
     sql: ${TABLE}.country ;; }
@@ -82,12 +89,14 @@ view: sessions {
   dimension: device {
     label: "Device"
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.device ;; }
 
   dimension: device_type {
     label: "Device Type"
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.device_type ;; }
 
@@ -99,18 +108,20 @@ view: sessions {
   dimension: ip {
     label: "IP"
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.ip ;; }
 
   dimension: landing_page {
     label: " Landing Page"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.landing_page ;; }
 
   dimension: page_type {
     label: " Page Type"
     type:  string
-    description: "Bucketed landing pages"
+    description: "Bucketed landing pages. Source: looker calculation"
     sql:  case when ${landing_page} ilike ('%checkouts%') then 'Checkout Page'
            when ${landing_page} ilike ('%mattresses%') or ${landing_page} ilike ('%pillows%') or ${landing_page} ilike ('%/sheets') or ${landing_page} ilike ('%/mattress-protector') or ${landing_page} ilike ('%/platform') or ${landing_page} ilike ('%/powerbase') or ${landing_page} ilike ('%/pet-bed') or ${landing_page} ilike ('%/seatcushions') then 'PDP'
            when ${landing_page} ilike ('purple.com/') then 'Home Page'
@@ -131,17 +142,19 @@ view: sessions {
   dimension: platform {
     label: "Platform"
     group_label: "Advanced"
-    description: "Device OS"
+    description: "Device OS. Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.platform ;; }
 
   dimension: referrer {
     label: " Referrer"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.referrer ;; }
 
   dimension: referrer_2 {
     label: " Referrer (grouped)"
+    description: "Source: looker calculation"
     type: string
     sql: case when ${TABLE}.referrer ilike ('%purple.com%') then 'https://purple.com/*'
           when ${TABLE}.referrer ilike ('%google.%') then 'https://google.com/*'
@@ -178,16 +191,28 @@ view: sessions {
     label: "Region"
     type: string
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     sql: ${TABLE}.region ;; }
+
+  dimension: in_canada {
+    label: "In Canada"
+    type: yesno
+    description: " 'Yes' if Region is one of the 13 Canadian provinces or territories, otherwise 'No'. Source: HEAP.sessions"
+    group_label: "Advanced"
+    sql: case when ${TABLE}.region in ('Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia',
+        'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Northwest Territories', 'Nunavut', 'Yukon')
+        then true else false end ;; }
 
   dimension: search_keyword {
     label: "Search Keyword"
     group_label: "Advanced"
+    description: "Source: HEAP.sessions"
     type: string
     sql: ${TABLE}.search_keyword ;; }
 
   dimension_group: time {
     group_label: "  Session Time"
+    description: "Source: HEAP.sessions"
     type: time
     timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute]
     sql: ${TABLE}.time ;; }
@@ -195,14 +220,14 @@ view: sessions {
   dimension: last_30{
     label: "z - Last 30 Days"
     group_label: "  Session Time"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days. Source: looker calculation"
     type: yesno
     sql: ${TABLE}.time::date > dateadd(day,-30,current_date);; }
 
   dimension: rolling_7day {
     label: "z - Rolling 7 Day Filter"
     group_label: "  Session Time"
-    description: "Yes = 7 most recent days ONLY"
+    description: "Yes = 7 most recent days ONLY. Source: looker calculation"
     type: yesno
     sql: ${TABLE}.time::date between dateadd(d,-7,current_date) and dateadd(d,-1,current_date)  ;;  }
 
@@ -214,14 +239,14 @@ view: sessions {
   dimension: Before_today{
     group_label: "  Session Time"
     label: "z - Is Before Today (mtd)"
-    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports. Source: looker calculation"
     type: yesno
     sql: ${TABLE}.time::date < current_date;; }
 
   dimension: current_week_num{
     group_label: "  Session Time"
     label: "z - Before Current Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days. Source: looker calculation"
     type: yesno
     sql: date_trunc(week, ${TABLE}.time::date) < date_trunc(week, current_date) ;;}
 
@@ -230,7 +255,7 @@ view: sessions {
     group_label: "  Session Time"
     label: "z - Current Week"
     #hidden:  yes
-    description: "Yes/No for if the date is in the current week of the year (for each year)"
+    description: "Yes/No for if the date is in the current week of the year (for each year). Source: looker calculation"
     type: yesno
     sql: EXTRACT(WEEK FROM ${time_date}::date) = EXTRACT(WEEK FROM current_date::date) ;;
   }
@@ -240,7 +265,7 @@ view: sessions {
     group_label: "  Session Time"
     label: "z - Current Month"
     #hidden:  yes
-    description: "Yes/No for if the date is in the current month of the year (for each year)"
+    description: "Yes/No for if the date is in the current month of the year (for each year). Source: looker calculation"
     type: yesno
     sql: EXTRACT(month FROM ${time_date}::date) = EXTRACT(month FROM current_date::date) ;;
   }
@@ -248,14 +273,14 @@ view: sessions {
   dimension: prev_week{
     group_label: "  Session Time"
     label: "z - Previous Week"
-    description: "Yes/No for if the date is in the last 30 days"
+    description: "Yes/No for if the date is in the last 30 days. Source: looker calculation"
     type: yesno
     sql:  date_trunc(week, ${TABLE}.time::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
   dimension: week_bucket{
     group_label: "  Session Time"
     label: "z - Week Bucket"
-    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
     type: string
      sql:  CASE WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, current_date) THEN 'Current Week'
              WHEN date_trunc(week, ${TABLE}.time::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
@@ -274,7 +299,7 @@ view: sessions {
     type: string
     hidden:  no
     label: " Channel"
-    description: "Channel that current session came from"
+    description: "Channel that current session came from. Source: looker calculation"
     sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
           when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${referrer} ilike '%fb%' or ${referrer} ilike '%facebo%' or ${referrer} ilike '%insta%' or ${referrer} ilike '%l%nk%din%' or ${referrer} ilike '%pinteres%' or ${referrer} ilike '%snapch%' then 'social'
           when ${utm_medium} ilike 'vi' or ${utm_medium} ilike 'video' or ${referrer} ilike '%y%tube%' then 'video'
@@ -291,6 +316,7 @@ view: sessions {
   dimension: utm_campaign {
     group_label: "UTM Tags"
     label: "UTM Campaign"
+    description: "Source: HEAP.sessions"
     type: string
     sql: lower(${TABLE}.utm_campaign) ;; }
 
@@ -303,18 +329,21 @@ view: sessions {
   dimension: utm_content {
     group_label: "UTM Tags"
     label: "UTM Content"
+    description: "Source: HEAP.sessions"
     type: string
     sql: lower(${TABLE}.utm_content) ;; }
 
   dimension: utm_medium {
     group_label: "UTM Tags"
     label: "UTM Medium"
+    description: "Source: HEAP.sessions"
     type: string
     sql: lower(${TABLE}.utm_medium) ;; }
 
   dimension: medium_bucket {
     label: "Medium"
     group_label: "Adspend Mapping"
+    description: "Source: looker calculation"
     type: string
     #hidden: yes
     sql: case when ${utm_medium} in ('sr','search','cpc') then 'search'
@@ -322,6 +351,7 @@ view: sessions {
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} = 'sh' or ${utm_medium} ilike '%shopping%' then 'shopping'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
           else 'other' end ;;
   }
@@ -329,12 +359,14 @@ view: sessions {
   dimension: utm_source {
     group_label: "UTM Tags"
     label: "UTM Source"
+    description: "Source: HEAP.sessions"
     type: string
     sql: lower(${TABLE}.utm_source) ;; }
 
   dimension: source_bucket {
     label: "Source"
     group_label: "Adspend Mapping"
+    description: "Source: looker calculation"
     type: string
     #hidden: yes
     sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' then 'GOOGLE'
@@ -359,12 +391,14 @@ view: sessions {
   dimension: utm_term {
     group_label: "UTM Tags"
     label: "UTM Term"
+    description: "Source: HEAP.sessions"
     type: string
     sql: lower(${TABLE}.utm_term) ;; }
 
   dimension: term_bucket {
     label: "Campaign Type"
     group_label: "Adspend Mapping"
+    description: "Source: looker calculation"
     type: string
     sql: case when ${utm_term} ilike '%br%' then 'BRAND'
       when ${utm_term} ilike '%pt%' then 'PROSPECTING'
@@ -382,22 +416,26 @@ view: sessions {
   dimension: ytd {
     group_label: "  Session Time"
     label: "z - YTD"
-    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year"
+    description: "Yes/No for Ad Date Day of Year is before Current Date Day of Year. Source: looker calculation"
     type: yesno
     sql:  ${time_day_of_year} < ${current_day_of_year} ;; }
 
   measure: count {
+    label: "Count of Sessions"
+    description: "Source: looker calculation"
     type: count_distinct
     sql: ${TABLE}.session_id ;;}
 
   measure: count_k {
     label: "Count (0.K)"
+    description: "Source: looker calculation"
     type: count_distinct
     sql: ${TABLE}.session_id ;;
     value_format: "#,##0,\" K\""}
 
   measure: distinct_users {
     label: "Distinct Users"
+    description: "Source: looker calculation"
     type: count_distinct
     sql:  ${TABLE}.user_id ;;
   }

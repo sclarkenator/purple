@@ -9,12 +9,27 @@ view: l2l_quality_yellow_card {
 
   dimension: bed_size {
     type: string
-    sql: ${TABLE}."BED_SIZE" ;;
+    description: "Source: l2l.v_quality_yellow_card"
+    sql: case when ${TABLE}."BED_SIZE" = 'T' then 'TWIN'
+      when ${TABLE}."BED_SIZE" = 'TXL' then 'TWINXL'
+      when ${TABLE}."BED_SIZE" = 'F' then 'FULL'
+      when ${TABLE}."BED_SIZE" = 'Q' then 'QUEEN'
+      when ${TABLE}."BED_SIZE" = 'K' then 'KING'
+      when ${TABLE}."BED_SIZE" = 'CK' then 'CKING'
+      else ${TABLE}."BED_SIZE"
+      end ;;
   }
 
   dimension: bed_type {
     type: string
-    sql: ${TABLE}."BED_TYPE" ;;
+    description: "Source: l2l.v_quality_yellow_card"
+    sql: case when ${TABLE}."BED_TYPE" = 'OG' THEN 'ORIGINAL PURPLE MATTRESS'
+      WHEN ${TABLE}."BED_TYPE" = 'NOG' THEN 'THE PURPLE MATTRESS'
+      WHEN ${TABLE}."BED_TYPE" = '2' THEN 'HYBRID 2'
+      WHEN ${TABLE}."BED_TYPE" = '3' THEN 'HYBRID PREMIER 3'
+      WHEN ${TABLE}."BED_TYPE" = '4' THEN 'HYBRID PREMIER 4'
+      ELSE ${TABLE}."BED_TYPE"
+      END ;;
   }
 
   dimension_group: created {
@@ -177,7 +192,8 @@ view: l2l_quality_yellow_card {
 
   measure: quantity {
     type: sum
-    sql: case when ${TABLE}."QUANTITY" >= 100 then 1 else ${TABLE}."QUANTITY" end ;;
+    sql: ${TABLE}."QUANTITY" ;;
+    #sql: case when ${TABLE}."QUANTITY" >= 100 then 1 else ${TABLE}."QUANTITY" end ;;
     }
 
   measure: count {

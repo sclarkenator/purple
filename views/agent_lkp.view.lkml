@@ -32,6 +32,19 @@ view: agent_lkp {
     sql: ${TABLE}.shopify_id ;;
   }
 
+  dimension: shopify_id_pos {
+    description: "The Shopify POS ID for Retail agent"
+    type:  number
+    sql: ${TABLE}.shopify_id_pos ;;
+  }
+
+  dimension: retail {
+    hidden: no
+    label: " * Is Retail Agent"
+    type:  yesno
+    sql: ${TABLE}.retail ;;
+  }
+
   #dimension: team_id {
   #  description: "The Team ID for this agent"
   #  type:  number

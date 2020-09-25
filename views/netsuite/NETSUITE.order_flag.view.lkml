@@ -11,10 +11,12 @@ view: order_flag {
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
+      ,case when sumo > 0 then 1 else 0 end sumo_flg
       ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
+      ,case when PILLOW_ORDERED > 1 then 1 else 0 end mp_flg
       ,case when split_king > 0 then 1 else 0 end sk_flg
       ,case when harmony > 0 then 1 else 0 end harmony_pillow_flg
       ,case when plush > 0 then 1 else 0 end plush_pillow_flg
@@ -36,9 +38,11 @@ view: order_flag {
 
 
       -- adding for ecommerce bundles
-     ,case when ( harmonytwobund >0 ) then 1 else 0 end harmonytwobund_flg
-     ,case when ( plushtwobund >0 ) then 1 else 0 end plushtwobund_flg
-     ,case when ( purplepillowtwobund >0 ) then 1 else 0 end purplepillowtwobund_flg
+     ,case when ( harmony_ORDERED > 1 ) then 1 else 0 end harmonytwobund_flg
+     ,case when ( harmony_ORDERED = 1 ) then 1 else 0 end singleharmony_flg
+     ,case when ( softstretch_ORDERED > 1 ) then 1 else 0 end softstretchtwobund_flg
+     ,case when ( plush_ORDERED > 1 ) then 1 else 0 end plushtwobund_flg
+     ,case when ( purplepillow_ORDERED > 1 ) then 1 else 0 end purplepillowtwobund_flg
      ,case when ( boostertwobund >0 ) then 1 else 0 end boostertwobund_flg
      ,case when ( sleepmasktwobund >0 ) then 1 else 0 end sleepmasktwobund_flg
      ,case when ( royalcushtwobund >0 ) then 1 else 0 end royalcushtwobund_flg
@@ -56,21 +60,43 @@ view: order_flag {
      ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
      ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
 -- bundles
-     ,case when ( harmonytwobund > 0 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
+     ,case when ( harmony_ORDERED > 1 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
      ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
      ,case when ( double_cushion > 0 and purple_pillow_flg >0) then 1 else 0 end bundle3_flg
      ,case when ( duvet > 0 and plush_pillow_flg >0) then 1 else 0 end bundle4_flg
      ,case when ( gravity_blanket > 0 and sleepmasktwobund >0) then 1 else 0 end bundle5_flg
      ,case when ( everywhere_cushion_flg > 0 and simply_cushion >0) then 1 else 0 end bundle6_flg
-     ,case when ( plushtwobund >= 1) then 1 else 0 end bundle7_flg
+     ,case when ( plush_ORDERED > 1) then 1 else 0 end bundle7_flg
      ,case when ( royal_cushion_flg > 0 and purple_pillow_flg >0) then 1 else 0 end bundle8_flg
      ,case when ( duvet > 0 and sleepmasktwobund >0) then 1 else 0 end bundle9_flg
      ,case when ( simply_cushion > 0 and back_cushion_flg >0) then 1 else 0 end bundle10_flg
-     ,case when ( harmonytwobund > 0 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
-     ,case when ( purplepillowtwobund > 0 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
-     ,case when ( purplepillowtwobund >= 1) then 1 else 0 end bundle13_flg
-     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmonytwobund >0) then 1 else 0 end bundle14_flg
-     ,case when ( harmonytwobund > 0 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+     ,case when ( harmony_ORDERED > 1 and sleepmasktwobund >0) then 1 else 0 end bundle11_flg
+     ,case when ( purplepillow_ORDERED > 1 and softstretch_sheets >0) then 1 else 0 end bundle12_flg
+     ,case when ( purplepillow_ORDERED > 1) then 1 else 0 end bundle13_flg
+     ,case when ( foundation_flg > 0 and protector_flg > 0 and softstretch_sheets > 0 and harmony_ORDERED >1) then 1 else 0 end bundle14_flg
+     ,case when ( harmony_ORDERED > 1 and softstretch_sheets > 0 and protector_flg >0) then 1 else 0 end bundle15_flg
+
+      --big 5 og sheets bundles
+     ,case when (harmony_ORDERED = 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end big5_singleharmony_ogsheets_flg
+      --bundle 1 is the 2 harmonies, og sheets, protector bundle
+     ,case when (purplepillow_ORDERED > 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twopurppillow_ogsheets_flg
+     ,case when (plush_ORDERED > 1 and original_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twoplush_ogsheets_flg
+     --big 5 og sheets with base bundles
+     ,case when (big5_singleharmony_ogsheets_flg > 0 and BASE_FLG > 0) then 1 else 0 end big5_singleharmony_ogsheets_barb_flg
+     ,case when (bundle1_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoharmony_ogsheets_barb_flg
+     ,case when (big5_twopurppillow_ogsheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twopurppillow_ogsheets_barb_flg
+     ,case when (big5_twoplush_ogsheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoplush_ogsheets_barb_flg
+
+     --big 5 SS sheets bundles
+     ,case when (harmony_ORDERED = 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end big5_singleharmony_sssheets_flg
+     --bundle 15 is the 2 harmonies, SS sheets, protector bundle
+     ,case when (purplepillow_ORDERED > 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twopurppillow_sssheets_flg
+     ,case when (plush_ORDERED > 1 and softstretch_sheets > 0 and PROTECTOR_FLG > 0) then 1 else 0 end  big5_twoplush_sssheets_flg
+     --big 5 ss sheets with base bundles
+     ,case when (big5_singleharmony_sssheets_flg > 0 and BASE_FLG > 0) then 1 else 0 end big5_singleharmony_sssheets_barb_flg
+     ,case when (bundle15_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoharmony_sssheets_barb_flg
+     ,case when (big5_twopurppillow_sssheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twopurppillow_sssheets_barb_flg
+     ,case when (big5_twoplush_sssheets_flg >0 and BASE_FLG > 0) then 1 else 0 end big5_twoplush_sssheets_barb_flg
 
      ,case when ( original_sheets > 0 and lite_cushion >0) then 1 else 0 end bundle16_flg
      ,case when ( original_sheets > 0 and purple_pillow_flg >0) then 1 else 0 end bundle17_flg
@@ -86,9 +112,30 @@ view: order_flag {
      ,case when (small_mattress > 0 and anyonepillow > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_small
      ,case when ((bar_small + bar_large > 0) and BASE_FLG > 0 ) then 1 else 0 end barb_flg
 
+    -- Hybrid Matress Sizes and Purple Mattress
+     ,case when hybrid2 > 0 then 1 else 0 end hybrid2_flg
+     ,case when hybrid3 > 0 then 1 else 0 end hybrid3_flg
+     ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
+     ,case when purple_mattress >0 then 1 else 0 end purple_mattres_flg
+
+    -- Room Set Completion
+     ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
+
+    -- For flagging an order based on UPT --
+     ,case when qty > 0 then qty else 0 end upt_dim
+
+    -- finishing up item flags --
+     ,case when light_duvet > 0 then 1 else 0 end light_duvet_flg
+     ,case when kidbed > 0 then 1 else 0 end kid_bed_flg
+     ,case when purpleplusbed > 0 then 1 else 0 end purple_plus_flg
+     ,case when kidpillow > 0 then 1 else 0 end kid_pillow_flg
+     ,case when allseasons_duvet > 0 then 1 else 0 end all_seasons_duvet_flg
+     ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
+     ,case when lifeline > 0 then 1 else 0 end lifeline_flg
+
     FROM(
       select sol.order_id
-        ,sum(case when category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
+        ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
         ,sum(case when line = 'COIL' or (description like '%HYBRID%' and line = 'KIT') THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
         ,SUM(CASE WHEN line = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
@@ -96,16 +143,18 @@ view: order_flag {
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
         ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
         ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
         ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
-        ,SUM(CASE WHEN category = 'MATTRESS' or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN (line = 'PILLOW' and line <> 'BOOSTER') THEN ORDERED_QTY ELSE 0 END) PILLOW_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
-        ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857') then 1 else 0 end) plush
-        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855') then 1 else 0 end) purple_pillow
+        ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891') then 1 else 0 end) harmony
+        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857','10-31-12862') then 1 else 0 end) plush
+        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855','10-31-12863') then 1 else 0 end) purple_pillow
         ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
         ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
         ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
@@ -127,38 +176,55 @@ view: order_flag {
 
         --adding for ecommerce bundles
 
--- new item flags
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
- ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
- ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
- ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
--- 2's
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) harmonytwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) plushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) purplepillowtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
- ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
- ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
+        -- new item flags
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
+         ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
+         ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
+         ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
+         ,sum(case when (model = 'LIGHT DUVET' ) THEN 1 ELSE 0 END) light_duvet
+         ,sum(case when (model = 'KIDS BED' ) THEN 1 ELSE 0 END) kidbed
+         ,sum(case when (model = 'PURPLE PLUS' ) THEN 1 ELSE 0 END) purpleplusbed
+         ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
+         ,sum(case when (model = 'ALL SEASONS DUVET' ) THEN 1 ELSE 0 END) allseasons_duvet
+         ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
+         ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
+        -- 2's
+         ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
+         ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
+         ,sum(case when (line = 'PILLOW' and model = 'PLUSH') THEN ORDERED_QTY ELSE 0 END) plush_ORDERED
+         ,sum(case when (line = 'PILLOW' and model = 'PILLOW 2.0') THEN ORDERED_QTY ELSE 0 END) purplepillow_ORDERED
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
+         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
+         ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
 
--- BAR / BARB
- ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
- ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
- ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
- ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+        -- BAR / BARB
+         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
+         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') and line <> 'COVER' THEN 1 ELSE 0 END) large_mattress
+         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
+         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
 
-        from sales_order_line sol
-      left join item on item.item_id = sol.item_id
-      left join sales_order s on s.order_id = sol.order_id and s.system = sol.system
+        -- Hybrid Mattresses and Purple Mattress
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
+         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
+         ,sum(case when model in ('THE PURPLE MATTRESS W/ OG COVER','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS') then 1 else 0 end) purple_mattress
+
+    -- For flagging an order based on UPT --
+             ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
+
+      from analytics.sales.sales_order_line sol
+      left join analytics.sales.item on item.item_id = sol.item_id
+      left join analytics.sales.sales_order s on s.order_id = sol.order_id and s.system = sol.system
       GROUP BY 1) ;;
 
     }
@@ -212,7 +278,7 @@ view: order_flag {
   measure: harmony_orders {
     group_label: "Total Orders with:"
     label: "a Harmony Pillow"
-    hidden: yes
+    hidden: no
     description: "1/0 per order; 1 if there was a Harmony pillow in the order. Source:looker.calculation"
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
@@ -251,6 +317,14 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.platform_flg ;; }
+
+  measure: sumo_orders{
+    group_label: "Total Orders with:"
+    label: "a Sumo Metal Base"
+    description: "1/0 per order; 1 if there was a platform base (Metal) in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.sumo_flg ;; }
 
   measure: foundation_orders {
     hidden: no
@@ -312,6 +386,33 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.gravity_mask_flg ;; }
+
+  measure: kid_bed_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Bed"
+    description: "1/0 per order; 1 if there was a kid bed in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_bed_flg ;; }
+
+  measure: kid_pillow_orders{
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Pillow"
+    description: "1/0 per order; 1 if there was a kid pillow in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_pillow_flg ;; }
+
+  measure: kid_sheets_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Kid Sheet"
+    description: "1/0 per order; 1 if there was a kid sheet in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.kid_sheets_flg ;; }
 
   dimension: mattress_flg {
     group_label: "    * Orders has:"
@@ -384,6 +485,14 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.pillow_flg = 1 ;; }
 
+  dimension: mp_orders_flg {
+    group_label: "    * Orders has:"
+    label: "Multiple Pillows"
+    description: "1/0; 1 if there is more than 1 pillow in the order. Source: looker.calculation"
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.mp_flg = 1 ;; }
+
   dimension: blanket_flg {
     hidden:  yes
     group_label: "    * Orders has:"
@@ -411,6 +520,14 @@ view: order_flag {
     description: "Number of mattresses in the order. Source: looker.calculation"
     type: number
     sql: ${TABLE}.mattress_ordered ;;
+  }
+
+  dimension: pillow_count {
+    group_label: " Advanced"
+    hidden: yes
+    description: "Number of pillows in the order. Source: looker.calculation"
+    type: number
+    sql: ${TABLE}.pillow_ordered ;;
   }
 
   dimension: harmony_flg {
@@ -1061,5 +1178,285 @@ view: order_flag {
     type:  yesno
     sql:  ${TABLE}.barb_flg = 1  ;; }
 
+  dimension: hybrid2_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 2"
+    description: "1/0; 1 if there is a Hybrid 2 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid2_flg = 1 ;; }
+
+  dimension: hybrid3_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 3"
+    description: "1/0; 1 if there is a Hybrid 3 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid3_flg = 1 ;; }
+
+  dimension: hybrid4_flag {
+    group_label: "    * Orders has:"
+    label: "a Hybrid 4"
+    description: "1/0; 1 if there is a Hybrid 4 Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.hybrid4_flg = 1 ;; }
+
+  measure: hybird_mattress_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid Mattress"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid_mattress_flg ;; }
+
+ measure: hybrid2_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 2"
+    description: "Count of Orders with a Hybrid 2 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid2_flg ;; }
+
+  measure: hybrid3_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 3"
+    description: "Count of Orders with a Hybrid 3 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid3_flg ;; }
+
+  measure: hybrid4_orders {
+    group_label: "Total Orders with:"
+    label: "a Hybrid 4"
+    description: "Count of Orders with a Hybrid 4 Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.hybrid4_flg ;; }
+
+  dimension: purple_mattress_flag {
+    group_label: "    * Orders has:"
+    label: "a Purple Mattress"
+    description: "1/0; 1 if there is a The Purple Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.purple_mattres_flg = 1 ;; }
+
+  measure: purple_mattress_orders {
+    group_label: "Total Orders with:"
+    label: "a Purple Mattress"
+    description: "Count of Orders with a The Purple Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.purple_mattres_flg ;; }
+
+  dimension: room_set_num {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "Bedset Completion Number"
+    description: "1-5; 1 if there is 1 bedset category in this order, 5 if all bedset categories are in it (Mattress, Sheets, Protector, Base, Pillow). Source: looker.calculation"
+    type:  number
+    sql: ${TABLE}.room_set ;; }
+
+  dimension: portcushtwobund_flag {
+    group_label: "eComm Bundle Flags"
+    label: " Bundle 20"
+    description: "1/0 per order; 1 if the order contains at least (2) Portable Cushions. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.portcushtwobund_flg=1 ;; }
+
+  dimension: upt_filter {
+    group_label: "    * Orders has:"
+    label: " UPT - Filter "
+    description: "Filters to a specific UPT. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  number
+    sql:  ${TABLE}.upt_dim ;; }
+
+  dimension: light_duvet_flag {
+    group_label: "    * Orders has:"
+    label: "a Light Duvet"
+    description: "1/0; 1 if there is a Lightweight Duvet in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.light_duvet_flg = 1 ;; }
+
+
+  ## new block ##
+
+
+
+  dimension: kid_bed_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Bed"
+    description: "1/0; 1 if there is a Kid Bed in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_bed_flg = 1 ;; }
+
+  dimension: purple_plus_flag {
+    group_label: "    * Orders has:"
+    label: "a Purple Plus Mattress"
+    description: "1/0; 1 if there is a Purple Plus Mattress in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.purple_plus_flg = 1 ;; }
+
+  dimension: kid_pillow_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Pillow"
+    description: "1/0; 1 if there is a Kid Pillow in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_pillow_flg = 1 ;; }
+
+  dimension: all_seasons_duvet_flag {
+    group_label: "    * Orders has:"
+    label: "an All Seasons Duvet"
+    description: "1/0; 1 if there is an All Seasons Duvet in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.all_seasons_duvet_flg = 1 ;; }
+
+  dimension: kid_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "a Kid Sheets"
+    description: "1/0; 1 if there is a Kid Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.kid_sheets_flg = 1 ;; }
+
+  dimension: lifeline_flag {
+    group_label: "    * Orders has:"
+    label: "a Lifeline Mattress"
+    description: "1/0; 1 if there is a Lifeline Mattress in this order. Source: looker.calculation"
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.lifeline_flg = 1 ;; }
+
+  dimension: harmonytwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Harmony Pillows"
+    description: "1/0; 1 if there are at least (2) Harmony Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.harmonytwobund_flg = 1 ;; }
+
+  dimension: softstretchtwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Softstretch Sheets"
+    description: "1/0; 1 if there are at least (2) Softstretch Sheets in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.softstretchtwobund_flg = 1 ;; }
+
+  dimension: singleharmony_flag {
+    group_label: "    * Orders has:"
+    label: "A Single Harmony Pillow"
+    description: "1/0; 1 if there is exactly 1 Harmony Pillow in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.singleharmony_flg = 1 ;; }
+
+
+# big 5 bundles
+  dimension: big5_singleharmony_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_ogsheets_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_ogsheets_flg = 1 ;; }
+
+  dimension: big5_twoplush_ogsheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, OG Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) Purple Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_ogsheets_flg = 1 ;; }
+
+  dimension: big5_singleharmony_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoharmony_ogsheets_barb_flg {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Harmony, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Harmony, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoharmony_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_ogsheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoplush_ogsheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, OG Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) Purple Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_ogsheets_barb_flg = 1 ;; }
+
+# big 5 bundles w/ softstretch upgrade
+  dimension: big5_singleharmony_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_sssheets_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_sssheets_flg = 1 ;; }
+
+  dimension: big5_twoplush_sssheets_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, SoftStretch Sheets, a Protector"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) SoftStretch Sheets, (1) Protector. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_sssheets_flg = 1 ;; }
+
+  dimension: big5_singleharmony_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 1 Harmony, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (1) Harmony, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_singleharmony_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoharmony_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Harmony, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Harmony, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoharmony_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twopurppillow_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Purple Pillows, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Purple Pillows, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twopurppillow_sssheets_barb_flg = 1 ;; }
+
+  dimension: big5_twoplush_sssheets_barb_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Big 5: 2 Plush, SoftStretch Sheets, a Protector, any base"
+    description: "1/0; 1 if the order contains at least (2) Plush Pillows, (1) SoftStretch Sheets, (1) Protector, any base. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.big5_twoplush_sssheets_barb_flg = 1 ;; }
 
 }

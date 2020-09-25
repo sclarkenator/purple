@@ -60,7 +60,7 @@ view: c3_roa {
         or ${SOURCE} = 'YOUTUBE'
         or ${SOURCE} = 'YOUTUBE.COM'
         or (${PLATFORM} = 'EXPONENTIAL') ;; label:"video" }
-      when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER')
+      when: {sql: ${PLATFORM} in ('FACEBOOK','PINTEREST','SNAPCHAT','QUORA','TWITTER','FB/IG')
                 or ${SOURCE} ilike ('%social media%') ;; label:"social"}
       when: {sql: ${SOURCE} ilike ('%ispla%')
                 or ${PLATFORM} in ('ACUITY')
@@ -69,7 +69,8 @@ view: c3_roa {
       when: {sql: ${PLATFORM} in ('TV','RADIO','SMS','HULU') ;; label:"traditional"}
       when: {sql: ${CAMPAIGN_NAME} ilike '%ative%'
                 or ${SOURCE} = 'NATIVE';; label: "native" }
-      when: {sql: ${PLATFORM} = 'AFFILIATE' ;; label: "affiliate" }
+      when: {sql: ${PLATFORM} = 'AFFILIATE'
+                or ${PLATFORM} = 'EMAIL' or ${SOURCE} = 'EMAIL';; label: "affiliate" }
       when: {sql:  ${SOURCE} ilike 'seo%'
                 or ${SOURCE} ilike ('%organic%')
                 or ${PLATFORM} in ('BLOG');; label:"organic"}

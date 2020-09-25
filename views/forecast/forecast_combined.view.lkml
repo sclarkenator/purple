@@ -190,6 +190,7 @@ sql_table_name: sales.forecast ;;
     label: "Forecasted DTC Discount"
     description: "Implied Discount Rate. Use only with DTC at SKU level. Calculation: 1-(total sales/hypothetical total sales at full price)"
     value_format: "0.0%"
+    hidden: yes
     type:  number
     sql: coalesce((1-(${total_amount}/nullif(${full_sales_amount},0))),0);; }
 
@@ -289,13 +290,13 @@ sql_table_name: sales.forecast ;;
     label: "Wholesale SCC Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Sleep Country' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} ilike '%Sleep Country%' then ${total_units_dimension} else 0 end ;;}
 
   measure: SCC_Amount {
     label: "Wholesale SCC Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'Sleep Country' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} ilike '%Sleep Country%' then ${total_amount_dimension} else 0 end ;;}
 
   measure: BBB_Units {
     label: "Wholesale BBB Units"
@@ -386,6 +387,11 @@ sql_table_name: sales.forecast ;;
     value_format: "#,##0"
     sql: case when ${TABLE}.forecast < current_date then ${total_amount_dimension} else 0 end;; }
 
+  measure: total_sku_ids {
+    hidden: yes
+    type: count_distinct
+    sql: ${sku_id} ;;
+  }
 
   dimension: primary_key {
     primary_key: yes

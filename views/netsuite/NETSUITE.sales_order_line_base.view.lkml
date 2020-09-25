@@ -190,7 +190,7 @@ view: sales_order_line_base {
 
   dimension: city {
     label: "City"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     view_label: "Customer"
     description: "Source: netsuite.sales_order_line"
     type: string
@@ -205,7 +205,7 @@ view: sales_order_line_base {
 
   dimension: country {
     label: "Country"
-    group_label: "Customer address"
+    group_label: "  Customer Address"
     view_label: "Customer"
     hidden: yes
     type: string
@@ -418,6 +418,72 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  dimension: is_same_rolling_week {
+    description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.) Source: looker calculation"
+    type: yesno
+    ## This dimension returns yes if the created_date is in the last 7 days OR is the same last 7 days for all previous years.
+    ## To determine if it is the same week the previous year, we check the week_of_year and the day_of_week_index.
+    ## Note SQL always returns 52 weeks in a year. (ie Sometimes dec 31 is marked week_of_year=1) That is why this works.
+    sql:
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date)::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '1 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '1 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '2 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '2 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '3 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '3 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '4 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '4 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '5 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '5 day')::integer - 1 + 7, 7))
+      OR
+      (${created_week_of_year} = EXTRACT(WEEK FROM (current_date - interval '6 day'))::int
+      AND ${created_day_of_week_index} = MOD(EXTRACT(DOW FROM current_date - interval '6 day')::integer - 1 + 7, 7))
+    ;;
+  }
+
+  dimension: period_comparison {
+    case: {
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '1 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE());;
+        label: "current_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '53 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '52 week') ;;
+        label: "last_year_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '105 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '104 week') ;;
+        label: "two_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '157 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '156 week') ;;
+        label: "three_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '209 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '208 week') ;;
+        label: "four_years_ago_same_week"
+      }
+      when: {
+        sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '2 week')
+          AND ${created_date} <= DATE_TRUNC('day', GETDATE() - interval '1 week') ;; # 8/06
+        label: "last_week"
+      }
+      else: "unknown"
+    }
+  }
+
   dimension_group: shift_time{
     hidden: yes
     label: "Shift Timescale"
@@ -431,9 +497,9 @@ view: sales_order_line_base {
   }
 
   dimension_group: current {
-    view_label: "Geography"
+    view_label: "Sales Order"
     label: "    Current"
-    description:  "Current Time/Date for calculations. Source: netsuite.sales_order_line"
+    description:  "Current Time/Date for calculations. Source: looker.calculation"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -455,7 +521,6 @@ view: sales_order_line_base {
     sql: MAX(${created_date}) ;;
     convert_tz: no
   }
-
 
   dimension: day_of_week {
     hidden:  yes
@@ -582,6 +647,49 @@ view: sales_order_line_base {
       value: "yes" }
     sql: ${ordered_qty}/90 ;;
   }
+
+    measure: 7_day_sales_dollar {
+      label: "7 Day Average Sales ($)"
+      description: "$ ordered in the last 7 days /7. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden: yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 7_day_window
+        value: "yes" }
+      sql: ${gross_amt}/7 ;;
+    }
+
+    measure: 30_day_sales_dollar {
+      label: "30 Day Average Sales ($)"
+      description: "$ ordered in the last 30 days /30. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden:  yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 30_day_window
+        value: "yes" }
+      sql: ${gross_amt}/30 ;;
+    }
+
+
+    measure: 90_day_sales_dollar {
+      label: "90 Day Average Sales ($)"
+      description: "$ ordered in the last 90 days /90. Source: netsuite.sales_order_line"
+      drill_fields: [order_details*]
+      #view_label: "Time-slice totals"
+      hidden:  yes
+      type: sum
+      value_format_name: usd_0
+      filters: {
+        field: 90_day_window
+        value: "yes" }
+      sql: ${gross_amt}/90 ;;
+    }
 
   dimension: rolling_7day {
     label: "Is in Last 7 Day"
@@ -738,7 +846,7 @@ view: sales_order_line_base {
 
   dimension: street_address {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     label: "Street Address"
     description: "Source: netsuite.sales_order_line"
     type: string
@@ -807,7 +915,7 @@ view: sales_order_line_base {
 
   dimension: state {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     description: "Source: netsuite.sales_order_line"
     type: string
     map_layer_name: us_states
@@ -816,7 +924,7 @@ view: sales_order_line_base {
 
   dimension: zip {
     view_label: "Customer"
-    group_label: "Customer Address"
+    group_label: "  Customer Address"
     label: "Zipcode (5)"
     description: "Source: netsuite.sales_order_line"
     type: zipcode
@@ -832,6 +940,16 @@ view: sales_order_line_base {
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
     sql: split_part(${TABLE}.ZIP,'-',1) ;;
+  }
+
+ dimension: carrier_raw {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Carrier (raw)"
+    description: "Netsuite Carrier field. Source:netsuite.sales_order_line"
+    #hidden: yes
+    type: string
+    sql: ${TABLE}.CARRIER ;;
   }
 
   dimension: carrier {
@@ -890,6 +1008,83 @@ view: sales_order_line_base {
     type: string
     sql: ${TABLE}.TRANSMITTED_TO_ID;;
   }
+
+    measure: kit_total_units {
+      description: "This is used for the forecast_combined and actual_sales explore.  It is break the kits/packages back to their child items"
+      type: sum
+      hidden: yes
+      sql:
+        case
+          --BASE
+          when ${item_id} in ('9809') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9816') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9824') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('10391') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('11511') then ${TABLE}.ordered_qty*2
+          --BEDDING
+          when ${item_id} in ('9783') then ${TABLE}.ordered_qty*4
+          when ${item_id} in ('9800') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9813') then ${TABLE}.ordered_qty*2
+          --KIT
+          when ${item_id} in ('9781') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9782') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9785') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9790') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9791') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9794') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9795') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9796') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9798') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9799') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9801') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9802') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9804') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9805') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9806') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9807') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9810') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9814') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9821') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9822') then ${TABLE}.ordered_qty*1
+          --MATTRESS
+          when ${item_id} in ('9786') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9787') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9789') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9792') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9803') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9808') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9815') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9818') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('9820') then ${TABLE}.ordered_qty*2
+          when ${item_id} in ('11262') then ${TABLE}.ordered_qty*2
+          --SALES SUPPORT
+          when ${item_id} in ('9793') then ${TABLE}.ordered_qty*50
+          when ${item_id} in ('9811') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9817') then ${TABLE}.ordered_qty*10
+          when ${item_id} in ('9823') then ${TABLE}.ordered_qty*25
+          when ${item_id} in ('10281') then ${TABLE}.ordered_qty*60
+          --SEATING
+          when ${item_id} in ('9784') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9788') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9797') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9812') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9819') then ${TABLE}.ordered_qty*6
+          when ${item_id} in ('9825') then ${TABLE}.ordered_qty*4
+          --Z-MARKETING
+          when ${item_id} in ('3502') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3504') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3429') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3430') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3497') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('3499') then ${TABLE}.ordered_qty*1
+          --OTHER
+          when ${item_id} in ('11107') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5863') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5862') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('5866','5869') then ${TABLE}.ordered_qty*1
+          when ${item_id} in ('9077') then ${TABLE}.ordered_qty*1
+          else ${TABLE}.ordered_qty end;;
+    }
 
   set: order_details {
     fields: [sales_order_line.sales_order_details*]

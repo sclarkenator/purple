@@ -18,6 +18,11 @@ view: fulfillment {
     group_label: " Advanced"
     label: "Fulfillment ID"
     description: "Netsuite Internal Fulillment ID. Source: netsuite.fulfillment"
+    link: {
+      label: "Netsuite"
+      url: "https://4651144.app.netsuite.com/app/accounting/transactions/itemship.nl?id={{value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    }
     type: string
     sql: ${TABLE}.FULFILLMENT_ID ;; }
 
@@ -169,6 +174,7 @@ view: fulfillment {
     #hidden: yes
     type: sum
     drill_fields: [sales_order_line.fulfillment_details*]
+    sql_distinct_key: NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')||NVL(${PK},'0') ;;
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
       when nvl(${TABLE}.BUNDLE_QUANTITY,0) > 0 then ${TABLE}.BUNDLE_QUANTITY
       else ${TABLE}.quantity END ;;}
@@ -179,6 +185,7 @@ view: fulfillment {
     description: "Count of bundles fulfilled, if an item was fullfiled without a bundle the value is the fulfilled units. Source:looker calculation"
     #hidden: yes
     type: sum
+    sql_distinct_key: NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')||NVL(${PK},'0') ;;
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
       when nvl(${TABLE}.BUNDLE_QUANTITY,0) = 0 then ${TABLE}.quantity
       else ${TABLE}.BUNDLE_QUANTITY end  ;;}
@@ -195,6 +202,7 @@ view: fulfillment {
     group_label: " Advanced"
     label: "Total Direct Shipping Costs"
     #hidden: yes
+    sql_distinct_key: NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')||NVL(${PK},'0') ;;
     description: "Direct shipping costs incurred, not including last-mile or other transfer costs. Source: netsuite.fulfillment"
     type: sum
     sql: ${TABLE}.shipping ;; }

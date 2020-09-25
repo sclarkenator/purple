@@ -9,6 +9,43 @@ view: zendesk_chats {
     sql: ${TABLE}."AGENT_ID" ;;
   }
 
+  dimension: agent_names {
+    type: string
+    group_label: "Advanced - Chats"
+    description: "Zendesk Agent ID. Source: zendesk_chats.zendesk_chats"
+    sql: ${TABLE}."AGENT_NAMES" ;;
+  }
+
+  dimension: history {
+    type: string
+    group_label: "Advanced - Chats"
+    description: "Text of chat. Source: zendesk_chats.zendesk_chats"
+    sql: ${TABLE}."HISTORY" ;;
+  }
+
+  dimension: return_warranty_flag{
+    type: string
+    group_label: "Flags - History"
+    description: "1/0 if history contains mention of warranty or return. Source: zendesk_chats.zendesk_chats"
+    sql:case when ${history} ilike '%warranty%'
+               OR ${history} ilike '%return%'
+               then 1 else 0 end
+    ;;
+  }
+
+  dimension: bases_platform_flag{
+    type: string
+    group_label: "Flags - History"
+    description: "1/0 if history contains mention of platform, base, frame, or foundation. Source: zendesk_chats.zendesk_chats"
+    sql:case when ${history} ilike '%platform%'
+               OR ${history} ilike '%base%'
+               OR ${history} ilike '%frame%'
+               OR ${history} ilike '%foundation%'
+               then 1 else 0 end
+    ;;
+  }
+
+
   dimension: chat_id {
     type: string
     primary_key: yes

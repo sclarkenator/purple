@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------
 
 view: entity {
-  sql_table_name: analytics_stage.netsuite.entity ;;
+  sql_table_name: analytics_stage.ns.entity ;;
 
   dimension: entity_id {
     primary_key: yes
@@ -13,7 +13,7 @@ view: entity {
     sql: ${TABLE}.entity_id ;;}
 
   dimension: full_name {
-    hidden: yes
+    hidden: no
     label: "Full Name"
     sql: ${TABLE}.full_name ;;}
 

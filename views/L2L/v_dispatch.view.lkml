@@ -75,6 +75,13 @@ view: v_dispatch {
     sql: ${TABLE}."SITE" ;;
   }
 
+measure: dispatch_occurences {
+  label: "Dispatch Occurrences"
+  description: "Count of distinct Dispatch Occurrences"
+  type: count_distinct
+  sql: ${TABLE}."DISPATCH_NUMBER" ;;
+}
+
   measure: dispatch_minutes {
     label: "Dispatch Minutes"
     description: "Number of Minutes the Dispatch Occured"
