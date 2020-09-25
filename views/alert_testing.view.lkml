@@ -1,7 +1,8 @@
 view: alert_testing {
 
  derived_table: {
-     sql:
+     persist_for: "24 hours"
+    sql:
     with sessions as
 (select to_date(time) date
         ,count(*) sessions
