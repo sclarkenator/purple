@@ -95,6 +95,16 @@ view: heap_page_views {
     sql: ${TABLE}.query;;
   }
 
+  dimension: g_clid {
+    label: "Query - gclid"
+    group_label: "Advanced"
+    description: "The landing page's gclid string. Source: Looker calculation"
+    hidden: yes
+    view_label: "Sessions"
+    type: string
+    sql: split_part(split_part(${query}, 'gclid=',  2), '&', 1) ;;
+  }
+
   dimension: path {
     label: "Parsed Page URL"
 #    hidden: yes
