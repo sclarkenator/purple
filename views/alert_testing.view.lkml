@@ -201,8 +201,8 @@ MEDIANS as
             ,metric
             ,tier
             ,amount
-            ,abs(amount - median(amount) over (partition by category)) diff_median
-            ,median(amount) over (partition by category) median
+            ,abs(amount - median(amount) over (partition by category||metric)) diff_median
+            ,median(amount) over (partition by category||metric) median
 from SUB)
 
 select date
