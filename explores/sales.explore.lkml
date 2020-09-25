@@ -8,17 +8,16 @@ include: "/dashboards/**/*.dashboard"
 
   explore: sales_order_line{
     from:  sales_order_line
-    label:  "DTC"
+    label:  "Sales"
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
-    description:  "All sales orders for DTC channel"
+    description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
     always_join: [fulfillment]
     always_filter: {
-      filters: {field: sales_order.channel      value: "DTC"}
-      filters: {field: item.merchandise         value: "No"}
-      filters: {field: item.finished_good_flg   value: "Yes"}}
-    #filters: {field: item.modified            value: "Yes"}}
+      filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
+      filters: [sales_order.is_exchange_upgrade_warranty: ""]
+    }
     join: sf_zipcode_facts {
       view_label: "Customer"
       type:  left_outer
@@ -406,6 +405,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: warranty {
     from: warranty_order
+    hidden: yes
     fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
     label: "Warranty"
     group_label: " Sales"
@@ -508,6 +508,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: wholesale {
     extends: [sales_order_line]
+    hidden: yes
     label:  "Wholesale"
     group_label: " Sales"
     view_label: "Sales Order Line"
@@ -521,6 +522,7 @@ include: "/dashboards/**/*.dashboard"
   explore: mattress_firm_sales {hidden:no
     label: "Mattress Firm"
     group_label: " Sales"
+    description: "Mattress Firm Units Sold by Store"
     view_label: "Store Details"
     join: mattress_firm_store_details {
       view_label: "Store Details"

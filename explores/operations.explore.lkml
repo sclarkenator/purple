@@ -63,7 +63,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: receipt_line {
       view_label: "Receipt Line"
-      type:  inner
+      type:  left_outer
       sql_on: ${receipt.receipt_id} = ${receipt_line.receipt_id} and coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id}) = ${receipt_line.item_id}
       ;;
       relationship: one_to_many
@@ -200,3 +200,4 @@ explore: forecast_compared_to_actual_sales {
 
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
+  explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}

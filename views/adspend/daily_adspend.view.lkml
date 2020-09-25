@@ -140,7 +140,9 @@ view: daily_adspend {
     sql: case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.06
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     }
@@ -152,7 +154,9 @@ view: daily_adspend {
     type: sum
     value_format: "$#,##0"
     sql: case
-      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+      when ${TABLE}.platform in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
       else ${TABLE}.spend
       end ;;
@@ -208,14 +212,25 @@ view: daily_adspend {
     sql: (${clicks}/${impressions});;  }
 
 
-  dimension: spend_platform {
+#   #dimension: spend_platform {
+#     label: " Spend Platform"
+#     description: "What platform for spend (google, facebook, TV, etc.)"
+#     type:  string
+#     sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
+#         when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
+#         when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
+#         when ${TABLE}.source = ('CTV') then 'CTV'
+#         when ${TABLE}.source = ('TV') then 'TV'
+#         when ${TABLE}.source = ('RADIO') then 'RADIO'
+#         when ${TABLE}.source = ('STREAMING') then 'STREAMING'
+#         when ${TABLE}.source = ('PODCAST') then 'PODCAST'
+#         else ${TABLE}.platform end ;; }
+
+dimension: spend_platform {
     label: " Spend Platform"
-    description: "What platform for spend (google, facebook, TV, etc.)"
+    description: "What platform for spend (google, facebook, oceanmedia)"
     type:  string
-    sql: case when ${TABLE}.source ilike ('%outub%') then 'YOUTUBE.COM'
-        when ${TABLE}.source ilike ('%instagram%') then 'INSTAGRAM'
-        when ${TABLE}.source = ('RAKUTEN') then 'RAKUTEN'
-        else ${TABLE}.platform end ;; }
+    sql: ${TABLE}.platform;;}
 
   dimension: Spend_platform_condensed {
     label: "Major Spend Platform"
@@ -225,7 +240,7 @@ view: daily_adspend {
     case: {
       when: {sql: ${TABLE}.platform in ('FACEBOOK','PINTEREST','SNAPCHAT','TWITTER','FB/IG') ;; label: "Social" }
       when: {sql: ${TABLE}.platform = 'GOOGLE' ;; label: "Google"}
-      when: {sql: ${TABLE}.platform in ('TV','RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','OCEAN MEDIA') ;; label: "Traditional" }
+      when: {sql: ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','SIRIUSXM','PANDORA','PRINT','VERITONE') or ${TABLE}.source in ('CTV','TV','RADIO','STREAMING','PODCAST');; label: "Traditional" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','AMAZON-SP','AMAZON-HSA','AMAZON PPC') ;;  label: "Amazon" }
       when: {sql: ${TABLE}.platform in ('YAHOO','BING') ;; label: "Yahoo/Bing" }
       when: {sql: ${TABLE}.platform = 'AFFILIATE' ;; label: "Affiliate"}
@@ -241,15 +256,16 @@ view: daily_adspend {
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
         or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
-        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  ;; label:"display" }
+        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
-      when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
-      when: {sql: ${TABLE}.platform in ('TV','HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA')
+      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA');; label: "native" }
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE','POSTIE','MADRIVO','ADWALLET','FKL') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
+      when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA') or ${spend_platform} in ('GOOGLE','BING','AMAZON-HSA');; label:"search"}
+     when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
+      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FlUENT','Fluent', 'LIVEINTENT') ;; label: "crm" }
       else: "other" }
   }
 
@@ -266,7 +282,7 @@ view: daily_adspend {
           when ${medium} ilike 'Shopping' then 'shopping'
           when ${medium} ilike '%Affiliate%' then 'affiliate'
           when ${medium} ilike 'traditional' then 'traditional'
-          when ${medium} ilike 'Email' then 'email'
+          when ${medium} ilike 'crm' then 'crm'
           when ${medium} is null then 'organic'
           when ${medium} ilike 'Referral' then 'referral'
           when ${medium} ilike 'Shopping' then 'shopping'
@@ -354,7 +370,8 @@ view: daily_adspend {
     type: number
     sql: ${TABLE}.purchase_viewthrough_conversions ;; }
 
-  dimension: ocean_bucket {
+#For Ocean Media Reporting
+ dimension: ocean_bucket {
     hidden: yes
     case: {
       when: {sql: ${spend_platform} = 'TV' ;; label: "TV"}
@@ -393,5 +410,12 @@ view: daily_adspend {
                 when campaign_name ilike '%blanket%' then 'BEDDING'
                 when campaign_name ilike '%mask%' then 'MASK'
                 when campaign_name ilike '%bed%' then 'MATTRESS'
-                else 'MATTRESS' end ;;  }
+                else 'MATTRESS' end ;;
+  }
+  measure: last_updated_date {
+    type: date
+    sql: MAX(${ad_raw}) ;;
+    convert_tz: no
+  }
+
 }

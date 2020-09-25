@@ -266,21 +266,25 @@ view: roas_pdt {
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
         when ${TABLE}.platform in ('eb','EBAY') then 'Ebay'
-        when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC') then 'Email'
+        when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
         when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
         when ${TABLE}.platform in ('FACEBOOK','facebook','fb','ig','igshopping','INSTAGRAM','instagram','FB/IG') then 'FB/IG'
         when ${TABLE}.platform in ('go','GOOGLE','google') then 'Google'
         when ${TABLE}.platform in ('PINTEREST','pinterest','pinterestk','pt') then 'Pinterest'
         when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
         when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
-         when ${TABLE}.platform in ('tab','TABOOLA') then 'Taboola'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt') then 'YouTube'
+        when ${TABLE}.platform in ('tab','TABOOLA') then 'Taboola'
         when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath') then 'Yahoo'
         when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
+        when ${TABLE}.platform in ('RAKUTEN','rk') then 'Rakuten'
+        when ${TABLE}.platform in ('SIMPLIFI','si') then 'Simplifi'
         when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
         when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
-        when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'TV'
+        when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
+        when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
+        when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE') then 'YouTube'
         else 'Other' end
       ;;
   }
@@ -306,13 +310,21 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.medium in ('social','so','facebook') then 'Social'
-        when ${TABLE}.medium in ('display','ds') then 'Display'
-        when ${TABLE}.medium in ('traditional','em','sms','tv','tx','email','cinema','au') then 'Traditional'
+      case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
+      'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
+        or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
+        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('ACUITY')
+          or (${TABLE}.platform in ('agility','ACUITY', 'oa') and ${TABLE}.medium is null)  then 'Display'
+        when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
+        when ${TABLE}.medium in ('TV','CTV','RADI0','STREAMING','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
+        or  ${TABLE}.platform in ('rk','TV','CTV','RADI0','STREAMING') then 'Traditional'
         when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
-        when ${TABLE}.medium in ('video','vi') then 'Video'
-        when ${TABLE}.medium in ('affiliate','af','referral','rf') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt') then 'Native'
+        when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
+        'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
+        'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
+        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube')  then 'Video'
+        when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
+        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
         when ${TABLE}.medium in ('organic')
           or ${TABLE}.medium is null then 'Organic'
         else 'Other' end

@@ -12,13 +12,27 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
-  measure: asp {
+  measure: asp_gross_amt {
     hidden: yes
+    type: sum
+    filters: [free_item: "No"]
+    sql: ${TABLE}.gross_amt ;;
+  }
+
+  measure: asp_total_units {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No"]
+    sql: ${TABLE}.ordered_qty ;;
+  }
+
+  measure: asp {
+    hidden: no
     label: "ASP"
-    description: "Average Sales Price. Source: looker.calculation"
+    description: "Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
     type: number
-    value_format_name: decimal_0
-    sql: ${sales_order_line.total_gross_Amt_non_rounded}/${sales_order_line.total_units} ;;
+    value_format: "$#,##0"
+    sql:case when ${asp_total_units} > 0 then ${asp_gross_amt}/${asp_total_units} else 0 end ;;
   }
 
   measure: avg_days_to_fulfill {

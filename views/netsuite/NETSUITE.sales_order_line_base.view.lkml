@@ -419,7 +419,7 @@ view: sales_order_line_base {
   }
 
   dimension: is_same_rolling_week {
-    description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.)"
+    description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.) Source: looker calculation"
     type: yesno
     ## This dimension returns yes if the created_date is in the last 7 days OR is the same last 7 days for all previous years.
     ## To determine if it is the same week the previous year, we check the week_of_year and the day_of_week_index.

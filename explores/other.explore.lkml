@@ -46,7 +46,8 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Answer"}
     join: item {
       view_label: "Product"
-      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_name} ;;
+      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_id};;
+      # TRY_CAST(${item.item_id} as INTEGER) = TRY_CAST(${qualtrics_answer.question_name} as INTEGER) or TRY_CAST(${qualtrics_answer.question_id} as INTEGER);;
       type: left_outer
       relationship: many_to_one}
     join: customer_table {
@@ -62,6 +63,11 @@ include: "/dashboards/**/*.dashboard"
       type:  left_outer
       sql_on: ${qualtrics_response.order_id}::text = ${sales_order_line_base.order_id}::text and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
       relationship: one_to_many}
+    join: first_order_flag {
+      view_label: "Sales Header"
+      type: left_outer
+      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+      relationship: one_to_one}
   }
 
   explore: qualtrics1 {
