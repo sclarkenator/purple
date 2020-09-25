@@ -32,7 +32,7 @@ view: sales_order_line {
     description: "Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
     type: number
     value_format: "$#,##0"
-    sql: ${asp_gross_amt}/${asp_total_units} ;;
+    sql:case when ${asp_total_units} > 0 then ${asp_gross_amt}/${asp_total_units} else 0 end ;;
   }
 
   measure: avg_days_to_fulfill {
