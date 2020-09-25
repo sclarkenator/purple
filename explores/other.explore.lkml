@@ -151,3 +151,6 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Response"}
 
   }
+explore: alert_testing {
+  hidden: yes
+}
