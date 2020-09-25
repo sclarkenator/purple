@@ -39,7 +39,7 @@ view: agent_lkp {
   }
 
   dimension: retail {
-    hidden: yes
+    hidden: no
     label: " * Is Retail Agent"
     type:  yesno
     sql: ${TABLE}.retail ;;

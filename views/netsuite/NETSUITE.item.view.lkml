@@ -427,7 +427,7 @@ view: item {
   dimension: grid_height {
     group_label: "Advanced"
     label: "Grid Height"
-    description: "Source: Looker calculation"
+    description: "2, 3, or 4 inch grid height. Source: Looker calculation"
     sql:
       case
         when ${TABLE}.model in ('KIDS BED','HYBRID 2','HYBRID 2H','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS','THE PURPLE MATTRESS W/ OG COVER','PURPLE PLUS','LIFELINE MATTRESS') then '2"'
@@ -556,6 +556,7 @@ view: item {
         when ${sku_clean} = '10-38-12939' then '10-38-12948'
         --Pillow 2.0
         when ${sku_clean} = '10-31-12863' then '10-31-12855'
+        when ${sku_clean} = '10-31-12870' then '10-31-12855'
         --Plush Pillow
         when ${sku_clean} = '10-31-12862' then '10-31-12857'
         --Duvet Washable
@@ -570,6 +571,7 @@ view: item {
         when ${sku_clean} = '10-21-12966' then '10-21-12618'
         --Harmony Vita
         when ${sku_clean} = '10-31-12891' then '10-31-12890'
+        when ${sku_clean} = '10-31-12896' then '10-31-12895'
         --Booster Back Up
         when ${sku_clean} = '10-31-13102' then '10-31-13100'
         else ${sku_clean} end ;;

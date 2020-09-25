@@ -121,6 +121,7 @@ view: zendesk_sell {
 
   dimension: RETAIL_AGENT {
     type: yesno
+    hidden:  yes
     group_label: "Advanced - Sell"
     label: " * Is Retail Agent"
     description: "Yes if agent is a retail agent. Source: zendesk_sell.inside_sales"
