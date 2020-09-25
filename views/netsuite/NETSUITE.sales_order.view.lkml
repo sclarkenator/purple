@@ -298,6 +298,21 @@ view: sales_order {
     type: yesno
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
+  dimension: is_exchange_upgrade_warranty {
+    hidden:yes
+    group_label: " Advanced"
+    label: "  * Is Return Exchange or Warranty Exchange or Warranty"
+    description: "Source: looker calculation"
+    type: yesno
+    sql:
+      case
+        when ${TABLE}.EXCHANGE = 'T' then 1
+        when ${TABLE}.IS_UPGRADE = 'T' then 1
+        when ${TABLE}.WARRANTY_CLAIM_ID is not null or ${TABLE}.warranty = 'T' then 1
+        else 0
+      end = 1
+    ;;
+  }
   dimension: memo {
     hidden: yes
     type: string
