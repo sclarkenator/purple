@@ -3,7 +3,7 @@ view: alert_testing {
  derived_table: {
      persist_for: "24 hours"
     sql:
-    with sessions as
+with sessions as
 (select to_date(time) date
         ,count(*) sessions
 from analytics.heap.sessions
@@ -40,8 +40,8 @@ group by 1)
 sub as
 (select distinct to_Date(response_received) date
             ,'CUSTOMER_CARE' bus_unit
-            ,'SCORE' as category
-            ,'CC_CSAT' metric
+            ,'SCORE' as metric
+            ,'CC_CSAT' category
             ,'M' tier
             ,avg(star_Rating) over (partition by to_date(response_received)) amount
     from ANALYTICS.CUSTOMER_CARE.customer_satisfaction_survey
@@ -131,7 +131,7 @@ UNION
 select distinct(to_Date(sl.created)) date
         ,'DTC' bus_unit
         ,i.line||'|'||i.model
-        ,'ATTACH_RATE' metric
+        ,'MATTRESS_ATTACH_RATE' metric
         ,'H' tier
         ,round(count(distinct sl.order_id) over (partition by date, i.line||'|'||i.model)/count(distinct sl.order_id) over (partition by date),4) amount
 from sales_order_line sl join item i on sl.item_id = i.item_id
@@ -148,51 +148,52 @@ join
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
-        ,'MATTRESS_ORDERS' metric
+        ,'MATTRESS_ORDERS' category
+        ,'ORDERS' metric
         ,'H' tier
         ,matt_ord amount
 from dtc_sales
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
         ,'AMOV' metric
+        ,'ORDERS' category
         ,'H' tier
         ,AMOV amount
 from dtc_sales
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
         ,'MATTRESS UPT' metric
+        ,'ORDERS' category
         ,'H' tier
         ,m_UPT amount
 from dtc_sales
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
         ,'ACCESSORY_ORDERS' metric
+        ,'ORDERS' category
         ,'H' tier
         ,non_matt_ord amount
 from dtc_sales
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
         ,'NAMOV' metric
+        ,'ORDERS' category
         ,'H' tier
         ,NAMOV amount
 from dtc_sales
 UNION
 select date
         ,'DTC' bus_unit
-        ,'ORDERS' category
         ,'ACCESSORY UPT' metric
+        ,'ORDERS' category
         ,'H' tier
         ,acc_UPT amount
 from dtc_sales
+
 )
 ,
 MEDIANS as
@@ -206,6 +207,7 @@ MEDIANS as
             ,median(amount) over (partition by category||metric) median
 from SUB)
 
+--******// MAIN QUERY //*****
 select date
         ,bus_unit
         ,category
@@ -213,10 +215,10 @@ select date
         ,tier
         ,amount
         ,median
-        ,median-1.5*(median(diff_median) over (partition by category)) neg_one_SD
-        ,median-3*(median(diff_median) over (partition by category)) neg_two_SD
-        ,median+1.5*(median(diff_median) over (partition by category)) plus_one_SD
-        ,median+3*(median(diff_median) over (partition by category)) plus_two_SD
+        ,median-1.5*(median(diff_median) over (partition by category||metric)) neg_one_SD
+        ,median-3*(median(diff_median) over (partition by category||metric)) neg_two_SD
+        ,median+1.5*(median(diff_median) over (partition by category||metric)) plus_one_SD
+        ,median+3*(median(diff_median) over (partition by category||metric)) plus_two_SD
         ,case
             when amount > plus_two_SD then '2 SD above median'
             when amount < neg_two_SD then '2 SD below median'
