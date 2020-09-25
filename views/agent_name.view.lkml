@@ -38,6 +38,13 @@ dimension: shopify_id_pos {
   sql: ${TABLE}.shopify_id_pos ;;
 }
 
+  dimension: retail {
+    hidden: no
+    label: " * Is Retail Agent"
+    type:  yesno
+    sql: ${TABLE}.retail ;;
+  }
+
 dimension: name {
   label: "CC Agent Name"
   group_label: " Advanced"
