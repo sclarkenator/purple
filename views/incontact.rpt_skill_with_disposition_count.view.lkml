@@ -14,26 +14,26 @@ dimension: primary_key {
   dimension: abandon_time {
     description: "How long a person was in queue before abandoning the call (without speaking to an agent)"
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   dimension: acw_time {
     description: "After Call Work Time (making notes, etc. before they're available for another call)"
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
   dimension: agent {
     type: string
-    hidden: yes #unhide this for agent based tables, I'm just using this view for disposition things right now
+    hidden: no #unhide this for agent based tables, I'm just using this view for disposition things right now
     sql: ${TABLE}."AGENT" ;;
   }
 
   dimension: avg_inqueue_time {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."AVG_INQUEUE_TIME" ;;
   }
 
@@ -148,7 +148,7 @@ dimension: primary_key {
 
 
   measure: avg_abandon_time {
-    hidden: yes
+    hidden: no
     type: average
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
