@@ -31,7 +31,7 @@ view: sales_order_line {
     label: "ASP"
     description: "Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
     type: number
-    value_format_name: decimal_0
+    value_format: "$#,##0"
     sql: ${asp_gross_amt}/${asp_total_units} ;;
   }
 
