@@ -266,31 +266,37 @@ from medians
    measure: amount {
      description: "Value for selected metric"
      type: sum
+    value_format: "[<1]0.0%;[>=1]#,##0"
      sql: ${TABLE}.amount ;;
    }
   measure: median {
     description: "120-day median value for selected metric"
+    value_format: "[<1]0.0%;[>=1]#,##0"
     type: sum
     sql: ${TABLE}.median ;;
   }
   measure: neg_one_SD {
     description: "1 SD equivalent below median (for control charts)"
+    value_format: "[<1]0.0%;[>=1]#,##0"
     type: sum
     sql: ${TABLE}.neg_one_SD ;;
   }
   measure: neg_two_SD {
     description: "2 SD equivalent below median (for control charts)"
     type: sum
+    value_format: "[<1]0.0%;[>=1]#,##0"
     sql: ${TABLE}.neg_two_SD ;;
   }
   measure: plus_one_SD {
     description: "1 SD equivalent above median (for control charts)"
     type: sum
+    value_format: "[<1]0.0%;[>=1]#,##0"
     sql: ${TABLE}.plus_one_SD ;;
   }
   measure: plus_two_SD {
     description: "2 SD equivalent above median (for control charts)"
     type: sum
+    value_format: "[<1]0.0%;[>=1]#,##0"
     sql: ${TABLE}.plus_two_SD ;;
   }
 
