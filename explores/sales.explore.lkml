@@ -17,9 +17,6 @@ include: "/dashboards/**/*.dashboard"
     always_filter: {
       filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
       filters: [sales_order.is_exchange_upgrade_warranty: ""]
-    #filters: {field: item.merchandise         value: "No"}
-    #filters: {field: item.finished_good_flg   value: "Yes"}
-    #filters: {field: item.modified            value: "Yes"}
     }
     join: sf_zipcode_facts {
       view_label: "Customer"

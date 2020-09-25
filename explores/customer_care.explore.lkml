@@ -23,12 +23,8 @@ include: "/dashboards/**/*.dashboard"
           AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
       relationship: many_to_one
     }
-    join: stella_connect_request {
-      type: left_outer
-      sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
-      relationship: many_to_one
-    }
   }
+
   explore: rpt_agent_stats {
     hidden: yes
     label: "InContact Agent Stats"
