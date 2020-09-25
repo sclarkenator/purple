@@ -19,7 +19,7 @@ where z.row_num = 1;;
   }
 
   dimension: active {
-    hidden: yes
+    hidden: no
     type: yesno
     sql: ${TABLE}."ACTIVE" ;;
   }
@@ -152,9 +152,9 @@ where z.row_num = 1;;
 
   measure: operational_availability {
     description: "Source: l2l.pitch"
-    type: average
-    value_format: "0.0\%"
-    sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+    type: number
+    value_format: "0\%"
+    sql: coalesce(((${planned_production_minutes}-${downtime_minutes})/${planned_production_minutes})*100,0) ;;
   }
 
   measure: total_operator_count {
@@ -235,6 +235,16 @@ where z.row_num = 1;;
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."SHIFT_START_DATE" ;;
+  }
+
+  dimension_group: delete_ts {
+    label: "Deleted"
+    description: "Date and Time a Pitch was deleted; Source: l2l.pitch"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."DELETE_TS" ;;
   }
 
   dimension: site {
