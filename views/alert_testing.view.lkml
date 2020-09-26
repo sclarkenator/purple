@@ -103,6 +103,7 @@ join
   from analytics.heap.sessions
   where to_Date(time) < current_date
   and to_Date(time) > current_date-8
+  and country ilike '%united states%'
   group by 1
   qualify rank() over (order by sessions desc)<=50) s1 on s1.REGION = s.REGION
 where to_date(time) > current_date-121
@@ -222,12 +223,8 @@ select date
         ,case
             when amount > plus_two_SD then '2 SD above median'
             when amount < neg_two_SD then '2 SD below median'
-            when amount > plus_one_SD
-                AND (lead(amount,1,0) over (order by date desc)) > plus_one_SD
-                AND (lead(amount,2,0) over (order by date desc)) > plus_one_SD then 'Trending above SD'
-            when amount < neg_one_SD
-                AND (lead(amount,1,0) over (order by date desc)) < neg_one_SD
-                AND (lead(amount,2,0) over (order by date desc)) < neg_one_SD then 'Trending below SD'
+            when amount > plus_one_SD AND (lead(amount,1,0) over (order by date desc)) > plus_one_SD AND (lead(amount,2,0) over (order by date desc)) > plus_one_SD then 'Trending above SD'
+            when amount < neg_one_SD  AND (lead(amount,1,0) over (order by date desc)) < neg_one_SD  AND (lead(amount,2,0) over (order by date desc)) < neg_one_SD  then 'Trending below SD'
             else null
         end alert
 from medians
@@ -253,6 +250,12 @@ from medians
     description: "What is being measured"
     type: string
     sql: ${TABLE}.metric ;;
+  }
+  dimension: cat_met {
+    description: "Category||Metric combined into a single field"
+    label: "Category||Metric"
+    type: string
+    sql: ${category}||'||'||${metric} ;;
   }
   dimension: tier {
     description: "Level of metric in question"
