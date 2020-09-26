@@ -51,8 +51,8 @@ UNION
 --This pulls the count of calls based on disposition
 select distinct to_date(contacted) date
             ,'CUSTOMER_CARE' bus_unit
-            ,skill category
-            ,'CALLS' metric
+            ,skill metric
+            ,'CALLS' category
             ,'H' tier
             ,count(*) over (partition by to_date(contacted), skill) amount
     from ANALYTICS.CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT
@@ -62,8 +62,8 @@ select distinct to_date(contacted) date
 UNION
 select distinct to_Date(created) date
         ,'CUSTOMER_CARE' bus_unit
-        ,case when department_name is null then 'UNASSIGNED' else department_name end category
-        ,'MISSED_CHATS' metric
+        ,case when department_name is null then 'UNASSIGNED' else department_name end metric
+        ,'MISSED_CHATS' category
         ,'H' tier
         ,sum(case when missed=true then 1 else 0 end) over (partition by to_date(created),department_name) amount
 from ANALYTICS.CUSTOMER_CARE.ZENDESK_CHATS
@@ -73,8 +73,8 @@ UNION
 --this pulls the top 20 UTM_SOURCE by sessions from Heap.
 select distinct to_date(time) date
         ,'WEB' bus_unit
-        ,s.UTM_SOURCE category
-        ,'SESSIONS BY SOURCE' metric
+        ,s.UTM_SOURCE metric
+        ,'SESSIONS BY SOURCE' category
         ,'M' tier
         ,count(*) over (partition by to_date(time), s.UTM_SOURCE) amount
 from analytics.heap.sessions s
@@ -92,8 +92,8 @@ UNION
 ---this query pulls sessions by state, limited to the top 50 regions in HEAP
 select distinct to_date(time) date
         ,'WEB' bus_unit
-        ,s.region category
-        ,'SESSIONS BY STATE' metric
+        ,s.region metric
+        ,'SESSIONS BY STATE' category
         ,'L' tier
         ,count(*) over (partition by to_date(time), s.REGION) amount
 from analytics.heap.sessions s
@@ -111,10 +111,10 @@ UNION
 ---this query pulls the top 20 promo codes (determined from the past 7 days)
 select distinct trandate date
     ,'DTC' bus_unit
-        ,split_part(shopify_discount_code,'-',0) category
-    ,'ORDERS W/ PROMO CODE' metric
+        ,split_part(shopify_discount_code,'-',0) metric
+    ,'ORDERS W/ PROMO CODE' category
     ,'H' tier
-        ,count(*) over (partition by trandate, promo) amount
+        ,count(*) over (partition by trandate, metric) amount
 from sales_order so
 join
     (select split_part(shopify_discount_code,'-',0) promo
@@ -130,8 +130,8 @@ and trandate > current_Date - 121
 UNION
 select distinct(to_Date(sl.created)) date
         ,'DTC' bus_unit
-        ,i.line||'|'||i.model
-        ,'MATTRESS_ATTACH_RATE' metric
+        ,i.line||'|'||i.model  metric
+        ,'MATTRESS_ATTACH_RATE' category
         ,'H' tier
         ,round(count(distinct sl.order_id) over (partition by date, i.line||'|'||i.model)/count(distinct sl.order_id) over (partition by date),4) amount
 from sales_order_line sl join item i on sl.item_id = i.item_id
@@ -148,8 +148,8 @@ join
 UNION
 select date
         ,'DTC' bus_unit
-        ,'MATTRESS_ORDERS' category
-        ,'ORDERS' metric
+        ,'MATTRESS_ORDERS' metric
+        ,'ORDERS' category
         ,'H' tier
         ,matt_ord amount
 from dtc_sales
@@ -230,7 +230,6 @@ select date
                 AND (lead(amount,2,0) over (order by date desc)) < neg_one_SD then 'Trending below SD'
             else null
         end alert
-
 from medians
        ;;
    }
