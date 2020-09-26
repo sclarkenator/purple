@@ -220,11 +220,13 @@ select date
         ,median-3*(median(diff_median) over (partition by category||metric)) neg_two_SD
         ,median+1.5*(median(diff_median) over (partition by category||metric)) plus_one_SD
         ,median+3*(median(diff_median) over (partition by category||metric)) plus_two_SD
+        ,lead(amount,1,0) over (partition by category||metric order by date desc) one_day_ago
+        ,lead(amount,2,0) over (partition by category||metric order by date desc) two_days_ago
         ,case
             when amount > plus_two_SD then '2 SD above median'
             when amount < neg_two_SD then '2 SD below median'
-            when amount > plus_one_SD AND (lead(amount,1,0) over (order by date desc)) > plus_one_SD AND (lead(amount,2,0) over (order by date desc)) > plus_one_SD then 'Trending above SD'
-            when amount < neg_one_SD  AND (lead(amount,1,0) over (order by date desc)) < neg_one_SD  AND (lead(amount,2,0) over (order by date desc)) < neg_one_SD  then 'Trending below SD'
+            when amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD then 'Trending above SD'
+            when amount < neg_one_SD  AND one_day_ago < neg_one_SD  AND two_days_ago < neg_one_SD  then 'Trending below SD'
             else null
         end alert
 from medians
@@ -271,40 +273,53 @@ from medians
    measure: amount {
      description: "Value for selected metric"
      type: sum
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
      sql: ${TABLE}.amount ;;
    }
   measure: median {
     description: "120-day median value for selected metric"
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
     type: sum
     sql: ${TABLE}.median ;;
   }
   measure: neg_one_SD {
     description: "1 SD equivalent below median (for control charts)"
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
     type: sum
     sql: ${TABLE}.neg_one_SD ;;
   }
   measure: neg_two_SD {
     description: "2 SD equivalent below median (for control charts)"
     type: sum
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
     sql: ${TABLE}.neg_two_SD ;;
   }
   measure: plus_one_SD {
     description: "1 SD equivalent above median (for control charts)"
     type: sum
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
     sql: ${TABLE}.plus_one_SD ;;
   }
   measure: plus_two_SD {
     description: "2 SD equivalent above median (for control charts)"
     type: sum
-    value_format: "[<1]0.0%;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
     sql: ${TABLE}.plus_two_SD ;;
   }
-
+  measure: one_day_ago {
+    hidden: yes
+    description: "Yesterday's value for selected metric"
+    type: sum
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    sql: ${TABLE}.one_day_ago ;;
+  }
+  measure: two_days_ago {
+    hidden: yes
+    description: "2 days ago value for selected metric"
+    type: sum
+    value_format: "[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    sql: ${TABLE}.two_days_ago ;;
+  }
 
 
 
