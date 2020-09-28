@@ -14,6 +14,13 @@ view: item {
     sql: ${TABLE}.ITEM_ID ;;
   }
 
+  dimension: finished_good_flg {
+    label: " Is Finished Good Filter"
+    view_label: "Filters"
+    hidden:  yes
+    type: yesno
+    sql: ${classification} = 'FG' ;;}
+
   dimension: classification {
     label: "NetSuite Item Classification"
     group_label: "Advanced"
