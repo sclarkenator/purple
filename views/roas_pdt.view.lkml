@@ -313,7 +313,8 @@ view: roas_pdt {
       case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
         or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
-        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('ACUITY')
+        when ${TABLE}.medium in ('display','ds')
+        or  (${TABLE}.platform in ('ACUITY') and ${TABLE}.medium in ('display','ds'))
           or (${TABLE}.platform in ('agility','ACUITY', 'oa') and ${TABLE}.medium is null)  then 'Display'
         when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
         when ${TABLE}.medium in ('TV','CTV','RADI0','STREAMING','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
@@ -322,10 +323,9 @@ view: roas_pdt {
         when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
-        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube')  then 'Video'
+        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube') then 'Video'
         when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')
-        or ${campaign_name} in ('MSAN Accessory IMA') then 'Native'
+        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')then 'Native'
         when ${TABLE}.medium in ('organic')
           or ${TABLE}.medium is null then 'Organic'
         else 'Other' end
