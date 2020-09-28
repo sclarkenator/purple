@@ -324,7 +324,8 @@ view: roas_pdt {
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
         'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube')  then 'Video'
         when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
+        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')
+        or ${campaign_name} in ('MSAN Accessory IMA') then 'Native'
         when ${TABLE}.medium in ('organic')
           or ${TABLE}.medium is null then 'Organic'
         else 'Other' end
