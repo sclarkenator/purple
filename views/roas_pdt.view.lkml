@@ -269,6 +269,8 @@ view: roas_pdt {
         when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
         when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
         when ${TABLE}.platform in ('FACEBOOK','facebook','fb','ig','igshopping','INSTAGRAM','instagram','FB/IG') then 'FB/IG'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
+          or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
         when ${TABLE}.platform in ('go','GOOGLE','google') then 'Google'
         when ${TABLE}.platform in ('PINTEREST','pinterest','pinterestk','pt') then 'Pinterest'
         when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
@@ -284,7 +286,8 @@ view: roas_pdt {
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE') then 'YouTube'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
+        or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
         else 'Other' end
       ;;
   }
