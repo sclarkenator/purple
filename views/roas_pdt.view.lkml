@@ -262,6 +262,7 @@ view: roas_pdt {
     type: string
     sql:
       case when ${TABLE}.platform in ('ACUITY','ac') then 'Acuity'
+        when ${TABLE}.platform in ('ADMARKETPLACE') then 'Admarketplace'
         when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
