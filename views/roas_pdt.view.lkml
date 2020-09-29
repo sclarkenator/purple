@@ -364,7 +364,7 @@ view: roas_pdt {
     label: "Sessions (#k)"
     description: "Total Sessions - beware filtering by non UTM/Session fields"
     type: sum
-    value_format: "#,##0,\" K\""
+    value_format: "[>=1000000]0,,\"M\"; [>=1000]0,\" K\" ; ##0"
     sql: ${TABLE}.sessions ;;
   }
 
@@ -372,7 +372,7 @@ view: roas_pdt {
     label: "Qualified Sessions (#k)"
     description: "Total Sessions - beware filtering by non UTM/Session fields"
     type: sum
-    value_format: "#,##0,\" K\""
+    value_format: "[>=1000000]0,,\"M\"; [>=1000]0,\" K\" ; ##0"
     sql: ${TABLE}.qualified_sessions ;;
   }
 
