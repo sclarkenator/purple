@@ -572,6 +572,11 @@ from medians
     label: "Category||Metric"
     type: string
     sql: ${category}||'||'||${metric} ;;
+    link: {
+      label: "Show control chart"
+      url: "https://purple.looker.com/looks/4647?f[alert_testing.cat_met]={{ value }}"
+      icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
+
   }
   dimension: tier {
     description: "Level of metric in question"
