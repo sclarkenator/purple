@@ -561,12 +561,8 @@ from medians
     description: "What is being measured"
     type: string
     sql: ${TABLE}.metric ;;
-    link: {
-      label: "Drill into Metric"
-      url: "https://purple.looker.com/looks/4647?f[alert_testing.metric]={{ value }}"
-      icon_url: "https://www.google.com/s2/favicons?domain=looker.com"
-    }
   }
+
   dimension: cat_met {
     description: "Category||Metric combined into a single field"
     label: "Category||Metric"
