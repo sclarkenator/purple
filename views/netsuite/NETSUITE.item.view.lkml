@@ -799,6 +799,10 @@ view: item {
         when ${item_id} in ('3430') then '3427'
         when ${item_id} in ('3497') then '3491'
         when ${item_id} in ('3499') then '3492'
+        --FACE MASK
+        when ${item_id} in ('11092') then '11720'
+        when ${item_id} in ('11093') then '11721'
+        when ${item_id} in ('11094') then '11723'
         --OTHER
         when ${item_id} in ('11107') then '8793'
         when ${item_id} in ('5863') then '5186'
@@ -876,6 +880,10 @@ view: item {
         when ${sku_clean} in ('10-60-29000') then '10-60-10000'
         when ${sku_clean} in ('10-11-18401') then '10-21-12601'
         when ${sku_clean} in ('10-11-18402') then '10-21-12602'
+        --FACE MASK
+        when ${sku_clean} in ('10-47-20000 (OLD)') then '10-47-20000'
+        when ${sku_clean} in ('10-47-20001 (OLD)') then '10-47-20001'
+        when ${sku_clean} in ('10-47-20002 (OLD)') then '10-47-20002'
         --OTHER
         when ${sku_clean} in ('10-31-12891') then '10-31-12890'
         when ${sku_clean} in ('10-38-82815') then '10-38-12815'
