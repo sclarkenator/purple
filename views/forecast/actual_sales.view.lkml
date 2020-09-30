@@ -7,7 +7,6 @@ view: actual_sales {
       column: channel { field: sales_order.channel }
       column: source { field: sales_order.source }
       column: tranid { field: sales_order.tranid }
-      column: full_name { field: customer_table.full_name }
       column: firstname { field: customer_table.first_name }
       column: lastname { field: customer_table.last_name }
       column: companyname { field: customer_table.companyname }
@@ -37,7 +36,7 @@ view: actual_sales {
   dimension: PK {
     primary_key: yes
     hidden: yes
-    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${TABLE}.kit_item_id,${TABLE}.kit_sku_id, ${channel},${source},${TABLE}.tranid,${TABLE}.full_name) ;;
+    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${TABLE}.kit_item_id,${TABLE}.kit_sku_id, ${channel},${source},${TABLE}.tranid) ;;
   }
   dimension_group: created {
     hidden: yes
