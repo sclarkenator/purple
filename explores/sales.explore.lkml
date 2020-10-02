@@ -8,7 +8,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: sales_order_line{
     from:  sales_order_line
-    label:  "Sales"
+    label:  " Sales"
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line

@@ -279,5 +279,6 @@ include: "/dashboards/**/*.dashboard"
   explore: zendesk_sell_deal {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_user {hidden:yes group_label: "Customer Care"}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
-  explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
+  explore: v_mismatch_rma {hidden: yes group_label:"Customer Care" description:"This is used by the CSR team to find RMA number they need to fix on the return form."}
+  explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}

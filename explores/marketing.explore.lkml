@@ -15,10 +15,6 @@ include: "/dashboards/**/*.dashboard"
       type: full_outer
       sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date} and ${adspend_target.medium} = ${daily_adspend.medium} ;;
       relationship: many_to_one}
-    join: temp_attribution {
-      type: left_outer
-      sql_on: ${temp_attribution.ad_date} = ${daily_adspend.ad_date} and ${temp_attribution.partner} = ${daily_adspend.Spend_platform_condensed} ;;
-      relationship: many_to_one}
   }
 
   explore: c3 {
