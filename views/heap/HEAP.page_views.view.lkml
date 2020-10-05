@@ -88,6 +88,24 @@ view: heap_page_views {
     sql: ${TABLE}.exit_page = 1 ;;
   }
 
+  #verify exit_pages
+  measure: Sum_exit_pages {
+    type: count_distinct
+    group_label: "Advanced"
+    description: "Count of instances a specific page was exited from (meant to be used with 'Title' or 'Parsed Page URL'). Source: heap.session_page_flow.session_id"
+    sql: ${session_id} ;;
+    filters: [exit_page: "yes"]
+    view_label: "Sessions" }
+
+  measure: exit_rate {
+    type: number
+    value_format: "0.0%"
+    group_label: "Advanced"
+    description: "How often a view of a specific page is the last page viewed in a session (meant to be used with 'Title' or 'Parsed Page URL'). Source: Looker calculation"
+    sql: ${Sum_exit_pages}/${count} ;;
+    view_label: "Sessions"
+  }
+
   dimension: query {
     label: "Query - tag string"
     group_label: "Advanced"
