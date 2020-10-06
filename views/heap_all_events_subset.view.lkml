@@ -8,7 +8,9 @@
       --add to cart, purchase, and email capture
       'checkout_submit_customer_info','cart_add_to_cart','cart_mattress_add_to_cart','product_detail_page_pdp_add_to_cart','purchase',
       --bundle tracking
-      'bundle_testing_combo_add_bundle_to_cart', 'bundle_testing_last_chance_bundle_add_to_cart', 'bundle_testing_pdp_add_to_cart_with_bundle_checked'
+      'bundle_testing_combo_add_bundle_to_cart', 'bundle_testing_last_chance_bundle_add_to_cart', 'bundle_testing_pdp_add_to_cart_with_bundle_checked',
+      --5th anniversary hero event
+      'carousel_banner_hero_cta_click'
       ) ;;
     }
 
