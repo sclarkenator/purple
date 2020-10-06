@@ -1,5 +1,5 @@
 view: ecommerce1 {
-  sql_table_name:marketing.V_ECOMMERCE  ;;
+  sql_table_name: analytics.marketing.ecommerce  ;;
   #this view is currently being built by Nathan Hollingworth and is not ready to use
 
   dimension: uid {
