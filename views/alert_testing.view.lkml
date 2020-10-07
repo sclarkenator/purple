@@ -30,7 +30,7 @@ left join
     (select session_id
             ,sum(shopify_amt) order_amt
             ,count(*) conversions
-     from ANALYTICS.MARKETING.V_ECOMMERCE
+     from ANALYTICS.MARKETING.ECOMMERCE
      where to_date(session_time) > current_date -121
      and to_date(session_time) < current_date
      and diff <6000
