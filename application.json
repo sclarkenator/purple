@@ -65,7 +65,7 @@
         },
         {
           "id": "3559",
-          "name": "Site (Sessions)",
+          "name": "Site (Traffic)",
           "permalink": "site",
           "singleValueReference": "site"
         },
