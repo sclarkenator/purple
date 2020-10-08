@@ -329,12 +329,12 @@ include: "/dashboards/**/*.dashboard"
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
   explore: jarom_location_data {hidden:  yes group_label: "Production"}
-  explore: l2_l_checklist_answers {hidden: yes group_label: "Production"}
-  explore: l2_l_checklists {hidden: yes group_label: "Production"}
-  explore: l2l_qpc_mattress_audit {hidden: yes group_label: "Production"}
-  explore: l2l_quality_yellow_card {hidden: yes group_label: "Production"}
-  explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "Production"}
-  explore: l2l_machine_downtime {hidden: yes group_label: "Production"}
+  explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
+  explore: l2_l_checklists {hidden: yes group_label: "L2L"}
+  explore: l2l_qpc_mattress_audit {hidden: yes group_label: "L2L"}
+  explore: l2l_quality_yellow_card {hidden: yes group_label: "L2L"}
+  explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "L2L"}
+  explore: l2l_machine_downtime {hidden: yes group_label: "L2L"}
   explore: inventory_reconciliation { hidden: yes group_label: "Production"}
   explore: po_and_to_inbound {hidden: yes group_label: "Production"}
   explore: inventory_recon_sub_locations {hidden:yes group_label: "Production"}
@@ -342,6 +342,7 @@ include: "/dashboards/**/*.dashboard"
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
+  explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes
   #   join: sales_order{
