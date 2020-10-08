@@ -921,7 +921,7 @@ from medians
     description: "Is this practically signficant"
     label: "Practically sig?"
     type: yesno
-    sql: ${TABLE}.sig_flag ;;
+    sql: ${TABLE}.sig_flag=1 ;;
   }
 
   dimension: pos_neg_flag {
