@@ -885,6 +885,10 @@ from medians
     description: "Grouping within metrics"
     label: " Dimensions"
     type: string
+    link: {
+      label: "Show dimension dashboard"
+      url: "https://purple.looker.com/dashboards/3836?Dimensions={{ value }}"
+      icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
     sql: ${TABLE}.dimensions ;;
   }
   dimension: metric {
