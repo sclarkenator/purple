@@ -34,7 +34,7 @@ view: sales_order {
     description: "Counts distinct email addresses in customer table.
       Source: netsuite.sales_order"
     view_label: "Customer"
-    drill_fields: [sales_order_line.sales_order_details*]
+    #drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     hidden: no
     sql: ${TABLE}.email ;; }
@@ -111,7 +111,7 @@ view: sales_order {
   dimension: channel {
     group_label: " Advanced"
     label: "Channel Filter"
-    hidden: no
+    hidden: yes
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
