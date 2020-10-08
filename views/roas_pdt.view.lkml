@@ -262,6 +262,7 @@ view: roas_pdt {
     type: string
     sql:
       case when ${TABLE}.platform in ('ACUITY','ac') then 'Acuity'
+        when ${TABLE}.platform in ('ADMARKETPLACE', 'adm') then 'Admarketplace'
         when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
           then 'Amazon'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
@@ -269,6 +270,8 @@ view: roas_pdt {
         when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
         when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
         when ${TABLE}.platform in ('FACEBOOK','facebook','fb','ig','igshopping','INSTAGRAM','instagram','FB/IG') then 'FB/IG'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
+          or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
         when ${TABLE}.platform in ('go','GOOGLE','google') then 'Google'
         when ${TABLE}.platform in ('PINTEREST','pinterest','pinterestk','pt') then 'Pinterest'
         when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
@@ -284,7 +287,8 @@ view: roas_pdt {
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE') then 'YouTube'
+        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
+        or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
         else 'Other' end
       ;;
   }
@@ -313,7 +317,8 @@ view: roas_pdt {
       case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
         or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
-        when ${TABLE}.medium in ('display','ds') or  ${TABLE}.platform in ('ACUITY')
+        when ${TABLE}.medium in ('display','ds')
+        or  (${TABLE}.platform in ('ACUITY') and ${TABLE}.medium in ('display','ds'))
           or (${TABLE}.platform in ('agility','ACUITY', 'oa') and ${TABLE}.medium is null)  then 'Display'
         when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
         when ${TABLE}.medium in ('TV','CTV','RADI0','STREAMING','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
@@ -322,9 +327,9 @@ view: roas_pdt {
         when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
-        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube')  then 'Video'
+        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube') then 'Video'
         when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
+        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')then 'Native'
         when ${TABLE}.medium in ('organic')
           or ${TABLE}.medium is null then 'Organic'
         else 'Other' end
@@ -360,7 +365,7 @@ view: roas_pdt {
     label: "Sessions (#k)"
     description: "Total Sessions - beware filtering by non UTM/Session fields"
     type: sum
-    value_format: "#,##0,\" K\""
+    value_format: "[>=1000000]0,,\"M\"; [>=1000]0,\" K\" ; ##0"
     sql: ${TABLE}.sessions ;;
   }
 
@@ -368,7 +373,7 @@ view: roas_pdt {
     label: "Qualified Sessions (#k)"
     description: "Total Sessions - beware filtering by non UTM/Session fields"
     type: sum
-    value_format: "#,##0,\" K\""
+    value_format: "[>=1000000]0,,\"M\"; [>=1000]0,\" K\" ; ##0"
     sql: ${TABLE}.qualified_sessions ;;
   }
 

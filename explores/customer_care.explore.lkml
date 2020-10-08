@@ -179,11 +179,6 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${agent_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
       relationship:  one_to_many
     }
-    join: stella_connect_request {
-      type: left_outer
-      sql_on: ${stella_connect_request.employee_id} = ${agent_lkp.incontact_id}  ;;
-      relationship: many_to_one
-    }
     join: team_lead_name {
       type:  left_outer
       sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
@@ -280,10 +275,10 @@ include: "/dashboards/**/*.dashboard"
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
   explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
   explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
-  explore: stella_response {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_contact {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_deal {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_user {hidden:yes group_label: "Customer Care"}
   explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
-  explore: v_shopify_refund_status { hidden: yes group_label:" Customer Care" }
+  explore: v_mismatch_rma {hidden: yes group_label:"Customer Care" description:"This is used by the CSR team to find RMA number they need to fix on the return form."}
+  explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}

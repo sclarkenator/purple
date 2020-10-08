@@ -71,14 +71,23 @@ view: customer_satisfaction_survey {
   }
 
   dimension: nps_comment {
-    description: "Source: stella_connect.customer_satisfaction_survey"
+    description: "Net Promoter Comment Score Source: stella_connect.customer_satisfaction_survey"
     type: string
     sql: ${TABLE}."NPS_COMMENT" ;;
   }
 
-  dimension: nps_rating {
-    description: "Source: stella_connect.customer_satisfaction_survey"
-    type: number
+  measure: nps_rating {
+    label: "Total NPS Rating"
+    description: "Net Promoter Score Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    sql: ${TABLE}."NPS_RATING" ;;
+  }
+
+  measure: avg_nps_rating {
+    label: "Average NPS Rating"
+    description: "Net Promoter Score Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    value_format: "0.##"
     sql: ${TABLE}."NPS_RATING" ;;
   }
 
@@ -99,17 +108,28 @@ view: customer_satisfaction_survey {
 
   dimension: sequence_id {
     hidden: yes
+    description: "Used in API call"
     type: number
     sql: ${TABLE}."SEQUENCE_ID" ;;
   }
 
-  dimension: star_rating {
-    label: "Agent CSAT Score"
+  measure: star_rating {
+    label: "Total Agent CSAT Score"
     description: "CSAT score give by customer. Range 0 to 5.
     Source: stella_connect.customer_satisfaction_survey"
-    type: number
+    type: sum
     sql: ${TABLE}."STAR_RATING" ;;
   }
+
+  measure: avg_star_rating {
+    label: "Average Agent CSAT Score"
+    description: "CSAT score give by customer. Range 0 to 5.
+    Source: stella_connect.customer_satisfaction_survey"
+    type: average
+    value_format: "0.##"
+    sql: ${TABLE}."STAR_RATING" ;;
+  }
+
 
   dimension: star_rating_comment {
     type: string

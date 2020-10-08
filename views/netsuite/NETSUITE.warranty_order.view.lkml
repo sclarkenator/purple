@@ -25,13 +25,6 @@ view: warranty_order {
     type: number
     sql: ${TABLE}.CHANNEL_ID ;; }
 
-  dimension: is_warrantied {
-    label: "     * Is Warrantied"
-    description: "Warranty order has been created. Source: netsuite.warranty_order"
-    type: yesno
-    sql: ${TABLE}.CREATED is not null ;;
-  }
-
   dimension_group: created {
     type: time
     label: "   Warranty "

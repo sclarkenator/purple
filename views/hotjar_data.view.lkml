@@ -4,7 +4,8 @@
 #-------------------------------------------------------------------
 
 view: hotjar_data {
-  sql_table_name: marketing.hotjar_data ;;
+  view_label: "hotjar_data"
+  sql_table_name: marketing.v_hotjar ;;
 
   dimension: pk_hotjar {
     label: "Primary Key - Hotjar"
@@ -82,6 +83,14 @@ view: hotjar_data {
       when: { sql: ${how_heard} = 'Podcast' ;; label: "Podcast" }
       when: { sql: ${how_heard} ilike 'Saw in %' ;; label: "Store" }
       else: "Other" } }
+
+  dimension: source {
+    label: "Source"
+    hidden: yes
+    description: "The tool used to collect the data"
+    type: string
+    sql: ${TABLE}.source ;;
+  }
 
   measure: count {
     type: count }
