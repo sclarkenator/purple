@@ -408,7 +408,8 @@ include: "/dashboards/**/*.dashboard"
     fields: [sales_order_line.is_fulfilled,sales_order_line.return_rate_dollars,sales_order_line.item_id,sales_order_line.item_order,sales_order_line.order_system
         ,sales_order_line.return_rate_units,sales_order_line.free_item,sales_order_line.total_gross_Amt_non_rounded,sales_order_line.total_units
         ,sales_order_line.created_date, sales_order_line.created_month, sales_order_line.created_quarter, sales_order_line.created_week, sales_order_line.created_year
-        ,sales_order_line.insidesales_sales,sales_order_line.sub_channel,sales_order_line.upt,sales_order_line.Before_today,sales_order_line.total_gross_Amt]
+        ,sales_order_line.insidesales_sales,sales_order_line.sub_channel,sales_order_line.upt,sales_order_line.Before_today,sales_order_line.total_gross_Amt
+        ,item*,fulfillment*,sales_order*,return_order_line*,return_order*,cancelled_order*,order_flag*,shopify_discount_codes*,warranty_order*,warranty_order_line*]
     label:  "  Main"
     hidden: yes
     group_label: " Sales"
@@ -422,7 +423,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: item {
       view_label: "Sales Order"
-      fields: [item.item_id,item.category_name, item.line_raw, item.model_raw, item.product_description_raw,item.sku_id]
+      fields: [item.item_id,item.category_name, item.line_raw, item.model_raw, item.product_description_raw,item.sku_id,item.model_raw_order]
       type: left_outer
       sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
       relationship: many_to_one
@@ -453,7 +454,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: return_order {
       view_label: "Sales Order"
-      fields: [return_order.return_order_id,return_order.return_completed]
+      fields: [return_order.return_order_id,return_order.return_completed,return_order.status]
       type: full_outer
       required_joins: [return_order_line]
       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
@@ -483,7 +484,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: warranty_order {
       view_label: "Sales Order"
-      fields: [warranty_order.order_id,warranty_order.warranty_order_id,warranty_order.original_system]
+      fields: [warranty_order.order_id,warranty_order.warranty_order_id,warranty_order.original_system,warranty_order.status,warranty_order.warranty_type]
       type: full_outer
       sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.original_system} ;;
       relationship: one_to_many
@@ -494,6 +495,27 @@ include: "/dashboards/**/*.dashboard"
       type:  full_outer
       sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
       relationship: many_to_many
+    }
+    join: shopify_orders {
+      view_label: "Sales Order Line"
+      type:  left_outer
+      fields: [shopify_orders.call_in_order_Flag]
+      sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+      relationship:  many_to_many
+    }
+    join: agent_name {
+      view_label: "Sales Order"
+      fields: []
+      type: left_outer
+      sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+      relationship: many_to_one
+    }
+    join: zendesk_sell {
+      view_label: "Zendesk"
+      fields: []
+      type: full_outer
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+      relationship: one_to_one
     }
   }
 
