@@ -500,6 +500,19 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many
     }
   }
+
+  explore: simplified_sales {
+    hidden: yes
+    label:  " Sales (simplified)"
+    group_label: " Sales"
+    extends: [sales_order_line]
+    always_join: [fulfillment]
+    fields: [
+      sales_order.channel,sales_order.is_exchange_upgrade_warranty,
+      sales_order_line.total_gross_Amt,
+      item.item_id
+    ]
+  }
 #-------------------------------------------------------------------
 #
 # Wholesale Explores
