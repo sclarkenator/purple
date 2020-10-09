@@ -418,6 +418,44 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  parameter: date_granularity {
+    type: unquoted
+    allowed_value: {
+      label: "Break down by Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Break down by Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Break down by Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Break down by Quarter"
+      value: "quarter"
+    }
+  }
+
+  dimension: date {
+    view_label: "Sales Order"
+    label: "    Order Date"
+    hidden: yes
+    sql:
+    {% if date_granularity._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif date_granularity._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif date_granularity._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif date_granularity._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% else %}
+      ${created_date}
+    {% endif %};;
+  }
+
   dimension: is_same_rolling_week {
     description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.) Source: looker calculation"
     type: yesno
