@@ -907,7 +907,7 @@ select date
     ,HURDLE_DESCRIPTION
     ,sig_hurdle
     ,METRIC_WITHIN_DIMENSIONS
-    ,case when hurdle_value >= sig_hurdle then 1 else 0 end sig_flag
+    ,case when greatest(hurdle_value,median) >= sig_hurdle then 1 else 0 end sig_flag
     ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
 from medians
 
