@@ -369,6 +369,6 @@ view: v_work_order_quality_checklist {
 
   measure: count {
     type: count
-    drill_fields: [checklist_name]
+    drill_fields: [checklist_number]
   }
 }

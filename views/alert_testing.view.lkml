@@ -284,8 +284,8 @@ select distinct s.date
     ,s.UTM_SOURCE DIMENSIONS
     ,'BOUNCE BY SOURCE' METRIC
     ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
-    ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
+  ,-1 POLARITY
+  ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
@@ -330,7 +330,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'SESSIONS BY SOURCE' METRIC
+    ,'SESSIONS BY CHANNEL' METRIC
     ,'MEDIUM' DETAIL_LEVEL
   ,1 POLARITY
     ,count(*) over (partition by s.date, s.CHANNEL) amount
@@ -346,9 +346,9 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'BOUNCE BY SOURCE' METRIC
+    ,'BOUNCE BY CHANNEL' METRIC
     ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
+  ,-1 POLARITY
     ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
@@ -362,7 +362,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'QCVR BY SOURCE' METRIC
+    ,'QCVR BY CHANNEL' METRIC
     ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,round(sum(conv_flag) over (partition by date,DIMENSIONS)/nullif((sum(session_flag) over (partition by date,DIMENSIONS)-sum(bounce_flag) over (partition by date,DIMENSIONS)),0),3) amount
@@ -378,7 +378,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'RPV BY SOURCE' METRIC
+    ,'RPV BY CHANNEL' METRIC
     ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,round(sum(order_amt) over (partition by date,DIMENSIONS)/nullif(sum(session_flag) over (partition by date,DIMENSIONS),0),3) amount
@@ -390,12 +390,75 @@ from session_details s
 where date > current_date-121
 and date < current_date
 UNION
---this query pulls sessions by state, limited to the top 50 regions in HEAP
+---top 30 landing pages||channels
+select distinct s.date
+    ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+    ,'SESSIONS BY LANDING PAGE||CHANNEL' METRIC
+    ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+    ,count(*) over (partition by date,s.landing_page,s.channel) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--pulls bounce rate of top 'N' landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL BOUNCE' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,-1 POLARITY
+  ,round(sum(bounce_flag) over (partition by date,s.landing_page,s.channel)/sum(session_flag) over (partition by date,s.landing_page,s.channel),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,2 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--this query returns the qualified conversion rate for the top landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL QCVR' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+  ,round(sum(conv_flag) over (partition by date,s.landing_page,s.channel)/nullif((sum(session_flag) over (partition by date,s.landing_page,s.channel)-sum(bounce_flag) over (partition by date,s.landing_page,s.channel)),0),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,3 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--this query pulls the RPV based on landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL RPV' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+  ,round(sum(order_amt) over (partition by date,s.landing_page,s.channel)/nullif(sum(session_flag) over (partition by date,s.landing_page,s.channel),0),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,4 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION--this query pulls sessions by state, limited to the top 50 regions in HEAP
 select distinct s.date
     ,'WEB' bus_unit
     ,s.region DIMENSIONS
     ,'SESSIONS BY STATE' METRIC
-    ,'VERY DETAILED' DETAIL_LEVEL
+    ,'VERY FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,count(*) over (partition by s.date, s.REGION) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
@@ -422,7 +485,7 @@ select distinct trandate date
   ,'DTC' bus_unit
   ,split_part(shopify_discount_code,'-',0) DIMENSIONS
   ,'ORDERS W/ PROMO CODE' METRIC
-  ,'VERY DETAILED' DETAIL_LEVEL
+  ,'VERY FINE' DETAIL_LEVEL
   ,-1 POLARITY
   ,count(*) over (partition by trandate, DIMENSIONS) amount
   ,'MINIMUM ORDERS' HURDLE_DESCRIPTION
@@ -568,7 +631,7 @@ select distinct s.date
     ,'WEB' bus_unit
     ,split_part(s.browser,'.',0) DIMENSIONS
     ,'SESSIONS BY BROWSER' METRIC
-    ,'VERY DETAILED' tier
+    ,'VERY FINE' tier
   ,1 POLARITY
     ,count(*) over (partition by date,DIMENSIONS) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
@@ -595,6 +658,7 @@ from session_details s join top_landing t on s.landing_page = t.landing_page
 where date < current_date
 and date > current_date - 121
 UNION
+--pulls bounce rate of top 'N' landing pages
 select distinct date
   ,'ACQUISITIONS' bus_unit
   ,s.landing_page DIMENSIONS
@@ -762,9 +826,9 @@ select distinct date
   ,'MEDIUM' DETAIL_LEVEL
   ,-1 POLARITY
   ,round(sum(bounce_flag) over (partition by date,s.referrer)/sum(session_flag) over (partition by date,s.referrer),3) amount
-  ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -778,9 +842,9 @@ select distinct date
   ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
   ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
-  ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -794,9 +858,9 @@ select distinct date
   ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
   ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
-  ,'MINIMUM RPV' HURDLE_DESCRIPTION
-  ,1 SIG_HURDLE
-  ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -843,9 +907,10 @@ select date
     ,HURDLE_DESCRIPTION
     ,sig_hurdle
     ,METRIC_WITHIN_DIMENSIONS
-    ,case when hurdle_value > sig_hurdle then 1 else 0 end sig_flag
+    ,case when hurdle_value >= sig_hurdle then 1 else 0 end sig_flag
     ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
 from medians
+
        ;;
    }
   dimension: metric_within_dimensions {
@@ -919,6 +984,12 @@ from medians
     description: "  Is metric outside statistical norms?"
     type: string
     sql: ${TABLE}.alert ;;
+    html: {% if pos_neg_flag._value == 'GOOD' %}
+          <p style="color: black; background-color: #98FF98; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% else %}
+          <p style="color: black; background-color: #F75D59; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% endif %}
+    ;;
   }
 
   dimension: sig_flag {
@@ -933,57 +1004,64 @@ from medians
     label: "Good/Bad direction"
     type: string
     sql: ${TABLE}.pos_neg_flag ;;
+    html: {% if value == 'GOOD' %}
+            <p style="color: black; background-color: green; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% else %}
+            <p style="color: black; background-color: red; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% endif %}
+          ;;
+
   }
 
   measure: amount {
-     description: "Value for selected metric"
-     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
-     sql: ${TABLE}.amount ;;
+    description: "Value for selected metric"
+    type: sum
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
+    sql: ${TABLE}.amount ;;
    }
 
   measure: median {
     description: "120-day median value for selected metric"
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     type: sum
     sql: ${TABLE}.median ;;
   }
   measure: neg_one_SD {
     description: "1 SD equivalent below median (for control charts)"
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     type: sum
     sql: ${TABLE}.neg_one_SD ;;
   }
   measure: neg_two_SD {
     description: "2 SD equivalent below median (for control charts)"
     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     sql: ${TABLE}.neg_two_SD ;;
   }
   measure: plus_one_SD {
     description: "1 SD equivalent above median (for control charts)"
     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     sql: ${TABLE}.plus_one_SD ;;
   }
   measure: plus_two_SD {
     description: "2 SD equivalent above median (for control charts)"
     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     sql: ${TABLE}.plus_two_SD ;;
   }
   measure: one_day_ago {
     hidden: yes
     description: "Yesterday's value for selected metric"
     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     sql: ${TABLE}.one_day_ago ;;
   }
   measure: two_days_ago {
     hidden: yes
     description: "2 days ago value for selected metric"
     type: sum
-    value_format: "[<0]0;[<1]0.0%;[<5]0.00;[>=1]#,##0"
+    value_format: "[<1]0.0%;[<5]0.00;#,##0"
     sql: ${TABLE}.two_days_ago ;;
   }
 

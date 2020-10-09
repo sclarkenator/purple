@@ -343,6 +343,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
+  explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes
   #   join: sales_order{
