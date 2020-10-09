@@ -30,7 +30,7 @@ view: sfg_stock_level {
   --inventory
   select
       i.sku_id
-      , sum(s.available) as avail
+      , sum(s.on_hand) as on_hand
   from production.inventory s
   left join sales.item i on s.item_id = i.item_id
   group by 1
@@ -68,8 +68,8 @@ from (
   select aa.*
       , bb.qty as avg_sales
       , bb.dtc_wholesale_qty as avg_sales2
-      , cc.avail as sfg_stock
-      , ccc.avail as fg_stock
+      , cc.on_hand as sfg_stock
+      , ccc.on_hand as fg_stock
       , dd.open_qty
   from aa
   left join bb on bb.sku_id = finished_good_sku
