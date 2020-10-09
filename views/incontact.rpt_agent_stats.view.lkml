@@ -66,7 +66,8 @@ view: rpt_agent_stats {
   }
 
   measure: avg_handle {
-    type: sum
+    type: average
+    value_format: "0.##"
     sql: ${TABLE}."AVG_HANDLE" ;;
   }
 
