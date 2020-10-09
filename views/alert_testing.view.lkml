@@ -330,7 +330,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'SESSIONS BY SOURCE' METRIC
+    ,'SESSIONS BY CHANNEL' METRIC
     ,'MEDIUM' DETAIL_LEVEL
   ,1 POLARITY
     ,count(*) over (partition by s.date, s.CHANNEL) amount
@@ -346,7 +346,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'BOUNCE BY SOURCE' METRIC
+    ,'BOUNCE BY CHANNEL' METRIC
     ,'MEDIUM' DETAIL_LEVEL
   ,-1 POLARITY
     ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
@@ -362,7 +362,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'QCVR BY SOURCE' METRIC
+    ,'QCVR BY CHANNEL' METRIC
     ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,round(sum(conv_flag) over (partition by date,DIMENSIONS)/nullif((sum(session_flag) over (partition by date,DIMENSIONS)-sum(bounce_flag) over (partition by date,DIMENSIONS)),0),3) amount
@@ -378,7 +378,7 @@ UNION
 select distinct s.date
     ,'WEB' bus_unit
     ,s.CHANNEL DIMENSIONS
-    ,'RPV BY SOURCE' METRIC
+    ,'RPV BY CHANNEL' METRIC
     ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,round(sum(order_amt) over (partition by date,DIMENSIONS)/nullif(sum(session_flag) over (partition by date,DIMENSIONS),0),3) amount
@@ -390,7 +390,70 @@ from session_details s
 where date > current_date-121
 and date < current_date
 UNION
---this query pulls sessions by state, limited to the top 50 regions in HEAP
+---top 30 landing pages||channels
+select distinct s.date
+    ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+    ,'SESSIONS BY LANDING PAGE||CHANNEL' METRIC
+    ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+    ,count(*) over (partition by date,s.landing_page,s.channel) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--pulls bounce rate of top 'N' landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL BOUNCE' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,-1 POLARITY
+  ,round(sum(bounce_flag) over (partition by date,s.landing_page,s.channel)/sum(session_flag) over (partition by date,s.landing_page,s.channel),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,2 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--this query returns the qualified conversion rate for the top landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL QCVR' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+  ,round(sum(conv_flag) over (partition by date,s.landing_page,s.channel)/nullif((sum(session_flag) over (partition by date,s.landing_page,s.channel)-sum(bounce_flag) over (partition by date,s.landing_page,s.channel)),0),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,3 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION
+--this query pulls the RPV based on landing page||channel
+select distinct date
+  ,'ACQUISITIONS' bus_unit
+    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'LANDING PAGE||CHANNEL RPV' METRIC
+  ,'VERY FINE' DETAIL_LEVEL
+  ,1 POLARITY
+  ,round(sum(order_amt) over (partition by date,s.landing_page,s.channel)/nullif(sum(session_flag) over (partition by date,s.landing_page,s.channel),0),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,500 SIG_HURDLE
+  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,4 METRIC_WITHIN_DIMENSIONS
+from session_details s join top_landing t on s.landing_page = t.landing_page
+where date < current_date
+and date > current_date - 121
+UNION--this query pulls sessions by state, limited to the top 50 regions in HEAP
 select distinct s.date
     ,'WEB' bus_unit
     ,s.region DIMENSIONS
@@ -595,6 +658,7 @@ from session_details s join top_landing t on s.landing_page = t.landing_page
 where date < current_date
 and date > current_date - 121
 UNION
+--pulls bounce rate of top 'N' landing pages
 select distinct date
   ,'ACQUISITIONS' bus_unit
   ,s.landing_page DIMENSIONS
@@ -845,7 +909,9 @@ select date
     ,METRIC_WITHIN_DIMENSIONS
     ,case when hurdle_value >= sig_hurdle then 1 else 0 end sig_flag
     ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
-from medians       ;;
+from medians
+
+       ;;
    }
   dimension: metric_within_dimensions {
     description: "This field counts up unique metrics by dimension and is used to create the dynamic dashboards"
