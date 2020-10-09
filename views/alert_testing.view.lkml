@@ -919,6 +919,12 @@ from medians
     description: "  Is metric outside statistical norms?"
     type: string
     sql: ${TABLE}.alert ;;
+    html: {% if pos_neg_flag._value == 'GOOD' %}
+          <p style="color: black; background-color: #98FF98; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% else %}
+          <p style="color: black; background-color: #F75D59; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% endif %}
+    ;;
   }
 
   dimension: sig_flag {
@@ -933,6 +939,13 @@ from medians
     label: "Good/Bad direction"
     type: string
     sql: ${TABLE}.pos_neg_flag ;;
+    html: {% if value == 'GOOD' %}
+            <p style="color: black; background-color: green; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% else %}
+            <p style="color: black; background-color: red; font-size:100%; text-align:center">{{ rendered_value }}</p>
+          {% endif %}
+          ;;
+
   }
 
   measure: amount {
