@@ -284,8 +284,8 @@ select distinct s.date
     ,s.UTM_SOURCE DIMENSIONS
     ,'BOUNCE BY SOURCE' METRIC
     ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
-    ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
+  ,-1 POLARITY
+  ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
@@ -348,7 +348,7 @@ select distinct s.date
     ,s.CHANNEL DIMENSIONS
     ,'BOUNCE BY SOURCE' METRIC
     ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
+  ,-1 POLARITY
     ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
@@ -395,7 +395,7 @@ select distinct s.date
     ,'WEB' bus_unit
     ,s.region DIMENSIONS
     ,'SESSIONS BY STATE' METRIC
-    ,'VERY DETAILED' DETAIL_LEVEL
+    ,'VERY FINE' DETAIL_LEVEL
   ,1 POLARITY
     ,count(*) over (partition by s.date, s.REGION) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
@@ -422,7 +422,7 @@ select distinct trandate date
   ,'DTC' bus_unit
   ,split_part(shopify_discount_code,'-',0) DIMENSIONS
   ,'ORDERS W/ PROMO CODE' METRIC
-  ,'VERY DETAILED' DETAIL_LEVEL
+  ,'VERY FINE' DETAIL_LEVEL
   ,-1 POLARITY
   ,count(*) over (partition by trandate, DIMENSIONS) amount
   ,'MINIMUM ORDERS' HURDLE_DESCRIPTION
@@ -568,7 +568,7 @@ select distinct s.date
     ,'WEB' bus_unit
     ,split_part(s.browser,'.',0) DIMENSIONS
     ,'SESSIONS BY BROWSER' METRIC
-    ,'VERY DETAILED' tier
+    ,'VERY FINE' tier
   ,1 POLARITY
     ,count(*) over (partition by date,DIMENSIONS) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
@@ -762,9 +762,9 @@ select distinct date
   ,'MEDIUM' DETAIL_LEVEL
   ,-1 POLARITY
   ,round(sum(bounce_flag) over (partition by date,s.referrer)/sum(session_flag) over (partition by date,s.referrer),3) amount
-  ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -778,9 +778,9 @@ select distinct date
   ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
   ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
-  ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -794,9 +794,9 @@ select distinct date
   ,'FINE' DETAIL_LEVEL
   ,1 POLARITY
   ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
-  ,'MINIMUM RPV' HURDLE_DESCRIPTION
-  ,1 SIG_HURDLE
-  ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) HURDLE_VALUE
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
 from session_details s join top_referrers t on s.referrer = t.referrer
 where date < current_date
@@ -845,8 +845,7 @@ select date
     ,METRIC_WITHIN_DIMENSIONS
     ,case when hurdle_value >= sig_hurdle then 1 else 0 end sig_flag
     ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
-from medians
-       ;;
+from medians       ;;
    }
   dimension: metric_within_dimensions {
     description: "This field counts up unique metrics by dimension and is used to create the dynamic dashboards"
