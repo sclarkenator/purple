@@ -115,7 +115,14 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Sales Header"
       type: left_outer
       sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
-      relationship: one_to_one}
+      relationship: one_to_one
+    }
+    join: standard_cost {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+      relationship: one_to_one
+    }
   }
 
   explore: events_view__all_events__all_events {hidden:yes}
