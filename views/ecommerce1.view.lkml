@@ -283,4 +283,22 @@ view: ecommerce1 {
     hidden:  yes
   }
 
+  measure: total_cvr {
+    description: "% of all Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - All Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_bounced_session}+${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
+  }
+
+  measure: qualified_cvr {
+    description: "% of all Non-bounced Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - Qualified Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
+  }
+
  }
