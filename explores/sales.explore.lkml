@@ -401,6 +401,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
       relationship: many_to_many
     }
+    join: privacy_request {
+      view_label: "Customer"
+      type: left_outer
+      sql_on: ${sales_order.email} = ${privacy_request.email_join};;
+      relationship: many_to_one
+    }
   }
 
   explore: sales_test {
