@@ -33,6 +33,8 @@ view: sfg_stock_level {
       , sum(s.on_hand) as on_hand
   from production.inventory s
   left join sales.item i on s.item_id = i.item_id
+  left join sales.location  l on s.location_id = l.location_id
+  where l.location in ('100-Purple West', '150-Alpine', 'P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC', 'P30 - PILOT DFW DC')
   group by 1
 ), dd as (
    --Open orders
