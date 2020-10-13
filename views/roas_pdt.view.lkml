@@ -265,7 +265,11 @@ view: roas_pdt {
         when ${TABLE}.platform in ('ADMARKETPLACE', 'adm') then 'Admarketplace'
         when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
           then 'Amazon'
+        when ${TABLE}.platform in ('al','ADLINGO') then 'Adlingo'
+        when ${TABLE}.platform in ('adme','ADMEDIA') then 'Admedia'
+        when ${TABLE}.platform in ('bra','BRAVE') then 'BRAVE'
         when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
+        when ${TABLE}.platform in ('cor','CORDLESS') then 'Cordless'
         when ${TABLE}.platform in ('eb','EBAY') then 'Ebay'
         when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
         when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
