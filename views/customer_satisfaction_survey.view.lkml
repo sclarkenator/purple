@@ -65,6 +65,13 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."ISSUE_RESOLVED" ;;
   }
 
+  measure: issue_resolved_count {
+    label: "FCR"
+    description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    sql:case when ${issue_resolved} then 1 else 0 end ;;
+  }
+
   dimension: issue_resolved_comment {
     type: string
     sql: ${TABLE}."ISSUE_RESOLVED_COMMENT" ;;
