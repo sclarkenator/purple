@@ -24,7 +24,7 @@ view: cc_activities {
 
     --chats (zendesk tickets)
     select 'chat' as activity_type
-        , case when c.department_name = 'Sales' then 'sales' else 'support' end as team
+        , case when c.department_name ilike '%Sales%' then 'sales' else 'support' end as team
         , c.created as created
         , a.name as agent_name
         , a.email as agent_email
