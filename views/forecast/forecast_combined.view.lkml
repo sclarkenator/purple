@@ -373,12 +373,12 @@ sql_table_name: sales.forecast ;;
   measure: retail_units {
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} = 'Owned Retail' then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${channel} = 'Owned Retail' then ${total_units_dimension} else 0 end ;;}
 
   measure: retail_amount {
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} = 'Owned Retail' then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${channel} = 'Owned Retail' then ${total_amount_dimension} else 0 end ;;}
 
   measure: to_date {
     label: "Goal to Date"
