@@ -19,6 +19,23 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+#-------------------------------------------------------------
+#
+# Paycom hours explore
+#
+#-------------------------------------------------------------
+
+explore: paycom_hours {
+  from: paycom_labor_hours
+  hidden:  no
+  description: "This has Paycom hourly data by day, by location by department"
+
+}
+
+
+
+
+
 #-------------------------------------------------------------------
 #
 # Qualtrics Explores
