@@ -80,6 +80,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_first_data_to_netsuite {label: "First Data to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
 
+  explore: paypal {hidden: yes group_label: "Accounting"}
   explore: v_fit {hidden: yes group_label: "Accounting"}
   explore: fit_problem {hidden: yes group_label: "Accounting"}
   explore: v_fit_affirm {hidden: yes group_label: "Accounting"}

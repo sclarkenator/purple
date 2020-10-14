@@ -137,7 +137,9 @@ include: "/dashboards/**/*.dashboard"
     label: "Current Inventory"
     description: "Inventory positions, by item by location"
     always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
+      filters: {field: warehouse_location.location_Active      value: "No"}
+      filters: [item.sku_id: "-%AC-%"]
+      }
     join: item {
       type: left_outer
       sql_on: ${inventory.item_id} = ${item.item_id} ;;

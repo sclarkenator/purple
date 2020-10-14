@@ -47,7 +47,7 @@ view: sfg_stock_level {
       (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system
   left join sales.sales_order  s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
   left join sales.cancelled_order c ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (c.item_id||'-'||c.order_id||'-'||c.system)
-  where s.created::date > dateadd('day',-61,current_date::date) --and s.created::date < current_date::date
+  where s.created::date > dateadd('day',-70,current_date::date) --and s.created::date < current_date::date
   and s.transaction_type <> 'Cash Sale'
   and s.source <> 'Amazon-FBA-US'
   and f.fulfilled is null
@@ -55,6 +55,7 @@ view: sfg_stock_level {
   and (i.category = 'MATTRESS')
   and s.channel_id in (1,2)
   and c.cancelled is null
+  and sol.location in ('100-Purple West', 'P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC', 'P30 - PILOT DFW DC', '101-XPO PWest')
   group by 1,2
   order by 3 desc
 )

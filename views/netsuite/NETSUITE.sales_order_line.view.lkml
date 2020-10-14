@@ -2,6 +2,50 @@ include: "/views/netsuite/NETSUITE.sales_order_line_base.view.lkml"
 view: sales_order_line {
   extends: [sales_order_line_base]
 
+  parameter: date_granularity {
+    type: unquoted
+    allowed_value: {
+      label: "By Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "By Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "By Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "By Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "By Product Model"
+      value: "model"
+    }
+  }
+
+  dimension: date {
+    view_label: "Sales Order"
+    label: "    Order Date"
+    hidden: yes
+    sql:
+    {% if date_granularity._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif date_granularity._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif date_granularity._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif date_granularity._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% elsif date_granularity._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${created_date}
+    {% endif %};;
+  }
+
   dimension: payment_method {
     hidden: yes
     view_label: "Sales Order"
