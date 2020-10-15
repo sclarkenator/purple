@@ -30,16 +30,6 @@ view: v_fit_first_data {
     sql: ${TABLE}."GATEWAY_AMOUNT" ;;
   }
 
-  dimension: in_netsuite {
-    type: yesno
-    sql: ${TABLE}."IN_NETSUITE" ;;
-  }
-
-  dimension: in_shopify {
-    type: yesno
-    sql: ${TABLE}."IN_SHOPIFY" ;;
-  }
-
   dimension: netsuite_amount {
     type: number
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
@@ -58,16 +48,6 @@ view: v_fit_first_data {
   dimension: po_id {
     type: string
     sql: ${TABLE}."PO_ID" ;;
-  }
-
-  dimension: same_amount {
-    type: yesno
-    sql: ${TABLE}."SAME_AMOUNT" ;;
-  }
-
-  dimension: same_transaction_count {
-    type: yesno
-    sql: ${TABLE}."SAME_TRANSACTION_COUNT" ;;
   }
 
   dimension: secondary_id {
