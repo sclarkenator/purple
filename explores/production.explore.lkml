@@ -326,7 +326,6 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: max_machine_capacity {hidden: yes group_label: "Production" label: "Max Machine Capacity" description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"}
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}

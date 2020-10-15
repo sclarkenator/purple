@@ -11,12 +11,14 @@ view: paypal {
       p.currency,
       p.amount,
       p.fee,
-      o.name,
-      o.id,
+      coalesce(o.name,cao.name) as name,
+      coalesce(o.id,cao.id) as id,
       p.type
     from analytics.accounting.paypal_sync p
       left join analytics_stage.shopify_us_ft.transaction s on p.transaction_id = s.authorization
       left join analytics_stage.shopify_us_ft."ORDER" o on s.order_id = o.id
+      left join analytics_stage.shopify_ca_ft.transaction cas on p.transaction_id = cas.authorization
+      left join analytics_stage.shopify_ca_ft."ORDER" cao on cas.order_id = cao.id
     where posted >= '2020-09-01'
       ;;
   }
