@@ -73,6 +73,12 @@ sql_table_name: sales.forecast ;;
     type:  string
     sql:${TABLE}.account ;; }
 
+  dimension: location {
+    description: "This is used for the Owned Retail store locations."
+    type:  string
+    sql: case when ${TABLE}.channel = 'Owned Retail' then ${TABLE}.account else null end;;
+  }
+
   dimension: top_customers {
     label: "Wholesale Accout Name (merged)"
     type:  string
