@@ -310,7 +310,7 @@ view: roas_pdt {
     description: "Data as is from core system (source)"
     group_label: "Advanced"
     type: string
-    sql: ${TABLE}.campaign_name ;;
+    sql: lower(${TABLE}.campaign_name);;
   }
 
   dimension: medium_clean {
