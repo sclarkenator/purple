@@ -27,11 +27,13 @@ view: v_fit_first_data {
 
   dimension: gateway_amount {
     type: number
+    value_format: "0,###.##"
     sql: ${TABLE}."GATEWAY_AMOUNT" ;;
   }
 
   dimension: netsuite_amount {
     type: number
+    value_format: "0,###.##"
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
 
@@ -43,6 +45,11 @@ view: v_fit_first_data {
   dimension: netsuite_transaction_id {
     type: string
     sql: ${TABLE}."NETSUITE_TRANSACTION_ID" ;;
+  }
+
+  dimension: netsuite_customer_id {
+    type: string
+    sql: ${TABLE}."NETSUITE_CUSTOMER_ID" ;;
   }
 
   dimension: po_id {
@@ -65,6 +72,11 @@ view: v_fit_first_data {
     sql: ${TABLE}."SHOPIFY_ORDER_NUMBER" ;;
   }
 
+  dimension: shopify_customer_id {
+    type: number
+    sql: ${TABLE}."SHOPIFY_CUSTOMER_ID" ;;
+  }
+
   dimension: transaction_id {
     type: string
     sql: ${TABLE}."TRANSACTION_ID" ;;
@@ -75,8 +87,12 @@ view: v_fit_first_data {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
+  measure: diff {
+    label: "Absolute Amount DIfference"
+    description: "abs(gateway_amount - netsuite_amount)"
+    type: sum
+    value_format: "0,###.##"
+    sql: abs(${gateway_amount} - ${netsuite_amount}) ;;
   }
+
 }
