@@ -88,7 +88,7 @@ view: v_fit_first_data {
   }
 
   measure: diff {
-    label: "Absolute Amount DIfference"
+    label: "Absolute Amount Difference"
     description: "abs(gateway_amount - netsuite_amount)"
     type: sum
     value_format: "0,###.##"
