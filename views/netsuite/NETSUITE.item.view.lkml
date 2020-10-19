@@ -514,12 +514,13 @@ view: item {
         when ${sku_clean} = '10-21-23617' then '10-21-12617'
         when ${sku_clean} = '10-21-23618' then '10-21-12618'
         --TPM FLR FS
-        when ${sku_clean} = '10-21-90026' then '10-21-12960'
-        when ${sku_clean} in ('10-21-23521','10-21-90025') then '10-21-12632'
-        when ${sku_clean} in ('10-21-23520','10-21-90024') then '10-21-12625'
+        when ${sku_clean} in ('10-21-90026','10-21-90005') then '10-21-12960'
+        when ${sku_clean} in ('10-21-23521','10-21-90025','10-21-90004') then '10-21-12632'
+        when ${sku_clean} in ('10-21-23520','10-21-90024','10-21-90003' ) then '10-21-12625'
         when ${sku_clean} = '10-21-90023' then '10-21-12620'
         when ${sku_clean} in ('10-21-90022','10-21-23630') then '10-21-12618'
-        when ${sku_clean} = '10-21-90021' then '10-21-12617'
+        when ${sku_clean} in ('10-21-90021','10-21-90000') then '10-21-12617'
+        when ${sku_clean} = '10-21-90027' then '10-21-60524'
         --H2 FLR FS
         when ${sku_clean} = '10-21-90010' then '10-21-60008'
         when ${sku_clean} in ('10-21-90009','10-21-60521') then '10-21-60007'
@@ -581,8 +582,6 @@ view: item {
         when ${sku_clean} = '10-31-12891' then '10-31-12890'
         when ${sku_clean} = '10-31-12896' then '10-31-12895'
         when ${sku_clean} = '10-31-12900' then '10-31-12890'
-
-
         --Booster Back Up
         when ${sku_clean} = '10-31-13102' then '10-31-13100'
         else ${sku_clean} end ;;
