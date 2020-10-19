@@ -41,9 +41,9 @@ dimension: PK {
     sql: ${TABLE}."CREATED" ;;
   }
 
-  dimension: handled {
+  measure: count_handled {
     description: "Source: incontact.rpt_service_levels"
-    type: number
+    type: sum
     sql: ${TABLE}."HANDLED" ;;
   }
 
@@ -53,7 +53,7 @@ dimension: PK {
     sql: ${TABLE}."PCT_CALLBACK_REQUESTS" ;;
   }
 
-  dimension: pct_handled {
+  measure: pct_handled {
     description: "Source: incontact.rpt_service_levels"
     type: string
     sql: ${TABLE}."PCT_HANDLED" ;;
@@ -65,11 +65,12 @@ dimension: PK {
     sql: ${TABLE}."QUEUED" ;;
   }
 
-  dimension: service_level {
+  measure: service_level {
     description: "Source: incontact.rpt_service_levels"
-    type: string
-    sql: ${TABLE}."SERVICE_LEVEL" ;;
-  }
+    value_format: "0#.##%"
+    type: average
+    sql: replace(${TABLE}."SERVICE_LEVEL",'%','')/100 ;;
+    }
 
   measure: count {
     type: count
