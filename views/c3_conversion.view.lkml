@@ -165,4 +165,44 @@ view: c3_conversion {
     sql: ${TABLE}."NETWORK_1" ;;
   }
 
+  dimension: network_2 {
+    description: "Second part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_2" ;;
+  }
+
+  dimension: network_3 {
+    description: "Third part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_3" ;;
+  }
+
+  dimension: network_4 {
+    description: "Fourth part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_4" ;;
+  }
+  dimension: network_5 {
+    description: "Fifth part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_5" ;;
+  }
+
+  dimension: network_6{
+    description: "Sixth part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_6" ;;
+  }
+
+  dimension: network_7 {
+    description: "Seventh part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_7" ;;
+  }
+
+  dimension: network_8 {
+    description: "Eighth part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_8" ;;
+  }
 }
