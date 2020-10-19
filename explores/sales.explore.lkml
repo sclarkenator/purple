@@ -407,6 +407,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.email} = ${privacy_request.email_join};;
       relationship: many_to_one
     }
+    join: v_financed_retail {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
+      relationship: one_to_one
+    }
   }
 
   explore: sales_test {
