@@ -577,9 +577,12 @@ view: item {
         when ${sku_clean} = '10-21-12968' then '10-21-12625'
         when ${sku_clean} = '10-21-12965' then '10-21-12617'
         when ${sku_clean} = '10-21-12966' then '10-21-12618'
-        --Harmony Vita
+        --Harmony
         when ${sku_clean} = '10-31-12891' then '10-31-12890'
         when ${sku_clean} = '10-31-12896' then '10-31-12895'
+        when ${sku_clean} = '10-31-12900' then '10-31-12890'
+
+
         --Booster Back Up
         when ${sku_clean} = '10-31-13102' then '10-31-13100'
         else ${sku_clean} end ;;
