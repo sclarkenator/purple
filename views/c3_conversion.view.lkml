@@ -159,4 +159,10 @@ view: c3_conversion {
     sql: ${order_id} ;;
   }
 
+  dimension: network_1 {
+    description: "First part of network Name"
+    type: string
+    sql: ${TABLE}."NETWORK_1" ;;
+  }
+
 }
