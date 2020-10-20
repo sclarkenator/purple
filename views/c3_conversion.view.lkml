@@ -176,6 +176,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
     WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
+    WHEN CONTAINS(${network_groupname},'cordless') then 'Chatbot'
     WHEN CONTAINS(${network_groupname},'duckduck') then 'DuckDuckGo'
     WHEN CONTAINS(${network_groupname},'ebay') then 'Ebay'
     WHEN CONTAINS(${network_groupname},'email') then 'Email'
@@ -210,6 +211,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo Native'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
+    WHEN CONTAINS(${network_groupname},'zeta') then 'Zeta'
     ELSE 'Other'
     END
     ;;
