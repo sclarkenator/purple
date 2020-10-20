@@ -281,7 +281,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
         when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
         when ${TABLE}.platform in ('tab','taboola','TABOOLA') then 'Taboola'
-        when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath') then 'Yahoo'
+        when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath','vrz') then 'Yahoo'
         when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
         when ${TABLE}.platform in ('RAKUTEN','rk') then 'Rakuten'
         when ${TABLE}.platform in ('SIMPLIFI','si') then 'Simplifi'
