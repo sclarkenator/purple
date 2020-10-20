@@ -13,7 +13,7 @@ view: session_facts {
         min(all_events.time) AS session_start_time,
         max(all_events.time) AS session_end_time,
         COUNT(distinct(all_events.session_id || '-' || all_events.user_id)) AS all_events_count
-      FROM heap.all_events AS all_events
+      FROM heap_data.purple.all_events AS all_events
       GROUP BY 1,2,3  ;;
 
     datagroup_trigger: pdt_refresh_6am
