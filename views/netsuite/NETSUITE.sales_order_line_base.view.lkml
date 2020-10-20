@@ -272,7 +272,7 @@ view: sales_order_line_base {
     group_label: "    Order Date"
     label: "z - Before Current Week"
     #hidden:  yes
-    description: "Yes/No for if the date is in the last 30 days. Source: netsuite.sales_order_line"
+    description: "Yes/No for if the week is before the current week number of the year. Source: netsuite.sales_order_line"
     type: yesno
     sql: date_trunc(week, ${TABLE}.Created::date) < date_trunc(week, current_date) ;;
   }
