@@ -16,18 +16,13 @@ view: mainfreight_inventory_snapshot {
   }
 
   dimension_group: snapshot {
+    label: "Created"
     description: "Source: analytics. mainfreight_inventory_snapshot"
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."SNAPSHOT_TS" AS TIMESTAMP_NTZ) ;;
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}."SNAPSHOT") ;;
   }
 
   measure: available {

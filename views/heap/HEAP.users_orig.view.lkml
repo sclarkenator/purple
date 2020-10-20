@@ -5,7 +5,7 @@
 
 view: users_orig {
   derived_table: {
-    sql: select * from heap.users;;
+    sql: select * from heap_data.purple.users;;
     datagroup_trigger: pdt_refresh_6am
   }
   #sql_table_name: heap.users ;;

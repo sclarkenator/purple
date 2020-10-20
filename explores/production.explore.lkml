@@ -169,6 +169,28 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_one}
   }
 
+  explore: mainfreight_inventory{
+    hidden: yes
+    group_label:"Production"
+    label: "Mainfreight Inventory"
+    always_filter: {
+      filters: [item.sku_id: "-%AC-%"]}
+    join: item {
+      type: left_outer
+      sql_on: ${mainfreight_inventory.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    }
+
+  explore: mainfreight_inventory_snapshot{
+    hidden: yes
+    group_label:"Production"
+    label: "Historical Mainfreight Inventory"
+    join: item {
+      type: left_outer
+      sql_on: ${mainfreight_inventory_snapshot.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    }
+
   explore: production_goal {
     group_label: "Production"
     label: "Production Goals"
@@ -345,6 +367,7 @@ include: "/dashboards/**/*.dashboard"
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
+
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes
   #   join: sales_order{

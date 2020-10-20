@@ -11,7 +11,7 @@ view: mainfreight_inventory {
   }
 
   dimension_group: updated_ts {
-    hidden: no
+    hidden: yes
     description: "Last time this data was received from Mainfreight. Source: analytics. mainfreight_inventory_snapshot"
     type: time
     timeframes: [

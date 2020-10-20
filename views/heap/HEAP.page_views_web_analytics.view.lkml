@@ -6,7 +6,7 @@ view: heap_page_views_web_analytics {
    derived_table: {
      sql: select
         user_id,session_id,event_id,time as event_time
-      from analytics.heap.pageviews
+      from heap_data.purple.pageviews
       group by 1,2,3,4
        ;;
    }

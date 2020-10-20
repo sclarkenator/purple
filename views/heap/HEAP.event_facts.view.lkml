@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------
 
 view: event_facts {
-  sql_table_name: analytics.heap.event_facts ;;
+  sql_table_name: heap_data.purple.event_facts ;;
   # derived_table: {
   #   sql:  analytics.heap.event_facts ;;
 #     sql: WITH
