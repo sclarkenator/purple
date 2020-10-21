@@ -11,7 +11,7 @@ view: email_contact_merged {
             from analytics.marketing.find_keep_love
             union
             select 'Fluent' as source, created::date, email, null as zipcode, null as gender, targeting_strategy
-            from analytics_stage.marketing_stage.fluent_contact
+            from analytics.marketing.fluent_contact
             union
             select 'MyMove' as source, created::date, email, postal_code as zipcode, null as gender, null as target_strategy
             from analytics.marketing.mymove_contact

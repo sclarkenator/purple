@@ -174,14 +174,18 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'amazon') then 'Amazon'
     WHEN CONTAINS(${network_groupname},'bing') then 'Bing'
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
+    WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
+    WHEN CONTAINS(${network_groupname},'cordless') then 'Chatbot'
+    WHEN CONTAINS(${network_groupname},'duckduck') then 'DuckDuckGo'
     WHEN CONTAINS(${network_groupname},'ebay') then 'Ebay'
     WHEN CONTAINS(${network_groupname},'email') then 'Email'
     WHEN CONTAINS(${network_groupname},'exponential') then 'VDX'
     WHEN CONTAINS(${network_groupname},'(fb)')
     OR CONTAINS(${network_groupname},'facebook') then 'FB/IG'
     WHEN CONTAINS(${network_groupname},'google')
-    OR CONTAINS(${network_groupname},'gdn') then 'Google'
+    OR CONTAINS(${network_groupname},'gdn')
+    OR CONTAINS(${network_groupname},'(3859)') then 'Google'
     WHEN CONTAINS(${network_groupname},'hulu') then 'Hulu'
     WHEN CONTAINS(${network_groupname},'impact radius') then 'Impact Radius'
     WHEN CONTAINS(${network_groupname},'linkedin') then 'LinkedIn'
@@ -207,6 +211,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo Native'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
+    WHEN CONTAINS(${network_groupname},'zeta') then 'Zeta'
     ELSE 'Other'
     END
     ;;
