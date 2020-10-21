@@ -637,7 +637,7 @@ dimension_group: trandate {
   }
 
   dimension: store_id {
-    label: "Retail store ID"
+    label: "Retail Store ID"
     description: "Netsuite retail store ID. Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
