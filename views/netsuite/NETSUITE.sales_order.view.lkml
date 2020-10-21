@@ -637,7 +637,7 @@ dimension_group: trandate {
   }
 
   dimension: store_id {
-    label: "Retail Store ID"
+    label: "Retail Location ID"
     description: "Netsuite retail store ID. Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
@@ -646,8 +646,8 @@ dimension_group: trandate {
     hidden: yes
   }
 dimension: store_name{
-  label: "Store Name"
-  description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
+  label: "Location Name"
+  description: "Owned Retail Location Name. Manually grouped from Location ID. Source: netsuite.sales_order"
   group_label: " Advanced"
   view_label: "Owned Retail"
   type: string
