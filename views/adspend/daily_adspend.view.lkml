@@ -261,7 +261,7 @@ dimension: spend_platform {
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG') OR ${TABLE}.source ilike ('instagram')
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG', 'TIKTOK') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
       when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE')
