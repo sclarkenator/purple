@@ -255,6 +255,13 @@ view: roas_pdt {
       ;;
   }
 
+  dimension: payment_method {
+    label: "payment method"
+    description: "Method used complete transaction"
+    type: string
+    sql: ${TABLE}.payment_method ;;
+  }
+
   dimension: platform {
     label: "Platform (raw)"
     description: "Data as is from core system (source)"
