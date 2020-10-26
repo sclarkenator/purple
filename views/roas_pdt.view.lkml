@@ -71,6 +71,7 @@ view: sales_pdt {
       column: total_gross_Amt_non_rounded { field: sales_order_line_base.total_gross_Amt_non_rounded }
       column: new_customer {field: first_order_flag.new_customer}
       column: repeat_customer {field: first_order_flag.repeat_customer}
+      column: payment_method {field: sales_order.payment_method}
       filters: { field: sales_order_line_base.created_date value: "2 years" }
     }
   }
@@ -83,6 +84,8 @@ view: sales_pdt {
   dimension: total_gross_Amt_non_rounded { type: number }
   dimension: new_customer {type: number}
   dimension: repeat_customer {type: number}
+  dimension: payment_method {type: string}
+
 }
 
 ######################################################
@@ -135,6 +138,7 @@ view: roas_pdt {
       , null as c3_trended_sales
       , null as new_customer
       , null as repeat_customer
+      , null as payment_method
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -154,6 +158,7 @@ view: roas_pdt {
       , null as c3_trended_sales
       , null as new_customer
       , null as repeat_customer
+      , null as payment_method
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -173,6 +178,7 @@ view: roas_pdt {
       , null as c3_trended_sales
       , new_customer
       , repeat_customer
+      , payment_method
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -192,6 +198,7 @@ view: roas_pdt {
       , TRENDED_AMOUNT as c3_trended_sales
       , null as new_customer
       , null as repeat_customer
+      , null as payment_method
    from ${c3_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
