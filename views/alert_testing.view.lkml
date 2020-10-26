@@ -25,7 +25,7 @@ with session_details as
         ,case when sn.session_num > 1 then 1 else 0 end ret_visit_flag
         ,nvl(p.order_amt,0) order_amt
         ,case when p.order_amt is null then 0 else 1 end conv_flag
-from analytics.heap.sessions s
+from heap_data.purple.sessions s
 left join
     (select session_id
             ,sum(shopify_amt) order_amt
@@ -38,13 +38,13 @@ left join
 left join
     (select distinct session_id
             ,count(event_id) over (partition by session_id) pages
-    from analytics.heap.pageviews
+    from heap_data.purple.pageviews
     where to_date(session_time) > current_date-121
     and to_date(session_time) < current_date) pv on pv.session_id = s.session_id
 left join
     (select distinct session_id
             ,row_number() over (partition by user_id order by time) session_num
-    from analytics.heap.sessions
+    from heap_data.purple.sessions
     where to_date(time) > current_date -121
     and to_date(time) < current_date) sn on sn.session_id = s.session_id
 where to_date(s.time) > current_date -121
@@ -64,7 +64,7 @@ pageviews as
         ,count(*) over (partition by session_id) session_pages
         ,case when max(time) over (partition by session_id) = time then 1 else 0 end exit_flag
         ,page_sequence||' of '||session_pages page_of_session
-from analytics.heap.pageviews
+from heap_data.purple.pageviews
 where to_date(time) > current_date -121
 and to_date(time) < current_date)
 ,
