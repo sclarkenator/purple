@@ -3,7 +3,7 @@
     derived_table: {
       sql:
       select *
-      from analytics.heap.all_events
+      from heap_data.purple.all_events
       where event_table_name in (
       --add to cart, purchase, and email capture
       'checkout_submit_customer_info','cart_add_to_cart','cart_mattress_add_to_cart','product_detail_page_pdp_add_to_cart','purchase',
