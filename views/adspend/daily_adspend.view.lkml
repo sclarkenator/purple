@@ -316,9 +316,15 @@ dimension: spend_platform {
     sql: ${TABLE}.source ;; }
 
   dimension: campaign_name {
-    label: "  Campaign Name"
+    label: "Campaign Name"
     type:  string
     sql: ${TABLE}.campaign_name ;; }
+
+  dimension: campaign_id {
+    label: "Campaign ID"
+    type:  string
+    sql: ${TABLE}.campaign_id;; }
+
 
   dimension: ad_name {
     label: "  Ad Name"
