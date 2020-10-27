@@ -217,6 +217,24 @@ view: c3_conversion {
     ;;
   }
 
-
+  dimension: medium_clean {
+    type: string
+    sql: CASE
+    WHEN CONTAINS(${group_name},'Youtube') then 'Video'
+    WHEN CONTAINS(${group_name},'AdMarketplace')
+    or CONTAINS (${group_name},'Bing Non-Brand')
+    or CONTAINS(${group_name}, 'Bing Brand')
+    or CONTAINS (${group_name},'Google Non-Brand')
+    or CONTAINS(${group_name},'Yelp Search')
+    or CONTAINS(${group_name},'Google Brand') then 'Search'
+    WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
+    WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
+    WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
+    WHEN CONTAINS(${group_name},'Social') then 'Paid Social'
+    WHEN CONTAINS(${group_name},'Radio') then 'Radio'
+    --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
+    ELSE ${TABLE}.group_name
+    END ;;
+    }
 
 }
