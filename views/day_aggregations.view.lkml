@@ -673,37 +673,37 @@ view: day_aggregations {
     sql: ${TABLE}.adspend;; }
 
   measure: target_dtc_amount {
-    label: "Target DTC Amount"
-    description: "Total DTC target from Daily Curve amount aggregated to the day."
+    label: "Plan DTC Amount"
+    description: "Plan DTC target from finance team, amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_dtc_amount;; }
 
   measure: target_retail_amount {
-    label: "Target Retail Amount"
-    description: "Total Retail target from Daily Curve amount aggregated to the day."
+    label: "Plan Retail Amount"
+    description: "Total Retail plan from finance team, amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_retail_amount;; }
 
   measure: target_wholesale_amount {
-    label: "Target Wholesale Amount"
-    description: "Total wholesale target from Daily Curve amount aggregated to the day."
+    label: "Plan Wholesale Amount"
+    description: "Plan wholesale target from finance amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_wholesale_amount;; }
 
 
   measure: target_insidesales_amount {
-    label: "Target Insidesales Amount"
-    description: "Ramping percentage of DTC target.  Going from 5% to 15% by Dec 2020."
+    label: "Plan Insidesales Amount"
+    description: "Ramping percentage of DTC plan.  Going from 5% to 15% by Dec 2020."
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.target_insidesales_amount;; }
 
   measure: total_target_amount {
-    label: "Total Target Amount"
-    description: "Total target from Daily Curve amount aggregated to the day. Retail, DTC, & Wholesale"
+    label: "Total Plan Amount"
+    description: "Total plan from finance team amount aggregated to the day. Retail, DTC, & Wholesale"
     type: number
     value_format: "$#,##0,\" K\""
     sql: ${target_retail_amount}+${target_dtc_amount}+${target_wholesale_amount};; }
@@ -734,7 +734,7 @@ view: day_aggregations {
     sql: ${TABLE}.dtc_refunds;; }
 
   measure: adspend_target {
-    label: "Target Adspend"
+    label: "Goal Adspend"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_adspend_target;; }
@@ -766,7 +766,7 @@ view: day_aggregations {
    sql: ${TABLE}.non_bounced_sessions ;; }
 
   measure: production_target {
-    label: "Target Mattress Production"
+    label: "Goal Mattress Production"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.production_target ;; }
@@ -812,16 +812,16 @@ view: day_aggregations {
   }
 
   measure: target_roas_sales {
-    label: "Target ROAs Sales"
-    description: "DTC Target + Retail Target + 50% of Wholesale Target"
+    label: "Plan ROAs Sales"
+    description: "DTC Plan + Retail Plan + 50% of Wholesale Plan"
     type: number
     value_format: "$#,##0.00"
     sql: nvl(${target_dtc_amount},0)+nvl(${target_retail_amount},0)+(nvl(${target_wholesale_amount},0)*0.50) ;;
   }
 
   measure: target_roas {
-    label: "Target ROAs"
-    description: "DTC Target + Retail Target + 50% of Wholesale Target /Adspend Target"
+    label: "Plan ROAs"
+    description: "Plan Target + Plan Target + 50% of Wholesale Plan /Adspend Goal"
     type: number
     value_format: "$#,##0.00"
     sql: ${target_roas_sales}/NULLIF(${adspend_target},0) ;;
