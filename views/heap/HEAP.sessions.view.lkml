@@ -217,6 +217,17 @@ view: sessions {
     timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute]
     sql: ${TABLE}.time ;; }
 
+  dimension_group: current_date_sessions {
+    view_label: "Sessions"
+    label: "    Current"
+    description:  "Current Time/Date for calculations. Source: looker.calculation"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
+
   dimension: last_30{
     label: "z - Last 30 Days"
     group_label: "  Session Time"

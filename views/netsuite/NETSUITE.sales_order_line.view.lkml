@@ -1427,7 +1427,7 @@ view: sales_order_line {
     description: "Units per transaction. Source:looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
+    sql: coalesce (${total_units}/nullif(count (distinct ${sales_order.order_id}),0),0) ;;
   }
 
   dimension: sub_channel {

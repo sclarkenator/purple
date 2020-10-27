@@ -27,7 +27,8 @@ include: "/dashboards/**/*.dashboard"
 
 explore: paycom_hours {
   from: paycom_labor_hours
-  hidden:  no
+  group_label: "HR"
+  hidden:  yes
   description: "This has Paycom hourly data by day, by location by department"
 
 }
