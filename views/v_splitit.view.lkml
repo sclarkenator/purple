@@ -9,7 +9,7 @@ view: v_splitit {
 
   measure: amount {
     type: sum
-    value_format: "$0,0##.##"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."AMOUNT" ;;
   }
 
