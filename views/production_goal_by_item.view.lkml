@@ -6,8 +6,8 @@ view: production_goal_by_item {
     label: "Primary key for Production Goal"
     primary_key: yes
     hidden: yes
-    type: date
-    sql: ${TABLE}."FORECAST" ;;
+    type: string
+    sql: concat(${TABLE}."FORECAST", ${TABLE}."ITEM_ID");;
   }
 
   dimension_group: forecast {

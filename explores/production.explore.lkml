@@ -74,14 +74,9 @@ include: "/dashboards/**/*.dashboard"
     }
     join: production_goal_by_item {
       type: left_outer
-      sql_on: ${assembly_build.item_id} = ${production_goal_by_item.item_id} ;;
-      relationship: one_to_many
+      sql_on: ${assembly_build.item_id} = ${production_goal_by_item.item_id} and ${assembly_build.produced_date} = ${production_goal_by_item.forecast_date} ;;
+      relationship: many_to_one
     }
-    join: production_goal {
-      type: left_outer
-      sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
-      relationship: one_to_many
-      }
   }
 
   explore: project_config {
@@ -202,7 +197,7 @@ include: "/dashboards/**/*.dashboard"
     description: "Production goals by forecast date, item, etc"
     join: production_goal_by_item {
       type: left_outer
-      sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
+      sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
       relationship: one_to_many}
     join: item {
       view_label: "Product"
