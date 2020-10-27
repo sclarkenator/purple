@@ -92,4 +92,4 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fit_shopify_payment {hidden: yes group_label: "Accounting"}
   explore: v_fit_stripe {hidden: yes group_label: "Accounting"}
   explore: v_splitit {hidden: yes group_label: "Accounting"}
-  explore: splitit {hidden: yes group_label: "Accounting"}
+  explore: splitit {hidden: yes group_label: "Accounting" description:"The date filter will change the date range in the SQL query."}

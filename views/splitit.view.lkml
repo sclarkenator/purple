@@ -1,4 +1,7 @@
-
+#############################
+## Blake Walton 2020-06-02
+#############################
+# this is a dynamic query where you select the date range in the Look
 view: splitit {
   derived_table: {
     sql:
@@ -24,7 +27,8 @@ view: splitit {
         left join analytics.sales.sales_order so on o.id::varchar = so.etail_order_id
       where gateway = 'splitit_monthly_payments'
         and t.status = 'success'
-        and t.created_at < '2020-10-01'
+        and {% condition date_selector %}  t.created_at {% endcondition %}
+        --and t.created_at < '2020-10-01'
       group by 1,2,3,4,5
     ), fd as (
       select
@@ -40,13 +44,15 @@ view: splitit {
       from analytics.accounting.first_data_transaction
       where status = 'Approved'
         and transaction_type in ('Tagged Completion','Tagged Refund')
-        and time < '2020-10-01'
+        and {% condition date_selector %}  time {% endcondition %}
+        --and time < '2020-10-01'
       group by 1
     ), ns as (
       select s.order_id, min(s.gross_amt) as ns_amt, coalesce(sum(rol.gross_amt),0) as ns_refund_amt
       from analytics.sales.sales_order s
         left join analytics.sales.return_order_line rol on s.order_id = rol.order_id
-      where rol.closed < '2020-10-01'
+      where {% condition date_selector %}  rol.closed {% endcondition %}
+        --where rol.closed < '2020-10-01'
       group by 1
     )
     select
@@ -60,12 +66,15 @@ view: splitit {
       ;;
   }
 
-  parameter: date_selector {
+  filter: date_selector {
     type: date_time
     description: "Use this field to select a date to filter results by."
   }
 
-  dimension: customer {}
+  dimension: customer {
+    type: string
+    sql:${TABLE}.customer;;
+  }
 
   dimension: shopify_order_number {
     type: string
