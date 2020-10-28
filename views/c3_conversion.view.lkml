@@ -239,7 +239,7 @@ view: c3_conversion {
 
   dimension: campaign_type_clean {
     type: string
-    sql:when ${group_name} ilike ('%brand%') and ${group_name} not ilike ('%non-brand%')
+    sql:case when ${group_name} ilike ('%brand%') and ${group_name} not ilike ('%non-brand%')
     or ${campaign} ilike ('br %')
     or ${campaign} ilike ('% br %')
     or ${campaign} ilike ('%-br-%')
