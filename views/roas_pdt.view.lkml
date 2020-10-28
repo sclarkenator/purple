@@ -116,6 +116,35 @@ view: c3_pdt {
 
 
 ######################################################
+#   C3 New
+#   https://purple.looker.com/dashboards/3635
+######################################################
+
+view: c3_new_pdt{
+  derived_table: {
+    explore_source: c3 {
+      column: position_created_date {}
+      column: campaign_type_clean {}
+      column: Platform_clean {}
+      column: medium_clean {}
+      column: campaign {}
+      column: attribution {}
+      column: converter {}
+      column: orders {}
+    }
+  }
+  dimension: position_created_date {type: date}
+  dimension: campaign_type_clean {type: string}
+  dimension: Platform_clean {type: string}
+  dimension: medium_clean {type: string}
+  dimension: campaign {type: string}
+  dimension: attribution {type: number}
+  dimension: converter {type: number}
+  dimension: orders {type: number}
+}
+
+
+######################################################
 #   CREATING FINAL TABLE
 #   Looks from : https://purple.looker.com/dashboards/3635
 ######################################################
@@ -139,6 +168,7 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -159,6 +189,7 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -179,6 +210,7 @@ view: roas_pdt {
       , new_customer
       , repeat_customer
       , payment_method
+      , null as c3_new_cohort
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -199,7 +231,29 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
    from ${c3_pdt.SQL_TABLE_NAME}
+   union all
+    select 'c3 new' as source
+      , position_created_date
+      , campaign_type_clean
+      , Platform_clean
+      , medium_clean
+      , Campaign
+      , null as aspend
+      , null as impressions
+      , null as clicks
+      , null as sessions
+      , null as qualified_sessions
+      , null as orders
+      , null as sales
+      , null as c3_cohort_sales
+      , null as c3_trended_sales
+      , null as new_customer
+      , null as repeat_customer
+      , null as payment_method
+      , attribution as c3_new_cohort
+   from ${c3_new_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
   }
@@ -241,13 +295,13 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING') or
+      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING','Prospecting') or
         left(${TABLE}.campaign_type,2) = 'pt'
           then 'Prospecting'
-        when ${TABLE}.campaign_type in ('rt','RETARGETING') or
+        when ${TABLE}.campaign_type in ('rt','RETARGETING', 'Retargeting') or
           left(${TABLE}.campaign_type,2) = 'rt'
           then 'Retargeting'
-        when ${TABLE}.campaign_type in ('br','BRAND') or
+        when ${TABLE}.campaign_type in ('br','BRAND','Brand') or
           left(${TABLE}.campaign_type,2) = 'br'
           then 'Brand'
         else 'Other' end
@@ -303,10 +357,12 @@ view: roas_pdt {
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
         when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
+         when ${TABLE}.platform in ('TIKTOK','tk') then 'TikTok'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
         or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
+        when ${TABLE}.platform in ('ZETA','ze') then 'Oceanmedia'
         else 'Other' end
       ;;
   }
@@ -332,24 +388,25 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.medium in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
+      case when lower(${TABLE}.medium) in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
-        or ${TABLE}.platform in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
-        when ${TABLE}.medium in ('display','ds')
-        or  (${TABLE}.platform in ('ACUITY') and ${TABLE}.medium in ('display','ds'))
-          or (${TABLE}.platform in ('agility','ACUITY', 'oa') and ${TABLE}.medium is null)  then 'Display'
-        when ${TABLE}.medium in ('crm','em', 'email') or  ${TABLE}.platform in ('LIVEINTENT', 'Fluent') then 'CRM'
-        when ${TABLE}.medium in ('TV','CTV','RADI0','STREAMING','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
-        or  ${TABLE}.platform in ('rk','TV','CTV','RADI0','STREAMING') then 'Traditional'
-        when ${TABLE}.medium in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
-        when ${TABLE}.medium in ('video','vi', 'yt','YOUTUBE','purple fanny pad' ,'raw egg demo', 'sasquatch video',
+        or lower(${TABLE}.platform) in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
+        when lower(${TABLE}.medium) in ('display','ds')
+        or  lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds')
+        or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
+        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent') then 'CRM'
+        when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
+        or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming') then 'Traditional'
+        when lower(${TABLE}.medium) in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
+        when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
-        'made in the usa video', 'unpacking video', 'original kickstarter video') or  ${TABLE}.platform in ('youtube') then 'Video'
-        when ${TABLE}.medium in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  ${TABLE}.platform in ('couponbytes') then 'Affiliate'
-        when ${TABLE}.medium in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')then 'Native'
-        when ${TABLE}.medium in ('organic')
-          or ${TABLE}.medium is null then 'Organic'
+        'made in the usa video', 'unpacking video', 'original kickstarter video')
+        or lower(${TABLE}.platform) in ('youtube') then 'Video'
+        when lower(${TABLE}.medium) in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  lower(${TABLE}.platform) in ('couponbytes') then 'Affiliate'
+        when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
+        when lower(${TABLE}.medium) in ('organic')
+          or lower(${TABLE}.medium) is null then 'Organic'
         else 'Other' end
       ;;
   }
@@ -449,6 +506,12 @@ view: roas_pdt {
     type: number
     value_format: "$#,##0.00"
     sql: ${adspend}/${orders} ;;
+  }
+  measure: new_cohort_amount{
+    label: "C3 Atrributed Amount New"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.c3_new_cohort;;
   }
 
 

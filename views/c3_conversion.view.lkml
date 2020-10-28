@@ -217,6 +217,74 @@ view: c3_conversion {
     ;;
   }
 
+  dimension: medium_clean {
+    type: string
+    sql: CASE
+    WHEN CONTAINS(${group_name},'Youtube') then 'Video'
+    WHEN CONTAINS(${group_name},'AdMarketplace')
+    or CONTAINS (${group_name},'Bing Non-Brand')
+    or CONTAINS(${group_name}, 'Bing Brand')
+    or CONTAINS (${group_name},'Google Non-Brand')
+    or CONTAINS(${group_name},'Yelp Search')
+    or CONTAINS(${group_name},'Google Brand') then 'Search'
+    WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
+    WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
+    WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
+    WHEN CONTAINS(${group_name},'Social') then 'Paid Social'
+    WHEN CONTAINS(${group_name},'Radio') then 'Radio'
+    --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
+    ELSE ${TABLE}.group_name
+    END ;;
+    }
+
+  dimension: campaign_type_clean {
+    type: string
+    sql:case when ${group_name} ilike ('%brand%') and ${group_name} not ilike ('%non-brand%')
+    or ${campaign} ilike ('br %')
+    or ${campaign} ilike ('% br %')
+    or ${campaign} ilike ('%-br-%')
+    or ${network_name} ilike ('br %')
+    or ${network_name} ilike ('% br %')
+    or ${network_name} ilike ('%-br-%') then 'Brand'
+when ${network_name} ilike ('%prospect%')
+    or ${network_name} ilike ('%pros%')
+    or ${network_name} ilike ('pt_%')
+    or ${network_name} ilike (' pt%')
+    or ${network_name} ilike ('% pt %')
+    or ${network_name} ilike ('pt%')
+    or ${network_name} ilike ('%_pt')
+    or ${network_name} ilike ('%_pt ')
+    or ${network_name} ilike ('%-pt%')
+    or ${campaign} ilike ('%prospect%')
+    or ${campaign} ilike ('%pros%')
+    or ${campaign} ilike ('pt_%')
+    or ${campaign} ilike (' pt%')
+    or ${campaign} ilike ('% pt %')
+    or ${campaign} ilike ('pt%')
+    or ${campaign} ilike ('%_pt')
+    or ${campaign} ilike ('%_pt ')
+    or ${campaign} ilike ('%-pt%') then 'Prospecting'
+when ${network_name} ilike ('%retarget%')
+    or ${network_name} ilike ('%remarket%')
+    or ${network_name} ilike ('rt_%')
+    or ${network_name} ilike (' rt%')
+    or ${network_name} ilike ('% rt %')
+    or ${network_name} ilike ('rt%')
+    or ${network_name} ilike ('%_rt')
+    or ${network_name} ilike ('%_rt ')
+    or ${network_name} ilike ('%-rt%')
+    or ${campaign} ilike ('%retarget%')
+    or ${campaign} ilike ('%remarket%')
+    or ${campaign} ilike ('rt_%')
+    or ${campaign} ilike (' rt%')
+    or ${campaign} ilike ('% rt %')
+    or ${campaign} ilike ('rt%')
+    or ${campaign} ilike ('%_rt')
+    or ${campaign} ilike ('%_rt ')
+    or ${campaign} ilike ('%-rt%') then 'Retargeting'
+else 'Other'
+end;;
+    }
 
 
 }
