@@ -4,6 +4,7 @@ view: visible {
   dimension_group: delivery {
     group_label: "Visible SCM"
     label: "Visible delivery"
+    hidden: yes
     description: "Date Visible delivered load to recipient. Source: visible.visible"
     type: time
     timeframes: [
@@ -20,6 +21,7 @@ view: visible {
   }
 
   dimension_group: in_hand {
+    hidden: yes
     group_label: "Visible SCM"
     label: "Visible in-hand"
     description: "Date Visible takes load. Source:visible.visible"
@@ -59,6 +61,7 @@ view: visible {
   }
 
   dimension: load_id {
+    hidden: yes
     group_label: "Visible SCM"
     label: "Visible load_id"
     description: "Visible SCM load_id. Source: visible.visible"
