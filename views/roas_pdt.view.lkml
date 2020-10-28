@@ -357,10 +357,12 @@ view: roas_pdt {
         when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
         when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
         when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
+         when ${TABLE}.platform in ('TIKTOK','tk') then 'TikTok'
         when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
         or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
+        when ${TABLE}.platform in ('ZETA','ze') then 'Oceanmedia'
         else 'Other' end
       ;;
   }
@@ -390,18 +392,19 @@ view: roas_pdt {
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
         or lower(${TABLE}.platform) in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
         when lower(${TABLE}.medium) in ('display','ds')
-        or  lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds'))
-          or lower((${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
-        when lower(${TABLE}.medium) in ('crm','em', 'email') or  ${TABLE}.platform in ('liveintent', 'fluent') then 'CRM'
+        or  lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds')
+        or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
+        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent') then 'CRM'
         when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
         or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming') then 'Traditional'
         when lower(${TABLE}.medium) in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
-        when lower(${TABLE}.medium in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
+        when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
-        'made in the usa video', 'unpacking video', 'original kickstarter video') or  lower(${TABLE}.platform) in ('youtube') then 'Video'
+        'made in the usa video', 'unpacking video', 'original kickstarter video')
+        or lower(${TABLE}.platform) in ('youtube') then 'Video'
         when lower(${TABLE}.medium) in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie') or  lower(${TABLE}.platform) in ('couponbytes') then 'Affiliate'
-        when lower(${TABLE}.medium)$ in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo')then 'Native'
+        when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
         when lower(${TABLE}.medium) in ('organic')
           or lower(${TABLE}.medium) is null then 'Organic'
         else 'Other' end
