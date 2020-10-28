@@ -504,6 +504,12 @@ view: roas_pdt {
     value_format: "$#,##0.00"
     sql: ${adspend}/${orders} ;;
   }
+  measure: new_cohort_amount{
+    label: "C3 Atrributed Amount New"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.c3_new_cohort;;
+  }
 
 
 }
