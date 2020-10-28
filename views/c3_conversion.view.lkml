@@ -237,4 +237,10 @@ view: c3_conversion {
     END ;;
     }
 
+  dimension: campaign_type_clean {
+    type: string
+    sql: 1 ;;
+    }
+
+
 }
