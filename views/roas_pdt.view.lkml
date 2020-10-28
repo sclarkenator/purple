@@ -295,13 +295,13 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING') or
+      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING','Prospecting') or
         left(${TABLE}.campaign_type,2) = 'pt'
           then 'Prospecting'
-        when ${TABLE}.campaign_type in ('rt','RETARGETING') or
+        when ${TABLE}.campaign_type in ('rt','RETARGETING', 'Retargeting') or
           left(${TABLE}.campaign_type,2) = 'rt'
           then 'Retargeting'
-        when ${TABLE}.campaign_type in ('br','BRAND') or
+        when ${TABLE}.campaign_type in ('br','BRAND','Brand') or
           left(${TABLE}.campaign_type,2) = 'br'
           then 'Brand'
         else 'Other' end
