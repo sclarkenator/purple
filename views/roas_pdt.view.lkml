@@ -168,6 +168,7 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -188,6 +189,7 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -208,6 +210,7 @@ view: roas_pdt {
       , new_customer
       , repeat_customer
       , payment_method
+      , null as c3_new_cohort
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -228,6 +231,7 @@ view: roas_pdt {
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , null as c3_new_cohort
    from ${c3_pdt.SQL_TABLE_NAME}
    union all
     select 'c3 new' as source
@@ -243,11 +247,12 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
-      , Attribution as c3_cohort_sales
+      , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
       , null as repeat_customer
       , null as payment_method
+      , attribution as c3_new_cohort
    from ${c3_new_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
