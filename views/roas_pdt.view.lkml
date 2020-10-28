@@ -116,6 +116,35 @@ view: c3_pdt {
 
 
 ######################################################
+#   C3 New
+#   https://purple.looker.com/dashboards/3635
+######################################################
+
+view: c3_new_pdt{
+  derived_table: {
+    explore_source: c3 {
+      column: position_created_date {}
+      column: campaign_type_clean {}
+      column: Platform_clean {}
+      column: medium_clean {}
+      column: campaign {}
+      column: attribution {}
+      column: converter {}
+      column: orders {}
+    }
+  }
+  dimension: position_created_date {type: date}
+  dimension: campaign_type_clean {type: string}
+  dimension: Platform_clean {type: string}
+  dimension: medium_clean {type: string}
+  dimension: campaign {type: string}
+  dimension: attribution {type: number}
+  dimension: converter {type: number}
+  dimension: orders {type: number}
+}
+
+
+######################################################
 #   CREATING FINAL TABLE
 #   Looks from : https://purple.looker.com/dashboards/3635
 ######################################################
@@ -200,6 +229,26 @@ view: roas_pdt {
       , null as repeat_customer
       , null as payment_method
    from ${c3_pdt.SQL_TABLE_NAME}
+   union all
+    select 'c3 new' as source
+      , position_created_date
+      , campaign_type_clean
+      , Platform_clean
+      , medium_clean
+      , Campaign
+      , null as aspend
+      , null as impressions
+      , null as clicks
+      , null as sessions
+      , null as qualified_sessions
+      , null as orders
+      , null as sales
+      , Attribution as c3_cohort_sales
+      , null as c3_trended_sales
+      , null as new_customer
+      , null as repeat_customer
+      , null as payment_method
+   from ${c3_new_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
   }
