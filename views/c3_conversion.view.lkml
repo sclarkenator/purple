@@ -239,7 +239,51 @@ view: c3_conversion {
 
   dimension: campaign_type_clean {
     type: string
-    sql: 1 ;;
+    sql:when ${group_name} ilike ('%brand%') and ${group_name} not ilike ('%non-brand%')
+    or ${campaign} ilike ('br %')
+    or ${campaign} ilike ('% br %')
+    or ${campaign} ilike ('%-br-%')
+    or ${network_name} ilike ('br %')
+    or ${network_name} ilike ('% br %')
+    or ${network_name} ilike ('%-br-%') then 'Brand'
+when ${network_name} ilike ('%prospect%')
+    or ${network_name} ilike ('%pros%')
+    or ${network_name} ilike ('pt_%')
+    or ${network_name} ilike (' pt%')
+    or ${network_name} ilike ('% pt %')
+    or ${network_name} ilike ('pt%')
+    or ${network_name} ilike ('%_pt')
+    or ${network_name} ilike ('%_pt ')
+    or ${network_name} ilike ('%-pt%')
+    or ${campaign} ilike ('%prospect%')
+    or ${campaign} ilike ('%pros%')
+    or ${campaign} ilike ('pt_%')
+    or ${campaign} ilike (' pt%')
+    or ${campaign} ilike ('% pt %')
+    or ${campaign} ilike ('pt%')
+    or ${campaign} ilike ('%_pt')
+    or ${campaign} ilike ('%_pt ')
+    or ${campaign} ilike ('%-pt%') then 'Prospecting'
+when ${network_name} ilike ('%retarget%')
+    or ${network_name} ilike ('%remarket%')
+    or ${network_name} ilike ('rt_%')
+    or ${network_name} ilike (' rt%')
+    or ${network_name} ilike ('% rt %')
+    or ${network_name} ilike ('rt%')
+    or ${network_name} ilike ('%_rt')
+    or ${network_name} ilike ('%_rt ')
+    or ${network_name} ilike ('%-rt%')
+    or ${campaign} ilike ('%retarget%')
+    or ${campaign} ilike ('%remarket%')
+    or ${campaign} ilike ('rt_%')
+    or ${campaign} ilike (' rt%')
+    or ${campaign} ilike ('% rt %')
+    or ${campaign} ilike ('rt%')
+    or ${campaign} ilike ('%_rt')
+    or ${campaign} ilike ('%_rt ')
+    or ${campaign} ilike ('%-rt%') then 'Retargeting'
+else 'Other'
+end;;
     }
 
 
