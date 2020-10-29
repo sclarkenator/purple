@@ -119,8 +119,8 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
 ##Added by Scott Clark 10/29/2020
 
   dimension: store {
-    label: "Store"
-    description: "Store location (based on showroom name field, ie. UT-01)"
+    label: "Location"
+    description: "Retail location (based on showroom name field, ie. UT-01)"
     type: string
     sql: ${TABLE}.store ;;
   }
