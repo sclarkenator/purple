@@ -127,7 +127,7 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
 
   dimension_group: month {
     type: time
-    label: "Expense month"
+    label: "Expense Date"
     description: "This is the month sales and expenses were incurred"
     timeframes: [
       month,
