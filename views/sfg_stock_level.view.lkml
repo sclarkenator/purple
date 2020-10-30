@@ -17,11 +17,11 @@ view: sfg_stock_level {
 ), bb as (
   --sales last 60 days
   select i.sku_id
-      , ceil(sum(sol.ordered_qty)/60,0) as qty
-      , ceil(sum(case when s.channel_id IN (1,2) then ordered_qty end)/60,0) as dtc_wholesale_qty
+      , ceil(sum(sol.ordered_qty)/60,0) as actual_qty
+      , ceil(sum(case when s.channel_id IN (1,2) then ordered_qty end)/60,0) as actual_dtc_wholesale_qty
   from sales.sales_order_line sol
-  left join sales.sales_order s on s.order_id = sol.order_id
-  left join sales.item i on i.item_id = sol.item_id
+    left join sales.sales_order s on s.order_id = sol.order_id
+    left join sales.item i on i.item_id = sol.item_id
   where sol.created::date > dateadd('day',-61,current_date)
       and sol.created::date < current_date::date
       --and channel_id in(1,2,5)
@@ -32,8 +32,8 @@ view: sfg_stock_level {
       i.sku_id
       , sum(s.on_hand) as on_hand
   from production.inventory s
-  left join sales.item i on s.item_id = i.item_id
-  left join sales.location  l on s.location_id = l.location_id
+    left join sales.item i on s.item_id = i.item_id
+    left join sales.location  l on s.location_id = l.location_id
   where l.location in ('100-Purple West', '150-Alpine', 'P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC', 'P30 - PILOT DFW DC')
   group by 1
 ), dd as (
@@ -42,43 +42,61 @@ view: sfg_stock_level {
       , i.product_description
       , sum(sol.ordered_qty) as open_qty
   from sales.sales_order_line  sol
-  left join sales.item  i ON sol.item_id = i.item_id
-  left join sales.fulfillment f ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) =
+    left join sales.item  i ON sol.item_id = i.item_id
+    left join sales.fulfillment f ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) =
       (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system
-  left join sales.sales_order  s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
-  left join sales.cancelled_order c ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (c.item_id||'-'||c.order_id||'-'||c.system)
+    left join sales.sales_order  s ON (sol.order_id||'-'||sol.system) = (s.order_id||'-'||s.system)
+    left join sales.cancelled_order c ON (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (c.item_id||'-'||c.order_id||'-'||c.system)
   where s.created::date > dateadd('day',-70,current_date::date) --and s.created::date < current_date::date
-  and s.transaction_type <> 'Cash Sale'
-  and s.source <> 'Amazon-FBA-US'
-  and f.fulfilled is null
-  and i.classification_new = 'FG'
-  and (i.category = 'MATTRESS')
-  and s.channel_id in (1,2)
-  and c.cancelled is null
-  and sol.location in ('100-Purple West', 'P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC', 'P30 - PILOT DFW DC', '101-XPO PWest')
+    and s.transaction_type <> 'Cash Sale'
+    and s.source <> 'Amazon-FBA-US'
+    and f.fulfilled is null
+    and i.classification_new = 'FG'
+    and i.category = 'MATTRESS'
+    and s.channel_id in (1,2)
+    and c.cancelled is null
+    and sol.location in ('100-Purple West', 'P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC', 'P30 - PILOT DFW DC', '101-XPO PWest')
   group by 1,2
   order by 3 desc
+), ee as (
+ --sales next 60 days
+  select
+      i.sku_id
+      , ceil(sum(f.units)/60,0) as forecasted_qty
+      , ceil(sum(case when f.channel in ('DTC','Wholesale') then units end)/60,0) as forecasted_dtc_wholesale_qty
+  from sales.forecast f
+      left join sales.item i on i.sku_id = f.sku_id
+  where f.forecast < dateadd('day',61,current_date)
+      and f.forecast > current_date::date
+    --and channel_id in('DTC','Wholesale','Owned Retail')
+  group by 1
 )
 select zz.hep_sku
     , zz.hep_description
-    , count (case when avg_sales is not null then finished_good_sku end) as qty_used
-    , sum (avg_sales) daily_avg
-    --, sum (avg_sales) *7 as sfg_stock_level
+    , count (case when actual_avg_sales is not null then finished_good_sku end) as actual_qty_used
+    , sum (actual_avg_sales) actual_daily_avg
+    --, sum (actual_avg_sales) *7 as actaul_sfg_stock_level
+    , count (case when forecasted_avg_sales is not null then finished_good_sku end) as forecasted_qty_used
+    , sum (forecasted_avg_sales) forecasted_daily_avg
+    --, sum (forecasted_avg_sales) *7 as forecasted_sfg_stock_level
     , round(max(sfg_stock),0) current_inventory
     , round(sum (fg_stock),0) fg_on_hand
     , round(sum (open_qty),0) open_orders
 from (
   select aa.*
-      , bb.qty as avg_sales
-      , bb.dtc_wholesale_qty as avg_sales2
+      , bb.actual_qty as actual_avg_sales
+      , bb.actual_dtc_wholesale_qty as actual_avg_sales2
       , cc.on_hand as sfg_stock
       , ccc.on_hand as fg_stock
       , dd.open_qty
+      , ee.forecasted_qty as forecasted_avg_sales
+      , ee.forecasted_dtc_wholesale_qty as forecasted_dtc_wholesale_qty
   from aa
   left join bb on bb.sku_id = finished_good_sku
   left join cc on cc.sku_id = aa.hep_sku
   left join cc ccc on ccc.sku_id = finished_good_sku
   left join dd on dd.sku_id = aa.finished_good_sku
+  left join ee on ee.sku_id = finished_good_sku
 ) zz
 group by 1,2  ;;
   }
@@ -97,18 +115,32 @@ group by 1,2  ;;
     sql: ${TABLE}."HEP_DESCRIPTION" ;;
   }
 
-  measure: qty_used {
-    label: "Quantity Used"
+  measure: actual_qty_used {
+    label: "Actual Quantity Used"
     description: "source; looker calculation"
     type: sum
-    sql:  ${TABLE}."QTY_USED" ;;
+    sql:  ${TABLE}."ACTUAL_QTY_USED" ;;
   }
 
-  measure: daily_avg {
-    label: "Daily Average"
+  measure: actual_daily_avg {
+    label: "Actual Daily Average"
     description: "source; sales.sales_order_line"
     type: sum
-    sql:  ${TABLE}."DAILY_AVG" ;;
+    sql:  ${TABLE}."ACTUAL_DAILY_AVG" ;;
+  }
+
+  measure: forecasted_qty_used {
+    label: "Forecasted Quantity Used"
+    description: "source; looker calculation"
+    type: sum
+    sql:  ${TABLE}."FORECASTED_QTY_USED" ;;
+  }
+
+  measure: forecasted_daily_avg {
+    label: "Forecasted Daily Average"
+    description: "source; sales.sales_order_line"
+    type: sum
+    sql:  ${TABLE}."FORECASTED_DAILY_AVG" ;;
   }
 
   measure: current_inventory {
