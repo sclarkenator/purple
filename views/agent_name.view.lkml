@@ -61,5 +61,12 @@ dimension: name {
     sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
   }
 
+  dimension: email_join {
+    description: "The email address for this agent"
+    type:  string
+    hidden: yes
+    sql: lower(${TABLE}.email) ;;
+  }
+
 
 }
