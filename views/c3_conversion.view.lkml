@@ -286,5 +286,38 @@ else 'Other'
 end;;
     }
 
+  dimension: N1 {
+    type: string
+    sql: ${TABLE}."NETWORK_1" ;;
+  }
 
+  dimension: N2 {
+    type: string
+    sql: ${TABLE}."NETWORK_2" ;;
+  }
+
+  dimension: N3 {
+      type: string
+      sql: ${TABLE}."NETWORK_3" ;;
+  }
+  dimension: N4 {
+    type: string
+    sql: ${TABLE}."NETWORK_4" ;;
+  }
+  dimension: N5 {
+    type: string
+    sql: ${TABLE}."NETWORK_5" ;;
+  }
+  dimension: N6 {
+    type: string
+    sql: ${TABLE}."NETWORK_6" ;;
+  }
+  dimension: N7 {
+    type: string
+    sql: ${TABLE}."NETWORK_7" ;;
+  }
+  dimension: N8 {
+    type: string
+    sql: ${TABLE}."NETWORK_8" ;;
+  }
 }
