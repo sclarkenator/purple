@@ -3,6 +3,8 @@ view: sales_order_line {
   extends: [sales_order_line_base]
 
   parameter: see_data_by {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: yes
     type: unquoted
     allowed_value: {
       label: "Day"
@@ -29,7 +31,8 @@ view: sales_order_line {
   dimension: see_data {
     view_label: "Sales Order"
     label: "See Data By"
-    hidden: no
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
     sql:
     {% if see_data_by._parameter_value == 'day' %}
       ${created_date}

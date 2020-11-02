@@ -843,4 +843,50 @@ view: day_aggregations {
     sql: ${TABLE}.cc_sales ;;
   }
 
+  parameter: see_data_by {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: no
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Year"
+      value: "year"
+    }
+  }
+
+  dimension: see_data {
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: no
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${date_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${date_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${date_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${date_quarter}
+    {% elsif see_data_by._parameter_value == 'year' %}
+      ${date_year}
+    {% else %}
+      ${date_date}
+    {% endif %};;
+  }
+
 }
