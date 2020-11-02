@@ -113,4 +113,54 @@ view: inventory {
     label: "Count of Occurances"
     type: count }
 
+  parameter: see_data_by {
+    type: unquoted
+    hidden: yes
+    allowed_value: {
+      label: "Warehouse Location"
+      value: "warehouse_location"
+    }
+    allowed_value: {
+      label: "Category"
+      value: "category"
+    }
+    allowed_value: {
+      label: "Line"
+      value: "line"
+    }
+    allowed_value: {
+      label: "Model"
+      value: "model"
+    }
+    allowed_value: {
+      label: "Product Name"
+      value: "name"
+    }
+    allowed_value: {
+      label: "SKU"
+      value: "sku"
+    }
+  }
+
+  dimension: see_data {
+    label: "See Data By"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'warehouse_location' %}
+      ${warehouse_location.location_name}
+    {% elsif see_data_by._parameter_value == 'category' %}
+      ${item.category_name}
+    {% elsif see_data_by._parameter_value == 'line' %}
+      ${item.line_raw}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% elsif see_data_by._parameter_value == 'name' %}
+      ${item.product_description_raw}
+    {% elsif see_data_by._parameter_value == 'sku' %}
+      ${item.sku_id}
+    {% else %}
+      ${warehouse_location.location_name}
+    {% endif %};;
+  }
+
 }
