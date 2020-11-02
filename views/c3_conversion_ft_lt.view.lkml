@@ -11,7 +11,8 @@ view: c3_conversion_ft_lt {
 
   dimension: has_touch {
     type: yesno
-    label: "  * Has Marketing Touch"
+    hidden: yes
+    label: "  * Has Marketing Touch (DEPRICATED)"
     description: "If there is a marketing touch on the order.  Most blank will be orders made not on the website (wholesale/retail). Source:c3.c3_conversion_ft_lt"
     sql: ${TABLE}."ANALYTICS_ORDER_ID" is not null;;
   }
@@ -24,9 +25,10 @@ view: c3_conversion_ft_lt {
   }
 
   dimension_group: first_touch {
-    label: "  First Touch"
+    label: "  First Touch (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: time
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -41,63 +43,71 @@ view: c3_conversion_ft_lt {
   }
 
   dimension: first_touch_platform {
-    label: " First Touch Platform"
+    label: " First Touch Platform (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: string
+    hidden: yes
     sql: ${TABLE}."FIRST_TOUCH_PLATFORM" ;;
   }
 
   dimension: ANY_TOUCH_GOOGLE {
-    label: "  * Includes a Google Touch"
+    label: "  * Includes a Google Touch (DEPRICATED)"
     description: "If there is a google touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
+    hidden: yes
     sql: ${TABLE}."ANY_TOUCH_GOOGLE" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_FACEBOOK {
-    label: "  * Includes a Facebook Touch"
+    label: "  * Includes a Facebook Touch (DEPRICATED)"
     description: "If there is a facebook touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
+    hidden: yes
     sql: ${TABLE}."ANY_TOUCH_FACEBOOK" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_TV {
-    label: "  * Includes a TV Touch"
+    label: "  * Includes a TV Touch (DEPRICATED)"
     description: "If there is a tv touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
+    hidden: yes
     sql: ${TABLE}."ANY_TOUCH_TV" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_YAHOO {
-    label: "  * Includes a Yahoo Touch"
+    label: "  * Includes a Yahoo Touch (DEPRICATED)"
     description: "If there is a yahoo touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
+    hidden: yes
     sql: ${TABLE}."ANY_TOUCH_YAHOO" = 'YES' ;;
   }
 
   dimension: ANY_TOUCH_PINTEREST {
-    label: "  * Includes a Pinterest Touch"
+    label: "  * Includes a Pinterest Touch (DEPRICATED)"
     description: "If there is a google touch anywhere in the timeline. Source:c3.c3_conversion_ft_lt"
     group_label: "Advanced"
     type: yesno
+    hidden: yes
     sql: ${TABLE}."ANY_TOUCH_PINTEREST" = 'YES' ;;
   }
 
   dimension: first_touch_source {
-    label: " First Touch Source"
+    label: " First Touch Source (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: string
+    hidden: yes
     sql: ${TABLE}."FIRST_TOUCH_SOURCE" ;;
   }
 
   dimension_group: last_touch {
-    label: "  Last Touch"
+    label: "  Last Touch (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: time
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -112,22 +122,25 @@ view: c3_conversion_ft_lt {
   }
 
   dimension: last_touch_platform {
-    label: " Last Touch Platform"
+    label: " Last Touch Platform (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: string
+    hidden: yes
     sql: ${TABLE}."LAST_TOUCH_PLATFORM" ;;
   }
 
   dimension: last_touch_source {
-    label: " Last Touch Source"
+    label: " Last Touch Source (DEPRICATED)"
     description: "Source: c3.c3_conversion_ft_lt"
     type: string
+    hidden: yes
     sql: ${TABLE}."LAST_TOUCH_SOURCE" ;;
   }
 
   dimension: total_touches {
     type: number
-    description: "Total touchpoints from all channels (not unique per channel). Source:c3.c3_conversion_ft_lt"
+    hidden: yes
+    description: "Total touchpoints from all channels (not unique per channel). Source:c3.c3_conversion_ft_lt (DEPRICATED)"
     group_label: "Advanced"
     sql: ${TABLE}."TOTAL_TOUCHES" ;;
   }

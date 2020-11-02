@@ -224,7 +224,7 @@ view: daily_adspend {
     hidden:  yes
     description: "Hidden field to get average daily adspend for defined period"
     type: number
-    sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;  }
+    sql: sum(${TABLE}.spend)/NULLIF(count(distinct(${ad_date})),0) ;;  }
 
   measure: impressions {
     label: "  Total Impressions"
@@ -252,21 +252,21 @@ view: daily_adspend {
     description: "Adspend / Total impressions/1000"
     type: number
     value_format: "$#,##0.00"
-    sql: ${adspend}/(${impressions}/1000) ;;  }
+    sql: ${adspend}/NULLIF((${impressions}/1000),0) ;;  }
 
   measure: cpc {
     label: "  CPC"
     description: "Adspend / Total Clicks"
     type: number
     value_format: "$#,##0.00"
-    sql: ${adspend}/${clicks} ;;  }
+    sql: ${adspend}/NULLIF(${clicks},0) ;;  }
 
   measure: ctr {
     label: "  CTR"
     description: " (Total Clicks / Total Impressions) *100"
     type: number
     value_format: "00.00%"
-    sql: (${clicks}/${impressions});;  }
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
 
 
 #   #dimension: spend_platform {
@@ -318,10 +318,10 @@ dimension: spend_platform {
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG') OR ${TABLE}.source ilike ('instagram')
+      when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG', 'TIKTOK') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') ;; label: "shopping"}
-      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE')
+      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE', 'MODUS')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "affiliate" }
       when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE') ;; label: "crm" }
@@ -373,14 +373,25 @@ dimension: spend_platform {
     sql: ${TABLE}.source ;; }
 
   dimension: campaign_name {
-    label: "  Campaign Name"
+    label: "Campaign Name"
     type:  string
     sql: ${TABLE}.campaign_name ;; }
 
+  dimension: campaign_id {
+    label: "Campaign ID"
+    type:  string
+    sql: ${TABLE}.campaign_id;; }
+
+
   dimension: ad_name {
-    label: "  Ad Name"
+    label: "Ad Name"
     type:  string
     sql: ${TABLE}.ad_name ;; }
+
+  dimension: ad_id {
+    label: "Ad ID"
+    type:  string
+    sql: ${TABLE}.ad_id ;; }
 
   dimension: campaign_type {
     label: "Campaign Type"
@@ -475,6 +486,56 @@ dimension: spend_platform {
     type: date
     sql: MAX(${ad_raw}) ;;
     convert_tz: no
+  }
+
+  parameter: see_data_by {
+    type: unquoted
+    hidden: yes
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Medium"
+      value: "medium"
+    }
+    allowed_value: {
+      label: "Spend Platform"
+      value: "spend_platform"
+    }
+  }
+
+  dimension: see_data {
+    label: "See Data By"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${ad_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${ad_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${ad_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${ad_quarter}
+    {% elsif see_data_by._parameter_value == 'medium' %}
+      ${medium}
+    {% elsif see_data_by._parameter_value == 'spend_platform' %}
+      ${spend_platform}
+    {% else %}
+      ${ad_date}
+    {% endif %};;
   }
 
 }

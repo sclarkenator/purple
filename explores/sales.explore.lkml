@@ -407,6 +407,18 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.email} = ${privacy_request.email_join};;
       relationship: many_to_one
     }
+    join: v_financed_retail {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
+      relationship: one_to_one
+    }
+    join: paycom_labor_hours {
+      type: left_outer
+      sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date};;
+      relationship: many_to_many
+      fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
+    }
   }
 
   explore: sales_test {

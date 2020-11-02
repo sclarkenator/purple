@@ -2,44 +2,44 @@ include: "/views/netsuite/NETSUITE.sales_order_line_base.view.lkml"
 view: sales_order_line {
   extends: [sales_order_line_base]
 
-  parameter: date_granularity {
+  parameter: see_data_by {
     type: unquoted
     allowed_value: {
-      label: "By Day"
+      label: "Day"
       value: "day"
     }
     allowed_value: {
-      label: "By Week"
+      label: "Week"
       value: "week"
     }
     allowed_value: {
-      label: "By Month"
+      label: "Month"
       value: "month"
     }
     allowed_value: {
-      label: "By Quarter"
+      label: "Quarter"
       value: "quarter"
     }
     allowed_value: {
-      label: "By Product Model"
+      label: "Product Model"
       value: "model"
     }
   }
 
-  dimension: date {
+  dimension: see_data {
     view_label: "Sales Order"
-    label: "    Order Date"
-    hidden: yes
+    label: "See Data By"
+    hidden: no
     sql:
-    {% if date_granularity._parameter_value == 'day' %}
+    {% if see_data_by._parameter_value == 'day' %}
       ${created_date}
-    {% elsif date_granularity._parameter_value == 'week' %}
+    {% elsif see_data_by._parameter_value == 'week' %}
       ${created_week}
-    {% elsif date_granularity._parameter_value == 'month' %}
+    {% elsif see_data_by._parameter_value == 'month' %}
       ${created_month}
-    {% elsif date_granularity._parameter_value == 'quarter' %}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
       ${created_quarter}
-    {% elsif date_granularity._parameter_value == 'model' %}
+    {% elsif see_data_by._parameter_value == 'model' %}
       ${item.model_raw}
     {% else %}
       ${created_date}
@@ -1427,7 +1427,7 @@ view: sales_order_line {
     description: "Units per transaction. Source:looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
+    sql: coalesce (${total_units}/nullif(count (distinct ${sales_order.order_id}),0),0) ;;
   }
 
   dimension: sub_channel {

@@ -72,10 +72,9 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       type: left_outer
     }
-    join: day_agg_prod_goal {
-      type: full_outer
-      view_label: "Production Goal"
-      sql_on: ${assembly_build.produced_date} = ${day_agg_prod_goal.forecast_date} ;;
+    join: production_goal_by_item {
+      type: left_outer
+      sql_on: ${assembly_build.item_id} = ${production_goal_by_item.item_id} and ${assembly_build.produced_date} = ${production_goal_by_item.forecast_date} ;;
       relationship: many_to_one
     }
   }
@@ -169,13 +168,36 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_one}
   }
 
+  explore: mainfreight_inventory{
+    hidden: yes
+    group_label:"Production"
+    label: "Mainfreight Inventory"
+    always_filter: {
+      filters: [item.sku_id: "-%AC-%"]}
+    join: item {
+      type: left_outer
+      sql_on: ${mainfreight_inventory.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    }
+
+  explore: mainfreight_inventory_snapshot{
+    hidden: yes
+    group_label:"Production"
+    label: "Historical Mainfreight Inventory"
+    join: item {
+      type: left_outer
+      sql_on: ${mainfreight_inventory_snapshot.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one}
+    }
+
   explore: production_goal {
+    hidden: yes
     group_label: "Production"
     label: "Production Goals"
     description: "Production goals by forecast date, item, etc"
     join: production_goal_by_item {
       type: left_outer
-      sql_on: ${production_goal.pk} = ${production_goal_by_item.pk} ;;
+      sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
       relationship: one_to_many}
     join: item {
       view_label: "Product"
@@ -326,7 +348,6 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: max_machine_capacity {hidden: yes group_label: "Production" label: "Max Machine Capacity" description: "Total capacity of Max machines by day and machine. Sourced from Engineering based on ideal cycle times"}
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
@@ -346,6 +367,7 @@ include: "/dashboards/**/*.dashboard"
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
+
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes
   #   join: sales_order{

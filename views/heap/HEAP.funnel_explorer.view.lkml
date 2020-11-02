@@ -24,7 +24,7 @@ view: funnel_explorer {
               THEN all_events.time
               ELSE NULL END
             ) as event3_time
-      FROM heap.all_events as all_events
+      FROM heap_data.purple.all_events as all_events
       WHERE {% condition session_date %} all_events.time {% endcondition %}
       GROUP BY 1
        ;;

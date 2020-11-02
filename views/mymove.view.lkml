@@ -51,7 +51,8 @@ view: mymove {
   dimension: date_bucket {
     view_label: "Marketing Attribution"
     group_label: "Advanced"
-    label: "My Move - Age Bucket"
+    label: "My Move - Age Bucket (DEPRICATED)"
+    hidden: yes
     description: "Days between create in my move and order (7/30/60/60+). Source:looker.calculation"
     type: string
     sql: case when ${TABLE}.days_old is null then 'NA'

@@ -8,7 +8,7 @@ view: all_events {
   #   sql: select * from heap.all_events;;
   #   datagroup_trigger: pdt_refresh_6am
   # }
-  sql_table_name: HEAP.ALL_EVENTS ;;
+  sql_table_name: heap_data.purple.all_events ;;
 
   dimension: event_id {
     hidden: yes
