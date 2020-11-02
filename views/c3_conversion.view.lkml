@@ -320,4 +320,19 @@ end;;
     type: string
     sql: ${TABLE}."NETWORK_8" ;;
   }
+  dimension: campaign_name_new {
+    type: string
+    sql: CASE when ${Platform_clean} = 'Acuity' then ${N3}
+    when ${Platform_clean} = 'Admarketplace' then ${N2}
+    when ${Platform_clean} = 'Agility' then ${N2}
+    when ${Platform_clean} = 'Amazon' then ${N2}
+    when ${Platform_clean} = 'Bing' then ${N2}
+    when ${Platform_clean} = 'Cordless' then ${N2}
+    when ${Platform_clean} = 'DuckDuckGo' then ${N2}
+    when ${Platform_clean} = 'Ebay' then ${N1}
+     when ${Platform_clean} = 'FB/IG' then ${N2}
+    ElSE ${network_name}
+    END;;
+  }
+
 }
