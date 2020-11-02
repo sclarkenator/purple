@@ -342,7 +342,30 @@ view: sessions {
     label: "UTM Content"
     description: "Source: HEAP.sessions"
     type: string
-    sql: lower(${TABLE}.utm_content) ;; }
+    sql: lower(${TABLE}.utm_content) ;;
+  }
+
+  dimension: promo_name {
+    group_label: "UTM Tags"
+    label: "Promo Name"
+    description: "Source: HEAP.sessions"
+    type: string
+    case: {
+      when: {
+        sql: ${utm_content} in ('hgg','hggbgg')  ;;
+        label: "Holiday Gift Guide"
+      }
+      when: {
+        sql:${utm_content} in ('bfd');;
+        label: "Black Friday"
+      }
+      when: {
+        sql:${utm_content} in ('cmd') ;;
+        label: "Cyber Monday"
+      }
+      else: "unknown"
+    }
+  }
 
   dimension: utm_medium {
     group_label: "UTM Tags"
