@@ -185,7 +185,9 @@ view: c3_conversion {
     OR CONTAINS(${network_groupname},'facebook') then 'FB/IG'
     WHEN CONTAINS(${network_groupname},'google')
     OR CONTAINS(${network_groupname},'gdn')
-    OR CONTAINS(${network_groupname},'(3859)') then 'Google'
+    OR (CONTAINS(${network_groupname}, '(0201)') and CONTAINS(${network_groupname},'display'))
+    OR (CONTAINS(${network_groupname}, '(8846)') and CONTAINS(${network_groupname},'display'))
+    then 'Google'
     WHEN CONTAINS(${network_groupname},'hulu') then 'Hulu'
     WHEN CONTAINS(${network_groupname},'impact radius') then 'Impact Radius'
     WHEN CONTAINS(${network_groupname},'linkedin') then 'LinkedIn'

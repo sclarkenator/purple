@@ -356,7 +356,7 @@ view: sessions {
         label: "Holiday Gift Guide"
       }
       when: {
-        sql:${utm_content} in ('bfd');;
+        sql:${utm_content} in ('bfd','bfg');;
         label: "Black Friday"
       }
       when: {
