@@ -352,7 +352,8 @@ view: sessions {
     type: string
     case: {
       when: {
-        sql: ${utm_content} ilike ('%hgg%') ;;
+        sql: ${utm_content} ilike ('%hgg%')
+        or ${utm_campaign} ilike ('%hgg%');;
         label: "Holiday Gift Guide"
       }
       when: {
