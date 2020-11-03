@@ -499,6 +499,12 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: one_to_many
     }
+    join: holdout_acquisition_emails  {
+      view_label: "Holdout Test"
+      sql_on: ${holdout_acquisition_emails.email} = ${customer_table.email} ;;
+      type: left_outer
+      relationship: many_to_one
+    }
   }
 #-------------------------------------------------------------------
 #
