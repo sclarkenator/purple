@@ -358,7 +358,8 @@ view: sessions {
       when: {
         sql:lower(${utm_content}) ilike ('%bfd%')
         or lower(${utm_content}) ilike ('%bfg%')
-        or lower(${utm_campaign}) ilike ('%-bfd%');;
+        or lower(${utm_campaign}) ilike ('%-bfd%')
+        or lower(${utm_campaign}) ilike ('%bfd_%');;
         label: "Black Friday"
       }
       when: {
