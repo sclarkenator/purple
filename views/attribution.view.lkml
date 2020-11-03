@@ -70,7 +70,7 @@ view: attribution {
         ,time
         ,subtotal_price
         ,sum(subtotal_price) over (partition by user_id) LTV
-from ANALYTICS.HEAP.CART_ORDERS_SHOPIFY_CONFIRMED_ORDER
+from heap_data.purple.CART_ORDERS_SHOPIFY_CONFIRMED_ORDER
 order by 1,6)
             where order_number = 1) p
         left join heap.sessions s on p.user_id = s.user_id and s.time <= p.purch_time

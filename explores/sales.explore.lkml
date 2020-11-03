@@ -8,7 +8,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: sales_order_line{
     from:  sales_order_line
-    label:  "Sales"
+    label:  " Sales"
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
@@ -401,7 +401,143 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
       relationship: many_to_many
     }
+    join: privacy_request {
+      view_label: "Customer"
+      type: left_outer
+      sql_on: ${sales_order.email} = ${privacy_request.email_join};;
+      relationship: many_to_one
+    }
+    join: v_financed_retail {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
+      relationship: one_to_one
+    }
+    join: paycom_labor_hours {
+      type: left_outer
+      sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date};;
+      relationship: many_to_many
+      fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
+    }
   }
+
+  explore: sales_test {
+    from: sales_order_line
+    fields: [sales_order_line.is_fulfilled,sales_order_line.return_rate_dollars,sales_order_line.item_id,sales_order_line.item_order,sales_order_line.order_system
+        ,sales_order_line.return_rate_units,sales_order_line.free_item,sales_order_line.total_gross_Amt_non_rounded,sales_order_line.total_units
+        ,sales_order_line.created_date, sales_order_line.created_month, sales_order_line.created_quarter, sales_order_line.created_week, sales_order_line.created_year
+        ,sales_order_line.insidesales_sales,sales_order_line.sub_channel,sales_order_line.upt,sales_order_line.Before_today,sales_order_line.total_gross_Amt
+        ,item*,fulfillment*,sales_order*,return_order_line*,return_order*,cancelled_order*,order_flag*,shopify_discount_codes*,warranty_order*,warranty_order_line*]
+    label:  "  Main"
+    hidden: yes
+    group_label: " Sales"
+    view_label: "Sales Order"
+    view_name: sales_order_line
+    #description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
+    #always_join: [fulfillment]
+    always_filter: {
+      filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
+      filters: [sales_order.is_exchange_upgrade_warranty: "No"]
+    }
+    join: item {
+      view_label: "Sales Order"
+      fields: [item.item_id,item.category_name, item.line_raw, item.model_raw, item.product_description_raw,item.sku_id,item.model_raw_order]
+      type: left_outer
+      sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
+    }
+    join: fulfillment {
+      view_label: "Sales Order"
+      fields: [fulfillment.item_id,fulfillment.order_id,fulfillment.system,fulfillment.fulfilled_F_raw]
+      type: left_outer
+      sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+      relationship: one_to_many
+    }
+    join: sales_order {
+      view_label: "Sales Order"
+      fields: [sales_order.is_exchange_upgrade_warranty,sales_order.channel,sales_order.unique_customers,sales_order.store_name,sales_order.channel2
+          ,sales_order.order_id,sales_order.average_order_size,sales_order.order_system,sales_order.related_tranid,sales_order.total_orders,sales_order.system
+          , sales_order.email,sales_order.transaction_type,sales_order.source,sales_order.created]
+      type: left_outer
+      sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
+      relationship: many_to_one
+    }
+    join: return_order_line {
+      view_label: "Sales Order"
+      fields: [return_order_line.item_order,return_order_line.return_order_id,return_order_line.total_returns_completed_dollars,return_order_line.total_returns_completed_units
+        , return_order_line.total_gross_amt]
+      type: full_outer
+      sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
+      relationship: one_to_many
+    }
+    join: return_order {
+      view_label: "Sales Order"
+      fields: [return_order.return_order_id,return_order.return_completed,return_order.status]
+      type: full_outer
+      required_joins: [return_order_line]
+      sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+      relationship: many_to_one
+    }
+    join: cancelled_order {
+      view_label: "Sales Order"
+      fields: [cancelled_order.item_order]
+      type: left_outer
+      sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
+      relationship: one_to_one
+    }
+    join: order_flag {
+      view_label: "Sales Order"
+      fields: [order_flag.order_id,order_flag.mattress_flg,order_flag.pillow_flg,order_flag.sheets_flg,order_flag.cushion_flg,order_flag.pet_bed_flg
+        ,order_flag.protector_flg,order_flag.base_flg,order_flag.average_mattress_order_size,order_flag.average_accessory_order_size]
+      type: left_outer
+      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+      relationship: one_to_one
+    }
+    join: shopify_discount_codes {
+      view_label: "Sales Order"
+      fields: [shopify_discount_codes.etail_order_name,shopify_discount_codes.promo_bucket]
+      type: left_outer
+      sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
+      relationship: many_to_many
+    }
+    join: warranty_order {
+      view_label: "Sales Order"
+      fields: [warranty_order.order_id,warranty_order.warranty_order_id,warranty_order.original_system,warranty_order.status,warranty_order.warranty_type]
+      type: full_outer
+      sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.original_system} ;;
+      relationship: one_to_many
+    }
+    join: warranty_order_line {
+      view_label: "Sales Order"
+      fields: [warranty_order_line.warranty_order_id,warranty_order_line.item_id,warranty_order_line.is_warrantied,warranty_order_line.quantity_complete]
+      type:  full_outer
+      sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
+      relationship: many_to_many
+    }
+    join: shopify_orders {
+      view_label: "Sales Order Line"
+      type:  left_outer
+      fields: [shopify_orders.call_in_order_Flag]
+      sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+      relationship:  many_to_many
+    }
+    join: agent_name {
+      view_label: "Sales Order"
+      fields: []
+      type: left_outer
+      sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+      relationship: many_to_one
+    }
+    join: zendesk_sell {
+      view_label: "Zendesk"
+      fields: []
+      type: full_outer
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+      relationship: one_to_one
+    }
+  }
+
+
 
   explore: warranty {
     from: warranty_order
@@ -505,6 +641,19 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: many_to_one
     }
+  }
+
+  explore: simplified_sales {
+    hidden: yes
+    label:  " Sales (simplified)"
+    group_label: " Sales"
+    extends: [sales_order_line]
+    always_join: [fulfillment]
+    fields: [
+      sales_order.channel,sales_order.is_exchange_upgrade_warranty,
+      sales_order_line.total_gross_Amt,
+      item.item_id
+    ]
   }
 #-------------------------------------------------------------------
 #

@@ -2,6 +2,53 @@ include: "/views/netsuite/NETSUITE.sales_order_line_base.view.lkml"
 view: sales_order_line {
   extends: [sales_order_line_base]
 
+  parameter: see_data_by {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: yes
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Product Model"
+      value: "model"
+    }
+  }
+
+  dimension: see_data {
+    view_label: "Sales Order"
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${created_date}
+    {% endif %};;
+  }
+
   dimension: payment_method {
     hidden: yes
     view_label: "Sales Order"
@@ -1383,7 +1430,7 @@ view: sales_order_line {
     description: "Units per transaction. Source:looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_units}/count (distinct ${sales_order.order_id}) ;;
+    sql: coalesce (${total_units}/nullif(count (distinct ${sales_order.order_id}),0),0) ;;
   }
 
   dimension: sub_channel {

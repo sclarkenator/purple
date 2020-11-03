@@ -6,6 +6,10 @@ view: actual_sales {
       column: ship_order_by_date { field: sales_order.ship_order_by_date}
       column: channel { field: sales_order.channel }
       column: source { field: sales_order.source }
+      column: tranid { field: sales_order.tranid }
+      column: firstname { field: customer_table.first_name }
+      column: lastname { field: customer_table.last_name }
+      column: companyname { field: customer_table.companyname }
       column: total_gross_Amt_non_rounded {}
       column: kit_item_id { field: item.kit_item_id }
       column: kit_sku_id { field: item.kit_sku_id }
@@ -32,10 +36,10 @@ view: actual_sales {
   dimension: PK {
     primary_key: yes
     hidden: yes
-    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${TABLE}.kit_item_id,${TABLE}.kit_sku_id, ${channel},${source}) ;;
+    sql: CONCAT(${TABLE}.created_date,${TABLE}.ship_order_by_date,${TABLE}.kit_item_id,${TABLE}.kit_sku_id, ${channel},${source},${TABLE}.tranid) ;;
   }
   dimension_group: created {
-    hidden: no
+    hidden: yes
     label: "Sales Order     Order Date"
     description: "Time and date order was placed. Source: netsuite.sales_order_line"
     type: time
@@ -65,6 +69,55 @@ view: actual_sales {
   dimension: channel {
     hidden: yes
     label: "Sales Order Channel Filter"
+  }
+  dimension: tranid {
+    hidden: yes
+    label: "Transaction ID"
+    group_label: " Advanced"
+    description: "Netsuite's Sale Order Number
+    Source: netsuite.sales_order"
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    }
+    type: string
+    sql: ${TABLE}.TRANID ;;
+  }
+  dimension: first_name {
+    hidden: yes
+    group_label: "  Customer details"
+    label: "First Name"
+    description: "First name from netsuite. Source: netsuite.customers"
+    type: string
+    sql:  ${TABLE}.firstname;;
+    required_access_grants:[can_view_pii]
+  }
+  dimension: last_name {
+    hidden: yes
+    group_label: "  Customer details"
+    label: "Last Name"
+    description: "Last name from netsuite. Source: netsuite.customers"
+    type: string
+    sql:  ${TABLE}.lastname ;;
+    required_access_grants:[can_view_pii]
+  }
+  dimension: companyname {
+    label: "Wholesale Customer Name"
+    group_label: "  Wholesale"
+    description: "Company Name from netsuite.
+    Source:netsuite.customers"
+    type: string
+    sql: ${TABLE}.companyname ;;
+  }
+  dimension: full_name {
+    hidden: yes
+    group_label: " Advanced"
+    label: "Customer Name"
+    description: "Merging first and last name from netsuite then coalesce to company name. Source: netsuite.customers"
+    type: string
+    sql:  NVL(initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname)),${TABLE}.companyname);;
+    required_access_grants:[can_view_pii]
   }
   dimension: gross_Amt_non_rounded {
     hidden: yes
@@ -129,6 +182,7 @@ view: actual_sales {
     description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
     type: sum
     sql:  ${units} ;;
+    drill_fields: [actual_sales.order_details]
   }
   measure: total_units_amazon {
     group_label: "Gross Sales"
@@ -137,6 +191,7 @@ view: actual_sales {
     filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
     type: sum
     sql:  ${units} ;;
+    drill_fields: [actual_sales.order_details_amazon]
   }
   measure: total_units_dtc {
     group_label: "Gross Sales"
@@ -145,6 +200,7 @@ view: actual_sales {
     filters: [channel: "DTC"]
     type: sum
     sql:  ${units} ;;
+    drill_fields: [actual_sales.order_details_dtc]
   }
   measure: total_units_retail {
     group_label: "Gross Sales"
@@ -153,6 +209,7 @@ view: actual_sales {
     filters: [channel: "Owned Retail"]
     type: sum
     sql:  ${units} ;;
+    drill_fields: [actual_sales.order_details_owned_retail]
   }
   measure: total_units_wholesale {
     group_label: "Gross Sales"
@@ -161,10 +218,26 @@ view: actual_sales {
     filters: [channel: "Wholesale"]
     type: sum
     sql:  ${units} ;;
+    drill_fields: [actual_sales.order_details_wholesale]
   }
   measure: total_sku_ids {
     hidden: yes
     type: count_distinct
     sql: ${sku_id} ;;
+  }
+  set: order_details {
+    fields:[ship_order_by_date,created_date,tranid,full_name,units,gross_Amt_non_rounded]
+  }
+  set: order_details_amazon {
+    fields:[ship_order_by_date,created_date,tranid,full_name,total_units_amazon,total_gross_Amt_amazon]
+  }
+  set: order_details_dtc {
+    fields:[ship_order_by_date,created_date,tranid,full_name,total_units_dtc,total_gross_Amt_dtc]
+  }
+  set: order_details_owned_retail {
+    fields:[ship_order_by_date,created_date,tranid,full_name,total_units_retail,total_gross_Amt_retail]
+  }
+  set: order_details_wholesale {
+    fields:[ship_order_by_date,created_date,tranid,full_name,total_units_wholesale,total_gross_Amt_amazon]
   }
 }

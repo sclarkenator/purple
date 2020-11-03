@@ -8,7 +8,7 @@ view: sessions {
 #     sql: select * from heap.sessions;;
 #     datagroup_trigger: pdt_refresh_6am
 #   }
-  sql_table_name: heap.sessions ;;
+  sql_table_name: heap_data.purple.sessions ;;
 
   dimension: session_id {
     #primary_key: yes
@@ -217,6 +217,17 @@ view: sessions {
     timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute]
     sql: ${TABLE}.time ;; }
 
+  dimension_group: current_date_sessions {
+    view_label: "Sessions"
+    label: "    Current"
+    description:  "Current Time/Date for calculations. Source: looker.calculation"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: current_date ;;
+  }
+
   dimension: last_30{
     label: "z - Last 30 Days"
     group_label: "  Session Time"
@@ -331,7 +342,30 @@ view: sessions {
     label: "UTM Content"
     description: "Source: HEAP.sessions"
     type: string
-    sql: lower(${TABLE}.utm_content) ;; }
+    sql: lower(${TABLE}.utm_content) ;;
+  }
+
+  dimension: promo_name {
+    group_label: "UTM Tags"
+    label: "Promo Name"
+    description: "Source: HEAP.sessions"
+    type: string
+    case: {
+      when: {
+        sql: ${utm_content} in ('hgg','hggbgg')  ;;
+        label: "Holiday Gift Guide"
+      }
+      when: {
+        sql:${utm_content} in ('bfd');;
+        label: "Black Friday"
+      }
+      when: {
+        sql:${utm_content} in ('cmd') ;;
+        label: "Cyber Monday"
+      }
+      else: "unknown"
+    }
+  }
 
   dimension: utm_medium {
     group_label: "UTM Tags"
@@ -351,6 +385,7 @@ view: sessions {
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' then 'video'
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} = 'nt' or ${utm_medium} ilike 'native' then 'native'
           when ${utm_medium} = 'sh' or ${utm_medium} ilike '%shopping%' then 'shopping'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
           else 'other' end ;;

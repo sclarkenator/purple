@@ -1,5 +1,5 @@
 view: ecommerce1 {
-  sql_table_name:marketing.V_ECOMMERCE  ;;
+  sql_table_name: analytics.marketing.ecommerce  ;;
   #this view is currently being built by Nathan Hollingworth and is not ready to use
 
   dimension: uid {
@@ -281,6 +281,24 @@ view: ecommerce1 {
     description: "Mobile App Version"
     sql: ${TABLE}.app_version ;;
     hidden:  yes
+  }
+
+  measure: total_cvr {
+    description: "% of all Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - All Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_bounced_session}+${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
+  }
+
+  measure: qualified_cvr {
+    description: "% of all Non-bounced Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - Qualified Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
   }
 
  }

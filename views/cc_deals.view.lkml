@@ -30,6 +30,11 @@ view: cc_deals {
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created:: date ;; }
 
+  dimension_group: created_time {
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created ;; }
+
   dimension: email {
     type:  string
     sql: ${TABLE}.email ;;

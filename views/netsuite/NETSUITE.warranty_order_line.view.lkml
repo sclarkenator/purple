@@ -7,6 +7,13 @@ view: warranty_order_line {
     hidden: yes
     sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-')||NVL(${TABLE}.created_ts,'0') ;; }
 
+  dimension: is_warrantied {
+    label: "     * Is Warrantied"
+    description: "Warranty order has been created for a product. Source: netsuite.warranty_order_line"
+    type: yesno
+    sql: ${TABLE}.CREATED_TS is not null ;;
+  }
+
   dimension: item_order{
     type: string
     hidden: yes

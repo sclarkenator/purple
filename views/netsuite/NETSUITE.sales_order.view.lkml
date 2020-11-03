@@ -34,7 +34,7 @@ view: sales_order {
     description: "Counts distinct email addresses in customer table.
       Source: netsuite.sales_order"
     view_label: "Customer"
-    drill_fields: [sales_order_line.sales_order_details*]
+    #drill_fields: [sales_order_line.sales_order_details*]
     type: count_distinct
     hidden: no
     sql: ${TABLE}.email ;; }
@@ -111,7 +111,7 @@ view: sales_order {
   dimension: channel {
     group_label: " Advanced"
     label: "Channel Filter"
-    hidden: no
+    hidden: yes
     type: string
     sql:  case when ${channel_id} = 1 then 'DTC'
                when ${channel_id} = 2 then 'Wholesale'
@@ -299,7 +299,7 @@ view: sales_order {
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
   dimension: is_exchange_upgrade_warranty {
-    hidden:yes
+    hidden: no
     group_label: " Advanced"
     label: "  * Is Return Exchange or Warranty Exchange or Warranty"
     description: "Source: looker calculation"
@@ -637,7 +637,7 @@ dimension_group: trandate {
   }
 
   dimension: store_id {
-    label: "Retail store ID"
+    label: "Retail Location ID"
     description: "Netsuite retail store ID. Source: netsuite.sales_order"
     group_label: " Advanced"
     view_label: "Sales Order"
@@ -646,8 +646,8 @@ dimension_group: trandate {
     hidden: yes
   }
 dimension: store_name{
-  label: "Store Name"
-  description: "Owned Retail Store Name. Manually grouped from store ID. Source: netsuite.sales_order"
+  label: "Location Name"
+  description: "Owned Retail Location Name. Manually grouped from Location ID. Source: netsuite.sales_order"
   group_label: " Advanced"
   view_label: "Owned Retail"
   type: string
@@ -657,6 +657,7 @@ dimension: store_name{
   when ${store_id} = 'WA-01' then 'Seattle'
   when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
   when ${store_id} = 'UT-01' then 'Lehi'
+  when ${store_id} = 'TX-01' then 'Austin'
   else ${store_id} end;;
 }
 

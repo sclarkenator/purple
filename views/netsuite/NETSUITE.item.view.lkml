@@ -514,12 +514,13 @@ view: item {
         when ${sku_clean} = '10-21-23617' then '10-21-12617'
         when ${sku_clean} = '10-21-23618' then '10-21-12618'
         --TPM FLR FS
-        when ${sku_clean} = '10-21-90026' then '10-21-12960'
-        when ${sku_clean} in ('10-21-23521','10-21-90025') then '10-21-12632'
-        when ${sku_clean} in ('10-21-23520','10-21-90024') then '10-21-12625'
+        when ${sku_clean} in ('10-21-90026','10-21-90005') then '10-21-12960'
+        when ${sku_clean} in ('10-21-23521','10-21-90025','10-21-90004') then '10-21-12632'
+        when ${sku_clean} in ('10-21-23520','10-21-90024','10-21-90003' ) then '10-21-12625'
         when ${sku_clean} = '10-21-90023' then '10-21-12620'
         when ${sku_clean} in ('10-21-90022','10-21-23630') then '10-21-12618'
-        when ${sku_clean} = '10-21-90021' then '10-21-12617'
+        when ${sku_clean} in ('10-21-90021','10-21-90000') then '10-21-12617'
+        when ${sku_clean} = '10-21-90027' then '10-21-60524'
         --H2 FLR FS
         when ${sku_clean} = '10-21-90010' then '10-21-60008'
         when ${sku_clean} in ('10-21-90009','10-21-60521') then '10-21-60007'
@@ -564,6 +565,7 @@ view: item {
         --Pillow 2.0
         when ${sku_clean} = '10-31-12863' then '10-31-12855'
         when ${sku_clean} = '10-31-12870' then '10-31-12855'
+        when ${sku_clean} = '10-31-12875' then '10-31-12855'
         --Plush Pillow
         when ${sku_clean} = '10-31-12862' then '10-31-12857'
         --Duvet Washable
@@ -576,9 +578,10 @@ view: item {
         when ${sku_clean} = '10-21-12968' then '10-21-12625'
         when ${sku_clean} = '10-21-12965' then '10-21-12617'
         when ${sku_clean} = '10-21-12966' then '10-21-12618'
-        --Harmony Vita
+        --Harmony
         when ${sku_clean} = '10-31-12891' then '10-31-12890'
         when ${sku_clean} = '10-31-12896' then '10-31-12895'
+        when ${sku_clean} = '10-31-12900' then '10-31-12890'
         --Booster Back Up
         when ${sku_clean} = '10-31-13102' then '10-31-13100'
         else ${sku_clean} end ;;
@@ -799,6 +802,10 @@ view: item {
         when ${item_id} in ('3430') then '3427'
         when ${item_id} in ('3497') then '3491'
         when ${item_id} in ('3499') then '3492'
+        --FACE MASK
+        when ${item_id} in ('11092') then '11720'
+        when ${item_id} in ('11093') then '11721'
+        when ${item_id} in ('11094') then '11723'
         --OTHER
         when ${item_id} in ('11107') then '8793'
         when ${item_id} in ('5863') then '5186'
@@ -876,6 +883,10 @@ view: item {
         when ${sku_clean} in ('10-60-29000') then '10-60-10000'
         when ${sku_clean} in ('10-11-18401') then '10-21-12601'
         when ${sku_clean} in ('10-11-18402') then '10-21-12602'
+        --FACE MASK
+        when ${sku_clean} in ('10-47-20000 (OLD)') then '10-47-20000'
+        when ${sku_clean} in ('10-47-20001 (OLD)') then '10-47-20001'
+        when ${sku_clean} in ('10-47-20002 (OLD)') then '10-47-20002'
         --OTHER
         when ${sku_clean} in ('10-31-12891') then '10-31-12890'
         when ${sku_clean} in ('10-38-82815') then '10-38-12815'

@@ -84,7 +84,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Customer"
       type: left_outer
       sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
-      fields: [customer_table.customer_id,customer_table.customer_id,customer_table.email,customer_table.full_name,customer_table.shipping_hold,customer_table.phone,customer_table.hold_reason_id,customer_table.shipping_hold]
+      fields: [customer_table.customer_id,customer_table.customer_id,customer_table.email,customer_table.full_name,customer_table.shipping_hold,customer_table.phone,customer_table.hold_reason_id,customer_table.shipping_hold,customer_table.email_signup_test]
       relationship: many_to_one
     }
     join: first_purchase_date {
@@ -115,7 +115,14 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Sales Header"
       type: left_outer
       sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
-      relationship: one_to_one}
+      relationship: one_to_one
+    }
+    join: standard_cost {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+      relationship: one_to_one
+    }
   }
 
   explore: events_view__all_events__all_events {hidden:yes}

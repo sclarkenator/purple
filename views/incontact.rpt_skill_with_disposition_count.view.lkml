@@ -12,32 +12,35 @@ dimension: primary_key {
 }
 
   dimension: abandon_time {
-    description: "How long a person was in queue before abandoning the call (without speaking to an agent)"
+    description: "How long a person was in queue before abandoning the call (without speaking to an agent). Source: incontact. rpt_skill_with_disposition_count"
     type: number
     hidden: no
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   dimension: acw_time {
-    description: "After Call Work Time (making notes, etc. before they're available for another call)"
+    description: "After Call Work Time (making notes, etc. before they're available for another call). Source: incontact. rpt_skill_with_disposition_count"
     type: number
     hidden: no
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
-  dimension: agent {
+  dimension: agent_id {
     type: string
+    description: "Agent Incontact ID Source: incontact. rpt_skill_with_disposition_count"
     hidden: no #unhide this for agent based tables, I'm just using this view for disposition things right now
-    sql: ${TABLE}."AGENT" ;;
+    sql: ${TABLE}."AGENT_ID" ;;
   }
 
   dimension: avg_inqueue_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: number
     hidden: no
     sql: ${TABLE}."AVG_INQUEUE_TIME" ;;
   }
 
   dimension_group: contacted {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     hidden: no
     timeframes: [
@@ -65,37 +68,39 @@ dimension: primary_key {
   }
 
   dimension: contact_info_from {
-    description: "Person initiating the call (Purple if Outbound call, Customer if Inbound call)"
+    description: "Person initiating the call (Purple if Outbound call, Customer if Inbound call). Source: incontact. rpt_skill_with_disposition_count"
     type: string
     sql: ${TABLE}."CONTACT_INFO_FROM" ;;
   }
 
   dimension: contact_info_to {
-    description: "Receiver of call (Purple if Inbound call, Customer if Outbound call)"
+    description: "Receiver of call (Purple if Inbound call, Customer if Outbound call). Source: incontact. rpt_skill_with_disposition_count"
     type: string
     sql: ${TABLE}."CONTACT_INFO_TO" ;;
   }
 
   dimension: disposition {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: string
     sql: lower(${TABLE}."DISPOSITION") ;; ## remove the lower() if we standardize naming and capitalization in snowflake between this and zendesk data
   }
 
   dimension: handle_time {
-    description: "Talk time + Hold time"
+    description: "Talk time + Hold time. Source: incontact. rpt_skill_with_disposition_count"
     type: number
     hidden: no
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
   dimension: hold_time {
-    description: "Time customer was on hold (not in queue)"
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
     type: number
     hidden: no
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
   dimension: hold_buckets {
+    description: "Source: looker.calculation"
     type: tier
     tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240   ]
     style: integer # the default value, could be excluded
@@ -103,6 +108,7 @@ dimension: primary_key {
   }
 
   dimension: in_queue_buckets {
+    description: "Source: looker.calculation"
     type: tier
     tiers: [0, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240 ]
     style: integer # the default value, could be excluded
@@ -125,6 +131,7 @@ dimension: primary_key {
   }
 
   dimension_group: reported {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     timeframes: [
       raw,
@@ -142,46 +149,50 @@ dimension: primary_key {
   }
 
   dimension: skill {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: string
     sql: ${TABLE}."SKILL" ;;
   }
 
 
   measure: avg_abandon_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: average
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   measure: avg_acw_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: yes
     type: number
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
   measure: total_handle_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
   measure: avg_talk_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     type: average
     value_format: "#,##0"
     sql: nvl(${TABLE}."HANDLE_TIME",0) - nvl(${TABLE}."HOLD_TIME",0);;
   }
 
   measure: avg_hold_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: average
     sql: case when ${TABLE}."HOLD_TIME" > 0 then ${TABLE}."HOLD_TIME" end
     ;;
   }
 
-
-
   measure: count {
-    description: "Number of phone calls"
+    description: "Number of phone calls. Source: looker.calculation"
     type: count
 
   }
