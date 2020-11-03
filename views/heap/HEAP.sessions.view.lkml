@@ -352,15 +352,17 @@ view: sessions {
     type: string
     case: {
       when: {
-        sql: ${utm_content} in ('hgg','hggbgg')  ;;
+        sql: ${utm_content} ilike ('%hgg%') ;;
         label: "Holiday Gift Guide"
       }
       when: {
-        sql:${utm_content} in ('bfd','bfg');;
+        sql:lower(${utm_content}) ilike ('%bfd%')
+        or lower(${utm_content}) ilike ('%bfg%')
+        or lower(${utm_campaign}) ilike ('%-bfd%');;
         label: "Black Friday"
       }
       when: {
-        sql:${utm_content} in ('cmd') ;;
+        sql:${utm_content} ilike ('%cmd%') ;;
         label: "Cyber Monday"
       }
       else: "unknown"
