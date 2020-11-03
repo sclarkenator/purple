@@ -845,7 +845,7 @@ view: day_aggregations {
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
-    hidden: no
+    hidden: yes
     type: unquoted
     allowed_value: {
       label: "Day"
@@ -872,7 +872,7 @@ view: day_aggregations {
   dimension: see_data {
     label: "See Data By"
     description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
-    hidden: no
+    hidden: yes
     sql:
     {% if see_data_by._parameter_value == 'day' %}
       ${date_date}
