@@ -413,6 +413,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
       relationship: one_to_one
     }
+    join: paycom_labor_hours {
+      type: left_outer
+      sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date};;
+      relationship: many_to_many
+      fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
+    }
   }
 
   explore: sales_test {
@@ -628,6 +634,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${v_optimizely_conversions.related_tranid} = ${sales_order.related_tranid} ;;
       type: left_outer
       relationship: one_to_many
+    }
+    join: holdout_acquisition_emails  {
+      view_label: "Holdout Test"
+      sql_on: ${holdout_acquisition_emails.email} = ${customer_table.email} ;;
+      type: left_outer
+      relationship: many_to_one
     }
   }
 

@@ -10,6 +10,7 @@ view: adspend_pdt {
       column: spend_platform {}
       column: medium {}
       column: campaign_name {}
+      column: campaign_id {}
       column: adspend_raw {}
       column: impressions {}
       column: clicks {}
@@ -22,6 +23,7 @@ view: adspend_pdt {
   dimension: spend_platform { type: string }
   dimension: medium { type: string }
   dimension: campaign_name { type: string }
+  dimension: campaign_id { type: string }
   dimension: adspend_raw { type: number }
   dimension: impressions { type: number }
   dimension: clicks { type: number }
@@ -155,7 +157,7 @@ view: roas_pdt {
       , ad_date as date
       , campaign_type
       , spend_platform as platform
-      , medium, campaign_name
+      , medium, campaign_name, campaign_id
       , adspend_raw as adspend
       , impressions
       , clicks
@@ -177,6 +179,7 @@ view: roas_pdt {
       , utm_source
       , utm_medium
       , utm_campaign
+      , utm_campaign as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -198,6 +201,7 @@ view: roas_pdt {
       , utm_source
       , utm_medium
       , utm_campaign
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -219,6 +223,7 @@ view: roas_pdt {
       , PLATFORM
       , medium
       , CAMPAIGN_NAME
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -240,6 +245,7 @@ view: roas_pdt {
       , Platform_clean
       , medium_clean
       , Campaign
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -273,7 +279,6 @@ view: roas_pdt {
     datatype: date
     sql: ${TABLE}.date::date ;;
   }
-
 
   dimension: source {
     label: " Data Source"
@@ -362,7 +367,7 @@ view: roas_pdt {
         when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
         when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
         or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when ${TABLE}.platform in ('ZETA','ze') then 'Oceanmedia'
+        when ${TABLE}.platform in ('ZETA','ze') then 'Zeta'
         else 'Other' end
       ;;
   }
@@ -381,6 +386,33 @@ view: roas_pdt {
     group_label: "Advanced"
     type: string
     sql: lower(${TABLE}.campaign_name);;
+  }
+
+  dimension: adspend_campaign_id {
+  hidden: no
+  type: string
+  sql:  case when ${source} = 'adspend' then ${TABLE}.campaign_id else null end ;;
+}
+
+  dimension: adspend_campaign_name {
+    hidden: no
+    type: string
+    sql:  case when ${source} = 'adspend' then ${TABLE}.campaign_name else null end ;;
+  }
+
+  dimension: session_campaign_id {
+    hidden: no
+    type: string
+    sql:  case when ${source} = 'sessions' then ${TABLE}.campaign_id else null end;;
+  }
+
+  dimension: campaign_name_new {
+    label: "Campaign Name (new)"
+    description: "Matches based on camapign ID in Campaign UTM"
+    group_label: "Advanced"
+    type: string
+    sql: case when ${adspend_campaign_id} = ${session_campaign_id} then ${adspend_campaign_name}
+    else ${campaign_name} end ;;
   }
 
   dimension: medium_clean {

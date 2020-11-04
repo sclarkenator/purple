@@ -299,7 +299,7 @@ view: sales_order {
     sql: ${TABLE}.EXCHANGE = 'T' ;; }
 
   dimension: is_exchange_upgrade_warranty {
-    hidden:yes
+    hidden: no
     group_label: " Advanced"
     label: "  * Is Return Exchange or Warranty Exchange or Warranty"
     description: "Source: looker calculation"

@@ -146,6 +146,11 @@ include: "/dashboards/**/*.dashboard"
     join: warehouse_location {
       sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
       relationship: many_to_one}
+    join: mainfreight_inventory {
+      type: left_outer
+      sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: inventory_snap {
@@ -166,6 +171,11 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
       relationship: one_to_one}
+    join: mainfreight_inventory_snapshot {
+      type: left_outer
+      sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: mainfreight_inventory{

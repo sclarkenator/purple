@@ -10,6 +10,7 @@ view: mainfreight_inventory_snapshot {
   }
 
   dimension: sku_id {
+    hidden: yes
     description: "Source: mainfreight. mainfreight_inventory_snapshot"
     type: string
     sql: ${TABLE}."SKU_ID" ;;

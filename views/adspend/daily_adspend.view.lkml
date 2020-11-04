@@ -2,9 +2,10 @@
 # Owner - Scott Clark
 # Daily Ad Spend
 #-------------------------------------------------------------------
-
+include: "_period_comparison.view.lkml"
 view: daily_adspend {
   sql_table_name: marketing.adspend ;;
+  extends: [_period_comparison]
 
   dimension: ad_date_key {
     hidden: yes
@@ -17,6 +18,31 @@ view: daily_adspend {
     type: time
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      time,
+      time_of_day,
+      date,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      week,
+      month,
+      month_num,
+      quarter,
+      quarter_of_year,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
+  }
 
   dimension: date_raw {
     hidden: yes
@@ -131,6 +157,36 @@ view: daily_adspend {
       else ${TABLE}.spend
       end ;; }
 
+  measure: adspend_no_calc_current_period {
+    label: "Total Adspend Current Period - No Calc ($)"
+    group_label: "Advanced"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_current_period: "yes"]
+    }
+
+  measure: adspend_no_calc_comparison_period {
+    label: "Total Adspend Comparison Period - No Calc ($)"
+    group_label: "Advanced"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FACEBOOK') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_comparison_period: "yes"]
+  }
+
   measure: agency_cost {
     label: "  Agency Cost ($)"
     group_label: "Advanced"
@@ -146,6 +202,7 @@ view: daily_adspend {
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     }
+
 
   measure: adspend_no_agency {
     label: "Adspend without Agency Cost ($)"
@@ -167,7 +224,7 @@ view: daily_adspend {
     hidden:  yes
     description: "Hidden field to get average daily adspend for defined period"
     type: number
-    sql: sum(${TABLE}.spend)/count(distinct(${ad_date})) ;;  }
+    sql: sum(${TABLE}.spend)/NULLIF(count(distinct(${ad_date})),0) ;;  }
 
   measure: impressions {
     label: "  Total Impressions"
@@ -195,21 +252,21 @@ view: daily_adspend {
     description: "Adspend / Total impressions/1000"
     type: number
     value_format: "$#,##0.00"
-    sql: ${adspend}/(${impressions}/1000) ;;  }
+    sql: ${adspend}/NULLIF((${impressions}/1000),0) ;;  }
 
   measure: cpc {
     label: "  CPC"
     description: "Adspend / Total Clicks"
     type: number
     value_format: "$#,##0.00"
-    sql: ${adspend}/${clicks} ;;  }
+    sql: ${adspend}/NULLIF(${clicks},0) ;;  }
 
   measure: ctr {
     label: "  CTR"
     description: " (Total Clicks / Total Impressions) *100"
     type: number
     value_format: "00.00%"
-    sql: (${clicks}/${impressions});;  }
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
 
 
 #   #dimension: spend_platform {
@@ -429,6 +486,56 @@ dimension: spend_platform {
     type: date
     sql: MAX(${ad_raw}) ;;
     convert_tz: no
+  }
+
+  parameter: see_data_by {
+    type: unquoted
+    hidden: yes
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Medium"
+      value: "medium"
+    }
+    allowed_value: {
+      label: "Spend Platform"
+      value: "spend_platform"
+    }
+  }
+
+  dimension: see_data {
+    label: "See Data By"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${ad_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${ad_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${ad_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${ad_quarter}
+    {% elsif see_data_by._parameter_value == 'medium' %}
+      ${medium}
+    {% elsif see_data_by._parameter_value == 'spend_platform' %}
+      ${spend_platform}
+    {% else %}
+      ${ad_date}
+    {% endif %};;
   }
 
 }

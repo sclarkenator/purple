@@ -47,18 +47,21 @@ item_return_rate AS
 contribution as
 (SELECT sales_order.showroom_name STORE,
         date_trunc(month,sales_order.trandate) month,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) gross_sales,
-  (COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty * standard_cost.cost ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0))  COGS,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')) is null
-                or datediff(d,(TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')),current_date)<130) then item_return_rate.return_rate*sales_order_line.gross_amt
-                else nvl((case when return_order.STATUS = 'Refunded' then return_order_line.gross_amt else 0 end),0) end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) RETURNS,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when (shipping."MAINFREIGHT") > 0 then 5.24 else 0 end  + shipping."SHIPPING_TOTAL" ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) SHIPPING,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when sales_order.SOURCE in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*sales_order_line.gross_amt
-              when sales_order.PAYMENT_METHOD ilike 'AFFIRM' then 0.0497*sales_order_line.gross_amt
-              when sales_order.PAYMENT_METHOD ilike 'SPLITIT' then .04*sales_order_line.gross_amt
-              else 0.0255*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) MERCHANT_FEES,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)) < 0 then 0 else nvl(((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)),0)*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) AFFILIATE_FEES,
-  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(0.01*sales_order_line.gross_amt ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) WARRANTY_ACCRUAL
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.PRE_DISCOUNT_AMT ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) FULL_IMU,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.order_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) ORDER_DISCOUNT,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) PROMO_DISCOUNT,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) gross_sales,
+    (COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty * standard_cost.cost ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0))  COGS,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')) is null
+          or datediff(d,(TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')),current_date)<130) then item_return_rate.return_rate*sales_order_line.gross_amt
+          else nvl((case when return_order.STATUS = 'Refunded' then return_order_line.gross_amt else 0 end),0) end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) RETURNS,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when (shipping."MAINFREIGHT") > 0 then 5.24 else 0 end  + shipping."SHIPPING_TOTAL" ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) SHIPPING,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when sales_order.SOURCE in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*sales_order_line.gross_amt
+          when sales_order.PAYMENT_METHOD ilike 'AFFIRM' then 0.0497*sales_order_line.gross_amt
+          when sales_order.PAYMENT_METHOD ilike 'SPLITIT' then .04*sales_order_line.gross_amt
+          else 0.0255*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) MERCHANT_FEES,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)) < 0 then 0 else nvl(((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)),0)*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) AFFILIATE_FEES,
+    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(0.01*sales_order_line.gross_amt ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) WARRANTY_ACCRUAL
 FROM SALES.SALES_ORDER_LINE  AS sales_order_line
 LEFT JOIN SALES.ITEM  AS item ON sales_order_line.ITEM_ID = item.ITEM_ID
 LEFT JOIN SALES.FULFILLMENT  AS fulfillment ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (case when fulfillment.parent_item_id = 0 or fulfillment.parent_item_id is null then fulfillment.item_id else fulfillment.parent_item_id end)||'-'||fulfillment.order_id||'-'||fulfillment.system
@@ -66,11 +69,9 @@ LEFT JOIN SALES.SALES_ORDER  AS sales_order ON (sales_order_line.order_id||'-'||
 FULL OUTER JOIN (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US')  AS return_order_line ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (return_order_line.item_id||'-'||return_order_line.order_id||'-'||return_order_line.system)
 FULL OUTER JOIN SALES.RETURN_ORDER  AS return_order ON return_order_line.RETURN_ORDER_ID = return_order.RETURN_ORDER_ID
 LEFT JOIN standard_cost ON standard_cost.item_id = item.ITEM_ID or standard_cost.ac_item_id = item.ITEM_ID
-LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID"
-)
+LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID")
 LEFT JOIN item_return_rate ON item.SKU_ID = item_return_rate.sku_id
-LEFT JOIN "SALES"."SHIPPING"
-     AS shipping ON sales_order_line.ITEM_ID = (shipping."ITEM_ID") and sales_order_line.ORDER_ID = (shipping."ORDER_ID")
+LEFT JOIN "SALES"."SHIPPING" AS shipping ON sales_order_line.ITEM_ID = (shipping."ITEM_ID") and sales_order_line.ORDER_ID = (shipping."ORDER_ID")
 
 WHERE sales_order.CHANNEL_id = 5
 GROUP BY 1,2)
@@ -98,6 +99,9 @@ select case when contribution.store = 'CA-01' then 'San Diego'
             when contribution.store = 'TX-01' then 'Austin'
             else contribution.store end STORE
         ,contribution.month
+        ,contribution.full_imu
+        ,contribution.order_discount
+        ,contribution.promo_discount
         ,contribution.gross_Sales
         ,contribution.cogs
         ,contribution.returns
@@ -137,6 +141,29 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     sql: ${TABLE}.month ;;
   }
 
+  measure: full_imu {
+    type: sum
+    label: "Full markup"
+    value_format_name: usd_0
+    description: "Total value of sales at full markup"
+    sql: ${TABLE}."FULL_IMU" ;;
+  }
+
+  measure: order_discount {
+    type: sum
+    label: "Order discounts"
+    value_format_name: usd_0
+    description: "Order-level discounts, typically through using agent discount or promo code"
+    sql: ${TABLE}."ORDER_DISCOUNT" ;;
+  }
+
+  measure: promo_discount {
+    type: sum
+    label: "Promo discounts"
+    value_format_name: usd_0
+    description: "Promotion discounts applied, typically free gift with purchase, bundle discounts, etc."
+    sql: ${TABLE}."PROMO_DISCOUNT" ;;
+  }
   measure: gross_sales {
     type: sum
     label: "Gross Sales"

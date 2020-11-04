@@ -176,38 +176,56 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
     WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
-    WHEN CONTAINS(${network_groupname},'cordless') then 'Chatbot'
+    WHEN CONTAINS(${network_groupname},'chatbot') then 'Chatbot'
     WHEN CONTAINS(${network_groupname},'duckduck') then 'DuckDuckGo'
     WHEN CONTAINS(${network_groupname},'ebay') then 'Ebay'
     WHEN CONTAINS(${network_groupname},'email') then 'Email'
     WHEN CONTAINS(${network_groupname},'exponential') then 'VDX'
     WHEN CONTAINS(${network_groupname},'(fb)')
-    OR CONTAINS(${network_groupname},'facebook') then 'FB/IG'
+    OR CONTAINS(${network_groupname},'facebook')
+    OR CONTAINS(${network_groupname},'instagram') then 'FB/IG'
     WHEN CONTAINS(${network_groupname},'google')
     OR CONTAINS(${network_groupname},'gdn')
-    OR CONTAINS(${network_groupname},'(3859)') then 'Google'
+    OR (CONTAINS(${network_groupname}, '(0201)') and CONTAINS(${network_groupname},'display'))
+    OR (CONTAINS(${network_groupname}, '(8846)') and CONTAINS(${network_groupname},'display'))
+    OR (CONTAINS(${network_groupname}, '(3859)') and CONTAINS(${network_groupname},'pla'))
+    then 'Google'
     WHEN CONTAINS(${network_groupname},'hulu') then 'Hulu'
     WHEN CONTAINS(${network_groupname},'impact radius') then 'Impact Radius'
     WHEN CONTAINS(${network_groupname},'linkedin') then 'LinkedIn'
+    WHEN CONTAINS(${network_groupname},'modus') then 'Modus'
+     WHEN CONTAINS(${network_groupname},'meredith') then 'Meredith'
     WHEN CONTAINS(${network_groupname},'nextdoor') then 'Nextdoor'
     WHEN CONTAINS(${network_groupname},'organic') then 'Organic'
     WHEN CONTAINS(${network_groupname},'outbrain') then 'Outbrain'
     WHEN CONTAINS(${network_groupname},'pintrest')
-    OR CONTAINS(${network_groupname},'pinterest')then 'Pinterest'
+    OR CONTAINS(${network_groupname},'pinterest')
+    OR (CONTAINS(${network_groupname}, '1 |') and CONTAINS(${network_groupname},'paid social'))
+    OR (CONTAINS(${network_groupname}, '2 |') and CONTAINS(${network_groupname},'paid social'))
+    OR (CONTAINS(${network_groupname}, '3 |') and CONTAINS(${network_groupname},'paid social'))
+    then 'Pinterest'
     WHEN CONTAINS(${network_groupname},'podcast') then 'podcast'
     WHEN CONTAINS(${network_groupname},'quora') then 'Quora'
     WHEN CONTAINS(${network_groupname},'radio') then 'Radio'
     WHEN CONTAINS(${network_groupname},'reddit') then 'Reddit'
-    WHEN CONTAINS(${network_groupname},'rakuten') then 'Rakuten'
+    WHEN CONTAINS(${network_groupname},'rakuten')
+    OR CONTAINS(${network_groupname},'affiliate')  then 'Rakuten'
     WHEN CONTAINS(${network_groupname},'simplifi') then 'Simplifi'
+    WHEN CONTAINS(${network_groupname},'sheerid') then 'SherID'
     WHEN CONTAINS(${network_groupname},'snapchat') then 'SnapChat'
+    WHEN CONTAINS(${group_name},'SMS') then 'SMS'
+    WHEN CONTAINS(${network_groupname},'spotx') then 'Spot X'
     WHEN CONTAINS(${network_groupname},'taboola') then 'Taboola'
+    WHEN CONTAINS(${network_groupname},'referral') then 'Talkable'
     WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     WHEN CONTAINS(${network_groupname},'twitter') then 'Twitter'
+    WHEN CONTAINS(${network_groupname},'uncategorized') then 'Uncategorized'
     WHEN CONTAINS(${network_groupname},'waze') then 'Waze'
     WHEN CONTAINS(${network_groupname},'yahoo')
     OR CONTAINS(${network_groupname},'verizon media')
-    OR CONTAINS(${network_groupname},'verizonmedia') then 'Yahoo'
+    OR CONTAINS(${network_groupname},'verizonmedia')
+    OR CONTAINS(${group_name},'Native')
+    OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Yahoo'
     WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo Native'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
@@ -286,5 +304,53 @@ else 'Other'
 end;;
     }
 
+  dimension: N1 {
+    type: string
+    sql: ${TABLE}."NETWORK_1" ;;
+  }
+
+  dimension: N2 {
+    type: string
+    sql: ${TABLE}."NETWORK_2" ;;
+  }
+
+  dimension: N3 {
+      type: string
+      sql: ${TABLE}."NETWORK_3" ;;
+  }
+  dimension: N4 {
+    type: string
+    sql: ${TABLE}."NETWORK_4" ;;
+  }
+  dimension: N5 {
+    type: string
+    sql: ${TABLE}."NETWORK_5" ;;
+  }
+  dimension: N6 {
+    type: string
+    sql: ${TABLE}."NETWORK_6" ;;
+  }
+  dimension: N7 {
+    type: string
+    sql: ${TABLE}."NETWORK_7" ;;
+  }
+  dimension: N8 {
+    type: string
+    sql: ${TABLE}."NETWORK_8" ;;
+  }
+  dimension: campaign_name_new {
+    type: string
+    sql: CASE when ${Platform_clean} = 'Acuity' then ${N3}
+    when ${Platform_clean} = 'Admarketplace' then ${N2}
+    when ${Platform_clean} = 'Agility' then ${N2}
+    when ${Platform_clean} = 'Amazon' then ${N2}
+    when ${Platform_clean} = 'Bing' then ${N2}
+    when ${Platform_clean} = 'Cordless' then ${N2}
+    when ${Platform_clean} = 'DuckDuckGo' then ${N2}
+    when ${Platform_clean} = 'Ebay' then ${N1}
+     when ${Platform_clean} = 'FB/IG' then ${N2}
+    ElSE ${network_name}
+    END;;
+  }
 
 }
