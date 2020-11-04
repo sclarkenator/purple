@@ -307,6 +307,13 @@ view: aura_vision_traffic {
     sql: ${TABLE}."OVERALL_VALUE" ;;
   }
 
+  measure: Store_Entries {
+    description: "Source: aura_vision.aura_vision_traffic"
+    type: sum
+    sql: case when ${TABLE}."METRIC" = 'Store > Entries' then ${TABLE}."OVERALL_VALUE" else 0 end ;;
+  }
+
+
   measure: count {
     hidden: yes
     type: count
