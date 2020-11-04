@@ -1,6 +1,64 @@
 view: assembly_build {
   sql_table_name: PRODUCTION.BUILD ;;
 
+  parameter: see_data_by {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: yes
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Year"
+      value: "year"
+    }
+    allowed_value: {
+      label: "Warehouse Location"
+      value: "warehouse_location"
+    }
+    allowed_value: {
+      label: "Product Model"
+      value: "model"
+    }
+  }
+
+  dimension: see_data {
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${produced_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${produced_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${produced_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${produced_quarter}
+    {% elsif see_data_by._parameter_value == 'year' %}
+      ${produced_year}
+    {% elsif see_data_by._parameter_value == 'warehouse_location' %}
+      ${warehouse_location.location_name}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${produced_date}
+    {% endif %};;
+  }
+
   dimension: assembly_build_id {
     label: "  Assembly Build Id"
     primary_key: yes
