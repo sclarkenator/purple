@@ -66,10 +66,6 @@ view: l2l_quality_yellow_card {
     sql: ${TABLE}."DEFECT_LOCATION" ;;
   }
 
-  dimension: defect_origin {
-    type: string
-    sql: ${TABLE}."DEFECT_ORIGIN" ;;
-  }
 
   dimension: defect_type {
     type: string
@@ -89,31 +85,6 @@ view: l2l_quality_yellow_card {
   dimension: dispatch_num {
     type: string
     sql: ${TABLE}."DISPATCH_NUM" ;;
-  }
-
-  dimension: initial_disposition {
-    type: string
-    sql: ${TABLE}."INITIAL_DISPOSITION" ;;
-  }
-
-  dimension: is_bed_rework {
-    type: string
-    sql: ${TABLE}."IS_BED_REWORK" ;;
-  }
-
-  dimension: is_factory_second {
-    type: string
-    sql: ${TABLE}."IS_FACTORY_SECOND" ;;
-  }
-
-  dimension: is_for_mrb {
-    type: string
-    sql: ${TABLE}."IS_FOR_MRB" ;;
-  }
-
-  dimension: is_line_rework {
-    type: string
-    sql: ${TABLE}."IS_LINE_REWORK" ;;
   }
 
   dimension: line {
@@ -180,14 +151,37 @@ view: l2l_quality_yellow_card {
     sql: ${TABLE}."TECHNOLOGY" ;;
   }
 
-  dimension: vendor_po_lotcode {
-    type: string
-    sql: ${TABLE}."VENDOR_PO_LOTCODE" ;;
-  }
-
   dimension: workorder_num {
     type: string
     sql: ${TABLE}."WORKORDER_NUM" ;;
+  }
+
+  dimension: what_for {
+    label: "Whats this for?"
+    type: string
+    sql: ${TABLE}."WHAT_FOR" ;;
+  }
+
+  dimension: part_no {
+    label: "Part Number"
+    type: string
+    sql: ${TABLE}."PART_No" ;;
+  }
+
+  dimension: vendor_name {
+    type: string
+    sql: ${TABLE}."VENDOR_NAME" ;;
+  }
+
+  dimension: machine_description {
+    type: string
+    sql: ${TABLE}."MACHINE_DESCRIPTION" ;;
+  }
+
+  dimension: cover_sealed {
+    label: "Cover Sealed?"
+    type: yesno
+    sql: ${TABLE}.COVER_SEALED ;;
   }
 
   measure: quantity {
