@@ -352,15 +352,19 @@ view: sessions {
     type: string
     case: {
       when: {
-        sql: ${utm_content} in ('hgg','hggbgg')  ;;
+        sql: ${utm_content} ilike ('%hgg%')
+        or ${utm_campaign} ilike ('%hgg%');;
         label: "Holiday Gift Guide"
       }
       when: {
-        sql:${utm_content} in ('bfd');;
+        sql:lower(${utm_content}) ilike ('%bfd%')
+        or lower(${utm_content}) ilike ('%bfg%')
+        or lower(${utm_campaign}) ilike ('%-bfd%')
+        or lower(${utm_campaign}) ilike ('%bfd_%');;
         label: "Black Friday"
       }
       when: {
-        sql:${utm_content} in ('cmd') ;;
+        sql:${utm_content} ilike ('%cmd%') ;;
         label: "Cyber Monday"
       }
       else: "unknown"
@@ -387,6 +391,7 @@ view: sessions {
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} = 'nt' or ${utm_medium} ilike 'native' then 'native'
           when ${utm_medium} = 'sh' or ${utm_medium} ilike '%shopping%' then 'shopping'
+           when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
           else 'other' end ;;
   }
@@ -404,15 +409,19 @@ view: sessions {
     description: "Source: looker calculation"
     type: string
     #hidden: yes
-    sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' then 'GOOGLE'
+    sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
+              when ${utm_source} ilike '%bg%' then 'BING'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
               when ${utm_source} ilike '%yahoo%' then 'YAHOO'
               when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
               when ${utm_source} ilike '%adwords%' then 'ADWORDS'
               when ${utm_source} ilike '%pinterest%' then 'PINTEREST'
+              when ${utm_source} ilike '%ob%' then 'OUTBRAIN'
               when ${utm_source} ilike '%bing%' then 'BING'
-              when ${utm_source} ilike '%gemini%' then 'GEMINI'
+              when ${utm_source} ilike '%gemini%' then 'YAHOO'
+              when ${utm_source} ilike '%vrz%' or ${utm_source} ilike '%oa%' then 'VERIZON MEDIA'
+              when ${utm_source} ilike '%tab%' then 'TABOOLA'
               when ${utm_source} ilike '%twitter%' then 'TWITTER'
               else 'OTHER' end ;;
   }

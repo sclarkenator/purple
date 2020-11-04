@@ -10,6 +10,7 @@ view: adspend_pdt {
       column: spend_platform {}
       column: medium {}
       column: campaign_name {}
+      column: campaign_id {}
       column: adspend_raw {}
       column: impressions {}
       column: clicks {}
@@ -22,6 +23,7 @@ view: adspend_pdt {
   dimension: spend_platform { type: string }
   dimension: medium { type: string }
   dimension: campaign_name { type: string }
+  dimension: campaign_id { type: string }
   dimension: adspend_raw { type: number }
   dimension: impressions { type: number }
   dimension: clicks { type: number }
@@ -120,7 +122,7 @@ view: c3_pdt {
 #   https://purple.looker.com/dashboards/3635
 ######################################################
 
-view: c3_new_pdt{
+view: c3_cohort_pdt{
   derived_table: {
     explore_source: c3 {
       column: position_created_date {}
@@ -143,6 +145,33 @@ view: c3_new_pdt{
   dimension: orders {type: number}
 }
 
+######################################################
+#   C3 New
+#   https://purple.looker.com/dashboards/3635
+######################################################
+
+view: c3_trended_pdt{
+  derived_table: {
+    explore_source: c3 {
+      column: order_created_date {}
+      column: campaign_type_clean {}
+      column: Platform_clean {}
+      column: medium_clean {}
+      column: campaign {}
+      column: attribution {}
+      column: converter {}
+      column: orders {}
+    }
+  }
+  dimension: order_created_date {type: date}
+  dimension: campaign_type_clean {type: string}
+  dimension: Platform_clean {type: string}
+  dimension: medium_clean {type: string}
+  dimension: campaign {type: string}
+  dimension: attribution {type: number}
+  dimension: converter {type: number}
+  dimension: orders {type: number}
+}
 
 ######################################################
 #   CREATING FINAL TABLE
@@ -155,7 +184,7 @@ view: roas_pdt {
       , ad_date as date
       , campaign_type
       , spend_platform as platform
-      , medium, campaign_name
+      , medium, campaign_name, campaign_id
       , adspend_raw as adspend
       , impressions
       , clicks
@@ -169,6 +198,7 @@ view: roas_pdt {
       , null as repeat_customer
       , null as payment_method
       , null as c3_new_cohort
+      , null as c3_new_trended
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -177,6 +207,7 @@ view: roas_pdt {
       , utm_source
       , utm_medium
       , utm_campaign
+      , utm_campaign as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -190,6 +221,7 @@ view: roas_pdt {
       , null as repeat_customer
       , null as payment_method
       , null as c3_new_cohort
+      , null as c3_new_trended
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -198,6 +230,7 @@ view: roas_pdt {
       , utm_source
       , utm_medium
       , utm_campaign
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -211,6 +244,7 @@ view: roas_pdt {
       , repeat_customer
       , payment_method
       , null as c3_new_cohort
+      , null as c3_new_trended
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -219,6 +253,7 @@ view: roas_pdt {
       , PLATFORM
       , medium
       , CAMPAIGN_NAME
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -232,14 +267,16 @@ view: roas_pdt {
       , null as repeat_customer
       , null as payment_method
       , null as c3_new_cohort
+      , null as c3_new_trended
    from ${c3_pdt.SQL_TABLE_NAME}
    union all
-    select 'c3 new' as source
+    select 'c3 cohort' as source
       , position_created_date
       , campaign_type_clean
       , Platform_clean
       , medium_clean
       , Campaign
+      , null as campaign_id
       , null as aspend
       , null as impressions
       , null as clicks
@@ -253,7 +290,31 @@ view: roas_pdt {
       , null as repeat_customer
       , null as payment_method
       , attribution as c3_new_cohort
-   from ${c3_new_pdt.SQL_TABLE_NAME}
+      , null as c3_new_trended
+   from ${c3_cohort_pdt.SQL_TABLE_NAME}
+  union all
+    select 'c3 trended' as source
+      , order_created_date
+      , campaign_type_clean
+      , Platform_clean
+      , medium_clean
+      , Campaign
+      , null as campaign_id
+      , null as aspend
+      , null as impressions
+      , null as clicks
+      , null as sessions
+      , null as qualified_sessions
+      , null as orders
+      , null as sales
+      , null as c3_cohort_sales
+      , null as c3_trended_sales
+      , null as new_customer
+      , null as repeat_customer
+      , null as payment_method
+      , null as c3_new_cohort
+      , attribution as c3_new_trended
+   from ${c3_trended_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
   }
@@ -273,7 +334,6 @@ view: roas_pdt {
     datatype: date
     sql: ${TABLE}.date::date ;;
   }
-
 
   dimension: source {
     label: " Data Source"
@@ -329,40 +389,38 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.platform in ('ACUITY','ac') then 'Acuity'
-        when ${TABLE}.platform in ('ADMARKETPLACE', 'adm') then 'Admarketplace'
-        when ${TABLE}.platform in ('am','amazon aap','amazon kindle','AMAZON MEDIA GROUP','amazon+aap','AMAZON-HSA','AMAZON-SP','amg')
+      case when lower(${TABLE}.platform) in ('acuity','ac') then 'Acuity'
+        when lower(${TABLE}.platform) in ('admarketplace', 'adm') then 'Admarketplace'
+        when lower(${TABLE}.platform)  in ('am','amazon aap','amazon kindle','amazon media group','amazon+aap','amazon-hsa','amazon-sp','amg')
           then 'Amazon'
-        when ${TABLE}.platform in ('al','ADLINGO') then 'Adlingo'
-        when ${TABLE}.platform in ('adme','ADMEDIA') then 'Admedia'
-        when ${TABLE}.platform in ('bra','BRAVE') then 'BRAVE'
-        when ${TABLE}.platform in ('bg','BING','bing','bn') then 'Bing'
-        when ${TABLE}.platform in ('co','CORDLESS') then 'Cordless'
-        when ${TABLE}.platform in ('eb','EBAY') then 'Ebay'
-        when ${TABLE}.platform in ('em','EMAIL','email','MYMOVE-LLC', 'REDCRANE','FLUENT','FKL','MADRIVO', 'ADWLLET', 'LIVEINTENT') then 'crm'
-        when ${TABLE}.platform in ('ex','EXPONENTIAL','VDX') then 'VDX'
-        when ${TABLE}.platform in ('FACEBOOK','facebook','fb','ig','igshopping','INSTAGRAM','instagram','FB/IG') then 'FB/IG'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
-          or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when ${TABLE}.platform in ('go','GOOGLE','google') then 'Google'
-        when ${TABLE}.platform in ('PINTEREST','pinterest','pinterestk','pt') then 'Pinterest'
-        when ${TABLE}.platform in ('sn','SNAPCHAT','snapchat') then 'Snapchat'
-        when ${TABLE}.platform in ('ta','talkable') then 'Talkable'
-        when ${TABLE}.platform in ('tab','taboola','TABOOLA') then 'Taboola'
-        when ${TABLE}.platform in ('YAHOO','yahoo','oa','oath','vrz') then 'Yahoo'
-        when ${TABLE}.platform in ('VERITONE','vr', 'RADIO','STREAMING', 'PODCAST') then 'Veritone'
-        when ${TABLE}.platform in ('RAKUTEN','rk') then 'Rakuten'
-        when ${TABLE}.platform in ('SIMPLIFI','si') then 'Simplifi'
-        when ${TABLE}.platform in ('TWITTER','tw') then 'Twitter'
-        when ${TABLE}.platform in ('OUTBRAIN','ob') then 'Outbrain'
-        when ${TABLE}.platform in ('NEXTDOOR','nd') then 'Nextdoor'
-        when ${TABLE}.platform in ('TV','tv','OCEAN MEDIA','hu') then 'Oceanmedia'
-         when ${TABLE}.platform in ('TIKTOK','tk') then 'TikTok'
-        when ${TABLE}.platform in ('WAZE', 'wa') then 'Waze'
-        when ${TABLE}.platform in ('YELP', 'ye') then 'Yelp'
-        when ${TABLE}.platform in ('youtube','YOUTUBE.COM','yt','YOUTUBE')
-        or (${TABLE}.platform in ('GOOGLE','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when ${TABLE}.platform in ('ZETA','ze') then 'Oceanmedia'
+        when lower(${TABLE}.platform)  in ('al','adlingo') then 'Adlingo'
+        when lower(${TABLE}.platform)  in ('adme','admedia') then 'Admedia'
+        when lower(${TABLE}.platform)  in ('bra','brave') then 'BRAVE'
+        when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
+        when lower(${TABLE}.platform)  in ('co','cordless') then 'Cordless'
+        when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
+        when lower(${TABLE}.platform)  in ('em','email','mymove-llc', 'redcrance','fluent','fkl','madrivo', 'adwallet', 'liveintent') then 'crm'
+        when lower(${TABLE}.platform)  in ('ex','exponential','vdx') then 'VDX'
+        when lower(${TABLE}.platform)  in ('facebook','fb','ig','igshopping','instagram','fb/ig') then 'FB/IG'
+        when lower(${TABLE}.platform)  in ('go','google') then 'Google'
+        when lower(${TABLE}.platform)  in ('pinterest','pinterestk','pt') then 'Pinterest'
+        when lower(${TABLE}.platform)  in ('sn','snapchat') then 'Snapchat'
+        when lower(${TABLE}.platform)  in ('ta','talkable') then 'Talkable'
+        when lower(${TABLE}.platform)  in ('tab','taboola') then 'Taboola'
+        when lower(${TABLE}.platform)  in ('yahoo','oa','oath','vrz') then 'Yahoo'
+        when lower(${TABLE}.platform)  in ('veritone','vr', 'radio','streaming', 'podcast') then 'Veritone'
+        when lower(${TABLE}.platform)  in ('rakuten','rk') then 'Rakuten'
+        when lower(${TABLE}.platform)  in ('simplifi','si') then 'Simplifi'
+        when lower(${TABLE}.platform)  in ('twitter','tw') then 'Twitter'
+        when lower(${TABLE}.platform)  in ('outbrain','ob') then 'Outbrain'
+        when lower(${TABLE}.platform) in ('nextdoor','nd') then 'Nextdoor'
+        when lower(${TABLE}.platform) in ('tv','oceanmeadia','hu') then 'Oceanmedia'
+        when lower(${TABLE}.platform)  in ('tiktok','tk') then 'TikTok'
+        when lower(${TABLE}.platform)  in ('waze', 'wa') then 'Waze'
+        when lower(${TABLE}.platform)  in ('yelp', 'ye') then 'Yelp'
+        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
+        or lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi') then 'YouTube'
+        when lower(${TABLE}.platform) in ('zeta','ze') then 'Zeta'
         else 'Other' end
       ;;
   }
@@ -381,6 +439,33 @@ view: roas_pdt {
     group_label: "Advanced"
     type: string
     sql: lower(${TABLE}.campaign_name);;
+  }
+
+  dimension: adspend_campaign_id {
+  hidden: no
+  type: string
+  sql:  case when ${source} = 'adspend' then ${TABLE}.campaign_id else null end ;;
+}
+
+  dimension: adspend_campaign_name {
+    hidden: no
+    type: string
+    sql:  case when ${source} = 'adspend' then ${TABLE}.campaign_name else null end ;;
+  }
+
+  dimension: session_campaign_id {
+    hidden: no
+    type: string
+    sql:  case when ${source} = 'sessions' then ${TABLE}.campaign_id else null end;;
+  }
+
+  dimension: campaign_name_new {
+    label: "Campaign Name (new)"
+    description: "Matches based on camapign ID in Campaign UTM"
+    group_label: "Advanced"
+    type: string
+    sql: case when ${adspend_campaign_id} = ${session_campaign_id} then ${adspend_campaign_name}
+    else ${campaign_name} end ;;
   }
 
   dimension: medium_clean {
@@ -475,7 +560,7 @@ view: roas_pdt {
     type: sum
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
-    sql: ${TABLE}.c3_cohort_sales ;;
+    sql: ${TABLE}.c3_new_cohort ;;
   }
 
   measure: c3_trended_sales {
@@ -484,8 +569,9 @@ view: roas_pdt {
     type: sum
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
-    sql: ${TABLE}.c3_trended_sales ;;
+    sql: ${TABLE}.c3_new_trended ;;
   }
+
   measure: new_customer {
     label: "New Customer"
     description: "Count of new customers"

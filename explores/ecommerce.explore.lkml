@@ -125,7 +125,6 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: events_view__all_events__all_events {hidden:yes}
 
 #   explore: ecommerce_qualtrics {
 #     hidden: yes

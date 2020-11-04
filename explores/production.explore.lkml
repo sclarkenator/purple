@@ -107,6 +107,11 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       sql_on: ${workorder_reconciliation.assembly_build_id} = ${assembly_build.assembly_build_id} ;;
     }
+    join: warehouse_location {
+      sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
+      relationship: many_to_one
+      type: left_outer
+    }
   }
 
   explore: warehouse_transfer {
