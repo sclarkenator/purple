@@ -225,8 +225,8 @@ view: c3_conversion {
     OR CONTAINS(${network_groupname},'verizon media')
     OR CONTAINS(${network_groupname},'verizonmedia')
     OR CONTAINS(${group_name},'Native')
-    OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Verzion Media'
-    WHEN CONTAINS(${network_groupname},'gemini native') then 'Verzion Media'
+    OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Yahoo'
+    WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
     WHEN CONTAINS(${network_groupname},'zeta') then 'Zeta'
