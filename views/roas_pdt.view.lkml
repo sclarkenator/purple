@@ -430,6 +430,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('postie') then 'Postie'
         when lower(${TABLE}.platform)  in ('simplifi','si') then 'Simplifi'
          when lower(${TABLE}.platform)  in ('spfy') then 'Spotify'
+         when lower(${TABLE}.platform)  in ('shid') then 'SheerID'
         when lower(${TABLE}.platform)  in ('twitter','tw') then 'Twitter'
         when lower(${TABLE}.platform)  in ('outbrain','ob') then 'Outbrain'
         when lower(${TABLE}.platform)  in ('obe') then 'Obé Fitness'
