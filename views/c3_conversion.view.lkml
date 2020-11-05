@@ -246,7 +246,7 @@ view: c3_conversion {
     or CONTAINS(${group_name}, 'Bing Brand')
     or CONTAINS (${group_name},'Google Non-Brand')
     or CONTAINS(${group_name},'Yelp Search')
-    or CONTAINS(${group_name},'Google Brand') then 'Search'
+    or CONTAINS(${group_name},'Google Brand') or CONTAINS(${network_name}, '(Bing)') then 'Search'
     WHEN CONTAINS(${network_name}, '(Bing Native)') then 'Native'
     WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
