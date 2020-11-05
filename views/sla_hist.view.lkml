@@ -3,8 +3,8 @@ view: sla_hist {
     ;;
 
   measure: days {
-    view_label: "Fulfillmentr"
-    group_label: " Advanced"
+    view_label: "Fulfillment"
+    group_label: "Advanced"
     type: number
     sql: ${TABLE}."DAYS" ;;
     label: "Website-stated SLA"
