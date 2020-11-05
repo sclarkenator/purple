@@ -391,7 +391,7 @@ view: sessions {
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} = 'nt' or ${utm_medium} ilike 'native' then 'native'
           when ${utm_medium} = 'sh'
-          or ${utm_medium} = 'fe'
+          or ${utm_medium} = 'feed'
           or ${utm_medium} ilike '%shopping%' then 'pla'
            when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
           when ${utm_medium} = 'tv' or ${utm_medium} ilike 'podcast' or ${utm_medium} ilike 'radio' or ${utm_medium} ilike 'cinema' or ${utm_medium} ilike 'print' then 'traditional'
