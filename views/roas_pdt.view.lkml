@@ -391,7 +391,7 @@ view: roas_pdt {
     sql:
       case when lower(${TABLE}.platform) in ('acuity','ac') then 'Acuity'
         when lower(${TABLE}.platform) in ('admarketplace', 'adm') then 'Admarketplace'
-        when lower(${TABLE}.platform)  in ('am','amazon aap','amazon kindle','amazon media group','amazon+aap','amazon-hsa','amazon-sp','amg')
+        when lower(${TABLE}.platform)  in ('am','amazon','amazon aap','amazon kindle','amazon media group','amazon+aap','amazon-hsa','amazon-sp','amg')
           then 'Amazon'
         when lower(${TABLE}.platform)  in ('al','adlingo') then 'Adlingo'
         when lower(${TABLE}.platform)  in ('adme','admedia') then 'Admedia'
@@ -399,7 +399,18 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
         when lower(${TABLE}.platform)  in ('co','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
-        when lower(${TABLE}.platform)  in ('em','email','mymove-llc', 'redcrance','fluent','fkl','madrivo', 'adwallet', 'liveintent') then 'crm'
+        when lower(${TABLE}.platform)  in ('em','email') then 'crm'
+        when lower(${TABLE}.platform)  in ('cn','conde naste') then 'Conde Naste'
+        when lower(${TABLE}.platform)  in ('mymove-llc') then 'MyMove-LLC'
+        when lower(${TABLE}.platform)  in ('mymove') then 'MyMove'
+        when lower(${TABLE}.platform)  in ( 'redcrance') then 'Redcrane'
+        when lower(${TABLE}.platform)  in ('fluent') then 'Fluent'
+        when lower(${TABLE}.platform)  in ('fkl') then 'FKL'
+         when lower(${TABLE}.platform)  in ('goop') then 'Goop'
+        when lower(${TABLE}.platform)  in ('madrivo') then 'Madrivo'
+        when lower(${TABLE}.platform)  in ('adwallet') then 'Adwallet'
+        when lower(${TABLE}.platform)  in ('liveintent') then 'Liveintent'
+        when lower(${TABLE}.platform)  in ('ir', 'impact radius') then 'Impact Radius'
         when lower(${TABLE}.platform)  in ('ex','exponential','vdx') then 'VDX'
         when lower(${TABLE}.platform)  in ('facebook','fb','ig','igshopping','instagram','fb/ig') then 'FB/IG'
         when lower(${TABLE}.platform)  in ('go','google') then 'Google'
@@ -409,12 +420,13 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('tab','taboola') then 'Taboola'
         when lower(${TABLE}.platform)  in ('yahoo','oa','oath','vrz') then 'Yahoo'
         when lower(${TABLE}.platform)  in ('veritone','vr', 'radio','streaming', 'podcast') then 'Veritone'
-        when lower(${TABLE}.platform)  in ('rakuten','rk') then 'Rakuten'
+        when lower(${TABLE}.platform)  in ('rakuten','rk', 'affiliate') then 'Rakuten'
         when lower(${TABLE}.platform)  in ('simplifi','si') then 'Simplifi'
         when lower(${TABLE}.platform)  in ('twitter','tw') then 'Twitter'
         when lower(${TABLE}.platform)  in ('outbrain','ob') then 'Outbrain'
+        when lower(${TABLE}.platform)  in ('obe') then 'Obé Fitness'
         when lower(${TABLE}.platform) in ('nextdoor','nd') then 'Nextdoor'
-        when lower(${TABLE}.platform) in ('tv','oceanmeadia','hu') then 'Oceanmedia'
+        when lower(${TABLE}.platform) in ('tv','oceanmedia', 'ocean media','hu') then 'Oceanmedia'
         when lower(${TABLE}.platform)  in ('tiktok','tk') then 'TikTok'
         when lower(${TABLE}.platform)  in ('waze', 'wa') then 'Waze'
         when lower(${TABLE}.platform)  in ('yelp', 'ye') then 'Yelp'
@@ -475,14 +487,14 @@ view: roas_pdt {
     sql:
       case when lower(${TABLE}.medium) in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
-        or lower(${TABLE}.platform) in ('snapchat', 'nextdoor','NEXTDOOR', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb')  then 'Social'
+        or lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb') then 'Social'
         when lower(${TABLE}.medium) in ('display','ds')
         or  lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds')
         or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
-        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent') then 'CRM'
+        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email') then 'CRM'
         when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
         or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming') then 'Traditional'
-        when lower(${TABLE}.medium) in ('search','sh','sr','cpc','shopping','cpm') then 'Search'
+        when lower(${TABLE}.medium) in ('search','sh','sr','cpc','shopping','cpm', 'seo') then 'Search'
         when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
         'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
         'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
