@@ -172,7 +172,9 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'admedia') then 'Admedia'
     WHEN CONTAINS(${network_groupname},'agility') then 'Agility'
     WHEN CONTAINS(${network_groupname},'amazon') then 'Amazon'
-    WHEN CONTAINS(${network_groupname},'bing') then 'Bing'
+     WHEN CONTAINS(${network_groupname},'rakuten')
+    OR CONTAINS(${network_groupname},'affiliate')  then 'Rakuten'
+    WHEN CONTAINS(${network_groupname},'bing') and NOT CONTAINS(${network_groupname},'RAKUTEN')then 'Bing'
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
     WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
@@ -244,11 +246,13 @@ view: c3_conversion {
     or CONTAINS(${group_name}, 'Bing Brand')
     or CONTAINS (${group_name},'Google Non-Brand')
     or CONTAINS(${group_name},'Yelp Search')
-    or CONTAINS(${group_name},'Google Brand') then 'Search'
+    or CONTAINS(${group_name},'Google Brand') or CONTAINS(${network_name}, '(Bing)') then 'Search'
+    WHEN CONTAINS(${network_name}, '(Bing Native)') then 'Native'
     WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
-    WHEN CONTAINS(${group_name},'Social') and not CONTAINS(lower(${network_name}) ,'youtube') then 'Paid Social'
+    WHEN CONTAINS(${group_name},'Social')
+    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Paid Social'
     WHEN CONTAINS(${group_name},'Radio') then 'Radio'
     --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     ELSE ${TABLE}.group_name
