@@ -35,8 +35,22 @@ view: _period_comparison {
     hidden: yes
     group_label: "Period Comparison"
     type: date
-    sql: dateadd(day,-${interval},${filter_start_date_raw}) ;;
+    sql: {% if comparison_period._parameter_value == "previous" %}
+          dateadd(day,-${interval},${filter_start_date_raw})
+        {% else %}
+          dateadd({% parameter comparison_period %}, -1, ${filter_start_date_raw})
+        {% endif %} ;;
+  }
 
+  dimension: previous_end_date {
+    hidden: yes
+    group_label: "Period Comparison"
+    type: date
+    sql: {% if comparison_period._parameter_value == "previous" %}
+          ${filter_start_date_raw}
+        {% else  %}
+          dateadd({% parameter comparison_period %}, -1, ${filter_end_date_raw})
+        {% endif %} ;;
   }
 
   dimension: same_period_last_year_start_date {
@@ -60,8 +74,10 @@ view: _period_comparison {
     sql:
             {% if comparison_period._parameter_value == 'previous'  %}
               ${previous_start_date}
-            {% elsif comparison_period._parameter_value == 'lastyear'  %}
-              ${same_period_last_year_start_date}
+            {% elsif comparison_period._parameter_value == 'month'  %}
+              ${previous_start_date}
+            {% elsif comparison_period._parameter_value == 'year'  %}
+              ${previous_start_date}
             {% else %}
               false
             {% endif %};;
@@ -118,7 +134,7 @@ view: _period_comparison {
     hidden: yes
     group_label: "Period Comparison"
     type: yesno
-    sql: ${event_raw} >= ${previous_start_date} AND ${event_raw} < ${filter_start_date_raw} ;;
+    sql: ${event_raw} >= ${previous_start_date} AND ${event_raw} < ${previous_end_date} ;;
   }
 
   dimension: is_same_period_last_year {
@@ -138,8 +154,12 @@ view: _period_comparison {
       value: "previous"
     }
     allowed_value: {
+      label: "Previous Month"
+      value: "month"
+    }
+    allowed_value: {
       label: "Same Period Last Year"
-      value: "lastyear"
+      value: "year"
     }
   }
 
@@ -150,8 +170,10 @@ view: _period_comparison {
     sql:
             {% if comparison_period._parameter_value == 'previous'  %}
               ${is_previous_period}=true
-            {% elsif comparison_period._parameter_value == 'lastyear'  %}
-              ${is_same_period_last_year}=true
+            {% elsif comparison_period._parameter_value == 'year'  %}
+              ${is_previous_period}=true
+            {% elsif comparison_period._parameter_value == 'month'  %}
+              ${is_previous_period}=true
             {% else %}
               false
             {% endif %}
@@ -173,7 +195,7 @@ view: _period_comparison {
     sql: CASE
             WHEN ${is_current_period} = true THEN 'Current Period'
             WHEN ${is_previous_period} = true THEN 'Previous Period'
-            WHEN ${is_same_period_last_year} = true THEN 'Same Period Last Year'
+            WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
         END
     ;;
   }
