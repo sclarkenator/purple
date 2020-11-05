@@ -283,6 +283,7 @@ view: c3_conversion {
 when ${group_name} = 'TV'
     or ${group_name} = 'Affiliate'
     or CONTAINS (${group_name},'Radio')
+    or CONTAINS (${group_name},'Non-Brand')
     or ${network_name} ilike ('%prospect%')
     or ${network_name} ilike ('%pros%')
     or ${network_name} ilike ('pt_%')
