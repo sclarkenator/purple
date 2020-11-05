@@ -400,7 +400,9 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('co','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
         when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
-        when lower(${TABLE}.platform)  in ('em','email') then 'crm'
+        when lower(${TABLE}.platform)  in ('em','email') then 'Email'
+        when lower(${TABLE}.platform)  in ('korte') then 'korte'
+        when lower(${TABLE}.platform)  in ('rokt') then 'rokt'
         when lower(${TABLE}.platform)  in ('cn','conde naste') then 'Conde Naste'
         when lower(${TABLE}.platform)  in ('mymove-llc') then 'MyMove-LLC'
         when lower(${TABLE}.platform)  in ('mymove') then 'MyMove'
@@ -495,10 +497,10 @@ view: roas_pdt {
       when lower(${TABLE}.medium) in ('social','so','facebook', 'talkable','paid social', 'paidsocial', 'organic social', 'social ads',
       'video06', 'video_6sec', 'video_47sec', 'video_15sec', 'video_11sec_gif','video_10sec', 'image')
         or lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter','facebook', 'quora', 'twitter','fb') then 'Social'
+        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email', 'fkl', 'findkeeplove') then 'CRM'
         when lower(${TABLE}.medium) in ('display','ds')
         or  lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds')
         or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
-        when lower(${TABLE}.medium) in ('crm','em', 'email') or  lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email') then 'CRM'
         when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
         or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming', 'veritone') then 'Traditional'
         when lower(${TABLE}.medium) in ('search','sr','cpc','shopping','cpm', 'seo') then 'Search'
