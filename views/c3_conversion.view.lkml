@@ -226,7 +226,7 @@ view: c3_conversion {
     OR CONTAINS(${network_groupname},'verizonmedia')
     OR CONTAINS(${group_name},'Native')
     OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Yahoo'
-    WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo Native'
+    WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
     WHEN CONTAINS(${network_groupname},'zeta') then 'Zeta'
@@ -238,7 +238,7 @@ view: c3_conversion {
   dimension: medium_clean {
     type: string
     sql: CASE
-    WHEN CONTAINS(${group_name},'Youtube') then 'Video'
+    WHEN CONTAINS(${group_name},'Youtube') or contains(${network_name},'Youtube') then 'Video'
     WHEN CONTAINS(${group_name},'AdMarketplace')
     or CONTAINS (${group_name},'Bing Non-Brand')
     or CONTAINS(${group_name}, 'Bing Brand')
@@ -248,7 +248,7 @@ view: c3_conversion {
     WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
-    WHEN CONTAINS(${group_name},'Social') then 'Paid Social'
+    WHEN CONTAINS(${group_name},'Social') and not CONTAINS(lower(${network_name}) ,'youtube') then 'Paid Social'
     WHEN CONTAINS(${group_name},'Radio') then 'Radio'
     --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     ELSE ${TABLE}.group_name
