@@ -12,13 +12,6 @@ include: "/dashboards/**/*.dashboard"
     hidden:yes
   }
 
-  explore: pii_review {
-    group_label: "Legal"
-    label: "PII Review"
-    description: "This explore is used by Legal for PII.  It is updated every morning."
-    hidden: yes
-  }
-
 #-------------------------------------------------------------
 #
 # Paycom hours explore
