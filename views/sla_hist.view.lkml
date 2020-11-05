@@ -4,11 +4,11 @@ view: sla_hist {
 
   measure: days {
     view_label: "Fulfillment"
-    group_label: "Advanced"
+    group_label: " Advanced"
     type: number
     sql: ${TABLE}."DAYS" ;;
     label: "Website-stated SLA"
-    description: "This is the stated SLA value the customer saw when they made their purchase."
+    description: "This is the stated SLA value the customer saw when they made their purchase for DTC only"
   }
 
   dimension_group: start {
