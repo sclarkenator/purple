@@ -412,6 +412,8 @@ view: sessions {
     type: string
     #hidden: yes
     sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
+              when ${utm_source} in ('ac') then 'ACUITY'
+              hen ${utm_source} in ('adme') then 'ADMEDIA'
               when ${utm_source} ilike '%bg%' then 'BING'
               when ${utm_source} in ('co') then 'CORDLESS'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
@@ -422,6 +424,7 @@ view: sessions {
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
               when ${utm_source} ilike '%adwords%' then 'ADWORDS'
               when ${utm_source} ilike '%pinterest%' then 'PINTEREST'
+              when ${utm_source} in ('nd') then 'NEXTDOOR'
               when ${utm_source} in ('om','tv') then 'OCEAN MEDIA'
               when ${utm_source} ilike '%ob%' then 'OUTBRAIN'
               when ${utm_source} ilike '%bing%' then 'BING'
@@ -429,6 +432,7 @@ view: sessions {
               when ${utm_source} ilike '%vrz%' or ${utm_source} ilike '%oa%' then 'VERIZON MEDIA'
               when ${utm_source} in ('rk') then 'RAKUTEN'
               when ${utm_source} in ('si') then 'SIMPLIFI'
+              when ${utm_source} in ('sn') then 'SNAPCHAT'
               when ${utm_source} ilike '%tab%' then 'TABOOLA'
               when ${utm_source} in ('talkable') then 'TALKABLE'
               when ${utm_source} in ('tk') then 'TIKTOK'
