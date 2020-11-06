@@ -413,7 +413,7 @@ view: sessions {
     #hidden: yes
     sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
               when ${utm_source} in ('ac') then 'ACUITY'
-              hen ${utm_source} in ('adme') then 'ADMEDIA'
+              when ${utm_source} in ('adme') then 'ADMEDIA'
               when ${utm_source} ilike '%bg%' then 'BING'
               when ${utm_source} in ('co') then 'CORDLESS'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
