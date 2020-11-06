@@ -214,7 +214,7 @@ view: sessions {
     group_label: "  Session Time"
     description: "Source: HEAP.sessions"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
     sql: ${TABLE}.time ;; }
 
   dimension_group: current_date_sessions {
