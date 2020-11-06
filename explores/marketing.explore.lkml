@@ -107,6 +107,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
       relationship: many_to_one
     }
+    join: sales_order {
+      type: left_outer
+      sql_on: lower(${cordial_activity.email}) = lower(${sales_order.email})
+        and ${cordial_activity.time_time} < ${sales_order.created} and ${cordial_activity.time_time} >= dateadd('hour',-48,${sales_order.created})
+        and ${cordial_activity.action} in ('message-sent','open');;
+      relationship: many_to_one
+    }
   }
 
   explore: email_contact_merged {
