@@ -413,18 +413,28 @@ view: sessions {
     #hidden: yes
     sql: case when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
               when ${utm_source} ilike '%bg%' then 'BING'
+              when ${utm_source} in ('co') then 'CORDLESS'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%' then 'FACEBOOK'
+              when ${utm_source} in ('em') then 'Email'
+              when ${utm_source} in ('findkeeplove') then 'fkl'
               when ${utm_source} ilike '%yahoo%' then 'YAHOO'
               when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
               when ${utm_source} ilike '%adwords%' then 'ADWORDS'
               when ${utm_source} ilike '%pinterest%' then 'PINTEREST'
+              when ${utm_source} in ('om','tv') then 'OCEAN MEDIA'
               when ${utm_source} ilike '%ob%' then 'OUTBRAIN'
               when ${utm_source} ilike '%bing%' then 'BING'
               when ${utm_source} ilike '%gemini%' then 'YAHOO'
               when ${utm_source} ilike '%vrz%' or ${utm_source} ilike '%oa%' then 'VERIZON MEDIA'
+              when ${utm_source} in ('rk') then 'RAKUTEN'
+              when ${utm_source} in ('si') then 'SIMPLIFI'
               when ${utm_source} ilike '%tab%' then 'TABOOLA'
+              when ${utm_source} in ('talkable') then 'TALKABLE'
+              when ${utm_source} in ('tk') then 'TIKTOK'
               when ${utm_source} ilike '%twitter%' then 'TWITTER'
+              when ${utm_source} in ('vr') then 'VERITONE'
+              when ${utm_source} in ('ze', 'zeta') then 'ZETA'
               else 'OTHER' end ;;
   }
 
