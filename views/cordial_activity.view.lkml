@@ -30,6 +30,7 @@ view: cordial_activity {
     timeframes: [
       raw,
       time,
+      hour,
       date,
       week,
       month,
