@@ -32,6 +32,100 @@ AND ((warehouse_location.location  IN ('100-Purple West', 'M10 - MainFreight Car
 and item.classification = 'FG'
 GROUP BY 1 )
 ,
+purcahse_and_transfer_ids AS
+(SELECT purchase_order_id as id
+      FROM  production.purchase_order
+      UNION
+      SELECT transfer_order_id as id
+      FROM production.transfer_order
+      )
+  ,  purchase_order_line AS (select * from (
+      select a.*
+          , row_number () over (partition by PURCHASE_ORDER_ID || PURCHASE_ORDER_LINE_ID order by 1) as rownum
+      from PRODUCTION.purchase_order_line a
+    ) z
+    where z.rownum = 1
+  )
+  ,  transfer_order_line AS (select * from (
+      select a.*
+          , row_number () over (partition by ACCOUNT_ID || TRANSFER_ORDER_ID || ITEM_ID order by 1) as rownum
+      from PRODUCTION.transfer_order_line a
+    ) z
+    where z.rownum = 1
+  )
+,
+incoming as
+(SELECT
+  item.SKU_ID
+  ,COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when purchase_order_line."QUANTITY_RECEIVED_IN_SHIPMENT" is null then purchase_order_line."ITEM_COUNT"
+          else purchase_order_line."ITEM_COUNT" - purchase_order_line."QUANTITY_RECEIVED_IN_SHIPMENT" end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(purchase_order_line."PURCHASE_ORDER_ID"||'L'||purchase_order_line."PURCHASE_ORDER_LINE_ID" ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(purchase_order_line."PURCHASE_ORDER_ID"||'L'||purchase_order_line."PURCHASE_ORDER_LINE_ID" ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) incoming_units
+FROM purcahse_and_transfer_ids
+LEFT JOIN PRODUCTION.PURCHASE_ORDER  AS purchase_order ON purchase_order.PURCHASE_ORDER_ID = purcahse_and_transfer_ids.id
+LEFT JOIN purchase_order_line ON purchase_order.PURCHASE_ORDER_ID = purchase_order_line.PURCHASE_ORDER_ID
+LEFT JOIN PRODUCTION.TRANSFER_ORDER  AS transfer_order ON (transfer_order."TRANSFER_ORDER_ID") = purcahse_and_transfer_ids.id
+FULL OUTER JOIN transfer_order_line ON (transfer_order_line."TRANSFER_ORDER_ID") = (transfer_order."TRANSFER_ORDER_ID")
+LEFT JOIN "FINANCE"."RECEIPT"
+     AS receipt ON purcahse_and_transfer_ids.id = (receipt."ORIGINAL_TRANSACTION_ID")
+LEFT JOIN "FINANCE"."RECEIPT_LINE"
+     AS receipt_line ON (receipt."RECEIPT_ID") = (receipt_line."RECEIPT_ID") and coalesce(purchase_order_line.ITEM_ID,(transfer_order_line."ITEM_ID")) = (receipt_line."ITEM_ID")
+LEFT JOIN SALES.ITEM  AS item ON item.ITEM_ID = coalesce(purchase_order_line.ITEM_ID,(transfer_order_line."ITEM_ID"),(receipt_line."ITEM_ID"))
+
+WHERE ((purchase_order_line.ESTIMATED_ARRIVAL  >= (TO_DATE(DATEADD('day', 0, CURRENT_DATE()))))) AND ((purchase_order_line.ESTIMATED_ARRIVAL  < (TO_DATE(DATEADD('day', 28, CURRENT_DATE()))))) AND (purchase_order_line.SHIPMENT_RECEIVED  IS NULL) AND (((CASE
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'FG'  THEN 'Finished Good'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'FS'  THEN 'Factory Second'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'FGC'  THEN 'Finished Goods Component'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'DSC'  THEN 'Discounts'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'SFG'  THEN 'Semi Finished Goods'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'RAW'  THEN 'Raw Materials'
+WHEN (case when
+    --split king mattress kits and split king powerbase kits
+        item.ITEM_ID in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
+        -- adds metal frame bases to finished goods
+        or item.line = 'FRAME' or ( item.category = 'SEATING' and (item.product_description ilike '%4 PK' or item.product_description ilike '%6 PK')) then 'FG'
+        else item.classification_new end
+) = 'PRC'  THEN 'Production Components'
+ELSE 'Other'
+END
+) = 'Finished Good')
+)
+GROUP BY 1)
+,
 fcst as
 (SELECT item.SKU_ID
   ,TO_DATE(forecast_combined.forecast) fcst_date
@@ -353,6 +447,7 @@ sub as
         ,round(slope_inv,0) inv_slope
         ,average_inv
         ,current_on_hand
+        ,nvl(inc.incoming_units,0) incoming_units_4w
         ,avg_daily_prod7
         ,avg_daily_prod28
 --        ,past_4w_dtc_fcst
@@ -435,6 +530,7 @@ left join next_8w_tot_fcst pt9 on pt9.sku_id = ci.sku_id
 left join tot_sales_trend tst on tst.sku_id = ci.sku_id
 left join tot_sales7 ts7 on ts7.sku_id = ci.sku_id
 left join open_orders oo on oo.sku_id = ci.sku_id
+left join incoming inc on inc.sku_id = ci.sku_id
  where item.classification = 'FG'
 and item.lifecycle_status = 'CURRENT'
 and description not ilike '%FLR%'
@@ -443,16 +539,17 @@ and description not ilike '%REFURb%')
 select category, line, model, description, sku_id
         ,current_on_hand
         ,unfulfilled_units
+        ,incoming_units_4w
         ,greatest(avg_daily_prod7,avg_daily_prod28) avg_production
         ,avg_daily_prod7
         ,sales_slope
-        ,coalesce(round((current_on_hand-unfulfilled_units)/nullif(next_4w_tot_fcst/4,0),1),999) weeks_OH
+        ,coalesce(round(current_on_hand/nullif(next_4w_tot_fcst/4,0),1),999) weeks_OH
         ,nvl(total_28d_units,0) past_4w_total
         ,nvl(next_4w_tot_fcst,0) next_4w_fcst
         ,nvl(next_8w_tot_fcst,0) next_8w_fcst
         ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*7-nvl(next_4w_tot_fcst_avg*7,0) current_inv_est
-        ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*28-nvl(next_4w_tot_fcst,0) four_week_inv_est
-        ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*56-nvl(next_8w_tot_fcst,0) eight_week_inv_est
+        ,current_on_hand-unfulfilled_units+incoming_units_4w+nvl(avg_production,0)*28-nvl(next_4w_tot_fcst,0) four_week_inv_est
+        ,current_on_hand-unfulfilled_units+incoming_units_4w+nvl(avg_production,0)*56-nvl(next_8w_tot_fcst,0) eight_week_inv_est
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) > .15 then 1 else 0 end trend_up_flg
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) < -0.1 then 1 else 0 end trend_down_flg
         ,case when weeks_oh = 999 then 'NO SALES FORECAST'
@@ -537,6 +634,13 @@ from sub
     label: "Unfulfilled"
     type: sum
     sql: ${TABLE}.unfulfilled_units ;;
+  }
+
+  measure: incoming_units_4w {
+    description: "Number of units expected to arrive in warehouses over the next 4 weeks."
+    label: "Incoming"
+    type: sum
+    sql: ${TABLE}.incoming_units_4w ;;
   }
 
   measure: past_4w_total {
