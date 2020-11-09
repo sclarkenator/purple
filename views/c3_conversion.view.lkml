@@ -172,7 +172,9 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'admedia') then 'Admedia'
     WHEN CONTAINS(${network_groupname},'agility') then 'Agility'
     WHEN CONTAINS(${network_groupname},'amazon') then 'Amazon'
-    WHEN CONTAINS(${network_groupname},'bing') then 'Bing'
+     WHEN CONTAINS(${network_groupname},'rakuten')
+    OR CONTAINS(${network_groupname},'affiliate')  then 'Rakuten'
+    WHEN CONTAINS(${network_groupname},'bing') and NOT CONTAINS(${network_groupname},'RAKUTEN')then 'Bing'
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
     WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
@@ -185,7 +187,18 @@ view: c3_conversion {
     OR CONTAINS(${network_groupname},'facebook')
     OR CONTAINS(${network_groupname},'instagram') then 'FB/IG'
     WHEN CONTAINS(${network_groupname},'google')
-    OR CONTAINS(${network_groupname},'gdn')
+     OR CONTAINS(${network_groupname},'gdn')
+     OR CONTAINS(${network_groupname},'GDN')
+    OR CONTAINS(${network_groupname},'rt - dpa remarketing')
+    OR CONTAINS(${network_groupname},'rt - new mattresses')
+    OR CONTAINS(${network_groupname},'rt - purple promotions ')
+    OR CONTAINS(${network_groupname},'rt - purple remarketing display new')
+    OR CONTAINS(${network_groupname},'rt - spring sale')
+    OR CONTAINS(${network_groupname},'pt - don')
+    OR CONTAINS(${network_groupname},'pt - hp display')
+    OR CONTAINS(${network_groupname},'rt - remarketing')
+    OR CONTAINS(${network_groupname},'pt - native prospect')
+    OR CONTAINS(${network_groupname},'rt - free')
     OR (CONTAINS(${network_groupname}, '(0201)') and CONTAINS(${network_groupname},'display'))
     OR (CONTAINS(${network_groupname}, '(8846)') and CONTAINS(${network_groupname},'display'))
     OR (CONTAINS(${network_groupname}, '(3859)') and CONTAINS(${network_groupname},'pla'))
@@ -244,11 +257,13 @@ view: c3_conversion {
     or CONTAINS(${group_name}, 'Bing Brand')
     or CONTAINS (${group_name},'Google Non-Brand')
     or CONTAINS(${group_name},'Yelp Search')
-    or CONTAINS(${group_name},'Google Brand') then 'Search'
+    or CONTAINS(${group_name},'Google Brand') or CONTAINS(${network_name}, '(Bing)') then 'Search'
+    WHEN CONTAINS(${network_name}, '(Bing Native)') then 'Native'
     WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
-    WHEN CONTAINS(${group_name},'PLA') then 'Shopping'
+    WHEN CONTAINS(${group_name},'PLA') then 'PLA'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
-    WHEN CONTAINS(${group_name},'Social') and not CONTAINS(lower(${network_name}) ,'youtube') then 'Paid Social'
+    WHEN CONTAINS(${group_name},'Social')
+    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Paid Social'
     WHEN CONTAINS(${group_name},'Radio') then 'Radio'
     --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     ELSE ${TABLE}.group_name
@@ -263,16 +278,25 @@ view: c3_conversion {
     or ${campaign} ilike ('%-br-%')
     or ${network_name} ilike ('br %')
     or ${network_name} ilike ('% br %')
-    or ${network_name} ilike ('%-br-%') then 'Brand'
-when ${network_name} ilike ('%prospect%')
+    or ${network_name} ilike ('%-br-%')
+    or ${network_name} ilike ('%_br_%')then 'Brand'
+when ${group_name} = 'TV'
+    or ${group_name} = 'Affiliate'
+    or CONTAINS (${group_name},'Radio')
+    or CONTAINS (${group_name},'Non-Brand')
+    or ${network_name} ilike ('%prospect%')
     or ${network_name} ilike ('%pros%')
     or ${network_name} ilike ('pt_%')
     or ${network_name} ilike (' pt%')
     or ${network_name} ilike ('% pt %')
     or ${network_name} ilike ('pt%')
     or ${network_name} ilike ('%_pt')
+    or ${network_name} ilike ('%_pt_%')
     or ${network_name} ilike ('%_pt ')
     or ${network_name} ilike ('%-pt%')
+    or CONTAINS (${network_name},'Rakuten')
+    or CONTAINS (${network_name},'rakuten')
+    or CONTAINS (${network_name},'Impact Radius')
     or ${campaign} ilike ('%prospect%')
     or ${campaign} ilike ('%pros%')
     or ${campaign} ilike ('pt_%')
@@ -291,9 +315,11 @@ when ${network_name} ilike ('%retarget%')
     or ${network_name} ilike ('%_rt')
     or ${network_name} ilike ('%_rt ')
     or ${network_name} ilike ('%-rt%')
+    or ${network_name} ilike ('%> RT-%')
     or ${campaign} ilike ('%retarget%')
     or ${campaign} ilike ('%remarket%')
     or ${campaign} ilike ('rt_%')
+    or ${campaign} ilike ('%_rt_%')
     or ${campaign} ilike (' rt%')
     or ${campaign} ilike ('% rt %')
     or ${campaign} ilike ('rt%')

@@ -68,5 +68,45 @@ dimension: name {
     sql: lower(${TABLE}.email) ;;
   }
 
+  dimension: team_type {
+    description: "Source: incontact.agent_lkp"
+    hidden: yes
+    type:  string
+    sql: ${TABLE}.team_type ;;
+  }
+
+  dimension: employee_type {
+    description: "Source: incontact.agent_lkp"
+    hidden: yes
+    type:  string
+    sql: ${TABLE}.employee_type ;;
+  }
+
+  dimension_group: purple_with_purpose {
+    type: time
+    hidden: yes
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.purple_with_purpose ;;
+  }
+
+  dimension_group: mentor {
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.mentor ;;
+  }
+
+  dimension_group: service_recovery_team {
+    hidden: yes
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.service_recovery_team ;;
+  }
 
 }
