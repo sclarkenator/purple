@@ -49,7 +49,7 @@ include: "/dashboards/**/*.dashboard"
     join: item {
       view_label: "Item"
       type:  left_outer
-      sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id},${receipt_line.item_id});;
+      sql_on: ${item.item_id} = coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id},${receipt_line.item_id}) ;;
       relationship: many_to_one}
     join: vendor {
       type:  left_outer
@@ -64,8 +64,7 @@ include: "/dashboards/**/*.dashboard"
     join: receipt_line {
       view_label: "Receipt Line"
       type:  left_outer
-      sql_on: ${receipt.receipt_id} = ${receipt_line.receipt_id} and coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id}) = ${receipt_line.item_id}
-      ;;
+      sql_on: ${receipt.receipt_id} = ${receipt_line.receipt_id} and coalesce(${purchase_order_line.item_id},${transfer_order_line.item_id}) = ${receipt_line.item_id} ;;
       relationship: one_to_many
     }
   }

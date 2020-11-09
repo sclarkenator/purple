@@ -167,7 +167,7 @@ view: sales_order_line {
 
   dimension: Due_Date {
     view_label: "Fulfillment"
-    hidden: yes
+    hidden: no
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
@@ -183,6 +183,20 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT')
             THEN dateadd(d,14,${created_date})
           --catch all is creatd +3
+          Else dateadd(d,3,${created_date}) END ;;
+  }
+
+  dimension: Due_Date_new {
+    ##added by Scott Clark on 11/6/2020 working on updating actual SLAs for Jane
+    view_label: "Fulfillment"
+    hidden: yes
+    type: date
+    sql: case
+          -- wholesale is ship by date (from sales order)
+          WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
+            THEN ${sales_order.ship_by_date}
+          -- fedex is min ship date
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,${sla_hist.days},${created_date})
           Else dateadd(d,3,${created_date}) END ;;
   }
 
@@ -244,16 +258,15 @@ view: sales_order_line {
     view_label: "Sales Order"
     group_label: " Advanced"
     label: " Bundle"
-    description: "Bunddle filter"
+    description: "Bundle filter"
     case: {
       when: {sql: ${order_flag.ultimate_cushion_flag} AND ${order_flag.back_cushion_flag} ;; label: "Ultimate + Back"}
       when: {sql: ${order_flag.duvet_flg} AND ${order_flag.softstretch_sheets_flag} ;; label: "Duvet + SoftStretch"}
       when: {sql: ${order_flag.royal_cushion_flag} AND ${order_flag.pet_bed_flg} ;; label: "Royal + Pet Bed"}
-      when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='HARMONY') ;; label: "2 Harmony"}
+      when: {sql: ${order_flag.harmonytwobund_flag} ;; label: "2 Harmony"}
       when: {sql: (${sales_order_line.total_units_dem} >1 AND ${item.model_raw}='PILLOW 2.0') ;; label: "2 Purple Pillow"}
       else: "other" }
   }
-
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
