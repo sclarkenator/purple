@@ -2,9 +2,10 @@ view: sla_hist {
   sql_table_name: "SHIPPING"."SLA_HIST"
     ;;
 
-  measure: days {
+  dimension: days {
     view_label: "Fulfillment"
     group_label: " Advanced"
+    hidden:  yes
     type: number
     sql: ${TABLE}."DAYS" ;;
     label: "Website-stated SLA"

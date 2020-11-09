@@ -19,6 +19,11 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+  explore: sku_summary {
+  ##Added by Scott Clark 11/8/2020
+    hidden: yes
+  }
+
 #-------------------------------------------------------------
 #
 # Paycom hours explore
