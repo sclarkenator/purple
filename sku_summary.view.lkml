@@ -2,7 +2,8 @@ view: sku_summary {
 ##Added by Scott Clark 11/8/2020 for weekly item-level reporting
 
    derived_table: {
-     sql: with thirty_inv as
+    persist_for: "24 hours"
+    sql: with thirty_inv as
 (SELECT item.sku_id
   ,datediff(d,current_date,TO_DATE(inventory_snap.created)) days_ago
   ,COALESCE(SUM(inventory_snap.on_hand ), 0) on_hand
