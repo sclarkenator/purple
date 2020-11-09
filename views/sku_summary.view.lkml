@@ -451,8 +451,8 @@ from sub ;;
     primary_key: yes
     type: string
     link: {
-      label: "Show dimension dashboard"
-      url: "https://purple.looker.com/dashboards/3836?Dimensions={{ value }}"
+      label: "Show SKU dashboard"
+      url: "https://purple.looker.com/dashboards-next/3895?SKU+ID={{ value }}"
       icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
     sql: ${TABLE}.sku_id ;;
    }
