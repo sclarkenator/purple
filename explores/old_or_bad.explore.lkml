@@ -262,4 +262,11 @@ include: "/dashboards/**/*.dashboard"
         sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
         relationship: many_to_one
       }
+      join: sla_hist {
+        ##join added by Scott Clark on 11/5/2020 to get website-stated SLA reflected somewhere
+        type: left_outer
+        sql_on: ${sales_order.trandate_date} >= ${sla_hist.start_date} and ${sales_order.trandate_date} < ${sla_hist.end_date} and ${sla_hist.sku_id} = ${item.sku_id} ;;
+        relationship: many_to_one
+
+      }
     }
