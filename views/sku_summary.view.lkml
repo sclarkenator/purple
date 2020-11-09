@@ -323,7 +323,28 @@ retail_oos as
         ,units
 from oosla
 where channel = 'Retail')
-,sub as
+,
+open_orders as
+(SELECT
+  item.SKU_ID
+  ,COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) open_units
+FROM SALES.SALES_ORDER_LINE  AS sales_order_line
+LEFT JOIN SALES.ITEM  AS item ON sales_order_line.ITEM_ID = item.ITEM_ID
+LEFT JOIN SALES.FULFILLMENT  AS fulfillment ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (case when fulfillment.parent_item_id = 0 or fulfillment.parent_item_id is null then fulfillment.item_id else fulfillment.parent_item_id end)||'-'||fulfillment.order_id||'-'||fulfillment.system
+LEFT JOIN SALES.SALES_ORDER  AS sales_order ON (sales_order_line.order_id||'-'||sales_order_line.system) = (sales_order.order_id||'-'||sales_order.system)
+LEFT JOIN SALES.CANCELLED_ORDER  AS cancelled_order ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (cancelled_order.item_id||'-'||cancelled_order.order_id||'-'||cancelled_order.system)
+
+WHERE ((((to_timestamp_ntz(sales_order_line.Created) ) >= ((DATEADD('day', -29, CURRENT_DATE()))) AND (to_timestamp_ntz(sales_order_line.Created) ) < ((DATEADD('day', 30, DATEADD('day', -29, CURRENT_DATE()))))))) AND ((CASE WHEN (TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')) is not null THEN 1 ELSE 0 END
+) = 0) AND ((case when sales_order.CHANNEL_id = 1 then 'DTC'
+               when sales_order.CHANNEL_id = 2 then 'Wholesale'
+               when sales_order.CHANNEL_id = 3 then 'General'
+               when sales_order.CHANNEL_id = 4 then 'Employee Store'
+               when sales_order.CHANNEL_id = 5 then 'Owned Retail'
+              else 'Other' end   IN ('DTC', 'Wholesale', 'Owned Retail'))) AND ((CASE WHEN (TO_CHAR(TO_DATE(to_timestamp_ntz(cancelled_order.CANCELLED) ), 'YYYY-MM-DD')) is not NULL  THEN 1 ELSE 0 END
+) = 0)
+GROUP BY 1)
+,
+sub as
 (select i.sku_id
         ,item.category
         ,item.line
@@ -385,6 +406,7 @@ where channel = 'Retail')
         ,nvl(d1.units,0) dtc_oosla
         ,nvl(w1.units,0) wholesale_oosla
         ,nvl(r1.units,0) retail_oosla
+        ,nvl(oo.open_units,0) unfulfilled_units
 from current_inventory ci join inv_summary i on ci.sku_id = i.sku_id
 join sales.item on item.sku_id = ci.sku_id
 left join prod7 on prod7.sku_id = ci.sku_id
@@ -412,23 +434,25 @@ left join next_4w_tot_fcst pt8 on pt8.sku_id = ci.sku_id
 left join next_8w_tot_fcst pt9 on pt9.sku_id = ci.sku_id
 left join tot_sales_trend tst on tst.sku_id = ci.sku_id
 left join tot_sales7 ts7 on ts7.sku_id = ci.sku_id
-where item.classification = 'FG'
+left join open_orders oo on oo.sku_id = ci.sku_id
+ where item.classification = 'FG'
 and item.lifecycle_status = 'CURRENT'
 and description not ilike '%FLR%'
 and description not ilike '%FS%'
 and description not ilike '%REFURb%')
 select category, line, model, description, sku_id
         ,current_on_hand
+        ,unfulfilled_units
         ,greatest(avg_daily_prod7,avg_daily_prod28) avg_production
         ,avg_daily_prod7
         ,sales_slope
-        ,coalesce(round(current_on_hand/nullif(next_4w_tot_fcst/4,0),1),999) weeks_OH
+        ,coalesce(round((current_on_hand-unfulfilled_units)/nullif(next_4w_tot_fcst/4,0),1),999) weeks_OH
         ,nvl(total_28d_units,0) past_4w_total
         ,nvl(next_4w_tot_fcst,0) next_4w_fcst
         ,nvl(next_8w_tot_fcst,0) next_8w_fcst
-        ,current_on_hand+nvl(avg_production,0)*7-nvl(next_4w_tot_fcst_avg*7,0) current_inv_est
-        ,current_on_hand+nvl(avg_production,0)*28-nvl(next_4w_tot_fcst,0) four_week_inv_est
-        ,current_on_hand+nvl(avg_production,0)*56-nvl(next_8w_tot_fcst,0) eight_week_inv_est
+        ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*7-nvl(next_4w_tot_fcst_avg*7,0) current_inv_est
+        ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*28-nvl(next_4w_tot_fcst,0) four_week_inv_est
+        ,current_on_hand-unfulfilled_units+nvl(avg_production,0)*56-nvl(next_8w_tot_fcst,0) eight_week_inv_est
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) > .15 then 1 else 0 end trend_up_flg
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) < -0.1 then 1 else 0 end trend_down_flg
         ,case when weeks_oh = 999 then 'NO SALES FORECAST'
@@ -439,10 +463,8 @@ select category, line, model, description, sku_id
                 when trend_up_flg = 1 then 'TRENDING UP'
                 when trend_down_flg = 1 then 'TRENDING DOWN'
                 else '' end exception_class
-
-
-
-from sub ;;
+from sub
+ ;;
  }
 
   dimension: sku_id {
@@ -508,6 +530,13 @@ from sub ;;
     label: "Current OH"
     type: sum
     sql: ${TABLE}.current_on_hand ;;
+  }
+
+  measure: unfulfilled {
+    description: "Number of units placed in the last 30 days that have not been fulfilled or cancelled."
+    label: "Unfulfilled"
+    type: sum
+    sql: ${TABLE}.unfulfilled_units ;;
   }
 
   measure: past_4w_total {
