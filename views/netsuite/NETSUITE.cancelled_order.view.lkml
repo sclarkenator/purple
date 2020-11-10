@@ -45,6 +45,14 @@ view: cancelled_order {
     type: yesno
     sql: ${cancelled_date} is not NULL ;; }
 
+  dimension: is_cancelled_wholesale {
+    label:  "     * Is Cancelled Wholesale"
+    description: "Whether the Wholesale order was cancelled.
+    Source: netsuite.cancelled_order"
+    hidden: yes
+    type: yesno
+    sql: case when ${sales_order.channel}= 'Wholesale' and ${cancelled_date} is not NULL then 1 else 0 end = 1 ;; }
+
   measure: amt_cancelled_and_refunded {
     label:  "Total Cancellations Completed ($)"
     hidden: yes
