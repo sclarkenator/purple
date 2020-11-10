@@ -395,6 +395,7 @@ view: sessions {
           or ${utm_medium} = 'feed'
           or ${utm_medium} ilike '%shopping%' then 'pla'
            when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
+          when ${utm_medium} in( 'sms', 'tx') then 'SMS'
           when ${utm_medium} in ('au','tv','podcast' ,'radio','cinema', 'print','linear') then 'traditional'
           else 'other' end ;;
   }
