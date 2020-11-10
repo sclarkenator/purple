@@ -19,22 +19,24 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+  explore: sku_summary {
+  ##Added by Scott Clark 11/8/2020
+    hidden: yes
+  }
+
 #-------------------------------------------------------------
 #
 # Paycom hours explore
 #
 #-------------------------------------------------------------
 
-explore: paycom_hours {
-  from: paycom_labor_hours
-  group_label: "HR"
-  hidden:  yes
-  description: "This has Paycom hourly data by day, by location by department"
+  explore: paycom_hours {
+    from: paycom_labor_hours
+    group_label: "HR"
+    hidden:  yes
+    description: "This has Paycom hourly data by day, by location by department"
 
-}
-
-
-
+  }
 
 
 #-------------------------------------------------------------------

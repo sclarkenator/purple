@@ -123,6 +123,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
       relationship: one_to_one
     }
+    join: heap_banner_click {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${ecommerce.session_id} = ${heap_banner_click.session_id} ;;
+      relationship: many_to_many
+    }
   }
 
 

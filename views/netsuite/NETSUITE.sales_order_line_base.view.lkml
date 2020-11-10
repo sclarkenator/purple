@@ -1012,7 +1012,7 @@ view: sales_order_line_base {
     measure: kit_total_units {
       description: "This is used for the forecast_combined and actual_sales explore.  It is break the kits/packages back to their child items"
       type: sum
-      hidden: yes
+      hidden: no
       sql:
         case
           --BASE

@@ -1,5 +1,5 @@
 view: pii_review {
-  sql_table_name: "LEGAL"."PII_REVIEW"
+  sql_table_name: ANALYTICS.LEGAL.PII_REVIEW
     ;;
 
 
