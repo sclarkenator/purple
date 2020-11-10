@@ -62,8 +62,9 @@ dimension: name {
   }
 
   dimension: primary_location{
-    label: "Location"
+    label: "Primary Location"
     group_label: " Advanced"
+    view_label: "Owned Retail"
     description: "The primary location where a retail agent works. Source:incontact.agent_lkp"
     type:  string
     sql: ${TABLE}.location ;;
