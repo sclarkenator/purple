@@ -61,6 +61,15 @@ dimension: name {
     sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
   }
 
+  dimension: primary_location{
+    label: "Primary Location"
+    group_label: " Advanced"
+    view_label: "Owned Retail"
+    description: "The primary location where a retail agent works. Source:incontact.agent_lkp"
+    type:  string
+    sql: ${TABLE}.location ;;
+  }
+
   dimension: email_join {
     description: "The email address for this agent"
     type:  string
