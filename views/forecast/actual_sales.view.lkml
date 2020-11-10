@@ -19,16 +19,8 @@ view: actual_sales {
         value: ""
       }
       filters: {
-        field: item.merchandise
-        value: ""
-      }
-      filters: {
-        field: item.finished_good_flg
-        value: "Yes"
-      }
-      filters: {
-        field: item.modified
-        value: "Yes"
+        field: cancelled_order.is_cancelled
+        value: "No"
       }
     }
     datagroup_trigger: pdt_refresh_6am
