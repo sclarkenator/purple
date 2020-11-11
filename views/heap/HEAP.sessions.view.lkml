@@ -389,12 +389,14 @@ view: sessions {
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' or ${utm_source} = 'youtube' then 'video'
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} = 'lc' then 'local'
           when ${utm_medium} = 'nt' or ${utm_medium} in ('native','nativeads') then 'native'
           when ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' then 'referral'
           when ${utm_medium} = 'sh'
           or ${utm_medium} = 'feed'
           or ${utm_medium} ilike '%shopping%' then 'pla'
            when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
+          when ${utm_medium} in( 'sms', 'tx') then 'SMS'
           when ${utm_medium} in ('au','tv','podcast' ,'radio','cinema', 'print','linear') then 'traditional'
           else 'other' end ;;
   }
