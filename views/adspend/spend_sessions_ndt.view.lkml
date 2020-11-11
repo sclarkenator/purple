@@ -223,6 +223,11 @@ view: spend_sessions_ndt {
     sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_name is not null ;;
   }
 
+  dimension: linked_id {
+    label: " Campaign ID Matches"
+    type: yesno
+    sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_id is not null ;;
+  }
   dimension: organic_session {
     label: " Organic (no tags)"
     type: yesno
