@@ -143,7 +143,7 @@ include: "/dashboards/**/*.dashboard"
     always_filter: {
       filters: {field: warehouse_location.location_Active      value: "No"}
       filters: [item.sku_id: "-%AC-%"]
-      }
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory.item_id} = ${item.item_id} ;;
@@ -163,7 +163,8 @@ include: "/dashboards/**/*.dashboard"
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
+      filters: {field: warehouse_location.location_Active      value: "No"}
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
