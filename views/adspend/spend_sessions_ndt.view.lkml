@@ -189,6 +189,12 @@ view: spend_sessions_ndt {
     group_label: "Spend"
     type: string
     sql: ${TABLE}.campaign_name;;
+
+  }
+  dimension: campaign_id{
+    group_label: "Spend"
+    type: string
+    sql: ${TABLE}.campaign_id;;
   }
 
   dimension: medium{
