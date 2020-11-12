@@ -19,6 +19,7 @@ view: adspend_ndt {
   }
   dimension: ad_date { type: date }
   dimension: campaign_name { type:  string }
+  dimension: campaign_id { type:  string }
   dimension: medium {type:  string }
   dimension: spend_platform {type:  string }
   dimension: campaign_type {type:  string }
