@@ -30,8 +30,7 @@ view: item {
     case when
     --split king mattress kits and split king powerbase kits
         ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
-        -- adds metal frame bases to finished goods
-        or ${line_raw} = 'FRAME' or ( ${category_raw} = 'SEATING' and (${product_description} ilike '%4 PK' or ${product_description} ilike '%6 PK')) then 'FG'
+        or ( ${category_raw} = 'SEATING' and (${product_description} ilike '%4 PK' or ${product_description} ilike '%6 PK')) then 'FG'
         else ${TABLE}.classification_new end ;;
   }
 
@@ -658,10 +657,6 @@ view: item {
       --Canada Mattress--
         when ${sku_clean} in ('10-21-22617','10-21-22618','10-21-22620','10-21-22625','10-21-22632','10-21-22960') then 'Canada'
 
-      --Sleepy Jones Pajamas--
-        when ${sku_clean} in ('10-90-10072','10-90-10071','10-90-10073','10-90-10074','10-90-10076','10-90-10075','10-90-10077',
-        '10-90-10078','10-90-10080','10-90-10079','10-90-10082','10-90-10083','10-90-10086','10-90-10085','10-90-10084','10-90-10081') then 'Sleepy Jones'
-
         else 'unspecified' end ;;
   }
 
@@ -734,10 +729,6 @@ view: item {
           '10-38-82893','10-38-82895','10-38-82815','10-38-82846','10-38-82891','10-38-72889','10-38-82892',
           '10-38-92892','10-38-82890','10-38-12822','10-38-12893','10-38-12815','10-38-12846','10-38-12892','10-38-52891') then 'Metal Platform'
         when ${sku_clean} in ('10-21-13027','10-38-12946','10-38-12939','10-38-12948','10-38-12955','10-38-12952') then 'Powerbase'
-
-      --Sleepy Jones Pajamas--
-        when ${sku_clean} in ('10-90-10072','10-90-10071','10-90-10073','10-90-10074','10-90-10076','10-90-10075','10-90-10077',
-        '10-90-10078','10-90-10080','10-90-10079','10-90-10082','10-90-10083','10-90-10086','10-90-10085','10-90-10084','10-90-10081') then 'Sleepy Jones'
 
         else 'unspecified' end ;;
   }
