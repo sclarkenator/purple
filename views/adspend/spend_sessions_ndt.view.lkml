@@ -7,6 +7,7 @@ view: adspend_ndt {
     explore_source: daily_adspend {
       column: ad_date {}
       column: campaign_name {}
+      column: campaign_id {}
       column: medium {}
       column: spend_platform {}
       column: campaign_type {}
@@ -88,6 +89,7 @@ view: spend_sessions_ndt {
         , sessions.count
 
         , spend.campaign_name
+        , spend.campaign_id
         , spend.medium
         , spend.spend_platform
         , spend.campaign_type
