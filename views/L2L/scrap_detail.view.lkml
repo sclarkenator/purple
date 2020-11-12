@@ -112,6 +112,7 @@ view: scrap_detail {
   }
 
   measure: scrap {
+    hidden: yes
     label: "Scrap"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
@@ -166,42 +167,49 @@ view: scrap_detail {
   }
 
   measure: cal_king_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} = '16' then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: king_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} = '15' then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: queen_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} = '14' then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: full_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} = '13' then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: twin_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} in ('12', '45') then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: regrind_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} in ('10', '17') then ${TABLE}.scrap else 0 end  ;;
   }
 
   measure: trash_scrap {
+    hidden: yes
     group_label: "Scrap by Type"
     type: sum
     sql: case when ${category} = '18' then ${TABLE}.scrap else 0 end  ;;

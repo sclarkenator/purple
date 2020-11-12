@@ -218,7 +218,7 @@ where z.row_num = 1;;
   }
 
   measure: scrap {
-    label: "Total Scrap"
+    label: "Scrap"
     description: "Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
