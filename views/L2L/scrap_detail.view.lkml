@@ -112,8 +112,8 @@ view: scrap_detail {
   }
 
   measure: scrap {
-    hidden: yes
-    label: "Scrap"
+    hidden: no
+    label: "Scrap Detailed"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
   }
@@ -216,7 +216,7 @@ view: scrap_detail {
   }
 
   measure: count {
-    hidden: yes
+    hidden: no
     type: count
     drill_fields: [id]
   }
