@@ -362,6 +362,24 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ltol_line.site} = ${ltol_pitch.site} and ${ltol_line.area} = ${ltol_pitch.area} and ${ltol_line.line_id} = ${ltol_pitch.line} ;;
       relationship: one_to_many
     }
+    join: scrap_detail {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${ltol_pitch.pitch_id} = ${scrap_detail.pitch} ;;
+      relationship: one_to_many
+    }
+    join: scrap_category {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.category} = ${scrap_category.id} ;;
+      relationship: one_to_many
+    }
+    join: product {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.product} = ${product.product_id} ;;
+      relationship: one_to_one
+    }
   }
 
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}

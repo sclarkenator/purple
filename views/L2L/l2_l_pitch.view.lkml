@@ -31,6 +31,7 @@ where z.row_num = 1;;
   }
 
   dimension: actual_product {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: number
     sql: ${TABLE}."ACTUAL_PRODUCT" ;;
@@ -217,6 +218,7 @@ where z.row_num = 1;;
   }
 
   measure: scrap {
+    label: "Scrap"
     description: "Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
