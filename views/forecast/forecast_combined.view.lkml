@@ -193,6 +193,7 @@ sql_table_name: sales.forecast ;;
     sql: (${standard_unit_cost}*${total_units}) ;; }
 
   measure: forecasted_dtc_discount{
+    #Under Construction by Jared
     label: "Forecasted DTC Discount"
     description: "Implied Discount Rate. Use only with DTC at SKU level. Calculation: 1-(total sales/hypothetical total sales at full price)"
     value_format: "0.0%"
