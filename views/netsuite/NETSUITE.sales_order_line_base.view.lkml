@@ -1,5 +1,22 @@
 view: sales_order_line_base {
-  sql_table_name: SALES.SALES_ORDER_LINE ;;
+  #sql_table_name: SALES.SALES_ORDER_LINE ;;
+  derived_table: {
+    sql:
+    select
+      sol.*,
+      case when so.channel_id = 2 and co.cancelled is not NULL then TRUE else FALSE end as is_cancelled_wholesale
+    from analytics.sales.sales_order_line sol
+      left join analytics.sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
+      left join analytics.sales.cancelled_order co on sol.order_id = co.order_id and sol.item_id = co.item_id and sol.system = co.system
+    ;;
+  }
+  dimension: is_cancelled_wholesale {
+    label:  "     * Is Cancelled Wholesale"
+    description: "Whether the Wholesale order was cancelled.
+    Source: netsuite.cancelled_order"
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.is_cancelled_wholesale;; }
 
   dimension: item_order{
     type: string
@@ -45,19 +62,28 @@ view: sales_order_line_base {
   measure: total_gross_Amt {
     group_label: "Gross Sales"
     label:  "Gross Sales ($0.k)"
-    description:  "Total the customer paid, excluding tax and freight, in $K. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $K. This also exludes wholesale cancelled orders. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
+    filters: {field: is_cancelled_wholesale value: "No" }
     value_format: "$#,##0,\" K\""
+    sql:  ${TABLE}.gross_amt ;;
+  }
+  measure: total_gross_Amt_raw {
+    hidden: yes
+    type: sum
+    drill_fields: [order_details*]
+    value_format: "$#,##0"
     sql:  ${TABLE}.gross_amt ;;
   }
 
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $. This also exludes wholesale cancelled orders. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
+    filters: {field: is_cancelled_wholesale value: "No" }
     value_format: "$#,##0"
     sql:  ${TABLE}.gross_amt ;;
   }
@@ -93,9 +119,10 @@ view: sales_order_line_base {
   measure: total_units {
     group_label: "Gross Sales"
     label:  "Gross Sales (units)"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns and cancellations. This also exludes wholesale cancelled orders. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
+   filters: {field: is_cancelled_wholesale value: "No" }
     sql:  ${TABLE}.ordered_qty ;;
   }
 
