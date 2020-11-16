@@ -93,7 +93,7 @@ view: customer_satisfaction_survey {
   measure: avg_nps_rating {
     label: "Average NPS Rating"
     description: "Net Promoter Score Source: stella_connect.customer_satisfaction_survey"
-    type: sum
+    type: average
     value_format: "0.##"
     sql: ${TABLE}."NPS_RATING" ;;
   }
