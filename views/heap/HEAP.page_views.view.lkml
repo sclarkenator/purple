@@ -167,6 +167,13 @@ view: heap_page_views {
     sql: 1.0*${Sum_non_bounced_session}/NULLIF(${Sum_bounced_session}+${Sum_non_bounced_session},0) ;;
     value_format_name: percent_1
     }
+
+measure: bounce_rate {
+  description: "Percent of sessions where user only viewed one page and left the site"
+  type: number
+  sql: (${count}-${Sum_non_bounced_session})/${count} ;;
+  value_format_name: percent_1
+   }
 }
 
 

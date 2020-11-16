@@ -4,6 +4,7 @@ view: mainfreight_inventory {
 
 
   dimension: sku_id {
+    hidden: yes
     primary_key: yes
     description: "Source: mainfreight. mainfreight_inventory"
     type: string

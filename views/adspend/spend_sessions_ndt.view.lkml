@@ -7,6 +7,7 @@ view: adspend_ndt {
     explore_source: daily_adspend {
       column: ad_date {}
       column: campaign_name {}
+      column: campaign_id {}
       column: medium {}
       column: spend_platform {}
       column: campaign_type {}
@@ -18,6 +19,7 @@ view: adspend_ndt {
   }
   dimension: ad_date { type: date }
   dimension: campaign_name { type:  string }
+  dimension: campaign_id { type:  string }
   dimension: medium {type:  string }
   dimension: spend_platform {type:  string }
   dimension: campaign_type {type:  string }
@@ -88,6 +90,7 @@ view: spend_sessions_ndt {
         , sessions.count
 
         , spend.campaign_name
+        , spend.campaign_id
         , spend.medium
         , spend.spend_platform
         , spend.campaign_type
@@ -96,7 +99,7 @@ view: spend_sessions_ndt {
 
       from ${adspend_ndt.SQL_TABLE_NAME} spend
       full outer join ${sessions_ndt.SQL_TABLE_NAME} sessions
-        on sessions.time_date::date = spend.ad_date::date and sessions.utm_campaign = spend.campaign_name
+        on sessions.time_date::date = spend.ad_date::date and sessions.utm_campaign = spend.campaign_id
     ;;
     datagroup_trigger: pdt_refresh_6am
   }
@@ -187,6 +190,12 @@ view: spend_sessions_ndt {
     group_label: "Spend"
     type: string
     sql: ${TABLE}.campaign_name;;
+
+  }
+  dimension: campaign_id{
+    group_label: "Spend"
+    type: string
+    sql: ${TABLE}.campaign_id;;
   }
 
   dimension: medium{
@@ -223,6 +232,11 @@ view: spend_sessions_ndt {
     sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_name is not null ;;
   }
 
+  dimension: linked_id {
+    label: " Campaign ID Matches"
+    type: yesno
+    sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_id is not null ;;
+  }
   dimension: organic_session {
     label: " Organic (no tags)"
     type: yesno

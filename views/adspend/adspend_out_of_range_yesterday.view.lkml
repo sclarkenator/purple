@@ -1,3 +1,4 @@
+## Data Engineering is using this data to check adspend daily
 view: adspend_out_of_range_yesterday {
   sql_table_name: MARKETING.ADSPEND_OUT_OF_RANGE_YESTERDAY ;;
 

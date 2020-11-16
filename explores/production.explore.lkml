@@ -107,6 +107,11 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       sql_on: ${workorder_reconciliation.assembly_build_id} = ${assembly_build.assembly_build_id} ;;
     }
+    join: warehouse_location {
+      sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
+      relationship: many_to_one
+      type: left_outer
+    }
   }
 
   explore: warehouse_transfer {
@@ -138,7 +143,7 @@ include: "/dashboards/**/*.dashboard"
     always_filter: {
       filters: {field: warehouse_location.location_Active      value: "No"}
       filters: [item.sku_id: "-%AC-%"]
-      }
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory.item_id} = ${item.item_id} ;;
@@ -146,6 +151,11 @@ include: "/dashboards/**/*.dashboard"
     join: warehouse_location {
       sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
       relationship: many_to_one}
+    join: mainfreight_inventory {
+      type: left_outer
+      sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: inventory_snap {
@@ -153,7 +163,8 @@ include: "/dashboards/**/*.dashboard"
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
+      filters: {field: warehouse_location.location_Active      value: "No"}
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
@@ -166,6 +177,11 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
       relationship: one_to_one}
+    join: mainfreight_inventory_snapshot {
+      type: left_outer
+      sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: mainfreight_inventory{
@@ -346,18 +362,30 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ltol_line.site} = ${ltol_pitch.site} and ${ltol_line.area} = ${ltol_pitch.area} and ${ltol_line.line_id} = ${ltol_pitch.line} ;;
       relationship: one_to_many
     }
+    join: scrap_detail {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${ltol_pitch.pitch_id} = ${scrap_detail.pitch} ;;
+      relationship: one_to_many
+    }
+    join: scrap_category {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.category} = ${scrap_category.id} ;;
+      relationship: one_to_many
+    }
+    join: product {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.product} = ${product.product_id} ;;
+      relationship: one_to_one
+    }
   }
 
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
   explore: jarom_location_data {hidden:  yes group_label: "Production"}
-  explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
-  explore: l2_l_checklists {hidden: yes group_label: "L2L"}
-  explore: l2l_qpc_mattress_audit {hidden: yes group_label: "L2L"}
-  explore: l2l_quality_yellow_card {hidden: yes group_label: "L2L"}
-  explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "L2L"}
-  explore: l2l_machine_downtime {hidden: yes group_label: "L2L"}
   explore: inventory_reconciliation { hidden: yes group_label: "Production"}
   explore: po_and_to_inbound {hidden: yes group_label: "Production"}
   explore: inventory_recon_sub_locations {hidden:yes group_label: "Production"}
@@ -367,6 +395,40 @@ include: "/dashboards/**/*.dashboard"
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
+
+  explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
+  explore: l2_l_checklists {hidden: yes group_label: "L2L"}
+  explore: l2l_qpc_mattress_audit {hidden: yes group_label: "L2L"}
+  explore: l2l_quality_yellow_card {hidden: yes group_label: "L2L"}
+  explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "L2L"}
+  explore: l2l_machine_downtime {hidden: yes group_label: "L2L"}
+  explore: incoming_inspection_form {
+    from:  date_meta
+    group_label: "L2L Inspection Form"
+    label: "Incoming Inspection Form"
+    view_label: "Inspection Date"
+    hidden: yes
+    join: incoming_inspection_form_cores {
+      type: left_outer
+      sql_on: ${incoming_inspection_form.date} = ${incoming_inspection_form_cores.inspection_date} ;;
+      relationship: one_to_one
+    }
+    join: incoming_inspection_form_covers {
+      type: left_outer
+      sql_on: ${incoming_inspection_form.date} = ${incoming_inspection_form_covers.inspection_date} ;;
+      relationship: one_to_one
+    }
+    join: incoming_inspection_form_rails {
+      type: left_outer
+      sql_on: ${incoming_inspection_form.date} = ${incoming_inspection_form_rails.inspection_date} ;;
+      relationship: one_to_one
+    }
+    join: incoming_inspection_form_other {
+      type: left_outer
+      sql_on: ${incoming_inspection_form.date} = ${incoming_inspection_form_other.inspection_date} ;;
+      relationship: one_to_one
+    }
+  }
 
   #  explore: fulfillment_snowflake{hidden:  yes from: fulfillment group_label: "Production"}
   # explore: mainchain_transaction_outwards_detail {hidden:yes

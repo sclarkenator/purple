@@ -107,6 +107,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
       relationship: many_to_one
     }
+    join: order_utm {
+      type: left_outer
+      sql_on: lower(${cordial_activity.email}) = lower(${order_utm.email})
+        and ${cordial_activity.time_time} < ${order_utm.created} and ${cordial_activity.time_time} >= dateadd('hour',-48,${order_utm.created})
+        and ${cordial_activity.action} in ('message-sent','open');;
+      relationship: many_to_one
+    }
   }
 
   explore: email_contact_merged {
@@ -195,6 +202,7 @@ explore: email_mymove_contact {
   explore: c3_roa {hidden: yes group_label: "Marketing"}
   explore: spend_sessions_ndt {hidden: yes group_label: "Marketing"}
   explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
+  explore: adspend_by_platform {group_label: "Marketing" label: "Adspend Platform Out of Range" description: "Platform daily Adspend outside of threshold set by Data Engineering." hidden: yes}
   explore: marketing_magazine {hidden: yes group_label: "Marketing"}
   explore: sessions {hidden: yes group_label: "Marketing"}
   explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}

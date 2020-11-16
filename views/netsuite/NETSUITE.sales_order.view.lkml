@@ -658,6 +658,7 @@ dimension: store_name{
   when ${store_id} in ('FO-01','FO_01') then 'Salt Lake'
   when ${store_id} = 'UT-01' then 'Lehi'
   when ${store_id} = 'TX-01' then 'Austin'
+  when ${store_id} = 'VA-01' then 'Tysons'
   else ${store_id} end;;
 }
 
