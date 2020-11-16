@@ -523,13 +523,6 @@ view: users {
     sql: ${TABLE}.total_number_of_orders ;;
   }
 
-  dimension: total_revenue {
-    group_label: "User Orders"
-    description: "Source: HEAP.users"
-    type: string
-    sql: ${TABLE}.total_revenue ;;
-  }
-
   dimension: total_spent {
     group_label: "User Orders"
     description: "Source: HEAP.users"

@@ -200,3 +200,4 @@ explore: forecast_compared_to_actual_sales {
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
+  explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedited Shipping"}

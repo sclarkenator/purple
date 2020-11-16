@@ -143,7 +143,7 @@ include: "/dashboards/**/*.dashboard"
     always_filter: {
       filters: {field: warehouse_location.location_Active      value: "No"}
       filters: [item.sku_id: "-%AC-%"]
-      }
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory.item_id} = ${item.item_id} ;;
@@ -163,7 +163,8 @@ include: "/dashboards/**/*.dashboard"
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}}
+      filters: {field: warehouse_location.location_Active      value: "No"}
+      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
     join: item {
       type: left_outer
       sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
@@ -360,6 +361,24 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${ltol_line.site} = ${ltol_pitch.site} and ${ltol_line.area} = ${ltol_pitch.area} and ${ltol_line.line_id} = ${ltol_pitch.line} ;;
       relationship: one_to_many
+    }
+    join: scrap_detail {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${ltol_pitch.pitch_id} = ${scrap_detail.pitch} ;;
+      relationship: one_to_many
+    }
+    join: scrap_category {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.category} = ${scrap_category.id} ;;
+      relationship: one_to_many
+    }
+    join: product {
+      view_label: "Pitch"
+      type: left_outer
+      sql_on: ${scrap_detail.product} = ${product.product_id} ;;
+      relationship: one_to_one
     }
   }
 
