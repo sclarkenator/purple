@@ -2,7 +2,7 @@
 # Owner - Scott Clark
 # Daily Ad Spend
 #-------------------------------------------------------------------
-include: "_period_comparison.view.lkml"
+include: "/views/_period_comparison.view.lkml"
 view: daily_adspend {
   sql_table_name: marketing.adspend ;;
   extends: [_period_comparison]

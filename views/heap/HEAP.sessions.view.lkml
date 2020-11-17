@@ -2,13 +2,39 @@
 # Owner - Tim Schultz
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
-
+include: "/views/_period_comparison.view.lkml"
 view: sessions {
 #   derived_table: {
 #     sql: select * from heap.sessions;;
 #     datagroup_trigger: pdt_refresh_6am
 #   }
   sql_table_name: heap_data.purple.sessions ;;
+
+  extends: [_period_comparison]
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      time,
+      time_of_day,
+      date,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      week,
+      month,
+      month_num,
+      quarter,
+      quarter_of_year,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.time ;;
+  }
 
   dimension: session_id {
     #primary_key: yes
@@ -498,6 +524,22 @@ view: sessions {
     label: "Count of Sessions"
     description: "Source: looker calculation"
     type: count_distinct
+    sql: ${TABLE}.session_id ;;}
+
+  measure: count_current_period {
+    hidden: yes
+    label: "Count of Sessions Current Period"
+    description: "Source: looker calculation"
+    type: count_distinct
+    filters: [is_current_period: "yes"]
+    sql: ${TABLE}.session_id ;;}
+
+  measure: count_comparison_period {
+    hidden: yes
+    label: "Count of Sessions Comparison Period"
+    description: "Source: looker calculation"
+    type: count_distinct
+    filters: [is_comparison_period: "yes"]
     sql: ${TABLE}.session_id ;;}
 
   measure: count_k {
