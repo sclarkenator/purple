@@ -6,7 +6,6 @@ view: adspend_by_platform {
         select date, platform,sum(spend) as spend
         from analytics.marketing.adspend
         where date > add_months(current_date,-3)
-          and platform in ('GOOGLE','YOUTUBE','FB/IG','BING','YAHOO', 'SNAPCHAT')
         group by 1,2
       ), threshold as (
         select platform, min(spend) as threshold
@@ -16,7 +15,6 @@ view: adspend_by_platform {
         select platform, sum(spend) as adspend_amt
         from analytics.marketing.adspend
         where date = current_date - 1
-          and platform in ('GOOGLE','YOUTUBE','FB/IG','BING','YAHOO', 'SNAPCHAT')
         group by 1
       )
       select y.*
