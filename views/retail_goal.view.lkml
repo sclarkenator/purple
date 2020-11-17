@@ -1,3 +1,6 @@
+#--------------------------------------
+# Create By: Blake Walton 2020-11-17
+#--------------------------------------
 view: retail_goal {
   sql_table_name: analytics.retail.retail_goal
     ;;
