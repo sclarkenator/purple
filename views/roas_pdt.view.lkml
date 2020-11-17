@@ -506,7 +506,7 @@ view: roas_pdt {
        when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
       or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming', 'veritone') then 'Traditional'
       when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
-      when lower(${TABLE}.medium) in ('sh','feed','shopping') then 'PLA'
+      when lower(${TABLE}.medium) in ('sh','feed','shopping','PLA') then 'PLA'
       when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
       'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
       'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
