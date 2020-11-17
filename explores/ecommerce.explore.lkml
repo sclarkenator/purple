@@ -129,6 +129,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ecommerce.session_id} = ${heap_banner_click.session_id} ;;
       relationship: many_to_many
     }
+    join: heap_banner_view {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${ecommerce.session_id} = ${heap_banner_view.session_id} ;;
+      relationship: many_to_many
+    }
   }
 
   explore: ecommerce_canada {
