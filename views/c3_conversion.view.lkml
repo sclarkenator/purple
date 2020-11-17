@@ -264,8 +264,10 @@ view: c3_conversion {
     WHEN CONTAINS(${group_name},'PLA') then 'PLA'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
     WHEN CONTAINS(${group_name},'Social')
-    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Paid Social'
-    WHEN CONTAINS(${group_name},'Radio') then 'Radio'
+    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Social'
+    WHEN CONTAINS(${group_name},'Radio')
+    or CONTAINS(${group_name}, 'Podcast')
+    or CONTAINS (${group_name},'TV') then 'Traditional'
     --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     ELSE ${TABLE}.group_name
     END ;;
