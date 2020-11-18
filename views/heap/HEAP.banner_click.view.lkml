@@ -3,6 +3,7 @@ view: heap_banner_click {
   sql_table_name: heap_data.heap.carousel_banner_home_hero_click_hero_cta ;;
 
   dimension: PK {
+    group_label: "Hero Banner"
     type: string
     primary_key: yes
     hidden: yes
@@ -10,6 +11,7 @@ view: heap_banner_click {
   }
 
   dimension: user_id {
+    group_label: "Hero Banner"
     description: "Unique ID for each user that has ordered"
     type: number
     hidden: yes
@@ -17,31 +19,36 @@ view: heap_banner_click {
   }
 
   dimension: event_id {
+    group_label: "Hero Banner"
     hidden: yes
     type: number
     sql: ${TABLE}.event_id ;;
   }
 
   dimension: session_id {
+    group_label: "Hero Banner"
     hidden:yes
     type: number
     sql: ${TABLE}.session_id ;;
   }
 
   dimension_group: time {
+    group_label: "Hero Banner"
     hidden: yes
     type: time
     timeframes: [date, week, month, year]
     sql: ${TABLE}.time ;;
   }
 
-  dimension: banner_heading {
+  dimension: banner_heading_click {
+    group_label: "Hero Banner"
     description: "Click event: clicked HERO banner, CTA (Call to Action) Source: heap.carousel_banner_home_ hero_click_hero_cta"
     type: string
     sql: ${TABLE}.banner_heading ;;
   }
 
   measure: banner_clicks {
+    group_label: "Hero Banner"
     description: "Count Click event: clicked HERO banner, CTA (Call to Action) Source: heap.carousel_banner_home_ hero_click_hero_cta"
     type: count_distinct
     sql: ${TABLE}.banner_heading ;;
