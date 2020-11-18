@@ -11,7 +11,6 @@ view: campaign_name_lookup {
             , date
             , row_number () over (partition by campaign_id order by date desc) as row_num
         from marketing.adspend
-        ---where campaign_id in ('8111996058','744229652','830970364','830970370','830970361')
         where campaign_id not in ('0','1','NA','N/A','11','111','111111','10')
           and campaign_name not in ('NA','N/A')
         order by 1,3 desc
