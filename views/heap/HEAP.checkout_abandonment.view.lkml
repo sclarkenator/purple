@@ -1,4 +1,4 @@
-view: heap_check_abandonment {
+view: heap_checkout_abandonment {
   derived_table: {
     explore_source: ecommerce {
       column: user_id { field: heap_all_events_subset.user_id }

@@ -129,6 +129,8 @@ view: ecommerce1 {
 #    hidden:  yes }
 
   dimension: ordered {
+    #this is used for the heap_checkout_abandonment explore
+    hidden: yes
     type: string
     sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
   }

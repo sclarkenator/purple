@@ -166,7 +166,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   #Created for Mason on 2020-11-18
-  explore: heap_check_abandonment {hidden:yes group_label: "Marketing" description:"Check abandonment details"}
+  explore: heap_checkout_abandonment {hidden:yes group_label: "Marketing" description:"Check abandonment details"}
 
 #   explore: ecommerce_qualtrics {
 #     hidden: yes

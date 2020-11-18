@@ -49,28 +49,33 @@ view: heap_page_views {
   }
 
   measure: event_time_min {
+    hidden: yes
     type: date_time
     sql: min(${event_time_raw}) ;;
     convert_tz: no
   }
 
   measure: event_time_max {
+    hidden: yes
     type: date_time
     sql: max(${event_time_raw}) ;;
     convert_tz: no
   }
 
   measure: event_time_diff {
+    hidden: yes
     type: number
     sql: datediff(minute,${event_time_min},${event_time_max}) ;;
   }
 
   measure: max_page_flow {
+    hidden: yes
     type: number
     sql: max(${page_flow}) ;;
   }
 
   measure: min_page_flow {
+    hidden: yes
     type: number
     sql: min(${page_flow}) ;;
   }
