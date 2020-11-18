@@ -32,7 +32,7 @@ view: heap_page_views {
     description: "Time the Session Began. Source: heap.session_page_flow.session_time"
     hidden: no
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, time,hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.session_time) ;;
@@ -42,10 +42,37 @@ view: heap_page_views {
     label: "Pageview - Event Time"
     description: "Time the Visitor viewed a page. Source: heap.session_page_flow.event_time"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw,time, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.event_time) ;;
+  }
+
+  measure: event_time_min {
+    type: date_time
+    sql: min(${event_time_raw}) ;;
+    convert_tz: no
+  }
+
+  measure: event_time_max {
+    type: date_time
+    sql: max(${event_time_raw}) ;;
+    convert_tz: no
+  }
+
+  measure: event_time_diff {
+    type: number
+    sql: datediff(minute,${event_time_min},${event_time_max}) ;;
+  }
+
+  measure: max_page_flow {
+    type: number
+    sql: max(${page_flow}) ;;
+  }
+
+  measure: min_page_flow {
+    type: number
+    sql: min(${page_flow}) ;;
   }
 
   dimension: title {

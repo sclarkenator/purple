@@ -128,6 +128,11 @@ view: ecommerce1 {
 #    sql: ${TABLE}.purchase_session_id ;;
 #    hidden:  yes }
 
+  dimension: ordered {
+    type: string
+    sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
+  }
+
   dimension: device_type {
     type: number
     sql: ${TABLE}.device_type ;;
