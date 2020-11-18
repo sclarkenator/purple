@@ -129,6 +129,11 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ecommerce.session_id} = ${heap_banner_click.session_id} ;;
       relationship: many_to_many
     }
+    join: campaign_name_lookup {
+      type: left_outer
+      sql_on: ${campaign_name_lookup.campaign_id}::string = ${ecommerce.utm_campaign_raw}::string;;
+      relationship: many_to_one
+    }
   }
 
   explore: ecommerce_canada {
@@ -149,6 +154,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${heap_ca_purchase.session_id} = ${ecommerce_canada.session_id} ;;
       relationship: one_to_many
     }
+
   }
 
 #   explore: ecommerce_qualtrics {
