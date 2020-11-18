@@ -128,6 +128,13 @@ view: ecommerce1 {
 #    sql: ${TABLE}.purchase_session_id ;;
 #    hidden:  yes }
 
+  dimension: ordered {
+    #this is used for the heap_checkout_abandonment explore
+    hidden: yes
+    type: string
+    sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
+  }
+
   dimension: device_type {
     type: number
     sql: ${TABLE}.device_type ;;
