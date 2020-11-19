@@ -992,6 +992,8 @@ view: sales_order_line_base {
           when ${location} ilike '%pilot%' then 'Pilot'
           when ${location} is null then 'FBA'
           when ${location} ilike '%100-%' then 'Purple'
+          when ${location} ilike '%nehds%' then 'NEHDS'
+          when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
   }
