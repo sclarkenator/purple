@@ -4,7 +4,7 @@
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
 view: heap_ca_page_views {
-  sql_table_name: analytics.heap.session_page_flow_bf_ca ;;
+  sql_table_name: analytics.heap.session_page_flow_ca  ;;
 
   dimension: session_id {
     hidden: no
