@@ -157,67 +157,66 @@ view: daily_adspend {
       else ${TABLE}.spend
       end ;; }
 
-  measure: adspend_current_period{
-    label: "Total Adspend ($k) current period"
-    group_label: "Advanced"
-    description: "Total adspend for selected channels (includes Agency cost)"
-    type: number
-    value_format: "$#,##0,\" K\""
-    sql: ${adspend_no_calc_current_period}+${adspend_no_agency_current_period} ;;  }
+  # measure: adspend_current_period{
+  #   label: "Total Adspend ($k) current period"
+  #   group_label: "Advanced"
+  #   description: "Total adspend for selected channels (includes Agency cost)"
+  #   type: number
+  #   value_format: "$#,##0,\" K\""
+  #   sql: ${adspend_no_calc_current_period}+${adspend_no_agency_current_period} ;;  }
 
+  # measure: adspend_no_calc_current_period {
+  #   label: "Total Adspend Current Period - No Calc ($)"
+  #   group_label: "Advanced"
+  #   description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+  #   type: sum
+  #   value_format:  "$#,##0"
+  #   #agency cost + adspend no agency
+  #   sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
+  #     when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+  #     when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+  #     when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
+  #     when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+  #     else ${TABLE}.spend
+  #     end ;;
+  #   filters: [is_current_period: "yes"]
+  #   }
 
-  measure: adspend_no_calc_current_period {
-    label: "Total Adspend Current Period - No Calc ($)"
-    group_label: "Advanced"
-    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
-    type: sum
-    value_format:  "$#,##0"
-    #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
-      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
-      else ${TABLE}.spend
-      end ;;
-    filters: [is_current_period: "yes"]
-    }
-
-  measure: adspend_no_agency_current_period {
-    label: "Adspend without Agency Cost ($) current period"
-    group_label: "Advanced"
-    description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
-    type: sum
-    value_format: "$#,##0"
-    sql: case
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
-      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
-      else ${TABLE}.spend
-      end ;;
-    filters: [is_current_period: "yes"]
-  }
-  measure: adspend_no_calc_comparison_period {
-    label: "Total Adspend Comparison Period - No Calc ($)"
-    group_label: "Advanced"
-    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
-    type: sum
-    value_format:  "$#,##0"
-    #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
-      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
-      else ${TABLE}.spend
-      end ;;
-    filters: [is_comparison_period: "yes"]
-  }
+  # measure: adspend_no_agency_current_period {
+  #   label: "Adspend without Agency Cost ($) current period"
+  #   group_label: "Advanced"
+  #   description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
+  #   type: sum
+  #   value_format: "$#,##0"
+  #   sql: case
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+  #     when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
+  #     when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+  #     else ${TABLE}.spend
+  #     end ;;
+  #   filters: [is_current_period: "yes"]
+  # }
+  # measure: adspend_no_calc_comparison_period {
+  #   label: "Total Adspend Comparison Period - No Calc ($)"
+  #   group_label: "Advanced"
+  #   description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+  #   type: sum
+  #   value_format:  "$#,##0"
+  #   #agency cost + adspend no agency
+  #   sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
+  #     when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+  #     when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+  #     when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.01
+  #     when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+  #     else ${TABLE}.spend
+  #     end ;;
+  #   filters: [is_comparison_period: "yes"]
+  # }
 
   measure: agency_cost {
     label: "  Agency Cost ($)"
@@ -526,6 +525,122 @@ dimension: spend_platform {
     sql: MAX(${ad_raw}) ;;
     convert_tz: no
   }
+
+  ## For _period_comparison
+  measure: adspend_current_period {
+    label: "Total Adspend Current Period"
+    group_label: "Period Comparison"
+    description: "Total adspend for selected channels (includes Agency cost)"
+    type: number
+    value_format: "$#,##0"
+    sql: ${agency_cost_current_period}+${adspend_no_agency_current_period} ;;  }
+
+  measure: agency_cost_current_period {
+    label: "  Agency Cost ($) Current Period"
+    group_label: "Period Comparison"
+    description: "Total cost to Agency Within and Modus for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
+      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      end ;;
+    filters: [is_current_period: "yes"]
+  }
+
+
+  measure: adspend_no_agency_current_period {
+    label: "Adspend without Agency Cost ($) Current Period"
+    group_label: "Period Comparison"
+    description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
+      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_current_period: "yes"]
+  }
+
+  measure: adspend_no_calc_current_period {
+    label: "Total Adspend - No Calc ($) Current Period"
+    group_label: "Period Comparison"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_current_period: "yes"]
+  }
+
+  measure: adspend_comparison_period {
+    label: "Total Adspend Comparison Period"
+    group_label: "Period Comparison"
+    description: "Total adspend for selected channels (includes Agency cost)"
+    type: number
+    value_format: "$#,##0"
+    sql: ${agency_cost_comparison_period}+${adspend_no_agency_comparison_period} ;;  }
+
+  measure: agency_cost_comparison_period {
+    label: "  Agency Cost ($) Comparison Period"
+    group_label: "Period Comparison"
+    description: "Total cost to Agency Within and Modus for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
+      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      end ;;
+    filters: [is_comparison_period: "yes"]
+  }
+
+  measure: adspend_no_agency_comparison_period {
+    label: "Adspend without Agency Cost ($) Comparison Period"
+    group_label: "Period Comparison"
+    description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
+    type: sum
+    value_format: "$#,##0"
+    sql: case
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
+      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_comparison_period: "yes"]
+  }
+
+  measure: adspend_no_calc_comparison_period {
+    label: "Total Adspend - No Calc ($) Comparison Period"
+    group_label: "Period Comparison"
+    description: "Total adspend for selected channels (includes Agency cost) but without calculations"
+    type: sum
+    value_format:  "$#,##0"
+    #agency cost + adspend no agency
+    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      else ${TABLE}.spend
+      end ;;
+    filters: [is_comparison_period: "yes"]
+  }
+
+  ##For C-level Dashboard
 
   parameter: see_data_by {
     type: unquoted
