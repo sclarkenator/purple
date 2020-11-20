@@ -11,13 +11,13 @@ view: dei {
   dimension: ethnicity {
     description: "Source: hr_excel_file.dei"
     type: string
-    sql: ${TABLE}."ETHNICITY" ;;
+    sql: coalesce(${TABLE}."ETHNICITY",'I do not wish to self-identify') ;;
   }
 
   dimension: gender {
     description: "Source: hr_excel_file.dei"
     type: string
-    sql: ${TABLE}."GENDER" ;;
+    sql: case when ${TABLE}."GENDER" = 'I do not wish to self-identify' then 'Unspecified' else ${TABLE}."GENDER" end ;;
   }
 
   dimension: location {
@@ -36,7 +36,7 @@ view: dei {
     label: "VP"
     description: "Source: hr_excel_file.dei"
     type: string
-    sql: ${TABLE}."VP" ;;
+    sql: coalesce(${TABLE}."VP",'C-Level') ;;
   }
 
   measure: count {
