@@ -56,11 +56,11 @@ view: heap_checkout_abandonment {
   }
   measure: avg_max_page_flow {
     type: average
-    value_format: "#0"
+    value_format: "#0.00"
     sql: ${max_page_flow} ;;
   }
   measure: avg_min_page_flow {
-    value_format: "#0"
+    value_format: "#0.00"
     type: average
     sql: ${min_page_flow} ;;
   }
