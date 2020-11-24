@@ -85,6 +85,27 @@ view: inventory {
     type: number
     sql: ${TABLE}.ON_ORDER ;; }
 
+  measure: last_sync_date {
+    group_label: " Sync"
+    type: date
+    label: "Sync date"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.created) ;;}
+
+  measure: last_sync_time {
+    group_label: " Sync"
+    type: date_time_of_day
+    label: "Sync time"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.created) ;;}
+
+  measure: last_sync_timestamp {
+    group_label: " Sync"
+    label: "Sync timestamp"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.created) ;;}
+
+
   measure: on_hand {
     label: "Total On Hand"
     description: "The quantity of an item physically in a warehouse."
