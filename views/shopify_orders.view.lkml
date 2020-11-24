@@ -97,6 +97,12 @@ view: shopify_orders {
       else ${sales_order.tax_amt} - ${TABLE}.total_tax end ;;
   }
 
+  measure: last_synced {
+    label: "Data synced"
+    sql: max(${created_raw}) ;;
+    convert_tz: yes
+  }
+
   dimension: order_ref {
     description: "Netsuite Reference ID"
     label: "Related_tranid"
@@ -130,6 +136,7 @@ view: shopify_orders {
 
   dimension: tax_match {
     label: "Taxes Match"
+    hidden: no
     description: "Taxes between Shopify and Netsuite Match"
     type: yesno
     sql: ${TABLE}.total_tax = ${sales_order.tax_amt} ;;
@@ -141,14 +148,18 @@ view: shopify_orders {
     sql: ${TABLE}.user_id ;;
   }
 
-  dimension_group: created_at  {
+  dimension_group: created  {
     type: time
     timeframes: [
       date,
+      hour,
+      hour_of_day,
+      minute15,
       week,
       month,
       quarter,
-      year
+      year,
+      raw
     ]
     convert_tz: yes
     datatype: timestamp
