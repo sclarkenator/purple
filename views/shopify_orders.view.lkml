@@ -13,7 +13,7 @@ view: shopify_orders {
         SELECT
             o.ORDER_ID AS ID,
             o.CUSTOMER_ID AS USER_ID,
-            o.CREATED AS CREATED_AT,
+            convert_timezone('America/Denver',o.CREATED) AS CREATED_AT,
             o.GROSS_AMT AS SUBTOTAL_PRICE,
             o.TOTAL_GROSS AS TOTAL_PRICE,
             o.ORDER_NUMBER AS NAME,
@@ -24,19 +24,19 @@ view: shopify_orders {
         INNER JOIN LINES l ON o.ORDER_ID = l.ORDER_ID
       )
       select
-        'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+        'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
       from analytics_stage.shopify_us_ft."ORDER"
       UNION
       select
-        'Shopify CA' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+        'Shopify CA' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
       from analytics_stage.shopify_ca_ft."ORDER"
       UNION
       select
-        'Shopify Outlet' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+        'Shopify Outlet' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
       from analytics_stage.shopify_outlet."ORDER"
       UNION
       select
-        'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
+        'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN
       from ct
     ;;
 #     sql:
@@ -97,6 +97,21 @@ view: shopify_orders {
       else ${sales_order.tax_amt} - ${TABLE}.total_tax end ;;
   }
 
+  measure: last_sync_date {
+    group_label: " Sync"
+    type: date
+    label: "Sync date"
+    description: "Date table was last refreshed"
+    sql: max(${created_raw}) ;;}
+
+  measure: last_sync_time {
+    group_label: " Sync"
+    type: date_time_of_day
+    label: "Sync time"
+    description: "Date table was last refreshed"
+    convert_tz: yes
+    sql: max(${created_raw}) ;;}
+
   dimension: order_ref {
     description: "Netsuite Reference ID"
     label: "Related_tranid"
@@ -130,6 +145,7 @@ view: shopify_orders {
 
   dimension: tax_match {
     label: "Taxes Match"
+    hidden: no
     description: "Taxes between Shopify and Netsuite Match"
     type: yesno
     sql: ${TABLE}.total_tax = ${sales_order.tax_amt} ;;
@@ -141,14 +157,18 @@ view: shopify_orders {
     sql: ${TABLE}.user_id ;;
   }
 
-  dimension_group: created_at  {
+  dimension_group: created  {
     type: time
     timeframes: [
       date,
+      hour,
+      hour_of_day,
+      minute15,
       week,
       month,
       quarter,
-      year
+      year,
+      raw
     ]
     convert_tz: yes
     datatype: timestamp

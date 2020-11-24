@@ -59,6 +59,22 @@ view: shopify_discount_codes {
     sql: split_part(${TABLE}.promo,'-',1) ;;
   }
 
+  dimension: sheer_id {
+    view_label: "Sales Order"
+    group_label: " Advanced"
+    label: "SheerID Promo Code"
+    description: "Promo Code Used in Shopify, bucketed (removed unique key). Source:shopify. shopify_discount_code"
+    hidden:  yes
+    type: string
+    sql: case when split_part(${TABLE}.promo,'-',1) = 'MD' then 'Military'
+              when split_part(${TABLE}.promo,'-',1) = 'FR' then 'First Responder'
+              when split_part(${TABLE}.promo,'-',1) = 'MED' then 'Healthcare'
+              when split_part(${TABLE}.promo,'-',1) = 'STU' then 'Student'
+              when split_part(${TABLE}.promo,'-',1) = 'TEA' then 'Teacher'
+              when split_part(${TABLE}.promo,'-',1) = 'TRU' then 'Trucker'
+              end ;;
+  }
+
   dimension: promo_2 {
     hidden:  yes
     label: "Promo - email test"
