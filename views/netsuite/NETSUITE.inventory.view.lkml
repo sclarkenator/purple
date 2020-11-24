@@ -19,7 +19,7 @@ view: inventory {
     sql: ${TABLE}.backordered ;; }
 
   dimension_group: created {
-    hidden: yes
+    hidden: no
     type: time
     description: "Date the Item was created in the table."
     timeframes: [ time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
