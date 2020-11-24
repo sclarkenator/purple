@@ -103,6 +103,7 @@ view: heap_page_views {
     label: " Pages Viewed (measure version)"
     description: "Average number of pages viewed in a session. Source: HEAP.session_page_flow"
     type: average
+    value_format: "000.00"
     sql: ${TABLE}.count_pages_viewed ;;
   }
 

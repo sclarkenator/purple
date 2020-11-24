@@ -564,46 +564,46 @@ view: sessions {
   }
 
   # Used for C-level Dasboard
-  # parameter: see_data_by_sessions {
-  #   description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
-  #   hidden: no
-  #   type: unquoted
-  #   allowed_value: {
-  #     label: "Day"
-  #     value: "day"
-  #   }
-  #   allowed_value: {
-  #     label: "Week"
-  #     value: "week"
-  #   }
-  #   allowed_value: {
-  #     label: "Month"
-  #     value: "month"
-  #   }
-  #   allowed_value: {
-  #     label: "Quarter"
-  #     value: "quarter"
-  #   }
-  # }
+  parameter: see_data_by_sessions {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: no
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+  }
 
-  # dimension: see_data_sessions {
-  #   view_label: "Sessions"
-  #   label: "See Data By"
-  #   description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
-  #   hidden: no
-  #   sql:
-  #   {% if see_data_by_sessions._parameter_value == 'day' %}
-  #     ${time_date}
-  #   {% elsif see_data_by_sessions._parameter_value == 'week' %}
-  #     ${time_week}
-  #   {% elsif see_data_by_sessions._parameter_value == 'month' %}
-  #     ${time_month}
-  #   {% elsif see_data_by_sessions._parameter_value == 'quarter' %}
-  #     ${time_quarter}
-  #   {% else %}
-  #     ${time_date}
-  #   {% endif %};;
-  # }
+  dimension: see_data_sessions {
+    view_label: "Sessions"
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: no
+    sql:
+    {% if see_data_by_sessions._parameter_value == 'day' %}
+      ${time_date}
+    {% elsif see_data_by_sessions._parameter_value == 'week' %}
+      ${time_week}
+    {% elsif see_data_by_sessions._parameter_value == 'month' %}
+      ${time_month}
+    {% elsif see_data_by_sessions._parameter_value == 'quarter' %}
+      ${time_quarter}
+    {% else %}
+      ${time_date}
+    {% endif %};;
+  }
 
   # ----- Sets of fields for drilling ------
   set: detail {
