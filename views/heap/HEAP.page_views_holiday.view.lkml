@@ -1,23 +1,22 @@
 #-------------------------------------------------------------------
-# Owner - Tim Schultz
-# Recreating the Heap Block so we can join addtional data
+# Owner - Blake Walton
+# This data updates every two hours during holiday periods
 #-------------------------------------------------------------------
-
-view: heap_page_views {
-  sql_table_name: analytics.heap.session_page_flow ;;
+view: heap_page_views_holiday {
+  sql_table_name: analytics.heap.session_page_flow_holiday ;;
 
 
   dimension: session_id {
     hidden: no
     type: string
-    description:  "Unique ID number for a session. Source: heap.session_page_flow.session_id"
+    description:  "Unique ID number for a session. Source: heap.session_page_flow_holiday_holiday.session_id"
     sql: ${TABLE}.session_id ;;
   }
 
   dimension: event_id {
     hidden: no
     type: string
-    description:  "Unique ID number for an event. Source: heap.session_page_flow.event_id"
+    description:  "Unique ID number for an event. Source: heap.session_page_flow_holiday_holiday.event_id"
     sql: ${TABLE}.event_id ;;
   }
 
@@ -29,7 +28,7 @@ view: heap_page_views {
   }
 
   dimension_group: session_time {
-    description: "Time the Session Began. Source: heap.session_page_flow.session_time"
+    description: "Time the Session Began. Source: heap.session_page_flow_holiday_holiday.session_time"
     hidden: no
     type: time
     timeframes: [raw, time,hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
@@ -40,7 +39,7 @@ view: heap_page_views {
 
   dimension_group: event_time {
     label: "Pageview - Event Time"
-    description: "Time the Visitor viewed a page. Source: heap.session_page_flow.event_time"
+    description: "Time the Visitor viewed a page. Source: heap.session_page_flow_holiday_holiday.event_time"
     type: time
     timeframes: [raw,time, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -81,29 +80,28 @@ view: heap_page_views {
   }
 
   dimension: title {
-    description: "The page's title as displayed on its tab in the browser. Source: heap.session_page_flow.title"
+    description: "The page's title as displayed on its tab in the browser. Source: heap.session_page_flow_holiday_holiday.title"
     type: string
     sql: ${TABLE}.title ;;
   }
 
   dimension: page_flow {
-    description: "Order of Page Visits within a session. Source: heap.session_page_flow.page_flow"
+    description: "Order of Page Visits within a session. Source: heap.session_page_flow_holiday_holiday.page_flow"
     type: string
     sql: ${TABLE}.page_flow ;;
   }
 
   dimension: pages_viewed {
     label: " Pages Viewed (dimension version)"
-    description: "Number of pages viewed in a session. Source: heap.session_page_flow.count_pages_viewed"
+    description: "Number of pages viewed in a session. Source: heap.session_page_flow_holiday_holiday.count_pages_viewed"
     type: number
     sql: ${TABLE}.count_pages_viewed ;;
   }
 
   measure: page_view_count {
     label: " Pages Viewed (measure version)"
-    description: "Average number of pages viewed in a session. Source: HEAP.session_page_flow"
+    description: "Average number of pages viewed in a session. Source: HEAP.session_page_flow_holiday_holiday"
     type: average
-    value_format: "000.00"
     sql: ${TABLE}.count_pages_viewed ;;
   }
 
@@ -125,7 +123,7 @@ view: heap_page_views {
   measure: Sum_exit_pages {
     type: count_distinct
     group_label: "Advanced"
-    description: "Count of instances a specific page was exited from (meant to be used with 'Title' or 'Parsed Page URL'). Source: heap.session_page_flow.session_id"
+    description: "Count of instances a specific page was exited from (meant to be used with 'Title' or 'Parsed Page URL'). Source: heap.session_page_flow_holiday_holiday.session_id"
     sql: ${session_id} ;;
     filters: [exit_page: "yes"]
     view_label: "Sessions" }
@@ -142,7 +140,7 @@ view: heap_page_views {
   dimension: query {
     label: "Query - tag string"
     group_label: "Advanced"
-    description: "The landing page's whole tag string after purple.com. Source: heap.session_page_flow.query"
+    description: "The landing page's whole tag string after purple.com. Source: heap.session_page_flow_holiday.query"
     view_label: "Sessions"
     type: string
     sql: ${TABLE}.query;;
@@ -161,7 +159,7 @@ view: heap_page_views {
   dimension: path {
     label: "Parsed Page URL"
 #    hidden: yes
-    description: "The string after purple.com excluding tags. Source: heap.session_page_flow.path"
+    description: "The string after purple.com excluding tags. Source: heap.session_page_flow_holiday.path"
     type: string
     sql: ${TABLE}.path ;;
   }
@@ -174,20 +172,20 @@ view: heap_page_views {
 
   measure: Sum_bounced_session {
     type: count_distinct
-    description: "Count of Bounced (single page) sessions. Source: heap.session_page_flow.session_id"
+    description: "Count of Bounced (single page) sessions. Source: heap.session_page_flow_holiday.session_id"
     sql: ${session_id};;
     filters: [bounced: "yes"]
     view_label: "Sessions" }
 
   measure: Sum_non_bounced_session {
-    description: "Count of Non-Bounced / Qualified (multiple page) sessions. Source: heap.session_page_flow.session_id"
+    description: "Count of Non-Bounced / Qualified (multiple page) sessions. Source: heap.session_page_flow_holiday.session_id"
     type: count_distinct
     sql: ${session_id};;
     filters: [bounced: "no"]
     view_label: "Sessions" }
 
   measure: Sum_non_bounced_session_ly {
-    description: "Count of Non-Bounced / Qualified (multiple page) sessions Last Year. Source: heap.session_page_flow.session_id"
+    description: "Count of Non-Bounced / Qualified (multiple page) sessions Last Year. Source: heap.session_page_flow_holiday.session_id"
     type: count_distinct
     sql: ${session_id};;
     filters: [bounced: "no",session_time_date: "1 years ago",session_time_hour_of_day: "<= 2"]
@@ -199,75 +197,12 @@ view: heap_page_views {
     type: number
     sql: 1.0*${Sum_non_bounced_session}/NULLIF(${Sum_bounced_session}+${Sum_non_bounced_session},0) ;;
     value_format_name: percent_1
-    }
+  }
 
-measure: bounce_rate {
-  description: "Percent of sessions where user only viewed one page and left the site"
-  type: number
-  sql: (${count}-${Sum_non_bounced_session})/${count} ;;
-  value_format_name: percent_1
-   }
+  measure: bounce_rate {
+    description: "Percent of sessions where user only viewed one page and left the site"
+    type: number
+    sql: (${count}-${Sum_non_bounced_session})/${count} ;;
+    value_format_name: percent_1
+  }
 }
-
-
-# below is the old view definition before 4/128/2020
-# Archiving in case of errors with change to above definition
-
-
-#view: heap_page_views {
-#  derived_table: {
-#    sql:
-#      select session_id,
-#        count(event_id) as pages_viewed
-#      from analytics.heap.pageviews
-#      --where time::date >=  '2019-06-16' and time::date <=  '2019-06-22'
-#      group by session_id ;;
-
-#    datagroup_trigger: pdt_refresh_6am
-
-#  }
-
-#  dimension: session_id {
-#    primary_key: yes
-#    hidden: yes
-#    sql: ${TABLE}.session_id ;; }
-
-#  measure: Sum_bounced_session {
-#    type: sum_distinct
-#    sql:
-#    Case
-#      When ${TABLE}.pages_viewed < 2 THEN 1 Else 0 End;;
-#    view_label: "Sessions" }
-
-
-# measure: Sum_non_bounced_session {
-#    type: sum_distinct
-#    sql:
-#    Case
-#      When ${TABLE}.pages_viewed >= 2 THEN 1 Else 0 End;;
-#    view_label: "Sessions" }
-
-#  dimension: pages_viewed {
-#    label: " Pages Viewed"
-#    description: "Pages viewed per session"
-#    view_label: "Sessions"
-#    type: number
-#    sql: ${TABLE}.pages_viewed ;;}
-
-#  dimension: bounced {
-#    label: "   * Bounced"
-#    description: "Only viewed 1 page"
-#    view_label: "Sessions"
-#    type: yesno
-#    sql: ${TABLE}.pages_viewed < 2 ;;}
-
-#  dimension: query {
-#    label: "Query - tag string"
-#    group_label: "Advanced"
-#    description: "The whole tag string after purple.com."
-#    view_label: "Sessions"
-#    type: string
-#    sql: ${TABLE}.query;;}
-
-#query
-# }
