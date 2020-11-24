@@ -259,12 +259,15 @@ view: c3_conversion {
     or CONTAINS(${group_name},'Yelp Search')
     or CONTAINS(${group_name},'Google Brand') or CONTAINS(${network_name}, '(Bing)') then 'Search'
     WHEN CONTAINS(${network_name}, '(Bing Native)') then 'Native'
-    WHEN CONTAINS(${group_name},'AdMedia') then 'Display'
+    WHEN CONTAINS(${group_name},'AdMedia')
+    or CONTAINS(${group_name},'DV360 Display') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'PLA'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
     WHEN CONTAINS(${group_name},'Social')
-    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Paid Social'
-    WHEN CONTAINS(${group_name},'Radio') then 'Radio'
+    and not CONTAINS(lower(${network_name}) ,'yelp') then 'Social'
+    WHEN CONTAINS(${group_name},'Radio')
+    or CONTAINS(${group_name}, 'Podcast')
+    or CONTAINS (${group_name},'TV') then 'Traditional'
     --WHEN CONTAINS(${network_groupname},'tv') then 'TV'
     ELSE ${TABLE}.group_name
     END ;;

@@ -54,14 +54,14 @@ view: customer_satisfaction_survey {
   dimension: historical {
     label: "* Is Historical CSAT"
     description: "Pre-Stella Connect CSAT. Source: analytics.customer_satisfaction_survey"
-    type: yesno
+    type: string
     sql: ${TABLE}."HISTORICAL" ;;
   }
 
   dimension: issue_resolved {
     label: "* Is Issue Resolved"
     description: "Did the customer indicate the issue was resolved. Source: stella_connect.customer_satisfaction_survey"
-    type: yesno
+    type: string
     sql: ${TABLE}."ISSUE_RESOLVED" ;;
   }
 
@@ -69,7 +69,7 @@ view: customer_satisfaction_survey {
     label: "FCR"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
     type: sum
-    sql:case when ${issue_resolved} then 1 else 0 end ;;
+    sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
   }
 
   dimension: issue_resolved_comment {
@@ -93,7 +93,7 @@ view: customer_satisfaction_survey {
   measure: avg_nps_rating {
     label: "Average NPS Rating"
     description: "Net Promoter Score Source: stella_connect.customer_satisfaction_survey"
-    type: sum
+    type: average
     value_format: "0.##"
     sql: ${TABLE}."NPS_RATING" ;;
   }
@@ -120,18 +120,23 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."SEQUENCE_ID" ;;
   }
 
+  dimension: star_rating_score {
+    label: "Agent CSAT Score"
+    description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
+    type: string
+    sql: ${TABLE}."STAR_RATING" ;;
+  }
+
   measure: star_rating {
     label: "Total Agent CSAT Score"
-    description: "CSAT score give by customer. Range 0 to 5.
-    Source: stella_connect.customer_satisfaction_survey"
+    description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: sum
     sql: ${TABLE}."STAR_RATING" ;;
   }
 
   measure: avg_star_rating {
     label: "Average Agent CSAT Score"
-    description: "CSAT score give by customer. Range 0 to 5.
-    Source: stella_connect.customer_satisfaction_survey"
+    description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: average
     value_format: "0.##"
     sql: ${TABLE}."STAR_RATING" ;;

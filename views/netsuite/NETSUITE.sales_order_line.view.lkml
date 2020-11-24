@@ -121,8 +121,9 @@ view: sales_order_line {
   }
 
   measure: mf_on_time {
+    hidden: yes
     view_label: "Fulfillment"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     label: "Mattress Firm Shipped on Time (% of units)"
     description: "Percent of units that  shipped out by the required ship-by date to arrive to Mattress Firm on time (mf fulfilled/mf units). Source:looker.calculation"
     drill_fields: [fulfillment_details*]
@@ -270,7 +271,8 @@ view: sales_order_line {
 
   measure: sales_eligible_for_SLA{
     label: "zQty Eligible SLA"
-    hidden:  yes
+    group_label: "Fulfillment SLA ($)"
+    hidden:  no
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
@@ -285,9 +287,10 @@ view: sales_order_line {
 
   measure: sales_Fulfilled_in_SLA{
     label: "zQty Fulfilled in SLA"
+    group_label: "Fulfillment SLA ($)"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
-    hidden:  yes
+    hidden:  no
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
@@ -302,7 +305,7 @@ view: sales_order_line {
 
   measure: zSLA_Achievement_prct {
     view_label: "Fulfillment"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA ($)"
     label: "SLA $ Achievement %"
     description: "Source: looker.calculation"
     hidden: no
@@ -310,6 +313,198 @@ view: sales_order_line {
     type: number
     drill_fields: [fulfillment_details*]
     sql: Case when ${sales_eligible_for_SLA} = 0 then 0 Else ${sales_Fulfilled_in_SLA}/${sales_eligible_for_SLA} End ;;
+  }
+
+  measure: purple_sales_eligible_for_SLA{
+    label: "Purple Qty Eligible SLA"
+    group_label: "Fulfillment SLA ($)"
+    hidden:  no
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: CASE
+            WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
+            ELSE 0
+          END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: purple_sales_Fulfilled_in_SLA{
+    label: "Purple Qty Fulfilled in SLA"
+    group_label: "Fulfillment SLA ($)"
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    hidden:  no
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+          Else
+            case
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+              Else 0
+            END
+        END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: purple_zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    group_label: "Fulfillment SLA ($)"
+    label: "Purple SLA $ Achievement %"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${purple_sales_eligible_for_SLA} = 0 then 0 Else ${purple_sales_Fulfilled_in_SLA}/${purple_sales_eligible_for_SLA} End ;;
+  }
+
+  measure: white_glove_sales_eligible_for_SLA{
+    label: "White Glove Qty Eligible SLA"
+    group_label: "Fulfillment SLA ($)"
+    hidden:  no
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: CASE
+            WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
+            ELSE 0
+          END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: white_glove_sales_Fulfilled_in_SLA{
+    label: "White Glove Qty Fulfilled in SLA"
+    group_label: "Fulfillment SLA ($)"
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    hidden:  no
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+          Else
+            case
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+              Else 0
+            END
+        END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: white_glove_zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    group_label: "Fulfillment SLA ($)"
+    label: "White Glove SLA $ Achievement %"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${white_glove_sales_eligible_for_SLA} = 0 then 0 Else ${white_glove_sales_Fulfilled_in_SLA}/${white_glove_sales_eligible_for_SLA} End ;;
+  }
+
+  measure: mainfreight_sales_eligible_for_SLA{
+    label: "MainFreight Qty Eligible SLA"
+    group_label: "Fulfillment SLA ($)"
+    hidden:  no
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: CASE
+            WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
+            ELSE 0
+          END;;
+    filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: mainfreight_sales_Fulfilled_in_SLA{
+    label: "MainFreight Qty Fulfilled in SLA"
+    group_label: "Fulfillment SLA ($)"
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    hidden:  no
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+          Else
+            case
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+              Else 0
+            END
+        END;;
+    filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: mainfreight_zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    group_label: "Fulfillment SLA ($)"
+    label: "MainFreight SLA $ Achievement %"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${mainfreight_sales_eligible_for_SLA} = 0 then 0 Else ${mainfreight_sales_Fulfilled_in_SLA}/${mainfreight_sales_eligible_for_SLA} End ;;
+  }
+
+  measure: other_sales_eligible_for_SLA{
+    label: "Other Qty Eligible SLA"
+    group_label: "Fulfillment SLA ($)"
+    hidden:  no
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: CASE
+            WHEN ${cancelled_order.cancelled_date} is null THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${TABLE}.gross_amt
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
+            ELSE 0
+          END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: other_sales_Fulfilled_in_SLA{
+    label: "Other Qty Fulfilled in SLA"
+    group_label: "Fulfillment SLA ($)"
+    view_label: "Fulfillment"
+    drill_fields: [fulfillment_details*]
+    hidden:  no
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+          when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+          Else
+            case
+              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+              Else 0
+            END
+        END;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: other_zSLA_Achievement_prct {
+    view_label: "Fulfillment"
+    group_label: "Fulfillment SLA ($)"
+    label: "Other SLA $ Achievement %"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${other_sales_eligible_for_SLA} = 0 then 0 Else ${other_sales_Fulfilled_in_SLA}/${other_sales_eligible_for_SLA} End ;;
   }
 
   dimension: pk_concat_ful_sales_order {
@@ -326,7 +521,7 @@ view: sales_order_line {
 
   measure: Qty_eligible_for_SLA{
     label: "Qty Eligible SLA"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
@@ -343,7 +538,7 @@ view: sales_order_line {
 
   measure: Qty_Fulfilled_in_SLA{
     label: "Qty Fulfilled in SLA"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
@@ -367,13 +562,196 @@ view: sales_order_line {
   measure: SLA_Achievement_prct {
     view_label: "Fulfillment"
     label: "SLA Achievement %"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     description: "Source: looker.calculation"
     hidden: no
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
+  }
+  measure:Purple_Qty_eligible_for_SLA{
+    label: "Purple Qty Eligible SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: Purple_Qty_Fulfilled_in_SLA{
+    label: "Purple Qty Fulfilled in SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0
+      END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: Purple_SLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "Purple SLA Achievement %"
+    group_label: "Fulfillment SLA (units)"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${Purple_Qty_eligible_for_SLA} = 0 then 0 Else ${Purple_Qty_Fulfilled_in_SLA}/${Purple_Qty_eligible_for_SLA} End ;;
+  }
+
+  measure:White_Glove_Qty_eligible_for_SLA{
+    label: "White Glove Qty Eligible SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: White_Glove_Qty_Fulfilled_in_SLA{
+    label: "White Glove Fulfilled in SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0
+      END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+  }
+
+  measure: White_Glove_SLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "White Glove SLA Achievement %"
+    group_label: "Fulfillment SLA (units)"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${White_Glove_Qty_eligible_for_SLA} = 0 then 0 Else ${White_Glove_Qty_Fulfilled_in_SLA}/${White_Glove_Qty_eligible_for_SLA} End ;;
+  }
+
+  measure:MainFreight_Qty_eligible_for_SLA{
+    label: "MainFreight Qty Eligible SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
+    filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: MainFreight_Qty_Fulfilled_in_SLA{
+    label: "MainFreight Fulfilled in SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0
+      END ;;
+    filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: MainFreight_SLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "MainFreight SLA Achievement %"
+    group_label: "Fulfillment SLA (units)"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${MainFreight_Qty_eligible_for_SLA} = 0 then 0 Else ${MainFreight_Qty_Fulfilled_in_SLA}/${MainFreight_Qty_eligible_for_SLA} End ;;
+  }
+
+  measure:Other_Qty_eligible_for_SLA{
+    label: "Other Qty Eligible SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
+            WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: Other_Qty_Fulfilled_in_SLA{
+    label: "Other Fulfilled in SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        Else 0
+      END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
+  }
+
+  measure: Other_SLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "Other SLA Achievement %"
+    group_label: "Fulfillment SLA (units)"
+    description: "Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when ${Other_Qty_eligible_for_SLA} = 0 then 0 Else ${Other_Qty_Fulfilled_in_SLA}/${Other_Qty_eligible_for_SLA} End ;;
   }
 
   dimension: picked_packed_sla {
@@ -395,8 +773,9 @@ view: sales_order_line {
   }
 
   measure: whlsl_on_time {
+    hidden: yes
     view_label: "Fulfillment"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     label: "Wholesale Shipped on Time (% of units)"
     description: "Percent of units shipped out by the required ship-by date to arrive on time (Wholesale fulfilled/Wholesale units). Source:looker.calculation"
     drill_fields: [fulfillment_details*]
@@ -643,10 +1022,10 @@ view: sales_order_line {
   }
 
   measure: manna_sla_achieved{
+    hidden: yes
     label: "Pilot SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
-    group_label: "Fulfillment SLA"
-    hidden: no
+    group_label: "Fulfillment SLA (units)"
     description: "Percent of line items fulfilled by Manna within 14 days of order. Source: looker.calculation"
     type: number
     drill_fields: [fulfillment_details*]
@@ -698,9 +1077,10 @@ view: sales_order_line {
 
 
   measure: xpo_sla_achieved{
+    hidden: yes
     label: "XPO SLA Achievement (% in 14 days)"
     view_label: "Fulfillment"
-    group_label: "Fulfillment SLA"
+    group_label: "Fulfillment SLA (units)"
     description: "Percent of line items fulfilled by Manna within 1 days of order. Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: number
@@ -1612,6 +1992,31 @@ view: sales_order_line {
       and NOT ${sales_order.warranty_order_flg}
       then ${gross_amt} else 0 end;;
   }
+
+##Creating Mattress ASP -Jared
+  measure: asp_gross_amt_mattress {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No" , item.category_name: "MATTRESS" ]
+    sql: ${TABLE}.gross_amt ;;
+  }
+
+  measure: asp_total_units_mattress {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No", item.category_name: "MATTRESS"]
+    sql: ${TABLE}.ordered_qty ;;
+  }
+
+  measure: asp_mattress {
+    hidden: no
+    label: "Mattress ASP"
+    description: "Mattress Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
+    type: number
+    value_format: "$#,##0"
+    sql:case when ${asp_total_units_mattress} > 0 then ${asp_gross_amt_mattress}/${asp_total_units_mattress} else 0 end ;;
+  }
+
 
   set: fulfill_details {
     fields: [fulfill_details*]

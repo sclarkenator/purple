@@ -2,13 +2,39 @@
 # Owner - Tim Schultz
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
-
+include: "/views/_period_comparison.view.lkml"
 view: sessions {
 #   derived_table: {
 #     sql: select * from heap.sessions;;
 #     datagroup_trigger: pdt_refresh_6am
 #   }
   sql_table_name: heap_data.purple.sessions ;;
+
+  extends: [_period_comparison]
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      time,
+      time_of_day,
+      date,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      week,
+      month,
+      month_num,
+      quarter,
+      quarter_of_year,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.time ;;
+  }
 
   dimension: session_id {
     #primary_key: yes
@@ -126,7 +152,8 @@ view: sessions {
            when ${landing_page} ilike ('%mattresses%') or ${landing_page} ilike ('%pillows%') or ${landing_page} ilike ('%/sheets') or ${landing_page} ilike ('%/mattress-protector') or ${landing_page} ilike ('%/platform') or ${landing_page} ilike ('%/powerbase') or ${landing_page} ilike ('%/pet-bed') or ${landing_page} ilike ('%/seatcushions') then 'PDP'
            when ${landing_page} ilike ('purple.com/') then 'Home Page'
            when ${landing_page} ilike ('%medium=%') or ${landing_page} ilike ('%promo') then 'Main Landing Page'
-           when ${landing_page} ilike ('%/buy%') then 'Buy Page' end;; }
+           when ${landing_page} ilike ('%/buy%') then 'Buy Page'
+           when contains(${landing_page}, '/blog/') then 'Blog' end;; }
 
   dimension: library {
     label: "Library"
@@ -499,6 +526,22 @@ view: sessions {
     type: count_distinct
     sql: ${TABLE}.session_id ;;}
 
+  measure: count_current_period {
+    hidden: yes
+    label: "Count of Sessions Current Period"
+    description: "Source: looker calculation"
+    type: count_distinct
+    filters: [is_current_period: "yes"]
+    sql: ${TABLE}.session_id ;;}
+
+  measure: count_comparison_period {
+    hidden: yes
+    label: "Count of Sessions Comparison Period"
+    description: "Source: looker calculation"
+    type: count_distinct
+    filters: [is_comparison_period: "yes"]
+    sql: ${TABLE}.session_id ;;}
+
   measure: count_k {
     label: "Count (0.K)"
     description: "Source: looker calculation"
@@ -518,6 +561,48 @@ view: sessions {
     type: number
     sql: ${count}::float/nullif(${distinct_users},0) ;;
     value_format_name: decimal_1
+  }
+
+  # Used for C-level Dasboard
+  parameter: see_data_by_sessions {
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: no
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+  }
+
+  dimension: see_data_sessions {
+    view_label: "Sessions"
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: no
+    sql:
+    {% if see_data_by_sessions._parameter_value == 'day' %}
+      ${time_date}
+    {% elsif see_data_by_sessions._parameter_value == 'week' %}
+      ${time_week}
+    {% elsif see_data_by_sessions._parameter_value == 'month' %}
+      ${time_month}
+    {% elsif see_data_by_sessions._parameter_value == 'quarter' %}
+      ${time_quarter}
+    {% else %}
+      ${time_date}
+    {% endif %};;
   }
 
   # ----- Sets of fields for drilling ------

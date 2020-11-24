@@ -23,6 +23,11 @@ include: "/dashboards/**/*.dashboard"
           AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
       relationship: many_to_one
     }
+    join: zendesk_ticket {
+      type:  left_outer
+      sql_on:  ${zendesk_ticket.ticket_id}=${customer_satisfaction_survey.ticket_id};;
+      relationship: many_to_one
+    }
   }
 
   explore: rpt_agent_stats {
