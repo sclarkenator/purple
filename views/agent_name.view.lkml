@@ -60,11 +60,9 @@ dimension: name {
     description: "The name of this associate. Source:incontact.agent_lkp"
     type:  string
     link: {
-      label: "Show Associate Dashboard"
-      url: " https://purple.looker.com/dashboards-next/3902?Agent+Name={{ value }}&Filtered+Date+Row=8+week"}
+      url: "https://purple.looker.com/dashboards-next/3902?Agent+Name={{ value }}"}
       sql: ${TABLE}.name ;;
   }
-
 
   dimension: merged_name{
     group_label: " Advanced"

@@ -1993,6 +1993,31 @@ view: sales_order_line {
       then ${gross_amt} else 0 end;;
   }
 
+##Creating Mattress ASP -Jared
+  measure: asp_gross_amt_mattress {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No" , item.category_name: "MATTRESS" ]
+    sql: ${TABLE}.gross_amt ;;
+  }
+
+  measure: asp_total_units_mattress {
+    hidden: yes
+    type: sum
+    filters: [free_item: "No", item.category_name: "MATTRESS"]
+    sql: ${TABLE}.ordered_qty ;;
+  }
+
+  measure: asp_mattress {
+    hidden: no
+    label: "Mattress ASP"
+    description: "Mattress Average Sales Price, this measure is excluding free items ($0 orders). Source: looker.calculation"
+    type: number
+    value_format: "$#,##0"
+    sql:case when ${asp_total_units_mattress} > 0 then ${asp_gross_amt_mattress}/${asp_total_units_mattress} else 0 end ;;
+  }
+
+
   set: fulfill_details {
     fields: [fulfill_details*]
   }
