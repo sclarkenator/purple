@@ -55,14 +55,19 @@ dimension: name {
 
   dimension: associate_name {
     label: "Associate"
-    hidden: yes
+    hidden: no
     group_label: " Advanced"
     description: "The name of this associate. Source:incontact.agent_lkp"
     type:  string
     link: {
-      url: "https://purple.looker.com/dashboards-next/3902?Agent+Name={{ value }}"}
+      url: "https://purple.looker.com/dashboards-next/3902?Associate={{ value }}"}
       sql: ${TABLE}.name ;;
   }
+
+  link: {
+    label: "Show SKU dashboard"
+    url: "https://purple.looker.com/dashboards-next/3895?SKU+ID={{ value }}"
+    icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
 
   dimension: merged_name{
     group_label: " Advanced"
