@@ -1946,7 +1946,15 @@ view: sales_order_line {
     type: sum
     sql: 0.01*${gross_amt} ;;
   }
-
+  measure: gross_margin {
+    ##added by Scott Clark 11/25/2020
+    label: "Gross margin"
+    description: "Total margin dollars after all product and order related expenses are netted out"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    sql: ${adj_gross_amt}-${COGS}-${return_amt}-${direct_affiliate}-${warranty_accrual}-${merch_fees} ;;
+  }
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
@@ -1977,6 +1985,17 @@ view: sales_order_line {
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
       then ${gross_amt} else 0 end;;
+  }
+
+  measure: owned_retail_sales {
+    group_label: "Gross Sales"
+    description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
+    label: "Sales - Owned Retail ($)"
+    hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    filters: [sales_order.channel: "Owned Retail",sales_order.is_exchange_upgrade_warranty: "No"]
+    sql:  ${gross_amt} ;;
   }
 
   measure: customer_care_sales {

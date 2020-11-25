@@ -8,7 +8,7 @@ view: privacy_request {
     label: "  * Is Privacy Request"
     description: "Yes if this customer has requested their data be deleted through CCPA. Source:analytics.privacy_request"
     type: yesno
-    sql: ${TABLE}.email_join is not null ;;
+    sql: ${email_join} is not null ;;
   }
 
   dimension: delete_in_progress {

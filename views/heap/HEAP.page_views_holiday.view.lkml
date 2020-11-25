@@ -55,8 +55,16 @@ view: heap_page_views_holiday {
   }
 
   measure: event_time_max {
-    hidden: yes
-    type: date_time
+    group_label: " Sync"
+    hidden: no
+    type: date_time_of_day
+    sql: max(${event_time_raw}) ;;
+    convert_tz: no
+  }
+  measure: event_date_sync {
+    group_label: " Sync"
+    hidden: no
+    type: date
     sql: max(${event_time_raw}) ;;
     convert_tz: no
   }

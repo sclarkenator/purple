@@ -445,6 +445,26 @@ view: sales_order_line_base {
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
+  measure: last_sync_date  {
+    ##added by Scott Clark 11/25/2020
+    hidden: yes
+    group_label: " Sync"
+    label: "Netsuite sync date"
+    description: "Date of most recent Netsuite sync"
+    type:  date
+    sql: max(${created_raw}) ;;
+  }
+
+  measure: last_sync_time  {
+    ##added by Scott Clark 11/25/2020
+    hidden: yes
+    group_label: " Sync"
+    label: "Netsuite sync time"
+    description: "Time of most recent Netsuite sync"
+    type:  date_time_of_day
+    sql: max(${created_raw}) ;;
+  }
+
   dimension: is_same_rolling_week {
     description: "Use this dimension to compare the current week to the same week in previous years. (Filters on the current week (last 7 days) and the same days previous years.) Source: looker calculation"
     type: yesno
