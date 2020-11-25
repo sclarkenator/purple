@@ -64,10 +64,10 @@ dimension: name {
       sql: ${TABLE}.name ;;
   }
 
-  link: {
-    label: "Show SKU dashboard"
-    url: "https://purple.looker.com/dashboards-next/3895?SKU+ID={{ value }}"
-    icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
+ ## link: {
+   ## label: "Show SKU dashboard"
+    ##url: "https://purple.looker.com/dashboards-next/3895?SKU+ID={{ value }}"
+    ##icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
 
   dimension: merged_name{
     group_label: " Advanced"
