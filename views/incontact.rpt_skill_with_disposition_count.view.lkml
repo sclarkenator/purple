@@ -188,13 +188,23 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: average
+    value_format: "#,##0.00"
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   measure: avg_acw_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: yes
-    type: number
+    hidden: no
+    type: average
+    value_format: "#,##0.00"
+    sql: ${TABLE}."ACW_TIME" ;;
+  }
+
+  measure: total_acw_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
+    hidden: no
+    type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
@@ -203,6 +213,43 @@ dimension: primary_key {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
+  }
+
+  measure: count_handle_time {
+    description: "Count Distinct of handle time. Source: incontact. rpt_skill_with_disposition_count"
+    type: count_distinct
+    value_format: "#,##0"
+    sql: ${TABLE}."HANDLE_TIME" ;;
+  }
+
+  measure: avg_acw {
+    label: "Average ACW (sec)"
+    description: "Average ACW in second, total_acw_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_acw_time}/${count_handle_time} ;;
+  }
+
+  measure: avg_handle_time {
+    label: "Average Handle Time"
+    description: "total_handle_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_handle_time}/${count_handle_time} ;;
+  }
+
+  measure: avg_hold_time_2 {
+    label: "Average Hold Time"
+    description: "total_hold_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_hold_time}/${count_handle_time} ;;
+  }
+  measure: total_hold_time {
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    hidden: no
+    sql: ${TABLE}."HOLD_TIME" ;;
   }
 
   measure: avg_talk_time {
