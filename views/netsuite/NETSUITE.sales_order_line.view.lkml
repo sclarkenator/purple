@@ -1987,6 +1987,17 @@ view: sales_order_line {
       then ${gross_amt} else 0 end;;
   }
 
+  measure: owned_retail_sales {
+    group_label: "Gross Sales"
+    description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
+    label: "Sales - Owned Retail ($)"
+    hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    filters: [sales_order.channel: "Owned Retail",sales_order.is_exchange_upgrade_warranty: "No"]
+    sql:  ${gross_amt} ;;
+  }
+
   measure: customer_care_sales {
     group_label: "Gross Sales"
     label: "Sales - Customer Care Team ($)"
