@@ -1946,7 +1946,15 @@ view: sales_order_line {
     type: sum
     sql: 0.01*${gross_amt} ;;
   }
-
+  measure: gross_margin {
+    ##added by Scott Clark 11/25/2020
+    label: "Gross margin"
+    description: "Total margin dollars after all product and order related expenses are netted out"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    sql: ${adj_gross_amt}-${COGS}-${return_amt}-${direct_affiliate}-${warranty_accrual}-${merch_fees} ;;
+  }
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
