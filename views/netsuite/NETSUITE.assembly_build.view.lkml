@@ -217,9 +217,9 @@ view: assembly_build {
      sql:  CASE WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, current_date) THEN 'Current Week'
              WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
              WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Current Week LY'
-             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
+             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+             WHEN date_trunc(week, ${TABLE}.PRODUCED::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
 
   dimension_group: shift_time{
