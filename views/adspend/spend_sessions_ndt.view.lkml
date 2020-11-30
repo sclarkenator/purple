@@ -99,7 +99,8 @@ view: spend_sessions_ndt {
 
       from ${adspend_ndt.SQL_TABLE_NAME} spend
       full outer join ${sessions_ndt.SQL_TABLE_NAME} sessions
-        on sessions.time_date::date = spend.ad_date::date and sessions.utm_campaign = spend.campaign_id
+        on sessions.time_date::date = spend.ad_date::date
+        and (sessions.utm_campaign = spend.campaign_id or sessions.utm_campaign = spend.campaign_name)
     ;;
     datagroup_trigger: pdt_refresh_6am
   }
@@ -229,13 +230,15 @@ view: spend_sessions_ndt {
   dimension: linked {
     label: " Campaign Matches"
     type: yesno
-    sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_name is not null ;;
+    #sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_name is not null ;;
+    sql: ${TABLE}.utm_campaign = ${TABLE}.campaign_name ;;
   }
 
   dimension: linked_id {
     label: " Campaign ID Matches"
     type: yesno
-    sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_id is not null ;;
+    #sql: ${TABLE}.utm_campaign is not null and ${TABLE}.campaign_id is not null ;;
+    sql: ${TABLE}.utm_campaign = ${TABLE}.campaign_id  ;;
   }
   dimension: organic_session {
     label: " Organic (no tags)"

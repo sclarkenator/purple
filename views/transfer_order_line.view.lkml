@@ -22,24 +22,6 @@ view: transfer_order_line {
     sql: ${TABLE}."ACCOUNT_ID" ;;
   }
 
-  dimension: amount_received {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."AMOUNT_RECEIVED" ;;
-  }
-
-  dimension: amount_shipped {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."AMOUNT_SHIPPED" ;;
-  }
-
-  dimension: committed_qty {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."COMMITTED_QTY" ;;
-  }
-
   dimension_group: created {
     hidden: yes
     type: time
@@ -72,44 +54,14 @@ view: transfer_order_line {
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
-  dimension: item_count {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."ITEM_COUNT" ;;
-  }
-
   dimension: item_id {
     type: number
     sql: ${TABLE}."ITEM_ID" ;;
   }
 
-  dimension: item_unit_price {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."ITEM_UNIT_PRICE" ;;
-  }
-
   dimension: line_memo {
     type: string
     sql: ${TABLE}."MEMO" ;;
-  }
-
-  dimension: packed_qty {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."PACKED_QTY" ;;
-  }
-
-  dimension: picked_qty {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."PICKED_QTY" ;;
-  }
-
-  dimension: received_qty {
-    hidden: yes
-    type: number
-    sql: ${TABLE}."RECEIVED_QTY" ;;
   }
 
   dimension_group: shipment_received {
@@ -205,6 +157,14 @@ view: transfer_order_line {
     sql: ${TABLE}."RECEIVED_QTY" ;;
   }
 
+  measure: fulfilled_qty {
+    type: sum
+    sql: ${TABLE}."FULFILLED_QTY" ;;
+  }
 
+  measure: remaining_qty {
+    type: number
+    sql: ${fulfilled_qty}-${total_received_qty} ;;
+  }
 
 }

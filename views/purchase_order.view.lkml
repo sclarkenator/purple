@@ -39,7 +39,7 @@ view: purchase_order {
 
   dimension: finals_ship_location {
     label: "Final Ship Location"
-    type: number
+    type: string
     sql: ${TABLE}."FINAL_SHIP_LOCATION" ;; }
 
   dimension_group: insert_ts {

@@ -53,6 +53,17 @@ dimension: name {
   sql: ${TABLE}.name ;;
 }
 
+  dimension: associate_name {
+    label: "Associate"
+    hidden: no
+    group_label: " Advanced"
+    description: "The name of this associate. Source:incontact.agent_lkp"
+    type:  string
+    link: {
+      url: "https://purple.looker.com/dashboards-next/3902?Associate={{ value }}"}
+      sql: ${TABLE}.name ;;
+  }
+
   dimension: merged_name{
     group_label: " Advanced"
     label: "CC/ZD Agent Name"

@@ -424,9 +424,14 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${sales_order.trandate_date} >= ${sla_hist.start_date} and ${sales_order.trandate_date} < ${sla_hist.end_date} and ${sla_hist.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one
-
     }
-
+    join: cordial_id {
+      view_label: "Customer"
+      type: left_outer
+      sql_on: lower(${sales_order.email}) = lower(${cordial_id.email_join});;
+      relationship: many_to_one
+      fields: [cordial_id.subscribe_status]
+    }
   }
 
   # explore: sales_test {

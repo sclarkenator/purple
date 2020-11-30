@@ -38,6 +38,13 @@ include: "/dashboards/**/*.dashboard"
 
   }
 
+  explore: dei {
+    group_label: "HR"
+    label: "DEI"
+    hidden:  yes
+    description: "Diversity, Equity, & Inclusion (DEI) data by supervisor and department"
+  }
+
 
 #-------------------------------------------------------------------
 #
