@@ -411,8 +411,8 @@ view: sales_order_line {
     sql: Case when ${white_glove_sales_eligible_for_SLA} = 0 then 0 Else ${white_glove_sales_Fulfilled_in_SLA}/${white_glove_sales_eligible_for_SLA} End ;;
   }
 
-  measure: mainfreight_sales_eligible_for_SLA{
-    label: "MainFreight Qty Eligible SLA"
+  measure: Mattress_Firm_sales_eligible_for_SLA{
+    label: "Mattress Firm Qty Eligible SLA"
     group_label: "Fulfillment SLA ($)"
     hidden:  no
     view_label: "Fulfillment"
@@ -428,8 +428,8 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: mainfreight_sales_Fulfilled_in_SLA{
-    label: "MainFreight Qty Fulfilled in SLA"
+  measure: Mattress_Firm_sales_Fulfilled_in_SLA{
+    label: "Mattress Firm Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA ($)"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
@@ -447,16 +447,16 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: mainfreight_zSLA_Achievement_prct {
+  measure: Mattress_Firm_zSLA_Achievement_prct {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA ($)"
-    label: "MainFreight SLA $ Achievement %"
+    label: "Mattress Firm SLA $ Achievement %"
     description: "Source: looker.calculation"
     hidden: no
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
-    sql: Case when ${mainfreight_sales_eligible_for_SLA} = 0 then 0 Else ${mainfreight_sales_Fulfilled_in_SLA}/${mainfreight_sales_eligible_for_SLA} End ;;
+    sql: Case when ${Mattress_Firm_sales_eligible_for_SLA} = 0 then 0 Else ${Mattress_Firm_sales_Fulfilled_in_SLA}/${Mattress_Firm_sales_eligible_for_SLA} End ;;
   }
 
   measure: other_sales_eligible_for_SLA{
@@ -662,8 +662,8 @@ view: sales_order_line {
     sql: Case when ${White_Glove_Qty_eligible_for_SLA} = 0 then 0 Else ${White_Glove_Qty_Fulfilled_in_SLA}/${White_Glove_Qty_eligible_for_SLA} End ;;
   }
 
-  measure:MainFreight_Qty_eligible_for_SLA{
-    label: "MainFreight Qty Eligible SLA"
+  measure:Mattress_Firm_Qty_eligible_for_SLA{
+    label: "Mattress Firm Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
@@ -680,8 +680,8 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: MainFreight_Qty_Fulfilled_in_SLA{
-    label: "MainFreight Fulfilled in SLA"
+  measure: Mattress_Firm_Qty_Fulfilled_in_SLA{
+    label: "Mattress Firm Fulfilled in SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
@@ -696,16 +696,16 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: MainFreight_SLA_Achievement_prct {
+  measure: Mattress_Firm_SLA_Achievement_prct {
     view_label: "Fulfillment"
-    label: "MainFreight SLA Achievement %"
+    label: "Mattress Firm SLA Achievement %"
     group_label: "Fulfillment SLA (units)"
     description: "Source: looker.calculation"
     hidden: no
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
-    sql: Case when ${MainFreight_Qty_eligible_for_SLA} = 0 then 0 Else ${MainFreight_Qty_Fulfilled_in_SLA}/${MainFreight_Qty_eligible_for_SLA} End ;;
+    sql: Case when ${Mattress_Firm_Qty_eligible_for_SLA} = 0 then 0 Else ${Mattress_Firm_Qty_Fulfilled_in_SLA}/${Mattress_Firm_Qty_eligible_for_SLA} End ;;
   }
 
   measure:Other_Qty_eligible_for_SLA{
