@@ -15,6 +15,14 @@ derived_table:
   where date between '2019-01-01' and current_date;;
 }
 
+  dimension: PK {
+    primary_key: yes
+    type: string
+    hidden: yes
+    sql: ${date_date}||-||${location} ;;
+  }
+
+
 
 dimension_group: date {
     type: time
