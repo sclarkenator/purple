@@ -672,22 +672,22 @@ view: roas_pdt {
   measure: last_touch_sales_roas {
     label: "ROAS LT"
     description: "C3 Last-touch ROAS"
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     type: number
-    sql: ${adspend}/${last_touch_sales};;
+    sql: ${adspend}/nullif(${last_touch_sales},0);;
   }
   measure: first_touch_sales_roas {
     label: "ROAS FT"
     description: "C3 First-touch ROAS"
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     type: number
-    sql: ${adspend}/${first_touch_sales};;
+    sql: ${adspend}/nullif(${first_touch_sales},0);;
   }
   measure: multi_touch_sales_roas {
     label: "ROAS MT"
     description: "C3 MT ROAS"
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     type: number
-    sql: ${adspend}/${influenced};;
+    sql: ${adspend}/nullif(${influenced},0);;
   }
 }
