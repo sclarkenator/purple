@@ -353,7 +353,7 @@ dimension: spend_platform {
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
         or ${spend_platform} in ('AMAZON-HSA');; label:"search"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: ${TABLE}.platform in ('AMAZON MEDIA GROUP','EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('EXPONENTIAL','AGILITY','AMAZON')
+      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG', 'TIKTOK') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
@@ -375,7 +375,7 @@ dimension: spend_platform {
           when ${medium} ilike 'Video' then 'video'
           when ${medium} ilike 'Native' then 'native'
           when ${medium} ilike 'Display' then 'display'
-          when ${medium} ilike 'Shopping' then 'pla'
+          when ${medium} ilike 'pla' then 'pla'
           when ${medium} ilike '%Affiliate%' then 'affiliate'
           when ${medium} ilike 'traditional' then 'traditional'
           when ${medium} ilike 'crm' then 'crm'
