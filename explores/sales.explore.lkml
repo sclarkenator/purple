@@ -419,10 +419,10 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_many
       fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
     }
-    join: sla_hist {
+    join: site_slas {
       ##join added by Scott Clark on 11/5/2020 to get website-stated SLA reflected somewhere
       type: left_outer
-      sql_on: ${sales_order.trandate_date} >= ${sla_hist.start_date} and ${sales_order.trandate_date} < ${sla_hist.end_date} and ${sla_hist.sku_id} = ${item.sku_id} ;;
+      sql_on: ${sales_order.trandate_date} >= ${site_slas.start_date} and ${sales_order.trandate_date} < coalesce(${site_slas.end_date},'2050-01-01') and ${site_slas.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one
     }
     join: cordial_id {
@@ -653,6 +653,24 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${holdout_acquisition_emails.email} = ${customer_table.email} ;;
       type: left_outer
       relationship: many_to_one
+    }
+    join: optimizely_campaign {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.campaign_id} = ${optimizely_campaign.campaign_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+    join: optimizely_experiment {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_experiment.experiment_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+    join: optimizely_variation {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.campaign_id} = ${optimizely_variation.variation_id} ;;
+      type: left_outer
+      relationship: one_to_many
     }
   }
 
