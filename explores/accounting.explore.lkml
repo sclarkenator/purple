@@ -105,13 +105,19 @@ include: "/dashboards/**/*.dashboard"
 # fiscal_month_offset:0   #customize based on your company's fiscal calendar set up
 
   explore: balance_sheet {
+    group_label: "Accounting"
     label: "Balance Sheet"
+    hidden: yes
   }
 
   explore: income_statement {
+    group_label: "Accounting"
     label: "Income Statement"
+    hidden: yes
   }
 
   explore: transaction_details {
+    group_label: "Accounting"
     label: "Transaction Details"
+    hidden: yes
   }

@@ -190,9 +190,11 @@ explore: alert_testing {
 #-------------------------------------------------------------------
 
   explore: login_history {
+    hidden: yes
   }
 
   explore: query_history {
+    hidden: yes
     join: databases {
       type: left_outer
       sql_on: ${query_history.database_name} = ${databases.database_name} ;;
@@ -207,6 +209,7 @@ explore: alert_testing {
   }
 
   # explore: schemata {
+  #   hidden: yes
   #   join: databases {
   #     type: left_outer
   #     sql_on: ${schemata.database_id} = ${databases.id} ;;
@@ -215,6 +218,7 @@ explore: alert_testing {
   # }
 
   explore: load_history {
+    hidden: yes
     fields: [ALL_FIELDS*,-tables.table_name,-tables.id]
     join: tables {
       sql_on: ${load_history.table_id} = ${tables.id} ;;
@@ -222,28 +226,28 @@ explore: alert_testing {
     }
   }
 
-  explore: storage_usage {}
+  explore: storage_usage {hidden: yes}
 
-  explore: warehouse_metering_history {}
+  explore: warehouse_metering_history {hidden: yes}
 
-  # explore: columns {}
+  # explore: columns {hidden: yes}
   #
-  # explore: databases {}
+  # explore: databases {hidden: yes}
   #
-  # explore: file_formats {}
+  # explore: file_formats {hidden: yes}
   #
-  # explore: functions {}
+  # explore: functions {hidden: yes}
   #
-  # explore: referential_constraints {}
+  # explore: referential_constraints {hidden: yes}
   #
-  # explore: sequences {}
+  # explore: sequences {hidden: yes}
   #
-  # explore: stages {}
+  # explore: stages {hidden: yes}
   #
-  # explore: table_constraints {}
+  # explore: table_constraints {hidden: yes}
   #
-  # explore: table_storage_metrics {}
+  # explore: table_storage_metrics {hidden: yes}
   #
-  # explore: tables {}
+  # explore: tables {hidden: yes}
   #
-  # explore: views {}
+  # explore: views {hidden: yes}
