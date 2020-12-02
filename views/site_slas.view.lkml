@@ -1,13 +1,14 @@
-view: sla_hist {
-  sql_table_name: "SHIPPING"."SLA_HIST"
+view: site_slas {
+  sql_table_name: "CSV_UPLOADS"."SITE_SLAS"
     ;;
+
 
   dimension: days {
     view_label: "Fulfillment"
     group_label: " Advanced"
     hidden:  yes
     type: number
-    sql: ${TABLE}."DAYS" ;;
+    sql: ${TABLE}.sla_days ;;
     label: "Website-stated SLA"
     description: "This is the stated SLA value the customer saw when they made their purchase for DTC only"
   }

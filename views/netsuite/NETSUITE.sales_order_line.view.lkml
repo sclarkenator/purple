@@ -190,14 +190,17 @@ view: sales_order_line {
   dimension: Due_Date_new {
     ##added by Scott Clark on 11/6/2020 working on updating actual SLAs for Jane
     view_label: "Fulfillment"
-    hidden: yes
+    group_label: " Advanced"
+    label: "SLA-based ship-by"
+    description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
+    hidden: no
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,${sla_hist.days},${created_date})
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${site_slas.days},5),${created_date})
           Else dateadd(d,3,${created_date}) END ;;
   }
 
