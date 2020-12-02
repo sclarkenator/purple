@@ -55,12 +55,13 @@ dimension: name {
 
   dimension: associate_name {
     label: "Associate"
-    hidden: no
+    hidden: yes
     group_label: " Advanced"
     description: "The name of this associate. Source:incontact.agent_lkp"
     type:  string
     link: {
-      url: "https://purple.looker.com/dashboards-next/3902?Associate={{ value }}"}
+      label: "Show Drill Dashboard"
+      url: "https://purple.looker.com/dashboards-next/3902?Associate={{ value }}&Filtered+Date+Row=8+week&Associate+KPI+Location="}
       sql: ${TABLE}.name ;;
   }
 
