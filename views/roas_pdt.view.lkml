@@ -645,29 +645,49 @@ view: roas_pdt {
   measure: new_cohort_amount{
     label: "C3 Atrributed Amount New"
     type: sum
-    value_format: "#,##0"
+    value_format: "$#,##0"
     sql: ${TABLE}.c3_new_cohort;;
   }
   measure: last_touch_sales {
     label:"Last Touch Sales"
     description: "Sale amount where C3 position was 'converter'"
-    value_format: "#,##0"
+    value_format: "$#,##0"
     type: sum
   sql: ${TABLE}.last_touch_sales;;
   }
   measure: first_touch_sales {
     label:"First Touch Sales"
     description: "Sale amount where C3 position was 'originator'"
-    value_format: "#,##0"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.first_touch_sales;;
   }
   measure: influenced {
     label: "Multi-touch Sales"
     description: "All C3 touchpoints attributed amount"
-    value_format: "#,##0"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.influenced;;
   }
-
+  measure: last_touch_sales_roas {
+    label: "ROAS LT"
+    description: "C3 Last-touch ROAS"
+    value_format: "$#,##0"
+    type: number
+    sql: ${adspend}/${last_touch_sales};;
+  }
+  measure: first_touch_sales_roas {
+    label: "ROAS FT"
+    description: "C3 First-touch ROAS"
+    value_format: "$#,##0"
+    type: number
+    sql: ${adspend}/${first_touch_sales};;
+  }
+  measure: multi_touch_sales_roas {
+    label: "ROAS MT"
+    description: "C3 MT ROAS"
+    value_format: "$#,##0"
+    type: number
+    sql: ${adspend}/${influenced};;
+  }
 }
