@@ -654,6 +654,24 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: many_to_one
     }
+    join: optimizely_campaign {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.campaign_id} = ${optimizely_campaign.campaign_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+    join: optimizely_experiment {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_experiment.experiment_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+    join: optimizely_variation {
+      view_label: "Optimizely"
+      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.campaign_id} = ${optimizely_variation.variation_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
   }
 
 #-------------------------------------------------------------------

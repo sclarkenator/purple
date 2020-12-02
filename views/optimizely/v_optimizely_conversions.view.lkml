@@ -2,7 +2,7 @@ view: v_optimizely_conversions {
   sql_table_name: "HEAP"."V_OPTIMIZELY_CONVERSIONS"
     ;;
 
-  dimension: PK {
+  dimension: pk {
     primary_key: yes
     hidden: yes
     type: string
