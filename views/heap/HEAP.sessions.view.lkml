@@ -394,6 +394,30 @@ view: sessions {
         sql:${utm_content} ilike ('%cmd%') ;;
         label: "Cyber Monday"
       }
+      when: {
+        sql:${utm_content} ilike ('%hds%') ;;
+        label: "Holiday Sale"
+      }
+      when: {
+        sql:${utm_content} ilike ('%dfs%') ;;
+        label: "December Flash Sale"
+      }
+      when: {
+        sql:${utm_content} ilike ('%vgg_egg%') ;;
+        label: "Valentine's Day Sale"
+      }
+      when: {
+        sql:${utm_content} ilike ('%pd_t1%') ;;
+        label: "President's Day"
+      }
+      when: {
+        sql:${utm_content} ilike ('%ws_eg%') ;;
+        label: "Winter Sale"
+      }
+      when: {
+        sql:${utm_content} ilike ('%_eg%') ;;
+        label: "All Evergreen"
+      }
       else: "unknown"
     }
   }
