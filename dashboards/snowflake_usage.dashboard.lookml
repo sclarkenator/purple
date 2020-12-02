@@ -1,6 +1,7 @@
 - dashboard: snowflake_usage
   title: Snowflake Usage
   layout: newspaper
+  preferred_viewer: dashboards-next
   elements:
   - title: Data Loading
     name: Data Loading
