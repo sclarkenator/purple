@@ -19,6 +19,7 @@ view: dma {
     group_label: "Advanced"
     label: "DMA"
     description: "Designated Marketing Area - derived from zipcode. Source:nielson.v_dma_fips_lkp"
+    map_layer_name: dma_layer
     type: string
     sql: ${TABLE}.dma_name ;;
   }
