@@ -14,7 +14,8 @@ view: cc_headcount_bydate {
     timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
-    sql: ${TABLE}.date ;; }
+    sql: ${TABLE}.date ;;
+  }
 
   dimension: incontact_id {
     type: string
