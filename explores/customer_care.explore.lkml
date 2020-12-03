@@ -275,6 +275,27 @@ include: "/dashboards/**/*.dashboard"
     description: "Orders that exist in Shopify that aren't yet in Netsuite"
   }
 
+  explore: cc_headcount {
+    from: cc_headcount_bydate
+    hidden: yes
+    group_label: "Customer Care"
+    view_label: "Agent Info"
+    join: team_lead_name {
+      view_label: "Team Lead"
+      fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
+      type: left_outer
+      sql_on: ${team_lead_name.incontact_id} = ${cc_headcount.incontact_id}
+        and ${team_lead_name.start_date} <= ${cc_headcount.by_date}
+        and ${team_lead_name.end_date} >= ${cc_headcount.by_date};;
+      relationship: many_to_one
+    }
+    join: agent_lkp {
+      view_label: "Team Lead"
+      type: left_outer
+      sql_on: ${team_lead_name.incontact_id} = ${agent_lkp.incontact_id} ;;
+    }
+  }
+
   explore: cc_activities {hidden: yes group_label: "Customer Care"}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
