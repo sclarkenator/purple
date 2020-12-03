@@ -173,7 +173,7 @@ view: sales_order_line {
     sql: case
           -- wholesale is ship by date (from sales order)
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
-            THEN ${sales_order.ship_by_date}
+            THEN ${fulfillment.created_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
@@ -298,11 +298,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
   }
 
@@ -345,11 +343,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
   }
@@ -393,11 +389,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
   }
@@ -441,11 +435,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -489,11 +481,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -550,6 +540,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
   }
@@ -602,6 +593,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
@@ -648,6 +640,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
@@ -694,6 +687,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
@@ -740,6 +734,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${SLA_Target_date} < ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
