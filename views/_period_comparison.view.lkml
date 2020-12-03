@@ -144,11 +144,16 @@ view: _period_comparison {
     sql: ${event_raw} >= ${same_period_last_year_start_date} AND ${event_raw} < ${same_period_last_year_end_date} ;;
   }
 
+  dimension: is_current_previous_or_same_period_ly {
+    type: yesno
+    sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' or ${is_same_period_last_year} = 'Yes' ;;
+  }
+
   parameter: comparison_period {
     group_label: "Period Comparison"
     label: "Comparison Period"
     type: unquoted
-    default_value: "lastyear"
+    default_value: "previous"
     allowed_value: {
       label: "Previous Period"
       value: "previous"
@@ -159,6 +164,10 @@ view: _period_comparison {
     }
     allowed_value: {
       label: "Same Period Last Year"
+      value: "year"
+    }
+    allowed_value: {
+      label: "Previous Period Last Year"
       value: "year"
     }
   }
@@ -195,7 +204,19 @@ view: _period_comparison {
     sql: CASE
             WHEN ${is_current_period} = true THEN 'Current Period'
             WHEN ${is_previous_period} = true THEN 'Previous Period'
-            WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
+            --WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
+        END
+    ;;
+  }
+
+  dimension: period_and_last_year {
+    group_label: "Period Comparison"
+    description: "Use this field in combination with the date filter field for dynamic date filtering"
+    type: string
+    sql: CASE
+            WHEN ${is_current_period} = true THEN 'Current Period'
+            WHEN ${is_previous_period} = true THEN 'Previous Period'
+            WHEN ${is_same_period_last_year} = true THEN 'Same Period Last Year'
         END
     ;;
   }
