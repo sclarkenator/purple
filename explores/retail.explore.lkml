@@ -25,12 +25,6 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
       relationship:  one_to_one
     }
-  ## Issues with MASP and Non-unique value/primary key (or sql_distinct_key), value overflow or collision when computing sum.
-## join: sales_order_line {
-    ##  type:  left_outer
-      ##sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
-      ##relationship: one_to_many
-      ##fields: [sales_order_line.asp_gross_amt_mattress,sales_order_line.asp_total_units_mattress,sales_order_line.asp_mattress,sales_order_line.mattress_units,sales_order_line.mattress_sales]}
 
     join: sales_order_line_base {
       view_label: "Sales Order Line"
