@@ -61,7 +61,7 @@ include: "/dashboards/**/*.dashboard"
     join: shopify_orders {
       view_label: "Sales Order Line"
       type:  left_outer
-      fields: [shopify_orders.call_in_order_Flag]
+      fields: [shopify_orders.call_in_order_Flag,shopify_orders.user_id]
       sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
       relationship:  many_to_many}
     join: return_order_line {
