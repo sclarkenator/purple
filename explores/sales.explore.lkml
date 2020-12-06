@@ -309,13 +309,13 @@ include: "/dashboards/**/*.dashboard"
     }
     join: shopify_users {
       type: left_outer
-      sql_on: ${shopify_users.id} = ${sales_order.etail_order_id} ;;
+      sql_on: ${shopify_users.id}::string = ${sales_order.etail_order_id}::string ;;
       relationship: many_to_one
     }
     join: agent_name {
       view_label: "Sales Order"
       type: left_outer
-      sql_on: ${agent_name.shopify_id}=${shopify_users.user_id} ;;
+      sql_on: ${agent_name.shopify_id}::string = ${shopify_users.user_id}::string ;;
       relationship: many_to_one
     }
     join: promotions_combined {
