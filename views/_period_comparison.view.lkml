@@ -144,7 +144,8 @@ view: _period_comparison {
     sql: ${event_raw} >= ${same_period_last_year_start_date} AND ${event_raw} < ${same_period_last_year_end_date} ;;
   }
 
-  dimension: is_current_previous_or_same_period_ly {
+  dimension: is_current_previous_or_same_period_last_year {
+    group_label: "Period Comparison"
     type: yesno
     sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' or ${is_same_period_last_year} = 'Yes' ;;
   }

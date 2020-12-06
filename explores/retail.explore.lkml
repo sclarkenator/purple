@@ -25,6 +25,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
       relationship:  one_to_one
     }
+
     join: sales_order_line_base {
       view_label: "Sales Order Line"
       type:  left_outer

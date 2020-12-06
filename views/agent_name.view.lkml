@@ -55,7 +55,7 @@ dimension: name {
 
   dimension: associate_name {
     label: "Associate"
-    hidden: yes
+    hidden: no
     group_label: " Advanced"
     description: "The name of this associate. Source:incontact.agent_lkp"
     type:  string
