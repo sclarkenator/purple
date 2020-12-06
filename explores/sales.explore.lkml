@@ -307,10 +307,15 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
       relationship: one_to_one
     }
+    join: shopify_users {
+      type: left_outer
+      sql_on: ${shopify_users.id} = ${sales_order.etail_order_id} ;;
+      relationship: many_to_one
+    }
     join: agent_name {
       view_label: "Sales Order"
       type: left_outer
-      sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+      sql_on: ${agent_name.shopify_id}=${shopify_users.user_id} ;;
       relationship: many_to_one
     }
     join: promotions_combined {
