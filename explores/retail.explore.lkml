@@ -45,11 +45,17 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
       relationship:  many_to_many
     }
+    join: shopify_users {
+      type: left_outer
+      sql_on: ${shopify_users.id}::string = ${sales_order.etail_order_id}::string ;;
+      relationship: many_to_one
+    }
     join: agent_name {
       view_label: "Sales Order"
       type: left_outer
-      sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+      sql_on: ${agent_name.shopify_id}::string = ${shopify_users.user_id}::string ;;
       relationship: many_to_one
+      fields: [agent_name.shopify_id,agent_name.associate_name,agent_name.primary_location]
     }
     join: aura_vision_traffic {
       view_label: "Owned Retail"
