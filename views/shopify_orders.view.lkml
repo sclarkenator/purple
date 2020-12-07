@@ -28,21 +28,21 @@ view: shopify_orders {
       select
         'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_us_ft."ORDER"
-      where created_at < '2020-11-01'
+      where created_at < '2020-12-06'
       UNION
       select
         'Shopify CA' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_ca_ft."ORDER"
-      where created_at < '2020-11-01'
+      where created_at < '2020-12-06'
       UNION
       select
         'Shopify Outlet' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_outlet."ORDER"
-      where created_at < '2020-11-01'
+      where created_at < '2020-12-06'
       UNION
-      select 'Shopify_API' AS SRC, ID::varchar(100) AS ID, 'NA'::varchar(100) AS USER_ID,created as created_at,subtotal_price,subtotal_price TOTAL_PRICE,'NA' NAME,0 TOTAL_DISCOUNTS,0 TOTAL_TAX,'NA' CHECKOUT_TOKEN,'NA' FINANCIAL_STATUS
+      select 'Shopify_API' AS SRC, ID::varchar(100) AS ID, 'NA'::varchar(100) AS USER_ID,created as created_at,subtotal_price,subtotal_price TOTAL_PRICE,'NA' NAME,0 TOTAL_DISCOUNTS,0 TOTAL_TAX,CHECKOUT_TOKEN,'NA' FINANCIAL_STATUS
       from analytics.sales.v_shopify_subtotal
-      where created_at > '2020-11-01'
+      where created_at >= '2020-12-06'
       UNION
       select 'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from ct
