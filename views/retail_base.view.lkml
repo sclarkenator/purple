@@ -2,7 +2,7 @@ view: retail_base {
 
 derived_table:
 {
-  sql: select date, showroom_name
+  sql: select date, mindate, showroom_name
   from ANALYTICS.UTIL.WAREHOUSE_DATE d
   left join (
     select showroom_name,
@@ -24,6 +24,7 @@ derived_table:
 
 dimension_group: date {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -45,5 +46,18 @@ dimension: store_id{
     sql: ${TABLE}.showroom_name ;;
   }
 
+dimension: open_date  {
+    description: "Date retail location first opened"
+    label: "Open"
+    type: date
+    sql: ${TABLE}.mindate ;;
+  }
+
+  dimension: days_open {
+    description: "Days between open date and sales date"
+    label: "Days Open"
+    type: number
+    sql: datediff('day',${open_date},${date_date}) ;;
+  }
 
 }
