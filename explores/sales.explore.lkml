@@ -432,6 +432,13 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       fields: [cordial_id.subscribe_status]
     }
+
+    join: fips {
+      type: left_outer
+      sql_on: right(concat ('00000',${fips.fips}),5)=right(concat ('00000',${dma.FIPS}),5);;
+      relationship: many_to_one
+    }
+
   }
 
   # explore: sales_test {
