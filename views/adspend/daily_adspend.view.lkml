@@ -347,21 +347,24 @@ dimension: spend_platform {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
-        or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY') ;; label: "audio" }
+      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') ;; label: "crm" }
+      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
+        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
         or ${spend_platform} in ('AMAZON-HSA');; label:"search"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
-        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
+      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') ${ad_day_of_year} ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG', 'TIKTOK') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
-      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
-      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE', 'MODUS')
+      when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE', 'MODUS')
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
-      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') ;; label: "crm" }
+      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
+        or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+
+
       else: "other" }
   }
 
@@ -375,11 +378,11 @@ dimension: spend_platform {
           or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
                   or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
-                  or ${spend_platform} in ('AMAZON-HSA');; label:"search"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+                  or ${spend_platform} in ('AMAZON-HSA');; label:"Search"}
+      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "Native" }
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
-          or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
-      when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
+          or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"Display" }
+      when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"Social growth"}
       when: {sql: ${TABLE}.platform in ('FB/IG') ;; label:"social"}
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: ${TABLE}.platform in ('HULU','SIRIUSXM','PRINT','PANDORA','USPS','NINJA','RADIO','PODCAST','SPOTIFY','Spotify','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE', 'MODUS')
@@ -571,7 +574,7 @@ dimension: spend_platform {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
-      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA','STREAMING') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     filters: [is_current_period: "yes"]
   }
@@ -587,7 +590,7 @@ dimension: spend_platform {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
-      when ${TABLE}.source in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      when ${TABLE}.PLATFORM in ('RADIO','PODCAST','CINEMA','STREAMING') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
       else ${TABLE}.spend
       end ;;
     filters: [is_current_period: "yes"]
