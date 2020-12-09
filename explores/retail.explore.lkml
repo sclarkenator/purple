@@ -25,6 +25,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
       relationship:  one_to_one
     }
+
     join: sales_order_line_base {
       view_label: "Sales Order Line"
       type:  left_outer
@@ -49,6 +50,7 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
       relationship: many_to_one
+      fields: [agent_name.shopify_id,agent_name.associate_name,agent_name.primary_location]
     }
     join: aura_vision_traffic {
       view_label: "Owned Retail"

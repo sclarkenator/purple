@@ -293,6 +293,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Team Lead"
       type: left_outer
       sql_on: ${team_lead_name.incontact_id} = ${agent_lkp.incontact_id} ;;
+      relationship: many_to_one
     }
   }
 
