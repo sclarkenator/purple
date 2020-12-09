@@ -38,7 +38,6 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
       relationship:many_to_one
       }
-
    join: item {
       view_label: "Product"
       type: left_outer
