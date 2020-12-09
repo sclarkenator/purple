@@ -28,6 +28,17 @@ view: dispatch_type {
     sql: ${TABLE}."CODE" ;;
   }
 
+  dimension: code_bucket {
+    description: "Source: Looker Calculation"
+    type: string
+    sql: case
+      when ${code} = "Labor" then "Labor"
+      when ${code} = "Material" then "Material"
+      when ${code} in ("Code Red", "Code Black", "Production Machine Setup", "Tooling Setup" then "Equipment"
+      else "Other"
+      end ;;
+  }
+
   dimension_group: created {
     hidden: yes
     type: time
