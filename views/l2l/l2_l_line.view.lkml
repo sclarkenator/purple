@@ -71,6 +71,10 @@ when ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Roll Pack 1'
 when ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Roll Pack 2'
 when ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Roll Pack 3'
 when ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Roll Pack 4'
+when ${TABLE}."DESCRIPTION" = 'Line One Glue' and  ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Assembly Line 1'
+when ${TABLE}."DESCRIPTION" = 'Line Two Glue' and  ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Assembly Line 2'
+when ${TABLE}."DESCRIPTION" = 'Line Three Glue' and  ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Assembly Line 3'
+when ${TABLE}."DESCRIPTION" = 'Line Four Glue' and  ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Assembly Line 4'
 else ${TABLE}."DESCRIPTION" end ;;
   }
 

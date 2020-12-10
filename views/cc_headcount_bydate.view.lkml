@@ -17,6 +17,29 @@ view: cc_headcount_bydate {
     sql: ${TABLE}.date ;;
   }
 
+  dimension: Before_today{
+    group_label: "By Date"
+    label: "z - Is Before Today (mtd)"
+    description: "This field is for formatting on (week/month/quarter/year) to date reports"
+    type: yesno
+    sql: ${TABLE}.date < current_date;; }
+
+  dimension: current_week_num{
+    group_label: "By Date"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is before the previous week"
+    type: yesno
+    sql: date_trunc(week, ${TABLE}.date::date) < date_trunc(week, current_date) ;;}
+  #sql: date_part('week',${TABLE}.date) < date_part('week',current_date);; }
+  #sql: date_part('week',${TABLE}.date) < 53;; }
+
+  dimension: prev_week{
+    group_label: "By Date"
+    label: "z - Previous Week"
+    description: "Yes/No for if the date is the previous week"
+    type: yesno
+    sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
+
   dimension: incontact_id {
     type: string
     #hidden: yes
@@ -127,9 +150,19 @@ view: cc_headcount_bydate {
     sql: ${TABLE}.service_recovery_team ;;
   }
 
-  measure: agents {
+  measure: total {
     type: count_distinct
     sql: ${incontact_id} ;;
+  }
+
+  measure: agents {
+    type: count_distinct
+    sql: case when ${is_supervisor} then null else ${incontact_id} end ;;
+  }
+
+  measure: supervisors {
+    type: count_distinct
+    sql: case when ${is_supervisor} then ${incontact_id} end  ;;
   }
 
 }

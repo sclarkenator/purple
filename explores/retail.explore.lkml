@@ -32,7 +32,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} ;;
       relationship: one_to_many
     }
-    join: item {
+    join: sales_order_line {
+      view_label: "Sales Order Line"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
+      relationship:many_to_one
+      }
+   join: item {
       view_label: "Product"
       type: left_outer
       sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
