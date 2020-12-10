@@ -388,7 +388,7 @@ dimension: spend_platform {
         or ${spend_platform} in ('AMAZON-HSA')
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"paid search"}
       when: {sql: ${TABLE}.platform in ('ADWALLET','FKL','FLUENT','Fluent','MADRIVO','ROKT','REDCRANE')or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+      when: {sql: (NOT ${TABLE}.platform in ('FB/IG')) and ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
       when: {sql: ${TABLE}.platform in ('FB/IG') ;; label:"social"}
