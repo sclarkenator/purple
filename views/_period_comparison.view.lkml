@@ -205,7 +205,7 @@ view: _period_comparison {
     sql: CASE
             WHEN ${is_current_period} = true THEN 'Current Period'
             WHEN ${is_previous_period} = true THEN 'Previous Period'
-            --WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
+            WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
         END
     ;;
   }
