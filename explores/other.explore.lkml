@@ -24,6 +24,8 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
+  explore: _calendar {hidden:yes} ##Added by Blake Walton 12/8/2020
+
 #-------------------------------------------------------------
 #
 # Paycom hours explore
