@@ -675,7 +675,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: optimizely_variation {
       view_label: "Optimizely"
-      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.campaign_id} = ${optimizely_variation.variation_id} ;;
+      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.variation_id} = ${optimizely_variation.variation_id} ;;
       type: left_outer
       relationship: one_to_many
     }
