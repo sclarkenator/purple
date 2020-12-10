@@ -3,6 +3,7 @@ view: order_utm {
    sql:
     select s.created
       , s.order_id
+      , s.SYSTEM
       , s.email
       , gross_amt
       , e.utm_medium
@@ -22,8 +23,23 @@ view: order_utm {
 
   dimension: order_id {
     type: string
-    primary_key: yes
+    # primary_key: yes
     sql: ${TABLE}.order_id ;;
+  }
+
+  # Added on 12/10 to join first_order_flag view - Mason
+  dimension: SYSTEM {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.SYSTEM ;;
+  }
+
+  dimension: pk {
+    description: "Primary key for order lookup"
+    primary_key: yes
+    hidden:  yes
+    type: string
+    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
 
   dimension: email {
