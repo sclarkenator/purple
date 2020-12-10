@@ -108,7 +108,19 @@ include: "/dashboards/**/*.dashboard"
   #       sql_on: ${group.id} = ${ticket.group_id} ;;
   #       relationship: many_to_one
   #     }
+  join: agent_lkp {
+    type: left_outer
+    sql_on: ${user.id}=${agent_lkp.zendesk_id} ;;
+    relationship: many_to_one
   }
+  join: team_lead_name {
+    type:  left_outer
+    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${zendesk_ticket.created_date}
+        AND ${team_lead_name.end_date}>=${zendesk_ticket.created_date};;
+    relationship: many_to_one
+  }
+}
 
   explore: daily_disposition_counts {
     group_label: "Customer Care"
