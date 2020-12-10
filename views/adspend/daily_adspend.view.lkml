@@ -371,7 +371,7 @@ dimension: spend_platform {
   dimension: medium_new{
     label: "Medium New"
     description: "Calculated based on source and platform"
-    hidden: yes
+    hidden: no
     type: string
     case: {
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
@@ -380,9 +380,11 @@ dimension: spend_platform {
       when: {sql: ${TABLE}.source = 'CTV'OR ${TABLE}.platform in ('HULU');; label:"CTV"}
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
-      when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
-                    or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
-                    or ${spend_platform} in ('AMAZON-HSA');; label:"search"}
+      when: {sql: (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
+        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%') ;; label:"brand search"}
+     when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
+        or ${spend_platform} in ('AMAZON-HSA')
+        or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"paid search"}
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"Social growth"}
