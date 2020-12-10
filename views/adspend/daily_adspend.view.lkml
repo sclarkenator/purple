@@ -380,7 +380,7 @@ dimension: spend_platform {
       when: {sql: (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
         or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%')
         or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand_%');; label:"brand search"}
-      when: {sql: ${TABLE}.platform in ('INTEGRAL MEDIA','LIVEINTENT', 'TALKABLE','POSTIE') ;; label: "crm" }
+      when: {sql: ${TABLE}.platform in ('INTEGRAL MEDIA','LIVEINTENT', 'TALKABLE','POSTIE','PRINT') ;; label: "crm" }
       when: {sql: ${TABLE}.source = 'CTV'OR ${TABLE}.platform in ('HULU');; label:"CTV"}
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
