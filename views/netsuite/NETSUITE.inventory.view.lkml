@@ -18,12 +18,12 @@ view: inventory {
     type: sum
     sql: ${TABLE}.backordered ;; }
 
-  dimension_group: created {
-    hidden: yes
+  dimension_group: updated {
+    hidden: no
     type: time
     description: "Date the Item was created in the table."
     timeframes: [ time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: ${TABLE}.updated ;; }
 
   measure: inbound {
     label: "Total Inbound"
@@ -84,6 +84,27 @@ view: inventory {
     hidden: yes
     type: number
     sql: ${TABLE}.ON_ORDER ;; }
+
+  measure: last_sync_date {
+    group_label: " Sync"
+    type: date
+    label: "Sync date"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.updated) ;;}
+
+  measure: last_sync_time {
+    group_label: " Sync"
+    type: date_time_of_day
+    label: "Sync time"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.updated) ;;}
+
+  measure: last_sync_timestamp {
+    group_label: " Sync"
+    label: "Sync timestamp"
+    description: "Date table was last refreshed"
+    sql: max(${TABLE}.updated) ;;}
+
 
   measure: on_hand {
     label: "Total On Hand"

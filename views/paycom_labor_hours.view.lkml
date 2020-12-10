@@ -126,7 +126,7 @@ view: paycom_labor_hours {
 
   dimension: punch_type {
     description: "Method of clocking in. Source: paycom.paycom_labor_hours"
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."PUNCH_TYPE" ;;
   }

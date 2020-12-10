@@ -150,6 +150,8 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'big%sandy%' ;; label: "Big Sandy" }
       when: { sql: lower(${TABLE}.companyname) like 'big%sky%' ;; label: "Big Sky" }
       when: { sql: lower(${TABLE}.companyname) like 'sam%' ;; label: "Sam's Club" }
+      when: { sql: lower(${TABLE}.companyname) like 'rooms%to%go%' ;; label: "Rooms to Go" }
+
 
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
       when: { sql: lower(${TABLE}.companyname) like 'access%'

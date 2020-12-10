@@ -143,6 +143,7 @@ view: c3_cohort_pdt{
   dimension: attribution {type: number}
   dimension: converter {type: number}
   dimension: orders {type: number}
+
 }
 
 ######################################################
@@ -153,6 +154,9 @@ view: c3_cohort_pdt{
 view: c3_trended_pdt{
   derived_table: {
     explore_source: c3 {
+      column: first_touch_sales {}
+      column: last_touch_sales {}
+      column: influenced { field: c3_conversion_count.influenced }
       column: order_created_date {}
       column: campaign_type_clean {}
       column: Platform_clean {}
@@ -171,6 +175,9 @@ view: c3_trended_pdt{
   dimension: attribution {type: number}
   dimension: converter {type: number}
   dimension: orders {type: number}
+  dimension: first_touch_sales {type:number}
+  dimension: last_touch_sales {type:number}
+  dimension: influenced {type:number}
 }
 
 ######################################################
@@ -199,6 +206,9 @@ view: roas_pdt {
       , null as payment_method
       , null as c3_new_cohort
       , null as c3_new_trended
+      , null as last_touch_sales
+      , null as first_touch_sales
+      , null as influenced
     from ${adspend_pdt.SQL_TABLE_NAME}
     union all
     select 'sessions' as source
@@ -222,6 +232,9 @@ view: roas_pdt {
       , null as payment_method
       , null as c3_new_cohort
       , null as c3_new_trended
+      , null as last_touch_sales
+      , null as first_touch_sales
+      , null as influenced
     from ${sessions_pdt.SQL_TABLE_NAME}
     union all
     select 'sales' as source
@@ -245,6 +258,9 @@ view: roas_pdt {
       , payment_method
       , null as c3_new_cohort
       , null as c3_new_trended
+      , null as last_touch_sales
+      , null as first_touch_sales
+      , null as influenced
     from ${sales_pdt.SQL_TABLE_NAME}
     union all
     select 'c3' as source
@@ -268,6 +284,9 @@ view: roas_pdt {
       , null as payment_method
       , null as c3_new_cohort
       , null as c3_new_trended
+      , null as last_touch_sales
+      , null as first_touch_sales
+      , null as influenced
    from ${c3_pdt.SQL_TABLE_NAME}
    union all
     select 'c3 cohort' as source
@@ -291,6 +310,9 @@ view: roas_pdt {
       , null as payment_method
       , attribution as c3_new_cohort
       , null as c3_new_trended
+      , null as last_touch_sales
+      , null as first_touch_sales
+      , null as influenced
    from ${c3_cohort_pdt.SQL_TABLE_NAME}
   union all
     select 'c3 trended' as source
@@ -314,6 +336,9 @@ view: roas_pdt {
       , null as payment_method
       , null as c3_new_cohort
       , attribution as c3_new_trended
+      , last_touch_sales
+      , first_touch_sales
+      , influenced
    from ${c3_trended_pdt.SQL_TABLE_NAME}
     ;;
   datagroup_trigger: pdt_refresh_6am
@@ -620,9 +645,49 @@ view: roas_pdt {
   measure: new_cohort_amount{
     label: "C3 Atrributed Amount New"
     type: sum
-    value_format: "#,##0"
+    value_format: "$#,##0"
     sql: ${TABLE}.c3_new_cohort;;
   }
-
-
+  measure: last_touch_sales {
+    label:"Last Touch Sales"
+    description: "Sale amount where C3 position was 'converter'"
+    value_format: "$#,##0"
+    type: sum
+  sql: ${TABLE}.last_touch_sales;;
+  }
+  measure: first_touch_sales {
+    label:"First Touch Sales"
+    description: "Sale amount where C3 position was 'originator'"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${TABLE}.first_touch_sales;;
+  }
+  measure: influenced {
+    label: "Multi-touch Sales"
+    description: "All C3 touchpoints attributed amount"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${TABLE}.influenced;;
+  }
+  measure: last_touch_sales_roas {
+    label: "ROAS LT"
+    description: "C3 Last-touch ROAS"
+    value_format: "$#,##0.00"
+    type: number
+    sql: ${adspend}/nullif(${last_touch_sales},0);;
+  }
+  measure: first_touch_sales_roas {
+    label: "ROAS FT"
+    description: "C3 First-touch ROAS"
+    value_format: "$#,##0.00"
+    type: number
+    sql: ${adspend}/nullif(${first_touch_sales},0);;
+  }
+  measure: multi_touch_sales_roas {
+    label: "ROAS MT"
+    description: "C3 MT ROAS"
+    value_format: "$#,##0.00"
+    type: number
+    sql: ${adspend}/nullif(${influenced},0);;
+  }
 }

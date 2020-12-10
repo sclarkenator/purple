@@ -93,3 +93,31 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fit_stripe {hidden: yes group_label: "Accounting"}
   explore: v_splitit {hidden: yes group_label: "Accounting"}
   explore: splitit {hidden: yes group_label: "Accounting" description:"The date filter will change the date range in the SQL query."}
+
+
+#-------------------------------------------------------------------
+#
+# Netsuite by Fivetran Explores
+# https://looker.com/platform/blocks/source/netsuite-by-fivetran
+# Created by Blake Walton 2020-11-30
+#-------------------------------------------------------------------
+
+# fiscal_month_offset:0   #customize based on your company's fiscal calendar set up
+
+  explore: balance_sheet {
+    group_label: "Accounting"
+    label: "Balance Sheet"
+    hidden: yes
+  }
+
+  explore: income_statement {
+    group_label: "Accounting"
+    label: "Income Statement"
+    hidden: yes
+  }
+
+  explore: transaction_details {
+    group_label: "Accounting"
+    label: "Transaction Details"
+    hidden: yes
+  }

@@ -10,7 +10,7 @@ view: transaction_details {
         transactions.trandate as transaction_date,
         transactions.due_date as transaction_due_date,
         transactions.transaction_type as transaction_type,
-        (lower(transactions.is_advanced_intercompany) = 'yes' or lower(transactions.is_intercompany) = 'yes') as is_transaction_intercompany,
+        --(lower(transactions.is_advanced_intercompany) = 'yes' or lower(transactions.is_intercompany) = 'yes') as is_transaction_intercompany,
         accounting_periods.ending as accounting_period_ending,
         accounting_periods.full_name as accounting_period_full_name,
         accounting_periods.name as accounting_period_name,
@@ -55,11 +55,11 @@ view: transaction_details {
           else transaction_lines.amount
           end as transaction_amount,
         case
-          when datediff(day, to_date(due_date), current_date)  < 0 then '< 0.0'
-          when datediff(day, to_date(due_date), current_date)  >= 0 and datediff(day, to_date(due_date), current_date)  < 30 then '>= 0.0 and < 30.0'
-          when datediff(day, to_date(due_date), current_date)  >= 30 and datediff(day, to_date(due_date), current_date)  < 60 then '>= 30.0 and < 60.0'
-          when datediff(day, to_date(due_date), current_date)  >= 60 and datediff(day, to_date(due_date), current_date)  < 90 then '>= 60.0 and < 90.0'
-          when datediff(day, to_date(due_date), current_date)  >= 90 then '>= 90.0'
+          when datediff(day, to_date(transactions.due_date), current_date)  < 0 then '< 0.0'
+          when datediff(day, to_date(transactions.due_date), current_date)  >= 0 and datediff(day, to_date(transactions.due_date), current_date)  < 30 then '>= 0.0 and < 30.0'
+          when datediff(day, to_date(transactions.due_date), current_date)  >= 30 and datediff(day, to_date(transactions.due_date), current_date)  < 60 then '>= 30.0 and < 60.0'
+          when datediff(day, to_date(transactions.due_date), current_date)  >= 60 and datediff(day, to_date(transactions.due_date), current_date)  < 90 then '>= 60.0 and < 90.0'
+          when datediff(day, to_date(transactions.due_date), current_date)  >= 90 then '>= 90.0'
           else 'Undefined'
           end as days_past_due_date_tier
       from analytics_stage.nstl.transaction_lines
@@ -88,7 +88,7 @@ view: transaction_details {
       left join analytics_stage.ns.departments on departments.department_id = transaction_lines.department_id
       join analytics_stage.ns.subsidiaries on subsidiaries.subsidiary_id = transaction_lines.subsidiary_id
       where (accounting_periods.fiscal_calendar_id is null
-        or accounting_periods.fiscal_calendar_id  = (select fiscal_calendar_id from netsuite.subsidiaries where parent_id is null))
+        or accounting_periods.fiscal_calendar_id  = (select fiscal_calendar_id from analytics_stage.ns.subsidiaries where parent_id is null))
        ;;
   }
 
@@ -143,7 +143,8 @@ view: transaction_details {
     group_label: "Transaction"
     description: "Yes/No field, indicating whether or not the transaction is an intercompany transaction or an advanced intercompany transaction"
     type: yesno
-    sql: ${TABLE}.is_transaction_intercompany ;;
+    sql: 0 ;;
+    #sql: ${TABLE}.is_transaction_intercompany ;;
   }
 
   dimension_group: transaction {

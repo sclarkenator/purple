@@ -47,7 +47,7 @@ include: "/dashboards/**/*.dashboard"
       type: inner
       sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
       relationship: many_to_one
-      fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_at_date, shopify_orders.gross_sales]}
+      fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_date, shopify_orders.gross_sales]}
     join: sales_order {
       type:  left_outer
       sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;

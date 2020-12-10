@@ -154,18 +154,57 @@ dimension: primary_key {
     sql: ${TABLE}."SKILL" ;;
   }
 
+  dimension: call_type {
+    description: ""
+    type: string
+    sql:
+    case
+        when ${skill} in ('8885Purple','888Purple','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher Discount','Time Magazine')
+            then 'Sales Inbound'
+        when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Sleep Country Canada','Support Xfer (From Sales)','Training Support Xfer','Warranty')
+            then 'Support Inbound'
+        when ${skill} = 'Service Recovery'
+            then 'SRT'
+        when ${skill} = 'Customer Service OB'
+            then 'Support OB'
+        when ${skill} = 'Sales Team OB'
+            then 'Sales OB'
+        when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)')
+            then 'Ops'
+        else 'Admin'
+    end
+    ;;
+  }
+
+  dimension: call_transfer {
+    label: "  * Is Transferred Call"
+    type: yesno
+    sql:
+      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)') then true else false end
+    ;;
+  }
 
   measure: avg_abandon_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: average
+    value_format: "#,##0.00"
     sql: ${TABLE}."ABANDON_TIME" ;;
   }
 
   measure: avg_acw_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: yes
-    type: number
+    hidden: no
+    type: average
+    value_format: "#,##0.00"
+    sql: ${TABLE}."ACW_TIME" ;;
+  }
+
+  measure: total_acw_time {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
+    hidden: no
+    type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
@@ -174,6 +213,43 @@ dimension: primary_key {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
+  }
+
+  measure: count_handle_time {
+    description: "Count Distinct of handle time. Source: incontact. rpt_skill_with_disposition_count"
+    type: count_distinct
+    value_format: "#,##0"
+    sql: ${TABLE}."HANDLE_TIME" ;;
+  }
+
+  measure: avg_acw {
+    label: "Average ACW (sec)"
+    description: "Average ACW in second, total_acw_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_acw_time}/${count_handle_time} ;;
+  }
+
+  measure: avg_handle_time {
+    label: "Average Handle Time"
+    description: "total_handle_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_handle_time}/${count_handle_time} ;;
+  }
+
+  measure: avg_hold_time_2 {
+    label: "Average Hold Time"
+    description: "total_hold_time/count_handle_time. Source: looker.calculation"
+    type: number
+    value_format: "#,##0.00"
+    sql: ${total_hold_time}/${count_handle_time} ;;
+  }
+  measure: total_hold_time {
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    hidden: no
+    sql: ${TABLE}."HOLD_TIME" ;;
   }
 
   measure: avg_talk_time {

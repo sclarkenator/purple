@@ -105,4 +105,79 @@ view: inventory_snap {
     sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
   }
 
+  parameter: see_data_by_inv_snap {
+    type: unquoted
+    #hidden: yes
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Warehouse Location"
+      value: "warehouse_location"
+    }
+    allowed_value: {
+      label: "Category"
+      value: "category"
+    }
+    allowed_value: {
+      label: "Line"
+      value: "line"
+    }
+    allowed_value: {
+      label: "Model"
+      value: "model"
+    }
+    allowed_value: {
+      label: "Product Name"
+      value: "name"
+    }
+    allowed_value: {
+      label: "SKU"
+      value: "sku"
+    }
+  }
+
+  dimension: see_data_inv_snap {
+    label: "See Data By"
+    hidden: yes
+    sql:
+    {% if see_data_by_inv_snap._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif see_data_by_inv_snap._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif see_data_by_inv_snap._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif see_data_by_inv_snap._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% elsif see_data_by_inv_snap._parameter_value == 'warehouse_location' %}
+      ${warehouse_location.location_name}
+    {% elsif see_data_by_inv_snap._parameter_value == 'category' %}
+      ${item.category_name}
+    {% elsif see_data_by_inv_snap._parameter_value == 'line' %}
+      ${item.line_raw}
+    {% elsif see_data_by_inv_snap._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% elsif see_data_by_inv_snap._parameter_value == 'name' %}
+      ${item.product_description_raw}
+    {% elsif see_data_by_inv_snap._parameter_value == 'sku' %}
+      ${item.sku_id}
+    {% else %}
+       ${created_date}
+    {% endif %};;
+  }
+
+
 }

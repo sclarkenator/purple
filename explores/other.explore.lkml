@@ -181,3 +181,73 @@ include: "/dashboards/**/*.dashboard"
 explore: alert_testing {
   hidden: yes
 }
+
+#-------------------------------------------------------------------
+#
+# Snowflake  Explores
+# Created by Blake Walton
+# https://looker.com/platform/blocks/source/cost-and-usage-analysis-by-snowflake
+#-------------------------------------------------------------------
+
+  explore: login_history {
+    hidden: yes
+  }
+
+  explore: query_history {
+    hidden: yes
+    join: databases {
+      type: left_outer
+      sql_on: ${query_history.database_name} = ${databases.database_name} ;;
+      relationship: many_to_one
+    }
+
+  #   join: schemata {
+  #     type: left_outer
+  #     sql_on: ${databases.id} = ${schemata.id} ;;
+  #     relationship: one_to_many
+  #   }
+  }
+
+  # explore: schemata {
+  #   hidden: yes
+  #   join: databases {
+  #     type: left_outer
+  #     sql_on: ${schemata.database_id} = ${databases.id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
+
+  explore: load_history {
+    hidden: yes
+    fields: [ALL_FIELDS*,-tables.table_name,-tables.id]
+    join: tables {
+      sql_on: ${load_history.table_id} = ${tables.id} ;;
+      relationship: many_to_one
+    }
+  }
+
+  explore: storage_usage {hidden: yes}
+
+  explore: warehouse_metering_history {hidden: yes}
+
+  # explore: columns {hidden: yes}
+  #
+  # explore: databases {hidden: yes}
+  #
+  # explore: file_formats {hidden: yes}
+  #
+  # explore: functions {hidden: yes}
+  #
+  # explore: referential_constraints {hidden: yes}
+  #
+  # explore: sequences {hidden: yes}
+  #
+  # explore: stages {hidden: yes}
+  #
+  # explore: table_constraints {hidden: yes}
+  #
+  # explore: table_storage_metrics {hidden: yes}
+  #
+  # explore: tables {hidden: yes}
+  #
+  # explore: views {hidden: yes}

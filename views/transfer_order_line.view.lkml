@@ -162,9 +162,21 @@ view: transfer_order_line {
     sql: ${TABLE}."FULFILLED_QTY" ;;
   }
 
-  measure: remaining_qty {
+  dimension: total_received_qty_d {
+    hidden: yes
     type: number
-    sql: ${fulfilled_qty}-${total_received_qty} ;;
+    sql: ${TABLE}."RECEIVED_QTY" ;;
+  }
+
+  dimension: fulfilled_qty_d {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."FULFILLED_QTY" ;;
+  }
+
+  measure: remaining_qty {
+    type: sum
+    sql: ${fulfilled_qty_d}-${total_received_qty_d} ;;
   }
 
 }

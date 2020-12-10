@@ -190,14 +190,17 @@ view: sales_order_line {
   dimension: Due_Date_new {
     ##added by Scott Clark on 11/6/2020 working on updating actual SLAs for Jane
     view_label: "Fulfillment"
-    hidden: yes
+    group_label: " Advanced"
+    label: "SLA-based ship-by"
+    description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
+    hidden: no
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,${sla_hist.days},${created_date})
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${site_slas.days},5),${created_date})
           Else dateadd(d,3,${created_date}) END ;;
   }
 
@@ -295,11 +298,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
   }
 
@@ -342,11 +343,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
   }
@@ -390,11 +389,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
   }
@@ -411,8 +408,8 @@ view: sales_order_line {
     sql: Case when ${white_glove_sales_eligible_for_SLA} = 0 then 0 Else ${white_glove_sales_Fulfilled_in_SLA}/${white_glove_sales_eligible_for_SLA} End ;;
   }
 
-  measure: mainfreight_sales_eligible_for_SLA{
-    label: "MainFreight Qty Eligible SLA"
+  measure: Mattress_Firm_sales_eligible_for_SLA{
+    label: "Mattress Firm Qty Eligible SLA"
     group_label: "Fulfillment SLA ($)"
     hidden:  no
     view_label: "Fulfillment"
@@ -428,8 +425,8 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: mainfreight_sales_Fulfilled_in_SLA{
-    label: "MainFreight Qty Fulfilled in SLA"
+  measure: Mattress_Firm_sales_Fulfilled_in_SLA{
+    label: "Mattress Firm Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA ($)"
     view_label: "Fulfillment"
     drill_fields: [fulfillment_details*]
@@ -438,25 +435,23 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: mainfreight_zSLA_Achievement_prct {
+  measure: Mattress_Firm_zSLA_Achievement_prct {
     view_label: "Fulfillment"
     group_label: "Fulfillment SLA ($)"
-    label: "MainFreight SLA $ Achievement %"
+    label: "Mattress Firm SLA $ Achievement %"
     description: "Source: looker.calculation"
     hidden: no
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
-    sql: Case when ${mainfreight_sales_eligible_for_SLA} = 0 then 0 Else ${mainfreight_sales_Fulfilled_in_SLA}/${mainfreight_sales_eligible_for_SLA} End ;;
+    sql: Case when ${Mattress_Firm_sales_eligible_for_SLA} = 0 then 0 Else ${Mattress_Firm_sales_Fulfilled_in_SLA}/${Mattress_Firm_sales_eligible_for_SLA} End ;;
   }
 
   measure: other_sales_eligible_for_SLA{
@@ -486,11 +481,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
           when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-          Else
-            case
-              when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
-              Else 0
-            END
+          when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${gross_amt}
+          when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
+          Else 0
         END;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -547,6 +540,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
   }
@@ -599,6 +593,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
@@ -645,6 +640,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
@@ -662,8 +658,8 @@ view: sales_order_line {
     sql: Case when ${White_Glove_Qty_eligible_for_SLA} = 0 then 0 Else ${White_Glove_Qty_Fulfilled_in_SLA}/${White_Glove_Qty_eligible_for_SLA} End ;;
   }
 
-  measure:MainFreight_Qty_eligible_for_SLA{
-    label: "MainFreight Qty Eligible SLA"
+  measure:Mattress_Firm_Qty_eligible_for_SLA{
+    label: "Mattress Firm Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
@@ -680,8 +676,8 @@ view: sales_order_line {
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: MainFreight_Qty_Fulfilled_in_SLA{
-    label: "MainFreight Fulfilled in SLA"
+  measure: Mattress_Firm_Qty_Fulfilled_in_SLA{
+    label: "Mattress Firm Fulfilled in SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
@@ -691,21 +687,22 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
 
-  measure: MainFreight_SLA_Achievement_prct {
+  measure: Mattress_Firm_SLA_Achievement_prct {
     view_label: "Fulfillment"
-    label: "MainFreight SLA Achievement %"
+    label: "Mattress Firm SLA Achievement %"
     group_label: "Fulfillment SLA (units)"
     description: "Source: looker.calculation"
     hidden: no
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
-    sql: Case when ${MainFreight_Qty_eligible_for_SLA} = 0 then 0 Else ${MainFreight_Qty_Fulfilled_in_SLA}/${MainFreight_Qty_eligible_for_SLA} End ;;
+    sql: Case when ${Mattress_Firm_Qty_eligible_for_SLA} = 0 then 0 Else ${Mattress_Firm_Qty_Fulfilled_in_SLA}/${Mattress_Firm_Qty_eligible_for_SLA} End ;;
   }
 
   measure:Other_Qty_eligible_for_SLA{
@@ -737,6 +734,7 @@ view: sales_order_line {
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
         when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
@@ -1946,7 +1944,15 @@ view: sales_order_line {
     type: sum
     sql: 0.01*${gross_amt} ;;
   }
-
+  measure: gross_margin {
+    ##added by Scott Clark 11/25/2020
+    label: "Gross margin"
+    description: "Total margin dollars after all product and order related expenses are netted out"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    sql: ${adj_gross_amt}-${COGS}-${return_amt}-${direct_affiliate}-${warranty_accrual}-${merch_fees} ;;
+  }
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"
@@ -1977,6 +1983,17 @@ view: sales_order_line {
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
       then ${gross_amt} else 0 end;;
+  }
+
+  measure: owned_retail_sales {
+    group_label: "Gross Sales"
+    description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
+    label: "Sales - Owned Retail ($)"
+    hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    filters: [sales_order.channel: "Owned Retail",sales_order.is_exchange_upgrade_warranty: "No"]
+    sql:  ${gross_amt} ;;
   }
 
   measure: customer_care_sales {

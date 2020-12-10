@@ -172,6 +172,11 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
     group_label: "Marketing"
     description:"This data updates every two hours during holiday periods"
+    join: holiday_sessions {
+      type: left_outer
+      sql_on: ${holiday_sessions.session_id} = ${heap_page_views_holiday.session_id} ;;
+      relationship: many_to_one
+    }
   }
 
 #   explore: ecommerce_qualtrics {
