@@ -40,10 +40,29 @@ view: fips {
 
   dimension: is_metro {
     type: yesno
+    hidden: yes
     label: " * Is Metro"
     description: "FIPS in metro area county with more than 250K population"
     view_label: "Geography"
-    sql: ${rucc_2013} in ('1','2','3')  ;;
+    sql: ${rucc_2013} in ('1')  ;;
+  }
+
+  dimension: is_rural {
+    type: yesno
+    hidden:  yes
+    label: " * Is Rural"
+    description: "FIPS in metro area county with more than 250K population"
+    view_label: "Geography"
+    sql: ${rucc_2013} in ('5', '6', '7','8','9')  ;;
+  }
+
+  dimension: is_suburban {
+    type: yesno
+    hidden:  yes
+    label: " * Is Suburban"
+    description: "FIPS in metro area county with more than 250K population"
+    view_label: "Geography"
+    sql: ${rucc_2013} in ('2','3','4')  ;;
   }
 
 
