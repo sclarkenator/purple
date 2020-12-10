@@ -224,7 +224,7 @@ view: daily_adspend {
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*.1
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
@@ -575,7 +575,7 @@ dimension: spend_platform {
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*.1
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date < '2021-01-01' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
@@ -610,7 +610,7 @@ dimension: spend_platform {
     type: sum
     value_format:  "$#,##0"
     #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*1.1
+    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date < '2021-01-01' then ${TABLE}.spend*1.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       else ${TABLE}.spend
@@ -632,7 +632,7 @@ dimension: spend_platform {
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date > '2021-01-01'then ${TABLE}.spend*.1
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date < '2021-01-01'then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
@@ -666,7 +666,7 @@ dimension: spend_platform {
     type: sum
     value_format:  "$#,##0"
     #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04'and ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*1.1
+    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04'or ${TABLE}.date::date < '2021-01-01' then ${TABLE}.spend*1.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       else ${TABLE}.spend
