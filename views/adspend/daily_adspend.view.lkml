@@ -374,22 +374,25 @@ dimension: spend_platform {
     hidden: no
     type: string
     case: {
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
-      when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM') ;; label: "audio" }
-      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT','POSTIE') ;; label: "crm" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${source} in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
+        or (${TABLE}.platform in ('YOUTUBE') and ${source}='AUDIO') ;; label: "audio" }
+      when: {sql: (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
+        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%')
+        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand_%');; label:"brand search"}
+      when: {sql: ${TABLE}.platform in ('INTEGRAL MEDIA','LIVEINTENT', 'TALKABLE','POSTIE') ;; label: "crm" }
       when: {sql: ${TABLE}.source = 'CTV'OR ${TABLE}.platform in ('HULU');; label:"CTV"}
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
-      when: {sql: (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
-        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%') ;; label:"brand search"}
      when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
         or ${spend_platform} in ('AMAZON-HSA')
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"paid search"}
+      when: {sql: ${TABLE}.platform in ('ADWALLET','FKL','FLUENT','Fluent','MADRIVO','ROKT','REDCRANE')or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
       when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
-      when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"Social growth"}
+      when: {sql: ${TABLE}.platform in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
       when: {sql: ${TABLE}.platform in ('FB/IG') ;; label:"social"}
-      when: {sql: ${TABLE}.source = 'TV';; label:"TV"}
+      when: {sql: ${TABLE}.source = 'TV' or ${TABLE}.platform = 'TV';; label:"TV"}
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
             or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
 
