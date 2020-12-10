@@ -114,6 +114,12 @@ include: "/dashboards/**/*.dashboard"
         and ${cordial_activity.action} in ('message-sent','open');;
       relationship: many_to_one
     }
+    # Added 12/10/2020 to get new/repeat customers - Mason
+    join: first_order_flag {
+      type: left_outer
+      sql_on: ${order_utm.pk} = ${first_order_flag.pk} ;;
+      relationship: many_to_one
+    }
   }
 
   explore: email_contact_merged {
