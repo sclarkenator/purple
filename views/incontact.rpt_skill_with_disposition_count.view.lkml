@@ -198,7 +198,7 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: sum
     value_format: "#,##0"
-    sql: case when ${handle_time} is not null then 1 else 0 end ;;
+    sql: case when ${handle_time} > 0 then 1 else 0 end ;;
   }
 
   measure: count_handle_time {
