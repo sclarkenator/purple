@@ -195,7 +195,7 @@ where z.row_num = 1;;
 
   dimension: current_day_numb  {
     view_label: "Pitch"
-    group_label: "Pitch Start"
+    group_label: "Pitch Start Date"
     label: "z - Before Current Day"
     description: "Yes/No for if the date is before the current day of the year. Source: Looker Calculation"
     type: yesno
@@ -204,7 +204,7 @@ where z.row_num = 1;;
 
   dimension: current_week_numb {
     view_label: "Pitch"
-    group_label: "Pitch Start"
+    group_label: "Pitch Start Date"
     label: "z - Before Current Week"
     description: "Yes/No for if the date is before the current week of the year. Source: Looker Calculation"
     type: yesno

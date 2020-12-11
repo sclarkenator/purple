@@ -78,10 +78,10 @@ view: ltol_line {
     description: "Source: Looker Calculation"
     type: string
     sql: case
-      when ${Line_name} = 'Line One Glue' and  ${Line_name} = 'Line One Roll Pack' then 'Assembly Line 1'
-      when ${Line_name} = 'Line Two Glue' and  ${Line_name} = 'Line Two Roll Pack' then 'Assembly Line 2'
-      when ${Line_name} = 'Line Three Glue' and  ${Line_name} = 'Line Three Roll Pack' then 'Assembly Line 3'
-      when ${Line_name} = 'Line Four Glue' and  ${Line_name} = 'Line Four Roll Pack' then 'Assembly Line 4'
+      when ${Line_name} = 'Glue 1' or  ${Line_name} = 'Roll Pack 1' then 'Assembly Line 1'
+      when ${Line_name} = 'Glue 2' or  ${Line_name} = 'Roll Pack 2' then 'Assembly Line 2'
+      when ${Line_name} = 'Glue 3' or  ${Line_name} = 'Roll Pack 3' then 'Assembly Line 3'
+      when ${Line_name} = 'Glue 4' or  ${Line_name} = 'Roll Pack 4' then 'Assembly Line 4'
       else ${Line_name} end;;
   }
 
