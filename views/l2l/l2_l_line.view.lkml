@@ -54,28 +54,35 @@ view: ltol_line {
     description: "Source: l2l.line"
     type: string
     sql: case when ${TABLE}."DESCRIPTION" = 'Scrim Line Red Max 2 and 5' then 'Scrim Red'
-when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
-when ${TABLE}."DESCRIPTION" = 'Regrind Line' then 'Regrind'
-when ${TABLE}."DESCRIPTION" = 'Max One Line' then 'Max 1'
-when ${TABLE}."DESCRIPTION" = 'Max Two Line' then 'Max 2'
-when ${TABLE}."DESCRIPTION" = 'Max Three Line' then 'Max 3'
-when ${TABLE}."DESCRIPTION" = 'Max Four Line' then 'Max 4'
-when ${TABLE}."DESCRIPTION" = 'Max Five Line' then 'Max 5'
-when ${TABLE}."DESCRIPTION" = 'Max Six Line' then 'Max 6'
-when ${TABLE}."DESCRIPTION" = 'Max Seven Line' then 'Max 7'
-when ${TABLE}."DESCRIPTION" = 'Line One Glue' then 'Glue 1'
-when ${TABLE}."DESCRIPTION" = 'Line Two Glue' then 'Glue 2'
-when ${TABLE}."DESCRIPTION" = 'Line Three Glue' then 'Glue 3'
-when ${TABLE}."DESCRIPTION" = 'Line Four Glue' then 'Glue 4'
-when ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Roll Pack 1'
-when ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Roll Pack 2'
-when ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Roll Pack 3'
-when ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Roll Pack 4'
-when ${TABLE}."DESCRIPTION" = 'Line One Glue' and  ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Assembly Line 1'
-when ${TABLE}."DESCRIPTION" = 'Line Two Glue' and  ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Assembly Line 2'
-when ${TABLE}."DESCRIPTION" = 'Line Three Glue' and  ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Assembly Line 3'
-when ${TABLE}."DESCRIPTION" = 'Line Four Glue' and  ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Assembly Line 4'
-else ${TABLE}."DESCRIPTION" end ;;
+      when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
+      when ${TABLE}."DESCRIPTION" = 'Regrind Line' then 'Regrind'
+      when ${TABLE}."DESCRIPTION" = 'Max One Line' then 'Max 1'
+      when ${TABLE}."DESCRIPTION" = 'Max Two Line' then 'Max 2'
+      when ${TABLE}."DESCRIPTION" = 'Max Three Line' then 'Max 3'
+      when ${TABLE}."DESCRIPTION" = 'Max Four Line' then 'Max 4'
+      when ${TABLE}."DESCRIPTION" = 'Max Five Line' then 'Max 5'
+      when ${TABLE}."DESCRIPTION" = 'Max Six Line' then 'Max 6'
+      when ${TABLE}."DESCRIPTION" = 'Max Seven Line' then 'Max 7'
+      when ${TABLE}."DESCRIPTION" = 'Line One Glue' then 'Glue 1'
+      when ${TABLE}."DESCRIPTION" = 'Line Two Glue' then 'Glue 2'
+      when ${TABLE}."DESCRIPTION" = 'Line Three Glue' then 'Glue 3'
+      when ${TABLE}."DESCRIPTION" = 'Line Four Glue' then 'Glue 4'
+      when ${TABLE}."DESCRIPTION" = 'Line One Roll Pack' then 'Roll Pack 1'
+      when ${TABLE}."DESCRIPTION" = 'Line Two Roll Pack' then 'Roll Pack 2'
+      when ${TABLE}."DESCRIPTION" = 'Line Three Roll Pack' then 'Roll Pack 3'
+      when ${TABLE}."DESCRIPTION" = 'Line Four Roll Pack' then 'Roll Pack 4'
+      else ${TABLE}."DESCRIPTION" end ;;
+  }
+
+  dimension: line_name_bucket {
+    description: "Source: Looker Calculation"
+    type: string
+    sql: case
+      when ${Line_name} = 'Glue 1' or  ${Line_name} = 'Roll Pack 1' then 'Assembly Line 1'
+      when ${Line_name} = 'Glue 2' or  ${Line_name} = 'Roll Pack 2' then 'Assembly Line 2'
+      when ${Line_name} = 'Glue 3' or  ${Line_name} = 'Roll Pack 3' then 'Assembly Line 3'
+      when ${Line_name} = 'Glue 4' or  ${Line_name} = 'Roll Pack 4' then 'Assembly Line 4'
+      else ${Line_name} end;;
   }
 
   dimension: downtime_rate {

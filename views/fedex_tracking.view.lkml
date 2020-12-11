@@ -1,5 +1,5 @@
 view: fedex_tracking {
-  sql_table_name: PRODUCTION.FEDEX_TRACKING ;;
+  sql_table_name: analytics.shipping.fedex_tracking ;;
 
   dimension: account_number {
     type: string

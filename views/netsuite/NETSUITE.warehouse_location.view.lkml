@@ -2,7 +2,7 @@ view: warehouse_location {
   sql_table_name: analytics.sales.LOCATION ;;
 
     dimension: location_id {
-      hidden: yes
+      hidden: no
       description: "Source: netsuite.location"
       type:number
       sql: ${TABLE}.location_id ;; }
