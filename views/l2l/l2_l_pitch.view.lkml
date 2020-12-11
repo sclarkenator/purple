@@ -193,6 +193,24 @@ where z.row_num = 1;;
     sql: ${TABLE}."PITCH_START" ;;
   }
 
+  dimension: current_day_numb  {
+    view_label: "Pitch"
+    group_label: "Pitch Start"
+    label: "z - Before Current Day"
+    description: "Yes/No for if the date is before the current day of the year. Source: Looker Calculation"
+    type: yesno
+    sql: ${TABLE}.pitch_start::date < current_date ;;
+  }
+
+  dimension: current_week_numb {
+    view_label: "Pitch"
+    group_label: "Pitch Start"
+    label: "z - Before Current Week"
+    description: "Yes/No for if the date is before the current week of the year. Source: Looker Calculation"
+    type: yesno
+    sql: date_trunc(week, ${TABLE}.pitch_start::date) < date_trunc(week, current_date) ;;
+  }
+
   measure: Total_planned_operator_count {
     description: "Source: l2l.pitch"
     type: sum
