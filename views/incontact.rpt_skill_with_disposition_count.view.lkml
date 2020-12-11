@@ -43,19 +43,7 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     hidden: no
-    timeframes: [
-      raw,
-      time,
-      hour,
-      hour_of_day,
-      date,
-      day_of_week,
-      week,
-      week_of_year,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30]
     sql: ${TABLE}."CONTACTED" ;;
   }
 
@@ -107,6 +95,12 @@ dimension: primary_key {
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
+  dimension: in_queue_time {
+    description: "Source: looker.calculation"
+    type: number
+    sql: ${TABLE}."INQUEUE_TIME" ;;
+  }
+
   dimension: in_queue_buckets {
     description: "Source: looker.calculation"
     type: tier
@@ -118,30 +112,14 @@ dimension: primary_key {
   dimension_group: insert_ts {
     type: time
     hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time,date,week,month,quarter,year]
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: reported {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      week_of_year,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,date,week,week_of_year,month,quarter,year]
     convert_tz: no
     datatype: date
     hidden: yes
@@ -194,13 +172,14 @@ dimension: primary_key {
 
   measure: avg_acw_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: no
+    hidden: yes
     type: average
     value_format: "#,##0.00"
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
   measure: total_acw_time {
+    label: "Total ACW Time"
     description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: sum
@@ -215,19 +194,27 @@ dimension: primary_key {
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
+  measure: total_handle_calls {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${handle_time} is not null then 1 else 0 end ;;
+  }
+
   measure: count_handle_time {
     description: "Count Distinct of handle time. Source: incontact. rpt_skill_with_disposition_count"
     type: count_distinct
+    hidden: yes
     value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
   measure: avg_acw {
-    label: "Average ACW (sec)"
+    label: "Average ACW Time"
     description: "Average ACW in second, total_acw_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_acw_time}/${count_handle_time} ;;
+    sql: ${total_acw_time}/${total_handle_calls} ;;
   }
 
   measure: avg_handle_time {
@@ -235,37 +222,59 @@ dimension: primary_key {
     description: "total_handle_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_handle_time}/${count_handle_time} ;;
+    sql: ${total_handle_time}/${total_handle_calls} ;;
   }
 
   measure: avg_hold_time_2 {
+    hidden: yes
     label: "Average Hold Time"
     description: "total_hold_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_hold_time}/${count_handle_time} ;;
+    sql: ${total_hold_time}/${total_handle_calls} ;;
   }
   measure: total_hold_time {
     description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
     type: sum
     hidden: no
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: ${hold_time} ;;
   }
 
   measure: avg_talk_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: average
+    hidden: yes
     value_format: "#,##0"
     sql: nvl(${TABLE}."HANDLE_TIME",0) - nvl(${TABLE}."HOLD_TIME",0);;
   }
 
   measure: avg_hold_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: no
+    hidden: yes
     type: average
     sql: case when ${TABLE}."HOLD_TIME" > 0 then ${TABLE}."HOLD_TIME" end
     ;;
   }
+
+  measure: total_inqueue_time {
+    type: sum
+    value_format: "#,##0"
+    sql:  ${TABLE}.INQUEUE_TIME ;;
+  }
+
+  measure: total_inbound_calls {
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${inbound_flag} then 1 else 0 end;;
+  }
+
+  measure: average_inqueue_time {
+    description: "Total In Queue Time/ Total Inbound Calls"
+    type: number
+    value_format: "#,##0"
+    sql:  ${total_inqueue_time}/ ${total_inbound_calls} ;;
+  }
+
 
   measure: count {
     description: "Number of phone calls. Source: looker.calculation"

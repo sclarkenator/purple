@@ -24,22 +24,30 @@ view: shopify_orders {
         FROM analytics.commerce_tools.ct_order o
         INNER JOIN LINES l ON o.ORDER_ID = l.ORDER_ID
       )
+
       select
         'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_us_ft."ORDER"
+      where created_at < current_date
       UNION
       select
         'Shopify CA' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_ca_ft."ORDER"
+      where created_at < current_date
       UNION
       select
         'Shopify Outlet' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from analytics_stage.shopify_outlet."ORDER"
+      where created_at < current_date
       UNION
-      select
-        'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
+      select 'Shopify_API' AS SRC, ID::varchar(100) AS ID, USER_ID::varchar(100) AS USER_ID,created as created_at,subtotal_price,subtotal_price TOTAL_PRICE, NAME,0 TOTAL_DISCOUNTS,0 TOTAL_TAX,CHECKOUT_TOKEN,'NA' FINANCIAL_STATUS
+      from analytics.sales.v_shopify_subtotal
+      where created_at >= current_date
+      UNION
+      select 'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
       from ct
-    ;;
+
+;;
 #     sql:
 #       select
 #         ID,USER_ID,CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN

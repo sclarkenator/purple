@@ -51,69 +51,15 @@
 
 #-------------------------------------------------------------------
 #
-# Production Explores
+# Map Layers (Custom)
+# Created by Blake Walton
 #
 #-------------------------------------------------------------------
 
-# I moved the Production Explores to Production.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# Accounting Explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Accounting Explores to Accounting.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# Operations Explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Operations Explores to Operations.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# Marketing explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Marketing Explores to Marketing.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# Customer Care Explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Customer Care Explores to customer_care.lkml -- Blake
-
-#-------------------------------------------------------------------
-
-#-------------------------------------------------------------------
-#
-# Sales Explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Sales and Wholesale Explores to Sales.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# Retail Explores
-#
-#-------------------------------------------------------------------
-
-# I moved the Retail Explores to Retail.lkml -- Blake
-
-#-------------------------------------------------------------------
-#
-# eCommerce Explore
-#
-#-------------------------------------------------------------------
-
-# I moved the eCommerce Explore to ecommerce.explore -- Blake
+  map_layer: dma_layer {
+    file: "/map_layers/nielsenmktmap.json"
+    property_key: "dma_name"
+  }
 
 #-------------------------------------------------------------------
 #
@@ -146,9 +92,3 @@
       relationship: many_to_one
     }
   }
-
-#-------------------------------------------------------------------
-# Old/Bad Explores
-#-------------------------------------------------------------------
-
-# I moved the Old/Bad Explores to Old_or_Bad.lkml -- Blake
