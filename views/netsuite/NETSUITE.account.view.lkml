@@ -5,13 +5,14 @@ view: account {
 
   dimension: account_id {
     primary_key: yes
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}."ACCOUNT_ID" ;;
   }
 
   dimension: accountnumber {
-    hidden: yes
+    hidden: no
+    label: "Account Number"
     type: string
     sql: ${TABLE}."ACCOUNTNUMBER" ;;
   }
@@ -23,7 +24,7 @@ view: account {
   }
 
   dimension: description {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
@@ -76,7 +77,7 @@ view: account {
   }
 
   dimension: type_name {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."TYPE_NAME" ;;
   }
