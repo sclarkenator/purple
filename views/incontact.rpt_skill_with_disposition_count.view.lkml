@@ -240,6 +240,13 @@ dimension: primary_key {
     sql: ${hold_time} ;;
   }
 
+  measure: total_hold_calls {
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    hidden: no
+    sql: case when ${hold_time} > 0 then 1 else 0 end ;;
+  }
+
   measure: avg_talk_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: average
