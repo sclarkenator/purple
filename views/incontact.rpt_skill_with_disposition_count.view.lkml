@@ -214,7 +214,7 @@ dimension: primary_key {
     description: "Average ACW in second, total_acw_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_acw_time}/${total_handle_calls} ;;
+    sql: ${total_acw_time}/case when ${total_handle_calls} > 0 then ${total_handle_calls} else null end ;;
   }
 
   measure: avg_handle_time {
@@ -222,22 +222,29 @@ dimension: primary_key {
     description: "total_handle_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_handle_time}/${total_handle_calls} ;;
+    sql: ${total_handle_time}/case when ${total_handle_calls} > 0 then ${total_handle_calls} else null end ;;
   }
 
   measure: avg_hold_time_2 {
-    hidden: yes
+    hidden: no
     label: "Average Hold Time"
     description: "total_hold_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_hold_time}/${total_handle_calls} ;;
+    sql: ${total_hold_time}/case when ${total_hold_calls} > 0 then ${total_hold_calls} else null end ;;
   }
   measure: total_hold_time {
     description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
     type: sum
     hidden: no
     sql: ${hold_time} ;;
+  }
+
+  measure: total_hold_calls {
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    hidden: no
+    sql: case when ${hold_time} > 0 then 1 else 0 end ;;
   }
 
   measure: avg_talk_time {
@@ -272,7 +279,7 @@ dimension: primary_key {
     description: "Total In Queue Time/ Total Inbound Calls"
     type: number
     value_format: "#,##0"
-    sql:  ${total_inqueue_time}/ ${total_inbound_calls} ;;
+    sql:  ${total_inqueue_time}/case when ${total_inbound_calls} > 0 then ${total_inbound_calls} else null end  ;;
   }
 
 

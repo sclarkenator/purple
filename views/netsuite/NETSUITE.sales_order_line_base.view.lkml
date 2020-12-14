@@ -107,7 +107,7 @@ view: sales_order_line_base {
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $. This also exludes wholesale cancelled orders. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $. This also excludes wholesale cancelled orders. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     filters: {field: is_cancelled_wholesale value: "No" }
