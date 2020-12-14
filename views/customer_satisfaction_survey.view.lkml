@@ -66,10 +66,25 @@ view: customer_satisfaction_survey {
   }
 
   measure: issue_resolved_count {
-    label: "FCR"
+    label: "FCR Resolved"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
     type: sum
     sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
+  }
+
+  measure: issue_resolved_total {
+    label: "FCR Count"
+    description: "First Call Resolution including true and false (excluding null) Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    sql:case when ${issue_resolved} is not null then 1 else 0 end ;;
+  }
+
+  measure: first_contact_rate {
+    label: "FCR"
+    description: "First Call Resolution/ Count *including true and false (excluding null) Source: stella_connect.customer_satisfaction_survey"
+    type: number
+    value_format: "0.00\%"
+    sql: ${issue_resolved_count}/case when ${issue_resolved_total} > 0 then${issue_resolved_total} end *100  ;;
   }
 
   dimension: issue_resolved_comment {
