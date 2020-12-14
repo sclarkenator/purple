@@ -226,7 +226,7 @@ dimension: primary_key {
   }
 
   measure: avg_hold_time_2 {
-    hidden: yes
+    hidden: no
     label: "Average Hold Time"
     description: "total_hold_time/count_handle_time. Source: looker.calculation"
     type: number
