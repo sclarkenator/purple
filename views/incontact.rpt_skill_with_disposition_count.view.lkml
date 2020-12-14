@@ -231,7 +231,7 @@ dimension: primary_key {
     description: "total_hold_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_hold_time}/case when ${total_handle_calls} > 0 then ${total_handle_calls} else null end ;;
+    sql: ${total_hold_time}/case when ${total_hold_calls} > 0 then ${total_hold_calls} else null end ;;
   }
   measure: total_hold_time {
     description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
