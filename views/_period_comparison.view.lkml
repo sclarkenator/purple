@@ -177,6 +177,8 @@ view: _period_comparison {
 
   dimension: is_current_previous_or_same_period_last_year {
     group_label: "Period Comparison"
+    label: "  * Is Current, Previous, or Same Period Last Year?"
+    description: "Use this filter if you want to compare the current period, previous period, and same period last year."
     type: yesno
     sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' or ${is_same_period_last_year} = 'Yes' ;;
   }
@@ -184,6 +186,7 @@ view: _period_comparison {
   parameter: comparison_period {
     group_label: "Period Comparison"
     label: "Comparison Period"
+    description: "Select what type of period you want to compare to.  Previous Period: specific dates. Previous Week: use this when looking at current week or last completed week. Previous Month: use this when looking at current week or last completed week."
     type: unquoted
     default_value: "previous"
     allowed_value: {
@@ -198,14 +201,14 @@ view: _period_comparison {
       label: "Previous Month"
       value: "month"
     }
-    allowed_value: {
-      label: "Same Period Last Year"
-      value: "year"
-    }
-    allowed_value: {
-      label: "Previous Period Last Year"
-      value: "year"
-    }
+    # allowed_value: {
+    #   label: "Same Period Last Year"
+    #   value: "year"
+    # }
+    # allowed_value: {
+    #   label: "Previous Period Last Year"
+    #   value: "year"
+    # }
   }
 
   dimension: is_comparison_period {

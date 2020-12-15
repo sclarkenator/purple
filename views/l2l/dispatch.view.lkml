@@ -70,6 +70,7 @@ view: dispatch {
   }
 
   dimension: downtime {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: number
     sql: ${TABLE}."DOWNTIME" ;;
@@ -130,6 +131,26 @@ view: dispatch {
       year
     ]
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
+  }
+
+  measure: downtime_minutes {
+    type: sum
+    description: "Source: l2l.dispatch"
+    value_format: "#,##0"
+    sql: ${downtime} ;;
+  }
+
+  measure: downtime_hours {
+    type: sum
+    description: "Source: Looker Calculation"
+    value_format: "#,##0"
+    sql: ${downtime}/60 ;;
+  }
+
+  measure: dispatch_occurences {
+    type: count_distinct
+    description: "Source: Looker Calculation"
+    sql: ${dispatch_number} ;;
   }
 
   measure: count {
