@@ -136,12 +136,14 @@ view: dispatch {
   measure: downtime_minutes {
     type: sum
     description: "Source: l2l.dispatch"
+    value_format: "#,##0"
     sql: ${downtime} ;;
   }
 
   measure: downtime_hours {
     type: sum
     description: "Source: Looker Calculation"
+    value_format: "#,##0"
     sql: ${downtime}/60 ;;
   }
 
