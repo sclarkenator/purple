@@ -320,6 +320,13 @@ dimension: countrty {
   type:  string
   sql: ${TABLE}.country;;}
 
+  dimension: budget_owner {
+    label: "Budget Owner"
+    description: "a way to filter spend by budget owner"
+    type:  string
+    sql: ${TABLE}.budget_owner;;}
+
+
 dimension: spend_platform {
     label: "Spend Platform"
     description: "What platform for spend (google, facebook, oceanmedia)"
