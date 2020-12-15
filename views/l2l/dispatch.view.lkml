@@ -139,6 +139,18 @@ view: dispatch {
     sql: ${downtime} ;;
   }
 
+  measure: downtime_hours {
+    type: sum
+    description: "Source: Looker Calculation"
+    sql: ${downtime}/60 ;;
+  }
+
+  measure: dispatch_occurences {
+    type: count_distinct
+    description: "Source: Looker Calculation"
+    sql: ${dispatch_number} ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [dispatch_id, dispatch_type.dispatch_type_id]
