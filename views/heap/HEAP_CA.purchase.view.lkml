@@ -33,7 +33,7 @@ view: heap_ca_purchase {
 
   measure: dollars {
     label: "Gross Amount"
-    value_format: "#,#00.00"
+    value_format_name: usd_0
     type: sum
     sql: ${TABLE}.dollars ;;
   }

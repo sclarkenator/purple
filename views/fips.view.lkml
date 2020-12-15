@@ -42,7 +42,7 @@ view: fips {
     type: yesno
     hidden: yes
     label: " * Is Metro"
-    description: "FIPS in metro area county with more than 250K population"
+    description: "FIPS in metro area county with more than 1 million"
     view_label: "Geography"
     sql: ${rucc_2013} in ('1')  ;;
   }
@@ -51,7 +51,7 @@ view: fips {
     type: yesno
     hidden:  yes
     label: " * Is Rural"
-    description: "FIPS in metro area county with more than 250K population"
+    description: "FIPS in counties of 20,000 or less (or a larger population but not adjacent to a metro area)"
     view_label: "Geography"
     sql: ${rucc_2013} in ('5', '6', '7','8','9')  ;;
   }
@@ -60,7 +60,7 @@ view: fips {
     type: yesno
     hidden:  yes
     label: " * Is Suburban"
-    description: "FIPS in metro area county with more than 250K population"
+    description: "FIPS in metros of 1 million or less and in or adjacent to a metro area"
     view_label: "Geography"
     sql: ${rucc_2013} in ('2','3','4')  ;;
   }

@@ -70,6 +70,7 @@ view: dispatch {
   }
 
   dimension: downtime {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: number
     sql: ${TABLE}."DOWNTIME" ;;
@@ -130,6 +131,12 @@ view: dispatch {
       year
     ]
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
+  }
+
+  measure: downtime_minutes {
+    type: sum
+    description: "Source: l2l.dispatch"
+    sql: ${downtime} ;;
   }
 
   measure: count {

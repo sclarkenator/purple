@@ -824,7 +824,7 @@ view: sales_order_line {
 
   measure: unfulfilled_orders {
     group_label: "Gross Sales Unfulfilled"
-    label: "Unfulfilled Units ($)"
+    label: "Unfulfilled Orders ($)"
     view_label: "Fulfillment"
     description: "Orders placed that have not been fulfilled. Source: looker.calculation"
     value_format: "$#,##0"

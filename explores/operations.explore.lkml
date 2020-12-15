@@ -21,6 +21,11 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${purchase_order.purchase_order_id} = ${purchase_order_line.purchase_order_id} ;;
       relationship: one_to_many}
+    join: account {
+      view_label: "Account"
+      type: left_outer
+      sql_on: ${purchase_order_line.account_id} = ${account.account_id} ;;
+      relationship: one_to_many}
     join: bill_purchase_order {
       view_label: "Bills"
       type:  left_outer
