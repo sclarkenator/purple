@@ -154,6 +154,23 @@ view: _period_comparison {
   }
 
 
+  dimension: day_of_week_abbr {
+    hidden:  yes
+    label:  "Current Period Day of Week (Short)"
+    group_label: "Period Comparison Date"
+    description: "Abbreviated day of week (Sun, Mon, Tue, etc). Source: netsuite.sales_order_line"
+    type: string
+    case: {
+      when: { sql: ${date_in_period_day_of_week} = 'Monday' ;; label: "Mon" }
+      when: { sql: ${date_in_period_day_of_week} = 'Tuesday' ;;  label: "Tue" }
+      when: { sql: ${date_in_period_day_of_week} = 'Wednesday' ;; label: "Wed" }
+      when: { sql: ${date_in_period_day_of_week} = 'Thursday' ;; label: "Thu" }
+      when: { sql: ${date_in_period_day_of_week} = 'Friday' ;; label: "Fri" }
+      when: { sql: ${date_in_period_day_of_week} = 'Saturday' ;; label: "Sat" }
+      when: { sql: ${date_in_period_day_of_week} = 'Sunday' ;; label: "Sun" }}
+  }
+
+
   dimension: is_current_period {
     hidden: yes
     group_label: "Period Comparison"
