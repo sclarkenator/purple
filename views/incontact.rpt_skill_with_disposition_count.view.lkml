@@ -145,7 +145,7 @@ dimension: primary_key {
             then 'SRT'
         when ${skill} = 'Customer Service OB'
             then 'Support OB'
-        when ${skill} = 'Fraud (Avail M-F 8a-6p)'
+        when ${skill} in ('Fraud (Avail M-F 8a-6p)','Fraud (Avail M-F 8a-5p)')
             then 'Verification'
         when ${skill} = 'Sales Team OB'
             then 'Sales OB'
