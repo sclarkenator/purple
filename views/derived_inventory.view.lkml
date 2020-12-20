@@ -1,5 +1,6 @@
 view: derived_inventory {
 ## View added by Scott Clark 11/25/2020
+## Can be deleted. Data Engineering built these metrics in to the actual snowflake tables. 12/20/2020
 
    derived_table: {
      sql: select location_id
