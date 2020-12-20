@@ -6,7 +6,53 @@
 view: inventory_snap {
   sql_table_name: PRODUCTION.INVENTORY_SNAP ;;
 
+  measure: on_hand {
+    label: "  On Hand"
+    description: "The quantity of an item physically in a warehouse."
+    type: sum
+    sql: ${TABLE}.ON_HAND ;; }
+
+  measure: open_orders {
+    label: "  Open orders"
+    description: "Total unfulfilled units ordered across all channels in the last 35 days that are due within the next 7 days"
+    type: sum
+    sql: nvl(${TABLE}.open_order,0)  ;; }
+
+  measure: dtc_open_orders {
+    group_label: "Open order channel"
+    label: "DTC"
+    description: "Total unfulfilled units ordered for DTC in the last 35 days that are due within the next 7 days"
+    type: sum
+    sql: nvl(${TABLE}.dtc_open_order,0)  ;; }
+
+  measure: wholesale_open_orders {
+    group_label: "Open order channel"
+    label: "Wholesale"
+    description: "Total unfulfilled units ordered for wholesale in the last 35 days that are due within the next 7 days"
+    type: sum
+    sql: nvl(${TABLE}.wholesale_open_order,0)  ;; }
+
+  measure: retail_open_orders {
+    group_label: "Open order channel"
+    label: "Retail"
+    description: "Total unfulfilled units ordered for Retail in the last 35 days that are due within the next 7 days"
+    type: sum
+    sql: nvl(${TABLE}.retail_open_order,0)  ;; }
+
   measure: available {
+    label: " Available"
+    description: "The sum of surplus items in all warehouses less open orders"
+    type: sum
+    sql: case when ${TABLE}.calculated_available is null then ${TABLE}.available else nvl(${TABLE}.calculated_available,0) end  ;; }
+
+  measure: backordered {
+    label: " Backordered"
+    description: "On-hand - open orders where open orders > on hand, aggregated from the location-level"
+    type: sum
+    sql: nvl(${TABLE}.calculated_backordered,0) ;; }
+
+  measure: available_1 {
+    group_label: "Netsuite_values"
     label: "Total Available"
     type: sum
     sql: ${TABLE}.available ;;  }
@@ -17,19 +63,20 @@ view: inventory_snap {
     type: sum
     sql: ${TABLE}.average_cost ;; }
 
-  measure: backordered {
+  measure: backordered_1 {
+    group_label: "Netsuite_values"
     label: "Total Backordered"
     type: sum
     sql: ${TABLE}.backordered ;; }
 
   dimension_group: created {
-    label: "Created"
+    label: "Inventory Snap"
     type: time
     timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
   dimension: week_bucket{
-    group_label: "Created Date"
+    group_label: "Inventory Snap Date"
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
@@ -42,11 +89,13 @@ view: inventory_snap {
              ELSE 'Other' END ;; }
 
   measure: inbound {
+    group_label: "Netsuite_values"
     label: "Total Inbound"
     type: sum
     sql: ${TABLE}.inbound ;; }
 
   dimension: item_id {
+    hidden: yes
     label: "Item ID"
     description: "Internal Netsuite ID"
     type: number
@@ -57,17 +106,14 @@ view: inventory_snap {
     type: number
     sql: ${TABLE}.location_id ;; }
 
-  measure: on_hand {
-    label: "Total On Hand"
-    type: sum
-    sql: ${TABLE}.on_hand ;; }
-
-  measure: on_order {
+  measure: on_order_1 {
+    group_label: "Netsuite_values"
     label: "Total On Order"
     type: sum
     sql: ${TABLE}.on_order ;; }
 
   measure: outbound {
+    group_label: "Netsuite_values"
     label: "Total Outbound"
     type: sum
     sql: ${TABLE}.outbound ;; }
@@ -78,12 +124,14 @@ view: inventory_snap {
     sql: ${TABLE}.preferred_stock_level ;; }
 
   measure: preferred_stock_level_msr {
+    group_label: "Netsuite_values"
     label: "Preferred Stock Level"
     type: sum
     sql: ${TABLE}.preferred_stock_level ;; }
 
   dimension: primary_key {
     primary_key: yes
+    hidden: yes
     sql: CONCAT(${TABLE}.location_id,${TABLE}.item_id,${TABLE}.on_hand, ${TABLE}.available) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   }
