@@ -219,10 +219,10 @@ view: _period_comparison {
       label: "Previous Month"
       value: "month"
     }
-    # allowed_value: {
-    #   label: "Same Period Last Year"
-    #   value: "year"
-    # }
+    allowed_value: {
+      label: "Same Period Last Year"
+      value: "year"
+    }
     # allowed_value: {
     #   label: "Previous Period Last Year"
     #   value: "year"
@@ -279,4 +279,5 @@ view: _period_comparison {
         END
     ;;
   }
+
 }
