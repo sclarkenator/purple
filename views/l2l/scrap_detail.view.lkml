@@ -4,6 +4,7 @@ view: scrap_detail {
   drill_fields: [id]
 
   dimension: id {
+    hidden: yes
     primary_key: yes
     type: number
     sql: ${TABLE}."ID" ;;
@@ -18,15 +19,7 @@ view: scrap_detail {
   dimension_group: created {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -39,45 +32,21 @@ view: scrap_detail {
   dimension_group: end_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."END_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: last_updated {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."LAST_UPDATED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -133,15 +102,7 @@ view: scrap_detail {
   dimension_group: start_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."START_TS" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -154,15 +115,7 @@ view: scrap_detail {
   dimension_group: update_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 

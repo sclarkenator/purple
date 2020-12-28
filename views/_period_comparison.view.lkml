@@ -150,6 +150,7 @@ view: _period_comparison {
       month,
       month_name,
       month_num,
+      quarter,
       year]
   }
 

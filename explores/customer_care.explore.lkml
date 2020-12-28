@@ -338,3 +338,4 @@ include: "/dashboards/**/*.dashboard"
   explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
+  explore: v_zendesk_articles {hidden: yes}

@@ -156,11 +156,11 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
       relationship: one_to_many
     }
-    join: derived_inventory {
-      type: left_outer
-      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
-      relationship: one_to_one
-    }
+ ##   join: derived_inventory {
+##      type: left_outer
+##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
+##      relationship: one_to_one
+##    }
 
   }
 
