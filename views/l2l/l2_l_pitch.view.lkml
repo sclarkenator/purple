@@ -24,12 +24,6 @@ where z.row_num = 1;;
     sql: ${TABLE}."ACTIVE" ;;
   }
 
-  measure: actual {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."ACTUAL" ;;
-  }
-
   dimension: actual_product {
     hidden: yes
     description: "Source: l2l.pitch"
@@ -49,19 +43,15 @@ where z.row_num = 1;;
     sql: ${TABLE}."BUILD_SEQUENCE" ;;
   }
 
-  measure: changeover_earned_hours {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."CHANGEOVER_EARNED_HOURS" ;;
-  }
-
   dimension: comment {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: string
     sql: ${TABLE}."COMMENT" ;;
   }
 
   dimension_group: created {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
@@ -77,27 +67,10 @@ where z.row_num = 1;;
   }
 
   dimension: cycle_time {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: number
     sql: ${TABLE}."CYCLE_TIME" ;;
-  }
-
-  measure: demand {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."DEMAND" ;;
-  }
-
-  measure: downtime_minutes {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."DOWNTIME_MINUTES" ;;
-  }
-
-  measure: earned_hours {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."EARNED_HOURS" ;;
   }
 
   dimension: has_actual_details {
@@ -140,43 +113,22 @@ where z.row_num = 1;;
   }
 
   dimension: name {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: string
     sql: ${TABLE}."NAME" ;;
   }
 
-  measure: nonproduction_minutes {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."NONPRODUCTION_MINUTES" ;;
-  }
-
-  measure: operational_availability {
-    description: "Source: l2l.pitch"
-    type: number
-    value_format: "0\%"
-    sql: coalesce(((${planned_production_minutes}-${downtime_minutes})/${planned_production_minutes})*100,0) ;;
-  }
-
-  measure: total_operator_count {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."OPERATOR_COUNT" ;;
-  }
-  measure: Avg_operator_count {
-    description: "Source: l2l.pitch"
-    type: average
-    sql: ${TABLE}."OPERATOR_COUNT" ;;
-  }
-
   dimension: overall_equipment_effectiveness {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: number
     sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
   }
 
   dimension_group: pitch_end {
-    description: "Source: l2l.pitch"
+    hidden: yes
+    description: "Pitch Name (Start of Shift, End of Shift, Break, Lunch, etc); Source: l2l.pitch"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -185,7 +137,7 @@ where z.row_num = 1;;
   }
 
   dimension_group: pitch_start {
-    description: "Source: l2l.pitch"
+    description: "Pitch is an Hour increment, a new Pitch starts every Hour; Source: l2l.pitch"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -211,45 +163,21 @@ where z.row_num = 1;;
     sql: date_trunc(week, ${TABLE}.pitch_start::date) < date_trunc(week, current_date) ;;
   }
 
-  measure: Total_planned_operator_count {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
-  }
-
-  measure: Avg_planned_operator_count {
-    description: "Source: l2l.pitch"
-    type: average
-    sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
-  }
-
   dimension: planned_product {
+    hidden: yes
     description: "Source: l2l.pitch"
     type: number
     sql: ${TABLE}."PLANNED_PRODUCT" ;;
   }
 
-  measure: planned_production_minutes {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
-  }
-
-  measure: scrap {
-    label: "Scrap"
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."SCRAP" ;;
-  }
-
   dimension: shift {
-    description: "Source: l2l.pitch"
+    description: "(Shift 1  is 7am-7pm, Shift 2 is 7pm-7am; Source: l2l.pitch"
     type: number
     sql: ${TABLE}."SHIFT" ;;
   }
 
   dimension_group: shift_start {
-    description: "Source: l2l.pitch"
+    description: "Shift is from 7am - 7pm, Shift Start Date begins at 7am; Source: l2l.pitch"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
@@ -258,6 +186,7 @@ where z.row_num = 1;;
   }
 
   dimension_group: delete_ts {
+    hidden: yes
     label: "Deleted"
     description: "Date and Time a Pitch was deleted; Source: l2l.pitch"
     type: time
@@ -271,6 +200,88 @@ where z.row_num = 1;;
     hidden: yes
     type: number
     sql: ${TABLE}."SITE" ;;
+  }
+
+  measure: actual {
+    description: "Total amount of Actual Product Produced; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."ACTUAL" ;;
+  }
+
+  measure: changeover_earned_hours {
+    hidden: yes
+    description: "Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."CHANGEOVER_EARNED_HOURS" ;;
+  }
+
+  measure: demand {
+    description: "Total amount of Demanded Product to be Produced; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."DEMAND" ;;
+  }
+
+  measure: downtime_minutes {
+    description: "Total amount of Downtime Mintues; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."DOWNTIME_MINUTES" ;;
+  }
+
+  measure: earned_hours {
+    hidden: yes
+    description: "Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."EARNED_HOURS" ;;
+  }
+
+  measure: nonproduction_minutes {
+    description: "Total amount of Non-Production Minutes; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."NONPRODUCTION_MINUTES" ;;
+  }
+
+  measure: operational_availability {
+    description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
+    type: number
+    value_format: "0\%"
+    sql: coalesce(((${planned_production_minutes}-${downtime_minutes})/${planned_production_minutes})*100,0) ;;
+  }
+
+  measure: total_operator_count {
+    description: "Total number of Operators; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."OPERATOR_COUNT" ;;
+  }
+
+  measure: Avg_operator_count {
+    description: "Average Operator Count; Source: l2l.pitch"
+    type: average
+    sql: ${TABLE}."OPERATOR_COUNT" ;;
+  }
+
+  measure: Total_planned_operator_count {
+    description: "Total Planned Operator Count; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
+  }
+
+  measure: Avg_planned_operator_count {
+    description: "Average Planned Operator Count; Source: l2l.pitch"
+    type: average
+    sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
+  }
+
+  measure: planned_production_minutes {
+    description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
+  }
+
+  measure: scrap {
+    label: "Scrap"
+    description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."SCRAP" ;;
   }
 
   measure: count {

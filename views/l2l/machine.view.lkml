@@ -16,15 +16,6 @@ view: machine {
     sql: ${TABLE}."AREA_ID" ;;
   }
 
-  dimension_group: created {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
-  }
-
   dimension: critical {
     hidden: yes
     type: number
@@ -32,31 +23,9 @@ view: machine {
   }
 
   dimension: description {
-    description: "Source: l2l.machine"
+    description: "Full Name of Machine (Max 2, Max 3, Max 4, etc) Source: l2l.machine"
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
-  }
-
-  dimension: down_count {
-    description: "Source: l2l.machine"
-    type: number
-    sql: ${TABLE}."DOWN_COUNT" ;;
-  }
-
-  dimension_group: inactivated {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: CAST(${TABLE}."INACTIVATED" AS TIMESTAMP_NTZ) ;;
-  }
-
-  dimension_group: insert_ts {
-    hidden: yes
-    type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension: line_id {
@@ -66,6 +35,7 @@ view: machine {
   }
 
   dimension: machine_code {
+    hidden: yes
     description: "Source: l2l.machine"
     type: string
     sql: ${TABLE}."MACHINE_CODE" ;;
@@ -90,7 +60,7 @@ view: machine {
   }
 
   dimension: short_description {
-    description: "Source: l2l.machine"
+    description: "Display Name as shown in L2L (MAX2, MAX3, MAX4, etc) Source: l2l.machine"
     label: "Display Name"
     type: string
     sql: ${TABLE}."SHORT_DESCRIPTION" ;;
@@ -102,11 +72,42 @@ view: machine {
     sql: ${TABLE}."SITE_ID" ;;
   }
 
+  dimension_group: created {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension_group: inactivated {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: CAST(${TABLE}."INACTIVATED" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension_group: insert_ts {
+    hidden: yes
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
+  }
+
   dimension_group: update_ts {
     hidden: yes
     type: time
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
+  }
+
+  measure: down_count {
+    description: "Source: l2l.machine"
+    type: sum
+    sql: ${TABLE}."DOWN_COUNT" ;;
   }
 
   measure: count {

@@ -11,6 +11,7 @@ view: dispatch {
   }
 
   dimension: assigned_techs {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: string
     sql: ${TABLE}."ASSIGNED_TECHS" ;;
@@ -35,6 +36,7 @@ view: dispatch {
   }
 
   dimension: created_by {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: string
     sql: ${TABLE}."CREATED_BY" ;;
@@ -77,6 +79,7 @@ view: dispatch {
   }
 
   dimension: last_updated_by {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: string
     sql: ${TABLE}."LAST_UPDATED_BY" ;;
@@ -98,6 +101,7 @@ view: dispatch {
   }
 
   dimension: technicians {
+    hidden: yes
     description: "Source: l2l.dispatch"
     type: string
     sql: ${TABLE}."TECHNICIANS" ;;
@@ -106,30 +110,14 @@ view: dispatch {
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: update_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 
