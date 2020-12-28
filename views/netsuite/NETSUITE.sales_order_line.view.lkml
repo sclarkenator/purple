@@ -49,8 +49,10 @@ view: sales_order_line {
       ${created_date}
     {% endif %};;
   }
+
 ## see data by pop sol (period over period sales order line) is used for the interactive dashboards
   parameter: see_data_by_pop_sol {
+    label: "See Data By"
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
     hidden: yes
     type: unquoted
@@ -94,6 +96,27 @@ view: sales_order_line {
       ${item.model_raw}
     {% else %}
       ${date_in_period_date}
+    {% endif %};;
+  }
+
+  dimension: see_data_pop_sol_order_created {
+    view_label: "Sales Order"
+    label: "See Data By Created"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${created_date}
     {% endif %};;
   }
 
