@@ -177,8 +177,9 @@ view: paycom_labor_hours {
     label: "Hours Worked"
     description: "Total hours worked, by clocked-in day, for owned retail agents. Source: paycom.paycom_labor_hours"
     type: sum
-    filters: [department_filter: "Showrooms"]
+##    filters: [department_filter: "Showrooms"]
     value_format: "#,##0"
     sql: ${TABLE}."HOURS" ;;
   }
+
 }

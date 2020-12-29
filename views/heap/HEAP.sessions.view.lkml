@@ -594,7 +594,7 @@ view: sessions {
   # Used for C-level Dasboard
   parameter: see_data_by_sessions {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
-    hidden: no
+    hidden: yes
     type: unquoted
     allowed_value: {
       label: "Day"
@@ -618,7 +618,7 @@ view: sessions {
     view_label: "Sessions"
     label: "See Data By"
     description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
-    hidden: no
+    hidden: yes
     sql:
     {% if see_data_by_sessions._parameter_value == 'day' %}
       ${time_date}

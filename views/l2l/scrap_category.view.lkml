@@ -4,6 +4,7 @@ view: scrap_category {
   drill_fields: [id]
 
   dimension: id {
+    hidden: yes
     primary_key: yes
     type: number
     sql: ${TABLE}."ID" ;;

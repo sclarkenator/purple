@@ -97,6 +97,9 @@ select case when contribution.store = 'CA-01' then 'San Diego'
             when contribution.store in ('FO-01','FO_01') then 'Salt Lake'
             when contribution.store = 'UT-01' then 'Lehi'
             when contribution.store = 'TX-01' then 'Austin'
+            when contribution.store = 'WA-02' then 'Lynnwood'
+            when contribution.store = 'VA-01' then 'Tysons'
+            when contribution.store = 'OH-01' then 'Columbus'
             else contribution.store end STORE
         ,contribution.month
         ,contribution.full_imu

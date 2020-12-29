@@ -12,6 +12,7 @@ view: machine_schedule {
   }
 
   dimension_group: schedule_created {
+    hidden: yes
     description: "Source: l2l.machine_schedule"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
@@ -27,6 +28,7 @@ view: machine_schedule {
   }
 
   dimension_group: schedule_due {
+    hidden: yes
     description: "Source: l2l.machine_schedule"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
@@ -56,37 +58,10 @@ view: machine_schedule {
     sql: ${TABLE}."LASTCYCLECOMPLETED" ;;
   }
 
-  dimension_group: lastlaunched {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."LASTLAUNCHED" ;;
-  }
-
-  dimension_group: lastupdated {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."LASTUPDATED" ;;
-  }
-
   dimension: lastupdatedby {
     hidden: yes
     type: string
     sql: ${TABLE}."LASTUPDATEDBY" ;;
-  }
-
-  dimension_group: launch {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."LAUNCH" ;;
   }
 
   dimension: launchprior {
@@ -101,8 +76,9 @@ view: machine_schedule {
     sql: ${TABLE}."MACHINE" ;;
   }
 
-  dimension: occurrencecount {
-    description: "Source: l2l.machine_schedule"
+  dimension: occurrence_count {
+    hidden: yes
+    description: "Total number of Machine Scheduled Occurences; Source: l2l.machine_schedule"
     type: number
     sql: ${TABLE}."OCCURRENCECOUNT" ;;
   }
@@ -111,15 +87,6 @@ view: machine_schedule {
     description: "Source: l2l.machine_schedule"
     type: yesno
     sql: ${TABLE}."OPEN" ;;
-  }
-
-  dimension_group: scheduled {
-    description: "Source: l2l.machine_schedule"
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."SCHEDULED" ;;
   }
 
   dimension: scheduleprior {
@@ -146,6 +113,43 @@ view: machine_schedule {
     sql: ${TABLE}."SUSPENDEDBY" ;;
   }
 
+  dimension_group: lastlaunched {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."LASTLAUNCHED" ;;
+  }
+
+  dimension_group: lastupdated {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."LASTUPDATED" ;;
+  }
+
+  dimension_group: launch {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."LAUNCH" ;;
+  }
+
+  dimension_group: scheduled {
+    hidden: yes
+    description: "Source: l2l.machine_schedule"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."SCHEDULED" ;;
+  }
+
   dimension_group: suspendedon {
     hidden: yes
     type: time
@@ -164,30 +168,14 @@ view: machine_schedule {
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: update_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time, date, week, month, quarter, year]
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 }

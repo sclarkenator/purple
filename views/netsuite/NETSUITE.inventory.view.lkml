@@ -49,7 +49,7 @@ view: inventory {
     label: " Backordered"
     description: "On-hand - open orders where open orders > on hand, aggregated from the location-level"
     type: sum
-    sql: nvl(${TABLE}.calculated_backordered,0) ;; }
+    sql: nvl(${TABLE}.calculated_backordered,0)*-1 ;; }
 
   measure: nets_available {
     group_label: "Netsuite_values"

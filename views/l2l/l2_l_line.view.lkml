@@ -11,7 +11,7 @@ view: ltol_line {
 
   dimension: abbreviation {
     label: "Display Name"
-    description: "Source: l2l.line"
+    description: "Dispaly Name as shown in L2L (M2L, M3L, M4L, etc); Source: l2l.line"
     type: string
     sql: ${TABLE}."ABBREVIATION" ;;
   }
@@ -35,23 +35,8 @@ view: ltol_line {
     sql: ${TABLE}."CODE" ;;
   }
 
-  dimension_group: created {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."CREATED" ;;
-  }
-
-  dimension: createdby {
-    type: string
-    hidden: yes
-    sql: ${TABLE}."CREATEDBY" ;;
-  }
-
   dimension: Line_name {
-    description: "Source: l2l.line"
+    description: "Line Name shown as Description in L2L (Max 2, Max 3, Max 4, etc); Source: l2l.line"
     type: string
     sql: case when ${TABLE}."DESCRIPTION" = 'Scrim Line Red Max 2 and 5' then 'Scrim Red'
       when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
@@ -75,7 +60,7 @@ view: ltol_line {
   }
 
   dimension: line_name_bucket {
-    description: "Source: Looker Calculation"
+    description: "Bucketed Line Name (Glue 1 + Roll Pack 1 = Assembly Line 1, etc); Source: Looker Calculation"
     type: string
     sql: case
       when ${Line_name} = 'Glue 1' or  ${Line_name} = 'Roll Pack 1' then 'Assembly Line 1'
@@ -85,46 +70,10 @@ view: ltol_line {
       else ${Line_name} end;;
   }
 
-  dimension: downtime_rate {
-    description: "Source: l2l.line"
-    type: number
-    sql: ${TABLE}."DOWNTIME_RATE" ;;
-  }
-
   dimension: inactive {
     description: "Source: l2l.line"
     type: string
     sql: ${TABLE}."INACTIVE" ;;
-  }
-
-  dimension_group: insert_ts {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}."INSERT_TS" ;;
-  }
-
-  dimension_group: lastupdated {
-    hidden: yes
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: ${TABLE}."LASTUPDATED" ;;
-  }
-
-  dimension: lastupdatedby {
-    type: string
-    hidden: yes
-    sql: ${TABLE}."LASTUPDATEDBY" ;;
   }
 
   dimension: pitch_schedule_template {
@@ -145,19 +94,42 @@ view: ltol_line {
     sql: ${TABLE}."SITE";;
   }
 
+  dimension_group: created {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."CREATED" ;;
+  }
+
   dimension_group: update_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}."UPDATE_TS" ;;
+  }
+
+  dimension_group: insert_ts {
+    hidden: yes
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}."INSERT_TS" ;;
+  }
+
+  dimension_group: lastupdated {
+    hidden: yes
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}."LASTUPDATED" ;;
+  }
+
+  measure: downtime_rate {
+    description: "Source: l2l.line"
+    type: sum
+    sql: ${TABLE}."DOWNTIME_RATE" ;;
   }
 
   measure: count {
