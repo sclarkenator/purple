@@ -135,11 +135,16 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${campaign_name_lookup.campaign_id}::string = ${ecommerce.utm_campaign_raw}::string;;
       relationship: many_to_one
     }
-
     join: heap_banner_view {
       view_label: "Sessions"
       type: left_outer
       sql_on: ${ecommerce.session_id} = ${heap_banner_view.session_id} ;;
+      relationship: many_to_many
+    }
+    join: core_events_click_any_element {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${ecommerce.session_id} = ${core_events_click_any_element.session_id} ;;
       relationship: many_to_many
     }
   }

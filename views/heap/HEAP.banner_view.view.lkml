@@ -1,5 +1,4 @@
 view: heap_banner_view {
-    # You can specify the table name if it's different from the view name:
     sql_table_name: heap_data.heap.carousel_banner_change ;;
 
     dimension: PK {
