@@ -216,6 +216,7 @@ explore: email_mymove_contact {
     }
   }
 
+  explore: fb_attribution { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}
   #explore: adspend_target { hidden:yes group_label: "Marketing"}
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}

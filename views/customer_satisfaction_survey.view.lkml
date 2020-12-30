@@ -66,10 +66,25 @@ view: customer_satisfaction_survey {
   }
 
   measure: issue_resolved_count {
-    label: "FCR"
+    label: "FCR Resolved"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
     type: sum
     sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
+  }
+
+  measure: issue_resolved_total {
+    label: "FCR Count"
+    description: "First Call Resolution including true and false (excluding null) Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    sql:case when ${issue_resolved} is not null then 1 else 0 end ;;
+  }
+
+  measure: first_contact_rate {
+    label: "FCR"
+    description: "First Call Resolution/ Count *including true and false (excluding null) Source: stella_connect.customer_satisfaction_survey"
+    type: number
+    value_format: "0.00\%"
+    sql: ${issue_resolved_count}/case when ${issue_resolved_total} > 0 then${issue_resolved_total} end *100  ;;
   }
 
   dimension: issue_resolved_comment {
@@ -134,6 +149,13 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."STAR_RATING" ;;
   }
 
+  measure: star_rating_count {
+    label: "Total Agent CSATs"
+    description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
+    type: count_distinct
+    sql:  ${TABLE}."STAR_RATING" is not null ;;
+  }
+
   measure: avg_star_rating {
     label: "Average Agent CSAT Score"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
@@ -142,6 +164,21 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."STAR_RATING" ;;
   }
 
+  measure: 5_star_rating {
+    label: "Agent CSAT Scores of 5"
+    #description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
+    type: sum
+    value_format: "0.##"
+    sql: case when ${star_rating_score} = '5' then 1 else 0 end ;;
+  }
+
+  measure: top_box {
+    label: "Top Box"
+    description: "CSAT score of 5 / total CSAT scores. Source: stella_connect.customer_satisfaction_survey"
+    type: number
+    value_format: "0.00\%"
+    sql: ${5_star_rating}/${star_rating_count} /100 ;;
+  }
 
   dimension: star_rating_comment {
     type: string

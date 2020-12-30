@@ -110,11 +110,13 @@ include: "/dashboards/**/*.dashboard"
   #     }
   join: agent_lkp {
     type: left_outer
+    view_label: "Agent Lookup"
     sql_on: ${user.id}=${agent_lkp.zendesk_id} ;;
     relationship: many_to_one
   }
   join: team_lead_name {
     type:  left_outer
+    view_label: "Agent Lookup"
     sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_ticket.created_date}
         AND ${team_lead_name.end_date}>=${zendesk_ticket.created_date};;
@@ -160,6 +162,20 @@ include: "/dashboards/**/*.dashboard"
       type:left_outer
       relationship:one_to_one
       sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+    }
+    join: agent_lkp {
+      type: left_outer
+      view_label: "Agent Lookup"
+      sql_on: ${rpt_skill_with_disposition_count.agent_id}=${agent_lkp.incontact_id} ;;
+      relationship: many_to_one
+    }
+    join: team_lead_name {
+      type:  left_outer
+      view_label: "Agent Lookup"
+      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        AND ${team_lead_name.start_date}<=${rpt_skill_with_disposition_count.reported_date}
+        AND ${team_lead_name.end_date}>=${rpt_skill_with_disposition_count.reported_date};;
+      relationship: many_to_one
     }
   }
 
@@ -322,3 +338,4 @@ include: "/dashboards/**/*.dashboard"
   explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
+  explore: v_zendesk_articles {hidden: yes}

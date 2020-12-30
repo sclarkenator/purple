@@ -5,7 +5,7 @@ view: adspend_target {
     hidden: yes
     type: string
     primary_key: yes
-    sql: ${medium}||${target_date} ;;
+    sql: ${medium}||${target_date}||${country} ;;
   }
 
   dimension_group: target {
@@ -34,6 +34,16 @@ view: adspend_target {
     #hidden:  yes
     type: string
     sql: nvl(${TABLE}.medium, ${daily_adspend.medium}) ;;
+  }
+
+  dimension: country {
+    label: "Target Country"
+    #group_label: "Target"
+    description: "The country from the target import"
+    view_label: "Daily Adspend"
+    #hidden:  yes
+    type: string
+    sql: ${TABLE}.country ;;
   }
 
   measure: amount {

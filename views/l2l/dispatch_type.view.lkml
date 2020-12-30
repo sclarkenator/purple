@@ -11,31 +11,33 @@ view: dispatch_type {
   }
 
   dimension: action_component_required {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."ACTION_COMPONENT_REQUIRED" ;;
   }
 
   dimension: allow_multiple {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."ALLOW_MULTIPLE" ;;
   }
 
   dimension: code {
-    description: "Source: l2l.dispatch_type"
+    description: "Dispatch Code (Code Red, Code Black, Code Yellow, etc); Source: l2l.dispatch_type"
     type: string
     sql: ${TABLE}."CODE" ;;
   }
 
   dimension: code_bucket {
-    description: "Source: Looker Calculation"
+    description: "Dispatch Code bucketed into Labor, Materials, Equipment (Code Red, Code Black, Production Machine Setup, Tooling Setup), and Other; Source: Looker Calculation"
     type: string
     sql: case
-      when ${code} = "Labor" then "Labor"
-      when ${code} = "Material" then "Material"
-      when ${code} in ("Code Red", "Code Black", "Production Machine Setup", "Tooling Setup" then "Equipment"
-      else "Other"
+      when ${code} = 'Labor' then 'Labor'
+      when ${code} = 'Materials' then 'Material'
+      when ${code} in ('Code Red', 'Code Black', 'Production Machine Setup', 'Tooling Setup') then 'Equipment'
+      else 'Other'
       end ;;
   }
 
@@ -61,6 +63,7 @@ view: dispatch_type {
   }
 
   dimension: description {
+    hidden: yes
     label: "Dispatch Type Description"
     description: "Source: l2l.dispatch_type"
     type: string
@@ -68,19 +71,21 @@ view: dispatch_type {
   }
 
   dimension: exclude_production_dashboard {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."EXCLUDE_PRODUCTION_DASHBOARD" ;;
   }
 
   dimension: highlight_critical {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."HIGHLIGHT_CRITICAL" ;;
   }
 
   dimension: impact {
-    description: "Source: l2l.dispatch_type"
+    description: "Impact dispatch will have on a scale of 0-3; Source: l2l.dispatch_type"
     type: number
     sql: ${TABLE}."IMPACT" ;;
   }
@@ -107,30 +112,35 @@ view: dispatch_type {
   }
 
   dimension: operator_type {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."OPERATOR_TYPE" ;;
   }
 
   dimension: priority {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: number
     sql: ${TABLE}."PRIORITY" ;;
   }
 
   dimension: reason_required {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."REASON_REQUIRED" ;;
   }
 
   dimension: require_quality_fields {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."REQUIRE_QUALITY_FIELDS" ;;
   }
 
   dimension: resource_required {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."RESOURCE_REQUIRED" ;;
@@ -143,6 +153,7 @@ view: dispatch_type {
   }
 
   dimension: start_when_dispatched {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."START_WHEN_DISPATCHED" ;;
@@ -151,30 +162,14 @@ view: dispatch_type {
   dimension_group: insert_ts {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: updated {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw, time, date, week, month, quarter, year]
     sql: CAST(${TABLE}."UPDATED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -185,12 +180,14 @@ view: dispatch_type {
   }
 
   dimension: user_create_type {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."USER_CREATE_TYPE" ;;
   }
 
   dimension: why_required {
+    hidden: yes
     description: "Source: l2l.dispatch_type"
     type: yesno
     sql: ${TABLE}."WHY_REQUIRED" ;;

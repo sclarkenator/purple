@@ -1,3 +1,4 @@
+include: "/views/_period_comparison.view.lkml"
 view: sales_order_line_base {
   #sql_table_name: SALES.SALES_ORDER_LINE ;;
   derived_table: {
@@ -10,6 +11,8 @@ view: sales_order_line_base {
       left join analytics.sales.cancelled_order co on sol.order_id = co.order_id and sol.item_id = co.item_id and sol.system = co.system
     ;;
   }
+  extends: [_period_comparison]
+
   dimension: is_cancelled_wholesale {
     label:  "     * Is Cancelled Wholesale"
     description: "Whether the Wholesale order was cancelled.
@@ -23,6 +26,30 @@ view: sales_order_line_base {
     primary_key:  yes
     hidden:  yes
     sql: ${TABLE}.item_id||'-'||${TABLE}.order_id||'-'||${TABLE}.system ;;
+  }
+#### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      time,
+      time_of_day,
+      date,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      week,
+      month,
+      month_num,
+      quarter,
+      quarter_of_year,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
   measure: avg_cost {
@@ -80,7 +107,7 @@ view: sales_order_line_base {
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $. This also exludes wholesale cancelled orders. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding tax and freight, in $. This also excludes wholesale cancelled orders. Source:netsuite.sales_order_line"
     type: sum
     drill_fields: [order_details*]
     filters: {field: is_cancelled_wholesale value: "No" }

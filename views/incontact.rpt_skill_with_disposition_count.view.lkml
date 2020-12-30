@@ -43,19 +43,7 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     hidden: no
-    timeframes: [
-      raw,
-      time,
-      hour,
-      hour_of_day,
-      date,
-      day_of_week,
-      week,
-      week_of_year,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30]
     sql: ${TABLE}."CONTACTED" ;;
   }
 
@@ -107,6 +95,12 @@ dimension: primary_key {
     sql: ${TABLE}."HOLD_TIME" ;;
   }
 
+  dimension: in_queue_time {
+    description: "Source: looker.calculation"
+    type: number
+    sql: ${TABLE}."INQUEUE_TIME" ;;
+  }
+
   dimension: in_queue_buckets {
     description: "Source: looker.calculation"
     type: tier
@@ -118,30 +112,14 @@ dimension: primary_key {
   dimension_group: insert_ts {
     type: time
     hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,time,date,week,month,quarter,year]
     sql: ${TABLE}."INSERT_TS" ;;
   }
 
   dimension_group: reported {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      week_of_year,
-      month,
-      quarter,
-      year
-    ]
+    timeframes: [raw,date,week,week_of_year,month,quarter,year]
     convert_tz: no
     datatype: date
     hidden: yes
@@ -159,16 +137,20 @@ dimension: primary_key {
     type: string
     sql:
     case
-        when ${skill} in ('8885Purple','888Purple','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher Discount','Time Magazine')
+        when ${skill} in ('8885Purple','888Purple','AAA EnCompass','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','CDL_Trucker _Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Mantra Wellness magazine','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher_Discount','Teacher Discount','Time Magazine')
             then 'Sales Inbound'
-        when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Sleep Country Canada','Support Xfer (From Sales)','Training Support Xfer','Warranty')
+        when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty')
             then 'Support Inbound'
-        when ${skill} = 'Service Recovery'
+        when ${skill} in ('Service Recovery','Sleep Country Canada','Sleep County Canada')
             then 'SRT'
         when ${skill} = 'Customer Service OB'
             then 'Support OB'
+        when ${skill} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)')
+            then 'Verification'
         when ${skill} = 'Sales Team OB'
             then 'Sales OB'
+        when ${skill} = 'PurpleBoysPodcast'
+            then 'PurpleBoysPodcast'
         when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)')
             then 'Ops'
         else 'Admin'
@@ -180,7 +162,7 @@ dimension: primary_key {
     label: "  * Is Transferred Call"
     type: yesno
     sql:
-      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)') then true else false end
+      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)','Training - Support Xfer') then true else false end
     ;;
   }
 
@@ -194,13 +176,14 @@ dimension: primary_key {
 
   measure: avg_acw_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: no
+    hidden: yes
     type: average
     value_format: "#,##0.00"
     sql: ${TABLE}."ACW_TIME" ;;
   }
 
   measure: total_acw_time {
+    label: "Total ACW Time"
     description: "Source: incontact. rpt_skill_with_disposition_count"
     hidden: no
     type: sum
@@ -215,19 +198,27 @@ dimension: primary_key {
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
+  measure: total_handle_calls {
+    description: "Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${handle_time} > 0 then 1 else 0 end ;;
+  }
+
   measure: count_handle_time {
     description: "Count Distinct of handle time. Source: incontact. rpt_skill_with_disposition_count"
     type: count_distinct
+    hidden: yes
     value_format: "#,##0"
     sql: ${TABLE}."HANDLE_TIME" ;;
   }
 
   measure: avg_acw {
-    label: "Average ACW (sec)"
+    label: "Average ACW Time"
     description: "Average ACW in second, total_acw_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_acw_time}/${count_handle_time} ;;
+    sql: ${total_acw_time}/case when ${total_handle_calls} > 0 then ${total_handle_calls} else null end ;;
   }
 
   measure: avg_handle_time {
@@ -235,37 +226,66 @@ dimension: primary_key {
     description: "total_handle_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_handle_time}/${count_handle_time} ;;
+    sql: ${total_handle_time}/case when ${total_handle_calls} > 0 then ${total_handle_calls} else null end ;;
   }
 
   measure: avg_hold_time_2 {
+    hidden: no
     label: "Average Hold Time"
     description: "total_hold_time/count_handle_time. Source: looker.calculation"
     type: number
     value_format: "#,##0.00"
-    sql: ${total_hold_time}/${count_handle_time} ;;
+    sql: ${total_hold_time}/case when ${total_hold_calls} > 0 then ${total_hold_calls} else null end ;;
   }
   measure: total_hold_time {
     description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
     type: sum
     hidden: no
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: ${hold_time} ;;
+  }
+
+  measure: total_hold_calls {
+    description: "Time customer was on hold (not in queue). Source: incontact. rpt_skill_with_disposition_count"
+    type: sum
+    hidden: no
+    sql: case when ${hold_time} > 0 then 1 else 0 end ;;
   }
 
   measure: avg_talk_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: average
+    hidden: yes
     value_format: "#,##0"
     sql: nvl(${TABLE}."HANDLE_TIME",0) - nvl(${TABLE}."HOLD_TIME",0);;
   }
 
   measure: avg_hold_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
-    hidden: no
+    hidden: yes
     type: average
     sql: case when ${TABLE}."HOLD_TIME" > 0 then ${TABLE}."HOLD_TIME" end
     ;;
   }
+
+  measure: total_inqueue_time {
+    type: sum
+    value_format: "#,##0"
+    sql:  ${TABLE}.INQUEUE_TIME ;;
+  }
+
+  measure: total_inbound_calls {
+    type: sum
+    value_format: "#,##0"
+    sql: case when ${inbound_flag} then 1 else 0 end;;
+  }
+
+  measure: average_inqueue_time {
+    description: "Total In Queue Time/ Total Inbound Calls"
+    type: number
+    value_format: "#,##0"
+    sql:  ${total_inqueue_time}/case when ${total_inbound_calls} > 0 then ${total_inbound_calls} else null end  ;;
+  }
+
 
   measure: count {
     description: "Number of phone calls. Source: looker.calculation"

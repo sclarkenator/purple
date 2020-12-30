@@ -101,6 +101,7 @@ view: shopify_orders {
   measure: gross_sales {
     label: "Gross Sales"
     description: "Gross product sales in Shopify"
+    value_format: "$#,##0"
     type: sum
     sql: ${TABLE}.subtotal_price ;;
   }

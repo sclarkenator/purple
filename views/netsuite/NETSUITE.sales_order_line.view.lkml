@@ -2,6 +2,7 @@ include: "/views/netsuite/NETSUITE.sales_order_line_base.view.lkml"
 view: sales_order_line {
   extends: [sales_order_line_base]
 
+## see data by is used for the interactive dashboards
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
     hidden: yes
@@ -31,6 +32,76 @@ view: sales_order_line {
   dimension: see_data {
     view_label: "Sales Order"
     label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${created_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${created_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${created_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${created_quarter}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${created_date}
+    {% endif %};;
+  }
+
+## see data by pop sol (period over period sales order line) is used for the interactive dashboards
+  parameter: see_data_by_pop_sol {
+    label: "See Data By"
+    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+    hidden: yes
+    type: unquoted
+    allowed_value: {
+      label: "Day"
+      value: "day"
+    }
+    allowed_value: {
+      label: "Week"
+      value: "week"
+    }
+    allowed_value: {
+      label: "Month"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+    allowed_value: {
+      label: "Product Model"
+      value: "model"
+    }
+  }
+
+  dimension: see_data_pop_sol {
+    view_label: "Sales Order"
+    label: "See Data By"
+    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+    hidden: yes
+    sql:
+    {% if see_data_by._parameter_value == 'day' %}
+      ${date_in_period_date}
+    {% elsif see_data_by._parameter_value == 'week' %}
+      ${date_in_period_week}
+    {% elsif see_data_by._parameter_value == 'month' %}
+      ${date_in_period_month}
+    {% elsif see_data_by._parameter_value == 'quarter' %}
+      ${date_in_period_quarter}
+    {% elsif see_data_by._parameter_value == 'model' %}
+      ${item.model_raw}
+    {% else %}
+      ${date_in_period_date}
+    {% endif %};;
+  }
+
+  dimension: see_data_pop_sol_order_created {
+    view_label: "Sales Order"
+    label: "See Data By Created"
     description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
     hidden: yes
     sql:
@@ -824,7 +895,7 @@ view: sales_order_line {
 
   measure: unfulfilled_orders {
     group_label: "Gross Sales Unfulfilled"
-    label: "Unfulfilled Units ($)"
+    label: "Unfulfilled Orders ($)"
     view_label: "Fulfillment"
     description: "Orders placed that have not been fulfilled. Source: looker.calculation"
     value_format: "$#,##0"
@@ -1910,7 +1981,7 @@ view: sales_order_line {
     type: sum
     sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
     sql:  case when (${fulfilled_date} is null
-                or datediff(d,${fulfilled_date},current_date)<130) then ${item_return_rate.return_rate_dim}*${gross_amt}
+                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_rate_dim}*${gross_amt}
                 else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
   }
 

@@ -429,7 +429,7 @@ view: day_aggregations {
     label: "z - Is Before Today (mtd)"
     description: "This field is for formatting on (week/month/quarter/year) to date reports"
     type: yesno
-    sql: ${TABLE}.date < current_date;; }
+    sql: case when ${TABLE}.date < current_date then TRUE else null end;; }
 
   dimension: start_date {
     group_label: "Created Date"
@@ -764,6 +764,20 @@ view: day_aggregations {
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.non_bounced_sessions ;; }
+
+  measure: cvr {
+    label: "CVR - All Sessions"
+    description: "% of all Sessions that resulted in an order. (Total DTC Orders / Sessions) Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${day_aggregations.total_unique_orders})/NULLIF(${day_aggregations.sessions_count},0) ;; }
+
+  measure: q_cvr {
+    label: "CVR - Qualified Sessions"
+    description: "% of all Non-bounced Sessions that resulted in an order. (Total DTC Orders / Non-bounced Sessions) Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${day_aggregations.total_unique_orders})/NULLIF(${day_aggregations.non_bounced_sessions},0) ;; }
 
   measure: production_target {
     label: "Goal Mattress Production"

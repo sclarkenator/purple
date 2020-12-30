@@ -545,6 +545,44 @@ view: roas_pdt {
       ;;
   }
 
+  dimension: medium_clean_new {
+    label: " Medium (clean) New"
+    description: "Transforming the data from each system to match a single format"
+    type: string
+    sql:
+      case
+      when lower(${TABLE}.medium) in ('au','radio','streaming','radio', 'audio', 'podcast')
+      or lower(${TABLE}.platform) in ('radio','streaming','podcast','veritone')then 'Audio'
+      when lower(${TABLE}.medium) in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie')
+      or lower(${TABLE}.platform) in ('couponbytes', 'rk', 'affiliate') then 'Affiliate'
+      when lower(${TABLE}.medium) in ('crm','em', 'email','traditional','sms','tx','print','ir')
+      or lower(${TABLE}.platform) in ('ta','talkable') then 'CRM'
+      when lower(${TABLE}.medium) in ('ctv')
+      or lower(${TABLE}.platform) in ('ctv') then 'CTV'
+      when lower(${TABLE}.medium) in ('display','ds')
+      or (lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds'))
+      or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
+      when lower(${TABLE}.medium) in ('crm','em', 'email')
+      or lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email', 'fkl', 'findkeeplove') then 'Lead Gen'
+      when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
+      when lower(${TABLE}.medium) in ('organic')
+      or lower(${TABLE}.medium) is null then 'Organic'
+      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
+      when lower(${TABLE}.medium) in ('social','so','facebook','paid social', 'paidsocial', 'organic social', 'social ads')
+      and lower(${TABLE}.platform) in ('facebook','fb') then 'Social'
+      when lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter', 'quora', 'twitter') then 'Social Growth'
+      when lower(${TABLE}.medium) in ('tv','cinema','linear') or  lower(${TABLE}.platform) in ('tv') then 'TV'
+      when lower(${TABLE}.medium) in ('sh','feed','shopping','PLA','pla') then 'PLA'
+      when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
+      'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
+      'customer unrolling', 'retargetingvideo', 'raw egg test', 'back sleeping video','gordon hayward', 't-pain', 'time travel', 'mattress roll video',
+      'made in the usa video', 'unpacking video', 'original kickstarter video')
+      or lower(${TABLE}.platform) in ('youtube')
+      then 'Video'
+      else 'Other' end
+      ;;
+  }
+
 
   measure: adspend {
     label: "Adspend ($k)"

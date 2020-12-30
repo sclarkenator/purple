@@ -57,14 +57,26 @@ view: _period_comparison {
     hidden: yes
     group_label: "Period Comparison"
     type: date
-    sql: dateadd(year,-1,${filter_start_date_raw}) ;;
+    sql:
+      {% if comparison_period._parameter_value == 'week'  %}
+        dateadd({% parameter comparison_period %}, -52, ${filter_start_date_raw})
+      {% else %}
+        dateadd(year,-1,${filter_start_date_raw})
+      {% endif %};;
+    # dateadd(year,-1,${filter_start_date_raw}) ;;
   }
 
   dimension: same_period_last_year_end_date {
     hidden: yes
     group_label: "Period Comparison"
     type: date
-    sql: dateadd(year,-1,${filter_end_date_raw}) ;;
+    sql:
+      {% if comparison_period._parameter_value == 'week'  %}
+        dateadd({% parameter comparison_period %}, -52, ${filter_end_date_raw})
+      {% else %}
+        dateadd(year,-1,${filter_end_date_raw})
+      {% endif %};;
+    # dateadd(year,-1,${filter_end_date_raw}) ;;
   }
 
   dimension: comparison_period_start_date {
@@ -73,6 +85,8 @@ view: _period_comparison {
     type: date
     sql:
             {% if comparison_period._parameter_value == 'previous'  %}
+              ${previous_start_date}
+            {% elsif comparison_period._parameter_value == 'week'  %}
               ${previous_start_date}
             {% elsif comparison_period._parameter_value == 'month'  %}
               ${previous_start_date}
@@ -106,7 +120,24 @@ view: _period_comparison {
     label: "Current Period"
     group_label: "Period Comparison Date"
     type: time
-    sql: dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw}) ;;
+    sql:
+            {% if comparison_period._parameter_value == 'previous'  %}
+              dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw})
+            {% elsif comparison_period._parameter_value == 'week'  %}
+              CASE
+                WHEN ${is_same_period_last_year}
+                  THEN  dateadd(week, 52, ${event_date})
+                ELSE dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw})
+              END
+            {% elsif comparison_period._parameter_value == 'month'  %}
+              dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw})
+            {% elsif comparison_period._parameter_value == 'year'  %}
+              dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw})
+            {% else %}
+              false
+            {% endif %};;
+# dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw}) ;;
+
     timeframes: [
       date,
       hour_of_day,
@@ -119,7 +150,25 @@ view: _period_comparison {
       month,
       month_name,
       month_num,
+      quarter,
       year]
+  }
+
+
+  dimension: day_of_week_abbr {
+    hidden:  yes
+    label:  "Current Period Day of Week (Short)"
+    group_label: "Period Comparison Date"
+    description: "Abbreviated day of week (Sun, Mon, Tue, etc). Source: netsuite.sales_order_line"
+    type: string
+    case: {
+      when: { sql: ${date_in_period_day_of_week} = 'Monday' ;; label: "Mon" }
+      when: { sql: ${date_in_period_day_of_week} = 'Tuesday' ;;  label: "Tue" }
+      when: { sql: ${date_in_period_day_of_week} = 'Wednesday' ;; label: "Wed" }
+      when: { sql: ${date_in_period_day_of_week} = 'Thursday' ;; label: "Thu" }
+      when: { sql: ${date_in_period_day_of_week} = 'Friday' ;; label: "Fri" }
+      when: { sql: ${date_in_period_day_of_week} = 'Saturday' ;; label: "Sat" }
+      when: { sql: ${date_in_period_day_of_week} = 'Sunday' ;; label: "Sun" }}
   }
 
 
@@ -146,6 +195,8 @@ view: _period_comparison {
 
   dimension: is_current_previous_or_same_period_last_year {
     group_label: "Period Comparison"
+    label: "  * Is Current, Previous, or Same Period Last Year?"
+    description: "Use this filter if you want to compare the current period, previous period, and same period last year."
     type: yesno
     sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' or ${is_same_period_last_year} = 'Yes' ;;
   }
@@ -153,11 +204,16 @@ view: _period_comparison {
   parameter: comparison_period {
     group_label: "Period Comparison"
     label: "Comparison Period"
+    description: "Select what type of period you want to compare to.  Previous Period: specific dates. Previous Week: use this when looking at current week or last completed week. Previous Month: use this when looking at current week or last completed week."
     type: unquoted
     default_value: "previous"
     allowed_value: {
       label: "Previous Period"
       value: "previous"
+    }
+    allowed_value: {
+      label: "Previous Week"
+      value: "week"
     }
     allowed_value: {
       label: "Previous Month"
@@ -167,10 +223,10 @@ view: _period_comparison {
       label: "Same Period Last Year"
       value: "year"
     }
-    allowed_value: {
-      label: "Previous Period Last Year"
-      value: "year"
-    }
+    # allowed_value: {
+    #   label: "Previous Period Last Year"
+    #   value: "year"
+    # }
   }
 
   dimension: is_comparison_period {
@@ -181,6 +237,8 @@ view: _period_comparison {
             {% if comparison_period._parameter_value == 'previous'  %}
               ${is_previous_period}=true
             {% elsif comparison_period._parameter_value == 'year'  %}
+              ${is_previous_period}=true
+            {% elsif comparison_period._parameter_value == 'week'  %}
               ${is_previous_period}=true
             {% elsif comparison_period._parameter_value == 'month'  %}
               ${is_previous_period}=true
@@ -205,7 +263,7 @@ view: _period_comparison {
     sql: CASE
             WHEN ${is_current_period} = true THEN 'Current Period'
             WHEN ${is_previous_period} = true THEN 'Previous Period'
-            --WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
+            WHEN ${is_previous_period} = true THEN 'Same Period Last Year'
         END
     ;;
   }
@@ -221,4 +279,5 @@ view: _period_comparison {
         END
     ;;
   }
+
 }
