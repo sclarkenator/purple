@@ -246,13 +246,13 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT') and ${sales_order.minimum_ship_date} > ${created_date}
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
           -- fedex without min ship date is created + 3
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS')
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS')
             THEN dateadd(d,14,${created_date})
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
@@ -447,7 +447,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_sales_Fulfilled_in_SLA{
@@ -464,7 +464,7 @@ view: sales_order_line {
           when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
           Else 0
         END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_zSLA_Achievement_prct {
@@ -697,7 +697,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_Qty_Fulfilled_in_SLA{
@@ -714,7 +714,7 @@ view: sales_order_line {
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_SLA_Achievement_prct {
