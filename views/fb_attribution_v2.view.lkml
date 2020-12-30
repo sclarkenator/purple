@@ -140,19 +140,19 @@ view: fb_attribution_v2 {
   measure: ROAS_28_click {
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_28_day_click }/${amount_spent} ;;
+    sql: ${purchases_conversion_value_28_day_click}/NULLIF(${amount_spent},0) ;;
   }
 
   measure: ROAS_1_click {
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_1_day_click}/${amount_spent} ;;
+    sql: ${purchases_conversion_value_1_day_click}/NULLIF(${amount_spent},0) ;;
   }
 
   measure: ROAS_1_view{
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_1_day_view}/${amount_spent} ;;
+    sql: ${purchases_conversion_value_1_day_view}/NULLIF(${amount_spent},0) ;;
   }
 
   measure: reach {
