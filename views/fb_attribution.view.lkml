@@ -2,19 +2,19 @@ view: fb_attribution {
   sql_table_name: "CSV_UPLOADS"."FB_ATTRIBUTION"
     ;;
 
-  measure: budget {
+  dimension: ad_set_delivery {
+    type: string
+    sql: ${TABLE}."AD_SET_DELIVERY" ;;
+  }
+
+  dimension: ad_set_name {
+    type: string
+    sql: ${TABLE}."AD_SET_NAME" ;;
+  }
+
+  measure: amount_spent {
     type: sum
-    sql: ${TABLE}."BUDGET" ;;
-  }
-
-  dimension: budget_type {
-    type: string
-    sql: ${TABLE}."BUDGET_TYPE" ;;
-  }
-
-  dimension: campaign {
-    type: string
-    sql: ${TABLE}."CAMPAIGN" ;;
+    sql: ${TABLE}."AMOUNT_SPENT" ;;
   }
 
   dimension: campaign_id {
@@ -22,29 +22,9 @@ view: fb_attribution {
     sql: ${TABLE}."CAMPAIGN_ID" ;;
   }
 
-  measure: clicks {
-    type: sum
-    sql: ${TABLE}."CLICKS" ;;
-  }
-
-  dimension: delivery {
+  dimension: campaign_name {
     type: string
-    sql: ${TABLE}."DELIVERY" ;;
-  }
-
-  dimension_group: end {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."END_DATE" ;;
+    sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
   measure: frequency {
@@ -57,9 +37,9 @@ view: fb_attribution {
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: indicator {
-    type: string
-    sql: ${TABLE}."INDICATOR" ;;
+  measure: link_clicks {
+    type: sum
+    sql: ${TABLE}."LINK_CLICKS" ;;
   }
 
   measure: purchases {
@@ -77,24 +57,44 @@ view: fb_attribution {
     sql: ${TABLE}."PURCHASES_1_DAY_VIEW" ;;
   }
 
-  measure: purchases_value {
+  measure: purchases_conversion_value {
     type: sum
-    sql: ${TABLE}."PURCHASES_VALUE" ;;
+    sql: ${TABLE}."PURCHASES_CONVERSION_VALUE" ;;
   }
 
-  measure: purchases_value_1_day_click {
+  measure: purchases_conversion_value_1_day_click {
     type: sum
-    sql: ${TABLE}."PURCHASES_VALUE_1_DAY_CLICK" ;;
+    sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_CLICK" ;;
   }
 
-  measure: purchases_value_1_day_view {
+  measure: purchases_conversion_value_1_day_view {
     type: sum
-    sql: ${TABLE}."PURCHASES_VALUE_1_DAY_VIEW" ;;
+    sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_VIEW" ;;
   }
 
   measure: reach {
     type: sum
     sql: ${TABLE}."REACH" ;;
+  }
+
+  dimension_group: reporting_starts {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."REPORTING_STARTS" ;;
+  }
+
+  dimension: result_indicator {
+    type: string
+    sql: ${TABLE}."RESULT_INDICATOR" ;;
   }
 
   measure: results {
@@ -112,33 +112,8 @@ view: fb_attribution {
     sql: ${TABLE}."RESULTS_1_DAY_VIEW" ;;
   }
 
-  measure: results_on_ad {
-    type: sum
-    sql: ${TABLE}."RESULTS_ON_AD" ;;
-  }
-
-  measure: spend {
-    type: sum
-    sql: ${TABLE}."SPEND" ;;
-  }
-
-  dimension_group: start {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."START_DATE" ;;
-  }
-
   measure: count {
     type: count
-    drill_fields: []
+    drill_fields: [ad_set_name, campaign_name]
   }
 }
