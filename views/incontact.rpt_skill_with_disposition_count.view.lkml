@@ -162,7 +162,7 @@ dimension: primary_key {
     label: "  * Is Transferred Call"
     type: yesno
     sql:
-      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)') then true else false end
+      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)','Training - Support Xfer') then true else false end
     ;;
   }
 
