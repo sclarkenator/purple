@@ -48,51 +48,51 @@ view: fb_attribution_v2 {
     end;;
   }
 
-  dimension: frequency {
-    type: number
+  measure: frequency {
+    type: sum
     value_format: "0.00"
     sql: ${TABLE}."FREQUENCY" ;;
   }
 
-  dimension: impressions {
-    type: number
+ measure: impressions {
+    type: sum
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: link_clicks {
-    type: number
+  measure: link_clicks {
+    type: sum
     sql: ${TABLE}."LINK_CLICKS" ;;
   }
 
-  dimension: purchases_1_day_click {
-    type: number
+ measure: purchases_1_day_click {
+    type: sum
     sql: ${TABLE}."PURCHASES_1_DAY_CLICK" ;;
   }
 
-  dimension: purchases_1_day_view {
-    type: number
+ measure: purchases_1_day_view {
+    type: sum
     sql: ${TABLE}."PURCHASES_1_DAY_VIEW" ;;
   }
 
-  dimension: purchases_28_day_click {
-    type: number
+  measure: purchases_28_day_click {
+    type: sum
     sql: ${TABLE}."PURCHASES_28_DAY_CLICK" ;;
   }
 
-  dimension: purchases_conversion_value_1_day_click {
-    type: number
+  measure: purchases_conversion_value_1_day_click {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_CLICK" ;;
   }
 
-  dimension: purchases_conversion_value_1_day_view {
-    type: number
+  measure: purchases_conversion_value_1_day_view {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_VIEW" ;;
   }
 
-  dimension: purchases_conversion_value_28_day_click {
-    type: number
+  measure: purchases_conversion_value_28_day_click {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_28_DAY_CLICK" ;;
   }
@@ -155,7 +155,7 @@ view: fb_attribution_v2 {
     sql: ${purchases_conversion_value_1_day_view}/${amount_spent} ;;
   }
 
-  dimension: reach {
+  measure: reach {
     type: number
     sql: ${TABLE}."REACH" ;;
   }
