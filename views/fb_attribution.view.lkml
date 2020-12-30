@@ -14,7 +14,7 @@ view: fb_attribution {
 
   measure: amount_spent {
     type: sum
-    value_format: "$0.00"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."AMOUNT_SPENT" ;;
   }
 
@@ -112,19 +112,19 @@ view: fb_attribution {
 
   measure: purchases_conversion_value {
     type: sum
-    value_format: "$0.00"
+    value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE" ;;
   }
 
   measure: purchases_conversion_value_1_day_click {
     type: sum
-    value_format: "$0.00"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_CLICK" ;;
   }
 
   measure: purchases_conversion_value_1_day_view {
     type: sum
-    value_format: "$0.00"
+    value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_VIEW" ;;
   }
 
