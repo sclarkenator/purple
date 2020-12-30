@@ -100,42 +100,42 @@ view: fb_attribution_v2 {
   measure: CVR_28_day_click{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_28_day_click}/${link_clicks} ;;
+    sql:  ${purchases_28_day_click}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CVR_1_day_click{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_1_day_click}/${link_clicks} ;;
+    sql:  ${purchases_1_day_click}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CVR_1_day_view{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_1_day_view}/${link_clicks} ;;
+    sql:  ${purchases_1_day_view}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CPA_28_day_click{
     type:  number
     value_format: "$0.00"
-    sql:${amount_spent}/${purchases_28_day_click} ;;
+    sql:${amount_spent}/NULLIF(${purchases_28_day_click},0) ;;
   }
 
   measure: CPA_1_day_click{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/${purchases_1_day_click} ;;
+    sql:  ${amount_spent}/NULLIF(${purchases_1_day_click},0) ;;
   }
 
   measure: CPA_1_day_view{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/${purchases_1_day_view} ;;
+    sql:  ${amount_spent}/NULLIF(${purchases_1_day_view},0) ;;
   }
   measure: CPM{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/(${impressions}/1000) ;;
+    sql:  ${amount_spent}/NULLIF((${impressions}/1000),0) ;;
   }
   measure: ROAS_28_click {
     type: number
