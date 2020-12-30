@@ -32,8 +32,25 @@ view: fb_attribution_v2 {
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
+  dimension: campaign_type {
+    type: string
+    sql: case when ${campaign_name} ilike '%-PT-%' then 'Prospecting'
+      when ${campaign_name} ilike '%-RT-%' then 'Retargeting'
+      when ${campaign_name} ilike '%-RE-%' then 'Reengage'
+    end;;
+  }
+
+  dimension: product_type {
+    type: string
+    sql: case when ${campaign_name} ilike '%_Matt_%' then 'Mattress'
+      when ${campaign_name} ilike '%_Accs_%' then 'Accessories'
+      else 'Mattress'
+    end;;
+  }
+
   dimension: frequency {
     type: number
+    value_format: "0.00"
     sql: ${TABLE}."FREQUENCY" ;;
   }
 
@@ -64,17 +81,78 @@ view: fb_attribution_v2 {
 
   dimension: purchases_conversion_value_1_day_click {
     type: number
+    value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_CLICK" ;;
   }
 
   dimension: purchases_conversion_value_1_day_view {
     type: number
+    value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_VIEW" ;;
   }
 
   dimension: purchases_conversion_value_28_day_click {
     type: number
+    value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_28_DAY_CLICK" ;;
+  }
+
+  measure: CVR_28_day_click{
+    type:  number
+    value_format: "0.0%"
+    sql:  ${purchases_28_day_click}/${link_clicks} ;;
+  }
+
+  measure: CVR_1_day_click{
+    type:  number
+    value_format: "0.0%"
+    sql:  ${purchases_1_day_click}/${link_clicks} ;;
+  }
+
+  measure: CVR_1_day_view{
+    type:  number
+    value_format: "0.0%"
+    sql:  ${purchases_1_day_view}/${link_clicks} ;;
+  }
+
+  measure: CPA_28_day_click{
+    type:  number
+    value_format: "$0.00"
+    sql:${amount_spent}/${purchases_28_day_click} ;;
+  }
+
+  measure: CPA_1_day_click{
+    type:  number
+    value_format: "$0.00"
+    sql:  ${amount_spent}/${purchases_1_day_click} ;;
+  }
+
+  measure: CPA_1_day_view{
+    type:  number
+    value_format: "$0.00"
+    sql:  ${amount_spent}/${purchases_1_day_view} ;;
+  }
+  measure: CPM{
+    type:  number
+    value_format: "$0.00"
+    sql:  ${amount_spent}/(${impressions}/1000) ;;
+  }
+  measure: ROAS_28_click {
+    type: number
+    value_format: "$0.00"
+    sql: ${purchases_conversion_value_28_day_click }/${amount_spent} ;;
+  }
+
+  measure: ROAS_1_click {
+    type: number
+    value_format: "$0.00"
+    sql: ${purchases_conversion_value_1_day_click}/${amount_spent} ;;
+  }
+
+  measure: ROAS_1_view{
+    type: number
+    value_format: "$0.00"
+    sql: ${purchases_conversion_value_1_day_view}/${amount_spent} ;;
   }
 
   dimension: reach {
