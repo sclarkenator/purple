@@ -12,8 +12,8 @@ view: fb_attribution_v2 {
     sql: ${TABLE}."AD_SET_BUDGET_TYPE" ;;
   }
 
-  dimension: amount_spent {
-    type: number
+  measure: amount_spent {
+    type: sum
     sql: ${TABLE}."AMOUNT_SPENT" ;;
   }
 
