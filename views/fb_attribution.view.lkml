@@ -46,7 +46,13 @@ view: fb_attribution {
 
   measure: frequency {
     type: sum
+    value_format: "0.00"
     sql: ${TABLE}."FREQUENCY" ;;
+  }
+  measure: avg_frequency {
+    type: average
+    value_format: "0.00"
+    sql: case when ${TABLE}."FREQUENCY" > 0 then ${TABLE}."FREQUENCY" end;;
   }
 
   measure: impressions {
