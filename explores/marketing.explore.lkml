@@ -120,6 +120,22 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${order_utm.pk} = ${first_order_flag.pk} ;;
       relationship: many_to_one
     }
+
+  # Added 12/30/2020 to get orders and items - Mason
+    join: sales_order_line {
+      type: left_outer
+      sql_on: ${order_utm.order_id} = ${sales_order_line.order_id} ;;
+      fields: [sales_order_line.order_id,sales_order_line.item_id]
+      relationship: one_to_one
+    }
+
+    # Added 12/30/2020 to get products - Mason
+    join: item {
+      type: left_outer
+      view_label: "Product"
+      sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
+      relationship: many_to_one
+    }
   }
 
   explore: email_contact_merged {
