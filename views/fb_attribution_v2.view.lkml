@@ -2,20 +2,14 @@ view: fb_attribution_v2 {
   sql_table_name: "CSV_UPLOADS"."FB_ATTRIBUTION_V2"
     ;;
 
-  dimension: ad_set_budget {
-    type: number
-    sql: ${TABLE}."AD_SET_BUDGET" ;;
-  }
+
 
   dimension: ad_set_budget_type {
     type: string
     sql: ${TABLE}."AD_SET_BUDGET_TYPE" ;;
   }
 
-  measure: amount_spent {
-    type: sum
-    sql: ${TABLE}."AMOUNT_SPENT" ;;
-  }
+
 
   dimension: campaign_delivery {
     type: string
@@ -46,6 +40,18 @@ view: fb_attribution_v2 {
       when ${campaign_name} ilike '%_Accs_%' then 'Accessories'
       else 'Mattress'
     end;;
+  }
+
+  measure: ad_set_budget {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}."AD_SET_BUDGET" ;;
+  }
+
+  measure: amount_spent {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}."AMOUNT_SPENT" ;;
   }
 
   measure: frequency {
