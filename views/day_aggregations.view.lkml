@@ -411,7 +411,7 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
-      where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
+      where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
   }
