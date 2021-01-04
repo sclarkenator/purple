@@ -314,7 +314,7 @@ view: daily_adspend {
 #         when ${TABLE}.source = ('PODCAST') then 'PODCAST'
 #         else ${TABLE}.platform end ;; }
 
-dimension: countrty {
+dimension: country {
   label: "Country"
   description: "USA or CA"
   type:  string
