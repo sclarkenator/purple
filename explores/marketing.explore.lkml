@@ -13,7 +13,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: no
     join: adspend_target {
       type: full_outer
-      sql_on:       sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
+      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
       and ${adspend_target.medium} = ${daily_adspend.medium}
       and ${adspend_target.country} = ${daily_adspend.country};;
       relationship: many_to_one}
