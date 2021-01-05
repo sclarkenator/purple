@@ -154,8 +154,12 @@ include: "/dashboards/**/*.dashboard"
     join: mainfreight_inventory {
       type: left_outer
       sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
-      relationship: one_to_many
-    }
+      relationship: one_to_many}
+    join: standard_cost {
+      view_label: "Item"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+      relationship: one_to_one}
  ##   join: derived_inventory {
 ##      type: left_outer
 ##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
@@ -187,8 +191,7 @@ include: "/dashboards/**/*.dashboard"
     join: mainfreight_inventory_snapshot {
       type: left_outer
       sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
-      relationship: one_to_many
-    }
+      relationship: one_to_many}
   }
 
   explore: mainfreight_inventory{

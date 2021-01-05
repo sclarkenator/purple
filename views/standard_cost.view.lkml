@@ -28,7 +28,7 @@ group by 1,2 ;;
     sql:${TABLE}.ac_item_id ;; }
 
   dimension: standard_cost {
-    hidden: yes
+    hidden: no
     label: "Standard Cost"
     type:  number
     value_format: "$#,##0"
