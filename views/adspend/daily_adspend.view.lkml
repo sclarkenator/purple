@@ -354,9 +354,9 @@ dimension: spend_platform {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE')  or ${source} in ('AFFILIATE');; label: "affiliate" }
       when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM') ;; label: "audio" }
-      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') ;; label: "crm" }
+      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "crm" }
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')

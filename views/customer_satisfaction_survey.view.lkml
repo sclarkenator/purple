@@ -152,7 +152,7 @@ view: customer_satisfaction_survey {
   measure: star_rating_count {
     label: "Total Agent CSATs"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
-    type: count_distinct
+    type: count
     sql:  ${TABLE}."STAR_RATING" is not null ;;
   }
 
@@ -177,7 +177,7 @@ view: customer_satisfaction_survey {
     description: "CSAT score of 5 / total CSAT scores. Source: stella_connect.customer_satisfaction_survey"
     type: number
     value_format: "0.00\%"
-    sql: ${5_star_rating}/${star_rating_count} /100 ;;
+    sql: ${5_star_rating}/${star_rating_count}*100;;
   }
 
   dimension: star_rating_comment {
