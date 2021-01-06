@@ -675,4 +675,17 @@ dimension: store_name{
       ,case when datediff(day,${created},current_date()) > 270 then dateadd(year,1,${created}) else ${created} end
       ,current_date());;
     }
+
+
+  dimension: before_after_mattress_price_increase {
+    group_label: " Advanced"
+    label: "Before or after mattress price increase"
+    description: "30 days before or after the mattress price increase on 7/15/2020"
+    hidden: no
+    type: string
+    sql: case when ${TABLE}.CREATED between '2020-06-14' and '2020-07-14' then 'Before'
+              when ${TABLE}.CREATED between '2020-07-15' and '2020-08-14' then 'After'
+              else 'Other'
+              end ;;
+    }
 }
