@@ -1348,7 +1348,7 @@ view: order_flag {
     sql: ${TABLE}.singleharmony_flg = 1 ;; }
 
 #  dimension: sj_pajama_flag {
-#    group_label: "    * Orders has:"
+#   group_label: "    * Orders has:"
 #    label: "A Sleepy Jones Pajamas"
 #    description: "1/0; 1 if there is at least 1 Sleepy Jones Pajamas in this order. Source: looker.calculation"
 #    type:  yesno

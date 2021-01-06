@@ -13,7 +13,9 @@ include: "/dashboards/**/*.dashboard"
     hidden: no
     join: adspend_target {
       type: full_outer
-      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date} and ${adspend_target.medium} = ${daily_adspend.medium} ;;
+      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
+      and ${adspend_target.medium} = ${daily_adspend.medium}
+      and ${adspend_target.country} = ${daily_adspend.country};;
       relationship: many_to_one}
   }
 
@@ -217,6 +219,7 @@ explore: email_mymove_contact {
   }
 
   explore: fb_attribution { hidden: yes}
+  explore: fb_attribution_v2 { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}
   #explore: adspend_target { hidden:yes group_label: "Marketing"}
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}
