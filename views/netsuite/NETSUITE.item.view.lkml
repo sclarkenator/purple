@@ -986,4 +986,11 @@ view: item {
            else 'Other'
            end ;;  }
 
+  dimension: lifecycle_status {
+    hidden: no
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}."LIFECYCLE_STATUS" ;;
+  }
+
 }

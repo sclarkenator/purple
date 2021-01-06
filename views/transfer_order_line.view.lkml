@@ -80,6 +80,18 @@ view: transfer_order_line {
     sql: to_timestamp_ntz(${TABLE}."SHIPPED") ;;
   }
 
+  measure: days_in_transit {
+    hidden: no
+    type: count
+    sql: datediff(${shipped_date},${shipment_received_date})  ;;
+  }
+
+  measure: sum_days_in_tranist {
+    hidden: no
+    type: sum
+    sql: datediff(${shipped_date},${shipment_received_date}) ;;
+  }
+
   dimension: transfer_order_id {
     type: number
     hidden: yes
