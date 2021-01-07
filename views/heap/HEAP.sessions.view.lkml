@@ -478,6 +478,7 @@ view: sessions {
               when ${utm_source} in ('em') then 'Email'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%'  or ${utm_source} in ('instagram')  then 'FB/IG'
               when ${utm_source} in ('findkeeplove') then 'fkl'
+              when ${utm_source} = 'goop' the  'Goop'
               when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
               when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
