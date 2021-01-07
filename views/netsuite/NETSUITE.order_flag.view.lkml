@@ -373,7 +373,7 @@ view: order_flag {
     sql:  ${TABLE}.duvet_flg ;; }
 
   measure: gravity_blanket_orders {
-    hidden: yes
+    hidden: no
     group_label: "Total Orders with:"
     label: "a Gravity Blanket"
     description: "1/0 per order; 1 if there was a gravity blanket in the order. Source:looker.calculation"
@@ -566,7 +566,7 @@ view: order_flag {
     sql: ${TABLE}.gravity_mask_flg > 0 ;; }
 
   dimension: gravity_blanket_flg {
-    hidden: yes
+    hidden: no
     group_label: "    * Orders has:"
     label: "a Gravity Blanket"
     description: "1/0; 1 if there is a Gravity Blanket in this order. Source: looker.calculation"
