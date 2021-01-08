@@ -14,10 +14,31 @@ view: daily_adspend {
     sql: ${TABLE}.ad_id||'-'||${TABLE}.date;; }
 
   dimension_group: ad {
+    ### Scott Clark 1/8/21: Deleted week_of_year. need to reverse this last week of 2021
     label: "  Ad"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
+
+  dimension: ad_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type:  number
+    label: "Week of Year"
+    group_label: "  Ad Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${ad_date::date} >= '2020-12-28' and ${ad_date::date} <= '2021-01-03' then 1
+              when ${ad_year::number}=2021 then date_part(weekofyear,${ad_date::date}) + 1
+              else date_part(weekofyear,${ad_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    group_label: "  Ad Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${ad_date::date} >= '2020-12-28' and ${ad_date::date} <= '2021-01-03' then 2021 else ${ad_year} end   ;;
+  }
 
   #### Used with period comparison view
   dimension_group: event {

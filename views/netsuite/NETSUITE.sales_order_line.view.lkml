@@ -1197,16 +1197,40 @@ view: sales_order_line {
   }
 
   dimension_group: fulfilled {
+    ## Scott Clark 1/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021
     view_label: "Fulfillment"
     label: "    Fulfilled"
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
+
+  dimension: fulfilled_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Fulfillment"
+    group_label: "    Fulfilled Date"
+    description: "2021 adjusted week of year number for fulfilled date"
+    sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
+              when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
+              else date_part(weekofyear,${fulfilled_date::date}) end ;;
+  }
+
+  dimension: fulf_adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type:  number
+    label: "z - 2021 adj year"
+    view_label: "Fulfillment"
+    group_label: "    Fulfilled Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 2021 else ${fulfilled_year} end   ;;
+  }
+
 
   measure: last_updated_date_fulfilled {
     view_label: "Fulfillment"

@@ -462,14 +462,37 @@ view: sales_order_line_base {
   }
 
   dimension_group: created {
+    ## Scott Clark 1/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021.
     view_label: "Sales Order"
     label: "    Order"
     description:  "Time and date order was placed. Source: netsuite.sales_order_line"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
+  }
+
+  dimension: created_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
+              when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
+              else date_part(weekofyear,${created_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 2021 else ${created_year::number} end   ;;
   }
 
   measure: last_sync_date  {
