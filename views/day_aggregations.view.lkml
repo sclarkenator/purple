@@ -421,7 +421,7 @@ view: day_aggregations {
   ##Scott Clark, 1/8/21: Deleted week of year.
     label: "Created"
     type: time
-    timeframes: [date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql: to_timestamp_ntz(${date}) ;; }
