@@ -31,9 +31,14 @@ view: zendesk_ticket {
     sql: ${TABLE}."DESCRIPTION" ;;
   }
 
-  dimension: disposition {
+  dimension: primary_disposition {
     type: string
-    sql: ${TABLE}."DISPOSITION" ;;
+    sql: ${TABLE}."PRIMARY_DISPOSITION" ;;
+  }
+
+  dimension: secondary_disposition {
+    type: string
+    sql: ${TABLE}."SECONDARY_DISPOSITION" ;;
   }
 
   dimension: disposition_call {
@@ -44,6 +49,16 @@ view: zendesk_ticket {
   dimension: disposition_comments {
     type: string
     sql: ${TABLE}."DISPOSITION_COMMENTS" ;;
+  }
+
+  dimension: requester_role {
+    type: string
+    sql: ${TABLE}."REQUESTER_ROLE" ;;
+  }
+
+  dimension: product {
+    type: string
+    sql: ${TABLE}."PRODUCT" ;;
   }
 
   dimension: first_response_comment_order {
