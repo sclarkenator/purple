@@ -296,9 +296,9 @@ view: sales_order_line_base {
     sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
            WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
            WHEN date_trunc(week, ${TABLE}.Created::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Current Week LY'
-           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
+           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+           WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
            ELSE 'Other' END ;;
   }
 
@@ -332,14 +332,14 @@ view: sales_order_line_base {
   }
 
   dimension: current_day_filter{
+    ###Edited on 1/12/21 by Scott Clark to align week for Y/Y daily
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Current Day"
     #hidden:  yes
     description: "Yes/No for if the date is on the current day of week and week of the year (for each year). Source: netsuite.sales_order_line"
     type: yesno
-    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) and
-      EXTRACT(DOW FROM ${TABLE}.Created::date) = EXTRACT(DOW FROM current_date::date) ;;
+    sql: ${created_week_of_year} = ${current_week_of_year} + 1 and ${created_day_of_week} = ${current_day_of_week} ;;
   }
 
   dimension: current_week_filter{

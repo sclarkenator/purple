@@ -282,15 +282,40 @@ view: sales_order_line {
   }
 
   dimension_group: SLA_Target {
+    ## Scott Clark 1/8/21 Swapping out week of year
     label: "SLA Target"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${Due_Date}) ;;
   }
+
+  dimension: SLA_Target_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Fulfillment"
+    group_label: "SLA Target Date"
+    description: "2021 adjusted week of year number (SLA)"
+    sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
+              when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
+              else date_part(weekofyear,${SLA_Target_date::date}) end ;;
+  }
+
+  dimension: SLA_adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    view_label: "Fulfillment"
+    group_label: "SLA Target Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 2021 else ${SLA_Target_year::number} end   ;;
+  }
+
+
 
   dimension: SLA_Buckets {
     group_label: " Advanced"
@@ -1341,9 +1366,9 @@ view: sales_order_line {
     sql:  CASE WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, current_date) THEN 'Current Week'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) THEN 'Last Week'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -2, date_trunc(week, current_date)) THEN 'Two Weeks Ago'
-            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Current Week LY'
-            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
-            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
+            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
+            WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
             ELSE 'Other' END ;;
   }
 

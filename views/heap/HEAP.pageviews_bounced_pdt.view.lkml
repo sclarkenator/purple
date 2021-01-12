@@ -24,9 +24,10 @@ view: pageviews_bounced_pdt {
       label: "Session Time"
       description: "Time the Session Began"
       type: time
-      timeframes: [week,week_of_year]
+      timeframes: [week, week_of_year]
       sql: ${TABLE}.session_time_week ;;
     }
+
     dimension: session_time_year {
       description: "Time the Session Began"
       type: date_year
