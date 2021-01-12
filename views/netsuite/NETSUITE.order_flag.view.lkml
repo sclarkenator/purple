@@ -134,6 +134,8 @@ view: order_flag {
      ,case when lifeline > 0 then 1 else 0 end lifeline_flg
 --     ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
 
+     ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
+
     FROM(
       select sol.order_id
         ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
@@ -224,6 +226,9 @@ view: order_flag {
 
     -- For flagging an order based on UPT --
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
+
+    -- Buy More Save More --
+         ,sum(case when (category not in('MATTRESS','BASE') and PRODUCT_DESCRIPTION  not ilike '%harmony%') then ordered_qty else 0 end) bmsm
 
       from analytics.sales.sales_order_line sol
       left join analytics.sales.item on item.item_id = sol.item_id
@@ -1468,5 +1473,15 @@ view: order_flag {
     type:  yesno
     hidden: yes
     sql: ${TABLE}.big5_twoplush_sssheets_barb_flg = 1 ;; }
+
+  dimension: bmsm_flag {
+    group_label: "eComm Bundle Flags"
+    label: "Buy More Save More Tier"
+    description: "Indicates the Buy More Save More tier of an order (2, 3, 4+ or null). Source: looker.calculation"
+    type:  string
+    hidden: yes
+    sql: case when ${TABLE}.bmsm_flg = 2 then 'Tier 2'
+              when ${TABLE}.bmsm_flg = 3 then 'Tier 3'
+              when ${TABLE}.bmsm_flg > 3 then 'Tier 4+' else null end ;; }
 
 }
