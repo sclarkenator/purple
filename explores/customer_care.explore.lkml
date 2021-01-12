@@ -339,5 +339,4 @@ include: "/dashboards/**/*.dashboard"
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
   explore: v_zendesk_articles {hidden: yes}
-  explore: v_invalid_return_rma {hidden: yes}
-  explore: v_invalid_warranty_rma {hidden: yes}
+  explore: v_invalid_rma {hidden: yes group_label:"Customer Care" description: "Invalid RMA Finder for Emily Heise"}
