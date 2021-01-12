@@ -228,7 +228,7 @@ view: order_flag {
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
 
     -- Buy More Save More --
-         ,sum(case when (category not in('MATTRESS','BASE') and PRODUCT_DESCRIPTION  not ilike '%harmony%') then ordered_qty else 0 end) bmsm
+         ,sum(case when (category not in('MATTRESS','BASE')) then ordered_qty else 0 end) bmsm
 
       from analytics.sales.sales_order_line sol
       left join analytics.sales.item on item.item_id = sol.item_id
@@ -1477,7 +1477,7 @@ view: order_flag {
   dimension: bmsm_flag {
     group_label: "eComm Bundle Flags"
     label: "Buy More Save More Tier"
-    description: "Indicates the Buy More Save More tier of an order (2, 3, 4+ or null). Source: looker.calculation"
+    description: "Indicates the Buy More Save More tier of an order (2, 3, 4+ or null). Excludes mattress and base units. Source: looker.calculation"
     type:  string
     hidden: yes
     sql: case when ${TABLE}.bmsm_flg = 2 then 'Tier 2'
