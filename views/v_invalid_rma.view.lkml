@@ -2,10 +2,16 @@ view: v_invalid_rma {
   sql_table_name: "CUSTOMER_CARE"."V_INVALID_RMA"
     ;;
 
-  dimension: agent_name {
+  dimension: created_by {
     type: string
-    sql: ${TABLE}."AGENT_NAME" ;;
-    label: "Agent Name"
+    sql: ${TABLE}."CREATED_BY" ;;
+    label: "Created By"
+  }
+
+  dimension: assigned_to {
+    type: string
+    sql: ${TABLE}."ASSIGNED_TO" ;;
+    label: "Assigned To"
   }
 
   dimension: category {
@@ -110,6 +116,12 @@ view: v_invalid_rma {
     label: "Return/Warranty Reason"
   }
 
+  dimension: reason_other {
+    type: string
+    sql: ${TABLE}."REASON_OTHER" ;;
+    label: "Other Reason"
+  }
+
   dimension: return_reason_id {
     type: number
     sql: ${TABLE}."RETURN_REASON_ID" ;;
@@ -130,6 +142,6 @@ view: v_invalid_rma {
 
   measure: count {
     type: count
-    drill_fields: [agent_name]
+    drill_fields: [created_by]
   }
 }
