@@ -56,6 +56,11 @@ view: zendesk_ticket {
     sql: ${TABLE}."REQUESTER_ROLE" ;;
   }
 
+  dimension: submitter_role {
+    type: string
+    sql: ${TABLE}."SUBMITTER_ROLE" ;;
+  }
+
   dimension: product {
     type: string
     sql: ${TABLE}."PRODUCT" ;;
