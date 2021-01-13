@@ -1120,8 +1120,7 @@ view: sales_order_line_base {
   dimension_group: N_3PL_TRANSMITTED {
     hidden:  no
     view_label: "Fulfillment"
-    group_label: " Advanced"
-    label: "3PL Transmitted Date"
+    label: "3PL Transmitted"
     description: "Source: netsuite.sales_order_line"
     type: time
     timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
