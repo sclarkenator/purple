@@ -155,12 +155,12 @@ view: c3_conversion {
   measure: last_touch_sales{
     description: "Sales by the last touch"
     type: sum
-    sql: case when ${position_name} = 'CONVERTER' then ${sale_amount_dim} else 0 end ;;
+    sql: case when ${position_name} = 'CONVERTER' then ${TABLE}."SALE_AMOUNT" else 0 end ;;
   }
   measure: first_touch_sales{
     description: "Sales by the first touch"
     type: sum
-    sql: case when ${position_name} = 'ORIGINATOR' then ${sale_amount_dim} else 0 end ;;
+    sql: case when ${position_name} = 'ORIGINATOR' then ${TABLE}."SALE_AMOUNT" else 0 end ;;
   }
 
   measure: orders {
