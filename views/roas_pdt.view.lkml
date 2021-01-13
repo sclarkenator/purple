@@ -16,6 +16,7 @@ view: adspend_pdt {
       column: clicks {}
       filters: { field: daily_adspend.ad_date value: "2 years" }
       filters: { field: daily_adspend.Before_today value: "Yes" }
+      filters: {field: daily_adspend.country value: "US"}
     }
   }
   dimension: ad_date { type: date }
@@ -588,7 +589,7 @@ view: roas_pdt {
     label: "Adspend ($k)"
     description: "Total Adspend - beware filtering by non adspend fields"
     type: sum
-    value_format: "[>=1000000]$0.00,,\"M\"; [>=1000]$0.00,\" K\" ; $##0.00"
+   value_format: "[>=1000000]$0.00,,\"M\"; [>=1000]$0.00,\" K\" ; $##0.00"
     sql: ${TABLE}.adspend ;;
   }
 
