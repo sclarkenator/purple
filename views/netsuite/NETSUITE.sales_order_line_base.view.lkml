@@ -1098,15 +1098,35 @@ view: sales_order_line_base {
   }
 
   dimension: IS_3PL_TRANSMIT_SUCCESS {
-    hidden: yes
+    hidden: no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "3PL Transmitted Success"
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.IS_3PL_TRANSMIT_SUCCESS;;
   }
 
   dimension: TRANSMITTED_TO_ID {
-    hidden: yes
+    hidden: no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "3PL Transmitted To ID"
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.TRANSMITTED_TO_ID;;
+  }
+
+  dimension_group: N_3PL_TRANSMITTED {
+    hidden:  no
+    view_label: "Fulfillment"
+    label: "3PL Transmitted"
+    description: "Source: netsuite.sales_order_line"
+    type: time
+    timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.N_3PL_TRANSMITTED ;;
   }
 
     measure: kit_total_units {
