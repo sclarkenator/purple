@@ -2,6 +2,12 @@ view: customer_satisfaction_survey {
   sql_table_name: ANALYTICS.CUSTOMER_CARE.CUSTOMER_SATISFACTION_SURVEY
     ;;
 
+  dimension: pk {
+    primary_key: yes
+    type: string
+    sql: ${survey_id}||${agent_id} ;;
+  }
+
   dimension_group: created {
     description: "When the CSAT survey was sent to the customer. Source: stella_connect.customer_satisfaction_survey"
     type: time
