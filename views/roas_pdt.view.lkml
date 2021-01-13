@@ -388,6 +388,7 @@ view: roas_pdt {
         or ${TABLE}.campaign_name ilike 'prospecting'
         or ${TABLE}.campaign_name ilike '%=pt'
         or ${platform} in ('tv','ir')
+        or ${medium} in ('af')
           then 'Prospecting'
         when ${TABLE}.campaign_type in ('rt','RETARGETING', 'Retargeting') or
           left(${TABLE}.campaign_type,2) = 'rt'
