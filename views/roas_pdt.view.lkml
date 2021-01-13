@@ -381,11 +381,18 @@ view: roas_pdt {
     description: "Transforming the data from each system to match a single format"
     type: string
     sql:
-      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING','Prospecting') or
+      case when ${TABLE}.campaign_type in ('pt','PRSOPECTING','PROSPECTING','Prospecting','prospecting') or
         left(${TABLE}.campaign_type,2) = 'pt'
+        or ${TABLE}.campaign_type = 'lg'
+        or ${TABLE}.campaign_type = 'prosp'
+        or ${TABLE}.campaign_name ilike 'prospecting'
+        or ${TABLE}.campaign_name ilike '%=pt'
+        or ${platform} in ('tv','ir')
           then 'Prospecting'
         when ${TABLE}.campaign_type in ('rt','RETARGETING', 'Retargeting') or
           left(${TABLE}.campaign_type,2) = 'rt'
+          or ${TABLE}.campaign_type = 're'
+          or ${TABLE}.campaign_name ilike 'retargeting'
           then 'Retargeting'
         when ${TABLE}.campaign_type in ('br','BRAND','Brand') or
           left(${TABLE}.campaign_type,2) = 'br'
