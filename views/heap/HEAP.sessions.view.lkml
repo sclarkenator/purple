@@ -238,11 +238,33 @@ view: sessions {
     sql: ${TABLE}.search_keyword ;; }
 
   dimension_group: time {
+    ### Scott Clark 1/13/21: Deleted week_of_year. need to reverse this last week of 2021
     group_label: "  Session Time"
     description: "Source: HEAP.sessions"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
     sql: ${TABLE}.time ;; }
+
+  dimension: time_week_of_year {
+    ## Scott Clark 1/13/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type:  number
+    label: "Week of Year"
+    group_label: "  Session Time"
+    description: "2021 adjusted week of year number"
+    sql: case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 1
+              when ${time_year::number}=2021 then date_part(weekofyear,${time_date::date}) + 1
+              else date_part(weekofyear,${time_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/13/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    group_label: "  Session Time"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 2021 else ${time_year::number} end   ;;
+  }
+
 
   dimension_group: current_date_sessions {
     view_label: "Sessions"
