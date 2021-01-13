@@ -127,8 +127,8 @@ view: c3_conversion {
     sql: ${TABLE}."REFERRING_ID" ;;
   }
 
-  dimension: sale_amount_dim {
-    type: number
+  measure: sale_amount_dim {
+    type: sum
     sql: ${TABLE}."SALE_AMOUNT" ;;
   }
 
