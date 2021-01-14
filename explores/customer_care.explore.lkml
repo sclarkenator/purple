@@ -234,7 +234,7 @@ include: "/dashboards/**/*.dashboard"
     join: agent_evaluation {
       type: full_outer
       sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
-      relationship: one_to_one}
+      relationship: one_to_many}
     join: rpt_agent_stats {
       type: full_outer
       sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
