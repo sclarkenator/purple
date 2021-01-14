@@ -75,6 +75,7 @@ view: customer_satisfaction_survey {
     label: "FCR Resolved"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
     type: sum
+    sql_distinct_key: ${pk} ;;
     sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
   }
 
