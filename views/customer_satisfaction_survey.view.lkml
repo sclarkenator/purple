@@ -204,7 +204,8 @@ view: customer_satisfaction_survey {
   }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${pk} ;;
     drill_fields: [agent_name, customer_name]
   }
 }
