@@ -160,7 +160,7 @@ view: customer_satisfaction_survey {
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: count_distinct
     sql_distinct_key: ${pk} ;;
-    sql:  ${TABLE}."STAR_RATING" is not null ;;
+    sql:  case when ${TABLE}."STAR_RATING" is not null then ${pk} end;;
   }
 
   measure: avg_star_rating {
