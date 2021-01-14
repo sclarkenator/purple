@@ -66,6 +66,32 @@ view: zendesk_ticket {
     sql: ${TABLE}."PRODUCT" ;;
   }
 
+  # Added by Mason Fuller on 1/14/2021 to clean the product field. The product field is a listagg.
+  dimension: product_clean {
+    type: string
+    sql: case
+      when ${TABLE}."PRODUCT" like '%blanket%' then 'blanket'
+      when ${TABLE}."PRODUCT" like '%cover%' then 'cover'
+      when ${TABLE}."PRODUCT" like '%duvet%' then 'duvet'
+      when ${TABLE}."PRODUCT" like '%egift_card%' then 'egift_card'
+      when ${TABLE}."PRODUCT" like '%eye_mask%' then 'eye_mask'
+      when ${TABLE}."PRODUCT" like '%face_mask%' then 'face_mask'
+      when ${TABLE}."PRODUCT" like '%mattress%' then 'mattress'
+      when ${TABLE}."PRODUCT" like '%no_product_discussed%' then 'no_product_discussed'
+      when ${TABLE}."PRODUCT" like '%pajamas%' then 'pajamas'
+      when ${TABLE}."PRODUCT" like '%petbed%' then 'petbed'
+      when ${TABLE}."PRODUCT" like '%pillow%' then 'pillow'
+      when ${TABLE}."PRODUCT" like '%pillow_case%' then 'pillow_case'
+      when ${TABLE}."PRODUCT" like '%platform_bases%' then 'platform_bases'
+      when ${TABLE}."PRODUCT" like '%platform_stabilization_kit%' then 'platform_stabilization_kit'
+      when ${TABLE}."PRODUCT" like '%powerbase%' then 'powerbase'
+      when ${TABLE}."PRODUCT" like '%protector%' then 'protector'
+      when ${TABLE}."PRODUCT" like '%seat_cushion%' then 'seat_cushion'
+      when ${TABLE}."PRODUCT" like '%sheets%' then 'sheets'
+      when ${TABLE}."PRODUCT" like '%squishy%' then 'squishy'
+      end ;;
+  }
+
   dimension: first_response_comment_order {
     type: number
     sql: ${TABLE}."FIRST_RESPONSE_COMMENT_ORDER" ;;
