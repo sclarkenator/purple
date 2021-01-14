@@ -1020,6 +1020,15 @@ view: sales_order_line_base {
     sql: ${TABLE}.STATE ;;
   }
 
+  dimension: cntry {
+    view_label: "Customer"
+    group_label: "  Customer Address"
+    description: "Source: netsuite.sales_order_line"
+    label: "Country"
+    type: string
+    sql: ${TABLE}.COUNTRY ;;
+  }
+
   dimension: zip {
     view_label: "Customer"
     group_label: "  Customer Address"
