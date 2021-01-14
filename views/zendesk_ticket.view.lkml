@@ -12,6 +12,7 @@ view: zendesk_ticket {
     sql: ${TABLE}."ASSIGNEE_ID" ;;
   }
 
+  # Mason Fuller on 1/14/2021 - Adding month_name
   dimension_group: created {
     type: time
     timeframes: [
@@ -20,6 +21,7 @@ view: zendesk_ticket {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
