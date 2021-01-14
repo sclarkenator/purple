@@ -74,9 +74,8 @@ view: customer_satisfaction_survey {
   measure: issue_resolved_count {
     label: "FCR Resolved"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
-    type: sum
-    sql_distinct_key: ${pk} ;;
-    sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
+    type: count_distinct
+    sql:case when ${issue_resolved} = 'true' then ${pk} end ;;
   }
 
   measure: issue_resolved_total {
