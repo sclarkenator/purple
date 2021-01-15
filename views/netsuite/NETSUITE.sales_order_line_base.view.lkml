@@ -355,7 +355,7 @@ view: sales_order_line_base {
     #hidden:  yes
     description: "Yes/No for if the date is on the current day of week and week of the year (for each year). Source: netsuite.sales_order_line"
     type: yesno
-    sql: ${created_week_of_year} = ${current_week_of_year} + 1 and ${created_day_of_week} = ${current_day_of_week} ;;
+    sql: ${created_week_of_year} = ${current_week_of_year} and ${created_day_of_week} = ${current_day_of_week} ;;
   }
 
   dimension: current_week_filter{
@@ -366,7 +366,7 @@ view: sales_order_line_base {
     #hidden:  yes
     description: "Yes/No for if the date is in the current week of the year (for each year). Source: netsuite.sales_order_line"
     type: yesno
-    sql: ${created_week_of_year} = ${current_week_of_year} +1  ;;
+    sql: ${created_week_of_year} = ${current_week_of_year}  ;;
   }
 
   dimension: current_month_filter{
