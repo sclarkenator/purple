@@ -291,6 +291,7 @@ view: sales_order_line_base {
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Week Bucket Old"
+    hidden: yes
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
     sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
