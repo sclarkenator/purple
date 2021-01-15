@@ -287,10 +287,10 @@ view: sales_order_line_base {
     sql: ${TABLE}.Created < current_date;;
   }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     view_label: "Sales Order"
     group_label: "    Order Date"
-    label: "z - Week Bucket"
+    label: "z - Week Bucket Old"
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
     sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -299,6 +299,21 @@ view: sales_order_line_base {
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;
+  }
+
+  dimension: week_bucket{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
+    type: string
+    sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
            ELSE 'Other' END ;;
   }
 
@@ -599,11 +614,23 @@ view: sales_order_line_base {
     label: "    Current"
     description:  "Current Time/Date for calculations. Source: looker.calculation"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: current_date ;;
   }
+
+  dimension: current_week_of_year {
+    ## Jared Dyer 1/14/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "    Current Week of Year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "2021 adjusted - current week of year number"
+    sql: case when ${current_year::number}=2021 then date_part(weekofyear,${current_date}::date) + 1
+    else date_part(weekofyear,${current_date::date}) end;;
+  }
+
 
   dimension: before_day_of_year {
     hidden: yes
