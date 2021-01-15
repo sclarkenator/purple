@@ -337,9 +337,10 @@ view: sessions {
     type: yesno
     sql:  date_trunc(week, ${TABLE}.time::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     group_label: "  Session Time"
     label: "z - Week Bucket"
+    hidden: yes
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
     type: string
      sql:  CASE WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -349,6 +350,20 @@ view: sessions {
              WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
              WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
+
+  dimension: week_bucket{
+    group_label: "  Session Time"
+    label: "z - Week Bucket"
+    hidden: no
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
+    type: string
+    sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) +1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;}
 
   dimension: user_id {
     type: number
