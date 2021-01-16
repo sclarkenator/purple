@@ -498,9 +498,10 @@ view: day_aggregations {
     type: string
     sql: to_char( ${TABLE}.week_start_2020,'MON-DD');; }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     group_label: "Created Date"
     label: "z - Week Bucket"
+    hidden:  yes
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
      sql:  CASE WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -510,6 +511,19 @@ view: day_aggregations {
              WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Last Week LY'
              WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
+
+  dimension: week_bucket{
+    group_label: "Created Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+     sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END;; }
 
   dimension_group: current {
     label: "Current"
