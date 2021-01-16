@@ -80,7 +80,7 @@ view: inventory_snap {
     type: number
     label: "Inventory Snap Week of Year"
     description: "2021 adjusted week of year number"
-    sql: case when ${created_date}::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
+    sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
               when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
               else date_part(weekofyear,${created_date::date}) end ;;}
 
@@ -110,7 +110,7 @@ view: inventory_snap {
             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;; }
+            ELSE 'Other' END ;; }
 
 
   measure: inbound {

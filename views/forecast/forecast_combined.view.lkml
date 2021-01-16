@@ -16,9 +16,9 @@ sql_table_name: sales.forecast ;;
     type: number
     label: "Forecast Week of Year"
     description: "2021 adjusted week of year number"
-    sql: case when ${date_date}::date} >= '2020-12-28' and ${date_date}::date} <= '2021-01-03' then 1
-              when ${date_year}::number}=2021 then date_part(weekofyear,${date_date}::date}) + 1
-              else date_part(weekofyear,${date_date}::date}) end ;;
+    sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
+              when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
+              else date_part(weekofyear,${date_date::date}) end ;;
   }
 
 
