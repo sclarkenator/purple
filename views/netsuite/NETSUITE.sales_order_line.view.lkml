@@ -1357,7 +1357,7 @@ view: sales_order_line {
     sql:  date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
 
-  dimension: week_bucket_ff{
+  dimension: week_bucket_ff_old{
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Week Bucket"
@@ -1369,8 +1369,21 @@ view: sales_order_line {
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
-            ELSE 'Other' END ;;
-  }
+            ELSE 'Other' END ;;}
+
+  dimension: week_bucket_ff{
+    group_label: "    Fulfilled Date"
+    view_label: "Fulfillment"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker.calculation"
+    type: string
+    sql:  CASE WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${fulfilled_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) AND ${fulfilled_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) -1 AND ${fulfilled_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) +1 AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) -1 AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;}
 
   measure: return_rate_units {
     group_label: "Return Rates"
