@@ -401,9 +401,17 @@ view: sales_order {
     sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
 
   dimension: recycle_fee_amt {
-    hidden:yes
+    label: "Recycle Fee"
+    group_label: " Advanced"
+    description: "The mattress recycle fee that applied to this order, or 0 if no fee applied."
     type: number
     sql: ${TABLE}.RECYCLE_FEE_AMT ;; }
+
+  dimension: has_recycle_fee {
+    label: "     * Has Recycle Fee"
+    description: "Does this order have a mattress recycle fee?"
+    type: yesno
+    sql: coalesce(${TABLE}.RECYCLE_FEE_AMT,0) > 0 ;; }
 
   dimension: related_tranid {
     group_label: " Advanced"
