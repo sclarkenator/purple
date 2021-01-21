@@ -75,6 +75,7 @@ view: sales_pdt {
       column: new_customer {field: first_order_flag.new_customer}
       column: repeat_customer {field: first_order_flag.repeat_customer}
       column: payment_method {field: sales_order.payment_method}
+      column: order_id { field: sales_order.order_id }
       filters: { field: sales_order_line_base.created_date value: "2 years" }
     }
   }
@@ -88,6 +89,7 @@ view: sales_pdt {
   dimension: new_customer {type: number}
   dimension: repeat_customer {type: number}
   dimension: payment_method {type: string}
+  dimension: order_id {type: string}
 
 }
 
@@ -134,6 +136,7 @@ view: c3_cohort_pdt{
       column: attribution {}
       column: converter {}
       column: orders {}
+      column: order_id {}
     }
   }
   dimension: position_created_date {type: date}
@@ -144,7 +147,7 @@ view: c3_cohort_pdt{
   dimension: attribution {type: number}
   dimension: converter {type: number}
   dimension: orders {type: number}
-
+  dimension: order_id {type: string}
 }
 
 ######################################################
@@ -166,6 +169,7 @@ view: c3_trended_pdt{
       column: attribution {}
       column: converter {}
       column: orders {}
+      column: order_id {}
     }
   }
   dimension: order_created_date {type: date}
@@ -179,6 +183,7 @@ view: c3_trended_pdt{
   dimension: first_touch_sales {type:number}
   dimension: last_touch_sales {type:number}
   dimension: influenced {type:number}
+  dimension: order_id {type: string}
 }
 
 ######################################################
@@ -192,7 +197,10 @@ view: roas_pdt {
       , ad_date as date
       , campaign_type
       , spend_platform as platform
-      , medium, campaign_name, campaign_id
+      , medium
+      , null as order_id
+      , campaign_name
+      , campaign_id
       , adspend_raw as adspend
       , impressions
       , clicks
@@ -217,6 +225,7 @@ view: roas_pdt {
       , utm_term
       , utm_source
       , utm_medium
+      , null as order_id
       , utm_campaign
       , utm_campaign as campaign_id
       , null as aspend
@@ -243,6 +252,7 @@ view: roas_pdt {
       , utm_term
       , utm_source
       , utm_medium
+      , order_id::string
       , utm_campaign
       , null as campaign_id
       , null as aspend
@@ -269,6 +279,7 @@ view: roas_pdt {
       , CAMPAIGN_TYPE
       , PLATFORM
       , medium
+      , null as order_id
       , CAMPAIGN_NAME
       , null as campaign_id
       , null as aspend
@@ -295,6 +306,7 @@ view: roas_pdt {
       , campaign_type_clean
       , Platform_clean
       , medium_clean
+      , order_id::string
       , Campaign
       , null as campaign_id
       , null as aspend
@@ -321,6 +333,7 @@ view: roas_pdt {
       , campaign_type_clean
       , Platform_clean
       , medium_clean
+      , order_id::string
       , Campaign
       , null as campaign_id
       , null as aspend
@@ -366,6 +379,11 @@ view: roas_pdt {
     description: "Which data source it's coming from"
     type: string
     sql: ${TABLE}.source ;;
+  }
+
+  dimension: order_id {
+   type: string
+   sql: ${TABLE}.order_id ;;
   }
 
   dimension: campaign_type {
