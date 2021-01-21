@@ -28,7 +28,7 @@ view: hotjar_data {
     timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.created ;;  }
+    sql: to_date(${TABLE}.created) ;;  }
 
   dimension: Before_today{
     group_label: "Created Date"
