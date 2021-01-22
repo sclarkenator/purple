@@ -206,3 +206,4 @@ explore: forecast_compared_to_actual_sales {
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
   explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedited Shipping"}
+  explore: ai_transaction {hidden:yes group_label: "Operations"}
