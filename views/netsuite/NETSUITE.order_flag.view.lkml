@@ -681,6 +681,18 @@ view: order_flag {
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
+##  measure: average_attached_accessory_value{
+##    label: "AAAV ($)"
+##    view_label: "Sales Order"
+##    hidden: yes
+##    description: "Average amount of attached accessories (non-mattress sales from mattress orders), excluding tax. Source:looker.calculation"
+##    type: average
+##    sql_distinct_key: ${sales_order.order_system} ;;
+##    value_format: "$#,##0"
+##    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt}-${mattress_sales} end ;;
+##  } mattress sales from sol
+
+
 #  adding for ecommerce categories and same update
   measure: ultimate_cushion_orders {
     group_label: "Total Orders with:"
