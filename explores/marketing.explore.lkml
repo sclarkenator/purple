@@ -218,6 +218,24 @@ explore: email_mymove_contact {
     }
   }
 
+  explore: talkable_referral {hidden: yes
+    join: sales_order {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order.related_tranid} = ${talkable_referral.order_number} ;;
+    }
+    join: sales_order_line_base {
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id}
+        and ${sales_order_line_base.system} = ${sales_order.system};;
+    }
+    join: item {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
+    }
+  }
   explore: fb_attribution { hidden: yes}
   explore: fb_attribution_v2 { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}
