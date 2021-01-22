@@ -446,12 +446,14 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('am','amazon','amazon aap','amazon kindle','amazon media','amazon media group','amazon+aap','amazon-hsa','amazon-sp','amg')
           then 'Amazon'
         when lower(${TABLE}.platform)  in ('al','adlingo') then 'Adlingo'
+         when lower(${TABLE}.platform)  in ('agility') then 'Agility'
         when lower(${TABLE}.platform)  in ('adme','admedia') then 'Admedia'
         when lower(${TABLE}.platform)  in ('ash') then 'AsherMedia'
         when lower(${TABLE}.platform)  in ('bra','brave') then 'BRAVE'
         when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
-        when lower(${TABLE}.platform)  in ('co','cordless') then 'Cordless'
+        when lower(${TABLE}.platform)  in ('cor','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
+        when lower(${TABLE}.platform)  in ('couponbytes') then 'Couponbytes'
         when lower(${TABLE}.platform)  in ('dv360') then 'DV360'
         when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
         when lower(${TABLE}.platform)  in ('em','email') then 'Email'
@@ -465,6 +467,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('fkl','findkeeplove') then 'FKL'
         when lower(${TABLE}.platform)  in ('goop') then 'Goop'
         when lower(${TABLE}.platform)  in ('linkedin', 'li') then 'LinkedIn'
+        when lower(${TABLE}.platform)  in ('meredith') then 'Meredith'
         when lower(${TABLE}.platform)  in ('madrivo') then 'Madrivo'
         when lower(${TABLE}.platform)  in ('adwallet') then 'Adwallet'
         when lower(${TABLE}.platform)  in ('liveintent') then 'Liveintent'
@@ -480,6 +483,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('sn','snapchat') then 'Snapchat'
         when lower(${TABLE}.platform)  in ('ta','talkable') then 'Talkable'
         when lower(${TABLE}.platform)  in ('tab','taboola') then 'Taboola'
+         when lower(${TABLE}.platform)  in ('twitter, tw') then 'Twitter'
         when lower(${TABLE}.platform)  in ('veritone','vr', 'radio','streaming', 'podcast') then 'Veritone'
         when lower(${TABLE}.platform)  in ('verizon media''yahoo','oa','oath','vrz') then 'Verizon Media'
         when lower(${TABLE}.platform)  in ('reddit','reddit.com') then 'Reddit'
@@ -585,25 +589,28 @@ view: roas_pdt {
       case
       when lower(${TABLE}.medium) in ('au','radio','streaming','radio', 'audio', 'podcast')
       or lower(${TABLE}.platform) in ('radio','streaming','podcast','veritone')then 'Audio'
-      when lower(${TABLE}.medium) in ('affiliate','af','referral','rf', 'affiliatedisplay', 'affiliatie')
+      when lower(${TABLE}.medium) in ('affiliate','af', 'affiliatedisplay', 'affiliatie')
       or lower(${TABLE}.platform) in ('couponbytes', 'rk', 'affiliate') then 'Affiliate'
-      when lower(${TABLE}.medium) in ('crm','em', 'email','traditional','sms','tx','print','ir')
+      when lower(${TABLE}.medium) in ('crm','em', 'email','sms','tx','print','ir')
       or lower(${TABLE}.platform) in ('ta','talkable') then 'CRM'
       when lower(${TABLE}.medium) in ('ctv')
       or lower(${TABLE}.platform) in ('ctv') then 'CTV'
-      when lower(${TABLE}.medium) in ('display','ds')
+      when lower(${TABLE}.medium) in ('ds')
+      or lower(${TABLE}.platform) in ('zeta')
       or (lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds'))
-      or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
+      or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null) then 'Display'
       when lower(${TABLE}.medium) in ('crm','em', 'email')
       or lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email', 'fkl', 'findkeeplove') then 'Lead Gen'
       when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
       when lower(${TABLE}.medium) in ('organic')
-      or lower(${TABLE}.medium) is null then 'Organic'
+      or lower(${TABLE}.medium) is null and lower(${TABLE}.platform) is null then 'Organic'
       when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
       when lower(${TABLE}.medium) in ('social','so','facebook','paid social', 'paidsocial', 'organic social', 'social ads')
       and lower(${TABLE}.platform) in ('facebook','fb') then 'Social'
       when lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter', 'quora', 'twitter') then 'Social Growth'
-      when lower(${TABLE}.medium) in ('tv','cinema','linear') or  lower(${TABLE}.platform) in ('tv') then 'TV'
+      when lower(${TABLE}.medium) in ('tv','cinema','linear') or lower(${TABLE}.platform) in ('tv')
+      or (lower(${TABLE}.medium) in ('traditional') and lower(${TABLE}.platform) in ('tv'))
+      or (lower(${TABLE}.medium) in ('traditional') and lower(${TABLE}.platform) in ('ocean media')) then 'TV'
       when lower(${TABLE}.medium) in ('sh','feed','shopping','PLA','pla') then 'PLA'
       when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
       'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
