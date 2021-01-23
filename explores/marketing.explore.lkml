@@ -222,7 +222,7 @@ explore: email_mymove_contact {
     join: sales_order {
       type: left_outer
       relationship: one_to_one
-      sql_on: ${sales_order.related_tranid} = ${talkable_referral.order_number} ;;
+      sql_on: ${sales_order.email} = ${talkable_referral.referred_email} ;;
     }
     join: sales_order_line_base {
       type: left_outer
@@ -235,7 +235,13 @@ explore: email_mymove_contact {
       relationship: many_to_one
       sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
     }
+    join: customer_table {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${sales_order.customer_id} = ${customer_table.customer_id} ;;
+    }
   }
+
   explore: fb_attribution { hidden: yes}
   explore: fb_attribution_v2 { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}
