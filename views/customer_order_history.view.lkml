@@ -24,7 +24,7 @@ group by 1
 
    dimension: lifetime_orders {
     view_label: "Customer"
-    label: "# of Orders"
+    label: "# of Lifetime Orders"
     group_label: " Advanced"
     description: "The total number of non-zero-dollar orders for each customer. Source: looker.calculation"
     type: string

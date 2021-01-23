@@ -63,6 +63,7 @@ view: dispatch {
   }
 
   dimension_group: dispatched {
+    hidden: no
     description: "Source: l2l.dispatch"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
@@ -122,6 +123,7 @@ view: dispatch {
   }
 
   measure: downtime_minutes {
+    hidden: no
     type: sum
     description: "Source: l2l.dispatch"
     value_format: "#,##0"
@@ -129,6 +131,7 @@ view: dispatch {
   }
 
   measure: downtime_hours {
+    hidden: no
     type: sum
     description: "Source: Looker Calculation"
     value_format: "#,##0"
@@ -136,6 +139,7 @@ view: dispatch {
   }
 
   measure: dispatch_occurences {
+    hidden: no
     type: count_distinct
     description: "Source: Looker Calculation"
     sql: ${dispatch_number} ;;
