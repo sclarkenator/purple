@@ -129,6 +129,7 @@ view: c3_cohort_pdt{
   derived_table: {
     explore_source: c3 {
       column: position_created_date {}
+      column: position_created_raw {}
       column: campaign_type_clean {}
       column: Platform_clean {}
       column: medium_clean {}
@@ -140,6 +141,7 @@ view: c3_cohort_pdt{
     }
   }
   dimension: position_created_date {type: date}
+  dimension: position_created_raw {type: date_time}
   dimension: campaign_type_clean {type: string}
   dimension: Platform_clean {type: string}
   dimension: medium_clean {type: string}
@@ -195,6 +197,7 @@ view: roas_pdt {
     sql:
     select 'adspend' as source
       , ad_date as date
+      , null as position_time
       , campaign_type
       , spend_platform as platform
       , medium
@@ -222,6 +225,7 @@ view: roas_pdt {
     union all
     select 'sessions' as source
       , time_date
+      , null as position_time
       , utm_term
       , utm_source
       , utm_medium
@@ -249,6 +253,7 @@ view: roas_pdt {
     union all
     select 'sales' as source
       , created_date
+      , null as position_time
       , utm_term
       , utm_source
       , utm_medium
@@ -276,6 +281,7 @@ view: roas_pdt {
     union all
     select 'c3' as source
       , SPEND_DATE_date
+      , null as position_time
       , CAMPAIGN_TYPE
       , PLATFORM
       , medium
@@ -303,6 +309,7 @@ view: roas_pdt {
    union all
     select 'c3 cohort' as source
       , position_created_date
+      , position_created_raw as position_time
       , campaign_type_clean
       , Platform_clean
       , medium_clean
@@ -330,6 +337,7 @@ view: roas_pdt {
   union all
     select 'c3 trended' as source
       , order_created_date
+      , null as position_time
       , campaign_type_clean
       , Platform_clean
       , medium_clean
@@ -362,6 +370,12 @@ view: roas_pdt {
     type: date
     hidden:yes
     sql: ${TABLE}.date ;;
+  }
+
+  dimension: position_time {
+    type: date_time
+    hidden: yes
+    sql: ${TABLE}.position_time ;;
   }
 
   dimension_group: date {
