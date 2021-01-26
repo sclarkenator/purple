@@ -190,6 +190,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
     WHEN CONTAINS(${network_groupname},'chatbot') then 'Chatbot'
     WHEN CONTAINS(${network_groupname},'duckduck') then 'DuckDuckGo'
+    WHEN CONTAINS(${network_groupname},'DV360') then 'DV360'
     WHEN CONTAINS(${network_groupname},'ebay') then 'Ebay'
     WHEN CONTAINS(${network_groupname},'email') then 'Email'
     WHEN CONTAINS(${network_groupname},'exponential') then 'VDX'
@@ -245,10 +246,10 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'uncategorized') then 'Uncategorized'
     WHEN CONTAINS(${network_groupname},'waze') then 'Waze'
     WHEN CONTAINS(${network_groupname},'yahoo')
-    OR CONTAINS(${network_groupname},'verizon media')
+    OR CONTAINS (lower(${network_groupname}),'verizon media')
     OR CONTAINS(${network_groupname},'verizonmedia')
     OR CONTAINS(${group_name},'Native')
-    OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Yahoo'
+    OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Verizon Media'
     WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
     WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
