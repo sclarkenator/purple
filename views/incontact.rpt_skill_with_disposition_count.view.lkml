@@ -43,7 +43,7 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     hidden: no
-    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30]
+    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30, month_name]
     sql: ${TABLE}."CONTACTED" ;;
   }
 
