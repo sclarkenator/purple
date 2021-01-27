@@ -1452,7 +1452,7 @@ view: sales_order_line {
     label: "Order to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the order date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1464,7 +1464,7 @@ view: sales_order_line {
     label: "Transmitted to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the transmitted date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1476,7 +1476,7 @@ view: sales_order_line {
     label: "Transmitted to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the transmitted date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1488,7 +1488,7 @@ view: sales_order_line {
     label: "Order to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the order date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1500,7 +1500,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the left purple date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
