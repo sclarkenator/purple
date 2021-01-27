@@ -498,7 +498,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('tab','taboola') then 'Taboola'
          when lower(${TABLE}.platform)  in ('twitter, tw') then 'Twitter'
         when lower(${TABLE}.platform)  in ('veritone','vr', 'radio','streaming', 'podcast') then 'Veritone'
-        when lower(${TABLE}.platform)  in ('verizon media''yahoo','oa','oath','vrz') then 'Verizon Media'
+        when lower(${TABLE}.platform)  in ('verizon media','yahoo','oa','oath','vrz') then 'Verizon Media'
         when lower(${TABLE}.platform)  in ('reddit','reddit.com') then 'Reddit'
         when lower(${TABLE}.platform)  in ('rakuten','rk', 'affiliate') then 'Rakuten'
         when lower(${TABLE}.platform)  in ('postie') then 'Postie'
