@@ -577,7 +577,7 @@ view: roas_pdt {
       or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
        when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
       or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming', 'veritone') then 'Traditional'
-      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
+      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') or (lower(${TABLE}.medium) = 'feed' and lower(${TABLE}.platform) = 'oa')  then 'Search'
       when lower(${TABLE}.medium) in ('sh','feed','shopping','PLA','pla') then 'PLA'
       when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
       'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
@@ -586,8 +586,7 @@ view: roas_pdt {
       or lower(${TABLE}.platform) in ('youtube')
       then 'Video'
       when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
-      when lower(${TABLE}.medium) in ('organic')
-      or lower(${TABLE}.medium) is null then 'Organic'
+      when (${TABLE}.medium is null and ${TABLE}.platform is null) then 'Organic/Direct'
       else 'Other' end
       ;;
   }

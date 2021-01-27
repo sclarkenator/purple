@@ -274,6 +274,7 @@ view: c3_conversion {
     or CONTAINS(${group_name},'DV360 Display') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'PLA'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
+    WHEN CONTAINS(${group_name},'seo-') then 'Organic/Direct'
     WHEN CONTAINS(${group_name},'Social')
     and not CONTAINS(lower(${network_name}) ,'yelp') then 'Social'
     WHEN CONTAINS(${group_name},'Radio')
