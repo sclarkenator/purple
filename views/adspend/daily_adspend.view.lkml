@@ -380,7 +380,7 @@ dimension: spend_platform {
       when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "crm" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: (${campaign_name} ilike '%ative%' and not ${spend_platform} = 'ADMARKETPLACE') or ${campaign_name} ilike 'nt_%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
+      when: {sql: ${TABLE}.source in ('DISPLAY')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%' and ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
