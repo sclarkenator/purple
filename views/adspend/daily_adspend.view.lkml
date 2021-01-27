@@ -378,7 +378,7 @@ dimension: spend_platform {
       when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE')  or ${source} in ('AFFILIATE');; label: "affiliate" }
       when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM') ;; label: "audio" }
       when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "crm" }
-      when: {sql: ${campaign_name} ilike '%ative%' or ${campaign_name} ilike 'nt_%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+      when: {sql: (${campaign_name} ilike '%ative%' and not ${spend_platform} = 'ADMARKETPLACE') or ${campaign_name} ilike 'nt_%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
         or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%' and ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
