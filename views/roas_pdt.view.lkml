@@ -454,7 +454,6 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('cor','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
         when lower(${TABLE}.platform)  in ('couponbytes') then 'Couponbytes'
-        when lower(${TABLE}.platform)  in ('dv360') then 'DV360'
         when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
         when lower(${TABLE}.platform)  in ('em','email') then 'Email'
         when lower(${TABLE}.platform)  in ('korte') then 'Korte'
@@ -478,7 +477,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('facebook','fb','ig','igshopping','instagram','fb/ig') then 'FB/IG'
         when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
         or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when lower(${TABLE}.platform)  in ('go','google') then 'Google'
+        when lower(${TABLE}.platform)  in ('go','google','dv360') then 'Google'
         when lower(${TABLE}.platform)  in ('pinterest','pinterestk','pt') then 'Pinterest'
         when lower(${TABLE}.platform)  in ('sn','snapchat') then 'Snapchat'
         when lower(${TABLE}.platform)  in ('ta','talkable') then 'Talkable'
