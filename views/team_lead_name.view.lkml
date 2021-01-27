@@ -32,6 +32,12 @@ view: team_lead_name {
     sql: ${TABLE}."TEAM_NAME" ;;
   }
 
+  dimension: team_email {
+    type:  string
+    description: "From Team Lead"
+    sql: ${TABLE}.team_email ;;
+  }
+
   dimension: agent_Name {
     type:  string
     hidden: yes
