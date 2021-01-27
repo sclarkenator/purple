@@ -489,9 +489,8 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('ir', 'impact radius') then 'Impact Radius'
         when lower(${TABLE}.platform)  in ('ex','exponential','vdx') then 'VDX'
         when lower(${TABLE}.platform)  in ('facebook','fb','ig','igshopping','instagram','fb/ig') then 'FB/IG'
-        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
-        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when lower(${TABLE}.platform)  in ('go','gon','google','dv360') then 'Google'
+        when lower(${TABLE}.platform)  in ('go','gon','google','dv360')
+        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'Google'
         when lower(${TABLE}.platform)  in ('pinterest','pinterestk','pt') then 'Pinterest'
         when lower(${TABLE}.platform)  in ('sn','snapchat') then 'Snapchat'
         when lower(${TABLE}.platform)  in ('ta','talkable') then 'Talkable'
@@ -513,8 +512,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('tiktok','tk') then 'TikTok'
         when lower(${TABLE}.platform)  in ('waze', 'wa') then 'Waze'
         when lower(${TABLE}.platform)  in ('yelp', 'ye') then 'Yelp'
-        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
-        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
+        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube') then 'YouTube'
         when lower(${TABLE}.platform) in ('zeta','ze') then 'Zeta'
         else 'Other' end
       ;;
