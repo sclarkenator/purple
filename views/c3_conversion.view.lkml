@@ -197,10 +197,10 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'(fb)')
     OR CONTAINS(${network_groupname},'facebook')
     OR CONTAINS(${network_groupname},'instagram') then 'FB/IG'
-    WHEN CONTAINS(${network_groupname},'simplifi') then 'Simplifi'
-    WHEN CONTAINS(${network_groupname},'google')
+    WHEN (CONTAINS(${network_groupname},'google') and not CONTAINS(${network_groupname},'simplifi'))
     OR CONTAINS(${network_groupname},'gdn')
-    OR CONTAINS(${network_groupname},'dv360')
+    OR CONTAINS(${group_name},'DV360 Video')
+    OR CONTAINS(${group_name},'DV360 Display')
     OR CONTAINS(${network_groupname},'GDN')
     OR CONTAINS(${network_groupname},'rt - dpa remarketing')
     OR CONTAINS(${network_groupname},'rt - new mattresses')
@@ -236,6 +236,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'rakuten')
     OR CONTAINS(${network_groupname},'affiliate')  then 'Rakuten'
     WHEN CONTAINS(${network_groupname},'sheerid') then 'SherID'
+    WHEN CONTAINS(${network_groupname},'simplifi') then 'Simplifi'
     WHEN CONTAINS(${network_groupname},'snapchat') then 'SnapChat'
     WHEN CONTAINS(${group_name},'SMS') then 'SMS'
     WHEN CONTAINS(${network_groupname},'spotx') then 'Spot X'
@@ -252,7 +253,8 @@ view: c3_conversion {
     OR (CONTAINS(${network_groupname}, 'dpa-') and CONTAINS(${network_groupname},'pla'))then 'Verizon Media'
     WHEN CONTAINS(${network_groupname},'gemini native') then 'Yahoo'
     WHEN CONTAINS(${network_groupname},'yelp') then 'Yelp'
-    WHEN CONTAINS(${network_groupname},'youtube') then 'YouTube'
+    WHEN CONTAINS(${network_groupname},'youtube')
+    OR (CONTAINS(${network_name},'DV360') and ${group_name}='Video') then 'YouTube'
     WHEN CONTAINS(${network_groupname},'zeta') then 'Zeta'
     ELSE 'Other'
     END
