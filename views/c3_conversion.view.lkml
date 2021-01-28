@@ -197,9 +197,11 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'(fb)')
     OR CONTAINS(${network_groupname},'facebook')
     OR CONTAINS(${network_groupname},'instagram') then 'FB/IG'
+    WHEN CONTAINS(${network_groupname},'simplifi') then 'Simplifi'
     WHEN CONTAINS(${network_groupname},'google')
-     OR CONTAINS(${network_groupname},'gdn')
-     OR CONTAINS(${network_groupname},'GDN')
+    OR CONTAINS(${network_groupname},'gdn')
+    OR CONTAINS(${network_groupname},'dv360')
+    OR CONTAINS(${network_groupname},'GDN')
     OR CONTAINS(${network_groupname},'rt - dpa remarketing')
     OR CONTAINS(${network_groupname},'rt - new mattresses')
     OR CONTAINS(${network_groupname},'rt - purple promotions ')
@@ -212,8 +214,7 @@ view: c3_conversion {
     OR CONTAINS(${network_groupname},'rt - free')
     OR (CONTAINS(${network_groupname}, '(0201)') and CONTAINS(${network_groupname},'display'))
     OR (CONTAINS(${network_groupname}, '(8846)') and CONTAINS(${network_groupname},'display'))
-    OR (CONTAINS(${network_groupname}, '(3859)') and CONTAINS(${network_groupname},'pla'))
-    then 'Google'
+    OR (CONTAINS(${network_groupname}, '(3859)') and CONTAINS(${network_groupname},'pla')) then 'Google'
     WHEN CONTAINS(${network_groupname},'hulu') then 'Hulu'
     WHEN CONTAINS(${network_groupname},'impact radius') then 'Impact Radius'
     WHEN CONTAINS(${network_groupname},'linkedin') then 'LinkedIn'
@@ -234,7 +235,6 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'reddit') then 'Reddit'
     WHEN CONTAINS(${network_groupname},'rakuten')
     OR CONTAINS(${network_groupname},'affiliate')  then 'Rakuten'
-    WHEN CONTAINS(${network_groupname},'simplifi') then 'Simplifi'
     WHEN CONTAINS(${network_groupname},'sheerid') then 'SherID'
     WHEN CONTAINS(${network_groupname},'snapchat') then 'SnapChat'
     WHEN CONTAINS(${group_name},'SMS') then 'SMS'
@@ -262,7 +262,7 @@ view: c3_conversion {
   dimension: medium_clean {
     type: string
     sql: CASE
-    WHEN CONTAINS(${group_name},'Youtube') or contains(${network_name},'Youtube') then 'Video'
+    WHEN CONTAINS(${group_name},'Youtube') or contains(${network_name},'Youtube') or CONTAINS(${group_name},'DV360 Video')  then 'Video'
     WHEN CONTAINS(${group_name},'AdMarketplace')
     or CONTAINS (${group_name},'Bing Non-Brand')
     or CONTAINS(${group_name}, 'Bing Brand')
@@ -274,6 +274,7 @@ view: c3_conversion {
     or CONTAINS(${group_name},'DV360 Display') then 'Display'
     WHEN CONTAINS(${group_name},'PLA') then 'PLA'
     WHEN CONTAINS(${group_name},'Affiliate Display') then 'Affiliate'
+    WHEN CONTAINS(${group_name},'SEO') or CONTAINS(${group_name},'ORGANIC') then 'Organic/Direct'
     WHEN CONTAINS(${group_name},'Social')
     and not CONTAINS(lower(${network_name}) ,'yelp') then 'Social'
     WHEN CONTAINS(${group_name},'Radio')
