@@ -576,7 +576,7 @@ view: roas_pdt {
     label: "NetworkGroup Name"
     description: "C3 Network and Group Name concatinated"
     type: string
-    sql: ${TABLE}.network_groupname ;;
+    sql: ${TABLE}.group_network ;;
   }
 
   dimension: medium_clean {
