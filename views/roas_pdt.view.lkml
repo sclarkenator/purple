@@ -138,6 +138,7 @@ view: c3_cohort_pdt{
       column: converter {}
       column: orders {}
       column: order_id {}
+      column: network_groupname {}
     }
   }
   dimension: position_created_date {type: date}
@@ -150,6 +151,7 @@ view: c3_cohort_pdt{
   dimension: converter {type: number}
   dimension: orders {type: number}
   dimension: order_id {type: string}
+  dimension: network_groupname {type: string}
 }
 
 ######################################################
@@ -172,6 +174,8 @@ view: c3_trended_pdt{
       column: converter {}
       column: orders {}
       column: order_id {}
+      column: network_groupname {}
+
     }
   }
   dimension: order_created_date {type: date}
@@ -186,6 +190,7 @@ view: c3_trended_pdt{
   dimension: last_touch_sales {type:number}
   dimension: influenced {type:number}
   dimension: order_id {type: string}
+  dimension: network_groupname {type: string}
 }
 
 ######################################################
@@ -204,6 +209,7 @@ view: roas_pdt {
       , null as order_id
       , campaign_name
       , campaign_id
+      , null as group_network
       , adspend_raw as adspend
       , impressions
       , clicks
@@ -232,6 +238,7 @@ view: roas_pdt {
       , null as order_id
       , utm_campaign
       , utm_campaign as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -260,6 +267,7 @@ view: roas_pdt {
       , order_id::string
       , utm_campaign
       , null as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -288,6 +296,7 @@ view: roas_pdt {
       , null as order_id
       , CAMPAIGN_NAME
       , null as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -316,6 +325,7 @@ view: roas_pdt {
       , order_id::string
       , Campaign
       , null as campaign_id
+      , network_groupname as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -344,6 +354,7 @@ view: roas_pdt {
       , order_id::string
       , Campaign
       , null as campaign_id
+      , network_groupname as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -559,6 +570,13 @@ view: roas_pdt {
     type: string
     sql: case when ${adspend_campaign_id} = ${session_campaign_id} then ${adspend_campaign_name}
     else ${campaign_name} end ;;
+  }
+
+  dimension: network_groupname {
+    label: "NetworkGroup Name"
+    description: "C3 Network and Group Name concatinated"
+    type: string
+    sql: ${TABLE}.group_network ;;
   }
 
   dimension: medium_clean {
