@@ -188,7 +188,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'brave') then 'Brave'
     WHEN CONTAINS(${network_groupname},'blog') then 'Blog'
     WHEN CONTAINS(${network_groupname},'cordless') then 'Cordless'
-    WHEN CONTAINS(${network_groupname},'chatbot') then 'Chatbot'
+    WHEN CONTAINS(${network_groupname},'chatbot') then 'Adlingo'
     WHEN CONTAINS(${network_groupname},'duckduck') then 'DuckDuckGo'
     WHEN CONTAINS(${network_groupname},'DV360') then 'DV360'
     WHEN CONTAINS(${network_groupname},'ebay') then 'Ebay'
