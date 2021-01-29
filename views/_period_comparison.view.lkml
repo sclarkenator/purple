@@ -41,7 +41,9 @@ view: _period_comparison {
     #group_label: "Period Comparison"
     type: date
     sql: {% if comparison_period._parameter_value == "previous" %}
-          dateadd(day,-${interval},${filter_start_date_raw})
+          dateadd(day,-${interval},${filter_start_date_raw})}
+        {% elsif comparison_period._parameter_value == "year" %}
+          dateadd(day,-364,${filter_start_date_raw})
         {% else %}
           dateadd({% parameter comparison_period %}, -1, ${filter_start_date_raw})
         {% endif %} ;;
@@ -54,6 +56,8 @@ view: _period_comparison {
     type: date
     sql: {% if comparison_period._parameter_value == "previous" %}
           ${filter_start_date_raw}
+        {% elsif comparison_period._parameter_value == "year" %}
+          dateadd(day,-364,${filter_end_date_raw})
         {% else  %}
           dateadd({% parameter comparison_period %}, -1, ${filter_end_date_raw})
         {% endif %} ;;
@@ -68,7 +72,8 @@ view: _period_comparison {
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_start_date_raw})
       {% else %}
-        dateadd(year,-1,${filter_start_date_raw})
+        --dateadd(year,-1,${filter_start_date_raw})
+        dateadd(day,-364,${filter_start_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_start_date_raw}) ;;
   }
@@ -82,7 +87,8 @@ view: _period_comparison {
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_end_date_raw})
       {% else %}
-        dateadd(year,-1,${filter_end_date_raw})
+        dateadd(day,-364,${filter_end_date_raw})
+        --dateadd(year,-1,${filter_end_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_end_date_raw}) ;;
   }
