@@ -32,6 +32,8 @@ view: order_flag {
       ,case when (pdESSpt1>=2 and pdANYpt2=1) then 1 else 0 end pdESS_flg
       ,case when (weight2pt1=1 and weight2pt2 >=2) then 1 else 0 end weightedtwo_flg
       , mattress_ordered
+      , mattress_sales
+      , gross_sales
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
       ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
       ,case when pillow_booster > 0 then 1 else 0 end pillow_booster_flg
@@ -138,6 +140,7 @@ view: order_flag {
 
     FROM(
       select sol.order_id
+        ,sum(sol.gross_amt) GROSS_SALES
         ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
         ,sum(case when line = 'COIL' or (description like '%HYBRID%' and line = 'KIT') THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
@@ -153,6 +156,7 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
         ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
         ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN SOL.GROSS_AMT ELSE 0 END) MATTRESS_SALES
         ,SUM(CASE WHEN (line = 'PILLOW' and line <> 'BOOSTER') THEN ORDERED_QTY ELSE 0 END) PILLOW_ORDERED
         ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
         ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891') then 1 else 0 end) harmony
@@ -250,6 +254,23 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.mattress_flg ;; }
+
+  dimension: gross_sales{
+    hidden: yes
+    sql: ${TABLE}.gross_sales  ;;
+  }
+
+  dimension: mattress_sales {
+    hidden: yes
+    sql: ${TABLE}.mattress_sales  ;;
+  }
+
+  measure: mattress_orders_non_zero_amt {
+    hidden:  yes
+    description: "1/0 per order; 1 if there was a mattress in the order and gross amt > 0. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql: case when ${mattress_sales}>0 then ${TABLE}.mattress_flg end ;; }
 
   measure: cushion_orders {
     group_label: "Total Orders with:"
@@ -681,17 +702,24 @@ view: order_flag {
     sql: case when ${order_flag.mattress_flg} = 0 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt} end ;;
   }
 
-##  measure: average_attached_accessory_value{
-##    label: "AAAV ($)"
-##    view_label: "Sales Order"
-##    hidden: yes
-##    description: "Average amount of attached accessories (non-mattress sales from mattress orders), excluding tax. Source:looker.calculation"
-##    type: average
-##    sql_distinct_key: ${sales_order.order_system} ;;
-##    value_format: "$#,##0"
-##    sql: case when ${order_flag.mattress_flg} = 1 AND ${sales_order.gross_amt}>0 then ${sales_order.gross_amt}-${mattress_sales} end ;;
-##  } mattress sales from sol
+#creating AAAV - Jared
+  measure: total_attached_accessory_value {
+    hidden: yes
+    description: "Amount of attached accessories (AMOV orders less the mattress $ amount), excluding tax. Source:looker.calculation"
+    type: sum
+    value_format: "$#,##0"
+    sql: case when ${mattress_sales} > 0 then (${gross_sales}-${mattress_sales}) else 0 end;;
+  }
 
+  measure: average_attached_accessory_value {
+    hidden: no
+    label: "AAAV ($)"
+    view_label: "Sales Order"
+    description: "Average amount of attached accessories (AMOV orders less the mattress $ amount), excluding tax. Source:looker.calculation"
+    type: number
+    value_format: "$#,##0"
+    sql: ${total_attached_accessory_value}/${mattress_orders_non_zero_amt};;
+  }
 
 #  adding for ecommerce categories and same update
   measure: ultimate_cushion_orders {
