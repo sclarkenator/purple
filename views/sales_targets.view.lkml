@@ -9,6 +9,12 @@ view: sales_targets {
     sql: ${TABLE}.DTC ;;
   }
 
+  dimension: dtc_target_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.DTC ;;
+  }
+
   measure: retail_target {
     label: "Retail Sales Target"
     description: "Monthly gross sales target, spread by day"
@@ -33,24 +39,37 @@ view: sales_targets {
     sql: (${TABLE}.WHLSL *0.50) + ${TABLE}.RETAIL + ${TABLE}.DTC ;;
   }
 
-  measure: insidesales_target {
+    measure: insidesales_target {
     label: "Insidesales Sales Target"
     description: "A ramping % of DTC sales through Dec 2020 capping at 15%"
     value_format: "$#,##0"
-    type: number
+    type: sum
     sql: case
-        when ${date_date} >= '2020-01-01' and ${date_date} < '2020-02-01' then ${dtc_target} * 0.065
-        when ${date_date} >= '2020-02-01' and ${date_date} < '2020-03-01' then ${dtc_target} * 0.064
-        when ${date_date} >= '2020-03-01' and ${date_date} < '2020-04-01' then ${dtc_target} * 0.066
-        when ${date_date} >= '2020-04-01' and ${date_date} < '2020-05-01' then ${dtc_target} * 0.07
-        when ${date_date} >= '2020-05-01' and ${date_date} < '2020-06-01' then ${dtc_target} * 0.071
-        when ${date_date} >= '2020-06-01' and ${date_date} < '2020-07-01' then ${dtc_target} * 0.094
-        when ${date_date} >= '2020-07-01' and ${date_date} < '2020-08-01' then ${dtc_target} * 0.105
-        when ${date_date} >= '2020-08-01' and ${date_date} < '2020-09-01' then ${dtc_target} * 0.115
-        when ${date_date} >= '2020-09-01' and ${date_date} < '2020-10-01' then ${dtc_target} * 0.125
-        when ${date_date} >= '2020-10-01' and ${date_date} < '2020-11-01' then ${dtc_target} * 0.135
-        when ${date_date} >= '2020-11-01' and ${date_date} < '2020-12-01' then ${dtc_target} * 0.14
-        when ${date_date} >= '2020-12-01' then ${dtc_target} * 0.15
+        when ${date_date} >= '2020-01-01' and ${date_date} < '2020-02-01' then ${dtc_target_dim} * 0.065
+        when ${date_date} >= '2020-02-01' and ${date_date} < '2020-03-01' then ${dtc_target_dim} * 0.064
+        when ${date_date} >= '2020-03-01' and ${date_date} < '2020-04-01' then ${dtc_target_dim} * 0.066
+        when ${date_date} >= '2020-04-01' and ${date_date} < '2020-05-01' then ${dtc_target_dim} * 0.07
+        when ${date_date} >= '2020-05-01' and ${date_date} < '2020-06-01' then ${dtc_target_dim} * 0.071
+        when ${date_date} >= '2020-06-01' and ${date_date} < '2020-07-01' then ${dtc_target_dim} * 0.094
+        when ${date_date} >= '2020-07-01' and ${date_date} < '2020-08-01' then ${dtc_target_dim} * 0.105
+        when ${date_date} >= '2020-08-01' and ${date_date} < '2020-09-01' then ${dtc_target_dim} * 0.115
+        when ${date_date} >= '2020-09-01' and ${date_date} < '2020-10-01' then ${dtc_target_dim} * 0.125
+        when ${date_date} >= '2020-10-01' and ${date_date} < '2020-11-01' then ${dtc_target_dim} * 0.135
+        when ${date_date} >= '2020-11-01' and ${date_date} < '2020-12-01' then ${dtc_target_dim} * 0.14
+        when ${date_date} >= '2020-12-01' and ${date_date} < '2021-01-01' then ${dtc_target_dim} * 0.15
+        when ${date_date} >= '2021-01-01' and ${date_date} < '2021-02-01' then ${dtc_target_dim} * 0.138441893
+        when ${date_date} >= '2021-02-01' and ${date_date} < '2021-03-01' then ${dtc_target_dim} * 0.142535645
+        when ${date_date} >= '2021-03-01' and ${date_date} < '2021-04-01' then ${dtc_target_dim} * 0.163122712
+        when ${date_date} >= '2021-04-01' and ${date_date} < '2021-05-01' then ${dtc_target_dim} * 0.173303405
+        when ${date_date} >= '2021-05-01' and ${date_date} < '2021-06-01' then ${dtc_target_dim} * 0.150161132
+        when ${date_date} >= '2021-06-01' and ${date_date} < '2021-07-01' then ${dtc_target_dim} * 0.142424376
+        when ${date_date} >= '2021-07-01' and ${date_date} < '2021-08-01' then ${dtc_target_dim} * 0.154325267
+        when ${date_date} >= '2021-08-01' and ${date_date} < '2021-09-01' then ${dtc_target_dim} * 0.170081345
+        when ${date_date} >= '2021-09-01' and ${date_date} < '2021-10-01' then ${dtc_target_dim} * 0.152127182
+        when ${date_date} >= '2021-10-01' and ${date_date} < '2021-11-01' then ${dtc_target_dim} * 0.154256185
+        when ${date_date} >= '2021-11-01' and ${date_date} < '2021-12-01' then ${dtc_target_dim} * 0.140368889
+        when ${date_date} >= '2021-12-01' and ${date_date} < '2022-01-01' then ${dtc_target_dim} * 0.151033206
+        when ${date_date} >= '2022-01-01' then ${dtc_target_dim} * 0.15
         else 0 end
     ;;
   }

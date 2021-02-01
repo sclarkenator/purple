@@ -41,7 +41,7 @@ view: _period_comparison {
     #group_label: "Period Comparison"
     type: date
     sql: {% if comparison_period._parameter_value == "previous" %}
-          dateadd(day,-${interval},${filter_start_date_raw})}
+          dateadd(day,-${interval},${filter_start_date_raw})
         {% elsif comparison_period._parameter_value == "year" %}
           dateadd(day,-364,${filter_start_date_raw})
         {% else %}
