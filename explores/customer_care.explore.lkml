@@ -157,6 +157,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many
       sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
     }
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
+    }
     join: v_wholesale_manager {
       view_label: "Customer"
       type:left_outer

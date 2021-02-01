@@ -390,6 +390,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${scrap_detail.product} = ${product.product_id} ;;
       relationship: one_to_one
     }
+    join: v_dispatch_with_downtime_minutes {
+      view_label: "Dispatch by Date"
+      type: left_outer
+      sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}

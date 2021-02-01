@@ -43,7 +43,7 @@ dimension: primary_key {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: time
     hidden: no
-    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30]
+    timeframes: [raw,time,hour,hour_of_day,date,day_of_week,week,week_of_year,month,quarter,year, minute30, month_name]
     sql: ${TABLE}."CONTACTED" ;;
   }
 
@@ -145,7 +145,7 @@ dimension: primary_key {
             then 'SRT'
         when ${skill} = 'Customer Service OB'
             then 'Support OB'
-        when ${skill} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)')
+        when ${skill} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)','Verification')
             then 'Verification'
         when ${skill} = 'Sales Team OB'
             then 'Sales OB'

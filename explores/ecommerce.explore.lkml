@@ -51,8 +51,8 @@ include: "/dashboards/**/*.dashboard"
     }
     join: sales_order {
       view_label: "Sales Order"
-      type:  left_outer
-      sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} ;;
+      type:  full_outer
+      sql_on: ${ecommerce1.order_number} = ${sales_order.related_tranid} and ${sales_order.channel_id} = 1 ;;
       fields: [sales_order.tranid,sales_order.system,sales_order.related_tranid,sales_order.source,sales_order.payment_method,sales_order.order_id,sales_order.warranty_order_flg,sales_order.is_upgrade,sales_order.Amazon_fulfillment,sales_order.gross_amt,sales_order.dtc_channel_sub_category,sales_order.total_orders,sales_order.payment_method_flag,sales_order.channel2,sales_order.channel_source,sales_order.Order_size_buckets,sales_order.max_order_size,sales_order.min_order_size,sales_order.average_order_size,sales_order.tax_amt_total, sales_order.order_type_hyperlink,sales_order.etail_order_id]
       relationship: one_to_one
     }

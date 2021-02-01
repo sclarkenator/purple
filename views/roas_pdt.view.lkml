@@ -129,6 +129,7 @@ view: c3_cohort_pdt{
   derived_table: {
     explore_source: c3 {
       column: position_created_date {}
+      column: position_created_raw {}
       column: campaign_type_clean {}
       column: Platform_clean {}
       column: medium_clean {}
@@ -137,9 +138,11 @@ view: c3_cohort_pdt{
       column: converter {}
       column: orders {}
       column: order_id {}
+      column: network_groupname {}
     }
   }
   dimension: position_created_date {type: date}
+  dimension: position_created_raw {type: date_time}
   dimension: campaign_type_clean {type: string}
   dimension: Platform_clean {type: string}
   dimension: medium_clean {type: string}
@@ -148,6 +151,7 @@ view: c3_cohort_pdt{
   dimension: converter {type: number}
   dimension: orders {type: number}
   dimension: order_id {type: string}
+  dimension: network_groupname {type: string}
 }
 
 ######################################################
@@ -170,6 +174,8 @@ view: c3_trended_pdt{
       column: converter {}
       column: orders {}
       column: order_id {}
+      column: network_groupname {}
+
     }
   }
   dimension: order_created_date {type: date}
@@ -184,6 +190,7 @@ view: c3_trended_pdt{
   dimension: last_touch_sales {type:number}
   dimension: influenced {type:number}
   dimension: order_id {type: string}
+  dimension: network_groupname {type: string}
 }
 
 ######################################################
@@ -195,12 +202,14 @@ view: roas_pdt {
     sql:
     select 'adspend' as source
       , ad_date as date
+      , null as position_time
       , campaign_type
       , spend_platform as platform
       , medium
       , null as order_id
       , campaign_name
       , campaign_id
+      , null as group_network
       , adspend_raw as adspend
       , impressions
       , clicks
@@ -222,12 +231,14 @@ view: roas_pdt {
     union all
     select 'sessions' as source
       , time_date
+      , null as position_time
       , utm_term
       , utm_source
       , utm_medium
       , null as order_id
       , utm_campaign
       , utm_campaign as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -249,12 +260,14 @@ view: roas_pdt {
     union all
     select 'sales' as source
       , created_date
+      , null as position_time
       , utm_term
       , utm_source
       , utm_medium
       , order_id::string
       , utm_campaign
       , null as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -276,12 +289,14 @@ view: roas_pdt {
     union all
     select 'c3' as source
       , SPEND_DATE_date
+      , null as position_time
       , CAMPAIGN_TYPE
       , PLATFORM
       , medium
       , null as order_id
       , CAMPAIGN_NAME
       , null as campaign_id
+      , null as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -303,12 +318,14 @@ view: roas_pdt {
    union all
     select 'c3 cohort' as source
       , position_created_date
+      , position_created_raw as position_time
       , campaign_type_clean
       , Platform_clean
       , medium_clean
       , order_id::string
       , Campaign
       , null as campaign_id
+      , network_groupname as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -330,12 +347,14 @@ view: roas_pdt {
   union all
     select 'c3 trended' as source
       , order_created_date
+      , null as position_time
       , campaign_type_clean
       , Platform_clean
       , medium_clean
       , order_id::string
       , Campaign
       , null as campaign_id
+      , network_groupname as group_network
       , null as aspend
       , null as impressions
       , null as clicks
@@ -362,6 +381,12 @@ view: roas_pdt {
     type: date
     hidden:yes
     sql: ${TABLE}.date ;;
+  }
+
+  dimension: position_time {
+    type: date_time
+    hidden: yes
+    sql: ${TABLE}.position_time ;;
   }
 
   dimension_group: date {
@@ -448,13 +473,12 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('al','adlingo') then 'Adlingo'
          when lower(${TABLE}.platform)  in ('agility') then 'Agility'
         when lower(${TABLE}.platform)  in ('adme','admedia') then 'Admedia'
-        when lower(${TABLE}.platform)  in ('ash') then 'AsherMedia'
+        when lower(${TABLE}.platform)  in ('ash','asher media') then 'AsherMedia'
         when lower(${TABLE}.platform)  in ('bra','brave') then 'BRAVE'
         when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
-        when lower(${TABLE}.platform)  in ('cor','cordless') then 'Cordless'
+        when lower(${TABLE}.platform)  in ('cor','co','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
         when lower(${TABLE}.platform)  in ('couponbytes') then 'Couponbytes'
-        when lower(${TABLE}.platform)  in ('dv360') then 'DV360'
         when lower(${TABLE}.platform)  in ('eb','ebay') then 'Ebay'
         when lower(${TABLE}.platform)  in ('em','email') then 'Email'
         when lower(${TABLE}.platform)  in ('korte') then 'Korte'
@@ -476,16 +500,15 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('ir', 'impact radius') then 'Impact Radius'
         when lower(${TABLE}.platform)  in ('ex','exponential','vdx') then 'VDX'
         when lower(${TABLE}.platform)  in ('facebook','fb','ig','igshopping','instagram','fb/ig') then 'FB/IG'
-        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
-        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
-        when lower(${TABLE}.platform)  in ('go','google') then 'Google'
+        when (lower(${TABLE}.platform)  in ('go','gon','google','dv360') and ${campaign_name} not ilike ('%_yt_%'))
+        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi') and ${campaign_name} not ilike ('%_yt_%')) then 'Google'
         when lower(${TABLE}.platform)  in ('pinterest','pinterestk','pt') then 'Pinterest'
         when lower(${TABLE}.platform)  in ('sn','snapchat') then 'Snapchat'
         when lower(${TABLE}.platform)  in ('ta','talkable') then 'Talkable'
         when lower(${TABLE}.platform)  in ('tab','taboola') then 'Taboola'
          when lower(${TABLE}.platform)  in ('twitter, tw') then 'Twitter'
         when lower(${TABLE}.platform)  in ('veritone','vr', 'radio','streaming', 'podcast') then 'Veritone'
-        when lower(${TABLE}.platform)  in ('verizon media''yahoo','oa','oath','vrz') then 'Verizon Media'
+        when lower(${TABLE}.platform)  in ('verizon media','yahoo','oa','oath','vrz') then 'Verizon Media'
         when lower(${TABLE}.platform)  in ('reddit','reddit.com') then 'Reddit'
         when lower(${TABLE}.platform)  in ('rakuten','rk', 'affiliate') then 'Rakuten'
         when lower(${TABLE}.platform)  in ('postie') then 'Postie'
@@ -500,8 +523,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('tiktok','tk') then 'TikTok'
         when lower(${TABLE}.platform)  in ('waze', 'wa') then 'Waze'
         when lower(${TABLE}.platform)  in ('yelp', 'ye') then 'Yelp'
-        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube')
-        or (lower(${TABLE}.platform)  in ('google','go') and ${TABLE}.medium in ('video','vi')) then 'YouTube'
+        when lower(${TABLE}.platform)  in ('youtube','youtube.com','yt','youtube') or ${campaign_name} ilike ('%_yt_%')then 'YouTube'
         when lower(${TABLE}.platform) in ('zeta','ze') then 'Zeta'
         else 'Other' end
       ;;
@@ -550,6 +572,13 @@ view: roas_pdt {
     else ${campaign_name} end ;;
   }
 
+  dimension: network_groupname {
+    label: "NetworkGroup Name"
+    description: "C3 Network and Group Name concatinated"
+    type: string
+    sql: ${TABLE}.group_network ;;
+  }
+
   dimension: medium_clean {
     label: " Medium (clean)"
     description: "Transforming the data from each system to match a single format"
@@ -566,7 +595,7 @@ view: roas_pdt {
       or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)  then 'Display'
        when lower(${TABLE}.medium) in ('tv','ctv','radio','streaming','traditional','sms','tv','tx','cinema','au','linear','print','radio', 'audio', 'podcast','ir')
       or  lower(${TABLE}.platform) in ('rk','tv','ctv','radio','streaming', 'veritone') then 'Traditional'
-      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
+      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') or (lower(${TABLE}.medium) = 'feed' and lower(${TABLE}.platform) = 'oa')  then 'Search'
       when lower(${TABLE}.medium) in ('sh','feed','shopping','PLA','pla') then 'PLA'
       when lower(${TABLE}.medium) in ('video','vi', 'yt','youtube','purple fanny pad' ,'raw egg demo', 'sasquatch video',
       'factory tour video','pet bed video','so sciencey','powerbase video','human egg drop test', 'pressure points video','latest technology video',
@@ -575,8 +604,7 @@ view: roas_pdt {
       or lower(${TABLE}.platform) in ('youtube')
       then 'Video'
       when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
-      when lower(${TABLE}.medium) in ('organic')
-      or lower(${TABLE}.medium) is null then 'Organic'
+      when (${TABLE}.medium is null and ${TABLE}.platform is null) then 'Organic/Direct'
       else 'Other' end
       ;;
   }
