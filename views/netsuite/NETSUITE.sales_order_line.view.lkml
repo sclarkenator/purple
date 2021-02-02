@@ -1969,6 +1969,19 @@ view: sales_order_line {
       else 'Other' end;;
   }
 
+  dimension: order_age_bucket3 {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Order Age (bucket 3)"
+    hidden: yes
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
+    Source: netsuite.sales_order"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+    style: integer
+    sql: datediff(day,${sales_order_line.created_date}, ${sales_order_line.fulfilled_date}) ;;
+  }
+
   measure: adj_gross_amt {
     ##added by Scott on 6/1/20
     label: " 5 - Adjusted gross sales"
