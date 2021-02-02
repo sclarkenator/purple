@@ -718,7 +718,7 @@ view: order_flag {
     description: "Average amount of attached accessories (AMOV orders less the mattress $ amount), excluding tax. Source:looker.calculation"
     type: number
     value_format: "$#,##0"
-    sql: ${total_attached_accessory_value}/${mattress_orders_non_zero_amt};;
+    sql: coalesce(${total_attached_accessory_value}/nullif(${mattress_orders_non_zero_amt},0),0);;
   }
 
 #  adding for ecommerce categories and same update
