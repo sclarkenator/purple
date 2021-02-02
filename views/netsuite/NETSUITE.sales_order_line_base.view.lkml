@@ -389,6 +389,17 @@ view: sales_order_line_base {
     sql: EXTRACT(quarter FROM ${TABLE}.Created::date) = EXTRACT(quarter FROM current_date::date) ;;
   }
 
+  dimension: current_quarter_of_year_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Quarter of Year"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current quarter of the year (for each year). Source: netsuite.sales_order_line"
+    type: yesno
+    sql: ${created_quarter_of_year} = ${current_quarter_of_year}  ;;
+  }
+
+
   dimension: prev_week{
     view_label: "Sales Order"
     group_label: "    Order Date"
