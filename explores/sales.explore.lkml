@@ -7,7 +7,12 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 
-  explore: sales {from: sales_base hidden: yes
+  explore: sales {
+    from: sales_base
+    label: "Sales NEW"
+    view_label: "Sales"
+    description: "Simplified view into sales"
+    hidden: no
     query: sales_last_30 {
     dimensions: [sales.order_date]
     measures: [sales.gross_amt]
