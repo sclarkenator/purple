@@ -7,7 +7,19 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 
-  explore: sales {from: sales_base hidden: yes}
+  explore: sales {from: sales_base hidden: yes
+    query: query_name {
+    dimensions: [sales.order_date]
+    measures: [sales.gross_amt]
+    label: "DTC Sales By Day"
+    description: "Total DTC Sales by Day for the Last 30 Days"
+    #pivots: [dimension1, dimension2, … ]
+    sorts: [sales.order_date: asc]
+    filters: [sales.order_date: "last 30 days",sales.channel2: "1"]
+    #timezone: timezone
+    limit: 100
+  }
+}
 
   explore: sales_order_line{
     from:  sales_order_line
