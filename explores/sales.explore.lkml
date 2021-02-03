@@ -14,28 +14,28 @@ include: "/dashboards/**/*.dashboard"
     description: "Simplified view into sales"
     hidden: no
     query: sales_last_30 {
-    dimensions: [sales.order_date]
-    measures: [sales.gross_amt]
-    label: "DTC Sales By Day"
-    description: "Total DTC Sales by Day for the Last 30 Days"
-    #pivots: [dimension1, dimension2, … ]
-    sorts: [sales.order_date: asc]
-    filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
-    #timezone: timezone
-    limit: 100
+      dimensions: [sales.order_date]
+      measures: [sales.gross_amt]
+      label: "DTC Sales By Day"
+      description: "Total DTC Sales by Day for the Last 30 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.order_date: asc]
+      filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
+      #timezone: timezone
+      limit: 100
+    }
+    query: sales_product {
+      dimensions: [sales.category_name]
+      measures: [sales.total_units]
+      label: "Units by Product Category"
+      description: "Total Units Sold by Category in the last 7 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.category_name: asc]
+      filters: [sales.order_date: "7 days ago for 7 days"]
+      #timezone: timezone
+      limit: 100
+    }
   }
-  query: sales_product {
-    dimensions: [sales.category_name]
-    measures: [sales.total_units]
-    label: "Units by Product Category"
-    description: "Total Units Sold by Category in the last 7 Days"
-    #pivots: [dimension1, dimension2, … ]
-    sorts: [sales.category_name: asc]
-    filters: [sales.order_date: "7 days ago for 7 days"]
-    #timezone: timezone
-    limit: 100
-  }
-}
 
   explore: sales_order_line{
     from:  sales_order_line
