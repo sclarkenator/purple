@@ -252,7 +252,8 @@ view: daily_adspend {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     }
 
@@ -267,8 +268,8 @@ view: daily_adspend {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
-      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
-      when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.95
+      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
       else ${TABLE}.spend
       end ;;
   }
