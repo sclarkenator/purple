@@ -6,6 +6,9 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+
+  explore: sales {from: sales_base hidden: yes}
+
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
@@ -617,7 +620,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
-  explore: sales {from: sales_base hidden: yes}
+
   explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
