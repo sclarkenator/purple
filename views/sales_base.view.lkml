@@ -21,7 +21,7 @@ view: sales_base {
       column: pillow_flg { field: order_flag.pillow_flg }
       column: sheets_flg { field: order_flag.sheets_flg }
       column: cushion_flg { field: order_flag.cushion_flg }
-      filters: { field: sales_order.channel_id value: "1,2,4" }
+      filters: { field: sales_order.channel_id value: "1,2,5" }
     }
   }
   dimension: is_cancelled {
@@ -108,15 +108,37 @@ view: sales_base {
     label: "Channel"
     type:string
   }
-  measure: total_gross_Amt_non_rounded {
-    label: "Gross Sales ($)"
+  measure: gross_amt {
+    label: "  Gross Sales ($)"
     value_format: "$#,##0"
     type: sum
+    sql: ${TABLE}.total_gross_Amt_non_rounded ;;
   }
   measure: total_units {
-    label: "Gross Units (#)"
+    label: "  Gross Units (#)"
     value_format: "#,##0"
     type: sum
+  }
+  measure: orders {
+    label: " Orders"
+    description: "Count of Distinct Orders"
+    value_format: "#,##0"
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+  measure: aov {
+    label: "AOV"
+    description: "Average Order Value (gross sales/orders)"
+    value_format: "$#,##0"
+    type: number
+    sql: ${gross_amt}/${orders} ;;
+  }
+  measure: amov {
+    label: "AMOV"
+    description: "Average Mattress Order Value (mattress orders: gross sales/orders)"
+    value_format: "$#,##0"
+    type: number
+    sql: sum(${TABLE}.total_gross_Amt_non_rounded * case when ${mattress_flg} then 1 else 0 end)/ sum(case when ${mattress_flg} then 1 else 0 end) ;;
   }
 
 }
