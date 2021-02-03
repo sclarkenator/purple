@@ -10,7 +10,7 @@ include: "/dashboards/**/*.dashboard"
   explore: sales {
     from: sales_base
     label: "Sales NEW"
-    view_label: "Sales"
+    group_label: " Sales"
     description: "Simplified view into sales"
     hidden: no
     query: sales_last_30 {
