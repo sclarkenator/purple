@@ -247,7 +247,8 @@ view: daily_adspend {
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
@@ -267,6 +268,7 @@ view: daily_adspend {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
       when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.95
       else ${TABLE}.spend
       end ;;
   }
@@ -652,7 +654,8 @@ dimension: spend_platform {
     description: "Total adspend for selected channels (includes Agency cost)"
     type: number
     value_format: "$#,##0"
-    sql: ${agency_cost_comparison_period}+${adspend_no_agency_comparison_period} ;;  }
+    sql: ${agency_cost_comparison_period}+${adspend_no_agency_comparison_period} ;;
+  }
 
   measure: agency_cost_comparison_period {
     label: "  Agency Cost ($) Comparison Period"

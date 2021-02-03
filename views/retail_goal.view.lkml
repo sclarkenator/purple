@@ -20,6 +20,7 @@ view: retail_goal {
       date,
       week,
       month,
+      month_num,
       quarter,
       year
     ]

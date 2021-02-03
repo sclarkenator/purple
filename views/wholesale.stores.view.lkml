@@ -1,23 +1,29 @@
 view: wholesale_stores {
-  sql_table_name: analytics.sales.WHOLESALE_STORE ;;
+  sql_table_name: analytics.retail.retail_store ;;
 
   dimension: Customer {
-    label: "Customer"
+    label: "Parent Account"
     type: string
-    sql: ${TABLE}.customer ;;
+    sql: ${TABLE}.parent_account ;;
   }
 
   dimension: Store_name {
     label: "Store Name"
     type: string
-    sql: ${TABLE}.location ;;
+    sql: ${TABLE}.account_name ;;
+  }
+
+  dimension: salesforce_store_id {
+    label: "Store ID"
+    type: string
+    sql: ${TABLE}.SALESFORCE_RETAIL_STORES_ID;;
   }
 
   dimension: Address {
     label: "Street Address"
     group_label: "Location"
     type: string
-    sql: ${TABLE}.Street ;;
+    sql: ${TABLE}.street_address ;;
   }
 
   dimension: City {
@@ -32,16 +38,7 @@ view: wholesale_stores {
     group_label: "Location"
     type: string
     map_layer_name: us_states
-  # sql: ${TABLE}.State
-   sql: case when ${TABLE}.State = 'California' then 'CA'
-        when ${TABLE}.State = 'District of Columbia' then 'DC'
-        when ${TABLE}.State = 'Illinois' then 'IL'
-        when ${TABLE}.State = 'Maryland' then 'MD'
-        when ${TABLE}.State = 'New York' then 'NY'
-        when ${TABLE}.State = 'Pennsylvania' then 'PA'
-        when ${TABLE}.State = 'Texas' then 'TX'
-        when ${TABLE}.State = 'Virginia' then 'VA'
-        else ${TABLE}.State end ;;
+    sql: ${TABLE}.state_short_name ;;
   }
 
   dimension: zip {
@@ -49,32 +46,43 @@ view: wholesale_stores {
     group_label: "Location"
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
-    sql: ${TABLE}.zip ;;
+    sql: ${TABLE}.zip_code ;;
   }
 
-  dimension: country {
-    label: "Country"
-    group_label: "Location"
+  dimension: coordinates{
+    type: location
+    sql_latitude: ${TABLE}.latitude;;
+    sql_longitude:${TABLE}.longitude ;;
+  }
+
+  dimension: latitude {
     type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
+    hidden: yes
+    sql: ${TABLE}.latitude ;;
+  }
+
+  dimension: longitude {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.longitude ;;
   }
 
   dimension_group: open_date {
+  label: "Open"
   type: time
   timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-  sql: ${TABLE}.open_date ;;
+  sql: ${TABLE}.add_purple_dt ;;
   }
 
-  dimension: beds {
-    label: "Bed in Store"
-    type: string
-    sql: ${TABLE}.beds ;;
+  dimension: is_inactive {
+    type: yesno
+    hidden: yes
+    sql: ${TABLE}.is_inactive = 'T' ;;
   }
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${open_date_date}, ${Customer}) ;;
+    sql: CONCAT(${open_date_date}, ${salesforce_store_id}) ;;
     hidden: yes
   }
 
