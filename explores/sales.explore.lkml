@@ -15,7 +15,7 @@ include: "/dashboards/**/*.dashboard"
     description: "Total DTC Sales by Day for the Last 30 Days"
     #pivots: [dimension1, dimension2, … ]
     sorts: [sales.order_date: asc]
-    filters: [sales.order_date: "last 30 days",sales.channel2: "1"]
+    filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
     #timezone: timezone
     limit: 100
   }
