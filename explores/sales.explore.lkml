@@ -188,6 +188,11 @@ include: "/dashboards/**/*.dashboard"
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
       relationship: many_to_one}
+    join: ups_tracking {
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.tracking_numbers} = ${ups_tracking.tracking_number} ;;
+      relationship: many_to_one}
     join: state_tax_reconciliation {
       view_label: "State Tax Reconciliation"
       type: left_outer
