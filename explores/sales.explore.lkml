@@ -6,6 +6,37 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+
+  explore: sales {
+    from: sales_base
+    label: "Sales NEW"
+    group_label: " Sales"
+    description: "Simplified view into sales"
+    hidden: no
+    query: sales_last_30 {
+      dimensions: [sales.order_date]
+      measures: [sales.gross_amt]
+      label: "DTC Sales By Day"
+      description: "Total DTC Sales by Day for the Last 30 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.order_date: asc]
+      filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
+      #timezone: timezone
+      limit: 100
+    }
+    query: sales_product {
+      dimensions: [sales.category_name]
+      measures: [sales.total_units]
+      label: "Units by Product Category"
+      description: "Total Units Sold by Category in the last 7 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.category_name: asc]
+      filters: [sales.order_date: "7 days ago for 7 days"]
+      #timezone: timezone
+      limit: 100
+    }
+  }
+
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
@@ -156,6 +187,11 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Fulfillment"
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+      relationship: many_to_one}
+    join: ups_tracking {
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.tracking_numbers} = ${ups_tracking.tracking_number} ;;
       relationship: many_to_one}
     join: state_tax_reconciliation {
       view_label: "State Tax Reconciliation"
@@ -617,7 +653,7 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
-  explore: sales {from: sales_base hidden: yes}
+
   explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
