@@ -139,7 +139,7 @@ dimension: id_date {
     group_label: "Data by Date"
     type: sum
     description: "Source: Looker Calculation"
-    value_format: "#,##0"
+    value_format: "#,##0.00"
     sql: ${dispatch_minutes}/60 ;;
   }
 

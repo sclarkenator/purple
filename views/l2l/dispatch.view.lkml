@@ -126,7 +126,7 @@ view: dispatch {
     hidden: no
     type: sum
     description: "Source: l2l.dispatch"
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${downtime} ;;
   }
 
