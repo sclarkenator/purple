@@ -81,6 +81,7 @@ view: inventory_day_sku {
       filters: { field: warehouse_location.warehouse_bucket value: "Purple,White Glove" }
       filters: { field: inventory_snap.created_date value: "3 years" }
       filters: { field: inventory_snap.on_hand value: ">0" }
+      filters: { field: inventory_snap.created_hour_of_day value: "23" }
     }
   }
   dimension: created_date { type: date }
