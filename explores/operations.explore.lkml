@@ -116,7 +116,8 @@ include: "/dashboards/**/*.dashboard"
       ALL_FIELDS*,
       -item.category_name,
       -item.line_raw,
-      -item.model_raw
+      -item.model_raw,
+      -item.sku_id
     ]
     join: item {
       view_label: "Product"

@@ -4,6 +4,7 @@ view: v_ai_product {
 
   dimension_group: insert_ts {
     type: time
+    hidden:  yes
     timeframes: [
       raw,
       time,
@@ -42,16 +43,20 @@ view: v_ai_product {
 
   dimension: sku_id {
     type: string
-    sql: ${TABLE}."SKU_ID" ;;
+    label: "SKU ID"
+    group_label: "Advanced"
+    sql: coalesce (${item.sku_id}, ${TABLE}."SKU_ID") ;;
   }
 
   dimension: sku_name {
     type: string
+    hidden:  yes
     sql: ${TABLE}."SKU_NAME" ;;
   }
 
   dimension_group: update_ts {
     type: time
+    hidden:  yes
     timeframes: [
       raw,
       time,
@@ -66,6 +71,7 @@ view: v_ai_product {
 
   measure: count {
     type: count
+    hidden:  yes
     drill_fields: [sku_name]
   }
 }
