@@ -43,7 +43,10 @@ view: fit_first_data {
       where t.transaction_type in ('Cash Sale', 'Sales Order')
         and t2.transaction_number is not null
         and t.date_deleted is null
-        and t.warranty_order = 'F'
+        and case
+          when coalesce(t.warranty_order,'F') = 'T' then iff(t.upgrade_0 = 'T',1,0)
+          else 1
+        end = 1
         and case
           when t2.transaction_type is null then 1
           when t2.transaction_type in ('Cash Refund', 'Customer Refund') then 1
@@ -123,11 +126,15 @@ view: fit_first_data {
           'Capture' as transaction_type,
           'USD' as currency,
           f.amount::float as transaction_amount,
-          d.gross_amount::float as netsuite_amount,
+          iff(d.gross_amount is null,iff(d2.gross_amount is null,p.amount,d2.gross_amount),d.gross_amount)::float as netsuite_amount,
           iff(ct.interaction_id is null,regexp_replace(o.name::varchar,'[ #N]{1,}',''),co.order_number) as order_number,
           iff(ct.interaction_id is null,o.id::string,co.order_id) as etail_order_id,
-          d.customer_deposit_id::varchar as netsuite_tran_id,
-          d.TRANSACTION_NUMBER::varchar as netsuite_transaction_id,
+          iff(d.customer_deposit_id is null,
+              iff(d2.customer_deposit_id is null,p.payment_id,d2.customer_deposit_id),
+              d.customer_deposit_id)::varchar as netsuite_tran_id,
+          iff(d.TRANSACTION_NUMBER is null,
+              iff(d2.transaction_number is null,p.transaction_number,d2.transaction_number),
+              d.transaction_number)::varchar as netsuite_transaction_id,
           t.entity_id as netsuite_customer_id
       from analytics.accounting.first_data_transaction f
         left join analytics_stage.shopify_us_ft.transaction s on f.ref_num = s.receipt:reference_no
@@ -139,11 +146,19 @@ view: fit_first_data {
         left join analytics_stage.ns.transactions t
           on trim(coalesce(o.id::string,ct.order_id)) = trim(t.etail_order_id)
           and t.transaction_type in ('Sales Order','Cash Sale')
-          and t.warranty_order = 'F'
-        left join analytics.sales.customer_deposit d on t.transaction_id = d.sales_order_id
+          and coalesce(t.total_amount_ref,0) > 0
+        left join analytics.sales.customer_deposit d on t.transaction_id::string = d.sales_order_id::string and d.account = 'FIT - First Data'
+        left join analytics.sales.customer_deposit d2 on t.related_tranid::string = d2.related_tranid::string and d2.account = 'FIT - First Data'
+        left join (
+          select p.payment_id, p.transaction_extid, p.transaction_number, sum(pl.amount*-1) as amount
+          from analytics.finance.payment p
+            join analytics.finance.payment_line pl on p.payment_id = pl.payment_id
+          where p.transaction_extid is not null
+          group by 1,2,3
+        ) p on t.transaction_id::string = p.transaction_extid::string
       where f.status = 'Approved'
-      and f.transaction_type = 'Purchase'
-      and {% condition date_selector %} f.time {% endcondition %}
+        and f.transaction_type = 'Purchase'
+        and {% condition date_selector %} f.time {% endcondition %}
     )
     select
       gateway, transaction_id, secondary_id, po_id, created, transaction_type, currency, transaction_amount, netsuite_amount,
