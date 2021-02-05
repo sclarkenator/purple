@@ -14,7 +14,7 @@ view: sales_day_sku {
       column: unfulfilled_orders_units {}
       filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
       filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
-      filters: { field: sales_order_line.created_date value: "7 days" }
+      filters: { field: sales_order_line.created_date value: "3 years" }
     }
   }
   dimension: created_date { type: date}
@@ -38,7 +38,7 @@ view: production_day_sku {
       column: sku_id { field: item.sku_id }
       filters: { field: assembly_build.scrap value: "0" }
       filters: { field: item.merchandise value: "0" }
-      filters: { field: assembly_build.produced_date value: "7 days"}
+      filters: { field: assembly_build.produced_date value: "3 years"}
     }
   }
   dimension: Total_Quantity { type: number }
@@ -57,7 +57,7 @@ view: forecast_day_sku {
       column: sku_id {}
       column: total_amount {}
       column: total_units {}
-      filters: { field: forecast_combined.date_date value: "7 days" }
+      filters: { field: forecast_combined.date_date value: "3 years" }
     }
   }
   dimension: date_date { type: date }
@@ -79,7 +79,7 @@ view: inventory_day_sku {
       column: sku_id { field: item.sku_id }
       filters: { field: warehouse_location.location_Active value: "No" }
       filters: { field: warehouse_location.warehouse_bucket value: "Purple,White Glove" }
-      filters: { field: inventory_snap.created_date value: "7 days" }
+      filters: { field: inventory_snap.created_date value: "3 years" }
       filters: { field: inventory_snap.on_hand value: ">0" }
     }
   }
@@ -98,7 +98,7 @@ view: po_day_sku {
       column: estimated_arrival_date { field: purchase_order_line.estimated_arrival_date }
       column: sku_id { field: item.sku_id }
       column: Total_quantity_received { field: purchase_order_line.Total_quantity_received }
-      filters: { field: purchase_order_line.estimated_arrival_date value: "7 days" }
+      filters: { field: purchase_order_line.estimated_arrival_date value: "3 years" }
       filters: { field: purchase_order_line.Total_quantity_received value: ">0" }
     }
   }
