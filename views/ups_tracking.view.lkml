@@ -3,11 +3,14 @@ view: ups_tracking {
 
   dimension: completed {
     type: yesno
+    view_label: "Fulfillment"
+    group_label: "UPS Details"
+    description: "Source: shipping.ups_tracking"
     sql: ${TABLE}."COMPLETED" ;;
   }
 
   dimension_group: status_ts {
-    label: "Last Scan"
+    label: "UPS Last Scan"
     view_label: "Fulfillment"
     group_label: "UPS Details"
     description: "Source: shipping.ups_tracking"
@@ -50,7 +53,8 @@ view: ups_tracking {
     sql: ${TABLE}."UPS_STATUS_DESCRIPTION" ;;
   }
 
-  dimension: days_since_last_scan {
+  dimension: ups_days_since_last_scan {
+    label: "UPS Days Since Last Scan "
     type: number
     view_label: "Fulfillment"
     group_label: "UPS Details"
@@ -58,14 +62,15 @@ view: ups_tracking {
     sql: datediff(day, ${TABLE}."STATUS_TS", current_timestamp())  ;;
   }
 
-  dimension: days_since_last_scan_bins {
+  dimension: ups_days_since_last_scan_bins {
+    label: "UPS Days Since Last Scan Bins"
     type: tier
     view_label: "Fulfillment"
     group_label: "UPS Details"
     description: "Source: shipping.ups_tracking"
     tiers: [0,1,2,3,4,5,10]
     style: integer
-    sql: ${days_since_last_scan} ;;
+    sql: ${ups_days_since_last_scan} ;;
   }
 
 
@@ -74,6 +79,6 @@ view: ups_tracking {
     description: "UPS Label Count. Source:shipping.ups_tracking"
     view_label: "Fulfillment"
     group_label: " Advanced"
-    drill_fields: [tracking_number, sales_order_line.order_id, ups_status_description, status_ts_date, days_since_last_scan, completed] ##NOTE## This drill references sales_order_line. It will break if not joined to sales_order_line in the explore.
+    drill_fields: [tracking_number, sales_order_line.order_id, ups_status_description, status_ts_date, ups_days_since_last_scan, completed] ##NOTE## This drill references sales_order_line. It will break if not joined to sales_order_line in the explore.
   }
 }
