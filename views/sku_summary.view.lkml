@@ -553,12 +553,12 @@ select category, line, model, description, sku_id
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) > .15 then 1 else 0 end trend_up_flg
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) < -0.1 then 1 else 0 end trend_down_flg
         ,case when weeks_oh = 999 then 'NO SALES FORECAST'
-                when weeks_oh > 20 then '20+ WEEKS OH'
                 when current_inv_est < 0 then 'CURRENT INV. CRUNCH'
-                when four_week_inv_est < 0 then '4-WEEK INV. CRUNCH'
-                when eight_week_inv_est < 0 then '8-WEEK INV. CRUNCH'
                 when trend_up_flg = 1 then 'TRENDING UP'
                 when trend_down_flg = 1 then 'TRENDING DOWN'
+                when four_week_inv_est < 0 then '4-WEEK INV. CRUNCH'
+                when eight_week_inv_est < 0 then '8-WEEK INV. CRUNCH'
+                when weeks_oh > 20 then '20+ WEEKS OH'
                 else '' end exception_class
 from sub
  ;;

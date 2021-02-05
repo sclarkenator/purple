@@ -647,6 +647,17 @@ include: "/dashboards/**/*.dashboard"
     hidden:no
   }
 
+  explore: day_sku {
+    from: day_sku_aggregations
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+  }
+
   explore: hour_assumptions {
     label: "Hour Assumptions"
     description: "% of day's sales by hour for dtc day prediction"
