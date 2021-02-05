@@ -126,7 +126,7 @@ view: dispatch {
     hidden: no
     type: sum
     description: "Source: l2l.dispatch"
-    value_format: "#,##0"
+    value_format: "#,##0.00"
     sql: ${downtime} ;;
   }
 
@@ -134,7 +134,7 @@ view: dispatch {
     hidden: no
     type: sum
     description: "Source: Looker Calculation"
-    value_format: "#,##0"
+    value_format: "#,##0.00"
     sql: ${downtime}/60 ;;
   }
 
