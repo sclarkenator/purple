@@ -1,33 +1,4 @@
 ######################################################
-#   Sales and Fulfillment
-######################################################
-view: sales_day_sku1 {
-  derived_table: {
-    explore_source: sales_order_line {
-      column: created_date {}
-      column: channel2 { field: sales_order.channel2 }
-      column: sku_id { field: item.sku_id }
-      column: total_gross_Amt_non_rounded {}
-      column: total_units {}
-      column: adj_gross_amt {}
-      column: unfulfilled_orders {}
-      column: unfulfilled_orders_units {}
-      filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
-##      filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
-      filters: { field: sales_order_line.created_date value: "3 years" }
-    }
-  }
-  dimension: created_date { type: date}
-##  dimension: channel2 { }
-  dimension: sku_id { }
-  dimension: total_gross_Amt_non_rounded { type: number }
-  dimension: total_units { type: number }
-  dimension: adj_gross_amt { type: number }
-  dimension: unfulfilled_orders { type: number }
-  dimension: unfulfilled_orders_units { type: number }
-}
-
-######################################################
 #   Production
 ######################################################
 view: production_day_sku1 {
@@ -134,7 +105,6 @@ view: day_sku_no_channel {
         cross join analytics.sales.item i
           where date between '2019-01-01' and '2021-12-31'
       ) aa
-      left join ${sales_day_sku1.SQL_TABLE_NAME} s on s.created_date::date = aa.date and s.sku_id = aa.sku_id
       left join ${production_day_sku1.SQL_TABLE_NAME} p on p.produced_date::date = aa.date and p.sku_id = aa.sku_id
       left join ${forecast_day_sku1.SQL_TABLE_NAME} f on f.date_date::date = aa.date and f.sku_id = aa.sku_id
       left join ${inventory_day_sku1.SQL_TABLE_NAME} i on i.created_date::date = aa.date and i.sku_id = aa.sku_id

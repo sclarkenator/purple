@@ -168,6 +168,24 @@ view: day_sku_aggregations {
     datatype: date
     sql: to_timestamp_ntz(${date}) ;; }
 
+  dimension: QTD {
+    label: "z - QTD"
+    group_label: "Dynamic Date"
+    description: "Identifies current quarter-to-date for filtering"
+    type: yesno
+    sql: case when ${date_quarter_of_year}=${current_quarter_of_year} AND ${date_day_of_year}<${current_day_of_year} then TRUE else null end ;;
+    }
+
+  dimension: YTD {
+    label: "z - YTD"
+    group_label: "Dynamic Date"
+    description: "Identifies year-to-date for filtering"
+    type: yesno
+    sql: case when ${date_day_of_year}<${current_day_of_year} then TRUE else null end ;;
+  }
+
+
+
   dimension: date_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
     type: number
