@@ -552,14 +552,20 @@ select category, line, model, description, sku_id
         ,current_on_hand-unfulfilled_units+incoming_units_4w+nvl(avg_production,0)*56-nvl(next_8w_tot_fcst,0) eight_week_inv_est
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) > .15 then 1 else 0 end trend_up_flg
         ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) < -0.1 then 1 else 0 end trend_down_flg
+        ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) > .30 then 1 else 0 end trend_big_up_flg
+        ,case when sales_slope/nullif(next_4w_tot_fcst_avg,0) < -0.2 then 1 else 0 end trend_big_down_flg
         ,case when weeks_oh = 999 then 'NO SALES FORECAST'
                 when current_inv_est < 0 then 'CURRENT INV. CRUNCH'
-                when trend_up_flg = 1 then 'TRENDING UP'
-                when trend_down_flg = 1 then 'TRENDING DOWN'
                 when four_week_inv_est < 0 then '4-WEEK INV. CRUNCH'
                 when eight_week_inv_est < 0 then '8-WEEK INV. CRUNCH'
                 when weeks_oh > 20 then '20+ WEEKS OH'
                 else '' end exception_class
+        ,case when trend_big_up_flg = 1 then 'TREND 30%+ UP'
+              when trend_big_down_flg = 1 then 'TREND 20%+ DOWN'
+              when trend_up_flg = 1 then 'TREND 15% UP'
+              when trend_down_flg = 1 then 'TRENDING 10% DOWN'
+              else '' end trend_type
+
 from sub
  ;;
  }
@@ -609,10 +615,17 @@ from sub
   }
 
   dimension: exception_class {
-    description: "Most urgent exception currently"
+    description: "Most urgent exception currently - done at a sku-level, not sku/date"
     label: "Exception type"
     type: string
     sql: ${TABLE}.exception_class ;;
+  }
+
+  dimension: trend_type {
+    description: "Trend type - values set in sku_summary.view - done at a sku-level, not sku/date"
+    label: "Trend type"
+    type: string
+    sql: ${TABLE}.trend_type ;;
   }
 
   measure: 7day_prod {

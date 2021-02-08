@@ -95,6 +95,7 @@ measure: dispatch_occurences {
   measure: dispatch_minutes {
     label: "Dispatch Minutes"
     description: "Number of Minutes the Dispatch Occured to be used with Dispatched Date"
+    value_format: "#,##0"
     type: sum
     sql: ${TABLE}."DISPATCH_MINUTES" ;;
   }
@@ -102,7 +103,7 @@ measure: dispatch_occurences {
   measure: dispatch_hours {
     label: "Dispatch Hours"
     description: "Number of Hours the Dispatch Occured to be used with Dispatched Date"
-    value_format: "#,##0"
+    value_format: "#,##0.00"
     type: sum
     sql: ${TABLE}."DISPATCH_MINUTES"/60 ;;
     }
