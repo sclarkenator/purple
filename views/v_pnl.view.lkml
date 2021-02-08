@@ -138,6 +138,7 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     description: "This is the month sales and expenses were incurred"
     timeframes: [
       month,
+      month_name,
       quarter,
       year
     ]
