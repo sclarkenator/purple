@@ -624,9 +624,13 @@ view: roas_pdt {
       when lower(${TABLE}.medium) in ('ctv')
       or lower(${TABLE}.platform) in ('ctv') then 'CTV'
       when lower(${TABLE}.medium) in ('ds')
-      or lower(${TABLE}.platform) in ('zeta')
+      or (lower(${TABLE}.platform) in ('amazon media group') and ${TABLE}.medium in ('display','ds'))
       or (lower(${TABLE}.platform) in ('acuity') and ${TABLE}.medium in ('display','ds'))
-      or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null) then 'Display'
+      or (lower(${TABLE}.platform) in ('agility','acuity', 'oa') and ${TABLE}.medium is null)
+      or (lower(${TABLE}.platform) in ('simplifi') and ${TABLE}.medium in ('display','ds'))
+      or (lower(${TABLE}.platform) in ('verizon media') and ${TABLE}.medium in ('display'))
+      or (lower(${TABLE}.platform) in ('zeta') and ${TABLE}.medium in ('display'))
+      or (${TABLE}.medium in ('display') and lower(${TABLE}.platform) not in ('asher media','amazon-sp')) then 'Display'
       when lower(${TABLE}.medium) in ('crm','em', 'email')
       or lower(${TABLE}.platform) in ('liveintent', 'fluent','ta','talkable', 'email', 'fkl', 'findkeeplove') then 'Lead Gen'
       when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
@@ -634,7 +638,7 @@ view: roas_pdt {
       or lower(${TABLE}.medium) is null and lower(${TABLE}.platform) is null then 'Organic'
       when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
       when lower(${TABLE}.medium) in ('social','so','facebook','paid social', 'paidsocial', 'organic social', 'social ads')
-      and lower(${TABLE}.platform) in ('facebook','fb') then 'Social'
+      or lower(${TABLE}.platform) in ('facebook','fb') then 'Social'
       when lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter', 'quora', 'twitter') then 'Social Growth'
       when lower(${TABLE}.medium) in ('tv','cinema','linear') or lower(${TABLE}.platform) in ('tv')
       or (lower(${TABLE}.medium) in ('traditional') and lower(${TABLE}.platform) in ('tv'))
