@@ -112,13 +112,6 @@ include: "/dashboards/**/*.dashboard"
     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
     #hidden: yes
-    fields: [
-      ALL_FIELDS*,
-      -item.category_name,
-      -item.line_raw,
-      -item.model_raw,
-      -item.sku_id
-    ]
     join: item {
       view_label: "Product"
       type: left_outer
