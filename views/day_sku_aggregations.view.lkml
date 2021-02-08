@@ -271,7 +271,7 @@ view: day_sku_aggregations {
   measure: total_sales {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}.dtc_amount;; }
+    sql: ${TABLE}.total_sales;; }
 
   measure: total_units {
     type: sum
