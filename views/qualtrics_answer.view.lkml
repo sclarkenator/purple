@@ -157,6 +157,13 @@ view: qualtrics_answer {
       sql: ${TABLE}.response_id ;;
     }
 
+  measure: answer_1 {
+    type: sum
+    hidden:  no
+    label: "Numeric answer"
+    sql: ${TABLE}.answer ;;
+  }
+
   measure: nps_score {
     type: number
     hidden: yes

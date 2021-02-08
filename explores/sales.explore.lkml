@@ -647,6 +647,30 @@ include: "/dashboards/**/*.dashboard"
     hidden:no
   }
 
+  explore: day_sku {
+    from: day_sku_aggregations
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+    join: day_sku_no_channel {
+      view_label: "test"
+      type: left_outer
+      fields: [day_sku_no_channel.purchased_units_recieved,day_sku_no_channel.produced_units,day_sku_no_channel.forecast_units,day_sku_no_channel.units_available]
+      sql_on: ${day_sku.date_date} = ${day_sku_no_channel.date_date} and ${day_sku.sku_id} = ${day_sku_no_channel.sku_id} and ${day_sku.channel}<>'NA' ;;
+      relationship: many_to_one
+    }
+    join: sku_summary {
+      view_label: "test"
+      type: left_outer
+      fields: [sku_summary.exception_class,sku_summary.trend_type]
+      sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
+    }
+  }
+
   explore: hour_assumptions {
     label: "Hour Assumptions"
     description: "% of day's sales by hour for dtc day prediction"

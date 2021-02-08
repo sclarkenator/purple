@@ -246,7 +246,7 @@ view: daily_adspend {
     type: sum
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
       when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
@@ -607,8 +607,9 @@ dimension: spend_platform {
     type: sum
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date < '2021-01-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+    when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display'
+    and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
+    when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
