@@ -636,7 +636,8 @@ view: roas_pdt {
       when lower(${TABLE}.medium) in ('native','nt', 'nativeads', 'referralutm_source=taboola','nativeads?utm_source=yahoo') then 'Native'
       when lower(${TABLE}.medium) in ('organic')
       or lower(${TABLE}.medium) is null and lower(${TABLE}.platform) is null then 'Organic'
-      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') then 'Search'
+      when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') and ${campaign_type_clean} in ('Brand') and ${platform} not in ('AMAZON-HSA') then 'Branded Search'
+       when lower(${TABLE}.medium) in ('search','sr','cpc','cpm', 'seo') and ${campaign_type_clean} not in ('Brand') then 'Non-Branded Search'
       when lower(${TABLE}.medium) in ('social','so','facebook','paid social', 'paidsocial', 'organic social', 'social ads')
       or lower(${TABLE}.platform) in ('facebook','fb') then 'Social'
       when lower(${TABLE}.platform) in ('snapchat', 'nextdoor', 'pinterest', 'instagram','quora', 'twitter', 'quora', 'twitter') then 'Social Growth'
