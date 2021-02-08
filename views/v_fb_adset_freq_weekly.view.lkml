@@ -3,17 +3,8 @@ view: v_fb_adset_freq_weekly {
     ;;
 
   dimension_group: _fivetran_synced {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."_FIVETRAN_SYNCED" AS TIMESTAMP_NTZ) ;;
+    type: date_time
+    sql: ${TABLE}."_FIVETRAN_SYNCED";;
   }
 
   dimension: account_id {
@@ -32,7 +23,8 @@ view: v_fb_adset_freq_weekly {
   }
 
   measure: frequency {
-    type: number
+    type: sum
+    value_format: "#.##"
     sql: ${TABLE}."FREQUENCY" ;;
   }
 
