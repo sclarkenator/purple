@@ -398,26 +398,26 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: build_of_materials {
+  explore: bill_of_materials {
     hidden: yes
     join: p_item {
       from: item
       view_label: "Parent Item"
       type: left_outer
       relationship: many_to_one
-      sql_on: ${build_of_materials.parent_id} = ${p_item.item_id} ;;
+      sql_on: ${bill_of_materials.parent_id} = ${p_item.item_id} ;;
     }
     join: c_item {
       from: item
       view_label: "Child Item"
       relationship: many_to_one
-      sql_on: ${build_of_materials.child_id} = ${c_item.item_id} ;;
+      sql_on: ${bill_of_materials.child_id} = ${c_item.item_id} ;;
     }
     join: com_item {
       from: item
       view_label: "Component Item"
       relationship: many_to_one
-      sql_on: ${build_of_materials.component_id} = ${com_item.item_id} ;;
+      sql_on: ${bill_of_materials.component_id} = ${com_item.item_id} ;;
     }
   }
 

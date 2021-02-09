@@ -1,4 +1,4 @@
-view: build_of_materials {
+view: bill_of_materials {
   sql_table_name: "PRODUCTION"."BUILD_OF_MATERIALS"
     ;;
   dimension: child_id {
