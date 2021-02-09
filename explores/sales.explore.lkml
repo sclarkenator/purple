@@ -36,7 +36,7 @@ include: "/dashboards/**/*.dashboard"
       limit: 100
     }
     query: period_over_period {
-      dimensions: [sales.date_in_period_date]
+      dimensions: [sales.date_in_period_date, sales.period]
       measures: [sales.gross_amt]
       label: "Period Over Period"
       description: "Last 30 days compared to the previous 30"
