@@ -320,13 +320,13 @@ view: v_fb_all {
   measure: CPA_28DC{
     type: number
     value_format: "$#,###.##"
-    sql: ${spend}/NULLIF(${purchase_28_dc},0));;
+    sql: ${spend}/NULLIF(${purchase_28_dc},0);;
 
   }
   measure: CPA_28DV{
     type: number
     value_format: "$#,###.##"
-    sql: ${spend}/NULLIF(${purchase_28_dv},0));;
+    sql: ${spend}/NULLIF(${purchase_28_dv},0);;
   }
   measure: CPA_7DC{
     type: number
