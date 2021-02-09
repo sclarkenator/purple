@@ -243,42 +243,42 @@ view: v_fb_all {
     label: "CPM"
     description: "Adspend / Total impressions/1000"
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${spend}/NULLIF((${impressions}/1000),0);;
   }
   measure: ROAS_28DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_28_dc}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_28DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_28_dv}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_7DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_7_dc}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_7DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_7_dv}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_1DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_1_dc}_dc}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_1DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_conversion_value_1_dv}_dv}/NULLIF(${spend},0);;
   }
   measure: CVR_28DC{
@@ -319,33 +319,33 @@ view: v_fb_all {
   }
   measure: CPA_28DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${spend}/NULLIF(${purchase_28_dc},0);;
 
   }
   measure: CPA_28DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${spend}/NULLIF(${purchase_28_dv},0);;
   }
   measure: CPA_7DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_7_dc}/NULLIF(${spend},0);;
   }
   measure: CPA_7DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_7_dv}/NULLIF(${spend},0);;
   }
   measure: CPA_1DC{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_1_dc}/NULLIF(${spend},0);;
   }
   measure: CPA_1DV{
     type: number
-    value_format: "$#,###.##"
+    value_format: "$0.00"
     sql: ${purchase_1_dv}/NULLIF(${spend},0);;
   }
   measure: count {
