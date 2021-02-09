@@ -176,35 +176,41 @@ view: v_fb_all {
   measure: purchase_conversion_value_1_dc {
     label: "Purchases Value 1DC"
     type: sum
+    value_format: "$#,###.##"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_1DC" ;;
   }
 
   measure: purchase_conversion_value_1_dv {
    label: "Purchase Value 1Dv"
     type: sum
+    value_format: "$#,###.##"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_1DV" ;;
   }
 
   measure: purchase_conversion_value_28_dc {
     label: "Purchase Value 28DC"
     type: sum
+    value_format: "$#,###.##"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_28DC" ;;
   }
 
   measure: purchase_conversion_value_28_dv {
     label: "Purchase Value 28DV"
     type: sum
+    value_format: "$#,###.##"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_28DV" ;;
   }
 
   measure: purchase_conversion_value_7_dc {
     label: "Purchase Value 7DC"
     type: sum
+    value_format: "$#,###.##"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DC" ;;
   }
 
   measure: purchase_conversion_value_7_dv {
     label: "Purchase Value 7DV"
+    value_format: "$#,###.##"
     type: sum
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DV" ;;
   }
