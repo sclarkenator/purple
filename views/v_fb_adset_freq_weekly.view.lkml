@@ -2,7 +2,7 @@ view: v_fb_adset_freq_weekly {
   sql_table_name: "MARKETING"."V_FB_ADSET_FREQ_WEEKLY"
     ;;
 
-  dimension_group: _fivetran_synced {
+  dimension: _fivetran_synced {
     type: date_time
     sql: ${TABLE}."_FIVETRAN_SYNCED";;
   }

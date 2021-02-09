@@ -224,6 +224,7 @@ view: v_fb_all {
   measure: spend {
     label: "Spend"
     type: sum
+    value_format: "$#,##0.00"
     sql: ${TABLE}."SPEND" ;;
   }
 
