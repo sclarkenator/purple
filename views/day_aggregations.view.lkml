@@ -418,18 +418,18 @@ view: day_aggregations {
   }
   dimension: date {type: date hidden:yes}
 
-  extends: [_period_comparison]
+  # extends: [_period_comparison]
 
   #### Used with period comparison view
-  dimension_group: event {
-    hidden: yes
-    type: time
-    timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
-      week,month,month_num,quarter,quarter_of_year,year]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.date ;;
-  }
+  # dimension_group: event {
+  #   hidden: yes
+  #   type: time
+  #   timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+  #     week,month,month_num,quarter,quarter_of_year,year]
+  #   convert_tz: no
+  #   datatype: date
+  #   sql: ${date_date} ;;
+  # }
 
   dimension_group: date {
   ##Scott Clark, 1/8/21: Deleted week of year.
