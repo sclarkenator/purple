@@ -35,6 +35,17 @@ include: "/dashboards/**/*.dashboard"
       #timezone: timezone
       limit: 100
     }
+    query: period_over_period {
+      dimensions: [sales.date_in_period_date]
+      measures: [sales.gross_amt]
+      label: "Period Over Period"
+      description: "Last 30 days compared to the previous 30"
+      pivots: [sales.period]
+      sorts: [sales.date_in_period_date: desc]
+      filters: [sales.comparison_period: "previous",
+        sales.date_filter: "30 days",
+        sales.is_within_current_and_comparison_period: "Yes"]
+    }
   }
 
   explore: sales_order_line{

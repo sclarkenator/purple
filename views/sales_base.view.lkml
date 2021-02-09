@@ -1,3 +1,4 @@
+include: "/views/_period_comparison.view.lkml"
 view: sales_base {
   derived_table: {
     explore_source: sales_order_line {
@@ -24,6 +25,19 @@ view: sales_base {
       filters: { field: sales_order.channel_id value: "1,2,5" }
     }
   }
+  extends: [_period_comparison]
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.created_date ;;
+  }
+
   dimension: is_cancelled {
     group_label: "  Filters"
     type: yesno
