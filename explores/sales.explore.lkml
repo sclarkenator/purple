@@ -679,6 +679,7 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       fields: [sku_summary.exception_class,sku_summary.trend_type]
       sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
     }
   }
 
