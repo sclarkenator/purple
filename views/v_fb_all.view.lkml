@@ -138,43 +138,43 @@ view: v_fb_all {
   }
 
   measure: purchase_1_dc {
-    label: "Purchase 1DC"
+    label: "Purchases 1DC"
     type: sum
     sql: ${TABLE}."PURCHASE_1DC" ;;
   }
 
   measure: purchase_1_dv {
-    label: "Purchase 1DV"
+    label: "Purchases 1DV"
     type: sum
     sql: ${TABLE}."PURCHASE_1DV" ;;
   }
 
   measure: purchase_28_dc {
-    label: "Purchase 28DC"
+    label: "Purchases 28DC"
     type: sum
     sql: ${TABLE}."PURCHASE_28DC" ;;
   }
 
  measure: purchase_28_dv {
-    label: "Purchase 28DV"
+    label: "Purchases 28DV"
     type: sum
     sql: ${TABLE}."PURCHASE_28DV" ;;
   }
 
  measure: purchase_7_dc {
-    label: "Purchase 7DC"
+    label: "Purchases 7DC"
     type: sum
     sql: ${TABLE}."PURCHASE_7DC" ;;
   }
 
   measure: purchase_7_dv {
-    label: "Purchase 7DV"
+    label: "Purchases 7DV"
     type: sum
     sql: ${TABLE}."PURCHASE_7DV" ;;
   }
 
   measure: purchase_conversion_value_1_dc {
-    label: "Purchase Value 1DC"
+    label: "Purchases Value 1DC"
     type: sum
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_1DC" ;;
   }
@@ -233,7 +233,115 @@ view: v_fb_all {
     type: sum
     sql: ${TABLE}."UNIQUE_CLICKS" ;;
   }
+  measure: cpm {
+    label: "CPM"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,###.##"
+    sql: ${spend}/NULLIF((${impressions}/1000),0);;
+  }
+  measure: ROAS_28DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_28_dc}/NULLIF(${spend},0);;
 
+  }
+  measure: ROAS_28DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_28_dv}/NULLIF(${spend},0);;
+
+  }
+  measure: ROAS_7DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_7_dc}/NULLIF(${spend},0);;
+
+  }
+  measure: ROAS_7DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_7_dv}/NULLIF(${spend},0);;
+
+  }
+  measure: ROAS_1DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_1_dc}_dc}/NULLIF(${spend},0);;
+
+  }
+  measure: ROAS_1DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_conversion_value_1_dv}_dv}/NULLIF(${spend},0);;
+  }
+  measure: CVR_28DC{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_28_dc}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CVR_28DV{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_28_dv}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CVR_7DC{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_7_dc}_dc}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CVR_7DV{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_7_dv}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CVR_1DC{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_1_dc}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CVR_1DV{
+    description: "Conversion rate"
+    type: number
+    value_format: "0.0%"
+    sql:  ${purchase_1_dv}/NULLIF(${inline_link_clicks},0);;
+  }
+  measure: CPA_28DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${spend}/NULLIF(${purchase_28_dc},0));;
+
+  }
+  measure: CPA_28DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${spend}/NULLIF(${purchase_28_dv},0));;
+  }
+  measure: CPA_7DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_7_dc}/NULLIF(${spend},0);;
+  }
+  measure: CPA_7DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_7_dv}/NULLIF(${spend},0);;
+  }
+  measure: CPA_1DC{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_1_dc}/NULLIF(${spend},0);;
+  }
+  measure: CPA_1DV{
+    type: number
+    value_format: "$#,###.##"
+    sql: ${purchase_1_dv}/NULLIF(${spend},0);;
+  }
   measure: count {
     hidden: yes
     type: count
