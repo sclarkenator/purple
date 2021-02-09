@@ -1,5 +1,5 @@
-view: build_of_materials {
-  sql_table_name: "PRODUCTION"."BUILD_OF_MATERIALS"
+view: bill_of_materials {
+  sql_table_name: "PRODUCTION"."BILL_OF_MATERIALS"
     ;;
   dimension: child_id {
     type: number
