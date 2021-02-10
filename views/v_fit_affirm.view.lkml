@@ -135,6 +135,7 @@ view: v_fit_affirm {
         and {% condition date_selector %} a.created {% endcondition %}
         and ah.source = 'Website'
         and ah.platform = 'Shopify'
+        and so.warranty = 'F'
       UNION ALL
       select
         'Charge' as event_type,
@@ -158,6 +159,7 @@ view: v_fit_affirm {
         and {% condition date_selector %} to_date(t.transaction_ts) {% endcondition %}
         and afh.source = 'Website'
         and afh.merchant_external_reference ilike 'CT%'
+        and so.warranty = 'F'
     )
     select
       event_type, created, affirm_id, affirm_amounts, affirm_total, order_number,
