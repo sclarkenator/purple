@@ -44,22 +44,8 @@ view: daily_adspend {
   dimension_group: event {
     hidden: yes
     type: time
-    timeframes: [
-      raw,
-      time,
-      time_of_day,
-      date,
-      day_of_week,
-      day_of_week_index,
-      day_of_month,
-      day_of_year,
-      week,
-      month,
-      month_num,
-      quarter,
-      quarter_of_year,
-      year
-    ]
+    timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,week,
+      month,month_num,quarter,quarter_of_year,year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}.date ;;
