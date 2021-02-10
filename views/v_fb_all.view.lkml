@@ -2,18 +2,10 @@ view: v_fb_all {
   sql_table_name: "MARKETING"."V_FB_ALL"
     ;;
 
-  dimension_group: _fivetran_synced {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."_FIVETRAN_SYNCED" AS TIMESTAMP_NTZ) ;;
+  dimension: _fivetran_synced {
+    type: date_time
+    sql:${TABLE}."_FIVETRAN_SYNCED";;
+
   }
 
   dimension: account_id {
@@ -297,7 +289,7 @@ view: v_fb_all {
     description: "Conversion rate"
     type: number
     value_format: "0.0%"
-    sql:  ${purchase_7_dc}_dc}/NULLIF(${inline_link_clicks},0);;
+    sql:  ${purchase_7_dc}/NULLIF(${inline_link_clicks},0);;
   }
   measure: CVR_7DV{
     description: "Conversion rate"
