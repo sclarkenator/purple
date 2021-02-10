@@ -268,6 +268,14 @@ include: "/dashboards/**/*.dashboard"
       #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
       relationship: one_to_one
     }
+    join: agent_lkp_eval {
+      from: agent_lkp
+      relationship: many_to_one
+      type: left_outer
+      sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
+      view_label: "Agent Evaluator"
+      fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
+    }
     required_access_grants: [is_customer_care_manager]
   }
 

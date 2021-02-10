@@ -72,6 +72,12 @@ view: customer_table {
     sql: ${TABLE}.email ;;
   }
 
+  dimension: email_join_lower {
+    hidden: no
+    type: string
+    sql: LOWER(${TABLE}.email) ;;
+  }
+
   dimension: phone {
     hidden:  no
     group_label: "  Customer details"
