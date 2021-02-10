@@ -273,13 +273,13 @@ view: v_fb_all {
   measure: ROAS_1DC{
     type: number
     value_format: "$0.00"
-    sql: ${purchase_conversion_value_1_dc}_dc}/NULLIF(${spend},0);;
+    sql: ${purchase_conversion_value_1_dc}/NULLIF(${spend},0);;
 
   }
   measure: ROAS_1DV{
     type: number
     value_format: "$0.00"
-    sql: ${purchase_conversion_value_1_dv}_dv}/NULLIF(${spend},0);;
+    sql: ${purchase_conversion_value_1_dv}/NULLIF(${spend},0);;
   }
   measure: CVR_28DC{
     description: "Conversion rate"
