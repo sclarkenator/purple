@@ -439,7 +439,10 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
     }
 
+
   }
+
+
 
   # explore: sales_test {
   #   from: sales_order_line
@@ -557,6 +560,47 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
+  explore: customers {
+    from:  v_visitors_view_normailized_ids
+    hidden: yes
+
+    join: customer_flags_by_order {
+      from: email_order_flag
+      type: left_outer
+      relationship: one_to_one
+      sql_on: LOWER(${customer_flags_by_order.email}) = LOWER(${customers.vp_customer_email});;
+    }
+    join: customer_flags_by_sessions {
+      from: v_customer_metrics
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${customer_flags_by_sessions.visitor_id}::string = ${customers.visitor_id}::string ;;
+    }
+    join: customer_flags_by_email{
+      from: cordial_customer_activity
+      type: left_outer
+      relationship: one_to_one
+      sql_on: LOWER(${customer_flags_by_email.email}) = LOWER(${customers.vp_customer_email}) ;;
+    }
+    join: customer_flags_by_audience{
+      from: tealium_visitors_view_normalized
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
+    }
+    # join: heap_id {
+    #   from: tealium_v_heap_id
+    #   type: left_outer
+    #   relationship: one_to_many
+    #   sql_on: ${customers.visitor_id}::string = ${heap_id.visitor_id}::string ;;
+    # }
+    # join: heap_customer{
+    #   from: customer
+    #   type: left_outer
+    #   relationship: one_to_many
+    #   sql_on: ${customers.visitor_id} = ${heap_customer.customer_id} ;;
+    # }
+  }
 
 
   explore: warranty {
