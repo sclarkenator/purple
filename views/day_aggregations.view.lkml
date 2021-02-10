@@ -416,20 +416,20 @@ view: day_aggregations {
 
     datagroup_trigger: pdt_refresh_6am
   }
-  dimension: date {type: date hidden:yes}
+  extends: [_period_comparison]
 
-  # extends: [_period_comparison]
+  #dimension: date {type: date hidden:yes}
 
-  #### Used with period comparison view
-  # dimension_group: event {
-  #   hidden: yes
-  #   type: time
-  #   timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
-  #     week,month,month_num,quarter,quarter_of_year,year]
-  #   convert_tz: no
-  #   datatype: date
-  #   sql: ${date_date} ;;
-  # }
+  ### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [raw,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: to_timestamp_ntz(${TABLE}.date);;
+ }
 
   dimension_group: date {
   ##Scott Clark, 1/8/21: Deleted week of year.
@@ -438,7 +438,7 @@ view: day_aggregations {
     timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: to_timestamp_ntz(${date}) ;; }
+    sql: to_timestamp_ntz(${TABLE}.date) ;; }
 
   dimension: date_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
