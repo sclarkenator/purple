@@ -35,6 +35,17 @@ include: "/dashboards/**/*.dashboard"
       #timezone: timezone
       limit: 100
     }
+    query: period_over_period {
+      dimensions: [sales.date_in_period_date, sales.period]
+      measures: [sales.gross_amt]
+      label: "Period Over Period"
+      description: "Last 30 days compared to the previous 30"
+      pivots: [sales.period]
+      sorts: [sales.date_in_period_date: desc]
+      filters: [sales.comparison_period: "previous",
+        sales.date_filter: "30 days",
+        sales.is_within_current_and_comparison_period: "Yes"]
+    }
   }
 
   explore: sales_order_line{
@@ -645,6 +656,31 @@ include: "/dashboards/**/*.dashboard"
     from: day_aggregations
     group_label: " Sales"
     hidden:no
+  }
+
+  explore: day_sku {
+    from: day_sku_aggregations
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+    join: day_sku_no_channel {
+      view_label: "test"
+      type: left_outer
+      fields: [day_sku_no_channel.purchased_units_recieved,day_sku_no_channel.produced_units,day_sku_no_channel.forecast_units,day_sku_no_channel.units_available]
+      sql_on: ${day_sku.date_date} = ${day_sku_no_channel.date_date} and ${day_sku.sku_id} = ${day_sku_no_channel.sku_id} and ${day_sku.channel}<>'NA' ;;
+      relationship: many_to_one
+    }
+    join: sku_summary {
+      view_label: "test"
+      type: left_outer
+      fields: [sku_summary.exception_class,sku_summary.trend_type]
+      sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
   }
 
   explore: hour_assumptions {
