@@ -3,27 +3,27 @@ view: shopify_orders {
   #sql_table_name: ANALYTICS_STAGE.SHOPIFY_US_FT."ORDER" ;;
   derived_table: {
     sql:
-      WITH LINES AS (
-        SELECT
-          ORDER_ID,
-          SUM(PRODUCT_DISCOUNT * ORDERED_QTY)+SUM(CART_DISCOUNT) AS TOTAL_DISCOUNT //Does not include shipping discounts
-        FROM analytics.commerce_tools.ct_order_line
-        GROUP BY ORDER_ID
-      ), ct AS (
-        SELECT
-            o.ORDER_ID AS ID,
-            o.CUSTOMER_ID AS USER_ID,
-            convert_timezone('America/Denver',o.CREATED) AS CREATED_AT,
-            o.GROSS_AMT AS SUBTOTAL_PRICE,
-            o.TOTAL_GROSS AS TOTAL_PRICE,
-            o.ORDER_NUMBER AS NAME,
-            l.TOTAL_DISCOUNT AS TOTAL_DISCOUNTS,
-            o.TOTAL_TAX AS TOTAL_TAX,
-            o.SESSION_ID AS CHECKOUT_TOKEN,
-            'paid' as FINANCIAL_STATUS
-        FROM analytics.commerce_tools.ct_order o
-        INNER JOIN LINES l ON o.ORDER_ID = l.ORDER_ID
-      )
+--      WITH LINES AS (
+--        SELECT
+--          ORDER_ID,
+--          SUM(PRODUCT_DISCOUNT * ORDERED_QTY)+SUM(CART_DISCOUNT) AS TOTAL_DISCOUNT //Does not include shipping discounts
+--        FROM analytics.commerce_tools.ct_order_line
+--        GROUP BY ORDER_ID
+--      ), ct AS (
+--        SELECT
+--            o.ORDER_ID AS ID,
+--            o.CUSTOMER_ID AS USER_ID,
+--            convert_timezone('America/Denver',o.CREATED) AS CREATED_AT,
+--            o.GROSS_AMT AS SUBTOTAL_PRICE,
+--            o.TOTAL_GROSS AS TOTAL_PRICE,
+--            o.ORDER_NUMBER AS NAME,
+--            l.TOTAL_DISCOUNT AS TOTAL_DISCOUNTS,
+--            o.TOTAL_TAX AS TOTAL_TAX,
+--            o.SESSION_ID AS CHECKOUT_TOKEN,
+--            'paid' as FINANCIAL_STATUS
+--        FROM analytics.commerce_tools.ct_order o
+--        INNER JOIN LINES l ON o.ORDER_ID = l.ORDER_ID
+--      )
 
       select
         'Shopify US' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
@@ -43,9 +43,9 @@ view: shopify_orders {
       select 'Shopify_API' AS SRC, ID::varchar(100) AS ID, USER_ID::varchar(100) AS USER_ID,created as created_at,subtotal_price,subtotal_price TOTAL_PRICE, NAME,0 TOTAL_DISCOUNTS,0 TOTAL_TAX,CHECKOUT_TOKEN,'NA' FINANCIAL_STATUS
       from analytics.sales.v_shopify_subtotal
       where created_at >= current_date
-      UNION
-      select 'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
-      from ct
+--      UNION
+--      select 'Commerce Tools' AS SRC, ID::varchar(100) AS ID,USER_ID::varchar(100) AS USER_ID,convert_timezone('America/Denver',CREATED_AT) as CREATED_AT,SUBTOTAL_PRICE,TOTAL_PRICE,NAME,TOTAL_DISCOUNTS,TOTAL_TAX,CHECKOUT_TOKEN,FINANCIAL_STATUS
+--      from ct
 
 ;;
 #     sql:
@@ -178,8 +178,14 @@ view: shopify_orders {
     type: time
     timeframes: [
       date,
+      day_of_week,
+      day_of_year,
+      day_of_month,
+      month_num,
       hour,
       hour_of_day,
+      week_of_year,
+      day_of_week_index,
       minute15,
       week,
       month,

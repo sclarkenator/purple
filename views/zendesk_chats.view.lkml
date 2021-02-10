@@ -79,7 +79,7 @@ view: zendesk_chats {
 
   dimension_group:created {
     type: time
-    timeframes: [date,week,month,quarter,year,hour_of_day]
+    timeframes: [date,week,month,quarter,year,hour_of_day,month_name]
     convert_tz: yes
     datatype: datetime
     ##group_label: "Advanced - Chats"

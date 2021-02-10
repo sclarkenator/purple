@@ -6,6 +6,48 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+
+  explore: sales {
+    from: sales_base
+    label: "Sales NEW"
+    group_label: " Sales"
+    description: "Simplified view into sales"
+    hidden: no
+    query: sales_last_30 {
+      dimensions: [sales.order_date]
+      measures: [sales.gross_amt]
+      label: "DTC Sales By Day"
+      description: "Total DTC Sales by Day for the Last 30 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.order_date: asc]
+      filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
+      #timezone: timezone
+      limit: 100
+    }
+    query: sales_product {
+      dimensions: [sales.category_name]
+      measures: [sales.total_units]
+      label: "Units by Product Category"
+      description: "Total Units Sold by Category in the last 7 Days"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [sales.category_name: asc]
+      filters: [sales.order_date: "7 days ago for 7 days"]
+      #timezone: timezone
+      limit: 100
+    }
+    query: period_over_period {
+      dimensions: [sales.date_in_period_date, sales.period]
+      measures: [sales.gross_amt]
+      label: "Period Over Period"
+      description: "Last 30 days compared to the previous 30"
+      pivots: [sales.period]
+      sorts: [sales.date_in_period_date: desc]
+      filters: [sales.comparison_period: "previous",
+        sales.date_filter: "30 days",
+        sales.is_within_current_and_comparison_period: "Yes"]
+    }
+  }
+
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
@@ -156,6 +198,11 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Fulfillment"
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+      relationship: many_to_one}
+    join: ups_tracking {
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.tracking_numbers} = ${ups_tracking.tracking_number} ;;
       relationship: many_to_one}
     join: state_tax_reconciliation {
       view_label: "State Tax Reconciliation"
@@ -655,11 +702,37 @@ include: "/dashboards/**/*.dashboard"
     hidden:no
   }
 
+  explore: day_sku {
+    from: day_sku_aggregations
+    hidden: yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+    join: day_sku_no_channel {
+      view_label: "test"
+      type: left_outer
+      fields: [day_sku_no_channel.purchased_units_recieved,day_sku_no_channel.produced_units,day_sku_no_channel.forecast_units,day_sku_no_channel.units_available]
+      sql_on: ${day_sku.date_date} = ${day_sku_no_channel.date_date} and ${day_sku.sku_id} = ${day_sku_no_channel.sku_id} and ${day_sku.channel}<>'NA' ;;
+      relationship: many_to_one
+    }
+    join: sku_summary {
+      view_label: "test"
+      type: left_outer
+      fields: [sku_summary.exception_class,sku_summary.trend_type]
+      sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+  }
+
   explore: hour_assumptions {
     label: "Hour Assumptions"
     description: "% of day's sales by hour for dtc day prediction"
     hidden: yes
   }
+
 
   explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
@@ -778,6 +851,7 @@ include: "/dashboards/**/*.dashboard"
       fields: [zcta5.fulfillment_region_1]}
   }
 
+  explore: sequential_rules {hidden: yes}
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}

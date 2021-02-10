@@ -89,7 +89,7 @@ view: cc_call_service_level_csl {
             then 'SRT'
         when  ${skill_name} = 'Customer Service OB'
             then 'Support OB'
-        when  ${skill_name} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)')
+        when  ${skill_name} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)','Verification')
             then 'Verification'
         when  ${skill_name} = 'Sales Team OB'
             then 'Sales OB'

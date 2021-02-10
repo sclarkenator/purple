@@ -14,10 +14,31 @@ view: daily_adspend {
     sql: ${TABLE}.ad_id||'-'||${TABLE}.date;; }
 
   dimension_group: ad {
+    ### Scott Clark 1/8/21: Deleted week_of_year. need to reverse this last week of 2021
     label: "  Ad"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.date ;; }
+
+  dimension: ad_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type:  number
+    label: "Week of Year"
+    group_label: "  Ad Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${ad_date::date} >= '2020-12-28' and ${ad_date::date} <= '2021-01-03' then 1
+              when ${ad_year::number}=2021 then date_part(weekofyear,${ad_date::date}) + 1
+              else date_part(weekofyear,${ad_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    group_label: "  Ad Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${ad_date::date} >= '2020-12-28' and ${ad_date::date} <= '2021-01-03' then 2021 else ${ad_year} end   ;;
+  }
 
   #### Used with period comparison view
   dimension_group: event {
@@ -151,7 +172,7 @@ view: daily_adspend {
     type: sum
     value_format:  "$#,##0"
     #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' then ${TABLE}.spend*1.1
+    sql:  case when ${TABLE}.platform in ('FB/IG') and (${TABLE}.date::date >= '2019-06-04'and ${TABLE}.date::date <= '2020-12-11') then ${TABLE}.spend*1.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       else ${TABLE}.spend
@@ -224,13 +245,15 @@ view: daily_adspend {
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date > '2021-01-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
+      when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+      when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
       end ;;
     }
 
@@ -245,7 +268,8 @@ view: daily_adspend {
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
-      when ${TABLE}.platform in ('RADIO','PODCAST','CINEMA') and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
       else ${TABLE}.spend
       end ;;
   }
@@ -314,7 +338,7 @@ view: daily_adspend {
 #         when ${TABLE}.source = ('PODCAST') then 'PODCAST'
 #         else ${TABLE}.platform end ;; }
 
-dimension: countrty {
+dimension: country {
   label: "Country"
   description: "USA or CA"
   type:  string
@@ -354,16 +378,16 @@ dimension: spend_platform {
     description: "Calculated based on source and platform"
     type: string
     case: {
-      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE') or ${TABLE}.platform ilike ('MYMOVE%') or ${source} in ('AFFILIATE');; label: "affiliate" }
-      when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM') ;; label: "audio" }
-      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') ;; label: "crm" }
-      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
-        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
+      when: {sql: ${spend_platform} = 'AFFILIATE' OR ${TABLE}.platform in ('AFFILIATE')  or ${source} in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: ${TABLE}.platform in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM') or ${spend_platform} ilike 'STREAMING%' or (${source} = 'AUDIO' and ${spend_platform}='YOUTUBE');; label: "audio" }
+      when: {sql: ${TABLE}.platform in ('MADRIVO','ADWALLET','FKL', 'FLUENT','Fluent', 'LIVEINTENT', 'TALKABLE','ROKT') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "crm" }
+      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
+      when: {sql: (${campaign_name} ilike '%ative%' and not ${spend_platform} = 'ADMARKETPLACE') or ${campaign_name} ilike 'nt_%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+      when: {sql: ${TABLE}.source in ('DISPLAY')
+        or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%' and ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
       when: {sql: ${TABLE}.source ilike ('%earc%') or (${campaign_name} ilike 'NB%' and ${spend_platform} <> 'OCEAN MEDIA')
         or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE')
         or ${spend_platform} in ('AMAZON-HSA');; label:"search"}
-      when: {sql: ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
       when: {sql: ${TABLE}.platform in ('FACEBOOK','WAZE','PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'FB/IG', 'TIKTOK') OR ${TABLE}.source ilike ('instagram')
         or ${TABLE}.source ilike 'messenger' ;; label:"social"}
       when: {sql: ${TABLE}.platform in ('HULU','PRINT','PANDORA','USPS','NINJA','INTEGRAL MEDIA','OCEAN MEDIA', 'POSTIE','REDCRANE', 'TV', 'VERITONE', 'MODUS')
@@ -583,8 +607,9 @@ dimension: spend_platform {
     type: sum
     value_format: "$#,##0"
     sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' or ${TABLE}.date::date < '2021-01-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+    when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display'
+    and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
+    when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
@@ -631,7 +656,8 @@ dimension: spend_platform {
     description: "Total adspend for selected channels (includes Agency cost)"
     type: number
     value_format: "$#,##0"
-    sql: ${agency_cost_comparison_period}+${adspend_no_agency_comparison_period} ;;  }
+    sql: ${agency_cost_comparison_period}+${adspend_no_agency_comparison_period} ;;
+  }
 
   measure: agency_cost_comparison_period {
     label: "  Agency Cost ($) Comparison Period"

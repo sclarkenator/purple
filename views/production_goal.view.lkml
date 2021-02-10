@@ -25,11 +25,23 @@ view: production_goal {
   dimension_group: forecast {
     view_label: "Production Goals"
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}."FORECAST" ;;
   }
+
+  dimension: forecast_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    group_label: "Produced Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${forecast_date::date} >= '2020-12-28' and ${forecast_date::date} <= '2021-01-03' then 1
+              when ${forecast_year::number}=2021 then date_part(weekofyear,${forecast_date::date}) + 1
+              else date_part(weekofyear,${forecast_date::date}) end ;;
+  }
+
 
   dimension_group: current {
     view_label: "Production Goals"

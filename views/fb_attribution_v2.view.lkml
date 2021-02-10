@@ -2,20 +2,14 @@ view: fb_attribution_v2 {
   sql_table_name: "CSV_UPLOADS"."FB_ATTRIBUTION_V2"
     ;;
 
-  dimension: ad_set_budget {
-    type: number
-    sql: ${TABLE}."AD_SET_BUDGET" ;;
-  }
+
 
   dimension: ad_set_budget_type {
     type: string
     sql: ${TABLE}."AD_SET_BUDGET_TYPE" ;;
   }
 
-  dimension: amount_spent {
-    type: number
-    sql: ${TABLE}."AMOUNT_SPENT" ;;
-  }
+
 
   dimension: campaign_delivery {
     type: string
@@ -48,51 +42,63 @@ view: fb_attribution_v2 {
     end;;
   }
 
-  dimension: frequency {
-    type: number
+  measure: ad_set_budget {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}."AD_SET_BUDGET" ;;
+  }
+
+  measure: amount_spent {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}."AMOUNT_SPENT" ;;
+  }
+
+  measure: frequency {
+    type: sum
     value_format: "0.00"
     sql: ${TABLE}."FREQUENCY" ;;
   }
 
-  dimension: impressions {
-    type: number
+ measure: impressions {
+    type: sum
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: link_clicks {
-    type: number
+  measure: link_clicks {
+    type: sum
     sql: ${TABLE}."LINK_CLICKS" ;;
   }
 
-  dimension: purchases_1_day_click {
-    type: number
+ measure: purchases_1_day_click {
+    type: sum
     sql: ${TABLE}."PURCHASES_1_DAY_CLICK" ;;
   }
 
-  dimension: purchases_1_day_view {
-    type: number
+ measure: purchases_1_day_view {
+    type: sum
     sql: ${TABLE}."PURCHASES_1_DAY_VIEW" ;;
   }
 
-  dimension: purchases_28_day_click {
-    type: number
+  measure: purchases_28_day_click {
+    type: sum
     sql: ${TABLE}."PURCHASES_28_DAY_CLICK" ;;
   }
 
-  dimension: purchases_conversion_value_1_day_click {
-    type: number
+  measure: purchases_conversion_value_1_day_click {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_CLICK" ;;
   }
 
-  dimension: purchases_conversion_value_1_day_view {
-    type: number
+  measure: purchases_conversion_value_1_day_view {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_1_DAY_VIEW" ;;
   }
 
-  dimension: purchases_conversion_value_28_day_click {
-    type: number
+  measure: purchases_conversion_value_28_day_click {
+    type: sum
     value_format:  "$#,##0.00"
     sql: ${TABLE}."PURCHASES_CONVERSION_VALUE_28_DAY_CLICK" ;;
   }
@@ -100,62 +106,62 @@ view: fb_attribution_v2 {
   measure: CVR_28_day_click{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_28_day_click}/${link_clicks} ;;
+    sql:  ${purchases_28_day_click}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CVR_1_day_click{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_1_day_click}/${link_clicks} ;;
+    sql:  ${purchases_1_day_click}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CVR_1_day_view{
     type:  number
     value_format: "0.0%"
-    sql:  ${purchases_1_day_view}/${link_clicks} ;;
+    sql:  ${purchases_1_day_view}/NULLIF(${link_clicks},0) ;;
   }
 
   measure: CPA_28_day_click{
     type:  number
     value_format: "$0.00"
-    sql:${amount_spent}/${purchases_28_day_click} ;;
+    sql:${amount_spent}/NULLIF(${purchases_28_day_click},0) ;;
   }
 
   measure: CPA_1_day_click{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/${purchases_1_day_click} ;;
+    sql:  ${amount_spent}/NULLIF(${purchases_1_day_click},0) ;;
   }
 
   measure: CPA_1_day_view{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/${purchases_1_day_view} ;;
+    sql:  ${amount_spent}/NULLIF(${purchases_1_day_view},0) ;;
   }
   measure: CPM{
     type:  number
     value_format: "$0.00"
-    sql:  ${amount_spent}/(${impressions}/1000) ;;
+    sql:  ${amount_spent}/NULLIF((${impressions}/1000),0) ;;
   }
   measure: ROAS_28_click {
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_28_day_click }/${amount_spent} ;;
+    sql: ${purchases_conversion_value_28_day_click}/NULLIF(${amount_spent},0) ;;
   }
 
   measure: ROAS_1_click {
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_1_day_click}/${amount_spent} ;;
+    sql: ${purchases_conversion_value_1_day_click}/NULLIF(${amount_spent},0) ;;
   }
 
   measure: ROAS_1_view{
     type: number
     value_format: "$0.00"
-    sql: ${purchases_conversion_value_1_day_view}/${amount_spent} ;;
+    sql: ${purchases_conversion_value_1_day_view}/NULLIF(${amount_spent},0) ;;
   }
 
-  dimension: reach {
+  measure: reach {
     type: number
     sql: ${TABLE}."REACH" ;;
   }

@@ -56,7 +56,7 @@ view: customer_table {
 
   dimension: email_signup_test {
     group_label: " Advanced"
-    hidden:  no
+    hidden:  yes
     label: "Customer Email Signup Test"
     description: "Customers that signed-up for email in the 5% sign-up test. Source:cordial"
     type: string

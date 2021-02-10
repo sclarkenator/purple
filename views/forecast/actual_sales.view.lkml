@@ -127,7 +127,7 @@ view: actual_sales {
   measure: total_gross_Amt_non_rounded {
     group_label: "Gross Sales"
     label:  "Gross Sales ($)"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding cancellations, tax, freight, in $. Source:netsuite.sales_order_line"
     type: sum
     value_format: "$#,##0"
     sql:  ${gross_Amt_non_rounded} ;;
@@ -135,7 +135,7 @@ view: actual_sales {
   measure: total_gross_Amt_amazon {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) Amazon"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
     filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
     type: sum
     value_format: "$#,##0"
@@ -144,7 +144,7 @@ view: actual_sales {
   measure: total_gross_Amt_dtc {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) DTC"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
     filters: [channel: "DTC"]
     type: sum
     value_format: "$#,##0"
@@ -153,7 +153,7 @@ view: actual_sales {
   measure: total_gross_Amt_retail {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) Retail"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
     filters: [channel: "Owned Retail"]
     type: sum
     value_format: "$#,##0"
@@ -162,7 +162,7 @@ view: actual_sales {
   measure: total_gross_Amt_wholesale {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) Wholesale"
-    description:  "Total the customer paid, excluding tax and freight, in $. Source:netsuite.sales_order_line"
+    description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
     filters: [channel: "Wholesale"]
     type: sum
     value_format: "$#,##0"
@@ -171,7 +171,7 @@ view: actual_sales {
   measure: total_units {
     group_label: "Gross Sales"
     label:  "Gross Sales (units)"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
     type: sum
     sql:  ${units} ;;
     drill_fields: [actual_sales.order_details]
@@ -179,7 +179,7 @@ view: actual_sales {
   measure: total_units_amazon {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) Amazon"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
     filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
     type: sum
     sql:  ${units} ;;
@@ -188,7 +188,7 @@ view: actual_sales {
   measure: total_units_dtc {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) DTC"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
     filters: [channel: "DTC"]
     type: sum
     sql:  ${units} ;;
@@ -197,7 +197,7 @@ view: actual_sales {
   measure: total_units_retail {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) Owned Retail"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
     filters: [channel: "Owned Retail"]
     type: sum
     sql:  ${units} ;;
@@ -206,7 +206,7 @@ view: actual_sales {
   measure: total_units_wholesale {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) Wholesale"
-    description: "Total units purchased, before returns and cancellations. Source:netsuite.sales_order_line"
+    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
     filters: [channel: "Wholesale"]
     type: sum
     sql:  ${units} ;;

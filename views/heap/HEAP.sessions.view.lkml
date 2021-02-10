@@ -238,11 +238,33 @@ view: sessions {
     sql: ${TABLE}.search_keyword ;; }
 
   dimension_group: time {
+    ### Scott Clark 1/13/21: Deleted week_of_year. need to reverse this last week of 2021
     group_label: "  Session Time"
     description: "Source: HEAP.sessions"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
     sql: ${TABLE}.time ;; }
+
+  dimension: time_week_of_year {
+    ## Scott Clark 1/13/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type:  number
+    label: "Week of Year"
+    group_label: "  Session Time"
+    description: "2021 adjusted week of year number"
+    sql: case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 1
+              when ${time_year::number}=2021 then date_part(weekofyear,${time_date::date}) + 1
+              else date_part(weekofyear,${time_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/13/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    group_label: "  Session Time"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 2021 else ${time_year::number} end   ;;
+  }
+
 
   dimension_group: current_date_sessions {
     view_label: "Sessions"
@@ -315,9 +337,10 @@ view: sessions {
     type: yesno
     sql:  date_trunc(week, ${TABLE}.time::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     group_label: "  Session Time"
     label: "z - Week Bucket"
+    hidden: yes
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
     type: string
      sql:  CASE WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -327,6 +350,20 @@ view: sessions {
              WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
              WHEN date_trunc(week, ${TABLE}.time::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
+
+  dimension: week_bucket{
+    group_label: "  Session Time"
+    label: "z - Week Bucket"
+    hidden: no
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
+    type: string
+    sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) +1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;}
 
   dimension: user_id {
     type: number
@@ -478,6 +515,7 @@ view: sessions {
               when ${utm_source} in ('em') then 'Email'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%'  or ${utm_source} in ('instagram')  then 'FB/IG'
               when ${utm_source} in ('findkeeplove') then 'fkl'
+              when ${utm_source} = 'goop' then  'GOOP'
               when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
               when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'

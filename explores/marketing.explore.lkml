@@ -13,7 +13,9 @@ include: "/dashboards/**/*.dashboard"
     hidden: no
     join: adspend_target {
       type: full_outer
-      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date} and ${adspend_target.medium} = ${daily_adspend.medium} ;;
+      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
+      and ${adspend_target.medium} = ${daily_adspend.medium}
+      and ${adspend_target.country} = ${daily_adspend.country};;
       relationship: many_to_one}
   }
 
@@ -216,7 +218,34 @@ explore: email_mymove_contact {
     }
   }
 
+  explore: talkable_referral {hidden: yes
+    join: sales_order {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order.email} = ${talkable_referral.referred_email} ;;
+    }
+    join: sales_order_line_base {
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id}
+        and ${sales_order_line_base.system} = ${sales_order.system};;
+    }
+    join: item {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
+    }
+    join: customer_table {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${sales_order.customer_id} = ${customer_table.customer_id} ;;
+    }
+  }
+
+  explore: v_fb_adset_freq_weekly {hidden: yes}
+  explore: v_fb_all {hidden: yes}
   explore: fb_attribution { hidden: yes}
+  explore: fb_attribution_v2 { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}
   #explore: adspend_target { hidden:yes group_label: "Marketing"}
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}

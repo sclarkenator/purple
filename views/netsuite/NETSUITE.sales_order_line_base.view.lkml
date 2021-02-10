@@ -287,10 +287,11 @@ view: sales_order_line_base {
     sql: ${TABLE}.Created < current_date;;
   }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     view_label: "Sales Order"
     group_label: "    Order Date"
-    label: "z - Week Bucket"
+    label: "z - Week Bucket Old"
+    hidden: yes
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
     sql:  CASE WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -299,6 +300,21 @@ view: sales_order_line_base {
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
            WHEN date_trunc(week, ${TABLE}.Created::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;
+  }
+
+  dimension: week_bucket{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
+    type: string
+    sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
            ELSE 'Other' END ;;
   }
 
@@ -332,24 +348,25 @@ view: sales_order_line_base {
   }
 
   dimension: current_day_filter{
+    ###Edited on 1/12/21 by Scott Clark to align week for Y/Y daily
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Current Day"
     #hidden:  yes
     description: "Yes/No for if the date is on the current day of week and week of the year (for each year). Source: netsuite.sales_order_line"
     type: yesno
-    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) and
-      EXTRACT(DOW FROM ${TABLE}.Created::date) = EXTRACT(DOW FROM current_date::date) ;;
+    sql: ${created_week_of_year} = ${current_week_of_year} and ${created_day_of_week} = ${current_day_of_week} ;;
   }
 
   dimension: current_week_filter{
+    ##Edited on 1/8/21 Scott Clark tweaked SQL to accomodate week shift. old code: sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) ;;
     view_label: "Sales Order"
     group_label: "    Order Date"
     label: "z - Current Week"
     #hidden:  yes
     description: "Yes/No for if the date is in the current week of the year (for each year). Source: netsuite.sales_order_line"
     type: yesno
-    sql: EXTRACT(WEEK FROM ${TABLE}.Created::date) = EXTRACT(WEEK FROM current_date::date) ;;
+    sql: ${created_week_of_year} = ${current_week_of_year}  ;;
   }
 
   dimension: current_month_filter{
@@ -371,6 +388,17 @@ view: sales_order_line_base {
     type: yesno
     sql: EXTRACT(quarter FROM ${TABLE}.Created::date) = EXTRACT(quarter FROM current_date::date) ;;
   }
+
+  dimension: current_quarter_of_year_filter{
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    label: "z - Current Quarter of Year"
+    #hidden:  yes
+    description: "Yes/No for if the date is in the current quarter of the year (for each year). Source: netsuite.sales_order_line"
+    type: yesno
+    sql: ${created_quarter_of_year} = ${current_quarter_of_year}  ;;
+  }
+
 
   dimension: prev_week{
     view_label: "Sales Order"
@@ -462,14 +490,37 @@ view: sales_order_line_base {
   }
 
   dimension_group: created {
+    ## Scott Clark 1/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021.
     view_label: "Sales Order"
     label: "    Order"
     description:  "Time and date order was placed. Source: netsuite.sales_order_line"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
+  }
+
+  dimension: created_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
+              when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
+              else date_part(weekofyear,${created_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 2021 else ${created_year::number} end   ;;
   }
 
   measure: last_sync_date  {
@@ -575,11 +626,23 @@ view: sales_order_line_base {
     label: "    Current"
     description:  "Current Time/Date for calculations. Source: looker.calculation"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: current_date ;;
   }
+
+  dimension: current_week_of_year {
+    ## Jared Dyer 1/14/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "    Current Week of Year"
+    view_label: "Sales Order"
+    group_label: "    Order Date"
+    description: "2021 adjusted - current week of year number"
+    sql: case when ${current_year::number}=2021 then date_part(weekofyear,${current_date}::date) + 1
+    else date_part(weekofyear,${current_date::date}) end;;
+  }
+
 
   dimension: before_day_of_year {
     hidden: yes
@@ -996,6 +1059,15 @@ view: sales_order_line_base {
     sql: ${TABLE}.STATE ;;
   }
 
+  dimension: cntry {
+    view_label: "Customer"
+    group_label: "  Customer Address"
+    description: "Source: netsuite.sales_order_line"
+    label: "Country"
+    type: string
+    sql: ${TABLE}.COUNTRY ;;
+  }
+
   dimension: zip {
     view_label: "Customer"
     group_label: "  Customer Address"
@@ -1074,15 +1146,35 @@ view: sales_order_line_base {
   }
 
   dimension: IS_3PL_TRANSMIT_SUCCESS {
-    hidden: yes
+    hidden: no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "3PL Transmitted Success"
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.IS_3PL_TRANSMIT_SUCCESS;;
   }
 
   dimension: TRANSMITTED_TO_ID {
-    hidden: yes
+    hidden: no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "3PL Transmitted To ID"
+    description: "Source: netsuite.sales_order_line"
     type: string
     sql: ${TABLE}.TRANSMITTED_TO_ID;;
+  }
+
+  dimension_group: N_3PL_TRANSMITTED {
+    hidden:  no
+    view_label: "Fulfillment"
+    label: "3PL Transmitted"
+    description: "Source: netsuite.sales_order_line"
+    type: time
+    timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.N_3PL_TRANSMITTED ;;
   }
 
     measure: kit_total_units {

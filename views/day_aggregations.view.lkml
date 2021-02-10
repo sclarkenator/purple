@@ -1,3 +1,4 @@
+include: "/views/_period_comparison.view.lkml"
 ######################################################
 #   DTC Sales and Units
 ######################################################
@@ -411,18 +412,54 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
-      where date::date >= '2017-01-01' and date::date < '2021-01-01' ;;
+      where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
   }
   dimension: date {type: date hidden:yes}
+
+  # extends: [_period_comparison]
+
+  #### Used with period comparison view
+  # dimension_group: event {
+  #   hidden: yes
+  #   type: time
+  #   timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+  #     week,month,month_num,quarter,quarter_of_year,year]
+  #   convert_tz: no
+  #   datatype: date
+  #   sql: ${date_date} ;;
+  # }
+
   dimension_group: date {
+  ##Scott Clark, 1/8/21: Deleted week of year.
     label: "Created"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
-    datatype: timestamp
+    datatype: date
     sql: to_timestamp_ntz(${date}) ;; }
+
+  dimension: date_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    group_label: "Created Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
+              when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
+              else date_part(weekofyear,${date_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    group_label: "Created Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 2021 else ${date_year} end   ;;
+  }
+
 
   dimension: Before_today{
     group_label: "Created Date"
@@ -475,9 +512,10 @@ view: day_aggregations {
     type: string
     sql: to_char( ${TABLE}.week_start_2020,'MON-DD');; }
 
-  dimension: week_bucket{
+  dimension: week_bucket_old{
     group_label: "Created Date"
     label: "z - Week Bucket"
+    hidden:  yes
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
      sql:  CASE WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, current_date) THEN 'Current Week'
@@ -488,12 +526,26 @@ view: day_aggregations {
              WHEN date_trunc(week, ${TABLE}.date::date) = date_trunc(week, dateadd(week, -2, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
              ELSE 'Other' END ;; }
 
+  dimension: week_bucket{
+    group_label: "Created Date"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+     sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END;; }
+
   dimension_group: current {
     label: "Current"
     description:  "Current Time/Date for calculations"
     type: time
     timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
+    hidden: yes
     datatype: timestamp
     sql: current_date ;;
   }

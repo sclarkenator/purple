@@ -401,9 +401,17 @@ view: sales_order {
     sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
 
   dimension: recycle_fee_amt {
-    hidden:yes
+    label: "Recycle Fee"
+    group_label: " Advanced"
+    description: "The mattress recycle fee that applied to this order, or 0 if no fee applied."
     type: number
     sql: ${TABLE}.RECYCLE_FEE_AMT ;; }
+
+  dimension: has_recycle_fee {
+    label: "     * Has Recycle Fee"
+    description: "Does this order have a mattress recycle fee?"
+    type: yesno
+    sql: coalesce(${TABLE}.RECYCLE_FEE_AMT,0) > 0 ;; }
 
   dimension: related_tranid {
     group_label: " Advanced"
@@ -674,5 +682,18 @@ dimension: store_name{
     sql:datediff(day
       ,case when datediff(day,${created},current_date()) > 270 then dateadd(year,1,${created}) else ${created} end
       ,current_date());;
+    }
+
+
+  dimension: before_after_mattress_price_increase {
+    group_label: " Advanced"
+    label: "Before or after mattress price increase"
+    description: "30 days before or after the mattress price increase on 7/15/2020"
+    hidden: no
+    type: string
+    sql: case when ${TABLE}.CREATED between '2020-06-14' and '2020-07-14' then 'Before'
+              when ${TABLE}.CREATED between '2020-07-15' and '2020-08-14' then 'After'
+              else 'Other'
+              end ;;
     }
 }

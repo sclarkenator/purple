@@ -2,6 +2,12 @@ view: customer_satisfaction_survey {
   sql_table_name: ANALYTICS.CUSTOMER_CARE.CUSTOMER_SATISFACTION_SURVEY
     ;;
 
+  dimension: pk {
+    primary_key: yes
+    type: string
+    sql: ${survey_id}||${agent_id} ;;
+  }
+
   dimension_group: created {
     description: "When the CSAT survey was sent to the customer. Source: stella_connect.customer_satisfaction_survey"
     type: time
@@ -68,15 +74,15 @@ view: customer_satisfaction_survey {
   measure: issue_resolved_count {
     label: "FCR Resolved"
     description: "First Call Resolution Source: stella_connect.customer_satisfaction_survey"
-    type: sum
-    sql:case when ${issue_resolved} = 'true' then 1 else 0 end ;;
+    type: count_distinct
+    sql:case when ${issue_resolved} = 'true' then ${pk} end ;;
   }
 
   measure: issue_resolved_total {
     label: "FCR Count"
     description: "First Call Resolution including true and false (excluding null) Source: stella_connect.customer_satisfaction_survey"
-    type: sum
-    sql:case when ${issue_resolved} is not null then 1 else 0 end ;;
+    type: count_distinct
+    sql:case when ${issue_resolved} is not null then ${pk} end ;;
   }
 
   measure: first_contact_rate {
@@ -153,7 +159,8 @@ view: customer_satisfaction_survey {
     label: "Total Agent CSATs"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: count_distinct
-    sql:  ${TABLE}."STAR_RATING" is not null ;;
+    sql_distinct_key: ${pk} ;;
+    sql:  case when ${TABLE}."STAR_RATING" is not null then ${pk} end;;
   }
 
   measure: avg_star_rating {
@@ -167,9 +174,9 @@ view: customer_satisfaction_survey {
   measure: 5_star_rating {
     label: "Agent CSAT Scores of 5"
     #description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
-    type: sum
+    type: count_distinct
     value_format: "0.##"
-    sql: case when ${star_rating_score} = '5' then 1 else 0 end ;;
+    sql: case when ${star_rating_score} = '5' then ${pk} end ;;
   }
 
   measure: top_box {
@@ -177,7 +184,7 @@ view: customer_satisfaction_survey {
     description: "CSAT score of 5 / total CSAT scores. Source: stella_connect.customer_satisfaction_survey"
     type: number
     value_format: "0.00\%"
-    sql: ${5_star_rating}/${star_rating_count} /100 ;;
+    sql: ${5_star_rating}/${star_rating_count}*100;;
   }
 
   dimension: star_rating_comment {
@@ -198,7 +205,8 @@ view: customer_satisfaction_survey {
   }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${pk} ;;
     drill_fields: [agent_name, customer_name]
   }
 }

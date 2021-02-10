@@ -154,8 +154,12 @@ include: "/dashboards/**/*.dashboard"
     join: mainfreight_inventory {
       type: left_outer
       sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
-      relationship: one_to_many
-    }
+      relationship: one_to_many}
+    join: standard_cost {
+      view_label: "Item"
+      type: left_outer
+      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+      relationship: one_to_one}
  ##   join: derived_inventory {
 ##      type: left_outer
 ##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
@@ -187,8 +191,7 @@ include: "/dashboards/**/*.dashboard"
     join: mainfreight_inventory_snapshot {
       type: left_outer
       sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
-      relationship: one_to_many
-    }
+      relationship: one_to_many}
   }
 
   explore: mainfreight_inventory{
@@ -386,6 +389,35 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${scrap_detail.product} = ${product.product_id} ;;
       relationship: one_to_one
+    }
+    join: v_dispatch_with_downtime_minutes {
+      view_label: "Dispatch by Date"
+      type: left_outer
+      sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
+      relationship: one_to_many
+    }
+  }
+
+  explore: bill_of_materials {
+    hidden: yes
+    join: p_item {
+      from: item
+      view_label: "Parent Item"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bill_of_materials.parent_id} = ${p_item.item_id} ;;
+    }
+    join: c_item {
+      from: item
+      view_label: "Child Item"
+      relationship: many_to_one
+      sql_on: ${bill_of_materials.child_id} = ${c_item.item_id} ;;
+    }
+    join: com_item {
+      from: item
+      view_label: "Component Item"
+      relationship: many_to_one
+      sql_on: ${bill_of_materials.component_id} = ${com_item.item_id} ;;
     }
   }
 

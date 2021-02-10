@@ -246,13 +246,13 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT') and ${sales_order.minimum_ship_date} > ${created_date}
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
           -- fedex without min ship date is created + 3
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS')
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS')
             THEN dateadd(d,14,${created_date})
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
@@ -282,15 +282,40 @@ view: sales_order_line {
   }
 
   dimension_group: SLA_Target {
+    ## Scott Clark 1/8/21 Swapping out week of year
     label: "SLA Target"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${Due_Date}) ;;
   }
+
+  dimension: SLA_Target_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Fulfillment"
+    group_label: "SLA Target Date"
+    description: "2021 adjusted week of year number (SLA)"
+    sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
+              when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
+              else date_part(weekofyear,${SLA_Target_date::date}) end ;;
+  }
+
+  dimension: SLA_adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    label: "z - 2021 adj year"
+    view_label: "Fulfillment"
+    group_label: "SLA Target Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 2021 else ${SLA_Target_year::number} end   ;;
+  }
+
+
 
   dimension: SLA_Buckets {
     group_label: " Advanced"
@@ -447,7 +472,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_sales_Fulfilled_in_SLA{
@@ -464,7 +489,7 @@ view: sales_order_line {
           when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
           Else 0
         END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_zSLA_Achievement_prct {
@@ -697,7 +722,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_Qty_Fulfilled_in_SLA{
@@ -714,7 +739,7 @@ view: sales_order_line {
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_SLA_Achievement_prct {
@@ -1197,16 +1222,40 @@ view: sales_order_line {
   }
 
   dimension_group: fulfilled {
+    ## Scott Clark 1/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021
     view_label: "Fulfillment"
     label: "    Fulfilled"
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
+
+  dimension: fulfilled_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    view_label: "Fulfillment"
+    group_label: "    Fulfilled Date"
+    description: "2021 adjusted week of year number for fulfilled date"
+    sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
+              when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
+              else date_part(weekofyear,${fulfilled_date::date}) end ;;
+  }
+
+  dimension: fulf_adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type:  number
+    label: "z - 2021 adj year"
+    view_label: "Fulfillment"
+    group_label: "    Fulfilled Date"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 2021 else ${fulfilled_year} end   ;;
+  }
+
 
   measure: last_updated_date_fulfilled {
     view_label: "Fulfillment"
@@ -1308,7 +1357,7 @@ view: sales_order_line {
     sql:  date_trunc(week, ${fulfilled_raw}::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
   }
 
-  dimension: week_bucket_ff{
+  dimension: week_bucket_ff_old{
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
     label: "z - Week Bucket"
@@ -1320,8 +1369,21 @@ view: sales_order_line {
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 1, dateadd(year, -1, current_date))) THEN 'Current Week LY'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, 0, dateadd(year, -1, current_date))) THEN 'Last Week LY'
             WHEN date_trunc(week, ${fulfilled_raw}::date) = date_trunc(week, dateadd(week, -1, dateadd(year, -1, current_date))) THEN 'Two Weeks Ago LY'
-            ELSE 'Other' END ;;
-  }
+            ELSE 'Other' END ;;}
+
+  dimension: week_bucket_ff{
+    group_label: "    Fulfilled Date"
+    view_label: "Fulfillment"
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker.calculation"
+    type: string
+    sql:  CASE WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${fulfilled_year} = date_part (year,current_date) THEN 'Current Week'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) AND ${fulfilled_year} = date_part (year,current_date) THEN 'Last Week'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) -1 AND ${fulfilled_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) +1 AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+            WHEN ${fulfilled_week_of_year} = date_part (weekofyear,current_date) -1 AND ${fulfilled_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;}
 
   measure: return_rate_units {
     group_label: "Return Rates"
@@ -1390,7 +1452,7 @@ view: sales_order_line {
     label: "Order to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the order date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1402,7 +1464,7 @@ view: sales_order_line {
     label: "Transmitted to Left Purple (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the transmitted date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1414,7 +1476,7 @@ view: sales_order_line {
     label: "Transmitted to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the transmitted date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1426,7 +1488,7 @@ view: sales_order_line {
     label: "Order to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the order date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1438,7 +1500,7 @@ view: sales_order_line {
     label: "Left Purple to In Hand (days)"
     view_label: "Fulfillment"
     group_label: "Time Between Benchmarks"
-    description: "The average difference between the order date and transmitted date. Source: looker.calculation"
+    description: "The average difference between the left purple date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
     value_format: "0.00"
@@ -1905,6 +1967,19 @@ view: sales_order_line {
       when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US','eBay') then 'Merchant'
       when ${sales_order.channel} = 'DTC' then 'Website'
       else 'Other' end;;
+  }
+
+  dimension: order_age_bucket3 {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Order Age (bucket 3)"
+    hidden: yes
+    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
+    Source: netsuite.sales_order"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+    style: integer
+    sql: datediff(day,${sales_order_line.created_date}, ${sales_order_line.fulfilled_date}) ;;
   }
 
   measure: adj_gross_amt {

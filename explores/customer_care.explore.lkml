@@ -157,6 +157,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many
       sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
     }
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
+    }
     join: v_wholesale_manager {
       view_label: "Customer"
       type:left_outer
@@ -234,7 +240,7 @@ include: "/dashboards/**/*.dashboard"
     join: agent_evaluation {
       type: full_outer
       sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
-      relationship: one_to_one}
+      relationship: one_to_many}
     join: rpt_agent_stats {
       type: full_outer
       sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
@@ -261,6 +267,14 @@ include: "/dashboards/**/*.dashboard"
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
       #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
       relationship: one_to_one
+    }
+    join: agent_lkp_eval {
+      from: agent_lkp
+      relationship: many_to_one
+      type: left_outer
+      sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
+      view_label: "Agent Evaluator"
+      fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
     }
     required_access_grants: [is_customer_care_manager]
   }
@@ -339,3 +353,4 @@ include: "/dashboards/**/*.dashboard"
   explore: zendesk_sell_user_active {hidden:yes group_label:"Customer Care" description: "Compares Agents in Zendesk Sell and Zendesk."}
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
   explore: v_zendesk_articles {hidden: yes}
+  explore: v_invalid_rma {hidden: yes group_label:"Customer Care" description: "Invalid RMA Finder for Emily Heise"}

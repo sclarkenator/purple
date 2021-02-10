@@ -80,6 +80,20 @@ view: transfer_order_line {
     sql: to_timestamp_ntz(${TABLE}."SHIPPED") ;;
   }
 
+  measure: days_in_transit {
+    description: "Looks at the total number of days between when and item/order is Shipped and when the Shipment is Received; Source: Looker calculation"
+    type: sum
+    value_format: "0"
+    sql: DATEDIFF(day, ${transfer_order_line.shipped_date},${transfer_order_line.shipment_received_date}) ;;
+  }
+
+  measure: avg_days_in_transit {
+    description: "Looks at the average number of days between when and item is Shipped and when the Shipment is Received; Source: Looker calculation"
+    type: average
+    value_format: "0"
+    sql: DATEDIFF(day, ${transfer_order_line.shipped_date},${transfer_order_line.shipment_received_date}) ;;
+  }
+
   dimension: transfer_order_id {
     type: number
     hidden: yes
