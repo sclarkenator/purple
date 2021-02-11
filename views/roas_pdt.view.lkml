@@ -490,6 +490,8 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('fluent') then 'Fluent'
         when lower(${TABLE}.platform)  in ('fkl','findkeeplove') then 'FKL'
         when lower(${TABLE}.platform)  in ('goop') then 'Goop'
+        when lower(${TABLE}.platform)  in ('liveintent','lv')
+        or lower(${TABLE}.platform) in ('li') then 'Liveintent'
         when lower(${TABLE}.platform)  in ('linkedin', 'li') then 'LinkedIn'
         when lower(${TABLE}.platform)  in ('meredith') then 'Meredith'
         when lower(${TABLE}.platform)  in ('madrivo') then 'Madrivo'
