@@ -282,6 +282,7 @@ view: _period_comparison {
 
   dimension: period {
     view_label: "Period over Period"
+    label: "Period (pivot by)"
     #group_label: "Period Comparison"
     description: "Use this field in combination with the date filter field for dynamic date filtering"
     suggestions: ["Current Period","Previous Period", "Same Period Last Year"]
@@ -295,6 +296,7 @@ view: _period_comparison {
   }
 
   dimension: period_and_last_year {
+    hidden: yes
     view_label: "Period over Period"
     #group_label: "Period Comparison"
     description: "Use this field in combination with the date filter field for dynamic date filtering"
