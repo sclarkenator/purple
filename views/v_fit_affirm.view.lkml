@@ -81,6 +81,12 @@ view: v_fit_affirm {
         sum(amount) as netsuite_total
       from nst
       group by 1
+    ), p as (
+      select p.payment_id, p.transaction_extid, p.transaction_number, sum(pl.amount*-1) as amount
+      from analytics.finance.payment p
+        join analytics.finance.payment_line pl on p.payment_id = pl.payment_id
+      where p.transaction_extid is not null
+      group by 1,2,3
     ), final as (
       select
         'Refund' as event_type,
@@ -122,15 +128,16 @@ view: v_fit_affirm {
         o.order_number::string as order_number,
         t.amount::varchar as etail_amounts,
         t.amount::float as etail_total,
-        d.transaction_number as ns_transaction_ids,
-        d.gross_amount::varchar as netsuite_amounts,
-        d.gross_amount::float as netsuite_total
+        iff(d.transaction_number is not null,d.transaction_number,p.transaction_number) as ns_transaction_ids,
+        iff(d.gross_amount is not null,d.gross_amount,p.amount)::varchar as netsuite_amounts,
+        iff(d.gross_amount is not null,d.gross_amount,p.amount)::float as netsuite_total
       from analytics.accounting.affirm_transaction a
         join analytics.accounting.affirm_header ah on a.entry_id = ah.id
         left join analytics_stage.shopify_us_ft.transaction t on a.entry_id = t.authorization and a.reference_id = t.receipt:x_reference
         left join analytics_stage.shopify_us_ft."ORDER" o on t.order_id = o.id
         left join analytics.sales.sales_order so on o.id::string = so.etail_order_id
         left join analytics.sales.customer_deposit d on so.order_id = d.sales_order_id
+        left join p on so.order_id::string = p.transaction_extid::string
       where a.event_type = 'capture'
         and {% condition date_selector %} a.created {% endcondition %}
         and ah.source = 'Website'
@@ -146,15 +153,16 @@ view: v_fit_affirm {
         o.order_number,
         t.amt::string as etail_amounts,
         t.amt as etail_total,
-        d.transaction_number as ns_transaction_ids,
-        d.gross_amount::varchar as netsuite_amounts,
-        d.gross_amount::float as netsuite_total
+        iff(d.transaction_number is not null,d.transaction_number,p.transaction_number) as ns_transaction_ids,
+        iff(d.gross_amount is not null,d.gross_amount,p.amount)::varchar as netsuite_amounts,
+        iff(d.gross_amount is not null,d.gross_amount,p.amount)::float as netsuite_total
       from analytics.commerce_tools.ct_transaction t
         join analytics.commerce_tools.ct_order o on t.order_id = o.order_id
         left join analytics.accounting.affirm_transaction aft on t.interaction_id = aft.event_id
         left join analytics.accounting.affirm_header afh on aft.entry_id = afh.id
         left join analytics.sales.sales_order so on o.order_id = so.etail_order_id
         left join analytics.sales.customer_deposit d on so.order_id = d.sales_order_id
+        left join p on so.order_id::string = p.transaction_extid::string
       where t.state = 'Success' and t.type = 'Charge' and aft.event_type = 'capture'
         and {% condition date_selector %} to_date(t.transaction_ts) {% endcondition %}
         and afh.source = 'Website'
