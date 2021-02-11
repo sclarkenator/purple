@@ -2048,17 +2048,29 @@ view: sales_order_line {
     sql:  ${total_standard_cost} ;;
   }
 
-  measure: return_amt {
-    label: " 7 - Return $"
-    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
-    view_label: "zz Margin Calculations"
-    value_format: "$#,##0"
-    type: sum
-    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
-    sql:  case when (${fulfilled_date} is null
-                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_rate_dim}*${gross_amt}
-                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
-  }
+##  measure: return_amt {
+##    label: " 7 - Return $"
+##    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
+##    view_label: "zz Margin Calculations"
+##    value_format: "$#,##0"
+##    type: number
+##    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
+##    sql:  case when (${fulfilled_date} is null
+##                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_rate_dim}*${adj_gross_amt}
+##                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+##  }
+
+##  measure: return_clawback {
+##    label: " 7a - Return clawback"
+##    description: "This is an contra-sales adjustment for the free items on a GWP when the main item is returned. For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
+##    view_label: "zz Margin Calculations"
+##    value_format: "$#,##0"
+##    type: number
+##    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
+##    sql:  case when (${fulfilled_date} is null
+##                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_clawback}*${adj_gross_amt}
+##                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+##  }
 
   measure: merch_fees {
     label: " 9 - Merchant fees"
@@ -2093,7 +2105,7 @@ view: sales_order_line {
   measure: gross_margin {
     ##added by Scott Clark 11/25/2020
     label: "Gross margin"
-    description: "Total margin dollars after all product and order related expenses are netted out"
+    description: "Total margin dollars after all direct product and order related expenses are netted out"
     type: number
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"

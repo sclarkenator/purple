@@ -410,8 +410,8 @@ include: "/dashboards/**/*.dashboard"
     }
     join: item_return_rate {
       type: left_outer
-      relationship: one_to_one
-      sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+      relationship: many_to_one
+      sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
     }
     join: shipping {
       type: left_outer

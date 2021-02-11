@@ -145,6 +145,15 @@ view: sales_order {
               when ${source} = 'Direct Entry' then 'Direct Entry'
               else 'Other' end ;;  }
 
+  dimension: channel_ret {
+    hidden: yes
+    ##this is for joining the modeled return rate file only
+    type: string
+    sql:  case when ${zendesk_sell.order_id} is not null then 'Inside sales'
+                    when ${channel_id} = 1 then 'Web'
+                    when ${channel_id} = 5 then 'Retail'
+                    else 'Other' end  ;; }
+
   dimension: trandate {
     hidden: yes
     sql: ${TABLE}.trandate ;;}
