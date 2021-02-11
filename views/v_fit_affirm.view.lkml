@@ -76,8 +76,8 @@ view: v_fit_affirm {
     ), ns as (
       select
         order_number,
-        listagg(distinct transaction_id,';') within group (order by transaction_id) as transaction_ids,
-        listagg(distinct amount,';') within group (order by amount) as netsuite_amounts,
+        listagg(transaction_id,';') within group (order by transaction_id) as transaction_ids,
+        listagg(amount,';') within group (order by amount) as netsuite_amounts,
         sum(amount) as netsuite_total
       from nst
       group by 1
