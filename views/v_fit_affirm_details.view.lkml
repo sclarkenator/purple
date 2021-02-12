@@ -8,8 +8,7 @@ view: v_fit_affirm_details {
         , t.amount
       from analytics.accounting.affirm_transaction t
       join analytics.accounting.affirm_header h on t.entry_id = h.id
-      where h.id = 'Z5JY-VA0T'
-    ;;
+      ;;
   }
   dimension: h_id {
     type: string
@@ -34,6 +33,7 @@ view: v_fit_affirm_details {
   }
   measure: total_amount {
     type: sum
+    value_format: "$#,##0.00"
     sql: ${TABLE}.amount ;;
   }
 }
