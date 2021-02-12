@@ -84,7 +84,6 @@ include: "/dashboards/**/*.dashboard"
   explore: paypal {hidden: yes group_label: "Accounting"}
   explore: v_fit {hidden: yes group_label: "Accounting"}
   explore: fit_problem {hidden: yes group_label: "Accounting"}
-  explore: v_fit_affirm {hidden: yes group_label: "Accounting"}
   explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
   explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
   explore: v_fit_braintree {hidden: yes group_label: "Accounting"}
@@ -96,6 +95,20 @@ include: "/dashboards/**/*.dashboard"
   explore: splitit {hidden: yes group_label: "Accounting" description:"The date filter will change the date range in the SQL query."}
   explore: fit_first_data {hidden: yes group_label: "Accounting"}
   explore: katapult {hidden: yes group_label: "Accounting"}
+  explore: v_fit_affirm {hidden: yes group_label: "Accounting"
+    join: v_fit_affirm_details {
+      view_label: "Affirm Details"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${v_fit_affirm.affirm_id} = ${v_fit_affirm_details.h_id} ;;
+    }
+    join: v_fit_affirm_ns_details {
+      view_label: "Netsuite Details"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${v_fit_affirm.order_number} = ${v_fit_affirm_ns_details.order_number} ;;
+    }
+  }
 
 
 

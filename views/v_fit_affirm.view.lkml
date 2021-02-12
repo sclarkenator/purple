@@ -225,6 +225,12 @@ view: v_fit_affirm {
     sql:${TABLE}.netsuite_amounts;;
   }
 
+  dimension: pk {
+    primary_key: yes
+    type: string
+    sql: ${event_type} || coalesce(${affirm_id},${order_number}) ;;
+  }
+
   measure: affirm_total {
     type: sum
     value_format: "$#,##0.00"
