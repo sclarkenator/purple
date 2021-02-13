@@ -178,7 +178,7 @@ where so.channel_id in (1,5)
     hidden: yes
     primary_key: yes
     type: string
-    sql:  ${TABLE}.order_id||${TABLE}.channel||${TABLE}.sku_id;;
+    sql:  ${TABLE}.order_id||'-'||${TABLE}.channel||'-'||${TABLE}.sku_id;;
   }
 
   dimension: order_id {

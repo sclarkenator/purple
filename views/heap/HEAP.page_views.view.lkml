@@ -166,11 +166,34 @@ view: heap_page_views {
     sql: ${TABLE}.path ;;
   }
 
+  dimension: product_page {
+    label: "Product grouping of page views"
+#    hidden: yes
+    description: "The string after purple.com excluding tags. Source: heap.session_page_flow.path"
+    type: string
+    sql: case when ${path} ilike '%blog%' then 'blog'
+              when ${path} ilike '%mattress-prot%' then 'bedding'
+              when ${path} ilike '%pillow%' then 'bedding'
+              when ${path} ilike '%frame%' then 'base'
+              when ${path} ilike '%sheets%' then 'bedding'
+              when ${path} ilike '%mattress%' then 'mattress'
+              when ${path} ilike '%seat-%' then 'seating'
+              when ${path} ilike '%blanket%' then 'bedding'
+              when ${path} ilike '%platform%' then 'base'
+              when ${path} ilike '%royal%' then 'seating'
+              when ${path} ilike '%bedding%' then 'bedding'
+              when ${path} ilike '%pet-%' then 'pet'
+              when ${path} ilike '%home-office%' then 'seating'
+              else 'other' end ;;
+  }
+
   measure: count {
-    hidden: yes
+    label: "Distinct sessions"
+    description: "Use this measure to calculate pageview level conversions"
+    hidden: no
     type: count_distinct
     sql: ${session_id};;
-    view_label: "Sessions" }
+    view_label: "Heap Page Views" }
 
   measure: Sum_bounced_session {
     type: count_distinct
