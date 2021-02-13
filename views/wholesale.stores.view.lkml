@@ -76,7 +76,7 @@ view: wholesale_stores {
 
   dimension: is_inactive {
     type: yesno
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.is_inactive = 'T' ;;
   }
 
