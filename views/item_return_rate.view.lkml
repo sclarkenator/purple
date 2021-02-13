@@ -61,7 +61,6 @@ select case when channel_id = 5 then 'Retail'
         ,sol.ordered_qty
         ,sol.discount_amt
         ,sol.adjusted_discount_amt
---        ,so.trandate
         ,f.fulfilled
         ,re.return_qty
         ,is_gift_with_purchase line_GWP
@@ -106,21 +105,13 @@ group by 1,2)
 select distinct case when channel_id = 5 then 'Retail'
             WHEN zendesk_sell.order_id is not null  THEN 'Inside sales' else 'Web' end channel
         ,so.order_id
---        ,cl.channel
         ,trim(i.sku_id,'AC-') sku_id
---        ,so.trandate
---        ,f.fulfilled
+        ,row_number() over (partition by so.order_id, i.sku_id order by i.sku_id) pk_row
         ,is_gift_with_purchase line_GWP
         ,so.has_gwp order_GWP
         ,gr.non_gwp_return
         ,case when reo.order_id is not null then 1 else 0 end gwp_return
         ,case when re.return_qty is null and so.has_gwp = 'T' and sol.is_gift_with_purchase = 'T' and reo.order_id is not null then 1 else 0 end ret_adj_flg
---        ,sol.gross_amt
---        ,sol.adjusted_gross_amt
---        ,sol.ordered_qty
---        ,sol.discount_amt
---        ,sol.adjusted_discount_amt
---        ,re.return_qty
         ,case when datediff(d,f.fulfilled,current_date())>140 AND return_qty > 0 then 1 when datediff(d,f.fulfilled,current_date())>140 AND nvl(return_qty,0) =0 then 0 else cl.adj_ret_rate end * sol.adjusted_gross_amt adj_return_amt
         ,case when datediff(d,f.fulfilled,current_date())>140 then ret_adj_flg*(sol.adjusted_gross_amt-sol.gross_amt)*non_gwp_return else sol.adjusted_gross_amt * nvl(return_clawback_rate,0) end adj_ret_clawback
 from sales_order_line sol join sales_order so on sol.order_id = so.order_id and so.system = sol.system
@@ -178,7 +169,7 @@ where so.channel_id in (1,5)
     hidden: yes
     primary_key: yes
     type: string
-    sql:  ${TABLE}.order_id||'-'||${TABLE}.channel||'-'||${TABLE}.sku_id;;
+    sql:  ${TABLE}.order_id||'-'||${TABLE}.channel||'-'||${TABLE}.sku_id||'-'||${TABLE}.pk_row;;
   }
 
   dimension: order_id {
