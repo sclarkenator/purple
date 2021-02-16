@@ -130,6 +130,19 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
+  dimension: channel_ret {
+    hidden: yes
+    ##this is for joining the modeled return rate file only
+    type: string
+    sql:
+      case when ${zendesk_sell.order_id} is not null then 'Inside sales'
+        when ${sales_order.channel_id} = 1 then 'Web'
+        when ${sales_order.channel_id} = 5 then 'Retail'
+        else 'Other'
+      end
+    ;;
+  }
+
   measure: asp_gross_amt {
     hidden: yes
     type: sum
