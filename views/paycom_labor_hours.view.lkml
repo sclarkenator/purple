@@ -167,6 +167,7 @@ view: paycom_labor_hours {
     view_label: "Owned Retail"
     group_label: "Hours Worked"
     label: "Location"
+    hidden: yes
     description: "Location where hours were clocked-in at for retail agents. Source: paycom.paycom_labor_hours"
     type: string
     sql: case when ${department_filter} = 'Showrooms' then ${TABLE}."LOCATION_CODE" else null end;;
