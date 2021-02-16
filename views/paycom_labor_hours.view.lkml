@@ -121,6 +121,7 @@ view: paycom_labor_hours {
     label: "Location"
     description: "Location where hours were clocked-in at. Source: paycom.paycom_labor_hours"
     type: string
+    hidden:  yes
     sql: ${TABLE}."LOCATION_CODE" ;;
   }
 
