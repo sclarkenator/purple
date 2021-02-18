@@ -146,7 +146,7 @@ view: fit_first_data {
         left join analytics_stage.ns.transactions t
           on trim(coalesce(o.id::string,ct.order_id)) = trim(t.etail_order_id)
           and t.transaction_type in ('Sales Order','Cash Sale')
-          and coalesce(t.total_amount_ref,0) > 0
+          and t.total_amount_ref is not null
         left join analytics.sales.customer_deposit d on t.transaction_id::string = d.sales_order_id::string and d.account = 'FIT - First Data'
         left join analytics.sales.customer_deposit d2 on t.related_tranid::string = d2.related_tranid::string and d2.account = 'FIT - First Data'
         left join (
