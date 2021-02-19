@@ -24,7 +24,8 @@ view: _period_comparison {
     hidden: yes
     type: time
     timeframes: [raw,date]
-    sql: CASE WHEN {% date_end date_filter %} IS NULL THEN CURRENT_DATE ELSE CAST({% date_end date_filter %} as DATE) END;;
+    sql: CASE
+      WHEN {% date_end date_filter %} IS NULL THEN CURRENT_DATE ELSE CAST({% date_end date_filter %} as DATE) END;;
   }
 
   dimension: interval {
