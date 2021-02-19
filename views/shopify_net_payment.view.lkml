@@ -22,7 +22,7 @@ view: shopify_net_payment {
   }
 
   dimension: order_id {
-    type: number
+    type: string
     link: {
       label: "Shopify"
       url: "https://onpurple.myshopify.com/admin/orders/{{order_id._value}}"}

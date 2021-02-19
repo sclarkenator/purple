@@ -1,6 +1,19 @@
+include: "/views/_period_comparison.view.lkml"
 view: v_fb_all {
-  sql_table_name: "MARKETING"."V_FB_ALL"
-    ;;
+  sql_table_name: "MARKETING"."V_FB_ALL" ;;
+  extends: [_period_comparison]
+
+
+#### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,week,
+      month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
+  }
 
   dimension: _fivetran_synced {
     type: date_time

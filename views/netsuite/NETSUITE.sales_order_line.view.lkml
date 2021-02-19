@@ -130,6 +130,19 @@ view: sales_order_line {
     sql: sales_order.payment_method ;;
   }
 
+  dimension: channel_ret {
+    hidden: yes
+    ##this is for joining the modeled return rate file only
+    type: string
+    sql:
+      case when ${zendesk_sell.order_id} is not null then 'Inside sales'
+        when ${sales_order.channel_id} = 1 then 'Web'
+        when ${sales_order.channel_id} = 5 then 'Retail'
+        else 'Other'
+      end
+    ;;
+  }
+
   measure: asp_gross_amt {
     hidden: yes
     type: sum
@@ -1228,7 +1241,7 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
@@ -1993,6 +2006,14 @@ view: sales_order_line {
     sql: nvl(${TABLE}.adjusted_gross_amt,0) ;;
   }
 
+  dimension: adj_gross_amt_dim {
+    ##added by Scott on 6/1/20
+    description: "used for calculating wholesale freight in shipping view"
+    hidden: yes
+    type: number
+    sql: nvl(${TABLE}.adjusted_gross_amt,0) ;;
+  }
+
   measure: order_discounts {
     ##added by Scott on 6/1/20
     label: " 2 - Order-level discounts"
@@ -2048,17 +2069,72 @@ view: sales_order_line {
     sql:  ${total_standard_cost} ;;
   }
 
-  measure: return_amt {
-    label: " 7 - Return $"
-    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
+  measure: wholesale_freight {
+    hidden:  yes
+    label: "wholesale Freight"
+    description: "For wholesale, we're using % to sales for this calculation"
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
-    sql:  case when (${fulfilled_date} is null
-                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_rate_dim}*${gross_amt}
-                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+    sql: case when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%d. noblin%' then 0.04*  ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Macy%' then 0.095*  ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Mathis Brothers Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Big Sandy%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%City Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Living Spaces%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%HOM Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Levin Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Miskelly%s Furnitur%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Ivan Smith%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Nebraska Furniture Ma%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Cardi%s Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Gardner White%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Morris Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Darvin Furniture%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Furniture Ro%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%STEINHAFELS%' then 0.03* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%North Dakota Mattress Venture%' then 0.040* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%OK Mattress Ventures%' then 0.040* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%South Dakota Mattress Ventures%' then 0.040* ${TABLE}.gross_amt
+              when ${customer_table.companyname} ilike '%Rooms To Go%' then 0.030* ${TABLE}.gross_amt else 0 end  ;;
   }
+
+  measure: freight {
+    hidden:  no
+    label: " 8 - Total Freight"
+    description: "This is the total shipping charges incurred across all shipping partners for any individual order/item combo. For wholesale, we're using % to sales for this calculation"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: number
+    sql: nvl(${shipping.shipping_amt},0) + nvl(${wholesale_freight},0) ;;
+  }
+
+
+##  measure: return_amt {
+##    label: " 7 - Return $"
+##    description: "For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
+##    view_label: "zz Margin Calculations"
+##    value_format: "$#,##0"
+##    type: number
+##    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
+##    sql:  case when (${fulfilled_date} is null
+##                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_rate_dim}*${adj_gross_amt}
+##                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+##  }
+
+##  measure: return_clawback {
+##    label: " 7a - Return clawback"
+##    description: "This is an contra-sales adjustment for the free items on a GWP when the main item is returned. For orders fulfilled more than 130 days ago, actual values are used. All others use the most recent rolling 90 day average. Source: looker.calculation"
+##    view_label: "zz Margin Calculations"
+##    value_format: "$#,##0"
+##    type: number
+##    sql_distinct_key: ${fulfillment.PK}||'-'||${return_order.primary_key}||'-'||${item_order} ;;
+##    sql:  case when (${fulfilled_date} is null
+##                or (datediff(d,${fulfilled_date},current_date)<130) and ${sales_order.channel_id} in (1,5)) then ${item_return_rate.return_clawback}*${adj_gross_amt}
+##                else nvl(${return_order_line.total_returns_completed_dollars_dim},0) end ;;
+##  }
 
   measure: merch_fees {
     label: " 9 - Merchant fees"
@@ -2067,10 +2143,11 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql: case when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*${gross_amt}
-              when ${sales_order.payment_method} ilike 'AFFIRM' then 0.0497*${gross_amt}
-              when ${sales_order.payment_method} ilike 'SPLITIT' then .04*${gross_amt}
-              else 0.0255*${gross_amt} end ;;
+    sql: case when ${sales_order.channel_id} = 2 then 0
+              when ${sales_order.source} in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15
+              when ${sales_order.payment_method} ilike 'AFFIRM' then 0.0497
+              when ${sales_order.payment_method} ilike 'SPLITIT' then 0.04
+              else 0.0255 end * nvl(${TABLE}.adjusted_gross_amt,0) ;;
     }
 
   measure: direct_affiliate {
@@ -2079,7 +2156,7 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql: case when ${affiliate_sales_order.comm_rate} < 0 then 0 else nvl(${affiliate_sales_order.comm_rate},0)*${gross_amt} end ;;
+    sql: case when ${affiliate_sales_order.comm_rate} < 0 then 0 else nvl(${affiliate_sales_order.comm_rate},0)*nvl(${TABLE}.adjusted_gross_amt,0) end ;;
   }
 
   measure: warranty_accrual {
@@ -2088,17 +2165,74 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: sum
-    sql: 0.01*${gross_amt} ;;
+    sql: case when ${customer_table.companyname} ilike '%mathis bro%' then 0.02
+              when ${customer_table.companyname} ilike '%rooms to go%' then 0.085
+              when ${sales_order.channel_id} = 2 then 0
+              else 0.01 end *nvl(${TABLE}.adjusted_gross_amt,0) ;;
   }
+
+  measure: mdf {
+    label: "12 - Wholesale MDF"
+    description: "Estimate of wholesale MDF dollars, based on % of fulfilled gross orders. Includes, Co-op, SPIFF, VIR, comfort exchange"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${customer_table.companyname} ilike '%Bloomingdale%' then 0.0145
+          when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.14
+          when ${customer_table.companyname} ilike '%Sleep Country%' then 0.115
+          when ${customer_table.companyname} ilike '%Macy%' then 0.095
+          when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.064
+          when ${customer_table.companyname} ilike '%Mathis Brothers Furniture%' then 0.05
+          when ${customer_table.companyname} ilike '%Big Sandy%' then 0.04
+          when ${customer_table.companyname} ilike '%City Furniture%' then 0.04
+          when ${customer_table.companyname} ilike '%Living Spaces%' then 0.04
+          when ${customer_table.companyname} ilike '%HOM Furniture%' then 0.035
+          when ${customer_table.companyname} ilike '%Levin Furniture%' then 0.035
+          when ${customer_table.companyname} ilike '%Miskelly%s Furnitur%' then 0.035
+          when ${customer_table.companyname} ilike '%Ivan Smith%' then 0.035
+          when ${customer_table.companyname} ilike '%Nebraska Furniture Ma%' then 0.035
+          when ${customer_table.companyname} ilike '%Cardi%s Furniture%' then 0.035
+          when ${customer_table.companyname} ilike '%Gardner White%' then 0.035
+          when ${customer_table.companyname} ilike '%Morris Furniture%' then 0.035
+          when ${customer_table.companyname} ilike '%Darvin Furniture%' then 0.035
+          when ${customer_table.companyname} ilike '%Furniture Ro%' then 0.02
+          when ${customer_table.companyname} ilike '%STEINHAFELS%' then 0.02
+          else 0 end * nvl(${TABLE}.adjusted_gross_amt,0) ;;
+    }
+
+  measure: promo_adj {
+    ##added by Scott on 6/1/20
+    label: "13 - Wholesale promo adj"
+    description: "This is a calculation for tier 1 holiday promo matching as well as GWP accruals for certain vendors."
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${customer_table.companyname} ilike '%furniture row%' then 0.044*nvl(${TABLE}.adjusted_gross_amt,0)
+              when ${customer_table.companyname} ilike '%steinheifal%' then 0.044*nvl(${TABLE}.adjusted_gross_amt,0)
+              when ${sales_order.channel_id} = 2 then 0.029*nvl(${TABLE}.adjusted_gross_amt,0)
+              else 0 end ;;
+  }
+
   measure: gross_margin {
     ##added by Scott Clark 11/25/2020
     label: "Gross margin"
-    description: "Total margin dollars after all product and order related expenses are netted out"
+    description: "Total margin dollars after all direct product and order related expenses are netted out"
     type: number
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
-    sql: ${adj_gross_amt}-${COGS}-${return_amt}-${direct_affiliate}-${warranty_accrual}-${merch_fees} ;;
+    sql: ${adj_gross_amt}-${COGS}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback}-${direct_affiliate}-${warranty_accrual}-${merch_fees}-${mdf}-${promo_adj}-${freight} ;;
   }
+
+  measure: gm_rate{
+    ##added by Scott Clark 11/25/2020
+    label: "Gross margin %"
+    description: "Gross margin / adjusted gross sales"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "0.0%"
+    sql: ${gross_margin}/nullif(${adj_gross_amt},0)  ;;
+  }
+
   measure: roa_sales {
     label: "Gross Sales - for ROAs"
     group_label: "Gross Sales"

@@ -410,8 +410,8 @@ include: "/dashboards/**/*.dashboard"
     }
     join: item_return_rate {
       type: left_outer
-      relationship: one_to_one
-      sql_on: ${item.sku_id} = ${item_return_rate.sku_id}  ;;
+      relationship: many_to_one
+      sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order_line.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
     }
     join: shipping {
       type: left_outer
@@ -700,6 +700,28 @@ include: "/dashboards/**/*.dashboard"
     from: day_aggregations
     group_label: " Sales"
     hidden:no
+    query: sales_last_30 {
+      dimensions: [day_aggregations.date_date]
+      measures: [day_aggregations.total_gross_sales, day_aggregations.forecast_total_amount]
+      label: "Sales to Forecast"
+      description: "Last 12 months, sales to forecast by month"
+      #pivots: [dimension1, dimension2, … ]
+      sorts: [day_aggregations.date_date: asc]
+      filters: [day_aggregations.date_date: "30 days ago for 30 days"]
+      #timezone: timezone
+      limit: 100
+    }
+    query: period_over_period {
+      dimensions: [day_aggregations.date_in_period_date, day_aggregations.period]
+      measures: [day_aggregations.total_gross_sales]
+      label: "Period Over Period"
+      description: "Last 30 days sales compared to the previous 30"
+      pivots: [day_aggregations.period]
+      sorts: [day_aggregations.date_in_period_date: desc]
+      filters: [day_aggregations.comparison_period: "previous",
+        day_aggregations.date_filter: "30 days",
+        day_aggregations.is_within_current_and_comparison_period: "Yes"]
+    }
   }
 
   explore: day_sku {

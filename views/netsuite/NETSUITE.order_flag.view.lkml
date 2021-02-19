@@ -108,9 +108,9 @@ view: order_flag {
     --BAR / BARB
      ,case when small_mattress > 0 then 1 else 0 end small_mattress_flg
      ,case when large_mattress > 0 then 1 else 0 end large_mattress_flg
-     ,case when anytwopillows > 0 then 1 else 0 end anytwopillows_flg
+    -- ,case when anytwopillows > 0 then 1 else 0 end anytwopillows_flg
      ,case when anyonepillow > 0 then 1 else 0 end anyonepillow_flg
-     ,case when (large_mattress > 0 and anytwopillows > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_large
+     ,case when (large_mattress > 0 and mp_flg > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_large
      ,case when (small_mattress > 0 and anyonepillow > 0 and SHEETS_FLG >0 and PROTECTOR_FLG >0 ) then 1 else 0 end bar_small
      ,case when ((bar_small + bar_large > 0) and BASE_FLG > 0 ) then 1 else 0 end barb_flg
 
@@ -219,7 +219,7 @@ view: order_flag {
         -- BAR / BARB
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') and line <> 'COVER' THEN 1 ELSE 0 END) large_mattress
-         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
+     --    ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
          ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
 
         -- Hybrid Mattresses and Purple Mattress
@@ -518,7 +518,7 @@ view: order_flag {
     group_label: "    * Orders has:"
     label: "Multiple Pillows"
     description: "1/0; 1 if there is more than 1 pillow in the order. Source: looker.calculation"
-    hidden: yes
+    hidden: no
     type:  yesno
     sql: ${TABLE}.mp_flg = 1 ;; }
 
