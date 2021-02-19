@@ -268,6 +268,11 @@ view: v_fb_all {
     sql: ${purchase_conversion_value_1_dc}/NULLIF(${spend},0);;
 
   }
+  measure: ROAS_1DC_1DV{
+    type: number
+    value_format: "$0.00"
+    sql:(${purchase_conversion_value_1_dv}+${purchase_conversion_value_1_dc})/NULLIF(${spend},0);;
+  }
   measure: ROAS_1DV{
     type: number
     value_format: "$0.00"
