@@ -120,7 +120,7 @@ include: "/dashboards/**/*.dashboard"
     join: v_ai_product{
       view_label: "Product"
       type: left_outer
-      sql_on: ${forecast_combined.sku_id} = ${v_ai_product.sku_id} ;;
+      sql_on: ${forecast_combined.sku_id} = ${v_ai_product.sku_raw} ;;
       relationship: many_to_one }
     join:fg_to_sfg{
       view_label: "FG to SFG"
