@@ -7,6 +7,11 @@ view: v_retail_orders_without_showroom {
     sql: ${TABLE}."PURPLE_SHOWROOM_NAME" ;;
   }
 
+  dimension: transaction_type {
+    type: string
+    sql: ${TABLE}."TRANSACTION_TYPE" ;;
+  }
+
   dimension: transaction_id {
     type: number
     sql: ${TABLE}."TRANSACTION_ID" ;;
