@@ -284,7 +284,7 @@ view: v_fb_all {
   measure: ROAS_1DC_1DV{
     type: number
     value_format: "$0.00"
-    sql:(sum(${purchase_conversion_value_1_dv})+sum(${purchase_conversion_value_1_dc}))/NULLIF(${spend},0);;
+    sql:(${purchase_conversion_value_1_dc}+ ${purchase_conversion_value_1_dv})/NULLIF(${spend},0);;
   }
   measure: ROAS_1DV{
     type: number
