@@ -1532,4 +1532,12 @@ view: order_flag {
               when ${TABLE}.bmsm_flg = 3 then 'Tier 3'
               when ${TABLE}.bmsm_flg > 3 then 'Tier 4+' else null end ;; }
 
+  dimension: purplepillowtwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Purple Pillows"
+    description: "1/0; 1 if there are at least (2) Purple Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.purplepillowtwobund_flg = 1 ;; }
+
 }
