@@ -27,6 +27,7 @@ view: v_visitors_view_normailized_ids {
     type: string
     label: "Customer Email"
     sql: ${TABLE}."VP_CUSTOMER_EMAIL" ;;
+    hidden: yes
   }
 
   measure: count {

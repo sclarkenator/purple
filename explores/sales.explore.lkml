@@ -635,6 +635,22 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_one
       sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
     }
+    join: contact {
+      from: tealium_contact
+      type: left_outer
+      relationship: one_to_one
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
+    }
+    # join: customer_table {
+    #   view_label: "Customers"
+    #   type: left_outer
+    #   sql_on: ${customer_table.email} = ${customers.vp_customer_email} ;;
+    #   relationship: one_to_one}
+    # join: customer_first_order {
+    #   view_label: "Customers"
+    #   type:  left_outer
+    #   sql_on: ${customers.vp_customer_email} = ${customer_first_order.email} ;;
+    #   relationship: one_to_one}
     # join: heap_id {
     #   from: tealium_v_heap_id
     #   type: left_outer
