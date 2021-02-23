@@ -40,9 +40,9 @@ view: v_fit_paypal {
     sql: ${TABLE}."IN_NETSUITE" ;;
   }
 
-  dimension: in_shopify {
+  dimension: in_etail {
     type: yesno
-    sql: ${TABLE}."IN_SHOPIFY" ;;
+    sql: ${TABLE}."IN_ETAIL" ;;
   }
 
   dimension: netsuite_amount {
@@ -85,14 +85,14 @@ view: v_fit_paypal {
     sql: ${TABLE}."SECONDARY_ID" ;;
   }
 
-  dimension: shopify_order_id {
+  dimension: etail_order_id {
     type: number
-    sql: ${TABLE}."SHOPIFY_ORDER_ID" ;;
+    sql: ${TABLE}."ETAIL_ORDER_ID" ;;
   }
 
-  dimension: shopify_order_number {
+  dimension: etail_order_number {
     type: string
-    sql: ${TABLE}."SHOPIFY_ORDER_NUMBER" ;;
+    sql: ${TABLE}."ETAIL_ORDER_NUMBER" ;;
   }
 
   dimension: transaction_id {
