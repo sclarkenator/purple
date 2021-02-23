@@ -108,9 +108,13 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: forecast_combined {
+    from:  forecast_v2
     label: "Forecast"
     description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
     group_label: "Operations"
+    always_filter: {
+      filters: [forecast_combined.version: "Current S&OP"]
+    }
     #hidden: yes
     join: item {
       view_label: "Product"

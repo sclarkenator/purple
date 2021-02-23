@@ -5,7 +5,18 @@ view: forecast_v2 {
   dimension: version {
     label: "Forecast Version"
     type: string
-    description: "Live is the current data in Adaptive, Current S&OP is locked at the first Saturday of the current month, Previous is 1 month previos"
+    description: "Working is the current data in Adaptive, Current S&OP is locked at the first Saturday of the current month, Previous is 1 month previos.  Rolling 4 month is looking at the forecast data from 4 months previous to the date being forecasted. "
+    case: {
+      when: { sql: ${version_raw} = 'Working' ;; label: "Working" }
+      when: { sql: ${version_raw} = 'Current S&OP' ;; label: "Current S&OP" }
+      when: { sql: ${version_raw} = 'Last Month S&OP' ;; label: "Last Month S&OP" }
+      when: { sql: ${version_raw} = 'Two Month S&OP' ;; label: "Two Month S&OP" }
+      when: { sql: ${version_raw} = 'Running 4 Month' ;; label: "Running 4 Month" }
+    }
+  }
+
+  dimension: version_raw {
+    type: string
     sql: ${TABLE}.version ;;
   }
 
