@@ -877,3 +877,4 @@ include: "/dashboards/**/*.dashboard"
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+  explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"}
