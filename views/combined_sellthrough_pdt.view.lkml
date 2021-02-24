@@ -74,6 +74,12 @@ view: combined_sellthrough_pdt {
    type: date
     sql: ${TABLE}.date::date ;;
   }
+  dimension: pk {
+    hidden: yes
+    primary_key: yes
+    type: date
+    sql: ${zipcode}||'-'||${channel}||'-'||${category}||'-'||${TABLE}.date ;;
+  }
   dimension_group: date {
     label: " Order"
     type: time
