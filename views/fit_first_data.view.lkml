@@ -157,7 +157,7 @@ view: fit_first_data {
           group by 1,2,3
         ) p on t.transaction_id::string = p.transaction_extid::string
       where f.status = 'Approved'
-        and (f.transaction_type in ('Purchase','Tagged Completion')
+        and f.transaction_type in ('Purchase','Tagged Completion')
         and {% condition date_selector %} f.time {% endcondition %}
     )
     select
