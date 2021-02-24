@@ -51,7 +51,7 @@ view: dtc_or_pdt {
 ######################################################
 
 view: combined_sellthrough_pdt {
-  label: "Combined Sell-Through PDT"
+  label: "Combined Sell-Through"
  derived_table: {
     sql:
     select finalized_date::date as date
