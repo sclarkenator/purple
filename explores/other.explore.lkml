@@ -97,6 +97,17 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
       relationship: one_to_one}
+    join: zendesk_sell {
+      view_label: "Zendesk"
+      type: full_outer
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+      relationship: one_to_one
+    }
+    join: order_flag {
+      view_label: "Sales Order"
+      type: left_outer
+      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+      relationship: one_to_one}
   }
 
   explore: qualtrics1 {

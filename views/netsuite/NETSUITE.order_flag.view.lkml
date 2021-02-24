@@ -1376,6 +1376,14 @@ view: order_flag {
     hidden: yes
     sql: ${TABLE}.harmonytwobund_flg = 1 ;; }
 
+  dimension: purplepillowtwobund_flg {
+    group_label: "    * Orders has:"
+    label: "multiple Purple Pillows"
+    description: "1/0; 1 if there are at least (2) Purple Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.purplepillowtwobund_flg = 1 ;; }
+
   dimension: softstretchtwobund_flag {
     group_label: "    * Orders has:"
     label: "multiple Softstretch Sheets"
@@ -1523,5 +1531,13 @@ view: order_flag {
     sql: case when ${TABLE}.bmsm_flg = 2 then 'Tier 2'
               when ${TABLE}.bmsm_flg = 3 then 'Tier 3'
               when ${TABLE}.bmsm_flg > 3 then 'Tier 4+' else null end ;; }
+
+  dimension: purplepillowtwobund_flag {
+    group_label: "    * Orders has:"
+    label: "multiple Purple Pillows"
+    description: "1/0; 1 if there are at least (2) Purple Pillows in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.purplepillowtwobund_flg = 1 ;; }
 
 }
