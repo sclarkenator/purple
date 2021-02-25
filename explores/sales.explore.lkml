@@ -486,6 +486,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
     }
 
+    join: retail_order_flag {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
+      relationship:  one_to_one
+    }
 
   }
 
