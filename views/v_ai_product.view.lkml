@@ -59,6 +59,12 @@ view: v_ai_product {
     sql: ${TABLE}."SKU_NAME" ;;
   }
 
+  dimension: sku_raw {
+    type: string
+    hidden: yes
+    sql: ${TABLE}."SKU_ID" ;;
+  }
+
   dimension_group: update_ts {
     type: time
     hidden:  yes

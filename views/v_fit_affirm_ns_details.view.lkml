@@ -58,7 +58,6 @@ view: v_fit_affirm_ns_details {
         where so.warranty = 'F'
       )
       select * from ns
-      where order_number = '1745121'
       order by created
 
     ;;
@@ -69,7 +68,8 @@ view: v_fit_affirm_ns_details {
   }
   dimension: transaction_id {
     primary_key: yes
-    type: string
+    type: number
+    value_format: "0"
     sql: ${TABLE}.transaction_id ;;
   }
   dimension: transaction_type {
@@ -98,6 +98,7 @@ view: v_fit_affirm_ns_details {
   }
   measure: total_amount {
     type: sum
+    value_format: "$#,##0.00"
     sql: ${TABLE}.amount ;;
   }
 }

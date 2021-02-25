@@ -20,7 +20,7 @@ view: dispatch {
   dimension_group: dispatch_completed {
     description: "Source: l2l.dispatch"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
     convert_tz: no
     datatype: timestamp
     sql: CAST(${TABLE}."COMPLETED" AS TIMESTAMP_NTZ) ;;
@@ -66,7 +66,7 @@ view: dispatch {
     hidden: no
     description: "Source: l2l.dispatch"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
     convert_tz: no
     datatype: timestamp
     sql: CAST(${TABLE}."DISPATCHED" AS TIMESTAMP_NTZ) ;;
@@ -122,6 +122,19 @@ view: dispatch {
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 
+  dimension: resource_time_diff {
+    hidden: yes
+    type: number
+    sql: timediff(second,${dispatched_time}, ${dispatch_completed_time}) ;;
+  }
+
+  dimension: resource_time {
+    hidden: yes
+    type: number
+    value_format: "hh:mm:ss"
+    sql: ${resource_time_diff} / 86400.0 ;;
+  }
+
   measure: downtime_minutes {
     hidden: no
     type: sum
@@ -148,5 +161,11 @@ view: dispatch {
   measure: count {
     type: count
     drill_fields: [dispatch_id, dispatch_type.dispatch_type_id]
+  }
+
+  measure: total_resource_time {
+    type: sum
+    value_format: "hh:mm:ss"
+    sql: ${resource_time} ;;
   }
 }

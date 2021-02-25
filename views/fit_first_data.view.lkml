@@ -146,7 +146,7 @@ view: fit_first_data {
         left join analytics_stage.ns.transactions t
           on trim(coalesce(o.id::string,ct.order_id)) = trim(t.etail_order_id)
           and t.transaction_type in ('Sales Order','Cash Sale')
-          and coalesce(t.total_amount_ref,0) > 0
+          and coalesce(t.total_amount_ref,'0') <> '0'
         left join analytics.sales.customer_deposit d on t.transaction_id::string = d.sales_order_id::string and d.account = 'FIT - First Data'
         left join analytics.sales.customer_deposit d2 on t.related_tranid::string = d2.related_tranid::string and d2.account = 'FIT - First Data'
         left join (
@@ -157,7 +157,7 @@ view: fit_first_data {
           group by 1,2,3
         ) p on t.transaction_id::string = p.transaction_extid::string
       where f.status = 'Approved'
-        and f.transaction_type = 'Purchase'
+        and f.transaction_type in ('Purchase','Tagged Completion')
         and {% condition date_selector %} f.time {% endcondition %}
     )
     select

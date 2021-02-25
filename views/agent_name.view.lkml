@@ -77,6 +77,7 @@ dimension: name {
     label: "Primary Location"
     group_label: " Advanced"
     view_label: "Owned Retail"
+    hidden:  yes
     description: "The primary location where a retail agent works. Source:incontact.agent_lkp"
     type:  string
     sql: ${TABLE}.location ;;

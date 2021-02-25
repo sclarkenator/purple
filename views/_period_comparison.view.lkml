@@ -24,7 +24,8 @@ view: _period_comparison {
     hidden: yes
     type: time
     timeframes: [raw,date]
-    sql: CASE WHEN {% date_end date_filter %} IS NULL THEN CURRENT_DATE ELSE CAST({% date_end date_filter %} as DATE) END;;
+    sql: CASE
+      WHEN {% date_end date_filter %} IS NULL THEN CURRENT_DATE ELSE CAST({% date_end date_filter %} as DATE) END;;
   }
 
   dimension: interval {
@@ -72,7 +73,6 @@ view: _period_comparison {
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_start_date_raw})
       {% else %}
-        --dateadd(year,-1,${filter_start_date_raw})
         dateadd(day,-364,${filter_start_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_start_date_raw}) ;;
@@ -88,7 +88,6 @@ view: _period_comparison {
         dateadd({% parameter comparison_period %}, -52, ${filter_end_date_raw})
       {% else %}
         dateadd(day,-364,${filter_end_date_raw})
-        --dateadd(year,-1,${filter_end_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_end_date_raw}) ;;
   }

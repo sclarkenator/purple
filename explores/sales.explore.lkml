@@ -411,7 +411,7 @@ include: "/dashboards/**/*.dashboard"
     join: item_return_rate {
       type: left_outer
       relationship: many_to_one
-      sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
+      sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order_line.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
     }
     join: shipping {
       type: left_outer
@@ -486,6 +486,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
     }
 
+    join: retail_order_flag {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
+      relationship:  one_to_one
+    }
 
   }
 
@@ -635,6 +641,22 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_one
       sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
     }
+    join: contact {
+      from: tealium_contact
+      type: left_outer
+      relationship: one_to_one
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
+    }
+    # join: customer_table {
+    #   view_label: "Customers"
+    #   type: left_outer
+    #   sql_on: ${customer_table.email} = ${customers.vp_customer_email} ;;
+    #   relationship: one_to_one}
+    # join: customer_first_order {
+    #   view_label: "Customers"
+    #   type:  left_outer
+    #   sql_on: ${customers.vp_customer_email} = ${customer_first_order.email} ;;
+    #   relationship: one_to_one}
     # join: heap_id {
     #   from: tealium_v_heap_id
     #   type: left_outer
@@ -881,3 +903,16 @@ explore: sessions_in_tests {hidden: yes}
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+  explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
+    join: dma {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${combined_sellthrough_pdt.zipcode} = ${dma.zip} ;;
+      relationship: many_to_many
+      fields: [dma.dma_name,dma.dma_mfrm]}
+    join: zcta5 {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${combined_sellthrough_pdt.zipcode} = (${zcta5.zipcode})  ;;
+      relationship: many_to_one
+      fields: [zcta5.fulfillment_region_1]}}
