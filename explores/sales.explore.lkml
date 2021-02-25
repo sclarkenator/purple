@@ -820,6 +820,10 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+
+explore: conversion {hidden: yes}
+explore: sessions_in_tests {hidden: yes}
+
 #-------------------------------------------------------------------
 #
 # Wholesale Explores
