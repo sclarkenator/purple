@@ -396,10 +396,11 @@ dimension: spend_platform {
         or (${TABLE}.platform in ('YOUTUBE') and ${source}='AUDIO') ;; label: "audio" }
       when: {sql: (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
         or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%')
-        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand_%');; label:"brand search"}
+        or (${TABLE}.source = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand_%')
+        or ${TABLE}.source = 'AMAZON PPC';; label:"brand search"}
       when: {sql: ${TABLE}.platform in ('INTEGRAL MEDIA','LIVEINTENT', 'TALKABLE','POSTIE','PRINT') ;; label: "crm" }
       when: {sql: ${TABLE}.source = 'CTV'OR ${TABLE}.platform in ('HULU');; label:"CTV"}
-      when: {sql: ${TABLE}.platform in ('EBAY') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
+      when: {sql: ${TABLE}.platform in ('EBAY','AMAZON MEDIA GROUP') OR ${TABLE}.source ilike ('%ispla%') or ${TABLE}.source in ('DISPLAY')
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
      when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
         or ${spend_platform} in ('AMAZON-HSA')
@@ -411,7 +412,8 @@ dimension: spend_platform {
       when: {sql: ${TABLE}.platform in ('FB/IG') ;; label:"social"}
       when: {sql: ${TABLE}.source = 'TV' or ${TABLE}.platform = 'TV';; label:"TV"}
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
-            or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
+            or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL')
+            or ${TABLE}.source = 'EXPONENTIAL';; label:"video" }
 
       else: "other" }
   }

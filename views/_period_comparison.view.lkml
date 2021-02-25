@@ -73,7 +73,6 @@ view: _period_comparison {
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_start_date_raw})
       {% else %}
-        --dateadd(year,-1,${filter_start_date_raw})
         dateadd(day,-364,${filter_start_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_start_date_raw}) ;;
@@ -89,7 +88,6 @@ view: _period_comparison {
         dateadd({% parameter comparison_period %}, -52, ${filter_end_date_raw})
       {% else %}
         dateadd(day,-364,${filter_end_date_raw})
-        --dateadd(year,-1,${filter_end_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_end_date_raw}) ;;
   }
