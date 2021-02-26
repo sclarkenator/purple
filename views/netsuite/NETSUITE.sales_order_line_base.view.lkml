@@ -574,6 +574,7 @@ view: sales_order_line_base {
   }
 
   dimension: period_comparison {
+    hidden: yes
     case: {
       when: {
         sql: ${created_date} > DATE_TRUNC('day', GETDATE() - interval '1 week')
