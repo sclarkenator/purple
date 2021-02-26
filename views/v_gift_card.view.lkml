@@ -42,7 +42,7 @@ view: v_gift_card {
   }
 
   dimension: note {
-    type: number
+    type: string
     sql: ${TABLE}."NOTE" ;;
   }
 
