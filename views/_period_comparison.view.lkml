@@ -144,17 +144,22 @@ view: _period_comparison {
             {% else %}
               false
             {% endif %};;
-    timeframes: [date,week,month,quarter,year]
+    timeframes: [
+      date,
+      hour_of_day,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      month_num,
+      quarter,
+      quarter_of_year,
+      year]
   }
-# hour_of_day,
-# day_of_week,
-# day_of_week_index,
-# day_of_month,
-# day_of_year,
-# week_of_year,
-# month_name,
-# month_num,
-
 
   dimension: day_of_week_abbr {
     hidden:  yes
