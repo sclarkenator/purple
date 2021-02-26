@@ -403,7 +403,7 @@ dimension: spend_platform {
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
      when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
         or ${spend_platform} in ('AMAZON-HSA')
-        or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"paid search"}
+        or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"search"}
       when: {sql: ${TABLE}.platform in ('ADWALLET','FKL','FLUENT','Fluent','MADRIVO','ROKT','REDCRANE')or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
       when: {sql: (NOT ${TABLE}.platform in ('FB/IG')) and ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}
