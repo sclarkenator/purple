@@ -20,6 +20,13 @@ view: covid {
     sql: ${TABLE}."CASES" ;;
   }
 
+  measure: DIFFERENCE {
+    type: sum
+    description: "Daily difference in cases"
+    sql: ${TABLE}."DIFFERENCE" ;;
+  }
+
+
   dimension: country_region {
     type: string
     label: "Country"
