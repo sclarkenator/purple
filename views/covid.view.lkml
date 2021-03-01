@@ -2,6 +2,14 @@ view: covid {
   sql_table_name: "SALES"."COVID"
     ;;
 
+
+  dimension: pk {
+    hidden: yes
+    primary_key: yes
+    type: date
+    sql: ${fips}||'-'||${case_type}||'-'||${TABLE}.date ;;
+  }
+
   dimension: case_type {
     type: string
     sql: ${TABLE}."CASE_TYPE" ;;
