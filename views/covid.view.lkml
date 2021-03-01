@@ -54,6 +54,16 @@ view: covid {
     sql: ${TABLE}."FIPS" ;;
   }
 
+  dimension: geofence_fips {
+    type: string
+    label: "Geofence FIPS"
+    sql: case when ${TABLE}."FIPS" = 53061 then 'Lynnwood'
+        when ${TABLE}."FIPS" = 06073 then 'San Diego'
+        when ${TABLE}."FIPS" = 06037 then 'Santa Monica'
+        when ${TABLE}."FIPS" = 39049 then 'Columbus'
+        end;;
+  }
+
   dimension: iso3166_1 {
     type: string
     hidden:  yes
