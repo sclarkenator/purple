@@ -433,7 +433,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
-  explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
+  explore: sfg_peak_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
 
   explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
   explore: l2_l_checklists {hidden: yes group_label: "L2L"}
