@@ -25,6 +25,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: _calendar {hidden:yes} ##Added by Blake Walton 12/8/2020
+  explore: covid {hidden: yes}
 
 #-------------------------------------------------------------
 #
