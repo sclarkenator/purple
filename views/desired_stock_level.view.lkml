@@ -1,4 +1,4 @@
-view: sfg_peak_stock_level {
+view: desired_stock_level {
   derived_table: {
     sql:
     with aa as (
@@ -198,13 +198,13 @@ group by 1,2,3,4,12,13  ;;
     sql:  ${TABLE}."QUANTITY_USED" ;;
   }
 
-  measure: sfg_stock_level {
+  measure: fg_on_hand {
     description: "source; sales.sales_order_line"
     type: sum
     sql:  ${TABLE}."FG_ON_HAND" ;;
   }
 
-  measure: current_inventory {
+  measure: sfg_stock_level{
     description: "source; looker calculation"
     type: sum
     sql:  ${TABLE}."SFG_STOCK_LEVEL" ;;
