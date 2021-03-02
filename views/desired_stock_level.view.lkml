@@ -103,8 +103,8 @@ select
   coalesce (i.sku_id, aip.sku_id) sku_id
   , i.product_description
   , round(coalesce(sum(fc.total_units ), 0),0) total_units_new
-    , round(((total_units_new/8)*2),0) "14_DAY_SUPPLY"
-    , round(("14_DAY_SUPPLY"/14),0) daily_forecast
+    , round(((total_units_new/8)*2),0) "14_DAY_FORECAST"
+    , round(("14_DAY_FORECAST"/14),0) daily_forecast
 from sales.v_forecast fc
     left join sales.item i on fc.sku_id = i.sku_id
     left join forecast.v_ai_product aip ON fc.sku_id = (aip.sku_id)
@@ -129,18 +129,18 @@ select zz.new_hep_sku
     , zz.fg_product_description
     , sum(zz.qty_used) as quantity_used
     , sum(zz.fg_on_hand) as fg_on_hand
-    , max(zz.sfg_on_hand) as sfg_stock_level
+    , max(zz.sfg_on_hand) as sfg_on_hand
     , case when sum(zz.unfulfilled_units) is null then 0 else sum(zz.unfulfilled_units) end as quantity_remaining
     , case when sum(zz.total_units_new) is null then 0 else sum(zz.total_units_new) end as total_new_units
-    , case when sum(zz."14_DAY_SUPPLY") is null then 0 else sum(zz."14_DAY_SUPPLY") end as fourteen_day_supply
+    , case when sum(zz."14_DAY_FORECAST") is null then 0 else sum(zz."14_DAY_FORECAST") end as fourteen_day_forecast
     , case when sum(zz.daily_forecast) is null then 0 else sum(zz.daily_forecast) end as daily_forecast
     , case when round(div0((zz.fg_on_hand-zz.unfulfilled_units),zz.daily_forecast),0) is null then 0
         else round(div0((zz.fg_on_hand-zz.unfulfilled_units),zz.daily_forecast),0)
-      end as days_of_inventory
-    , case when ((zz."14_DAY_SUPPLY"+zz.unfulfilled_units)-zz.fg_on_hand) < 1 then 0
-        when ((zz."14_DAY_SUPPLY"+zz.unfulfilled_units)-zz.fg_on_hand) is null then 0
-        else ((zz."14_DAY_SUPPLY"+zz.unfulfilled_units)-zz.fg_on_hand)
-      end as beds_needed
+      end as fg_days_of_inventory
+    , case when ((zz."14_DAY_FORECAST"+zz.unfulfilled_units)-zz.fg_on_hand) < 1 then 0
+        when ((zz."14_DAY_FORECAST"+zz.unfulfilled_units)-zz.fg_on_hand) is null then 0
+        else ((zz."14_DAY_FORECAST"+zz.unfulfilled_units)-zz.fg_on_hand)
+      end as fg_beds_needed
 from (
   select aa.new_hep_sku
       , aa.finished_good_sku
@@ -151,7 +151,7 @@ from (
       , cc.product_description as sfg_product_description
       , dd.unfulfilled_orders_units as unfulfilled_units
       , ee.total_units_new as total_units_new
-      , ee."14_DAY_SUPPLY" as "14_DAY_SUPPLY"
+      , ee."14_DAY_FORECAST" as "14_DAY_FORECAST"
       , ee.daily_forecast as daily_forecast
   from aa
   left join bb on bb.sku_id = aa.finished_good_sku
@@ -171,8 +171,8 @@ group by 1,2,3,4,12,13  ;;
   }
 
   dimension: sfg_production_description {
-    label: "Hep Product Description"
-    description: "Hep Product Descripton; source:production.fg_to_sfg"
+    label: "SFG Product Description"
+    description: "SFG Product Descripton; source:production.fg_to_sfg"
     type: string
     sql: ${TABLE}."SFG_PRODUCT_DESCRIPTION" ;;
   }
@@ -185,7 +185,7 @@ group by 1,2,3,4,12,13  ;;
   }
 
   dimension: fg_production_description {
-    label: "Hep Product Description"
+    label: "FG Product Description"
     description: "Hep Product Descripton; source:production.fg_to_sfg"
     type: string
     sql: ${TABLE}."FG_PRODUCT_DESCRIPTION" ;;
@@ -199,18 +199,21 @@ group by 1,2,3,4,12,13  ;;
   }
 
   measure: fg_on_hand {
+    label: "FG On Hand"
     description: "source; sales.sales_order_line"
     type: sum
     sql:  ${TABLE}."FG_ON_HAND" ;;
   }
 
-  measure: sfg_stock_level{
+  measure: sfg_on_hand {
+    label: "SFG on Hand"
     description: "source; looker calculation"
-    type: sum
-    sql:  ${TABLE}."SFG_STOCK_LEVEL" ;;
+    type: max
+    sql:  ${TABLE}."SFG_ON_HAND" ;;
   }
 
   measure: quantity_remaining {
+    label: "Quantity Remaining"
     description: "source; sales.sales_order_line"
     type: sum
     sql:  ${TABLE}."QUANTITY_REMAINING" ;;
@@ -224,7 +227,7 @@ group by 1,2,3,4,12,13  ;;
   }
 
   measure: fourteen_day_forecast {
-    label: "14 Day Supply"
+    label: "14 Day Forecast"
     description: "source; production.inventory"
     type: sum
     sql:  ${TABLE}."FOURTEEN_DAY_FORECAST" ;;
@@ -237,15 +240,17 @@ group by 1,2,3,4,12,13  ;;
     sql:  ${TABLE}."DAILY_FORECAST" ;;
   }
 
-  measure: days_of_inventory {
+  measure: fg_days_of_inventory {
+    label: "FG Days of Inventory"
     description: "source; production.inventory"
     type: sum
-    sql:  ${TABLE}."DAYS_OF_INVENTORY" ;;
+    sql:  ${TABLE}."FG_DAYS_OF_INVENTORY" ;;
   }
 
-  measure: beds_needed {
+  measure: fg_beds_needed {
+    label: "FG Beds Needed"
     description: "source; sales.sales_order_line"
     type: sum
-    sql:  ${TABLE}."BEDS_NEEDED" ;;
+    sql:  ${TABLE}."FG_BEDS_NEEDED" ;;
   }
 }
