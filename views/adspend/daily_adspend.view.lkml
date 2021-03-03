@@ -380,8 +380,6 @@ dimension: spend_platform {
         OR ${TABLE}.source in ('CINEMA','VERITONE') ;; label:"traditional"}
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
         or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL') ;; label:"video" }
-
-
       else: "other" }
   }
 
@@ -414,7 +412,6 @@ dimension: spend_platform {
       when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or ${TABLE}.source in ('VIDEO','Video')
             or (${spend_platform} = 'EXPONENTIAL' and ${TABLE}.source <> 'EXPONENTIAL')
             or ${TABLE}.source = 'EXPONENTIAL';; label:"video" }
-
       else: "other" }
   }
 
