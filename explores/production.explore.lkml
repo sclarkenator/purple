@@ -396,6 +396,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
       relationship: one_to_many
     }
+    join: reason {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${dispatch.reason_code} = ${reason.code} ;;
+      relationship: one_to_one
+    }
   }
 
   explore: bill_of_materials {
