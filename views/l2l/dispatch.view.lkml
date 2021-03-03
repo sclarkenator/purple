@@ -52,6 +52,7 @@ view: dispatch {
   dimension: dispatch_number {
     description: "Source: l2l.dispatch"
     type: number
+    value_format: "#0"
     sql: ${TABLE}."DISPATCH_NUMBER" ;;
   }
 
@@ -133,6 +134,12 @@ view: dispatch {
     type: number
     value_format: "hh:mm:ss"
     sql: ${resource_time_diff} / 86400.0 ;;
+  }
+
+  dimension: reason_code {
+    type: string
+    description: "Dispatch Reason Code; Source: l2l.dispatch"
+    sql: ${TABLE}."REASON" ;;
   }
 
   measure: downtime_minutes {
