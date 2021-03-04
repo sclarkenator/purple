@@ -1,3 +1,4 @@
+include: "/views/_period_comparison.view.lkml"
 ######################################################
 #   Sales and Fulfillment
 ######################################################
@@ -178,7 +179,20 @@ view: day_sku_aggregations {
     ;;
     datagroup_trigger: pdt_refresh_6am
   }
-  dimension: date {type: date hidden:yes}
+  extends: [_period_comparison]
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,week,
+      month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
+  }
+
+
+  #dimension: date {type: date hidden:yes}
 
   dimension: pk {
     hidden: yes
@@ -192,7 +206,7 @@ view: day_sku_aggregations {
     timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: to_timestamp_ntz(${date}) ;; }
+    sql: to_timestamp_ntz(${TABLE}.date) ;; }
 
   dimension: QTD {
     label: "z - QTD"
@@ -381,6 +395,56 @@ view: day_sku_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.purchased_units_recieved;; }
+
+  measure: to_plan_dollars {
+    label: "To Plan ($)"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${plan_amount} > 0 then (${total_sales}/${plan_amount})-1 else 0 end;;
+  }
+  measure: to_plan_units {
+    label: "To Plan (units)"
+    type: number
+    value_format: "0.0%"
+    sql: (${total_units}/${plan_units})-1 ;;
+  }
+  measure: to_forecast_dollars {
+    label: "To Forecast ($)"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${forecast_amount} > 0 then (${total_sales}/${forecast_amount})-1 else 0 end;;
+  }
+  measure: to_forecast_units {
+    label: "To Forecast (units)"
+    type: number
+    value_format: "0.0%"
+    sql: (${total_units}/${forecast_units})-1 ;;
+  }
+
+  dimension: liquid_date {
+    group_label: "Dynamic Date"
+    label: "z - liquid date"
+    description: "If > 365 days in the look, than month, if > 30 than week, else day"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start date_date %} as date),
+                cast({% date_end date_date  %} as date)
+                ) >365
+      THEN cast(${date_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start date_date %} as date),
+                cast({% date_end date_date  %} as date)
+                ) >30
+      THEN cast(${date_week} as varchar)
+      else ${date_date}
+      END
+    ;;
+  }
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
