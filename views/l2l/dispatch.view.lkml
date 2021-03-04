@@ -169,10 +169,4 @@ view: dispatch {
     type: count
     drill_fields: [dispatch_id, dispatch_type.dispatch_type_id]
   }
-
-  measure: total_resource_time {
-    type: sum
-    value_format: "hh:mm:ss"
-    sql: ${resource_time} ;;
-  }
 }
