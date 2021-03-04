@@ -32,6 +32,16 @@ view: area {
     sql: ${TABLE}."SITE_ID" ;;
   }
 
+  dimension: site_name{
+    label: "Site Name"
+    description: "The Name of the Site (Granstville, Alpine, Atlanta, etc; Source: looker calculation"
+    type: string
+    sql: case when ${site_id} = 2 then 'Grantsville'
+      when ${site_id} = 3 then 'Alpine'
+      when ${site_id} = 1 then 'Sandbox'
+      else 'Other' end ;;
+  }
+
   dimension_group: created {
     hidden: yes
     description: "Source: l2l.area"
