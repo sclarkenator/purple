@@ -184,7 +184,7 @@ view: customer_table {
     sql: ${TABLE}.sales_manager_id ;;}
 
   dimension: bill_address {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.billaddress ;;
   }
