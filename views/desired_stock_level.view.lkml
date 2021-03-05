@@ -101,25 +101,24 @@ order by 3 desc
 --Forecasted Sales by Mattress SKU
 select
   coalesce (i.sku_id, aip.sku_id) sku_id
-  , i.product_description
-  , round(coalesce(sum(fc.total_units ), 0),0) total_units_new
+    , i.product_description
+    , round(coalesce(sum(fc.total_units ), 0),0) total_units_new
     , round(((total_units_new/8)*2),0) "14_DAY_FORECAST"
     , round(("14_DAY_FORECAST"/14),0) daily_forecast
+  , case
+        when fc.version = 'Working'  then 'Working'
+        when fc.version = 'Current S&OP'  then 'Current S&OP'
+        when fc.version = 'Last Month S&OP'  then 'Last Month S&OP'
+        when fc.version = 'Two Month S&OP'  then 'Two Month S&OP'
+        when fc.version = 'Running 4 Month'  then 'Running 4 Month'
+    end as forecast_version
 from sales.v_forecast fc
     left join sales.item i on fc.sku_id = i.sku_id
-    left join forecast.v_ai_product aip ON fc.sku_id = (aip.sku_id)
-where (((case
-    when fc.version = 'Working'  then 'Working'
-    when fc.version = 'Current S&OP'  then 'Current S&OP'
-    when fc.version = 'Last Month S&OP'  then 'Last Month S&OP'
-    when fc.version = 'Two Month S&OP'  then 'Two Month S&OP'
-    when fc.version = 'Running 4 Month'  then 'Running 4 Month'
-        end) = 'Last Month S&OP'))
-    and ((fc.forecast  < (to_date(dateadd('day', 63, date_trunc('week', current_date()))))))
+    left join forecast.v_ai_product aip on fc.sku_id = aip.sku_id
+where ((fc.forecast  < (to_date(dateadd('day', 63, date_trunc('week', current_date()))))))
     and ((fc.forecast  >= (to_date(dateadd('day', 7, date_trunc('week', current_date()))))))
     and (i.category = 'MATTRESS')
-group by 1,2
-order by 3 desc
+group by 1,2,6
 
 )
 
@@ -141,6 +140,7 @@ select zz.new_hep_sku
         when ((zz."14_DAY_FORECAST"+zz.unfulfilled_units)-zz.fg_on_hand) is null then 0
         else ((zz."14_DAY_FORECAST"+zz.unfulfilled_units)-zz.fg_on_hand)
       end as fg_beds_needed
+    , zz.forecast_version
 from (
   select aa.new_hep_sku
       , aa.finished_good_sku
@@ -153,6 +153,7 @@ from (
       , ee.total_units_new as total_units_new
       , ee."14_DAY_FORECAST" as "14_DAY_FORECAST"
       , ee.daily_forecast as daily_forecast
+      , ee.forecast_version as forecast_version
   from aa
   left join bb on bb.sku_id = aa.finished_good_sku
   left join cc on cc.sku_id = aa.new_hep_sku
@@ -160,7 +161,7 @@ from (
   left join ee on ee.sku_id = aa.finished_good_sku
 ) zz
 --where new_hep_sku = ''
-group by 1,2,3,4,12,13  ;;
+group by 1,2,3,4,12,13,14  ;;
   }
 
   dimension: hep_sku {
@@ -189,6 +190,19 @@ group by 1,2,3,4,12,13  ;;
     description: "Hep Product Descripton; source:production.fg_to_sfg"
     type: string
     sql: ${TABLE}."FG_PRODUCT_DESCRIPTION" ;;
+  }
+
+  dimension: forecast_version {
+    label: "Forecast Version"
+    type: string
+    description: "Working is the current data in Adaptive, Current S&OP is locked at the first Saturday of the current month, Previous is 1 month previos.  Rolling 4 month is looking at the forecast data from 4 months previous to the date being forecasted. "
+    case: {
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Working' ;; label: "Working" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Current S&OP' ;; label: "Current S&OP" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Last Month S&OP' ;; label: "Last Month S&OP" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Two Month S&OP' ;; label: "Two Month S&OP" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Running 4 Month' ;; label: "Running 4 Month" }
+    }
   }
 
   measure: quantity_used {
