@@ -45,13 +45,34 @@ view: mattress_firm_sales {
     type:  string
     sql:  ${TABLE}.mf_Sku ;; }
 
+ ## Jared Dyer 3/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021.
   dimension_group: finalized{
     label: "Order"
     description: "When order was placed @ Mattress Firm"
     type:  time
-    timeframes: [date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
     datatype: date
     sql: ${TABLE}.finalized_date ;; }
+
+  dimension: created_week_of_year {
+    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    type: number
+    label: "Week of Year"
+    group_label: "Order Date"
+    description: "2021 adjusted week of year number"
+    sql: case when ${finalized_date::date} >= '2020-12-28' and ${finalized_date::date} <= '2021-01-03' then 1
+              when ${finalized_year::number}=2021 then date_part(weekofyear,${finalized_date::date}) + 1
+              else date_part(weekofyear,${finalized_date::date}) end ;;
+  }
+
+  dimension: adj_year {
+    ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    type: number
+    group_label: "Order Date"
+    label: "z - 2021 adj year"
+    description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
+    sql:  case when ${finalized_date::date} >= '2020-12-28' and ${finalized_date::date} <= '2021-01-03' then 2021 else ${finalized_year::number} end   ;;
+  }
 
   dimension_group: open_date{
     label: "Store Open"
