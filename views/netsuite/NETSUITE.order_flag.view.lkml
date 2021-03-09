@@ -1394,7 +1394,7 @@ view: order_flag {
 
   dimension: singleharmony_flag {
     group_label: "    * Orders has:"
-    label: "A Single Harmony Pillow"
+    label: "a Single Harmony Pillow"
     description: "1/0; 1 if there is exactly 1 Harmony Pillow in this order. Source: looker.calculation"
     type:  yesno
     hidden: yes
