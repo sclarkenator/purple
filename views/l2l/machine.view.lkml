@@ -35,7 +35,7 @@ view: machine {
   }
 
   dimension: machine_code {
-    hidden: yes
+    hidden: no
     description: "Source: l2l.machine"
     type: string
     sql: ${TABLE}."MACHINE_CODE" ;;
