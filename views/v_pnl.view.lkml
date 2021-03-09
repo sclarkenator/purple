@@ -109,6 +109,7 @@ PNL as
   else retail_location end  store
         ,to_Date(date_trunc(month,(ending))) month
         ,upper(case when category = 'Wholesale & Retail Compensation' then 'compensation'
+               when category = 'Professional Services' then 'PROFESSIONAL SERVICES'
                when name ilike 'lease%' then 'rent'
                when name ilike 'rent%' then 'RENT'
                when name ilike 'water%' then 'UTILITIES'
@@ -143,11 +144,13 @@ select case when contribution.store = 'CA-01' then 'San Diego'
         ,contribution.warranty
         ,nvl(p1.gross_amount,0) RENT
         ,nvl(p2.gross_amount,0) COMPENSATION
+        ,nvl(p3.gross_amount,0) PROFESSIONALSERVICES
         ,nvl(p4.gross_amount,0) UTILITIES
         ,nvl(p5.gross_amount,0) OTHER
 from contribution
 left join pnl p1 on p1.store = contribution.store and p1.month = contribution.month and p1.expense_type = 'RENT'
 left join pnl p2 on p2.store = contribution.store and p2.month = contribution.month and p2.expense_type = 'COMPENSATION'
+left join pnl p3 on p3.store = contribution.store and p3.month = contribution.month and p3.expense_type = 'PROFESSIONAL SERVICES'
 left join pnl p4 on p4.store = contribution.store and p4.month = contribution.month and p4.expense_type = 'UTILITIES'
 left join pnl p5 on p5.store = contribution.store and p5.month = contribution.month and p5.expense_type = 'OTHER'
  ;;}
@@ -268,6 +271,13 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     label: "Compensation"
     description: "Total compensation for direct labor at store"
     sql: ${TABLE}.compensation ;;
+  }
+
+  measure: professionalservices {
+    value_format_name: usd_0
+    type: sum
+    label: "Professional Services"
+    sql: ${TABLE}.professionalservices ;;
   }
 
   measure: utilities {
