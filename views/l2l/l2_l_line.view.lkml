@@ -36,7 +36,7 @@ view: ltol_line {
   }
 
   dimension: Line_name {
-    description: "Line Name shown as Description in L2L (Max 2, Max 3, Max 4, etc); Source: l2l.line"
+    description: "Line Name shown as Description in L2L (Max 1, Max 2, Max 3, etc); Source: l2l.line"
     type: string
     sql: case when ${TABLE}."DESCRIPTION" = 'Scrim Line Red Max 2 and 5' then 'Scrim Red'
           when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
