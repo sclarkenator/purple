@@ -41,7 +41,7 @@ view: ltol_line {
     sql: case when ${TABLE}."DESCRIPTION" = 'Scrim Line Red Max 2 and 5' then 'Scrim Red'
           when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
           when ${TABLE}."DESCRIPTION" = 'Regrind Line' then 'Regrind'
-          when ${TABLE}."DESCRIPTION" = 'Max One Line' then 'Max 1'
+          when ${TABLE}."DESCRIPTION" = 'Max Line' then 'Max 1'
           when ${TABLE}."DESCRIPTION" = 'Max Two Line' then 'Max 2'
           when ${TABLE}."DESCRIPTION" = 'Max Three Line' then 'Max 3'
           when ${TABLE}."DESCRIPTION" = 'Max Four Line' then 'Max 4'
