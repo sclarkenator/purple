@@ -134,7 +134,7 @@ view: order_flag {
      ,case when allseasons_duvet > 0 then 1 else 0 end all_seasons_duvet_flg
      ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
      ,case when lifeline > 0 then 1 else 0 end lifeline_flg
---     ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
+     ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
 
      ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
 
@@ -180,8 +180,8 @@ view: order_flag {
           ) THEN 1 else 0 end) buymsm1
         ,sum(case when sku_id in ('10-47-20000','10-47-20002','10-47-20001') then 1 else 0 end) med_mask
         ,sum(case when sku_id in ('10-31-12863','10-31-13100') then 1 else 0 end) pillow_booster
---        ,sum(case when sku_id in ('10-90-10072','10-90-10071','10-90-10073','10-90-10074','10-90-10076','10-90-10075','10-90-10077',
---        '10-90-10078','10-90-10080','10-90-10079','10-90-10082','10-90-10083','10-90-10086','10-90-10085','10-90-10084','10-90-10081') then 1 else 0 end) sj_pajamas
+        ,sum(case when sku_id in ('10-90-10072','10-90-10071','10-90-10073','10-90-10074','10-90-10076','10-90-10075','10-90-10077',
+        '10-90-10078','10-90-10080','10-90-10079','10-90-10082','10-90-10083','10-90-10086','10-90-10085','10-90-10084','10-90-10081') then 1 else 0 end) sj_pajamas
 
         --adding for ecommerce bundles
 
@@ -1400,13 +1400,13 @@ view: order_flag {
     hidden: yes
     sql: ${TABLE}.singleharmony_flg = 1 ;; }
 
-#  dimension: sj_pajama_flag {
-#   group_label: "    * Orders has:"
-#    label: "A Sleepy Jones Pajamas"
-#    description: "1/0; 1 if there is at least 1 Sleepy Jones Pajamas in this order. Source: looker.calculation"
-#    type:  yesno
-#    hidden: no
-#    sql: ${TABLE}.sj_pajama_flg = 1 ;; }
+  dimension: sj_pajama_flag {
+   group_label: "    * Orders has:"
+    label: "A Sleepy Jones Pajamas"
+    description: "1/0; 1 if there is at least 1 Sleepy Jones Pajamas in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: no
+    sql: ${TABLE}.sj_pajama_flg = 1 ;; }
 
 # big 5 bundles
   dimension: big5_singleharmony_ogsheets_flag {
