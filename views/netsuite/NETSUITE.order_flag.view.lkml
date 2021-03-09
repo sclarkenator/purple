@@ -1402,11 +1402,12 @@ view: order_flag {
 
   dimension: sj_pajama_flag {
    group_label: "    * Orders has:"
-    label: "A Sleepy Jones Pajamas"
+    label: "a Sleepy Jones Pajamas"
     description: "1/0; 1 if there is at least 1 Sleepy Jones Pajamas in this order. Source: looker.calculation"
     type:  yesno
     hidden: no
-    sql: ${TABLE}.sj_pajama_flg = 1 ;; }
+    sql: ${TABLE}.sj_pajama_flg = 1 ;;
+    }
 
 # big 5 bundles
   dimension: big5_singleharmony_ogsheets_flag {
