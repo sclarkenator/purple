@@ -18,35 +18,7 @@ view: store_four_wall {
       where a.end_date = '2099-01-01'
       group by 1,2 )
 ,
-item_return_rate AS
-(select trim(i.sku_id,'AC-') sku_id
-              ,nvl(sum(returns),0)/sum(sales) return_rate
-      from
-      (
-      select sol.item_id
-              ,sum(returns) returns
-              ,sum(sol.gross_amt) sales
-      from sales.sales_order_line sol
-      left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
-      left join
-            (select rl.order_id
-                    ,rl.item_id
-                    ,rl.system
-                    ,sum(rl.gross_amt) returns
-             from sales.return_order_line rl
-             join sales.return_order ro on ro.return_order_id = rl.return_order_id
-             where ro.status = 'Refunded'
-             and rl.closed > '2019-10-01'
-             group by 1,2,3
-             order by 4 desc) r
-          on r.order_id = sol.order_id and r.item_id = sol.item_id and r.system = sol.system
-      where datediff(d,sol.fulfilled,current_date)>130 and datediff(d,sol.fulfilled,current_date)<=220
-      and so.channel_id = 1
-      group by 1
-      having sum(sol.gross_amt)>0) s
-      join sales.item i on i.item_id = s.item_id
-      group by 1)
-,
+
 contribution as
 (
 SELECT
@@ -112,7 +84,7 @@ LEFT JOIN standard_cost ON standard_cost.item_id = item.ITEM_ID or standard_cost
 LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID"
 )
 FULL OUTER JOIN customer_care.v_zendesk_sell  AS zendesk_sell ON zendesk_sell.order_id=sales_order.order_id and sales_order.SYSTEM='NETSUITE'
-LEFT JOIN LOOKER_SCRATCH.LR$YE6H41615209661407_item_return_rate AS item_return_rate ON item.SKU_ID = item_return_rate.sku_id and item_return_rate.channel = (case when zendesk_sell.order_id is not null then 'Inside sales'
+LEFT JOIN analytics.sales.item_return_rate AS item_return_rate ON item.SKU_ID = item_return_rate.sku_id and item_return_rate.channel = (case when zendesk_sell.order_id is not null then 'Inside sales'
         when sales_order.CHANNEL_id = 1 then 'Web'
         when sales_order.CHANNEL_id = 5 then 'Retail'
         else 'Other'
