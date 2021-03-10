@@ -344,6 +344,45 @@ view: day_agg_prod_mattress {
   dimension: produced_date { type: date }
 }
 
+######################################################
+#   IS Deals
+#   https://purple.looker.com/dashboards/4132
+######################################################
+view: day_agg_is_deals {
+  derived_table: {
+    explore_source: cc_deals {
+      column: created_date {}
+      column: count {}
+      column: total_orders { field: sales_order.total_orders }
+      filters: { field: cc_deals.created_date value: "2 years" }
+    }
+  }
+  dimension: created_date { type: date }
+  dimension: count { type: number }
+  dimension: total_orders { type: number}
+}
+
+######################################################
+#   IS Activities
+#   https://purple.looker.com/dashboards/4132
+######################################################
+view: day_agg_is_activities {
+  derived_table: {
+    explore_source: cc_activities {
+      column: activity_date {}
+      column: count {}
+      column: calls {}
+      column: chats {}
+      column: emails {}
+      filters: { field: cc_activities.activity_date value: "2 years" }
+    }
+  }
+  dimension: activity_date { type: date }
+  dimension: count {type: number }
+  dimension: calls { type: number }
+  dimension: chats { type: number }
+  dimension: emails { type: number }
+}
 
 ######################################################
 #   CREATING FINAL TABLE
@@ -389,6 +428,12 @@ view: day_aggregations {
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
         , (nvl(dtc.total_gross_Amt_non_rounded,0) + nvl(retail.total_gross_Amt_non_rounded,0) + (nvl(wholesale.total_gross_Amt_non_rounded,0) * 0.50)) as roas_sales
+        , is_deals.count as is_deals
+        , is_deals.total_orders as is_cohort_orders
+        , is_activities.count as is_activities
+        , is_activities.calls as is_calls
+        , is_activities.chats as is_chats
+        , is_activities.emails as is_emails
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -412,6 +457,8 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
+      left join ${day_agg_is_deals.SQL_TABLE_NAME} is_deals on is_deals.created_date::date = d.date
+      left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -907,6 +954,54 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.cc_sales ;;
+  }
+
+  measure: is_deals {
+    label: "IS SQOs (#)"
+    description: "Deals created in zendesk sell"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_deals ;;
+  }
+
+  measure: is_cohort_orders {
+    label: "IS Cohort Orders (#)"
+    description: "Netsuite orders converted from deals created in zendesk sell on the zendesk deal date"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_cohort_orders ;;
+  }
+
+  measure: is_activities {
+    label: "IS Activities (#)"
+    description: "Total activities from calls, chats and emails"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_activities ;;
+  }
+
+  measure: is_calls {
+    label: "IS Calls (#)"
+    description: "Total calls from RPT skills report download in incontact"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_calls ;;
+  }
+
+  measure: is_chats {
+    label: "IS Chats (#)"
+    description: "Total chats from zendesk tickets"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_chats ;;
+  }
+
+  measure: is_emails {
+    label: "IS Emails (#)"
+    description: "Total emails from zendesk tickets"
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${TABLE}.is_emails ;;
   }
 
   parameter: see_data_by {
