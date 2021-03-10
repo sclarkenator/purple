@@ -34,11 +34,12 @@ view: area {
 
   dimension: site_name{
     label: "Site Name"
-    description: "The Name of the Site (Granstville, Alpine, Atlanta, etc; Source: looker calculation"
+    description: "The Name of the Site (Granstville, Alpine, McDonough, etc; Source: looker calculation"
     type: string
-    sql: case when ${site_id} = 2 then 'Grantsville'
+    sql: case when ${site_id} = 1 then 'Sandbox'
+      when ${site_id} = 2 then 'Grantsville'
       when ${site_id} = 3 then 'Alpine'
-      when ${site_id} = 1 then 'Sandbox'
+      when ${site_id} = 4 then 'McDonough'
       else 'Other' end ;;
   }
 

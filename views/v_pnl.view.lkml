@@ -18,35 +18,7 @@ view: store_four_wall {
       where a.end_date = '2099-01-01'
       group by 1,2 )
 ,
-item_return_rate AS
-(select trim(i.sku_id,'AC-') sku_id
-              ,nvl(sum(returns),0)/sum(sales) return_rate
-      from
-      (
-      select sol.item_id
-              ,sum(returns) returns
-              ,sum(sol.gross_amt) sales
-      from sales.sales_order_line sol
-      left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
-      left join
-            (select rl.order_id
-                    ,rl.item_id
-                    ,rl.system
-                    ,sum(rl.gross_amt) returns
-             from sales.return_order_line rl
-             join sales.return_order ro on ro.return_order_id = rl.return_order_id
-             where ro.status = 'Refunded'
-             and rl.closed > '2019-10-01'
-             group by 1,2,3
-             order by 4 desc) r
-          on r.order_id = sol.order_id and r.item_id = sol.item_id and r.system = sol.system
-      where datediff(d,sol.fulfilled,current_date)>130 and datediff(d,sol.fulfilled,current_date)<=220
-      and so.channel_id = 1
-      group by 1
-      having sum(sol.gross_amt)>0) s
-      join sales.item i on i.item_id = s.item_id
-      group by 1)
-,
+
 contribution as
 (
 SELECT
@@ -112,7 +84,7 @@ LEFT JOIN standard_cost ON standard_cost.item_id = item.ITEM_ID or standard_cost
 LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID"
 )
 FULL OUTER JOIN customer_care.v_zendesk_sell  AS zendesk_sell ON zendesk_sell.order_id=sales_order.order_id and sales_order.SYSTEM='NETSUITE'
-LEFT JOIN LOOKER_SCRATCH.LR$YE6H41615209661407_item_return_rate AS item_return_rate ON item.SKU_ID = item_return_rate.sku_id and item_return_rate.channel = (case when zendesk_sell.order_id is not null then 'Inside sales'
+LEFT JOIN analytics.sales.item_return_rate AS item_return_rate ON item.SKU_ID = item_return_rate.sku_id and item_return_rate.channel = (case when zendesk_sell.order_id is not null then 'Inside sales'
         when sales_order.CHANNEL_id = 1 then 'Web'
         when sales_order.CHANNEL_id = 5 then 'Retail'
         else 'Other'
@@ -137,6 +109,7 @@ PNL as
   else retail_location end  store
         ,to_Date(date_trunc(month,(ending))) month
         ,upper(case when category = 'Wholesale & Retail Compensation' then 'compensation'
+               when category = 'Professional Services' then 'PROFESSIONAL SERVICES'
                when name ilike 'lease%' then 'rent'
                when name ilike 'rent%' then 'RENT'
                when name ilike 'water%' then 'UTILITIES'
@@ -171,11 +144,13 @@ select case when contribution.store = 'CA-01' then 'San Diego'
         ,contribution.warranty
         ,nvl(p1.gross_amount,0) RENT
         ,nvl(p2.gross_amount,0) COMPENSATION
+        ,nvl(p3.gross_amount,0) PROFESSIONALSERVICES
         ,nvl(p4.gross_amount,0) UTILITIES
         ,nvl(p5.gross_amount,0) OTHER
 from contribution
 left join pnl p1 on p1.store = contribution.store and p1.month = contribution.month and p1.expense_type = 'RENT'
 left join pnl p2 on p2.store = contribution.store and p2.month = contribution.month and p2.expense_type = 'COMPENSATION'
+left join pnl p3 on p3.store = contribution.store and p3.month = contribution.month and p3.expense_type = 'PROFESSIONAL SERVICES'
 left join pnl p4 on p4.store = contribution.store and p4.month = contribution.month and p4.expense_type = 'UTILITIES'
 left join pnl p5 on p5.store = contribution.store and p5.month = contribution.month and p5.expense_type = 'OTHER'
  ;;}
@@ -296,6 +271,13 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     label: "Compensation"
     description: "Total compensation for direct labor at store"
     sql: ${TABLE}.compensation ;;
+  }
+
+  measure: professionalservices {
+    value_format_name: usd_0
+    type: sum
+    label: "Professional Services"
+    sql: ${TABLE}.professionalservices ;;
   }
 
   measure: utilities {
