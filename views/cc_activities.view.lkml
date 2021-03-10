@@ -203,6 +203,21 @@ view: cc_activities {
     type: count
   }
 
+  measure: chats {
+    type: sum
+    sql: case when ${activity_type} = 'chat' then 1 else 0 end ;;
+  }
+
+  measure: calls {
+    type: sum
+    sql: case when ${activity_type} = 'call' then 1 else 0 end ;;
+  }
+
+  measure: emails {
+    type: sum
+    sql: case when ${activity_type} = 'email' then 1 else 0 end ;;
+  }
+
   measure: duration {
     type: sum
     sql: ${TABLE}.duration ;;
