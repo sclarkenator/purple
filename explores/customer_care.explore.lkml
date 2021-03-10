@@ -339,6 +339,7 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+  explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
   explore: cc_activities {hidden: yes group_label: "Customer Care"}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
