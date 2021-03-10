@@ -173,7 +173,7 @@ view: heap_page_views {
     type: string
     sql: case when ${path} ilike '%blog%' then 'blog'
               when ${path} ilike '%mattress-prot%' then 'bedding'
-              when ${path} ilike '%pillow%' then 'bedding'
+              when ${path} ilike '%pillow%' then 'pillow'
               when ${path} ilike '%frame%' then 'base'
               when ${path} ilike '%sheets%' then 'bedding'
               when ${path} ilike '%mattress%' then 'mattress'
