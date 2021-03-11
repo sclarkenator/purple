@@ -72,10 +72,15 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       type: left_outer
     }
+    join: production_goal {
+      type: left_outer
+      sql_on: ${assembly_build.produced_date} = ${production_goal.forecast_date} ;;
+      relationship: many_to_one
+    }
     join: production_goal_by_item {
       type: left_outer
-      sql_on: ${assembly_build.item_id} = ${production_goal_by_item.item_id} and ${assembly_build.produced_date} = ${production_goal_by_item.forecast_date} ;;
-      relationship: many_to_one
+      sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
+      relationship: one_to_many
     }
   }
 
