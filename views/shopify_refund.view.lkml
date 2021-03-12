@@ -2,6 +2,11 @@ view: shopify_refund {
   sql_table_name: "CUSTOMER_CARE"."V_ETAIL_MANUAL_REFUND"
   ;;
 
+  dimension: system {
+    type: string
+    sql: ${TABLE}.system ;;
+  }
+
   dimension_group: refunded  {
     type: time
     timeframes: [date,month_num,week_of_year,week,month,quarter,year,raw]
