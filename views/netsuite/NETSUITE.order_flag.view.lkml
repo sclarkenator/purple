@@ -135,8 +135,7 @@ view: order_flag {
      ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
      ,case when lifeline > 0 then 1 else 0 end lifeline_flg
      ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
-    ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_two_flg
-
+    ,case when sj_pajamas > 1 then 1 else 0 end sj_pajama_two_flg
      ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
 
     FROM(
