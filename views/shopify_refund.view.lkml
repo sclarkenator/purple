@@ -1,17 +1,21 @@
 view: shopify_refund {
   derived_table: {
     sql:
-      select o.name as order_number, to_date(r.created_at) as refunded, t.amount, a.name as refunded_by
+      with t as (
+        select refund_id, sum(amount) as amount
+        from analytics_stage.shopify_us_ft.transaction
+        where status = 'success'
+          and refund_id is not null
+        group by 1
+      )
+      select r.id, o.name as order_number, r.note as refund_note, to_date(r.created_at) as refunded, t.amount, a.name as refunded_by
       from analytics_stage.shopify_us_ft.refund r
         join analytics_stage.shopify_us_ft."ORDER" o on r.order_id = o.id
-        join analytics_stage.shopify_us_ft.transaction t on r.id = t.refund_id
+        join t on r.id = t.refund_id
         join analytics.customer_care.agent_lkp a on r.user_id = a.shopify_id
+      where
+        a.inactive is null
     ;;
-  }
-
-  dimension: name {
-    type: string
-    sql: ${TABLE}.name ;;
   }
 
   dimension_group: refunded  {
@@ -30,6 +34,11 @@ view: shopify_refund {
   dimension: refunded_by {
     type: string
     sql: ${TABLE}.refunded_by ;;
+  }
+
+  dimension: refund_note {
+    type: string
+    sql: ${TABLE}.refund_note ;;
   }
 
   measure: amount {
