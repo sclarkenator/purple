@@ -2101,6 +2101,7 @@ view: sales_order_line {
               when ${customer_table.companyname} ilike '%Rooms To Go%' then 0.030* ${TABLE}.gross_amt else 0 end  ;;
   }
 
+
   measure: freight {
     hidden:  no
     label: " 8 - Total Freight"
@@ -2108,7 +2109,7 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: number
-    sql: nvl(${shipping.shipping_amt},0) + nvl(${wholesale_freight},0) ;;
+    sql: nvl(${fulfillment.total_shipping},0)+nvl(${wholesale_freight},0) ;;
   }
 
 
