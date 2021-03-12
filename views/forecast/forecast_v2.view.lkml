@@ -12,12 +12,18 @@ view: forecast_v2 {
       when: { sql: ${version_raw} = 'Last Month S&OP' ;; label: "Last Month S&OP" }
       when: { sql: ${version_raw} = 'Two Month S&OP' ;; label: "Two Month S&OP" }
       when: { sql: ${version_raw} = 'Running 4 Month' ;; label: "Running 4 Month" }
+      when: { sql: ${version_raw} = 'Previous Month Lock' ;; label: "Previous Month Lock" }
     }
   }
 
   dimension: version_raw {
     type: string
     sql: ${TABLE}.version ;;
+  }
+
+  dimension: forecast_made_date {
+    type: date
+    sql: ${TABLE}.forecast_made_date ;;
   }
 
   dimension_group: date {
