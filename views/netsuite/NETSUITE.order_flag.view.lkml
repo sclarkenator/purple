@@ -135,6 +135,7 @@ view: order_flag {
      ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
      ,case when lifeline > 0 then 1 else 0 end lifeline_flg
      ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
+    ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_two_flg
 
      ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
 
@@ -1408,6 +1409,15 @@ view: order_flag {
     hidden: no
     sql: ${TABLE}.sj_pajama_flg = 1 ;;
     }
+
+  dimension: sj_pajama_two_flag {
+    group_label: "    * Orders has:"
+    label: "two Sleepy Jones Pajamas"
+    description: "1/0; 1 if there is at least 2 Sleepy Jones Pajamas in this order. Source: looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.sj_pajama_two_flg = 1 ;;
+  }
 
 # big 5 bundles
   dimension: big5_singleharmony_ogsheets_flag {
