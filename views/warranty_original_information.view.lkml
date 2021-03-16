@@ -137,6 +137,16 @@ view: warranty_original_information {
       type: date
       sql: ${TABLE}.s_created_date ;;
     }
+  dimension_group: orignal_sales_created_date {
+    ## Scott Clark 1/8/21: Removed day_of_year for 2021 Y/Y adjustment. Add back final week of 2021.
+    label: "Orignal Sales Order"
+    description:  "Time and date orignal sales order was placed. Source: netsuite.sales_order_line"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${TABLE}.s_created_date) ;;
+  }
   dimension: replacement_order_id {
     hidden: yes
     type: number
