@@ -6,6 +6,7 @@ view: order_flag {
       ,case when MATTRESS_FLG > 0 then 1 else 0 end mattress_flg
       ,case when HYBRID_MATTRESS_FLG > 0 then 1 else 0 end hybrid_mattress_flg
       ,case when CUSHION_FLG > 0 then 1 else 0 end cushion_flg
+      ,case when CUSHION_FLG_sansback > 0 then 1 else 0 end CUSHION_flg_sansback
       ,case when SHEETS_FLG > 0 then 1 else 0 end sheets_flg
       ,case when PROTECTOR_FLG > 0 then 1 else 0 end protector_flg
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
@@ -203,6 +204,7 @@ view: order_flag {
          ,sum(case when (model = 'ALL SEASONS DUVET' ) THEN 1 ELSE 0 END) allseasons_duvet
          ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
          ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
+         ,SUM(CASE WHEN category = 'SEATING' and model not in ('BACK') THEN 1 ELSE 0 END) CUSHION_FLG_sansback
         -- 2's
          ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
          ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
@@ -279,6 +281,15 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  sum
     sql:  ${TABLE}.cushion_flg ;; }
+
+  measure: cushion_orders_sansback {
+    group_label: "Total Orders with:"
+    label: "a Cushion - Any except Back"
+    description: "1/0 per order; 1 if there was a cushion other than a back cushion in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    hidden: yes
+    sql:  ${TABLE}.CUSHION_flg_sansback ;; }
 
   measure: sheets_orders {
     group_label: "Total Orders with:"
@@ -463,6 +474,14 @@ view: order_flag {
     description: "1/0; 1 if there is a cushion in this order. Source:looker.calculation"
     type:  yesno
     sql: ${TABLE}.cushion_flg = 1 ;; }
+
+  dimension: CUSHION_FLaG_sansback {
+    group_label: "    * Orders has:"
+    label: "a Cushion - Any except Back"
+    description: "1/0; 1 if there is a cushion other than a back cushion in this order. Source:looker.calculation"
+    type:  yesno
+    hidden: yes
+    sql: ${TABLE}.CUSHION_flg_sansback = 1 ;; }
 
   dimension: sheets_flg {
     group_label: "    * Orders has:"
