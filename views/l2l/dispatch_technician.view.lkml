@@ -155,8 +155,16 @@ view: dispatch_technician {
   }
 
   dimension: resource_time_dim {
+    hidden: yes
     type: number
     sql: timediff(minutes,${assigned_raw},${completed_raw}) ;;
+  }
+
+  measure: resource_time {
+    type: sum
+    description: "To be used with Dispatched Date; Source: Looker Calculation"
+    value_format: "#,##0.00"
+    sql: ${resource_time_dim}/60 ;;
   }
 
   measure: count {
