@@ -10,6 +10,8 @@ view: day_aggregations_dtc_sales {
       column: total_units {}
       column: insidesales_sales {}
       column: customer_care_sales {}
+      column: customer_care_orders {}
+      column: insidesales_orders {}
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
@@ -26,6 +28,8 @@ view: day_aggregations_dtc_sales {
   measure: total_units {type: sum}
   measure: insidesales_sales {type: sum}
   measure: customer_care_sales {type: sum}
+  measure: insidesales_orders {type: sum}
+  measure: customer_care_orders {type: sum}
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${created_date_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
@@ -375,6 +379,8 @@ view: day_agg_is_activities {
       column: chats {}
       column: emails {}
       filters: { field: cc_activities.activity_date value: "2 years" }
+      filters: { field: cc_activities.team value: "sales" }
+      filters: { field: cc_activities.missed value: "No" }
     }
   }
   dimension: activity_date { type: date }
@@ -396,6 +402,8 @@ view: day_aggregations {
         , dtc.total_units as dtc_units
         , dtc.insidesales_sales as is_sales
         , dtc.customer_care_sales as cc_sales
+        , dtc.customer_care_orders as cc_orders
+        , dtc.insidesales_orders as is_orders
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
         , retail.total_gross_Amt_non_rounded as retail_amount
@@ -941,7 +949,7 @@ view: day_aggregations {
   }
 
   measure: is_sales {
-    label: "Sales - Inside Sales ($)"
+    label: "IS Inside Sales ($)"
     description: "Gross Sales from Inside Sales Team (Does not include customer care)"
     type: sum
     value_format: "$#,##0.00"
@@ -949,18 +957,50 @@ view: day_aggregations {
   }
 
   measure: cc_sales {
-    label: "Sales - Customer Care ($)"
+    label: "IS Customer Care Sales ($)"
     description: "Gross Sales from Customer Care Team"
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.cc_sales ;;
   }
 
+  measure: is_total_sales {
+    label: "IS - Total Sales ($)"
+    description: "Gross Sales from Customer Care Team"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: nvl(${TABLE}.is_sales,0) + nvl(${TABLE}.cc_sales,0) ;;
+  }
+
+  measure: is_orders {
+    label: "IS Inside Orders (#)"
+    description: "Gross Sales from Inside Sales Team (Does not include customer care)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_orders ;;
+  }
+
+  measure: cc_orders {
+    label: "IS Customer Care Orders (#)"
+    description: "Gross Sales from Customer Care Team"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.cc_orders ;;
+  }
+
+  measure: is_total_orders {
+    label: "IS - Total Orders (#)"
+    description: "Total Ordrs from Customer Care and Inside Sales Team"
+    type: sum
+    value_format: "#,##0"
+    sql: nvl(${TABLE}.is_orders,0) + nvl(${TABLE}.cc_orders,0) ;;
+  }
+
   measure: is_deals {
     label: "IS SQOs (#)"
     description: "Deals created in zendesk sell"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_deals ;;
   }
 
@@ -968,7 +1008,7 @@ view: day_aggregations {
     label: "IS Cohort Orders (#)"
     description: "Netsuite orders converted from deals created in zendesk sell on the zendesk deal date"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_cohort_orders ;;
   }
 
@@ -976,7 +1016,7 @@ view: day_aggregations {
     label: "IS Activities (#)"
     description: "Total activities from calls, chats and emails"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_activities ;;
   }
 
@@ -984,7 +1024,7 @@ view: day_aggregations {
     label: "IS Calls (#)"
     description: "Total calls from RPT skills report download in incontact"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_calls ;;
   }
 
@@ -992,7 +1032,7 @@ view: day_aggregations {
     label: "IS Chats (#)"
     description: "Total chats from zendesk tickets"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_chats ;;
   }
 
@@ -1000,9 +1040,16 @@ view: day_aggregations {
     label: "IS Emails (#)"
     description: "Total emails from zendesk tickets"
     type: sum
-    value_format: "#,##0.00"
+    value_format: "#,##0"
     sql: ${TABLE}.is_emails ;;
   }
+
+  measure: cvr_is {
+    label: "IS Conversion Rate"
+    description: "% of all IS actvities over IS orders. Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${day_aggregations.is_orders})/NULLIF(${day_aggregations.is_activities},0) ;; }
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"

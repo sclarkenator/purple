@@ -53,7 +53,7 @@ view: cc_activities {
     left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
     left join analytics_stage.zendesk.user u on u.id = t.requester_id
     left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
-    where t.via_channel in ('email','facebook')
+    where t.via_channel in ('email','facebook','web')
 
   ;;}
 
