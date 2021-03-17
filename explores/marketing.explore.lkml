@@ -162,6 +162,11 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
       relationship: many_to_one
     }
+    join: first_order_flag {
+      type: left_outer
+      sql_on: LOWER(${email_contact_merged.email_join}) =  LOWER(${first_order_flag.email});;
+      relationship: one_to_one
+    }
   }
 
 explore: email_mymove_contact {
