@@ -407,6 +407,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${dispatch.reason_code} = ${reason.code} and ${machine.site_id} = ${reason.site};;
       relationship: one_to_many
     }
+    join: dispatch_technician {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${dispatch.dispatch_id} = ${dispatch_technician.dispatch_id} and ${dispatch.dispatch_number} = ${dispatch_technician.dispatch_number} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: bill_of_materials {
