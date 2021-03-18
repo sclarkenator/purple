@@ -2296,7 +2296,7 @@ view: sales_order_line {
     group_label: "Gross Sales"
     label: "Sales - Customer Care Team ($)"
     description: "Summing Gross Sales where the order was from a customer care agent. Excluding warranties and exchanges."
-    type: count_distinct
+    type: sum
     value_format: "$#,##0"
     sql: case when ${agent_name.merged_name} is not null
       and ${zendesk_sell.name} is null
@@ -2309,7 +2309,7 @@ view: sales_order_line {
   measure: customer_care_orders {
     group_label: "Gross Sales"
     label: "Sales - Customer Care Team (#)"
-    type: sum
+    type: count_distinct
     value_format: "#,##0"
     sql: case when ${agent_name.merged_name} is not null
       and ${zendesk_sell.name} is null
