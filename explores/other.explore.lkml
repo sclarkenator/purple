@@ -48,6 +48,26 @@ include: "/dashboards/**/*.dashboard"
     description: "Diversity, Equity, & Inclusion (DEI) data by supervisor and department"
   }
 
+#-------------------------------------------------------------
+#
+# Bridge Data
+#
+#-------------------------------------------------------------
+
+  explore: bridge_enrollment {
+    group_label: "HR"
+    hidden: yes
+    join: bridge_course {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_course.id} = ${bridge_enrollment.course_id};;
+    }
+    join: bridge_user {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_user.id} = ${bridge_enrollment.learner_id} ;;
+    }
+  }
 
 #-------------------------------------------------------------------
 #
