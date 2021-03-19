@@ -37,6 +37,7 @@ view: bridge_enrollment {
 
   dimension: enrollment_id {
     type: number
+    primary_key: yes
     sql: ${TABLE}."ENROLLMENT_ID" ;;
   }
 
