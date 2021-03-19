@@ -2179,7 +2179,7 @@ view: sales_order_line {
     value_format: "$#,##0"
     type: sum
     sql: case when ${customer_table.companyname} ilike '%Bloomingdale%' then 0.0145
-          when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.14
+          when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.05
           when ${customer_table.companyname} ilike '%Sleep Country%' then 0.115
           when ${customer_table.companyname} ilike '%Macy%' then 0.095
           when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.064
