@@ -159,7 +159,7 @@ view: bridge_course {
     sql: ${TABLE}."TITLE" ;;
   }
 
-    dimension_group: updated {
+  dimension_group: updated {
     type: time
     timeframes: [
       raw,
@@ -176,5 +176,23 @@ view: bridge_course {
   measure: count {
     type: count
     drill_fields: [id]
+  }
+
+  measure: overdue_total {
+    type: sum
+    sql: ${enrollment_counts_overdue};;
+    hidden: yes
+  }
+
+  measure: enrollment_total {
+    type: sum
+    sql: ${enrollment_counts_all};;
+    hidden: yes
+  }
+
+  measure: percent_overdue {
+    type: number
+    sql: ${overdue_total}/NULLIF(${enrollment_total}, 0)*100 ;;
+    value_format: "0.0\%"
   }
 }
