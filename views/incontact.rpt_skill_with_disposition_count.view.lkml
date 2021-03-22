@@ -139,7 +139,7 @@ dimension: primary_key {
     case
         when ${skill} in ('8885Purple','888Purple','AAA EnCompass','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','CDL_Trucker _Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Mantra Wellness magazine','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher_Discount','Teacher Discount','Time Magazine')
             then 'Sales Inbound'
-        when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty')
+        when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty','Support Tier 1 to Tier 2 xfer')
             then 'Support Inbound'
         when ${skill} in ('Service Recovery','Sleep Country Canada','Sleep County Canada')
             then 'SRT'
@@ -162,7 +162,7 @@ dimension: primary_key {
     label: "  * Is Transferred Call"
     type: yesno
     sql:
-      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)','Training - Support Xfer') then true else false end
+      case when ${skill} in ('Sales Xfer (From Support)','Support Xfer (From Sales)','Training - Support Xfer','Support Tier 1 to Tier 2 xfer') then true else false end
     ;;
   }
 

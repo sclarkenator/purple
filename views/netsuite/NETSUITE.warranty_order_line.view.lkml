@@ -69,14 +69,11 @@ view: warranty_order_line {
   measure: quantity_complete {
     group_label: " Advanced"
     label: "Total Warranties Completed (units)"
-    description: "Units from material warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
+    description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
     filters: {
       field: warranty_order.status
       value: "Closed"}
-    filters:  {
-      field: warranty_order.warranty_type
-      value: "Material"}
     sql: ${TABLE}.QUANTITY ;;
   }
 
