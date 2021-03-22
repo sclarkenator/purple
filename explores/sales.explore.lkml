@@ -44,7 +44,7 @@ include: "/dashboards/**/*.dashboard"
       sorts: [sales.date_in_period_date: desc]
       filters: [sales.comparison_period: "previous",
         sales.date_filter: "30 days",
-        sales.is_within_current_and_comparison_period: "Yes"]
+        sales.within_dates: "Yes"]
     }
   }
 
@@ -742,7 +742,7 @@ include: "/dashboards/**/*.dashboard"
       sorts: [day_aggregations.date_in_period_date: desc]
       filters: [day_aggregations.comparison_period: "previous",
         day_aggregations.date_filter: "30 days",
-        day_aggregations.is_within_current_and_comparison_period: "Yes"]
+        day_aggregations.within_dates: "Yes"]
     }
   }
 

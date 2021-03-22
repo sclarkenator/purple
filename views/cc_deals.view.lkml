@@ -57,21 +57,23 @@ view: cc_deals {
 
   dimension: source_clean {
     type:  string
-    sql: case when ${TABLE}.source_name ilike ('%chat%') then 'chat'
-      when ${TABLE}.source_name ilike ('%call%') or ${TABLE}.source_name in ('Magazine Ad','Transfer from Support') then 'call'
-      when ${TABLE}.source_name ilike ('%email%') or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk','MyMOVE')
-        or ${TABLE}.source_name ilike ('%facebook%')  then 'email'
-      else 'other' end;;
+    sql:
+      case
+        when ${TABLE}.source_name ilike ('%chat%')
+          or ${TABLE}.source_name in ('MyMove') then 'chat'
+        when ${TABLE}.source_name ilike ('%call%')
+          or ${TABLE}.source_name in ('Magazine Ad','Transfer from Support','888Purple') then 'call'
+        when ${TABLE}.source_name ilike ('%email%')
+          or ${TABLE}.source_name in ('Abandoned Cart Campaign','Bulk','MyMOVE')
+          or ${TABLE}.source_name ilike ('%facebook%')  then 'email'
+        else 'other'
+      end
+    ;;
   }
 
   dimension: stage_name {
     type:  string
     sql: ${TABLE}.stage_name ;;
-  }
-
-  dimension: team_clean {
-    type:  string
-    sql: case when ${TABLE}.team = 'sales' then 'sales' else 'support' end ;;
   }
 
   dimension: order_id {
