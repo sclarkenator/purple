@@ -692,7 +692,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
       required_joins: [warranty_order_line]
       relationship: many_to_one}
-  }
+    }
 
   explore: return_form_entry {
     hidden: yes
