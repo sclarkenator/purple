@@ -159,8 +159,8 @@ view: daily_adspend {
     value_format:  "$#,##0"
     #agency cost + adspend no agency
     sql:  case when ${TABLE}.platform in ('FB/IG') and (${TABLE}.date::date >= '2019-06-04'and ${TABLE}.date::date <= '2020-12-11') then ${TABLE}.spend*1.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
-      when ${TABLE}.source ilike ('%outub%') and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' AND ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
+      when (${TABLE}.source ilike ('%outub%')and ${TABLE}.platform NOT in ('DV360')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
       else ${TABLE}.spend
       end ;; }
 
@@ -234,7 +234,7 @@ view: daily_adspend {
     sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
       when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
       when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05
+      -- when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05 -- MAPPED TOTAL MEDIA COST 3/1
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
       when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
       when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
@@ -402,7 +402,7 @@ dimension: spend_platform {
             or ${spend_platform} = 'AMAZON-SP' or ${campaign_name} ilike '%displa%'  or ${TABLE}.platform ilike ('ACUITY') ;; label:"display" }
      when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
         or ${spend_platform} in ('AMAZON-HSA')
-        or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"paid search"}
+        or (${campaign_name} ilike '&ative%earch%' and ${spend_platform} = 'ADMARKETPLACE');; label:"search"}
       when: {sql: ${TABLE}.platform in ('ADWALLET','FKL','FLUENT','Fluent','MADRIVO','ROKT','REDCRANE')or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
       when: {sql: (NOT ${TABLE}.platform in ('FB/IG')) and ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR ${TABLE}.platform in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or ${TABLE}.source in ('PLA') ;; label: "pla"}

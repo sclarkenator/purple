@@ -553,8 +553,8 @@ view: sessions {
     description: "Source: looker calculation"
     type: string
     sql: case when ${utm_term} ilike '%br%' then 'BRAND'
-      when ${utm_term} ilike '%pt%' then 'PROSPECTING'
-      when ${utm_term} = '%rt%' then 'RETARGETING'
+      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' then 'PROSPECTING'
+      when ${utm_term} ilike '%rt%' then 'RETARGETING'
       else 'OTHER' end ;;
   }
 
