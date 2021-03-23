@@ -694,6 +694,23 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one}
     }
 
+  explore: scc {
+    from: sleep_country_canada_sales
+    hidden: yes
+    fields: [ALL_FIELDS*]
+    label: "SCC Orders"
+    group_label: " Orders"
+    description: "Sales Orders for SCC"
+    join: sleep_country_canada_store {
+      type: left_outer
+      sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
+      relationship: many_to_one}
+    join: sleep_country_canada_product {
+      type: left_outer
+      sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
+      relationship: many_to_one}
+  }
+
   explore: return_form_entry {
     hidden: yes
     group_label: " Sales"
