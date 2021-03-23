@@ -240,6 +240,7 @@ view: c3_conversion {
     WHEN CONTAINS(${network_groupname},'snapchat') then 'SnapChat'
     WHEN CONTAINS(${group_name},'SMS') then 'SMS'
     WHEN CONTAINS(${network_groupname},'spotx') then 'Spot X'
+    WHEN CONTAINS(${network_groupname},'stackadapt') then 'StackAdapt'
     WHEN CONTAINS(${network_groupname},'taboola') then 'Taboola'
     WHEN CONTAINS(${network_groupname},'referral') then 'Talkable'
     WHEN CONTAINS(${network_groupname},'tv') then 'TV'
