@@ -52,6 +52,7 @@ view: dispatch {
   dimension: dispatch_number {
     description: "Source: l2l.dispatch"
     type: number
+    value_format: "#0"
     sql: ${TABLE}."DISPATCH_NUMBER" ;;
   }
 
@@ -128,11 +129,10 @@ view: dispatch {
     sql: timediff(second,${dispatched_time}, ${dispatch_completed_time}) ;;
   }
 
-  dimension: resource_time {
-    hidden: yes
-    type: number
-    value_format: "hh:mm:ss"
-    sql: ${resource_time_diff} / 86400.0 ;;
+  dimension: reason_code {
+    type: string
+    description: "Dispatch Reason Code; Source: l2l.dispatch"
+    sql: ${TABLE}."REASON" ;;
   }
 
   measure: downtime_minutes {
@@ -161,11 +161,5 @@ view: dispatch {
   measure: count {
     type: count
     drill_fields: [dispatch_id, dispatch_type.dispatch_type_id]
-  }
-
-  measure: total_resource_time {
-    type: sum
-    value_format: "hh:mm:ss"
-    sql: ${resource_time} ;;
   }
 }

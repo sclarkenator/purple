@@ -4,14 +4,22 @@ view: _period_comparison {
   filter: date_filter {
     view_label: "Period over Period"
     #group_label: "Period Comparison"
-    label: "Current Period Date Filter"
+    label: " * Current Period Date"
     description: "Use this date filter in combination with the period dimension to compare this period to previous periods."
     type: date
   }
 
-  dimension_group: filter_start_date {
+  filter: within_dates {
+    #hidden: yes
     view_label: "Period over Period"
     #group_label: "Period Comparison"
+    label: " * Limit to Period Dates"
+    type: yesno
+    sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' ;;
+    # or ${is_same_period_last_year} = 'Yes'
+  }
+
+  dimension_group: filter_start_date {
     hidden: yes
     type: time
     timeframes: [raw,date]
@@ -19,8 +27,6 @@ view: _period_comparison {
   }
 
   dimension_group: filter_end_date {
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     hidden: yes
     type: time
     timeframes: [raw,date]
@@ -30,16 +36,12 @@ view: _period_comparison {
 
   dimension: interval {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: number
     sql: datediff(day,${filter_start_date_raw},${filter_end_date_raw}) ;;
   }
 
   dimension: previous_start_date {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: date
     sql: {% if comparison_period._parameter_value == "previous" %}
           dateadd(day,-${interval},${filter_start_date_raw})
@@ -52,8 +54,6 @@ view: _period_comparison {
 
   dimension: previous_end_date {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: date
     sql: {% if comparison_period._parameter_value == "previous" %}
           ${filter_start_date_raw}
@@ -66,14 +66,11 @@ view: _period_comparison {
 
   dimension: same_period_last_year_start_date {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: date
     sql:
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_start_date_raw})
       {% else %}
-        --dateadd(year,-1,${filter_start_date_raw})
         dateadd(day,-364,${filter_start_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_start_date_raw}) ;;
@@ -81,23 +78,18 @@ view: _period_comparison {
 
   dimension: same_period_last_year_end_date {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: date
     sql:
       {% if comparison_period._parameter_value == 'week'  %}
         dateadd({% parameter comparison_period %}, -52, ${filter_end_date_raw})
       {% else %}
         dateadd(day,-364,${filter_end_date_raw})
-        --dateadd(year,-1,${filter_end_date_raw})
       {% endif %};;
     # dateadd(year,-1,${filter_end_date_raw}) ;;
   }
 
   dimension: comparison_period_start_date {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: date
     sql:
             {% if comparison_period._parameter_value == 'previous'  %}
@@ -116,8 +108,6 @@ view: _period_comparison {
   dimension: day_in_period {
     hidden: yes
     description: "Gives the number of days since the start of each period. Use this to align the event dates onto the same axis, the axes will read 1,2,3, etc."
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: number
     sql:
       {% if date_filter._is_filtered %}
@@ -136,7 +126,7 @@ view: _period_comparison {
     description: "Use this as your grouping dimension when comparing periods. Aligns the comparison periods onto the current period"
     label: "Current Period"
     view_label: "Period over Period"
-    #group_label: "Period Comparison Date"
+    #group_label: "Period Comparison"
     type: time
     sql:
             {% if comparison_period._parameter_value == 'previous'  %}
@@ -154,8 +144,6 @@ view: _period_comparison {
             {% else %}
               false
             {% endif %};;
-# dateadd(day, ${day_in_period} - 1, ${filter_start_date_raw}) ;;
-
     timeframes: [
       date,
       hour_of_day,
@@ -169,15 +157,13 @@ view: _period_comparison {
       month_name,
       month_num,
       quarter,
+      quarter_of_year,
       year]
   }
-
 
   dimension: day_of_week_abbr {
     hidden:  yes
     label:  "Current Period Day of Week (Short)"
-    view_label: "Period over Period"
-    #group_label: "Period Comparison Date"
     description: "Abbreviated day of week (Sun, Mon, Tue, etc). Source: netsuite.sales_order_line"
     type: string
     case: {
@@ -193,41 +179,35 @@ view: _period_comparison {
 
   dimension: is_current_period {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: yesno
     sql: ${event_raw} >= ${filter_start_date_raw} AND ${event_raw} < ${filter_end_date_raw} ;;
   }
 
   dimension: is_previous_period {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: yesno
     sql: ${event_raw} >= ${previous_start_date} AND ${event_raw} < ${previous_end_date} ;;
   }
 
   dimension: is_same_period_last_year {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     type: yesno
     sql: ${event_raw} >= ${same_period_last_year_start_date} AND ${event_raw} < ${same_period_last_year_end_date} ;;
   }
 
   dimension: is_current_previous_or_same_period_last_year {
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
-    label: "  * Is Current, Previous, or Same Period Last Year?"
+    #label: "  * Is Current, Previous, or Same Period Last Year?"
+    label: " * In Date Range"
     description: "Use this filter if you want to compare the current period, previous period, and same period last year."
     type: yesno
+    hidden: yes
     sql: ${is_current_period} = 'Yes' or ${is_previous_period} = 'Yes' or ${is_same_period_last_year} = 'Yes' ;;
   }
 
   parameter: comparison_period {
     view_label: "Period over Period"
     #group_label: "Period Comparison"
-    label: "Comparison Period"
+    label: " * Compare To"
     description: "Select what type of period you want to compare to.  Previous Period: specific dates. Previous Week: use this when looking at current week or last completed week. Previous Month: use this when looking at current week or last completed week."
     type: unquoted
     default_value: "previous"
@@ -254,8 +234,6 @@ view: _period_comparison {
   }
 
   dimension: is_comparison_period {
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     hidden: yes
     type: yesno
     sql:
@@ -274,8 +252,7 @@ view: _period_comparison {
   }
 
   dimension: is_within_current_and_comparison_period {
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
+    hidden: yes
     type: yesno
     sql: ${is_current_period} = true OR ${is_comparison_period} = true
       ;;
@@ -283,8 +260,8 @@ view: _period_comparison {
 
   dimension: period {
     view_label: "Period over Period"
-    label: "Period (pivot by)"
     #group_label: "Period Comparison"
+    label: " Period (pivot by)"
     description: "Use this field in combination with the date filter field for dynamic date filtering"
     suggestions: ["Current Period","Previous Period", "Same Period Last Year"]
     type: string
@@ -298,8 +275,6 @@ view: _period_comparison {
 
   dimension: period_and_last_year {
     hidden: yes
-    view_label: "Period over Period"
-    #group_label: "Period Comparison"
     description: "Use this field in combination with the date filter field for dynamic date filtering"
     type: string
     sql: CASE

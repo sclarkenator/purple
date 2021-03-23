@@ -44,4 +44,11 @@ view: first_order_flag {
     value_format: "#,##0"
     hidden: yes
   }
+
+  dimension: email {
+    view_label: "Email Address"
+    description: "Email address of customer"
+    sql: ${TABLE}.email ;;
+    hidden: yes
+  }
 }

@@ -127,8 +127,14 @@ dimension: id_date {
     sql: ${TABLE}."DISPATCH_DATE" ;;
   }
 
+  dimension: reason_code {
+    hidden: yes
+    description: "Dispatch Reason Code; Source:l2l.v_dispatch_with_downtime_minutes"
+    type: string
+    sql: ${TABLE}."REASON" ;;
+  }
+
   measure: downtime_minutes {
-    group_label: "Data by Date"
     type: sum
     description: "Source: l2l.v_dispatch_with_downtime_minutes"
     value_format: "#,##0"
@@ -136,7 +142,6 @@ dimension: id_date {
   }
 
   measure: downtime_hours {
-    group_label: "Data by Date"
     type: sum
     description: "Source: Looker Calculation"
     value_format: "#,##0.00"
@@ -144,7 +149,6 @@ dimension: id_date {
   }
 
   measure: dispatch_occurences {
-    group_label: "Data by Date"
     type: count_distinct
     description: "Source: Looker Calculation"
     sql: ${dispatch_number} ;;

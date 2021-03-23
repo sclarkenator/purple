@@ -72,10 +72,15 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       type: left_outer
     }
+    join: production_goal {
+      type: left_outer
+      sql_on: ${assembly_build.produced_date} = ${production_goal.forecast_date} ;;
+      relationship: many_to_one
+    }
     join: production_goal_by_item {
       type: left_outer
-      sql_on: ${assembly_build.item_id} = ${production_goal_by_item.item_id} and ${assembly_build.produced_date} = ${production_goal_by_item.forecast_date} ;;
-      relationship: many_to_one
+      sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
+      relationship: one_to_many
     }
   }
 
@@ -396,6 +401,18 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
       relationship: one_to_many
     }
+    join: reason {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${dispatch.reason_code} = ${reason.code} and ${machine.site_id} = ${reason.site};;
+      relationship: one_to_many
+    }
+    join: dispatch_technician {
+      view_label: "Dispatch"
+      type: left_outer
+      sql_on: ${dispatch.dispatch_id} = ${dispatch_technician.dispatch_id} and ${dispatch.dispatch_number} = ${dispatch_technician.dispatch_number} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: bill_of_materials {
@@ -433,7 +450,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
-  explore: sfg_stock_level {hidden: yes label: "SFG Stock Level" group_label: "Production"}
+  explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
 
   explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
   explore: l2_l_checklists {hidden: yes group_label: "L2L"}

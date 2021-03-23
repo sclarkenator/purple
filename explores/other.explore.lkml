@@ -25,6 +25,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: _calendar {hidden:yes} ##Added by Blake Walton 12/8/2020
+  explore: covid {hidden: yes}
 
 #-------------------------------------------------------------
 #
@@ -47,6 +48,26 @@ include: "/dashboards/**/*.dashboard"
     description: "Diversity, Equity, & Inclusion (DEI) data by supervisor and department"
   }
 
+#-------------------------------------------------------------
+#
+# Bridge Data
+#
+#-------------------------------------------------------------
+
+  explore: bridge_enrollment {
+    group_label: "HR"
+    hidden: yes
+    join: bridge_course {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_course.id} = ${bridge_enrollment.course_id};;
+    }
+    join: bridge_user {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_user.id} = ${bridge_enrollment.learner_id} ;;
+    }
+  }
 
 #-------------------------------------------------------------------
 #
@@ -96,6 +117,17 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Sales Header"
       type: left_outer
       sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+      relationship: one_to_one}
+    join: zendesk_sell {
+      view_label: "Zendesk"
+      type: full_outer
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+      relationship: one_to_one
+    }
+    join: order_flag {
+      view_label: "Sales Order"
+      type: left_outer
+      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
       relationship: one_to_one}
   }
 

@@ -2101,6 +2101,7 @@ view: sales_order_line {
               when ${customer_table.companyname} ilike '%Rooms To Go%' then 0.030* ${TABLE}.gross_amt else 0 end  ;;
   }
 
+
   measure: freight {
     hidden:  no
     label: " 8 - Total Freight"
@@ -2108,7 +2109,7 @@ view: sales_order_line {
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
     type: number
-    sql: nvl(${shipping.shipping_amt},0) + nvl(${wholesale_freight},0) ;;
+    sql: nvl(${fulfillment.total_shipping},0)+nvl(${wholesale_freight},0) ;;
   }
 
 
@@ -2178,7 +2179,7 @@ view: sales_order_line {
     value_format: "$#,##0"
     type: sum
     sql: case when ${customer_table.companyname} ilike '%Bloomingdale%' then 0.0145
-          when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.14
+          when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.05
           when ${customer_table.companyname} ilike '%Sleep Country%' then 0.115
           when ${customer_table.companyname} ilike '%Macy%' then 0.095
           when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.064
@@ -2265,6 +2266,20 @@ view: sales_order_line {
       then ${gross_amt} else 0 end;;
   }
 
+  measure: insidesales_orders {
+    hidden: no
+    group_label: "Gross Sales"
+    label: "Sales - Inside Sales Team (#)"
+    type: count_distinct
+    value_format: "#,##0"
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is not null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${sales_order.order_id} else 0 end;;
+  }
+
   measure: owned_retail_sales {
     group_label: "Gross Sales"
     description: "Summing Gross Sales from orders placed by an insidesales sales agent.  Excluding warranties and exchanges. Excluding customer care"
@@ -2277,6 +2292,7 @@ view: sales_order_line {
   }
 
   measure: customer_care_sales {
+    hidden: no
     group_label: "Gross Sales"
     label: "Sales - Customer Care Team ($)"
     description: "Summing Gross Sales where the order was from a customer care agent. Excluding warranties and exchanges."
@@ -2288,6 +2304,19 @@ view: sales_order_line {
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
       then ${gross_amt} else 0 end;;
+  }
+
+  measure: customer_care_orders {
+    group_label: "Gross Sales"
+    label: "Sales - Customer Care Team (#)"
+    type: count_distinct
+    value_format: "#,##0"
+    sql: case when ${agent_name.merged_name} is not null
+      and ${zendesk_sell.name} is null
+      and NOT ${sales_order.is_exchange}
+      and NOT ${sales_order.is_upgrade}
+      and NOT ${sales_order.warranty_order_flg}
+      then ${sales_order.order_id} else 0 end;;
   }
 
 ##Creating Mattress ASP -Jared

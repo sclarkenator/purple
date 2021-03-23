@@ -41,6 +41,11 @@ view: v_gift_card {
     sql: ${TABLE}."ORDER_NUMBER" ;;
   }
 
+  dimension: note {
+    type: string
+    sql: ${TABLE}."NOTE" ;;
+  }
+
   dimension: type {
     type: string
     sql: ${TABLE}."TYPE" ;;

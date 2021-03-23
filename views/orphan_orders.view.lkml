@@ -25,6 +25,12 @@ view: orphan_orders {
     type:  string
     sql: ${TABLE}.financial_status ;; }
 
+  dimension: customer_name {
+    label: "Customer Name"
+    description:  "The name of the customer"
+    type:  string
+    sql: ${TABLE}.customer_name ;; }
+
   dimension_group: order_date {
     label: "Order Date"
     description: "Date order was placed in shopify (Mountain time zone)"

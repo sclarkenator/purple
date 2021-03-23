@@ -50,7 +50,7 @@ view: v_fedex_to_xpo {
   }
 
   dimension: order_id {
-    type: number
+    type: string
     sql: ${TABLE}."ORDER_ID" ;;
   }
 

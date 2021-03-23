@@ -11,7 +11,8 @@ include: "/dashboards/**/*.dashboard"
   explore: owned_retail_target_by_location {hidden: yes }
   explore: store_four_wall {hidden:yes}
   explore: retail_goal {hidden:yes description:"Owened Retail Sales and Mattress Unit Goals by date and location"}
-  explore: retail_base  {
+
+ explore: retail_base  {
     hidden: yes
     join:  sales_order {
       view_label: "Sales"
@@ -25,7 +26,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
       relationship:  one_to_one
     }
-
+    join: retail_order_flag {
+      view_label: "Retail Order Flag"
+      type: left_outer
+      sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
+      relationship:  one_to_one
+    }
     join: sales_order_line_base {
       view_label: "Sales Order Line"
       type:  left_outer

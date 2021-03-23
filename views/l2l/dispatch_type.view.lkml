@@ -31,12 +31,13 @@ view: dispatch_type {
   }
 
   dimension: code_bucket {
-    description: "Dispatch Code bucketed into Labor, Materials, Equipment (Code Red, Code Black, Production Machine Setup, Tooling Setup), and Other; Source: Looker Calculation"
+    description: "Dispatch Code bucketed into Labor, Materials, Equipment (Code Red, Code Black, Production Machine Setup, Tooling Setup), Planned Unavailabiliyt (PM, Fixed Asset Hours-Upgrade) and Other; Source: Looker Calculation"
     type: string
     sql: case
       when ${code} = 'Labor' then 'Labor'
       when ${code} = 'Materials' then 'Material'
       when ${code} in ('Code Red', 'Code Black', 'Production Machine Setup', 'Tooling Setup') then 'Equipment'
+      when ${code} in ('PM', 'Fixed Asset Hours-Upgrade') then 'Planned Unavailability'
       else 'Other'
       end ;;
   }

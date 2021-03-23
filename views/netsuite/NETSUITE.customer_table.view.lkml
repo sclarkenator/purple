@@ -146,17 +146,18 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'mattress%firm%' ;;  label: "Mattress Firm" }
       when: { sql: lower(${TABLE}.companyname) like 'furniture%row%' ;; label: "Furniture Row" }
       when: { sql: lower(${TABLE}.companyname) like 'macy%' ;; label: "Macy's" }
-      when: { sql: lower(${TABLE}.companyname) like 'sleep country%' ;; label: "Sleep Country" }
+      when: { sql: lower(${TABLE}.companyname) like 'sleep country%' ;; label: "Sleep Country Canada" }
       when: { sql: lower(${TABLE}.companyname) like 'bed bath%' ;; label: "Bed Bath and Beyond" }
       when: { sql: lower(${TABLE}.companyname) like 'hom%furniture%' ;; label: "HOM Furniture" }
       when: { sql: lower(${TABLE}.companyname) like 'steinhafel%' ;; label: "Steinhafels" }
-      when: { sql: lower(${TABLE}.companyname) like 'raymour%' ;; label: "Raymour" }
+      when: { sql: lower(${TABLE}.companyname) like 'raymour%' ;; label: "Raymour & Flanigan" }
       when: { sql: lower(${TABLE}.companyname) like 'city%furniture%' ;; label: "City Furniture" }
       when: { sql: lower(${TABLE}.companyname) like 'mathis%' ;; label: "Mathis Brothers" }
       when: { sql: lower(${TABLE}.companyname) like 'big%sandy%' ;; label: "Big Sandy" }
       when: { sql: lower(${TABLE}.companyname) like 'big%sky%' ;; label: "Big Sky" }
       when: { sql: lower(${TABLE}.companyname) like 'sam%' ;; label: "Sam's Club" }
-      when: { sql: lower(${TABLE}.companyname) like 'rooms%to%go%' ;; label: "Rooms to Go" }
+      when: { sql: lower(${TABLE}.companyname) like 'rooms%to%go%' ;; label: "Rooms To Go" }
+      when: { sql: lower(${TABLE}.companyname) like 'levin%' ;; label: "Levin Furniture Co" }
 
 
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
@@ -183,6 +184,10 @@ view: customer_table {
     hidden: yes
     sql: ${TABLE}.sales_manager_id ;;}
 
-
+  dimension: bill_address {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.billaddress ;;
+  }
 
 }

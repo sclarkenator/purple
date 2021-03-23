@@ -2,84 +2,112 @@ view: store_four_wall {
   derived_table: {
     sql: WITH standard_cost AS
 (select
-    coalesce(b.item_id, a.item_id) as ac_item_id,
-    a.item_id,
-    max(standard_cost) as cost
-from sales.item_standard_cost a
-left join
-    (select
-    right(a.sku_id,11) as clean_sku_id,
-    max(case when a.sku_id like 'AC-%' then a.item_id else null end) as ac_item_id,
-    min(case when length(a.sku_id) = 11 then a.item_id else null end) as item_id
-from sales.item a
-group by 1) b on b.ac_item_id = a.item_id
-group by 1,2 )
-,
-item_return_rate AS
-(select trim(i.sku_id,'AC-') sku_id
-              ,nvl(sum(returns),0)/sum(sales) return_rate
-      from
-      (
-      select sol.item_id
-              ,sum(returns) returns
-              ,sum(sol.gross_amt) sales
-      from sales.sales_order_line sol
-      left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
+        coalesce(b.item_id, a.item_id) as ac_item_id
+        , a.item_id
+        , max(standard_cost) as cost
+      from sales.item_standard_cost a
       left join
-            (select rl.order_id
-                    ,rl.item_id
-                    ,rl.system
-                    ,sum(rl.gross_amt) returns
-             from sales.return_order_line rl
-             join sales.return_order ro on ro.return_order_id = rl.return_order_id
-             where ro.status = 'Refunded'
-             and rl.closed > '2019-10-01'
-             group by 1,2,3
-             order by 4 desc) r
-          on r.order_id = sol.order_id and r.item_id = sol.item_id and r.system = sol.system
-      where datediff(d,sol.fulfilled,current_date)>130 and datediff(d,sol.fulfilled,current_date)<=220
-      and so.channel_id = 1
-      group by 1
-      having sum(sol.gross_amt)>0) s
-      join sales.item i on i.item_id = s.item_id
-      group by 1)
+          (
+        select
+          right(a.sku_id,11) as clean_sku_id
+          , max(case when a.sku_id like 'AC-%' then a.item_id else null end) as ac_item_id
+          , min(case when length(a.sku_id) = 11 then a.item_id else null end) as item_id
+        from sales.item a
+        group by 1
+      ) b on b.ac_item_id = a.item_id
+      where a.end_date = '2099-01-01'
+      group by 1,2 )
 ,
+
 contribution as
-(SELECT sales_order.showroom_name STORE,
-        date_trunc(month,sales_order.trandate) month,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.PRE_DISCOUNT_AMT ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) FULL_IMU,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.order_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) ORDER_DISCOUNT,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) PROMO_DISCOUNT,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) gross_sales,
-    (COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty * standard_cost.cost ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0))  COGS,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')) is null
-          or datediff(d,(TO_CHAR(TO_DATE(case when sales_order.TRANSACTION_TYPE = 'Cash Sale' or sales_order.SOURCE = 'Amazon-FBA-US'  then (TO_CHAR(DATE_TRUNC('second', sales_order.CREATED ), 'YYYY-MM-DD HH24:MI:SS')) else (to_timestamp_ntz(fulfillment.fulfilled)) end ), 'YYYY-MM-DD')),current_date)<130) then item_return_rate.return_rate*sales_order_line.gross_amt
-          else nvl((case when return_order.STATUS = 'Refunded' then return_order_line.gross_amt else 0 end),0) end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((NVL(fulfillment.FULFILLMENT_ID,'0') || NVL(fulfillment.system,'0') || NVL(fulfillment.item_id,'0') || NVL(fulfillment.parent_item_id,'0'))||'-'||(NVL(return_order.return_order_id,0)||NVL(return_order.order_id,0))||'-'||(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) RETURNS,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when (shipping."MAINFREIGHT") > 0 then 5.24 else 0 end  + shipping."SHIPPING_TOTAL" ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5((shipping."ORDER_ID")||'-'||(shipping."ITEM_ID") ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) SHIPPING,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when sales_order.SOURCE in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15*sales_order_line.gross_amt
-          when sales_order.PAYMENT_METHOD ilike 'AFFIRM' then 0.0497*sales_order_line.gross_amt
-          when sales_order.PAYMENT_METHOD ilike 'SPLITIT' then .04*sales_order_line.gross_amt
-          else 0.0255*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) MERCHANT_FEES,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)) < 0 then 0 else nvl(((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)),0)*sales_order_line.gross_amt end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) AFFILIATE_FEES,
-    COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(0.01*sales_order_line.gross_amt ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) WARRANTY_ACCRUAL
-FROM SALES.SALES_ORDER_LINE  AS sales_order_line
+(
+SELECT
+  case when sales_order.showroom_name = 'CA-01' then 'San Diego'
+  when sales_order.showroom_name = 'CA-02' then 'Santa Clara'
+  when sales_order.showroom_name = 'CA-03' then 'Santa Monica'
+  when sales_order.showroom_name = 'WA-01' then 'Seattle'
+  when sales_order.showroom_name in ('FO-01','FO_01') then 'Salt Lake'
+  when sales_order.showroom_name = 'UT-01' then 'Lehi'
+  when sales_order.showroom_name = 'TX-01' then 'Austin'
+  when sales_order.showroom_name = 'VA-01' then 'Tysons'
+  when sales_order.showroom_name = 'WA-02' then  'Lynnwood'
+  when sales_order.showroom_name = 'OH-01' then  'Columbus'
+  else sales_order.showroom_name end store,
+  to_date(DATE_TRUNC('month', to_timestamp_ntz(sales_order_line.Created) )) month,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.PRE_DISCOUNT_AMT ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) full_IMU,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.order_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) order_discount,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) promo_discount,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.cc_discount,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) cc_discount,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) gross_sales,
+  (COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.ordered_qty * standard_cost.cost ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0))  cogs,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(item_return_rate.adj_return_amt ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(item_return_rate.order_id||'-'||item_return_rate.channel||'-'||item_return_rate.sku_id||'-'||item_return_rate.pk_row), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(item_return_rate.order_id||'-'||item_return_rate.channel||'-'||item_return_rate.sku_id||'-'||item_return_rate.pk_row), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) return_amt,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(item_return_rate.adj_ret_clawback ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(item_return_rate.order_id||'-'||item_return_rate.channel||'-'||item_return_rate.sku_id||'-'||item_return_rate.pk_row), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(item_return_rate.order_id||'-'||item_return_rate.channel||'-'||item_return_rate.sku_id||'-'||item_return_rate.pk_row), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) adj_return_amt,
+  nvl((COALESCE(SUM(fulfillment.shipping ), 0)),0)+nvl((COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when customer_table.companyname ilike '%Raymour & Flanigan Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%d. noblin%' then 0.04*  sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Macy%' then 0.095*  sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Mattress Firm%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Mathis Brothers Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Big Sandy%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%City Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Living Spaces%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%HOM Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Levin Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Miskelly%s Furnitur%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Ivan Smith%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Nebraska Furniture Ma%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Cardi%s Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Gardner White%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Morris Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Darvin Furniture%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Furniture Ro%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%STEINHAFELS%' then 0.03* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%North Dakota Mattress Venture%' then 0.040* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%OK Mattress Ventures%' then 0.040* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%South Dakota Mattress Ventures%' then 0.040* sales_order_line.gross_amt
+              when customer_table.companyname ilike '%Rooms To Go%' then 0.030* sales_order_line.gross_amt else 0 end  ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0)),0) shipping,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when sales_order.CHANNEL_id = 2 then 0
+              when sales_order.SOURCE in ('Amazon-FBM-US','Amazon-FBA','Amazon FBA - US') then 0.15
+              when sales_order.PAYMENT_METHOD ilike 'AFFIRM' then 0.0497
+              when sales_order.PAYMENT_METHOD ilike 'SPLITIT' then 0.04
+              else 0.0255 end * nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) merchant_fees,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when ((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)) < 0 then 0 else nvl(((nvl(affiliate_sales_order."TOTAL_COMMISSION",0))/(case when affiliate_sales_order."SALES" < 1 then 1 else affiliate_sales_order.sales end)),0)*nvl(sales_order_line.adjusted_gross_amt,0) end ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) affiliate_fees,
+  COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(case when customer_table.companyname ilike '%mathis bro%' then 0.02
+              when customer_table.companyname ilike '%rooms to go%' then 0.085
+              when sales_order.CHANNEL_id = 2 then 0
+              else 0.01 end *nvl(sales_order_line.adjusted_gross_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) warranty
+FROM sales_order_line
 LEFT JOIN SALES.ITEM  AS item ON sales_order_line.ITEM_ID = item.ITEM_ID
 LEFT JOIN SALES.FULFILLMENT  AS fulfillment ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (case when fulfillment.parent_item_id = 0 or fulfillment.parent_item_id is null then fulfillment.item_id else fulfillment.parent_item_id end)||'-'||fulfillment.order_id||'-'||fulfillment.system
 LEFT JOIN SALES.SALES_ORDER  AS sales_order ON (sales_order_line.order_id||'-'||sales_order_line.system) = (sales_order.order_id||'-'||sales_order.system)
-FULL OUTER JOIN (SELECT * FROM SALES.RETURN_ORDER_LINE WHERE system != 'SHOPIFY-US')  AS return_order_line ON (sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system) = (return_order_line.item_id||'-'||return_order_line.order_id||'-'||return_order_line.system)
-FULL OUTER JOIN SALES.RETURN_ORDER  AS return_order ON return_order_line.RETURN_ORDER_ID = return_order.RETURN_ORDER_ID
+LEFT JOIN analytics_stage.ns.CUSTOMERS  AS customer_table ON (customer_table.customer_id::int) = sales_order.CUSTOMER_ID
 LEFT JOIN standard_cost ON standard_cost.item_id = item.ITEM_ID or standard_cost.ac_item_id = item.ITEM_ID
-LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID")
-LEFT JOIN item_return_rate ON item.SKU_ID = item_return_rate.sku_id
-LEFT JOIN "SALES"."SHIPPING" AS shipping ON sales_order_line.ITEM_ID = (shipping."ITEM_ID") and sales_order_line.ORDER_ID = (shipping."ORDER_ID")
-
+LEFT JOIN "MARKETING"."RAKUTEN_AFFILIATE_ORDER"    AS affiliate_sales_order ON sales_order.related_tranid=('#'||affiliate_sales_order."ORDER_ID"
+)
+FULL OUTER JOIN customer_care.v_zendesk_sell  AS zendesk_sell ON zendesk_sell.order_id=sales_order.order_id and sales_order.SYSTEM='NETSUITE'
+LEFT JOIN analytics.sales.item_return_rate AS item_return_rate ON item.SKU_ID = item_return_rate.sku_id and item_return_rate.channel = (case when zendesk_sell.order_id is not null then 'Inside sales'
+        when sales_order.CHANNEL_id = 1 then 'Web'
+        when sales_order.CHANNEL_id = 5 then 'Retail'
+        else 'Other'
+      end) and item_return_rate.order_id = sales_order.order_id
 WHERE sales_order.CHANNEL_id = 5
-GROUP BY 1,2)
+GROUP BY 1,2
+)
 ,
 PNL as
-(select retail_location store
+(select case when retail_location = 'CA-01' then 'San Diego'
+  when retail_location = 'CA-02' then 'Santa Clara'
+  when retail_location = 'CA-03' then 'Santa Monica'
+  when retail_location = 'WA-01' then 'Seattle'
+  when retail_location in ('FO-01','FO_01') then 'Salt Lake'
+  when retail_location = 'UT-01' then 'Lehi'
+  when retail_location = 'TX-01' then 'Austin'
+  when retail_location = 'VA-01' then 'Tysons'
+  when retail_location = 'WA-02' then  'Lynnwood'
+  when retail_location = 'OH-01' then  'Columbus'
+  else retail_location end  store
         ,to_Date(date_trunc(month,(ending))) month
         ,upper(case when category = 'Wholesale & Retail Compensation' then 'compensation'
+               when category = 'Professional Services' then 'PROFESSIONAL SERVICES'
                when name ilike 'lease%' then 'rent'
                when name ilike 'rent%' then 'RENT'
                when name ilike 'water%' then 'UTILITIES'
@@ -107,18 +135,20 @@ select case when contribution.store = 'CA-01' then 'San Diego'
         ,contribution.promo_discount
         ,contribution.gross_Sales
         ,contribution.cogs
-        ,contribution.returns
+        ,nvl(contribution.return_amt,0)+nvl(contribution.adj_return_amt,0) returns
         ,contribution.shipping
         ,contribution.merchant_fees
         ,contribution.affiliate_fees
-        ,contribution.warranty_accrual
+        ,contribution.warranty
         ,nvl(p1.gross_amount,0) RENT
         ,nvl(p2.gross_amount,0) COMPENSATION
+        ,nvl(p3.gross_amount,0) PROFESSIONALSERVICES
         ,nvl(p4.gross_amount,0) UTILITIES
         ,nvl(p5.gross_amount,0) OTHER
 from contribution
 left join pnl p1 on p1.store = contribution.store and p1.month = contribution.month and p1.expense_type = 'RENT'
 left join pnl p2 on p2.store = contribution.store and p2.month = contribution.month and p2.expense_type = 'COMPENSATION'
+left join pnl p3 on p3.store = contribution.store and p3.month = contribution.month and p3.expense_type = 'PROFESSIONAL SERVICES'
 left join pnl p4 on p4.store = contribution.store and p4.month = contribution.month and p4.expense_type = 'UTILITIES'
 left join pnl p5 on p5.store = contribution.store and p5.month = contribution.month and p5.expense_type = 'OTHER'
  ;;}
@@ -222,7 +252,7 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     value_format_name: usd_0
     label: "Warranty accrual"
     description: "Warranty accrual based on items sold at a store during a period"
-    sql: ${TABLE}.warranty_accrual ;;
+    sql: ${TABLE}.warranty ;;
   }
 
   measure: rent {
@@ -239,6 +269,13 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     label: "Compensation"
     description: "Total compensation for direct labor at store"
     sql: ${TABLE}.compensation ;;
+  }
+
+  measure: professionalservices {
+    value_format_name: usd_0
+    type: sum
+    label: "Professional Services"
+    sql: ${TABLE}.professionalservices ;;
   }
 
   measure: utilities {

@@ -44,7 +44,7 @@ include: "/dashboards/**/*.dashboard"
       sorts: [sales.date_in_period_date: desc]
       filters: [sales.comparison_period: "previous",
         sales.date_filter: "30 days",
-        sales.is_within_current_and_comparison_period: "Yes"]
+        sales.within_dates: "Yes"]
     }
   }
 
@@ -486,6 +486,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
     }
 
+    join: retail_order_flag {
+      view_label: "Owned Retail"
+      type: left_outer
+      sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
+      relationship:  one_to_one
+    }
 
   }
 
@@ -686,7 +692,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
       required_joins: [warranty_order_line]
       relationship: many_to_one}
-  }
+    }
 
   explore: return_form_entry {
     hidden: yes
@@ -736,7 +742,7 @@ include: "/dashboards/**/*.dashboard"
       sorts: [day_aggregations.date_in_period_date: desc]
       filters: [day_aggregations.comparison_period: "previous",
         day_aggregations.date_filter: "30 days",
-        day_aggregations.is_within_current_and_comparison_period: "Yes"]
+        day_aggregations.within_dates: "Yes"]
     }
   }
 
@@ -836,6 +842,10 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+
+explore: conversion {hidden: yes}
+explore: sessions_in_tests {hidden: yes}
+
 #-------------------------------------------------------------------
 #
 # Wholesale Explores
@@ -893,3 +903,16 @@ include: "/dashboards/**/*.dashboard"
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+  explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
+    join: dma {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${combined_sellthrough_pdt.zipcode} = ${dma.zip} ;;
+      relationship: many_to_many
+      fields: [dma.dma_name,dma.dma_mfrm]}
+    join: zcta5 {
+      view_label: "Geography"
+      type:  left_outer
+      sql_on: ${combined_sellthrough_pdt.zipcode} = (${zcta5.zipcode})  ;;
+      relationship: many_to_one
+      fields: [zcta5.fulfillment_region_1]}}

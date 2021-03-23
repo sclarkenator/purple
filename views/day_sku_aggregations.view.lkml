@@ -1,3 +1,4 @@
+include: "/views/_period_comparison.view.lkml"
 ######################################################
 #   Sales and Fulfillment
 ######################################################
@@ -68,6 +69,29 @@ view: forecast_day_sku {
 }
 
 ######################################################
+#   AOP
+######################################################
+
+view: aop_day_sku {
+  derived_table: {
+    explore_source: aop_combined {
+      column: forecast_date {}
+      column: channel {}
+      column: sku_id {}
+      column: total_sales {}
+      column: total_units {}
+      filters: {field: aop_combined.forecast_date value: "3 years"}
+    }
+  }
+  dimension: forecast_date {type: date}
+  dimension: channel {}
+  dimension: sku_id {}
+  dimension: total_sales {type: number}
+  dimension: total_units {type: number}
+}
+
+
+######################################################
 #   Inventory
 ######################################################
 view: inventory_day_sku {
@@ -125,6 +149,8 @@ view: day_sku_aggregations {
         , p.Total_Quantity as produced_units
         , f.total_amount as forecast_amount
         , f.total_units as forecast_units
+        , aop.total_sales as plan_amount
+        , aop.total_units as plan_units
         , i.on_hand as units_on_hand
         , i.available as units_available
         , po.Total_quantity_received as purchased_units_recieved
@@ -149,10 +175,24 @@ view: day_sku_aggregations {
       left join ${forecast_day_sku.SQL_TABLE_NAME} f on f.date_date::date = aa.date and f.sku_id = aa.sku_id and f.channel = aa.channel
       left join ${inventory_day_sku.SQL_TABLE_NAME} i on i.created_date::date = aa.date and i.sku_id = aa.sku_id and aa.channel = 'NA'
       left join ${po_day_sku.SQL_TABLE_NAME} po on po.estimated_arrival_date::date = aa.date and po.sku_id = aa.sku_id and aa.channel = 'NA'
+      left join ${aop_day_sku.SQL_TABLE_NAME} aop on aop.forecast_date::date = aa.date and aop.sku_id = aa.sku_id and aop.channel = aa.channel
     ;;
     datagroup_trigger: pdt_refresh_6am
   }
-  dimension: date {type: date hidden:yes}
+  extends: [_period_comparison]
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,week,
+      month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
+  }
+
+
+  #dimension: date {type: date hidden:yes}
 
   dimension: pk {
     hidden: yes
@@ -166,7 +206,7 @@ view: day_sku_aggregations {
     timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
-    sql: to_timestamp_ntz(${date}) ;; }
+    sql: to_timestamp_ntz(${TABLE}.date) ;; }
 
   dimension: QTD {
     label: "z - QTD"
@@ -331,6 +371,16 @@ view: day_sku_aggregations {
     value_format: "#,##0"
     sql: ${TABLE}.forecast_units;; }
 
+  measure: plan_amount {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.plan_amount;; }
+
+  measure: plan_units {
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.plan_units;; }
+
   measure: units_on_hand {
     type: sum
     value_format: "#,##0"
@@ -345,6 +395,56 @@ view: day_sku_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.purchased_units_recieved;; }
+
+  measure: to_plan_dollars {
+    label: "To Plan ($)"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${plan_amount} > 0 then (${total_sales}/${plan_amount})-1 else 0 end;;
+  }
+  measure: to_plan_units {
+    label: "To Plan (units)"
+    type: number
+    value_format: "0.0%"
+    sql: (${total_units}/${plan_units})-1 ;;
+  }
+  measure: to_forecast_dollars {
+    label: "To Forecast ($)"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${forecast_amount} > 0 then (${total_sales}/${forecast_amount})-1 else 0 end;;
+  }
+  measure: to_forecast_units {
+    label: "To Forecast (units)"
+    type: number
+    value_format: "0.0%"
+    sql: (${total_units}/${forecast_units})-1 ;;
+  }
+
+  dimension: liquid_date {
+    group_label: "Dynamic Date"
+    label: "z - liquid date"
+    description: "If > 365 days in the look, than month, if > 30 than week, else day"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start date_date %} as date),
+                cast({% date_end date_date  %} as date)
+                ) >365
+      THEN cast(${date_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start date_date %} as date),
+                cast({% date_end date_date  %} as date)
+                ) >30
+      THEN cast(${date_week} as varchar)
+      else ${date_date}
+      END
+    ;;
+  }
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"

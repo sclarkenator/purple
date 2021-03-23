@@ -10,6 +10,8 @@ view: day_aggregations_dtc_sales {
       column: total_units {}
       column: insidesales_sales {}
       column: customer_care_sales {}
+      column: customer_care_orders {}
+      column: insidesales_orders {}
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
@@ -26,6 +28,8 @@ view: day_aggregations_dtc_sales {
   measure: total_units {type: sum}
   measure: insidesales_sales {type: sum}
   measure: customer_care_sales {type: sum}
+  measure: insidesales_orders {type: sum}
+  measure: customer_care_orders {type: sum}
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${created_date_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
@@ -344,6 +348,47 @@ view: day_agg_prod_mattress {
   dimension: produced_date { type: date }
 }
 
+######################################################
+#   IS Deals
+#   https://purple.looker.com/dashboards/4132
+######################################################
+view: day_agg_is_deals {
+  derived_table: {
+    explore_source: cc_deals {
+      column: created_date {}
+      column: count {}
+      column: total_orders { field: sales_order.total_orders }
+      filters: { field: cc_deals.created_date value: "2 years" }
+    }
+  }
+  dimension: created_date { type: date }
+  dimension: count { type: number }
+  dimension: total_orders { type: number}
+}
+
+######################################################
+#   IS Activities
+#   https://purple.looker.com/dashboards/4132
+######################################################
+view: day_agg_is_activities {
+  derived_table: {
+    explore_source: cc_activities {
+      column: activity_date {}
+      column: count {}
+      column: calls {}
+      column: chats {}
+      column: emails {}
+      filters: { field: cc_activities.activity_date value: "2 years" }
+      filters: { field: cc_activities.team value: "sales" }
+      filters: { field: cc_activities.missed value: "No" }
+    }
+  }
+  dimension: activity_date { type: date }
+  dimension: count {type: number }
+  dimension: calls { type: number }
+  dimension: chats { type: number }
+  dimension: emails { type: number }
+}
 
 ######################################################
 #   CREATING FINAL TABLE
@@ -357,6 +402,8 @@ view: day_aggregations {
         , dtc.total_units as dtc_units
         , dtc.insidesales_sales as is_sales
         , dtc.customer_care_sales as cc_sales
+        , dtc.customer_care_orders as cc_orders
+        , dtc.insidesales_orders as is_orders
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
         , retail.total_gross_Amt_non_rounded as retail_amount
@@ -389,6 +436,12 @@ view: day_aggregations {
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
         , (nvl(dtc.total_gross_Amt_non_rounded,0) + nvl(retail.total_gross_Amt_non_rounded,0) + (nvl(wholesale.total_gross_Amt_non_rounded,0) * 0.50)) as roas_sales
+        , is_deals.count as is_deals
+        , is_deals.total_orders as is_cohort_orders
+        , is_activities.count as is_activities
+        , is_activities.calls as is_calls
+        , is_activities.chats as is_chats
+        , is_activities.emails as is_emails
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -412,6 +465,8 @@ view: day_aggregations {
       left join ${day_aggregations_sessions.SQL_TABLE_NAME} sessions on sessions.event_time_date::date = d.date
       left join ${day_agg_prod_goal.SQL_TABLE_NAME} prod_goal on prod_goal.forecast_date::date = d.date
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
+      left join ${day_agg_is_deals.SQL_TABLE_NAME} is_deals on is_deals.created_date::date = d.date
+      left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -894,7 +949,7 @@ view: day_aggregations {
   }
 
   measure: is_sales {
-    label: "Sales - Inside Sales ($)"
+    label: "IS Inside Sales ($)"
     description: "Gross Sales from Inside Sales Team (Does not include customer care)"
     type: sum
     value_format: "$#,##0.00"
@@ -902,12 +957,99 @@ view: day_aggregations {
   }
 
   measure: cc_sales {
-    label: "Sales - Customer Care ($)"
+    label: "IS Customer Care Sales ($)"
     description: "Gross Sales from Customer Care Team"
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.cc_sales ;;
   }
+
+  measure: is_total_sales {
+    label: "IS - Total Sales ($)"
+    description: "Gross Sales from Customer Care Team"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: nvl(${TABLE}.is_sales,0) + nvl(${TABLE}.cc_sales,0) ;;
+  }
+
+  measure: is_orders {
+    label: "IS Inside Orders (#)"
+    description: "Gross Sales from Inside Sales Team (Does not include customer care)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_orders ;;
+  }
+
+  measure: cc_orders {
+    label: "IS Customer Care Orders (#)"
+    description: "Gross Sales from Customer Care Team"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.cc_orders ;;
+  }
+
+  measure: is_total_orders {
+    label: "IS - Total Orders (#)"
+    description: "Total Ordrs from Customer Care and Inside Sales Team"
+    type: sum
+    value_format: "#,##0"
+    sql: nvl(${TABLE}.is_orders,0) + nvl(${TABLE}.cc_orders,0) ;;
+  }
+
+  measure: is_deals {
+    label: "IS SQOs (#)"
+    description: "Deals created in zendesk sell"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_deals ;;
+  }
+
+  measure: is_cohort_orders {
+    label: "IS Cohort Orders (#)"
+    description: "Netsuite orders converted from deals created in zendesk sell on the zendesk deal date"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_cohort_orders ;;
+  }
+
+  measure: is_activities {
+    label: "IS Activities (#)"
+    description: "Total activities from calls, chats and emails"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_activities ;;
+  }
+
+  measure: is_calls {
+    label: "IS Calls (#)"
+    description: "Total calls from RPT skills report download in incontact"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_calls ;;
+  }
+
+  measure: is_chats {
+    label: "IS Chats (#)"
+    description: "Total chats from zendesk tickets"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_chats ;;
+  }
+
+  measure: is_emails {
+    label: "IS Emails (#)"
+    description: "Total emails from zendesk tickets"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.is_emails ;;
+  }
+
+  measure: cvr_is {
+    label: "IS Conversion Rate"
+    description: "% of all IS actvities over IS orders. Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${day_aggregations.is_orders})/NULLIF(${day_aggregations.is_activities},0) ;; }
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
