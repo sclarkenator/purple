@@ -6,12 +6,11 @@ view: order_utm {
       , s.SYSTEM
       , s.email
       , gross_amt
-      , h.utm_medium
-      , h.utm_source
-      , h.utm_term
+      , e.utm_medium
+      , e.utm_source
+      , e.utm_term
     from sales.sales_order s
     left join marketing.ecommerce e on e.order_number = s.related_tranid
-    left join heap_data.HEAP.SESSIONS h on e.SESSION_ID = h.SESSION_ID
     --where s.created > '2020-11-01' and e.session_id is not null
     ;;
  }

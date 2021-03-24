@@ -83,54 +83,54 @@ view: ecommerce1 {
   #   hidden:  yes
   # }
 
-  # dimension: created {
-  #   type: date
-  #   description: "Date the session record was created in the data warehouse"
-  #   sql: ${TABLE}.created ;;
-  #   hidden:  yes
-  # }
+  dimension: created {
+    type: date
+    description: "Date the session record was created in the data warehouse"
+    sql: ${TABLE}.created ;;
+    hidden:  yes
+  }
 
-  # dimension: created_ts {
-  #   type: date_time
-  #   description: "Time the session record was created in the data warehouse"
-  #   sql: ${TABLE}.created_ts ;;
-  #   hidden:  yes
-  # }
+  dimension: created_ts {
+    type: date_time
+    description: "Time the session record was created in the data warehouse"
+    sql: ${TABLE}.created_ts ;;
+    hidden:  yes
+  }
 
-  # dimension: cosco_time {
-  #   type: date_time
-  #   label: "Shopify Confirmed Order Time"
-  #   description: "Time Date for cart orders shopify confirmed order "
-  #   sql: ${TABLE}.cosco_time ;;
-  #   hidden:  yes
-  # }
+  dimension: cosco_time {
+    type: date_time
+    label: "Shopify Confirmed Order Time"
+    description: "Time Date for cart orders shopify confirmed order "
+    sql: ${TABLE}.cosco_time ;;
+    hidden:  yes
+  }
 
-  # dimension: copo_time {
-  #   type: date_time
-  #   label: "Shopify Order Time"
-  #   description: "Time date a cart order placed order"
-  #   sql: ${TABLE}.copo_time ;;
-  #   hidden:  yes
-  # }
+  dimension: copo_time {
+    type: date_time
+    label: "Shopify Order Time"
+    description: "Time date a cart order placed order"
+    sql: ${TABLE}.copo_time ;;
+    hidden:  yes
+  }
 
-  # dimension: p_time {
-  #   type: date_time
-  #   description: "Time of Purchase - Heap"
-  #   sql: ${TABLE}.p_time ;;
-  #   hidden:  yes
-  # }
+  dimension: p_time {
+    type: date_time
+    description: "Time of Purchase - Heap"
+    sql: ${TABLE}.p_time ;;
+    hidden:  yes
+  }
 
-  # dimension: shopify_processed_at {
-  #   type: date_time
-  #   sql: ${TABLE}.shopify_processed_at ;;
-  #   hidden:  yes
-  # }
+  dimension: shopify_processed_at {
+    type: date_time
+    sql: ${TABLE}.shopify_processed_at ;;
+    hidden:  yes
+  }
 
-  # dimension: shopify_created_at {
-  #   type: date_time
-  #   sql: ${TABLE}.shopify_created_at ;;
-  #   hidden:  yes
-  # }
+  dimension: shopify_created_at {
+    type: date_time
+    sql: ${TABLE}.shopify_created_at ;;
+    hidden:  yes
+  }
 
 #  dimension: cosco_event_id {
 #    type: string
@@ -178,12 +178,12 @@ view: ecommerce1 {
   #   hidden:  yes
   # }
 
-  # dimension: time {
-  #   type: date_time
-  #   description: "Session start time"
-  #   sql: ${TABLE}.time ;;
-  #   hidden:  yes
-  # }
+  dimension: time {
+    type: date_time
+    description: "Session start time"
+    sql: ${TABLE}.time ;;
+    hidden:  yes
+  }
 
   # dimension: platform {
   #   type: string
@@ -248,45 +248,45 @@ view: ecommerce1 {
   #   hidden:  yes
   # }
 
-  # dimension: utm_source {
-  #   type: string
-  #   view_label: "Sessions"
-  #   group_label: "UTM"
-  #   sql: ${TABLE}.utm_source ;;
-  #   hidden:  yes
-  # }
+  dimension: utm_source {
+    type: string
+    view_label: "Sessions"
+    group_label: "UTM"
+    sql: ${TABLE}.utm_source ;;
+    hidden:  yes
+  }
 
-  # dimension: utm_campaign {
-  #   type: string
-  #   view_label: "Sessions"
-  #   group_label: "UTM"
-  #   sql: ${TABLE}.utm_campaign ;;
-  #   hidden:  yes
-  # }
+  dimension: utm_campaign {
+    type: string
+    view_label: "Sessions"
+    group_label: "UTM"
+    sql: ${TABLE}.utm_campaign ;;
+    hidden:  yes
+  }
 
-  # dimension: utm_medium {
-  #   type: string
-  #   view_label: "Sessions"
-  #   group_label: "UTM"
-  #   sql: ${TABLE}.utm_medium ;;
-  #   hidden:  yes
-  # }
+  dimension: utm_medium {
+    type: string
+    view_label: "Sessions"
+    group_label: "UTM"
+    sql: ${TABLE}.utm_medium ;;
+    hidden:  yes
+  }
 
-  # dimension: utm_term {
-  #   type: string
-  #   view_label: "Sessions"
-  #   group_label: "UTM"
-  #   sql: ${TABLE}.utm_term ;;
-  #   hidden:  yes
-  # }
+  dimension: utm_term {
+    type: string
+    view_label: "Sessions"
+    group_label: "UTM"
+    sql: ${TABLE}.utm_term ;;
+    hidden:  yes
+  }
 
-  # dimension: utm_content {
-  #   type: string
-  #   view_label: "Sessions"
-  #   group_label: "UTM"
-  #   sql: ${TABLE}.utm_content ;;
-  #   hidden:  yes
-  # }
+  dimension: utm_content {
+    type: string
+    view_label: "Sessions"
+    group_label: "UTM"
+    sql: ${TABLE}.utm_content ;;
+    hidden:  yes
+  }
 
   # dimension: device {
   #   type: string
