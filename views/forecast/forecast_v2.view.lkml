@@ -9,10 +9,7 @@ view: forecast_v2 {
     case: {
       when: { sql: ${version_raw} = 'Working' ;; label: "Working" }
       when: { sql: ${version_raw} = 'Current S&OP' ;; label: "Current S&OP" }
-      when: { sql: ${version_raw} = 'Last Month S&OP' ;; label: "Last Month S&OP" }
-      when: { sql: ${version_raw} = 'Two Month S&OP' ;; label: "Two Month S&OP" }
       when: { sql: ${version_raw} = 'Running 4 Month' ;; label: "Running 4 Month" }
-      when: { sql: ${version_raw} = 'Previous Month Lock' ;; label: "Previous Month Lock" }
     }
   }
 
