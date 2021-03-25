@@ -408,6 +408,29 @@ view: day_agg_is_activities {
 }
 
 ######################################################
+#   Retail Traffic Aura Visison
+#   https://purple.looker.com/dashboards/4132
+######################################################
+view: day_agg_retail_auravision{
+  derived_table: {
+    explore_source: sales_order_line {
+      column: created_date {}
+      column: store_name { field: sales_order.store_name }
+      column: Store_Entries { field: aura_vision_traffic.Store_Entries }
+      column: total_orders { field: sales_order.total_orders }
+      filters: {field: sales_order.channel value: "Owned Retail"}
+      filters: {field: sales_order.is_exchange_upgrade_warranty value: "No"}
+      filters: {field: retail_order_flag.is_draft value: "No"}
+      filters: {field: retail_order_flag.is_chat value: "No"}
+      filters: {field: sales_order_line.created_date value: "before today" }
+    }
+  }
+  dimension: created_date {type: date}
+  dimension: Store_Entries {type: number}
+  dimension: total_orders {type: number}
+}
+
+######################################################
 #   CREATING FINAL TABLE
 ######################################################
 view: day_aggregations {
@@ -460,6 +483,9 @@ view: day_aggregations {
         , is_activities.chats as is_chats
         , is_activities.emails as is_emails
         , scc.net_sales as scc_sales
+--        , retail_traffic.created_date as retail_traffic_date
+--        , retail_traffic.store_entries as retail_traffic_showroom_entries
+--        , retail_traffic.total_orders as retail_traffic_showroom_orders
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -486,6 +512,7 @@ view: day_aggregations {
       left join ${day_agg_is_deals.SQL_TABLE_NAME} is_deals on is_deals.created_date::date = d.date
       left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
       left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
+--      left join ${day_agg_retail_auravision.SQL_TABLE_NAME} retail_traffic on retail_traffic.created_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -1076,6 +1103,29 @@ view: day_aggregations {
     type: number
     value_format_name: percent_2
     sql: 1.0*(${day_aggregations.is_orders})/NULLIF(${day_aggregations.is_activities},0) ;; }
+
+  measure: retail_traffic_showroom_entries{
+    label: "Retail Showroom Entries"
+    description: "Total showroom entry count"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.retail_traffic_showroom_entries ;;
+  }
+
+  measure: retail_traffic_showroom_orders{
+    label: "Retail Order Count"
+    description: "Count of Retail Showroom Orders (excludes chat/draft)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.retail_traffic_showroom_orders ;;
+  }
+
+  measure: retail_conversion {
+    label: "Retail Conversion Rate"
+    description: "% of all showroom entries that resulted in an order (excludes chat/draft orders)  Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${day_aggregations.retail_traffic_showroom_orders})/NULLIF(${day_aggregations.retail_traffic_showroom_entries},0) ;; }
 
   parameter: see_data_by {
     description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
