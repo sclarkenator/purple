@@ -28,6 +28,11 @@ include: "/dashboards/**/*.dashboard"
   explore: covid {hidden: yes}
   explore: hierarchy_draft {hidden: yes}
 
+  explore: ante_issue {
+    hidden:yes
+    label: "Analytics Testing"
+    }
+
 
 #-------------------------------------------------------------
 #
