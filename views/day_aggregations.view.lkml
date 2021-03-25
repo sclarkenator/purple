@@ -86,6 +86,23 @@ view: day_aggregations_wholesale_sales {
 }
 
 ######################################################
+#   Canada Sales and Units
+######################################################
+# If necessary, uncomment the line below to include explore_source.
+# include: "sales.explore.lkml"
+
+view: day_aggregations_scc {
+  derived_table: {
+    explore_source: scc {
+      column: created_date {}
+      column: net_sales {}
+    }
+  }
+  dimension: created_date {}
+  dimension: net_sales {}
+}
+
+######################################################
 #   Retail Sales and Units
 ######################################################
 view: day_aggregations_retail_sales {
@@ -442,6 +459,7 @@ view: day_aggregations {
         , is_activities.calls as is_calls
         , is_activities.chats as is_chats
         , is_activities.emails as is_emails
+        , scc.net_sales as scc_sales
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -467,6 +485,7 @@ view: day_aggregations {
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
       left join ${day_agg_is_deals.SQL_TABLE_NAME} is_deals on is_deals.created_date::date = d.date
       left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
+      left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -648,6 +667,13 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.wholesale_amount;; }
+
+  measure: scc_net_sales {
+    label: "Sleep Country Canada Sales"
+    description: "Total SCC sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.scc_net_sales;; }
 
   measure: wholesale_amount_k {
     label: "Wholesale Amount ($.k)"
