@@ -421,7 +421,7 @@ view: day_agg_retail_auravision{
       filters: {field: sales_order.is_exchange_upgrade_warranty value: "No"}
       filters: {field: retail_order_flag.is_draft value: "No"}
       filters: {field: retail_order_flag.is_chat value: "No"}
-      filters: {field: sales_order_line.created_date value: "before today" }
+      filters: {field: sales_order_line.created_date value: "2021/02/10 to yesterday" }
     }
   }
   dimension: created_date {type: date}
@@ -1105,7 +1105,7 @@ view: day_aggregations {
 
   measure: retail_traffic_showroom_entries{
     label: "Retail Showroom Entries"
-    description: "Total showroom entry count"
+    description: "Total showroom entry count. Data available starting Feb 2021"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.retail_traffic_showroom_entries ;;
@@ -1113,7 +1113,7 @@ view: day_aggregations {
 
   measure: retail_traffic_showroom_orders{
     label: "Retail Order Count"
-    description: "Count of Retail Showroom Orders (excludes chat/draft)"
+    description: "Count of Retail Showroom Orders (excludes chat/draft). Data available starting Feb 2021"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.retail_traffic_showroom_orders ;;
@@ -1121,7 +1121,7 @@ view: day_aggregations {
 
   measure: retail_conversion {
     label: "Retail Conversion Rate"
-    description: "% of all showroom entries that resulted in an order (excludes chat/draft orders)  Source: looker.calculation"
+    description: "% of all showroom entries that resulted in an order (excludes chat/draft orders). Data available starting Feb 2021  Source: looker.calculation"
     type: number
     value_format_name: percent_2
     sql: 1.0*(${day_aggregations.retail_traffic_showroom_orders})/NULLIF(${day_aggregations.retail_traffic_showroom_entries},0) ;; }
