@@ -31,7 +31,7 @@ view: customer_table {
     label: "First Name"
     description: "First name from netsuite. Source: netsuite.customers"
     type: string
-    sql:  ${TABLE}.firstname;;
+    sql:  UPPER(${TABLE}.firstname);;
     required_access_grants:[can_view_pii] }
 
   dimension: last_name {
@@ -39,7 +39,7 @@ view: customer_table {
     label: "Last Name"
     description: "Last name from netsuite. Source: netsuite.customers"
     type: string
-    sql:  ${TABLE}.lastname ;;
+    sql:  UPPER(${TABLE}.lastname) ;;
     required_access_grants:[can_view_pii] }
 
   dimension: email {
