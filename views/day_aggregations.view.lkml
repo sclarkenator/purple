@@ -398,7 +398,6 @@ view: day_agg_retail_auravision{
   derived_table: {
     explore_source: sales_order_line {
       column: created_date {}
-      column: store_name { field: sales_order.store_name }
       column: Store_Entries { field: aura_vision_traffic.Store_Entries }
       column: total_orders { field: sales_order.total_orders }
       filters: {field: sales_order.channel value: "Owned Retail"}
@@ -465,9 +464,9 @@ view: day_aggregations {
         , is_activities.calls as is_calls
         , is_activities.chats as is_chats
         , is_activities.emails as is_emails
---        , retail_traffic.created_date as retail_traffic_date
---        , retail_traffic.store_entries as retail_traffic_showroom_entries
---        , retail_traffic.total_orders as retail_traffic_showroom_orders
+        , retail_traffic.created_date as retail_traffic_date
+        , retail_traffic.store_entries as retail_traffic_showroom_entries
+        , retail_traffic.total_orders as retail_traffic_showroom_orders
       from analytics.util.warehouse_date d
       left join (
         select date_part('week',d.date) as week_num
@@ -493,7 +492,7 @@ view: day_aggregations {
       left join ${day_agg_prod_mattress.SQL_TABLE_NAME} prod_mat on prod_mat.produced_date::date = d.date
       left join ${day_agg_is_deals.SQL_TABLE_NAME} is_deals on is_deals.created_date::date = d.date
       left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
---      left join ${day_agg_retail_auravision.SQL_TABLE_NAME} retail_traffic on retail_traffic.created_date::date = d.date
+      left join ${day_agg_retail_auravision.SQL_TABLE_NAME} retail_traffic on retail_traffic.created_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
