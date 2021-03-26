@@ -79,7 +79,8 @@ view: sales_order {
     case: {
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%us%'))
               or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%us%'))
-              or (lower(${TABLE}.source) like ('%direct entry%')) or (${TABLE}.source is null);;
+              or (lower(${TABLE}.source) like ('%direct entry%')) or (${TABLE}.source is null)
+              or ${TABLE}.source = 'Shopify - POS';;
         label: "SHOPIFY-US" }
       when: { sql: (lower(${TABLE}.system) like ('%shopify%') and lower(${TABLE}.system) like ('%ca%'))
           or (lower(${TABLE}.source) like ('%shopify%') and lower(${TABLE}.source) like ('%ca%')) ;;
@@ -89,6 +90,8 @@ view: sales_order {
         label: "AMAZON-CA"  }
       when: { sql: (lower(${TABLE}.source) like ('%amazon%')) or  (lower(${TABLE}.system) like ('%amazon%')) ;;
         label: "AMAZON-US" }
+      when: { sql: (${TABLE}.source = 'Commerce Tools' ) ;;
+        label: "COMMERCE TOOLS" }
       else: "OTHER" } }
 
   dimension: Amazon_fulfillment{
