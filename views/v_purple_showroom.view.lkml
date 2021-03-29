@@ -10,6 +10,8 @@ view: v_purple_showroom {
 
   dimension: address_1 {
     type: string
+    group_label: "Address"
+    label: "Street Address"
     sql: ${TABLE}."ADDRESS_1" ;;
   }
 
@@ -27,11 +29,13 @@ view: v_purple_showroom {
 
   dimension: city {
     type: string
+    group_label: "Address"
     sql: ${TABLE}."CITY" ;;
   }
 
   dimension_group: date_created {
     type: time
+    hidden:  yes
     timeframes: [
       raw,
       time,
@@ -46,6 +50,7 @@ view: v_purple_showroom {
 
   dimension_group: date_deleted {
     type: time
+    hidden:  yes
     timeframes: [
       raw,
       time,
@@ -60,11 +65,13 @@ view: v_purple_showroom {
 
   dimension: is_inactive {
     type: string
+    hidden:  yes
     sql: ${TABLE}."IS_INACTIVE" ;;
   }
 
   dimension_group: last_modified {
     type: time
+    hidden:  yes
     timeframes: [
       raw,
       time,
@@ -96,16 +103,20 @@ view: v_purple_showroom {
 
   dimension: purple_showroom_id {
     type: string
+    label: "Purple Showroom Number"
+    hidden:  yes
     sql: ${TABLE}."PURPLE_SHOWROOM_ID" ;;
   }
 
   dimension: purple_showroom_name {
     type: string
+    label: "Purple Showroom ID"
     sql: ${TABLE}."PURPLE_SHOWROOM_NAME" ;;
   }
 
   dimension: shopify_store_id {
     type: string
+    hidden:  yes
     sql: ${TABLE}."SHOPIFY_STORE_ID" ;;
   }
 
@@ -117,11 +128,13 @@ view: v_purple_showroom {
 
   dimension: zip {
     type: zipcode
+    group_label: "Address"
     sql: ${TABLE}."ZIP" ;;
   }
 
   measure: count {
     type: count
+    hidden:  yes
     drill_fields: [purple_showroom_name, location_name]
   }
 }
