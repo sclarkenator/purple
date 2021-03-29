@@ -117,6 +117,11 @@ include: "/dashboards/**/*.dashboard"
       required_joins: [return_order_line]
       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
       relationship: many_to_one}
+    join: return_reason_v2 {
+      view_label: "Returns"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${return_reason_v2.order_id} ;;
+      relationship: one_to_many }
     join: return_reason {
       view_label: "Returns"
       type: full_outer
