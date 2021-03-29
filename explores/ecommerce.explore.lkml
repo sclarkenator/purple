@@ -16,7 +16,7 @@ include: "/dashboards/**/*.dashboard"
     join: session_facts {
       view_label: "Sessions"
       type: left_outer
-      sql_on: ${ecommerce.session_id}::string = ${session_facts.session_id}::string ;;
+      sql_on: ${ecommerce.session_id} = ${session_facts.session_id} ;;
       relationship: one_to_one
     }
     join: zip_codes_city {
@@ -46,7 +46,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: ecommerce1 {
       type: left_outer
-      sql_on: ${ecommerce.session_id}::string = ${ecommerce1.session_id}::string ;;
+      sql_on: ${ecommerce.session_id} = ${ecommerce1.session_id} ;;
       relationship: many_to_one
     }
     join: sales_order {
