@@ -15,6 +15,7 @@ view: sales_base {
       column: created_date {}
       column: order_id { field: sales_order.order_id }
       column: channel2 { field: sales_order.channel2 }
+      column: store_name { field: sales_order.store_name }
       column: free_item {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
@@ -121,6 +122,12 @@ view: sales_base {
   dimension: channel2 {
     label: "Channel"
     type:string
+    sql: ${TABLE}.channel2 ;;
+  }
+  dimension: store_name {
+    label: "Retail Store Location"
+    type: string
+    sql: ${TABLE}.store_name ;;
   }
   measure: gross_amt {
     label: "  Gross Sales ($)"

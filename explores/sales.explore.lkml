@@ -46,6 +46,15 @@ include: "/dashboards/**/*.dashboard"
         sales.date_filter: "30 days",
         sales.within_dates: "Yes"]
     }
+    query: retail_sales {
+      dimensions: [sales.store_name]
+      measures: [sales.gross_amt]
+      label: "Sales by Retail Store"
+      description: "Gross sales by store for each retail store location"
+      #sorts: [sales.date_in_period_date: desc]
+      filters: [sales.channel2: "Owned Retail",
+        sales.date_filter: "30 days"]
+    }
   }
 
   explore: sales_order_line{
