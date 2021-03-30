@@ -70,8 +70,6 @@ include: "/dashboards/**/*.dashboard"
   explore: affirm_daily_lto_funnel {hidden:yes group_label: "Accounting"}
   explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
   explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
-  explore: v_braintree_order_num {label: "Braintree Order Numbers" group_label: "Accounting" hidden:yes}
-  explore: v_braintree_to_netsuite {label: "Braintree to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_shopify_payment_to_netsuite {label: "Shopify Payment to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
@@ -83,11 +81,8 @@ include: "/dashboards/**/*.dashboard"
   explore: v_fit_paypal {hidden: yes group_label: "Accounting"}
   explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
   explore: v_fit_first_data {hidden: yes group_label: "Accounting"}
-  explore: v_fit {hidden: yes group_label: "Accounting"}
-  explore: fit_problem {hidden: yes group_label: "Accounting"}
   explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
   explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
-  explore: v_fit_braintree {hidden: yes group_label: "Accounting"}
   explore: v_fit_shopify_payment {hidden: yes group_label: "Accounting"}
   explore: v_fit_stripe {hidden: yes group_label: "Accounting"}
   explore: v_splitit {hidden: yes group_label: "Accounting"}
