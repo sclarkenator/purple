@@ -53,7 +53,7 @@ include: "/dashboards/**/*.dashboard"
       description: "Gross sales by store for each retail store location"
       #sorts: [sales.date_in_period_date: desc]
       filters: [sales.channel2: "Owned Retail",
-        sales.date_filter: "30 days"]
+        sales.order_date: "30 days"]
     }
   }
 
