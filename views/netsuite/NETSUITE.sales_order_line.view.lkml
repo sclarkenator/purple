@@ -2172,6 +2172,15 @@ view: sales_order_line {
               else 0.01 end *nvl(${TABLE}.adjusted_gross_amt,0) ;;
   }
 
+  measure: vir {
+    label: "12a - Wholesale VIR"
+    description: "Estimate of wholesale VOlume Incentive Rebate dollars, based on % of fulfilled gross orders.Removed pre net-revenue estimate"
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    type: sum
+    sql: case when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.035 else 0 end * nvl(${TABLE}.adjusted_gross_amt,0) ;;
+    }
+
   measure: mdf {
     label: "12 - Wholesale MDF"
     description: "Estimate of wholesale MDF dollars, based on % of fulfilled gross orders. Includes, Co-op, SPIFF, VIR, comfort exchange"
@@ -2182,7 +2191,7 @@ view: sales_order_line {
           when ${customer_table.companyname} ilike '%Raymour & Flanigan Furniture%' then 0.05
           when ${customer_table.companyname} ilike '%Sleep Country%' then 0.115
           when ${customer_table.companyname} ilike '%Macy%' then 0.095
-          when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.064
+          when ${customer_table.companyname} ilike '%Mattress Firm%' then 0.029
           when ${customer_table.companyname} ilike '%Mathis Brothers Furniture%' then 0.05
           when ${customer_table.companyname} ilike '%Big Sandy%' then 0.04
           when ${customer_table.companyname} ilike '%City Furniture%' then 0.04
@@ -2221,7 +2230,16 @@ view: sales_order_line {
     type: number
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
-    sql: ${adj_gross_amt}-${COGS}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback}-${direct_affiliate}-${warranty_accrual}-${merch_fees}-${mdf}-${promo_adj}-${freight} ;;
+    sql: ${adj_gross_amt}-${vir}-${COGS}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback}-${direct_affiliate}-${warranty_accrual}-${merch_fees}-${mdf}-${promo_adj}-${freight} ;;
+  }
+
+  measure: net_revenue {
+    label: "Net revenue estimate"
+    description: "Estimated net revenue: gross revenue (IMU) less discounts, less cancellations, less returns, less VIR"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    sql: ${adj_gross_amt}-${vir}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback} ;;
   }
 
   measure: gm_rate{
