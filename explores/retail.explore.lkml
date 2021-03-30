@@ -77,6 +77,13 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_many
       fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
     }
+    join: v_purple_showroom {
+      view_label: "Showroom"
+      type:  left_outer
+      sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
+      relationship: many_to_one
+    }
+
 
 
   }

@@ -186,10 +186,10 @@ view: v_fb_all {
   }
 
   measure: purchase_conversion_value_1_dv {
-   label: "Purchase Value 1Dv"
+   label: "Purchase Value 1DV"
     type: sum
     value_format: "$#,##0.00"
-    sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_1DV" ;;
+    sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_1DV"  ;;
   }
 
   measure: purchase_conversion_value_28_dc {

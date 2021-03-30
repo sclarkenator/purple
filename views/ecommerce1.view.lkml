@@ -9,21 +9,6 @@ view: ecommerce1 {
     hidden:  yes
   }
 
-  dimension: user_id {
-    type: number
-    description: "All User IDs related to this session ID and order number"
-    sql: ${TABLE}.user_id ;;
-    hidden:  yes
-  }
-
-  dimension: session_id_order_number {
-    type: string
-    description: "Unique combination of Session ID and Order Number"
-    sql: concat(${TABLE}.order_number,${TABLE}.session_id) ;;
-    primary_key: yes
-    hidden: yes
-  }
-
   dimension: order_number {
     type: string
     description: "Netsuite's Related Tran ID"
@@ -31,19 +16,72 @@ view: ecommerce1 {
     hidden:  yes
   }
 
-  dimension: checkout_token {
-    type: string
-    description: "Unique url string identifying a checkout"
-    sql: ${TABLE}.checkout_token ;;
+  dimension: etail_amt {
+    type: number
+    description: "Order amount in Shopify"
+    sql: ${TABLE}.etail_amt ;;
     hidden:  yes
   }
 
-  dimension: shopify_amt {
-    type: number
-    description: "Order amount in Shopify"
-    sql: ${TABLE}.shopify_amt ;;
+  dimension: ordered {
+    #this is used for the heap_checkout_abandonment explore
+    hidden: yes
+    type: string
+    sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
+  }
+
+  dimension: session_id {
+    type: string
+    sql: ${TABLE}.session_id ;;
     hidden:  yes
   }
+
+  dimension: checkout_platform {
+    type: string
+    description: "Shopify or CommerceTools"
+    sql: ${TABLE}.checkout_platform ;;
+    hidden:  yes
+  }
+
+  measure: total_cvr {
+    description: "% of all Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - All Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_bounced_session}+${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
+  }
+
+  measure: qualified_cvr {
+    description: "% of all Non-bounced Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - Qualified Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_non_bounced_session},0) ;;
+    value_format_name: percent_2
+  }
+
+  # dimension: user_id {
+  #   type: number
+  #   description: "All User IDs related to this session ID and order number"
+  #   sql: ${TABLE}.user_id ;;
+  #   hidden:  yes
+  # }
+
+  # dimension: session_id_order_number {
+  #   type: string
+  #   description: "Unique combination of Session ID and Order Number"
+  #   sql: concat(${TABLE}.order_number,${TABLE}.session_id) ;;
+  #   primary_key: yes
+  #   hidden: yes
+  # }
+
+  # dimension: checkout_token {
+  #   type: string
+  #   description: "Unique url string identifying a checkout"
+  #   sql: ${TABLE}.checkout_token ;;
+  #   hidden:  yes
+  # }
 
   dimension: created {
     type: date
@@ -128,30 +166,17 @@ view: ecommerce1 {
 #    sql: ${TABLE}.purchase_session_id ;;
 #    hidden:  yes }
 
-  dimension: ordered {
-    #this is used for the heap_checkout_abandonment explore
-    hidden: yes
-    type: string
-    sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
-  }
+  # dimension: device_type {
+  #   type: number
+  #   sql: ${TABLE}.device_type ;;
+  #   hidden:  yes
+  # }
 
-  dimension: device_type {
-    type: number
-    sql: ${TABLE}.device_type ;;
-    hidden:  yes
-  }
-
-  dimension: event_id {
-    type: string
-    sql: ${TABLE}.event_id ;;
-    hidden:  yes
-  }
-
-  dimension: session_id {
-    type: string
-    sql: ${TABLE}.session_id ;;
-    hidden:  yes
-  }
+  # dimension: event_id {
+  #   type: string
+  #   sql: ${TABLE}.event_id ;;
+  #   hidden:  yes
+  # }
 
   dimension: time {
     type: date_time
@@ -160,68 +185,68 @@ view: ecommerce1 {
     hidden:  yes
   }
 
-  dimension: platform {
-    type: string
-    description: "Operating system of device"
-    sql: ${TABLE}.platform ;;
-    hidden:  yes
-  }
+  # dimension: platform {
+  #   type: string
+  #   description: "Operating system of device"
+  #   sql: ${TABLE}.platform ;;
+  #   hidden:  yes
+  # }
 
 #  dimension: session_device_type {
 #    type: number
 #    sql: ${TABLE}.session_device_type ;;
 #    hidden:  yes }
 
-  dimension: country {
-    type: string
-    group_label: "Geography"
-    sql: ${TABLE}.country ;;
-    hidden:  yes
-  }
+  # dimension: country {
+  #   type: string
+  #   group_label: "Geography"
+  #   sql: ${TABLE}.country ;;
+  #   hidden:  yes
+  # }
 
-  dimension: region {
-    type: string
-    group_label: "Geography"
-    sql: ${TABLE}.region ;;
-    hidden:  yes
-  }
+  # dimension: region {
+  #   type: string
+  #   group_label: "Geography"
+  #   sql: ${TABLE}.region ;;
+  #   hidden:  yes
+  # }
 
-  dimension: city {
-    type: string
-    group_label: "Geography"
-    sql: ${TABLE}.city ;;
-    hidden:  yes
-  }
+  # dimension: city {
+  #   type: string
+  #   group_label: "Geography"
+  #   sql: ${TABLE}.city ;;
+  #   hidden:  yes
+  # }
 
-  dimension: ip {
-    type: string
-    sql: ${TABLE}.ip ;;
-    hidden:  yes
-  }
+  # dimension: ip {
+  #   type: string
+  #   sql: ${TABLE}.ip ;;
+  #   hidden:  yes
+  # }
 
-  dimension: referrer {
-    type: string
-    sql: ${TABLE}.referrer ;;
-    hidden:  yes
-  }
+  # dimension: referrer {
+  #   type: string
+  #   sql: ${TABLE}.referrer ;;
+  #   hidden:  yes
+  # }
 
-  dimension: landing_page {
-    type: string
-    sql: ${TABLE}.landing_page ;;
-    hidden:  yes
-  }
+  # dimension: landing_page {
+  #   type: string
+  #   sql: ${TABLE}.landing_page ;;
+  #   hidden:  yes
+  # }
 
-  dimension: browser {
-    type: string
-    sql: ${TABLE}.browser ;;
-    hidden:  yes
-  }
+  # dimension: browser {
+  #   type: string
+  #   sql: ${TABLE}.browser ;;
+  #   hidden:  yes
+  # }
 
-  dimension: search_keyword {
-    type: string
-    sql: ${TABLE}.search_keyword ;;
-    hidden:  yes
-  }
+  # dimension: search_keyword {
+  #   type: string
+  #   sql: ${TABLE}.search_keyword ;;
+  #   hidden:  yes
+  # }
 
   dimension: utm_source {
     type: string
@@ -263,49 +288,33 @@ view: ecommerce1 {
     hidden:  yes
   }
 
-  dimension: device {
-    type: string
-    sql: ${TABLE}.device ;;
-    hidden:  yes
-  }
+  # dimension: device {
+  #   type: string
+  #   sql: ${TABLE}.device ;;
+  #   hidden:  yes
+  # }
 
-  dimension: carrier {
-    type: string
-    description: "Mobile Network Carrier"
-    sql: ${TABLE}.carrier ;;
-    hidden:  yes
-  }
+  # dimension: carrier {
+  #   type: string
+  #   description: "Mobile Network Carrier"
+  #   sql: ${TABLE}.carrier ;;
+  #   hidden:  yes
+  # }
 
-  dimension: app_name {
-    type: string
-    description: "Mobile App Name"
-    sql: ${TABLE}.app_name ;;
-    hidden:  yes
-  }
+  # dimension: app_name {
+  #   type: string
+  #   description: "Mobile App Name"
+  #   sql: ${TABLE}.app_name ;;
+  #   hidden:  yes
+  # }
 
-  dimension: app_version {
-    type: string
-    description: "Mobile App Version"
-    sql: ${TABLE}.app_version ;;
-    hidden:  yes
-  }
+  # dimension: app_version {
+  #   type: string
+  #   description: "Mobile App Version"
+  #   sql: ${TABLE}.app_version ;;
+  #   hidden:  yes
+  # }
 
-  measure: total_cvr {
-    description: "% of all Sessions that resulted in an order. Source: looker.calculation"
-    label: "CVR - All Sessions"
-    type: number
-    view_label: "Sessions"
-    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_bounced_session}+${heap_page_views.Sum_non_bounced_session},0) ;;
-    value_format_name: percent_2
-  }
 
-  measure: qualified_cvr {
-    description: "% of all Non-bounced Sessions that resulted in an order. Source: looker.calculation"
-    label: "CVR - Qualified Sessions"
-    type: number
-    view_label: "Sessions"
-    sql: 1.0*(${sales_order.total_orders})/NULLIF(${heap_page_views.Sum_non_bounced_session},0) ;;
-    value_format_name: percent_2
-  }
 
  }

@@ -44,4 +44,15 @@ view: warehouse_location {
         or ${location_id} = '116' or ${location_id} = '121' then 'White Glove'
       else 'Other' end ;;
   }
+
+  dimension: production_location{
+    label: "Production Location"
+    description: "Warehouse Locations for Production (100-Purple West, 150-Alpine, 200-Purple South); Source: Looker Calculation"
+    type: string
+    case: {
+      when: { sql: ${location_id} = '4' ;; label: "Purple West"}
+      when: { sql: ${location_id} = '5' ;; label: "Alpine"}
+      when: { sql: ${location_id} = '111' ;; label: "Purple South"}
+    }
+  }
 }

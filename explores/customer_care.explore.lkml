@@ -310,6 +310,8 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Exchange Item"}
   }
 
+  explore: cc_traffic { hidden: yes }
+
   explore: orphan_orders {
     hidden:  yes
     group_label: "Customer Care"

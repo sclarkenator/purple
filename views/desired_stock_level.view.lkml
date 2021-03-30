@@ -199,8 +199,6 @@ group by 1,2,3,4,12,13,14  ;;
     case: {
       when: { sql: ${TABLE}."FORECAST_VERSION" = 'Working' ;; label: "Working" }
       when: { sql: ${TABLE}."FORECAST_VERSION" = 'Current S&OP' ;; label: "Current S&OP" }
-      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Last Month S&OP' ;; label: "Last Month S&OP" }
-      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Two Month S&OP' ;; label: "Two Month S&OP" }
       when: { sql: ${TABLE}."FORECAST_VERSION" = 'Running 4 Month' ;; label: "Running 4 Month" }
     }
   }

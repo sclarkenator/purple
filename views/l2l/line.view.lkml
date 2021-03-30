@@ -67,6 +67,7 @@ view: ltol_line {
           when ${TABLE}."DESCRIPTION" = 'Line Five Roll Pack' then 'Roll Pack 5'
           when ${TABLE}."DESCRIPTION" = 'Line Six Roll Pack' then 'Roll Pack 6'
           when ${TABLE}."DESCRIPTION" = 'Line Seven Roll Pack' then 'Roll Pack 7'
+          when ${TABLE}."DESCRIPTION" ilike '%Injection Molding Line%' then replace(${TABLE}.DESCRIPTION,'Line')
         else ${TABLE}."DESCRIPTION" end  ;;
   }
 
@@ -78,6 +79,9 @@ view: ltol_line {
       when ${Line_name} = 'Glue 2' or  ${Line_name} = 'Roll Pack 2' then 'Assembly Line 2'
       when ${Line_name} = 'Glue 3' or  ${Line_name} = 'Roll Pack 3' then 'Assembly Line 3'
       when ${Line_name} = 'Glue 4' or  ${Line_name} = 'Roll Pack 4' then 'Assembly Line 4'
+      when ${Line_name} = 'Glue 5' or  ${Line_name} = 'Roll Pack 5' then 'Assembly Line 5'
+      when ${Line_name} = 'Glue 6' or  ${Line_name} = 'Roll Pack 6' then 'Assembly Line 6'
+      when ${Line_name} = 'Glue 7' or  ${Line_name} = 'Roll Pack 7' then 'Assembly Line 7'
       else ${Line_name} end;;
   }
 

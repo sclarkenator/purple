@@ -84,4 +84,14 @@ view: zendesk_macros {
     type: count
     drill_fields: []
   }
+
+  measure: 1_day {
+    type: sum
+    sql: ${TABLE}.usage_24H ;;
+  }
+
+  measure: 7_day {
+    type: sum
+    sql: ${TABLE}.usage_7d ;;
+  }
 }

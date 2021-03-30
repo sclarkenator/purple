@@ -129,13 +129,6 @@ view: dispatch {
     sql: timediff(second,${dispatched_time}, ${dispatch_completed_time}) ;;
   }
 
-  dimension: resource_time {
-    hidden: yes
-    type: number
-    value_format: "hh:mm:ss"
-    sql: ${resource_time_diff} / 86400.0 ;;
-  }
-
   dimension: reason_code {
     type: string
     description: "Dispatch Reason Code; Source: l2l.dispatch"

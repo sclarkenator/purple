@@ -44,7 +44,16 @@ include: "/dashboards/**/*.dashboard"
       sorts: [sales.date_in_period_date: desc]
       filters: [sales.comparison_period: "previous",
         sales.date_filter: "30 days",
-        sales.is_within_current_and_comparison_period: "Yes"]
+        sales.within_dates: "Yes"]
+    }
+    query: retail_sales {
+      dimensions: [sales.store_name]
+      measures: [sales.gross_amt]
+      label: "Sales by Retail Store"
+      description: "Gross sales by store for each retail store location"
+      #sorts: [sales.date_in_period_date: desc]
+      filters: [sales.channel2: "Owned Retail",
+        sales.date_filter: "30 days"]
     }
   }
 
@@ -117,6 +126,11 @@ include: "/dashboards/**/*.dashboard"
       required_joins: [return_order_line]
       sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
       relationship: many_to_one}
+    join: return_reason_v2 {
+      view_label: "Returns"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${return_reason_v2.order_id} ;;
+      relationship: one_to_many }
     join: return_reason {
       view_label: "Returns"
       type: full_outer
@@ -492,6 +506,11 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
       relationship:  one_to_one
     }
+    join: talkable_referral {
+      type: left_outer
+      sql_on: ${talkable_referral.order_number} = ${sales_order.related_tranid} ;;
+      relationship: one_to_one
+    }
 
   }
 
@@ -692,6 +711,23 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${warranty_order_line.item_id} = ${item.item_id} ;;
       required_joins: [warranty_order_line]
       relationship: many_to_one}
+    }
+
+  explore: scc {
+    from: sleep_country_canada_sales
+    hidden: yes
+    fields: [ALL_FIELDS*]
+    label: "SCC Orders"
+    group_label: " Orders"
+    description: "Sales Orders for SCC"
+    join: sleep_country_canada_store {
+      type: left_outer
+      sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
+      relationship: many_to_one}
+    join: sleep_country_canada_product {
+      type: left_outer
+      sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
+      relationship: many_to_one}
   }
 
   explore: return_form_entry {
@@ -742,7 +778,7 @@ include: "/dashboards/**/*.dashboard"
       sorts: [day_aggregations.date_in_period_date: desc]
       filters: [day_aggregations.comparison_period: "previous",
         day_aggregations.date_filter: "30 days",
-        day_aggregations.is_within_current_and_comparison_period: "Yes"]
+        day_aggregations.within_dates: "Yes"]
     }
   }
 

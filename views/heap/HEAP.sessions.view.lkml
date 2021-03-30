@@ -2,7 +2,7 @@
 # Owner - Tim Schultz
 # Recreating the Heap Block so we can join addtional data
 #-------------------------------------------------------------------
-#include: "/views/_period_comparison.view.lkml"
+include: "/views/_period_comparison.view.lkml"
 view: sessions {
 #   derived_table: {
 #     sql: select * from heap.sessions;;
@@ -10,17 +10,17 @@ view: sessions {
 #   }
   sql_table_name: heap_data.purple.sessions ;;
 
-  # extends: [_period_comparison]
-  # #### Used with period comparison view
-  # dimension_group: event {
-  #   hidden: yes
-  #   type: time
-  #   timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,
-  #     day_of_year,week,month,month_num,quarter,quarter_of_year,year]
-  #   convert_tz: no
-  #   datatype: date
-  #   sql: ${TABLE}.time ;;
-  # }
+   extends: [_period_comparison]
+   #### Used with period comparison view
+   dimension_group: event {
+     hidden: yes
+     type: time
+     timeframes: [raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,
+       day_of_year,week,month,month_num,quarter,quarter_of_year,year]
+     convert_tz: no
+     datatype: date
+     sql: ${TABLE}.time ;;
+   }
 
   dimension: session_id {
     #primary_key: yes
@@ -553,8 +553,8 @@ view: sessions {
     description: "Source: looker calculation"
     type: string
     sql: case when ${utm_term} ilike '%br%' then 'BRAND'
-      when ${utm_term} ilike '%pt%' then 'PROSPECTING'
-      when ${utm_term} = '%rt%' then 'RETARGETING'
+      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' then 'PROSPECTING'
+      when ${utm_term} ilike '%rt%' then 'RETARGETING'
       else 'OTHER' end ;;
   }
 

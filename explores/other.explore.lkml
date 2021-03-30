@@ -26,6 +26,13 @@ include: "/dashboards/**/*.dashboard"
 
   explore: _calendar {hidden:yes} ##Added by Blake Walton 12/8/2020
   explore: covid {hidden: yes}
+  explore: hierarchy_draft {hidden: yes}
+
+  explore: ante_issue {
+    hidden:yes
+    label: "Analytics Testing"
+    }
+
 
 #-------------------------------------------------------------
 #
@@ -48,6 +55,26 @@ include: "/dashboards/**/*.dashboard"
     description: "Diversity, Equity, & Inclusion (DEI) data by supervisor and department"
   }
 
+#-------------------------------------------------------------
+#
+# Bridge Data
+#
+#-------------------------------------------------------------
+
+  explore: bridge_enrollment {
+    group_label: "HR"
+    hidden: yes
+    join: bridge_course {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_course.id} = ${bridge_enrollment.course_id};;
+    }
+    join: bridge_user {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${bridge_user.id} = ${bridge_enrollment.learner_id} ;;
+    }
+  }
 
 #-------------------------------------------------------------------
 #

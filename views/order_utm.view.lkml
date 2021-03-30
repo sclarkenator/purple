@@ -1,7 +1,7 @@
 view: order_utm {
  derived_table: {
    sql:
-    select s.created
+        select s.created
       , s.order_id
       , s.SYSTEM
       , s.email
@@ -9,7 +9,7 @@ view: order_utm {
       , e.utm_medium
       , e.utm_source
       , e.utm_term
-    from sales_order s
+    from sales.sales_order s
     left join marketing.ecommerce e on e.order_number = s.related_tranid
     --where s.created > '2020-11-01' and e.session_id is not null
     ;;

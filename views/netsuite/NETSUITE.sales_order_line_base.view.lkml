@@ -248,7 +248,7 @@ view: sales_order_line_base {
     view_label: "Customer"
     description: "Source: netsuite.sales_order_line"
     type: string
-    sql: ${TABLE}.CITY ;;
+    sql: UPPER(${TABLE}.CITY) ;;
   }
 
   dimension: company_id {
@@ -988,7 +988,7 @@ view: sales_order_line_base {
     label: "Street Address"
     description: "Source: netsuite.sales_order_line"
     type: string
-    sql: ${TABLE}.STREET_ADDRESS ;;
+    sql: UPPER(${TABLE}.STREET_ADDRESS) ;;
     required_access_grants:[can_view_pii]
   }
 
@@ -1057,7 +1057,7 @@ view: sales_order_line_base {
     description: "Source: netsuite.sales_order_line"
     type: string
     map_layer_name: us_states
-    sql: ${TABLE}.STATE ;;
+    sql: UPPER(${TABLE}.STATE) ;;
   }
 
   dimension: cntry {
