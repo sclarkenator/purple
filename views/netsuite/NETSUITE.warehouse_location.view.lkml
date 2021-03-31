@@ -50,9 +50,9 @@ view: warehouse_location {
     description: "Warehouse Locations for Production (100-Purple West, 150-Alpine, 200-Purple South); Source: Looker Calculation"
     type: string
     case: {
-      when: { sql: ${location_id} = '4' ;; label: "Purple West"}
-      when: { sql: ${location_id} = '5' ;; label: "Alpine"}
+      when: { sql: ${location_id} = '4'  or ${location_id} = '41';; label: "Purple West"}
       when: { sql: ${location_id} = '111' ;; label: "Purple South"}
+      when: { sql: ${location_id} = '5' ;; label: "Alpine"}
     }
   }
 }
