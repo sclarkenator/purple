@@ -673,7 +673,6 @@ dimension_group: trandate {
 dimension: store_name{
   label: "Location Name"
   description: "Owned Retail Location Name. Manually grouped from Location ID. Source: netsuite.sales_order"
-  group_label: " Advanced"
   view_label: "Owned Retail"
   type: string
   sql: case when ${store_id} = 'CA-01' then 'San Diego'
