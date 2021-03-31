@@ -51,6 +51,7 @@ view: warehouse_location {
     type: string
     case: {
       when: { sql: ${location_id} = '4' ;; label: "Purple West"}
+      when: { sql: ${location_id} = '41' ;; label: "Purple West"}
       when: { sql: ${location_id} = '5' ;; label: "Alpine"}
       when: { sql: ${location_id} = '111' ;; label: "Purple South"}
     }
