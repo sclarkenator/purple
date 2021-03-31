@@ -11,6 +11,8 @@ view: order_flag {
       ,case when PROTECTOR_FLG > 0 then 1 else 0 end protector_flg
       ,case when BASE_FLG > 0 then 1 else 0 end base_flg
       ,case when POWERBASE_FLG > 0 then 1 else 0 end powerbase_flg
+      ,case when REVERIE_POWERBASE_FLG > 0 then 1 else 0 end reverie_powerbase_flg
+      ,case when ASCENT_POWERBASE_FLG > 0 then 1 else 0 end ascent_powerbase_flg
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
       ,case when sumo > 0 then 1 else 0 end sumo_flg
       ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
@@ -149,6 +151,8 @@ view: order_flag {
         ,SUM(CASE WHEN line = 'PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
         ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
+        ,SUM(CASE WHEN model = 'REVERIE' THEN 1 ELSE 0 END) REVERIE_POWERBASE_FLG
+        ,SUM(CASE WHEN model = 'ASCENT POWERBASE' THEN 1 ELSE 0 END) ASCENT_POWERBASE_FLG
         ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
@@ -507,10 +511,26 @@ view: order_flag {
 
   dimension: powerbase_flg {
     group_label: "    * Orders has:"
-    label: "a Powerbase"
-    description: "1/0; 1 if there is a powerbase in this order. Source:looker.calculation"
+    label: "an Adjustable Base"
+    description: "1/0; 1 if there is a powerbase or acsent in this order. Source:looker.calculation"
     type:  yesno
     sql: ${TABLE}.powerbase_flg = 1 ;; }
+
+  dimension: reverie_powerbase_flg {
+    group_label: "    * Orders has:"
+    label: "a Reverie Base"
+    #hidden: yes
+    description: "1/0; 1 if there is a powerbase or acsent in this order. Source:looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.reverie_powerbase_flg = 1 ;; }
+
+  dimension: ascent_powerbase_flg {
+    group_label: "    * Orders has:"
+    label: "an Ascent Base"
+    #hidden: yes
+    description: "1/0; 1 if there is a powerbase or acsent in this order. Source:looker.calculation"
+    type:  yesno
+    sql: ${TABLE}.ascent_powerbase_flg = 1 ;; }
 
   dimension: platform_flg {
     group_label: "    * Orders has:"
