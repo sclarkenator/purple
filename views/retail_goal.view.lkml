@@ -32,7 +32,16 @@ view: retail_goal {
   dimension: location {
     description: "Owned Retail Store Location Name. Source: csv_file.retail_goal"
     type: string
-    sql: ${TABLE}."LOCATION" ;;
+    sql: case when ${TABLE}."LOCATION" = 'Salt Lake' then 'UT - Factory Outlet SLC'
+    when ${TABLE}."LOCATION" = 'San Diego' then 'CA - Fashion Valley'
+    when ${TABLE}."LOCATION" = 'Lehi' then 'UT - Lehi HQ'
+    when ${TABLE}."LOCATION" = 'Austin' then 'TX - Domain Northside'
+    when ${TABLE}."LOCATION" = 'Lynnwood' then 'WA - Alderwood Mall'
+    when ${TABLE}."LOCATION" = 'Columbus' then 'OH - Easton Town Center'
+    when ${TABLE}."LOCATION" = 'Santa Clara' then 'CA - Valley Fair'
+    when ${TABLE}."LOCATION" = 'Santa Monica' then 'CA - Santa Monica Place'
+    when ${TABLE}."LOCATION" = 'Tysons' then 'VA - Tysons Corner Center'
+    else ${TABLE}."LOCATION" end;;
   }
 
   measure: beds {
