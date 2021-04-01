@@ -15,7 +15,7 @@ view: sales_base {
       column: created_date {}
       column: order_id { field: sales_order.order_id }
       column: channel2 { field: sales_order.channel2 }
-      column: store_name { field: sales_order.store_name }
+      column: store_name { field: v_purple_showroom.location_name }
       column: free_item {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
