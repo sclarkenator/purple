@@ -94,4 +94,10 @@ view: zendesk_macros {
     type: sum
     sql: ${TABLE}.usage_7d ;;
   }
+
+  measure: usage_30d  {
+    label: "30 Day"
+    type: sum
+    sql: ${TABLE}.usage_30d  ;;
+  }
 }
