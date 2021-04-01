@@ -8,6 +8,14 @@ view: v_purple_showroom {
     hidden: yes
   }
 
+  dimension: location_name {
+    type: string
+    view_label: "Owned Retail"
+    label: " Location Name"
+    description: "Standardized Owned Retail location name. State - Center/Mall Name. Maintained in Netsuite."
+    sql: ${TABLE}."LOCATION_NAME" ;;
+  }
+
   dimension: address_1 {
     type: string
     group_label: "Address"
@@ -84,11 +92,6 @@ view: v_purple_showroom {
     sql: CAST(${TABLE}."LAST_MODIFIED_DATE" AS TIMESTAMP_NTZ) ;;
   }
 
-  dimension: location_name {
-    type: string
-    sql: ${TABLE}."LOCATION_NAME" ;;
-  }
-
   dimension: parent_id {
     type: string
     hidden:  yes
@@ -110,7 +113,7 @@ view: v_purple_showroom {
 
   dimension: purple_showroom_name {
     type: string
-    label: "Purple Showroom ID"
+    label: " Showroom ID"
     sql: ${TABLE}."PURPLE_SHOWROOM_NAME" ;;
   }
 

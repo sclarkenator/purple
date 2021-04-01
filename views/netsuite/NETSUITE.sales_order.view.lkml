@@ -671,7 +671,8 @@ dimension_group: trandate {
     hidden: yes
   }
 dimension: store_name{
-  label: "Location Name"
+  label: "Deprecated Location Name"
+  hidden: yes
   description: "Owned Retail Location Name. Manually grouped from Location ID. Source: netsuite.sales_order"
   view_label: "Owned Retail"
   type: string
