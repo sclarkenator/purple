@@ -68,7 +68,7 @@ view: sales_targets {
         when ${date_date} >= '2021-09-01' and ${date_date} < '2021-10-01' then ${dtc_target_dim} * 0.15685
         when ${date_date} >= '2021-10-01' and ${date_date} < '2021-11-01' then ${dtc_target_dim} * 0.15755
         when ${date_date} >= '2021-11-01' and ${date_date} < '2021-12-01' then ${dtc_target_dim} * 0.15944
-        when ${date_date} >= '2021-12-01' and ${date_date} < '2022-01-01' then ${dtc_target_dim} * 8900222.677
+        when ${date_date} >= '2021-12-01' and ${date_date} < '2022-01-01' then ${dtc_target_dim} * 0.15470
         when ${date_date} >= '2022-01-01' then ${dtc_target_dim} * 0.15
         else 0 end
     ;;
