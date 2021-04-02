@@ -146,6 +146,7 @@ view: cc_traffic {
   }
 
   measure: count {
+    hidden: yes
     type: sum
     sql: ${TABLE}.count ;;
   }
