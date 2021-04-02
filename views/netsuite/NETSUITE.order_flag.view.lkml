@@ -140,6 +140,7 @@ view: order_flag {
      ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
     ,case when sj_pajamas > 1 then 1 else 0 end sj_pajama_two_flg
      ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
+    ,case when mini_bed_squishy > 0 then 1 else 0 end mini_bed_squishy_flg
 
     FROM(
       select sol.order_id
@@ -233,6 +234,7 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
          ,sum(case when model in ('THE PURPLE MATTRESS W/ OG COVER','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS') then 1 else 0 end) purple_mattress
+        ,sum(case when product_description ilike '%MINI BED SQUISHY%' then 1 else 0 end) mini_bed_squishy
 
     -- For flagging an order based on UPT --
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
@@ -582,6 +584,13 @@ view: order_flag {
     description: "1/0; 1 if there is more than 1 mattress in the order. Source:looker.calculation"
     type:  yesno
     sql:  ${TABLE}.mm_flg = 1 ;; }
+
+  dimension: mini_bed_squishy_flg {
+    group_label: "    * Orders has:"
+    label: "a Mini bed squishy"
+    description: "1/0; 1 if there is a squishy purchased in the order. Source:looker.calculation"
+    type:  yesno
+    sql:  ${TABLE}.mini_bed_squishy_flg = 1 ;; }
 
   dimension: mattress_count {
     group_label: " Advanced"
