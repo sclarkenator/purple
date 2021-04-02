@@ -152,6 +152,41 @@ view: cc_traffic {
 
   measure: sales {
     type: sum
+    value_format_name: usd
     sql: ${TABLE}.gross_sales ;;
   }
-}
+
+    measure: order_count {
+    type: sum
+    sql: ${TABLE}.count ;;
+    filters: [metric_type: "Orders"]
+  }
+
+  measure: activities_count {
+    type: sum
+    sql: ${TABLE}.count ;;
+    filters: [metric_type: "Activities"]
+  }
+
+  measure: SQL_count {
+    type: sum
+    sql: ${TABLE}.count ;;
+    filters: [metric_type: "SQLs"]
+  }
+
+measure: is_cvr {
+  label: "Conversion Rate"
+  description: "% of all IS orders over IS activities. Source: looker.calculation"
+  type: number
+  value_format_name: percent_2
+  sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
+    }
+
+  measure: aov {
+    label: "AOV"
+    description: "IS Average Order Value = IS Sales over IS Orders"
+    type: number
+    value_format_name: usd
+    sql: (${sales})/NULLIF(${order_count},0);;
+  }
+  }
