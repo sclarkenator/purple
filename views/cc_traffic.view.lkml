@@ -145,6 +145,12 @@ view: cc_traffic {
     sql: ${TABLE}.metric_type ;;
   }
 
+  dimension: purple_image {
+    type: string
+    sql: ${TABLE}.homepage_url;;
+    html: <img src="https://ok7static.oktacdn.com/fs/bco/1/fs056okwxbPfT6CfW357" /> ;;
+  }
+
   measure: count {
     hidden: yes
     type: sum
@@ -157,7 +163,7 @@ view: cc_traffic {
     sql: ${TABLE}.gross_sales ;;
   }
 
-    measure: order_count {
+  measure: order_count {
     type: sum
     sql: ${TABLE}.count ;;
     filters: [metric_type: "Orders"]
@@ -175,12 +181,12 @@ view: cc_traffic {
     filters: [metric_type: "SQLs"]
   }
 
-measure: is_cvr {
-  label: "Conversion Rate"
-  description: "% of all IS orders over IS activities. Source: looker.calculation"
-  type: number
-  value_format_name: percent_2
-  sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
+  measure: is_cvr {
+    label: "Conversion Rate"
+    description: "% of all IS orders over IS activities. Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
     }
 
   measure: aov {
@@ -190,4 +196,4 @@ measure: is_cvr {
     value_format_name: usd
     sql: (${sales})/NULLIF(${order_count},0);;
   }
-  }
+}
