@@ -77,6 +77,18 @@ view: warranty_order_line {
     sql: ${TABLE}.QUANTITY ;;
   }
 
+  measure: quantity_complete_sales {
+    group_label: " Advanced"
+    label: "Total Warranties Completed ($)"
+    description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
+    type: sum
+    filters: {
+      field: warranty_order.status
+      value: "Closed"}
+    sql: ${TABLE}.QUANTITY*${sales_order_line.gross_amt} ;;
+  }
+
+
   dimension: system {
     hidden: yes
     type: string
