@@ -74,7 +74,7 @@ view: shop_comm_test {
 
   measure: mattress_sales {
     type: sum
-    hidden: yes
+    hidden: no
     filters: [mattress_order: "1"]
     value_format_name: usd_0
     sql: ${TABLE}.gross_sales ;;
