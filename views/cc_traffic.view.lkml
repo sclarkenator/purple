@@ -77,7 +77,7 @@ view: cc_traffic {
     select
       'Activities' as metric_type
       , a.activity_date::date as merged
-      , a.agent_name
+      , a.agent_name as agent
       , a.agent_email
       , a.activity_type as source_clean
       , a.count
@@ -125,8 +125,8 @@ view: cc_traffic {
   }
 
   dimension: agent {
-      type: string
-      sql: ${TABLE}.agent ;;
+    type: string
+    sql: ${TABLE}.agent ;;
   }
 
   dimension: agent_email {
@@ -157,7 +157,7 @@ view: cc_traffic {
     sql: ${TABLE}.gross_sales ;;
   }
 
-    measure: order_count {
+  measure: order_count {
     type: sum
     sql: ${TABLE}.count ;;
     filters: [metric_type: "Orders"]
@@ -175,13 +175,13 @@ view: cc_traffic {
     filters: [metric_type: "SQLs"]
   }
 
-measure: is_cvr {
-  label: "Conversion Rate"
-  description: "% of all IS orders over IS activities. Source: looker.calculation"
-  type: number
-  value_format_name: percent_2
-  sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
-    }
+  measure: is_cvr {
+    label: "Conversion Rate"
+    description: "% of all IS orders over IS activities. Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
+  }
 
   measure: aov {
     label: "AOV"
@@ -190,4 +190,4 @@ measure: is_cvr {
     value_format_name: usd
     sql: (${sales})/NULLIF(${order_count},0);;
   }
-  }
+}
