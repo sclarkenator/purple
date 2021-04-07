@@ -16,21 +16,23 @@ view: v_google_search_site_report {
     sql: CAST(${TABLE}."_FIVETRAN_SYNCED" AS TIMESTAMP_NTZ) ;;
   }
 
-  dimension: clicks {
-    type: number
-    sql: ${TABLE}."CLICKS" ;;
-  }
-
   dimension: country {
+    label: "Country"
     type: string
     map_layer_name: countries
     sql: ${TABLE}."COUNTRY" ;;
   }
 
-  dimension: ctr {
-    type: number
-    sql: ${TABLE}."CTR" ;;
+  dimension: search_type {
+    label: "Search Type"
+    type: string
+    sql: ${TABLE}."SEARCH_TYPE" ;;
   }
+
+  dimension: site {
+    label: "Site"
+    type: string
+    sql: ${TABLE}."SITE" ;;}
 
   dimension_group: date {
     type: time
@@ -48,32 +50,33 @@ view: v_google_search_site_report {
   }
 
   dimension: device {
+    label: "Device Type"
     type: string
     sql: ${TABLE}."DEVICE" ;;
   }
 
-  dimension: impressions {
+  measure: clicks {
+    label: "Clicks"
+    type: number
+    sql: ${TABLE}."CLICKS" ;;
+  }
+
+  measure: impressions {
+    label: "Impressions"
     type: number
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: position {
+  measure: ctr {
+    label: "  CTR"
+    description: " (Total Clicks / Total Impressions) *100"
+    type: number
+    value_format: "00.00%"
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
+
+  measure: position {
     type: number
     sql: ${TABLE}."POSITION" ;;
   }
 
-  dimension: search_type {
-    type: string
-    sql: ${TABLE}."SEARCH_TYPE" ;;
-  }
-
-  dimension: site {
-    type: string
-    sql: ${TABLE}."SITE" ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
