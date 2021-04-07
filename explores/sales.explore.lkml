@@ -516,7 +516,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Owned Retail"
       type:  left_outer
       sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
-      relationship: many_to_one
+      relationship: one_to_one
     }
 
   }
@@ -644,34 +644,88 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
 
     join: customer_flags_by_order {
+      view_label: "Order History Details"
       from: email_order_flag
       type: left_outer
       relationship: one_to_one
       sql_on: LOWER(${customer_flags_by_order.email}) = LOWER(${customers.vp_customer_email});;
     }
     join: customer_flags_by_sessions {
+      view_label: "Web Sessions Details"
       from: v_customer_metrics
       type: left_outer
       relationship: one_to_one
       sql_on: ${customer_flags_by_sessions.visitor_id}::string = ${customers.visitor_id}::string ;;
     }
     join: customer_flags_by_email{
+      view_label: "Email Marketing Details"
       from: cordial_customer_activity
       type: left_outer
       relationship: one_to_one
       sql_on: LOWER(${customer_flags_by_email.email}) = LOWER(${customers.vp_customer_email}) ;;
     }
     join: customer_flags_by_audience{
+      view_label: "Tealium Audiences"
       from: tealium_visitors_view_normalized
       type: left_outer
       relationship: one_to_one
       sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
     }
     join: contact {
+      view_label: "Contact"
       from: tealium_contact
       type: left_outer
       relationship: one_to_one
       sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
+    }
+    # join: customer_order_sequence {
+    #   view_label: " Order Sequence"
+    #   from: v_customer_order_sequence
+    #   type: left_outer
+    #   relationship: one_to_many
+    #   sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_order_sequence.email}) ;;
+    # }
+    join: customer_first_order {
+      view_label: " 1st Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_first_order.email}) AND ${customer_first_order.order_sequence} = 1 ;;
+    }
+    join: customer_second_order {
+      view_label: " 2nd Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_second_order.email}) AND ${customer_second_order.order_sequence} = 2 ;;
+    }
+    join: customer_third_order {
+      view_label: " 3rd Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_third_order.email}) AND ${customer_third_order.order_sequence} = 3;;
+    }
+    join: customer_fourth_order {
+      view_label: " 4th Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fourth_order.email}) AND ${customer_fourth_order.order_sequence} = 4;;
+    }
+    join: customer_fifth_order {
+      view_label: " 5th Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fifth_order.email}) AND ${customer_fifth_order.order_sequence} = 5;;
+    }
+    join: customer_last_order {
+      view_label: " Last Order"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_last_order.email}) AND ${customer_last_order.last_order} = true;;
     }
     # join: customer_table {
     #   view_label: "Customers"
@@ -722,7 +776,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: scc {
     from: sleep_country_canada_sales
-    hidden: yes
+    #hidden: yes
     fields: [ALL_FIELDS*]
     label: "SCC Orders"
     group_label: " Orders"
@@ -735,7 +789,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
       relationship: many_to_one}
+    join: item {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
+    }
   }
+
 
   explore: return_form_entry {
     hidden: yes
@@ -942,6 +1002,8 @@ explore: sessions_in_tests {hidden: yes}
       fields: [zcta5.fulfillment_region_1]}
   }
 
+  explore: v_ct_test {hidden: yes}
+  explore: shop_comm_test {hidden: yes}
   explore: sequential_rules {hidden: yes}
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}

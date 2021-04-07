@@ -43,6 +43,7 @@ view: heap_page_views_holiday {
     type: time
     timeframes: [raw,time, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
+    hidden:yes
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.event_time) ;;
   }
@@ -54,18 +55,19 @@ view: heap_page_views_holiday {
     convert_tz: no
   }
 
-  measure: event_time_max {
+  measure: session_time_max {
     group_label: " Sync"
     hidden: no
     type: date_time_of_day
-    sql: max(${event_time_raw}) ;;
+    sql: max(${session_time_raw}) ;;
     convert_tz: no
   }
-  measure: event_date_sync {
+
+  measure: session_date_max {
     group_label: " Sync"
     hidden: no
     type: date
-    sql: max(${event_time_raw}) ;;
+    sql: max(${session_time_raw}) ;;
     convert_tz: no
   }
 
@@ -129,6 +131,7 @@ view: heap_page_views_holiday {
 
   #verify exit_pages
   measure: Sum_exit_pages {
+    hidden:yes
     type: count_distinct
     group_label: "Advanced"
     description: "Count of instances a specific page was exited from (meant to be used with 'Title' or 'Parsed Page URL'). Source: heap.session_page_flow_holiday_holiday.session_id"
@@ -137,6 +140,7 @@ view: heap_page_views_holiday {
     view_label: "Sessions" }
 
   measure: exit_rate {
+    hidden:yes
     type: number
     value_format: "0.0%"
     group_label: "Advanced"
@@ -173,7 +177,7 @@ view: heap_page_views_holiday {
   }
 
   measure: count {
-    hidden: yes
+    hidden: no
     type: count_distinct
     sql: ${session_id};;
     view_label: "Sessions" }
