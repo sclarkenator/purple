@@ -77,7 +77,7 @@ view: cc_traffic {
     select
       'Activities' as metric_type
       , a.activity_date::date as merged
-      , a.agent_name
+      , a.agent_name as agent
       , a.agent_email
       , a.activity_type as source_clean
       , a.count
@@ -125,8 +125,8 @@ view: cc_traffic {
   }
 
   dimension: agent {
-      type: string
-      sql: ${TABLE}.agent ;;
+    type: string
+    sql: ${TABLE}.agent ;;
   }
 
   dimension: agent_email {
@@ -143,12 +143,6 @@ view: cc_traffic {
   dimension: metric_type {
     type: string
     sql: ${TABLE}.metric_type ;;
-  }
-
-  dimension: purple_image {
-    type: string
-    sql: ${TABLE}.homepage_url;;
-    html: <img src="https://ok7static.oktacdn.com/fs/bco/1/fs056okwxbPfT6CfW357" /> ;;
   }
 
   measure: count {
@@ -187,7 +181,7 @@ view: cc_traffic {
     type: number
     value_format_name: percent_2
     sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
-    }
+  }
 
   measure: aov {
     label: "AOV"
