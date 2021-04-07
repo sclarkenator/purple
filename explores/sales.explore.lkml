@@ -776,7 +776,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: scc {
     from: sleep_country_canada_sales
-    hidden: yes
+    #hidden: yes
     fields: [ALL_FIELDS*]
     label: "SCC Orders"
     group_label: " Orders"
@@ -789,7 +789,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
       relationship: many_to_one}
+    join: item {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
+    }
   }
+
 
   explore: return_form_entry {
     hidden: yes
