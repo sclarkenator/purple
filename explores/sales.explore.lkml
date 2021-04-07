@@ -516,7 +516,7 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Owned Retail"
       type:  left_outer
       sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
-      relationship: many_to_one
+      relationship: one_to_one
     }
 
   }
