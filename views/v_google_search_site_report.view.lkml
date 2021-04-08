@@ -4,6 +4,7 @@ view: v_google_search_site_report {
 
   dimension_group: _fivetran_synced {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -57,13 +58,13 @@ view: v_google_search_site_report {
 
   measure: clicks {
     label: "Clicks"
-    type: number
+    type: sum
     sql: ${TABLE}."CLICKS" ;;
   }
 
   measure: impressions {
     label: "Impressions"
-    type: number
+    type: sum
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
