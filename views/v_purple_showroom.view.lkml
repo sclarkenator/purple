@@ -117,9 +117,9 @@ view: v_purple_showroom {
     sql: ${TABLE}."PURPLE_SHOWROOM_NAME" ;;
   }
 
-  dimension: showroom_sqft {
+  measure: showroom_sqft {
     view_label: "Owned Retail"
-    type: number
+    type: sum
     label: " Showroom Square Footage"
     sql: ${TABLE}.square_footage ;;
   }
