@@ -161,6 +161,7 @@ view: cc_traffic {
     type: sum
     sql: ${TABLE}.count ;;
     filters: [metric_type: "Orders"]
+    drill_fields:[period, merged_date, order_count]
   }
 
   measure: activities_count {
