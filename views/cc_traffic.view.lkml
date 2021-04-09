@@ -54,6 +54,7 @@ view: ndt_is_orders {
     explore_source: sales_order_line {
       column: created_date {}
       column: merged_name { field: agent_name.merged_name }
+      column: email_2 { field: agent_name.email_2 }
       column: source_clean { field: cc_deals.source_clean }
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
@@ -66,6 +67,7 @@ view: ndt_is_orders {
   }
   dimension: created_date { type: date }
   dimension: merged_name { type: string }
+  dimension: email_2 { type: string }
   dimension: source_clean { type:string }
   dimension: total_gross_Amt_non_rounded { type: number }
   dimension: total_units { type: number }
@@ -121,7 +123,7 @@ view: cc_traffic {
       'Orders' as metric_type
       , a.created_date::date
       , a.merged_name
-      , null as agent_email
+      , email_2
       , a.source_clean
       , a.total_orders
       , total_gross_Amt_non_rounded
