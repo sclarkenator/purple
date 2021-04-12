@@ -74,7 +74,7 @@ include: "/dashboards/**/*.dashboard"
     join: paycom_labor_hours {
       type: left_outer
       #sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date} AND ${paycom_labor_hours.punch_type}!='HR';;
-      sql_on: ${retail_base.date_date}= ${paycom_labor_hours.clocked_in_or_date} AND ${paycom_labor_hours.punch_type}!='HR' ;;
+      sql_on: ${agent_name.email_join} = ${paycom_labor_hours.email_join} AND ${retail_base.date_date}= ${paycom_labor_hours.clocked_in_or_date} AND ${paycom_labor_hours.punch_type}!='HR' ;;
       relationship: many_to_many
       fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
     }

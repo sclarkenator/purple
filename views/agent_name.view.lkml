@@ -83,6 +83,14 @@ dimension: name {
     sql: ${TABLE}.location ;;
   }
 
+  dimension: email_2 {
+    group_label: " Advanced"
+    label: "CC/ZD Agent Email"
+    description: "The name of this email. Source:incontact.agent_lkp"
+    type:  string
+    sql:  lower(nvl(${zendesk_sell.email},${TABLE}.email)) ;;
+  }
+
   dimension: email_join {
     description: "The email address for this agent"
     type:  string

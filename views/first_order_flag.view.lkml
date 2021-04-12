@@ -3,11 +3,11 @@ view: first_order_flag {
      sql:
       select
         order_id,
-        c.email,
+        email,
         system,
-        case when row_number () over (partition by c.email order by so.created) = 1 then 'NEW' else 'REPEAT' end NEW_FLG
+        row_number () over (partition by email order by so.created) order_num,
+        case when order_num = 1 then 'NEW' else 'REPEAT' end NEW_FLG
       from sales.sales_order so
-      left join analytics_stage.ns.CUSTOMERS c on c.customer_id=so.customer_id
       where (so.channel_id = 1 OR so.channel_id = 5)
       ;;
    }
@@ -26,6 +26,15 @@ view: first_order_flag {
     description: "New or repeat for this email address? Source: looker.calculation"
     type: string
     sql: ${TABLE}.new_Flg ;;
+  }
+
+  dimension: order_num {
+    label: "Order sequence number"
+    view_label: "Customer"
+    group_label: " Advanced"
+    description: "Sequence of current order Source: looker.calculation"
+    type: number
+    sql: ${TABLE}.order_num ;;
   }
   measure: new_customer {
     view_label: "Customer"

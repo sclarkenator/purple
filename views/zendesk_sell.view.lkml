@@ -72,6 +72,12 @@ view: zendesk_sell {
          end;;
   }
 
+  dimension: email {
+    type: string
+    hidden: yes
+    sql:  ${TABLE}.email ;;
+  }
+
   dimension: draft_order_name {
     type: string
     group_label: "Advanced - Sell"
