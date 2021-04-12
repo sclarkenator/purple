@@ -23,6 +23,12 @@ view: v_google_keyword_page_report {
     sql: ${TABLE}."COUNTRY" ;;
   }
 
+  dimension: keyword_type {
+    type: string
+    sql: case when ${keyword} ilike '%purple%' then 'brand'
+    else 'non-brand' end;;
+  }
+
   dimension_group: date {
     type: time
     timeframes: [
@@ -71,7 +77,7 @@ view: v_google_keyword_page_report {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
   }
-  measure: ctr {
+  measure: CTR {
     type: number
     value_format: "00.00%"
     sql: (${clicks}/NULLIF(${impressions},0));;
