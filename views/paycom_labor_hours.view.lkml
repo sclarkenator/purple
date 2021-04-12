@@ -6,7 +6,9 @@ view: paycom_labor_hours {
     primary_key: yes
     hidden: yes
     type: string
+    ##sql: ${TABLE}.employee_code||${TABLE}.clocked_in||${TABLE}.punch_type||${TABLE}.department ;;
     sql: ${TABLE}.employee_code||${TABLE}.clocked_in||${TABLE}.punch_type||${TABLE}.department ;;
+
   }
   dimension: email_join {
     hidden: yes

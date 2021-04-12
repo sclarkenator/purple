@@ -117,6 +117,13 @@ view: v_purple_showroom {
     sql: ${TABLE}."PURPLE_SHOWROOM_NAME" ;;
   }
 
+  measure: showroom_sqft {
+    view_label: "Owned Retail"
+    type: sum
+    label: " Showroom Square Footage"
+    sql: ${TABLE}.square_footage ;;
+  }
+
   dimension: shopify_store_id {
     type: string
     hidden:  yes

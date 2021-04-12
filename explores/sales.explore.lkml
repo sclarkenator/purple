@@ -356,6 +356,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${zendesk_sell.deal_id}=${zendesk_sell_deal.deal_id};;
       relationship: one_to_one
     }
+    join: cc_deals {
+      view_label: "Zendesk"
+      type: left_outer
+      relationship: one_to_one
+      fields: [cc_deals.order_id, cc_deals.source_clean]
+      sql_on: ${cc_deals.order_id} = ${sales_order.order_id} ;;
+    }
     join: warranty_original_information {
       view_label: "Warranties"
       type: left_outer

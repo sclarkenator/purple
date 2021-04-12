@@ -249,6 +249,7 @@ explore: email_mymove_contact {
 
   explore: v_fb_adset_freq_weekly {hidden: yes}
   explore: v_fb_all {hidden: yes}
+  explore: v_google_search_site_report {hidden: yes}
   explore: fb_attribution { hidden: yes}
   explore: fb_attribution_v2 { hidden: yes}
   explore: roas_pdt { hidden: yes group_label: "Marketing"}

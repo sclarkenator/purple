@@ -78,6 +78,7 @@ view: cc_deals {
 
   dimension: order_id {
     type:  string
+    hidden: yes
     sql: ${TABLE}.order_id ;;
   }
 
