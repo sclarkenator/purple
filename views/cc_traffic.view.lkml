@@ -46,28 +46,53 @@ view: ndt_deals {
   dimension: count { type: number }
 }
 ######################################################
-#   Deals
+#   Orders
 #   https://purple.looker.com/dashboards-next/4155
 ######################################################
 view: ndt_is_orders {
   derived_table: {
-    explore_source: cc_deals {
-      column: created_date { field: sales_order_line_base.created_date }
-      column: agent {}
-      column: agent_email {}
-      column: source_clean {}
-      column: count {}
-      column: total_gross_Amt_non_rounded { field: sales_order_line_base.total_gross_Amt_non_rounded }
-      filters: { field: sales_order_line_base.created_date value: "2 years"  }
+    explore_source: sales_order_line {
+      column: created_date {}
+      column: merged_name { field: agent_name.merged_name }
+      column: email_2 { field: agent_name.email_2 }
+      column: source_clean { field: cc_deals.source_clean }
+      column: total_gross_Amt_non_rounded {}
+      column: total_units {}
+      column: total_orders { field: sales_order.total_orders }
+      filters: { field: sales_order.channel value: "DTC" }
+      filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
+      filters: { field: zendesk_sell.inside_sales_order value: "Yes" }
+      filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
   dimension: created_date { type: date }
-  dimension: agent {}
-  dimension: agent_email {}
-  dimension: source_clean {}
-  dimension: count { type: number }
+  dimension: merged_name { type: string }
+  dimension: email_2 { type: string }
+  dimension: source_clean { type:string }
   dimension: total_gross_Amt_non_rounded { type: number }
+  dimension: total_units { type: number }
+  dimension: total_orders { type: number }
 }
+
+# view: ndt_is_orders {
+#   derived_table: {
+#     explore_source: cc_deals {
+#       column: created_date { field: sales_order_line_base.created_date }
+#       column: agent {}
+#       column: agent_email {}
+#       column: source_clean {}
+#       column: count {}
+#       column: total_gross_Amt_non_rounded { field: sales_order_line_base.total_gross_Amt_non_rounded }
+#       filters: { field: sales_order_line_base.created_date value: "2 years"  }
+#     }
+#   }
+#   dimension: created_date { type: date }
+#   dimension: agent {}
+#   dimension: agent_email {}
+#   dimension: source_clean {}
+#   dimension: count { type: number }
+#   dimension: total_gross_Amt_non_rounded { type: number }
+# }
 ######################################################
 #   FINAL TABLE
 ######################################################
@@ -97,10 +122,10 @@ view: cc_traffic {
     select
       'Orders' as metric_type
       , a.created_date::date
-      , a.agent
-      , a.agent_email
+      , a.merged_name
+      , email_2
       , a.source_clean
-      , a.count
+      , a.total_orders
       , total_gross_Amt_non_rounded
     from ${ndt_is_orders.SQL_TABLE_NAME} a
     ;;
