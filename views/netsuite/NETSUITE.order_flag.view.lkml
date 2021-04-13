@@ -138,9 +138,16 @@ view: order_flag {
      ,case when kidsheets > 0 then 1 else 0 end kid_sheets_flg
      ,case when lifeline > 0 then 1 else 0 end lifeline_flg
      ,case when sj_pajamas > 0 then 1 else 0 end sj_pajama_flg
-    ,case when sj_pajamas > 1 then 1 else 0 end sj_pajama_two_flg
+     ,case when sj_pajamas > 1 then 1 else 0 end sj_pajama_two_flg
      ,case when bmsm > 1 then bmsm else 0 end bmsm_flg
-    ,case when mini_bed_squishy > 0 then 1 else 0 end mini_bed_squishy_flg
+     ,case when mini_bed_squishy > 0 then 1 else 0 end mini_bed_squishy_flg
+     ,case when nvl(hybrid2_flg,0)+ nvl(hybrid3_flg,0) + nvl(hybrid4_flg,0)+nvl(purple_mattres_flg,0)+nvl(kid_bed_flg,0) > 1 then 'muliple models'
+            when purple_mattres_flg = 1 then 'TPM'
+            when hybrid2_flg = 1 then 'Hybrid'
+            when hybrid3_flg = 1 then 'Premier 3'
+            when hybrid4_flg = 1 then 'Premier 4'
+            when kid_bed_flg = 1 then 'Kid bed'
+            else 'none' end mattress_order_model
 
     FROM(
       select sol.order_id
@@ -254,6 +261,14 @@ view: order_flag {
     hidden: yes
     type:  number
     sql: ${TABLE}.order_id ;; }
+
+
+  dimension: mattress_order_model {
+    group_label: "    * Orders has:"
+    description: "Use in conjunction with mattress order flag. When multiple mattress models are purchased on a single order, they are bucketed as 'multiple models'."
+    label: "Mattress order model"
+    sql: ${TABLE}.mattress_order_model ;;
+  }
 
   measure: mattress_orders {
     group_label: "Total Orders with:"
