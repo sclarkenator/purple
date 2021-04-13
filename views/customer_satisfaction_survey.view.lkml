@@ -187,15 +187,6 @@ view: customer_satisfaction_survey {
     sql: ${5_star_rating}/${star_rating_count}*100;;
   }
 
-  measure: top_box_MTD {
-    label: "Top Box"
-    description: "CSAT score of 5 / total CSAT scores. Source: stella_connect.customer_satisfaction_survey"
-    type: average
-    value_format: "0.00\%"
-    sql: ${5_star_rating}/${star_rating_count}*100;;
-    filters: [response_received_date: "This Month"]
-  }
-
   dimension: star_rating_comment {
     type: string
     sql: ${TABLE}."STAR_RATING_COMMENT" ;;
