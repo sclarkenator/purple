@@ -68,6 +68,8 @@ view: day_aggregations_wholesale_sales {
       column: created_date {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
+      column: mattress_units {}
+
       filters: { field: sales_order.channel value: "Wholesale"}
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
@@ -75,9 +77,12 @@ view: day_aggregations_wholesale_sales {
       #filters: { field: sales_order_line.created_date value: "2 years" }
     }
   }
+
   dimension: created_date { type: date }
   measure: total_gross_Amt_non_rounded { type: sum}
   measure: total_units {type: sum}
+  measure: mattress_units {type: sum}
+
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${created_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
@@ -445,6 +450,7 @@ view: day_aggregations {
         , dtc.insidesales_orders as is_orders
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
+        , wholesale.mattress_units as wholesale_mattress_units
         , retail.total_gross_Amt_non_rounded as retail_amount
         , retail.total_units as retail_units
         , forecast.total_amount as forecast_total_amount
@@ -730,6 +736,13 @@ view: day_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.wholesale_units;; }
+
+  measure: wholesale_mattress_units {
+    label: "Wholesale Mattress Units"
+    description: "Total wholesale units aggregated to the day (written orders)."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.wholesale_mattress_units;; }
 
   measure: retail_amount {
     label: "Retail Amount"
