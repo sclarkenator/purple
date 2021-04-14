@@ -783,7 +783,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: scc {
     from: sleep_country_canada_sales
-    #hidden: yes
+    hidden: yes
     fields: [ALL_FIELDS*]
     label: "SCC Orders"
     group_label: " Orders"
