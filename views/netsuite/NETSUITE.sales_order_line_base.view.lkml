@@ -482,6 +482,30 @@ view: sales_order_line_base {
           else 'Other' end  ;;
   }
 
+  dimension: liquid_date {
+    group_label: "Dynamic Date"
+    label: "z - liquid date"
+    description: "If > 365 days in the look, than month, if > 30 than week, else day"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start created_date %} as date),
+                cast({% date_end created_date  %} as date)
+                ) >365
+      THEN cast(${created_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start created_date %} as date),
+                cast({% date_end created_date  %} as date)
+                ) >30
+      THEN cast(${created_week} as varchar)
+      else ${created_date}
+      END
+    ;;
+  }
   dimension: Shipping_Addresee{
     hidden:  yes
     description: "The name on the shipping address. Source: netsuite.sales_order_line"
