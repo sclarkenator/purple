@@ -658,6 +658,7 @@ view: day_aggregations {
 
   measure: dtc_amount {
     label: "DTC Amount"
+    group_label: "Sales - DTC"
     description: "Total DTC sales aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -665,6 +666,7 @@ view: day_aggregations {
 
   measure: dtc_amount_k {
     label: "DTC Amount ($.k)"
+    group_label: "Sales - DTC"
     description: "Total DTC sales aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -672,6 +674,7 @@ view: day_aggregations {
 
   measure: dtc_amount_before_today{
     label: "DTC Amount Before T"
+    group_label: "Sales - DTC"
     hidden: yes
     description: "Total DTC sales aggregated to the day."
     type: sum
@@ -681,6 +684,7 @@ view: day_aggregations {
 
   measure: dtc_amount_before_today_null{
     label: "DTC Amount Before Today"
+    group_label: "Sales - DTC"
     description: "Total DTC sales aggregated to the day."
     type: number
     value_format: "$#,##0"
@@ -688,6 +692,7 @@ view: day_aggregations {
 
   measure: dtc_units {
     label: "DTC Units"
+    group_label: "Sales - DTC"
     description: "Total DTC units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -695,6 +700,7 @@ view: day_aggregations {
 
   measure: wholesale_amount {
     label: "Wholesale Amount"
+    group_label: "Sales - Wholesale"
     description: "Total wholesale sales aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -702,6 +708,7 @@ view: day_aggregations {
 
   measure: scc_net_sales {
     label: "Sleep Country Canada Sales"
+    group_label: "Sales - Wholesale"
     description: "Total SCC sales aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -709,6 +716,7 @@ view: day_aggregations {
 
   measure: wholesale_amount_k {
     label: "Wholesale Amount ($.k)"
+    group_label: "Sales - Wholesale"
     description: "Total wholesale sales aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -716,6 +724,7 @@ view: day_aggregations {
 
   measure: wholesale_amount_before_today{
     label: "Wholesale Amount Before T"
+    group_label: "Sales - Wholesale"
     hidden: yes
     description: "Total Wholesale sales aggregated to the day."
     type: sum
@@ -725,6 +734,7 @@ view: day_aggregations {
 
   measure: wholesale_amount_before_today_null{
     label: "Wholesale Amount Before Today"
+    group_label: "Sales - Wholesale"
     description: "Total Wholesale sales aggregated to the day."
     type: number
     value_format: "$#,##0"
@@ -732,6 +742,7 @@ view: day_aggregations {
 
   measure: wholesale_units {
     label: "Wholesale Units"
+    group_label: "Sales - Wholesale"
     description: "Total wholesale units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -739,6 +750,7 @@ view: day_aggregations {
 
   measure: wholesale_mattress_units {
     label: "Wholesale Mattress Units"
+    group_label: "Sales - Wholesale"
     description: "Total wholesale units aggregated to the day (written orders)."
     type: sum
     value_format: "#,##0"
@@ -746,6 +758,7 @@ view: day_aggregations {
 
   measure: retail_amount {
     label: "Retail Amount"
+    group_label: "Sales - Retail"
     description: "Total Retail sales aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -753,6 +766,7 @@ view: day_aggregations {
 
   measure: retail_amount_before_today{
     label: "Retail Amount Before T"
+    group_label: "Sales - Retail"
     hidden: yes
     description: "Total Retail sales aggregated to the day."
     type: sum
@@ -762,6 +776,7 @@ view: day_aggregations {
 
   measure: retail_amount_before_today_null{
     label: "Retail Amount Before Today"
+    group_label: "Sales - Retail"
     description: "Total Retail sales aggregated to the day."
     type: number
     value_format: "$#,##0"
@@ -769,6 +784,7 @@ view: day_aggregations {
 
   measure: retail_units {
     label: "Retail Units"
+    group_label: "Sales - Retail"
     description: "Total Retail units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -776,6 +792,7 @@ view: day_aggregations {
 
   measure: forecast_total_amount {
     label: "Forecast Amount"
+    group_label: "Forecast"
     description: "Total forecast amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -783,6 +800,7 @@ view: day_aggregations {
 
   measure: forecast_total_units {
     label: "Forecast Units"
+    group_label: "Forecast"
     description: "Total forecast units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -790,6 +808,7 @@ view: day_aggregations {
 
   measure: forecast_dtc_amount {
     label: "Forecast DTC Amount"
+    group_label: "Forecast"
     description: "Total DTC forecast amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -797,6 +816,7 @@ view: day_aggregations {
 
   measure: forecast_dtc_units {
     label: "Forecast DTC Units"
+    group_label: "Forecast"
     description: "Total DTC forecast units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -804,6 +824,7 @@ view: day_aggregations {
 
   measure: forecast_wholesale_amount {
     label: "Forecast Wholesale Amount"
+    group_label: "Forecast"
     description: "Total wholesale forecast amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -811,6 +832,7 @@ view: day_aggregations {
 
   measure: forecast_wholesale_units {
     label: "Forecast Wholesale Units"
+    group_label: "Forecast"
     description: "Total wholesale forecast units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -818,6 +840,7 @@ view: day_aggregations {
 
   measure: forecast_retail_amount {
     label: "Forecast Retail Amount"
+    group_label: "Forecast"
     description: "Total Retail forecast amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -825,6 +848,7 @@ view: day_aggregations {
 
   measure: forecast_retail_units {
     label: "Forecast Retail Units"
+    group_label: "Forecast"
     description: "Total Retail forecast units aggregated to the day."
     type: sum
     value_format: "#,##0"
@@ -832,6 +856,7 @@ view: day_aggregations {
 
   measure: adspend {
     label: "Adspend"
+    group_label: "Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
     value_format: "$#,##0"
@@ -839,6 +864,7 @@ view: day_aggregations {
 
   measure: adspend_k {
     label: "Adspend ($K)"
+    group_label: "Adspend"
     description: "Total adspend aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -846,6 +872,7 @@ view: day_aggregations {
 
   measure: target_dtc_amount {
     label: "Plan DTC Amount"
+    group_label: "Plan"
     description: "Plan DTC target from finance team, amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -853,6 +880,7 @@ view: day_aggregations {
 
   measure: target_retail_amount {
     label: "Plan Retail Amount"
+    group_label: "Plan"
     description: "Total Retail plan from finance team, amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -860,6 +888,7 @@ view: day_aggregations {
 
   measure: target_wholesale_amount {
     label: "Plan Wholesale Amount"
+    group_label: "Plan"
     description: "Plan wholesale target from finance amount aggregated to the day."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -868,6 +897,7 @@ view: day_aggregations {
 
   measure: target_insidesales_amount {
     label: "Plan Insidesales Amount"
+    group_label: "Plan"
     description: "Ramping percentage of DTC plan.  Going from 5% to 15% by Dec 2020."
     type: sum
     value_format: "$#,##0,\" K\""
@@ -875,13 +905,14 @@ view: day_aggregations {
 
   measure: total_target_amount {
     label: "Total Plan Amount"
+    group_label: "Plan"
     description: "Total plan from finance team amount aggregated to the day. Retail, DTC, & Wholesale"
     type: number
     value_format: "$#,##0,\" K\""
     sql: ${target_retail_amount}+${target_dtc_amount}+${target_wholesale_amount};; }
 
   measure: total_gross_sales {
-    label: "Total Gross Sales"
+    label: " Total Gross Sales"
     description: "Total Gross Sales. Retail, DTC, & Wholesale"
     type: number
     value_format: "$#,##0,\" K\""
@@ -889,30 +920,35 @@ view: day_aggregations {
 
   measure: dtc_nontrial_returns {
     label: "DTC Non-Trial Returns"
+    group_label: "Sales - DTC"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_nontrial_returns;; }
 
   measure: dtc_trial_returns {
     label: "DTC Trial Returns"
+    group_label: "Sales - DTC"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_trial_returns;; }
 
   measure: dtc_refunds {
     label: "DTC Refunds"
+    group_label: "Sales - DTC"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.dtc_refunds;; }
 
   measure: adspend_target {
     label: "Goal Adspend"
+    group_label: "Adspend"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_adspend_target;; }
 
   measure: total_unique_orders {
     label: "DTC Orders"
+    group_label: "Sales - DTC"
     description: "Count of Distinct Order for DTC"
     type: sum
     value_format: "#,##0"
@@ -920,25 +956,29 @@ view: day_aggregations {
 
  measure: unique_mattress_orders {
    label: "DTC Mattress Orders"
-  description: "Total Unique DTC Mattress Orders"
+   group_label: "Sales - DTC"
+   description: "Total Unique DTC Mattress Orders"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.unique_mattress_orders ;; }
 
  measure: sessions_count {
    label: "Sessions"
+   group_label: "Site Traffic"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.sessions_count ;; }
 
  measure: non_bounced_sessions {
    label: "Sessions -  Non-Bounced"
+   group_label: "Site Traffic"
    type: sum
    value_format: "#,##0"
    sql: ${TABLE}.non_bounced_sessions ;; }
 
   measure: cvr {
     label: "CVR - All Sessions"
+    group_label: "Site Traffic"
     description: "% of all Sessions that resulted in an order. (Total DTC Orders / Sessions) Source: looker.calculation"
     type: number
     value_format_name: percent_2
@@ -946,6 +986,7 @@ view: day_aggregations {
 
   measure: q_cvr {
     label: "CVR - Qualified Sessions"
+    group_label: "Site Traffic"
     description: "% of all Non-bounced Sessions that resulted in an order. (Total DTC Orders / Non-bounced Sessions) Source: looker.calculation"
     type: number
     value_format_name: percent_2
@@ -953,18 +994,21 @@ view: day_aggregations {
 
   measure: production_target {
     label: "Goal Mattress Production"
+    group_label: "Production"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.production_target ;; }
 
   measure: production_mattresses {
     label: "Mattress Production"
+    group_label: "Production"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.production_mattresses ;; }
 
   measure: roas_sales {
     label: "ROAs - Total Sales"
+    group_label: "Adspend"
     description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
     #type: number
     type:  sum
@@ -975,6 +1019,7 @@ view: day_aggregations {
 
   measure: roas_sales_calc {
     label: "ROAs - Total Sales (test)"
+    group_label: "Adspend"
     description: "Calculations done in lookML not sql"
     type: number
     value_format: "$#,##0"
@@ -983,6 +1028,7 @@ view: day_aggregations {
 
   measure: roas {
     label: "ROAs - Full"
+    group_label: "Adspend"
     description: "Retun on Adspend (total roas salse/adspend)"
     type: number
     value_format: "$#,##0.00"
@@ -991,6 +1037,7 @@ view: day_aggregations {
 
   measure: dtc_roas {
     label: "ROAs - DTC"
+    group_label: "Adspend"
     description: "Retun on Adspend (total roas salse/adspend)"
     type: number
     value_format: "$#,##0.00"
@@ -999,6 +1046,7 @@ view: day_aggregations {
 
   measure: target_roas_sales {
     label: "Plan ROAs Sales"
+    group_label: "Adspend"
     description: "DTC Plan + Retail Plan + 50% of Wholesale Plan"
     type: number
     value_format: "$#,##0.00"
@@ -1007,6 +1055,7 @@ view: day_aggregations {
 
   measure: target_roas {
     label: "Plan ROAs"
+    group_label: "Adspend"
     description: "Plan Target + Plan Target + 50% of Wholesale Plan /Adspend Goal"
     type: number
     value_format: "$#,##0.00"
@@ -1015,6 +1064,7 @@ view: day_aggregations {
 
   measure: is_sales {
     label: "IS Inside Sales ($)"
+    group_label: "Inside Sales"
     description: "Gross Sales from Inside Sales Team (Does not include customer care)"
     type: sum
     value_format: "$#,##0.00"
@@ -1023,6 +1073,7 @@ view: day_aggregations {
 
   measure: cc_sales {
     label: "IS Customer Care Sales ($)"
+    group_label: "Inside Sales"
     description: "Gross Sales from Customer Care Team"
     type: sum
     value_format: "$#,##0.00"
@@ -1031,6 +1082,7 @@ view: day_aggregations {
 
   measure: is_total_sales {
     label: "IS - Total Sales ($)"
+    group_label: "Inside Sales"
     description: "Gross Sales from Customer Care Team"
     type: sum
     value_format: "$#,##0.00"
@@ -1039,6 +1091,7 @@ view: day_aggregations {
 
   measure: is_orders {
     label: "IS Inside Orders (#)"
+    group_label: "Inside Sales"
     description: "Gross Sales from Inside Sales Team (Does not include customer care)"
     type: sum
     value_format: "#,##0"
@@ -1047,6 +1100,7 @@ view: day_aggregations {
 
   measure: cc_orders {
     label: "IS Customer Care Orders (#)"
+    group_label: "Inside Sales"
     description: "Gross Sales from Customer Care Team"
     type: sum
     value_format: "#,##0"
@@ -1055,6 +1109,7 @@ view: day_aggregations {
 
   measure: is_total_orders {
     label: "IS - Total Orders (#)"
+    group_label: "Inside Sales"
     description: "Total Ordrs from Customer Care and Inside Sales Team"
     type: sum
     value_format: "#,##0"
@@ -1063,6 +1118,7 @@ view: day_aggregations {
 
   measure: is_deals {
     label: "IS SQOs (#)"
+    group_label: "Inside Sales"
     description: "Deals created in zendesk sell"
     type: sum
     value_format: "#,##0"
@@ -1071,6 +1127,7 @@ view: day_aggregations {
 
   measure: is_cohort_orders {
     label: "IS Cohort Orders (#)"
+    group_label: "Inside Sales"
     description: "Netsuite orders converted from deals created in zendesk sell on the zendesk deal date"
     type: sum
     value_format: "#,##0"
@@ -1079,6 +1136,7 @@ view: day_aggregations {
 
   measure: is_activities {
     label: "IS Activities (#)"
+    group_label: "Inside Sales"
     description: "Total activities from calls, chats and emails"
     type: sum
     value_format: "#,##0"
@@ -1087,6 +1145,7 @@ view: day_aggregations {
 
   measure: is_calls {
     label: "IS Calls (#)"
+    group_label: "Inside Sales"
     description: "Total calls from RPT skills report download in incontact"
     type: sum
     value_format: "#,##0"
@@ -1095,6 +1154,7 @@ view: day_aggregations {
 
   measure: is_chats {
     label: "IS Chats (#)"
+    group_label: "Inside Sales"
     description: "Total chats from zendesk tickets"
     type: sum
     value_format: "#,##0"
@@ -1103,6 +1163,7 @@ view: day_aggregations {
 
   measure: is_emails {
     label: "IS Emails (#)"
+    group_label: "Inside Sales"
     description: "Total emails from zendesk tickets"
     type: sum
     value_format: "#,##0"
@@ -1111,6 +1172,7 @@ view: day_aggregations {
 
   measure: cvr_is {
     label: "IS Conversion Rate"
+    group_label: "Inside Sales"
     description: "% of all IS actvities over IS orders. Source: looker.calculation"
     type: number
     value_format_name: percent_2
@@ -1118,6 +1180,7 @@ view: day_aggregations {
 
   measure: retail_traffic_showroom_entries{
     label: "Retail Showroom Entries"
+    group_label: "Sales - Retail"
     description: "Total showroom entry count. Data available starting Feb 2021"
     type: sum
     value_format: "#,##0"
@@ -1126,6 +1189,7 @@ view: day_aggregations {
 
   measure: retail_traffic_showroom_orders{
     label: "Retail Order Count"
+    group_label: "Sales - Retail"
     description: "Count of Retail Showroom Orders (excludes chat/draft). Data available starting Feb 2021"
     type: sum
     value_format: "#,##0"
@@ -1134,6 +1198,7 @@ view: day_aggregations {
 
   measure: retail_conversion {
     label: "Retail Conversion Rate"
+    group_label: "Sales - Retail"
     description: "% of all showroom entries that resulted in an order (excludes chat/draft orders). Data available starting Feb 2021  Source: looker.calculation"
     type: number
     value_format_name: percent_2
