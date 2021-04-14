@@ -223,6 +223,31 @@ view: sessions {
     type: string
     sql: ${TABLE}.search_keyword ;; }
 
+  dimension: liquid_date {
+    group_label: "Dynamic Date"
+    label: "z - liquid date"
+    description: "If > 365 days in the look, than month, if > 30 than week, else day"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start time_date %} as date),
+                cast({% date_end time_date  %} as date)
+                ) >365
+      THEN cast(${time_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start time_date %} as date),
+                cast({% date_end time_date  %} as date)
+                ) >30
+      THEN cast(${time_week} as varchar)
+      else ${time_date}
+      END
+    ;;
+  }
+
   dimension_group: time {
     ### Scott Clark 1/13/21: Deleted week_of_year. need to reverse this last week of 2021
     group_label: "  Session Time"
