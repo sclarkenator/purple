@@ -417,6 +417,13 @@ include: "/dashboards/**/*.dashboard"
 
   explore: bill_of_materials {
     hidden: yes
+    join: bill_of_materials_p {
+      from: bill_of_materials
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${bill_of_materials_p.child_id} = ${bill_of_materials.parent_id} and ${bill_of_materials.component_id} = ${bill_of_materials_p.component_id} ;;
+      view_label: "Parent Item Quantity"
+    }
     join: p_item {
       from: item
       view_label: "Parent Item"
