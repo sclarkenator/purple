@@ -9,7 +9,8 @@ view: v_ct_test {
       hour,
       time,
       date,
-      week
+      week,
+      raw
     ]
     sql: ${TABLE}."HOUR" ;;
   }
@@ -49,17 +50,22 @@ view: v_ct_test {
     sql: ${orders}/nullif(${sessions},0) ;;
   }
 
-  measure: refresh_time {
-    label: "Refresh time"
+  measure: session_time_max {
+    group_label: " Sync"
+    hidden: no
     type: date_time_of_day
-    sql: max(${TABLE}.refresh_time) ;;
+    sql: max(${hour_raw}) ;;
+    convert_tz: no
   }
 
-  measure: refresh_date {
-    label: "Refresh date"
-    type: date_time
-    sql: max(${TABLE}.refresh_time) ;;
+  measure: session_date_max {
+    group_label: " Sync"
+    hidden: no
+    type: date
+    sql: max(${hour_raw}) ;;
+    convert_tz: no
   }
+
   dimension: variant {
     label: "Checkout variant"
     type: string

@@ -1447,6 +1447,9 @@ view: sales_order_line {
     sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
       when ${carrier} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
       when ${carrier} = 'Carry Out' then ${created_raw}
+      when ${carrier} = 'Ryder' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier} = 'NEHDS' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier} = 'Purple' then ${N_3PL_TRANSMITTED_date}
       else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
   }
 

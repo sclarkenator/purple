@@ -63,6 +63,7 @@ view: ndt_is_orders {
       filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
       filters: { field: zendesk_sell.inside_sales_order value: "Yes" }
       filters: { field: sales_order_line.created_date value: "2 years" }
+      filters: { field: sales_order.gross_amt value: ">0"}
     }
   }
   dimension: created_date { type: date }
@@ -186,6 +187,7 @@ view: cc_traffic {
     type: sum
     sql: ${TABLE}.count ;;
     filters: [metric_type: "Orders"]
+    drill_fields:[period, merged_date, order_count]
   }
 
   measure: activities_count {

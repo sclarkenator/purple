@@ -44,7 +44,7 @@ view: customer_satisfaction_survey {
   }
 
   dimension: agent_id {
-    label: "Agent Incontact ID"
+    label: "Agent InContact ID"
     description: "Agent Incontact ID. Source: stella_connect.customer_satisfaction_survey"
     type: number
     sql: ${TABLE}."EMPLOYEE_ID" ;;
@@ -184,7 +184,7 @@ view: customer_satisfaction_survey {
     description: "CSAT score of 5 / total CSAT scores. Source: stella_connect.customer_satisfaction_survey"
     type: number
     value_format: "0.00\%"
-    sql: ${5_star_rating}/${star_rating_count}*100;;
+    sql: ${5_star_rating}/nullif(${star_rating_count}, 0)*100;;
   }
 
   dimension: star_rating_comment {
