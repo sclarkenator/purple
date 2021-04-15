@@ -816,7 +816,7 @@ dimension: medium_source_type {
     sql: ${adspend}/nullif(${influenced},0);;
   }
 
-  parameter: breakdown {type: string
+  parameter: breakdowns {type: string
     allowed_value: { value: "Medium" }
     allowed_value: { value: "Source" }
     allowed_value: { value: "Type" }
@@ -825,7 +825,7 @@ dimension: medium_source_type {
   }
 
   dimension: breakdown_types {
-    label_from_parameter: breakdown
+    label_from_parameter: breakdowns
     sql:
             CASE
              WHEN {% parameter breakdown %} = 'Medium' THEN ${medium_clean_new}
