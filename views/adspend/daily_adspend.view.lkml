@@ -153,16 +153,13 @@ view: daily_adspend {
 
   measure: adspend_no_calc {
     label: "Total Adspend - No Calc ($)"
+    hidden: yes
     group_label: "Advanced"
     description: "Total adspend for selected channels (includes Agency cost) but without calculations"
     type: sum
     value_format:  "$#,##0"
     #agency cost + adspend no agency
-    sql:  case when ${TABLE}.platform in ('FB/IG') and (${TABLE}.date::date >= '2019-06-04'and ${TABLE}.date::date <= '2020-12-11') then ${TABLE}.spend*1.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' AND ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
-      when (${TABLE}.source ilike ('%outub%')and ${TABLE}.platform NOT in ('DV360')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*1.1
-      else ${TABLE}.spend
-      end ;; }
+    sql:  ${TABLE}.SPEND + COALESCE(${TABLE}.AGENCY_COST,0);; }
 
   # measure: adspend_current_period{
   #   label: "Total Adspend ($k) current period"
@@ -225,24 +222,49 @@ view: daily_adspend {
   #   filters: [is_comparison_period: "yes"]
   # }
 
+  # measure: agency_cost_old {
+  #   label: "  Agency Cost ($)"
+  #   group_label: "Advanced"
+  #   description: "Total cost to Agency Within and Modus for selected channels"
+  #   type: sum
+  #   value_format: "$#,##0"
+  #   sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
+  #     when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
+  #     when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
+  #     -- when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05 -- MAPPED TOTAL MEDIA COST 3/1
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
+  #     when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
+  #     when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+  #     OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
+  #     end ;;
+  #   }
+
   measure: agency_cost {
     label: "  Agency Cost ($)"
     group_label: "Advanced"
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case when ${TABLE}.platform in ('FB/IG') and ${TABLE}.date::date >= '2019-06-04' and ${TABLE}.date::date < '2020-11-30' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('GOOGLE') and ${medium} = 'display' and ${TABLE}.date::date >= '2019-06-14' and ${TABLE}.date::date <= '2020-07-31' then ${TABLE}.spend*.1
-      when (${TABLE}.source ilike ('%outub%') and ${TABLE}.platform in ('GOOGLE')) and ${TABLE}.date::date >= '2019-06-14' then ${TABLE}.spend*.1
-      -- when ${TABLE}.platform in ('DV360') then ${TABLE}.spend*.05 -- MAPPED TOTAL MEDIA COST 3/1
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01'and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.06
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.085
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.1
-      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
-      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.06
-      end ;;
+    sql: ${TABLE}.AGENCY_COST;;
     }
 
+
+  # measure: adspend_no_agency_old {
+  #   label: "Adspend without Agency Cost ($)"
+  #   group_label: "Advanced"
+  #   description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
+  #   type: sum
+  #   value_format: "$#,##0"
+  #   sql: case
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
+  #     when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
+  #     when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
+  #     when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
+  #     OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
+  #     else ${TABLE}.spend
+  #     end ;;
+  # }
 
   measure: adspend_no_agency {
     label: "Adspend without Agency Cost ($)"
@@ -250,14 +272,7 @@ view: daily_adspend {
     description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
     type: sum
     value_format: "$#,##0"
-    sql: case
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2018-10-01' and ${TABLE}.date::date < '2020-03-01' then ${TABLE}.spend*.94
-      when ${TABLE}.source in ('TV') and ${TABLE}.date::date >= '2020-03-01' then ${TABLE}.spend*.915
-      when ${TABLE}.source in ('CTV') and ${TABLE}.date::date > '2020-03-01' then ${TABLE}.spend*.9
-      when ${TABLE}.platform in ('RADIO','PODCAST','STREAMING','CINEMA')
-      OR (${TABLE}.platform in ('YOUTUBE') AND ${TABLE}.source in ('AUDIO')) and ${TABLE}.date::date >= '2019-08-01' then ${TABLE}.spend*.94
-      else ${TABLE}.spend
-      end ;;
+    sql: ${TABLE}.SPEND;;
   }
 
   measure: avg_adspend {
@@ -580,6 +595,7 @@ dimension: spend_platform {
   ## For _period_comparison
   measure: adspend_current_period {
     label: "Total Adspend Current Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend for selected channels (includes Agency cost)"
     type: number
@@ -588,6 +604,7 @@ dimension: spend_platform {
 
   measure: agency_cost_current_period {
     label: "  Agency Cost ($) Current Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
@@ -607,6 +624,7 @@ dimension: spend_platform {
 
   measure: adspend_no_agency_current_period {
     label: "Adspend without Agency Cost ($) Current Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
     type: sum
@@ -623,6 +641,7 @@ dimension: spend_platform {
 
   measure: adspend_no_calc_current_period {
     label: "Total Adspend - No Calc ($) Current Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend for selected channels (includes Agency cost) but without calculations"
     type: sum
@@ -638,6 +657,7 @@ dimension: spend_platform {
 
   measure: adspend_comparison_period {
     label: "Total Adspend Comparison Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend for selected channels (includes Agency cost)"
     type: number
@@ -647,6 +667,7 @@ dimension: spend_platform {
 
   measure: agency_cost_comparison_period {
     label: "  Agency Cost ($) Comparison Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total cost to Agency Within and Modus for selected channels"
     type: sum
@@ -664,6 +685,7 @@ dimension: spend_platform {
 
   measure: adspend_no_agency_comparison_period {
     label: "Adspend without Agency Cost ($) Comparison Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend EXCLUDING Agency Within and Modus agency fees for selected channels"
     type: sum
@@ -680,6 +702,7 @@ dimension: spend_platform {
 
   measure: adspend_no_calc_comparison_period {
     label: "Total Adspend - No Calc ($) Comparison Period"
+    hidden: yes
     group_label: "Period Comparison"
     description: "Total adspend for selected channels (includes Agency cost) but without calculations"
     type: sum
