@@ -659,6 +659,17 @@ view: roas_pdt {
       ;;
   }
 
+dimension: medium_source {
+  label: "Medium/Source"
+  type: string
+  sql: concat(${medium_clean_new},${platform_clean}) ;;
+}
+
+dimension: medium_source_type {
+    label: "Medium/Source"
+    type: string
+    sql: concat(${medium_clean_new},${platform_clean},${campaign_type_clean}) ;;
+  }
 
   measure: adspend {
     label: "Adspend ($k)"
@@ -803,5 +814,26 @@ view: roas_pdt {
     value_format: "$#,##0.00"
     type: number
     sql: ${adspend}/nullif(${influenced},0);;
+  }
+
+  parameter: breakdown {type: string
+    allowed_value: { value: "Medium" }
+    allowed_value: { value: "Source" }
+    allowed_value: { value: "Type" }
+    allowed_value: { value: "Medium/Source"}
+    allowed_value: { value: "Medium/Source/Type"}
+  }
+
+  dimension: breakdown_types {
+    label_from_parameter: breakdown
+    sql:
+            CASE
+             WHEN {% parameter breakdown %} = 'Medium' THEN ${medium_clean_new}
+             WHEN {% parameter breakdown %} = 'Source' THEN ${platform_clean}
+             WHEN {% parameter breakdown %} = 'Type' THEN ${campaign_type_clean}
+             WHEN {% parameter breakdown %} = 'Medium/Source' THEN ${medium_source}
+             WHEN {% parameter breakdown %} = 'Medium/Source/Type' THEN ${medium_source_type}
+             ELSE NULL
+            END ;;
   }
 }
