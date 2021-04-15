@@ -26,12 +26,7 @@ view: item {
     group_label: "Advanced"
     description: "What stage is this item in production?. Source:looker.calculation"
     hidden:  no
-    sql:
-    case when
-    --split king mattress kits and split king powerbase kits
-        ${item_id} in ('9815','9824','9786','9792','9818','9803','4412','4413','4409','4410','4411','3573') -- then 'FG'
-        or ( ${category_raw} = 'SEATING' and (${product_description} ilike '%4 PK' or ${product_description} ilike '%6 PK')) then 'FG'
-        else ${TABLE}.classification_new end ;;
+    sql: ${TABLE}.classification_new ;;
   }
 
   dimension: classification_raw {

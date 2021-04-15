@@ -248,6 +248,31 @@ view: sessions {
     ;;
   }
 
+  # dimension: liquid_date_comps {
+  #   group_label: "Dynamic Date"
+  #   label: "z - liquid date comps"
+  #   description: "If > 365 days in the look, than month, if > 30 than week, else day"
+  #   sql:
+  #   CASE
+  #     WHEN
+  #       datediff(
+  #               'day',
+  #               cast({% date_start time_date %} as date),
+  #               cast({% date_end time_date  %} as date)
+  #               ) >365
+  #     THEN cast(${time_month_name} as varchar)
+  #     WHEN
+  #       datediff(
+  #               'day',
+  #               cast({% date_start time_date %} as date),
+  #               cast({% date_end time_date  %} as date)
+  #               ) >30
+  #     THEN cast(${time_week_of_year} as varchar)
+  #     else ${time_day_of_year}
+  #     END
+  #   ;;
+  # }
+
   dimension_group: time {
     ### Scott Clark 1/13/21: Deleted week_of_year. need to reverse this last week of 2021
     group_label: "  Session Time"
@@ -578,8 +603,8 @@ view: sessions {
     description: "Source: looker calculation"
     type: string
     sql: case when ${utm_term} ilike '%br%' then 'BRAND'
-      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' then 'PROSPECTING'
-      when ${utm_term} ilike '%rt%' then 'RETARGETING'
+      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' or ${utm_term} = 'prosp' then 'PROSPECTING'
+      when ${utm_term} ilike '%rt%' or ${utm_term} = 'remarketing' or ${utm_term} = 're' then 'RETARGETING'
       else 'OTHER' end ;;
   }
 
