@@ -9,16 +9,19 @@ view: expeditors {
 
   dimension: duty {
     type: number
+    hidden: yes
     sql: ${TABLE}."DUTY" ;;
   }
 
   dimension: entered_value {
     type: number
+    hidden: yes
     sql: ${TABLE}."ENTERED_VALUE" ;;
   }
 
   dimension_group: entry {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -34,16 +37,19 @@ view: expeditors {
 
   dimension: entry_no {
     type: string
+    hidden: yes
     sql: ${TABLE}."ENTRY_NO" ;;
   }
 
   dimension: file_no {
     type: string
+    hidden: yes
     sql: ${TABLE}."FILE_NO" ;;
   }
 
   dimension: hmf_harbor_fee {
     type: number
+    hidden: yes
     sql: ${TABLE}."HMF_HARBOR_FEE" ;;
   }
 
@@ -79,6 +85,7 @@ view: expeditors {
 
   dimension: isf {
     type: string
+    hidden: yes
     sql: ${TABLE}."ISF" ;;
   }
 
@@ -99,26 +106,31 @@ view: expeditors {
 
   dimension: line_7501 {
     type: string
+    hidden: yes
     sql: ${TABLE}."LINE_7501" ;;
   }
 
   dimension: line_seq {
     type: string
+    hidden: yes
     sql: ${TABLE}."LINE_SEQ" ;;
   }
 
   dimension: mb {
     type: string
+    hidden: yes
     sql: ${TABLE}."MB" ;;
   }
 
   dimension: mpf {
     type: number
+    hidden: yes
     sql: ${TABLE}."MPF" ;;
   }
 
   dimension_group: payment {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -179,6 +191,7 @@ view: expeditors {
 
   measure: count {
     type: count
+    hidden: yes
     drill_fields: []
   }
  # Entered Value  Duty  MPF HMF Harbor Fee
@@ -187,6 +200,12 @@ view: expeditors {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.entered_value ;;
+  }
+
+  measure: total_mpf {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.mpf ;;
   }
 
   measure: total_duty {
@@ -199,6 +218,18 @@ view: expeditors {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.hmf_harbor_fee ;;
+  }
+
+  measure: total_item_quantity {
+    type: sum
+    sql: ${TABLE}.item_quantity ;;
+  }
+
+  measure: tariff_rate_2 {
+    label: "Tariff Calculation"
+    description: "duty + mpf + hmf / entered value"
+    value_format_name: percent_1
+    sql: (${total_duty}+${total_hmf_harbor_fee}+${total_mpf})/${total_entered_value} ;;
   }
 
 }
