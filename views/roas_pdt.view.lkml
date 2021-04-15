@@ -828,11 +828,11 @@ dimension: medium_source_type {
     label_from_parameter: breakdowns
     sql:
             CASE
-             WHEN {% parameter breakdown %} = 'Medium' THEN ${medium_clean_new}
-             WHEN {% parameter breakdown %} = 'Source' THEN ${platform_clean}
-             WHEN {% parameter breakdown %} = 'Type' THEN ${campaign_type_clean}
-             WHEN {% parameter breakdown %} = 'Medium/Source' THEN ${medium_source}
-             WHEN {% parameter breakdown %} = 'Medium/Source/Type' THEN ${medium_source_type}
+             WHEN {% parameter breakdowns %} = 'Medium' THEN ${medium_clean_new}
+             WHEN {% parameter breakdowns %} = 'Source' THEN ${platform_clean}
+             WHEN {% parameter breakdowns %} = 'Type' THEN ${campaign_type_clean}
+             WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
+             WHEN {% parameter breakdowns %} = 'Medium/Source/Type' THEN ${medium_source_type}
              ELSE NULL
             END ;;
   }
