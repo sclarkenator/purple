@@ -91,6 +91,26 @@ view: day_aggregations_wholesale_sales {
 }
 
 ######################################################
+#   Wholesale Fulfilled
+######################################################
+
+view: day_aggregations_wholesale_fulfilled {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: fulfilled_orders {}
+      column: fulfilled_orders_units {}
+      column: fulfilled_date {}
+      filters: {field: sales_order.channel value: "Wholesale"}
+      filters: {field: sales_order.is_exchange_upgrade_warranty value: ""}
+      filters: {field: sales_order_line.fulfilled_date value: "NOT NULL"}
+    }
+  }
+  dimension: fulfilled_orders {type: number }
+  dimension: fulfilled_orders_units {type: number }
+  dimension: fulfilled_date {type: date}
+}
+
+######################################################
 #   Canada Sales and Units
 ######################################################
 # If necessary, uncomment the line below to include explore_source.
@@ -451,6 +471,8 @@ view: day_aggregations {
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
         , wholesale.mattress_units as wholesale_mattress_units
+        , wholesale_fulfilled.fulfilled_orders as wholesale_fulfilled_amount
+        , wholesale_fulfilled.fulfilled_orders_units as wholesale_fulfilled_units
         , retail.total_gross_Amt_non_rounded as retail_amount
         , retail.total_units as retail_units
         , forecast.total_amount as forecast_total_amount
@@ -518,6 +540,7 @@ view: day_aggregations {
       left join ${day_agg_is_activities.SQL_TABLE_NAME} is_activities on is_activities.activity_date::date = d.date
       left join ${day_agg_retail_auravision.SQL_TABLE_NAME} retail_traffic on retail_traffic.created_date::date = d.date
       left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
+      left join ${day_aggregations_wholesale_fulfilled.SQL_TABLE_NAME} wholesale_fulfilled on wholesale_fulfilled.fulfilled_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -705,6 +728,22 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.wholesale_amount;; }
+
+  measure: wholesale_fulfilled_amount {
+    label: "Wholesale Fulfilled Amount"
+    group_label: "Sales - Wholesale"
+    description: "Total wholesale sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.wholesale_fulfilled_amount;; }
+
+  measure: wholesale_fulfilled_units {
+    label: "Wholesale Fulfilled Units"
+    group_label: "Sales - Wholesale"
+    description: "Total wholesale sales aggregated to the day."
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.wholesale_fulfilled_units;; }
 
   measure: scc_net_sales {
     label: "Sleep Country Canada Sales"
