@@ -328,6 +328,7 @@ view: day_sku_aggregations {
 
   dimension: channel {
     type: string
+    description: "DTC, Wholesale, or Owned Retail. (DTC includes Amazon/Ebay)"
     sql: ${TABLE}.channel ;;
   }
 
