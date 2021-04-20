@@ -859,10 +859,17 @@ include: "/dashboards/**/*.dashboard"
   explore: day_sku {
     from: day_sku_aggregations
     hidden: yes
-    join: item {
+
+   join: item {
       view_label: "Product"
       type: left_outer
       sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+      relationship: many_to_one
+    }
+    join: v_ai_product{
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${day_sku.sku_id} = ${v_ai_product.sku_raw} ;;
       relationship: many_to_one
     }
     join: day_sku_no_channel {

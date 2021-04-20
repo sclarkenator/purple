@@ -22,17 +22,7 @@ view: store_four_wall {
 contribution as
 (
 SELECT
-  case when sales_order.showroom_name = 'CA-01' then 'San Diego'
-  when sales_order.showroom_name = 'CA-02' then 'Santa Clara'
-  when sales_order.showroom_name = 'CA-03' then 'Santa Monica'
-  when sales_order.showroom_name = 'WA-01' then 'Seattle'
-  when sales_order.showroom_name in ('FO-01','FO_01') then 'Salt Lake'
-  when sales_order.showroom_name = 'UT-01' then 'Lehi'
-  when sales_order.showroom_name = 'TX-01' then 'Austin'
-  when sales_order.showroom_name = 'VA-01' then 'Tysons'
-  when sales_order.showroom_name = 'WA-02' then  'Lynnwood'
-  when sales_order.showroom_name = 'OH-01' then  'Columbus'
-  else sales_order.showroom_name end store,
+  sales_order.showroom_name store,
   to_date(DATE_TRUNC('month', to_timestamp_ntz(sales_order_line.Created) )) month,
   COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(sales_order_line.PRE_DISCOUNT_AMT ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) full_IMU,
   COALESCE(COALESCE(CAST( ( SUM(DISTINCT (CAST(FLOOR(COALESCE(nvl(sales_order_line.order_discount_amt,0) ,0)*(1000000*1.0)) AS DECIMAL(38,0))) + (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0) ) - SUM(DISTINCT (TO_NUMBER(MD5(sales_order_line.item_id||'-'||sales_order_line.order_id||'-'||sales_order_line.system ), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::NUMERIC(38, 0)) )  AS DOUBLE PRECISION) / CAST((1000000*1.0) AS DOUBLE PRECISION), 0), 0) order_discount,
@@ -94,17 +84,7 @@ GROUP BY 1,2
 )
 ,
 PNL as
-(select case when retail_location = 'CA-01' then 'San Diego'
-  when retail_location = 'CA-02' then 'Santa Clara'
-  when retail_location = 'CA-03' then 'Santa Monica'
-  when retail_location = 'WA-01' then 'Seattle'
-  when retail_location in ('FO-01','FO_01') then 'Salt Lake'
-  when retail_location = 'UT-01' then 'Lehi'
-  when retail_location = 'TX-01' then 'Austin'
-  when retail_location = 'VA-01' then 'Tysons'
-  when retail_location = 'WA-02' then  'Lynnwood'
-  when retail_location = 'OH-01' then  'Columbus'
-  else retail_location end  store
+(select retail_location store
         ,to_Date(date_trunc(month,(ending))) month
         ,upper(case when category = 'Wholesale & Retail Compensation' then 'compensation'
                when category = 'Professional Services' then 'PROFESSIONAL SERVICES'
@@ -118,17 +98,7 @@ from analytics.sales.v_pnl
 where retail_location is not null
 and name not ilike 'Depreciat%'
 group by 1,2,3)
-select case when contribution.store = 'CA-01' then 'San Diego'
-            when contribution.store = 'CA-02' then 'Santa Clara'
-            when contribution.store = 'CA-03' then 'Santa Monica'
-            when contribution.store = 'WA-01' then 'Seattle'
-            when contribution.store in ('FO-01','FO_01') then 'Salt Lake'
-            when contribution.store = 'UT-01' then 'Lehi'
-            when contribution.store = 'TX-01' then 'Austin'
-            when contribution.store = 'WA-02' then 'Lynnwood'
-            when contribution.store = 'VA-01' then 'Tysons'
-            when contribution.store = 'OH-01' then 'Columbus'
-            else contribution.store end STORE
+select vps.location_name STORE
         ,contribution.month
         ,contribution.full_imu
         ,contribution.order_discount
@@ -145,12 +115,14 @@ select case when contribution.store = 'CA-01' then 'San Diego'
         ,nvl(p3.gross_amount,0) PROFESSIONALSERVICES
         ,nvl(p4.gross_amount,0) UTILITIES
         ,nvl(p5.gross_amount,0) OTHER
+        ,vps.square_footage
 from contribution
 left join pnl p1 on p1.store = contribution.store and p1.month = contribution.month and p1.expense_type = 'RENT'
 left join pnl p2 on p2.store = contribution.store and p2.month = contribution.month and p2.expense_type = 'COMPENSATION'
 left join pnl p3 on p3.store = contribution.store and p3.month = contribution.month and p3.expense_type = 'PROFESSIONAL SERVICES'
 left join pnl p4 on p4.store = contribution.store and p4.month = contribution.month and p4.expense_type = 'UTILITIES'
 left join pnl p5 on p5.store = contribution.store and p5.month = contribution.month and p5.expense_type = 'OTHER'
+join "RETAIL"."V_PURPLE_SHOWROOM" vps on vps.purple_showroom_name = contribution.store
  ;;}
 
 ##Added by Scott Clark 10/29/2020
@@ -158,6 +130,7 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
   dimension: store {
     label: "Location"
     description: "Retail location (based on showroom name field, ie. UT-01)"
+    primary_key: yes
     type: string
     sql: ${TABLE}.store ;;
   }
@@ -294,5 +267,12 @@ left join pnl p5 on p5.store = contribution.store and p5.month = contribution.mo
     sql: ${TABLE}.other ;;
   }
 
+  measure: sqft {
+    value_format_name: decimal_0
+    type: sum_distinct
+    label: "Square feet"
+    description: "Total square footage of location"
+    sql: ${TABLE}.square_footage ;;
+  }
 
 }

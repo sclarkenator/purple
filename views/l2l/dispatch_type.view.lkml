@@ -37,7 +37,7 @@ view: dispatch_type {
       when ${code} = 'Labor' then 'Labor'
       when ${code} = 'Materials' then 'Material'
       when ${code} in ('Code Red', 'Code Black', 'Production Machine Setup', 'Tooling Setup') then 'Equipment'
-      when ${code} in ('PM', 'Fixed Asset Hours-Upgrade') then 'Planned Unavailability'
+      when ${code} in ('PM', 'Fixed Asset Hours-Upgrade', 'WO') then 'Planned Unavailability'
       else 'Other'
       end ;;
   }
