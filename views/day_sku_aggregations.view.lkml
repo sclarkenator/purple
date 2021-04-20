@@ -423,7 +423,7 @@ view: day_sku_aggregations {
     label: "To Forecast (units)"
     type: number
     value_format: "0.0%"
-    sql: (${total_units}/${forecast_units})-1 ;;
+    sql: case when ${forecast_units} > 0 then (${total_units}/${forecast_units})-1 else 0 end ;;
   }
 
   dimension: liquid_date {
