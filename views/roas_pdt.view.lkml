@@ -836,4 +836,20 @@ dimension: medium_source_type {
              ELSE NULL
             END ;;
   }
+
+  parameter: return_metrics {
+    type: string
+    allowed_value: {
+      label: "Clicks"
+      value: "clicks"
+    }
+    allowed_value: {
+      label: "Impressions"
+      value: "impressions"
+    }
+    allowed_value: {
+      label: "CPC"
+      value: "cpc"
+    }
+  }
 }
