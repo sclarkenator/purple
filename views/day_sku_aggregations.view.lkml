@@ -159,7 +159,11 @@ view: day_sku_aggregations {
           , i.sku_id
           , s.channel
         from analytics.util.warehouse_date d
-        cross join analytics.sales.item i
+        cross join (
+              select distinct coalesce (i.sku_id,ai.sku_id) sku_id
+              from sales.item i
+              full outer join "FORECAST"."V_AI_PRODUCT" ai on i.sku_id=ai.sku_id
+        ) i
         cross join (
           select distinct
               case when channel_id = 1 then 'DTC'
