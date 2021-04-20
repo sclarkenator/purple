@@ -10,9 +10,15 @@ view: daily_adspend {
   dimension: ad_date_key {
     hidden: yes
     type: string
-    primary_key: yes
+    primary_key: no
     sql: ${TABLE}.ad_id||'-'||${TABLE}.date;; }
 
+  dimension: pk {
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.ad_id || ${TABLE}.source || ${TABLE}.campaign_id || ${TABLE}.device ;;
+  }
+  #ad_id, source, campaign_id, device
   dimension_group: ad {
     ### Scott Clark 1/8/21: Deleted week_of_year. need to reverse this last week of 2021
     label: "  Ad"
