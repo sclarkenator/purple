@@ -16,6 +16,14 @@ view: v_purple_showroom {
     sql: ${TABLE}."LOCATION_NAME" ;;
   }
 
+  dimension: is_outlet {
+    view_label: "Owned Retail"
+    group_label: "Advanced"
+    type: yesno
+    label: "Outlet?"
+    sql: ${TABLE}.location_name = 'UT - Factory Outlet SLC' ;;
+  }
+
   dimension: address_1 {
     type: string
     group_label: "Address"
@@ -72,9 +80,12 @@ view: v_purple_showroom {
   }
 
   dimension: is_inactive {
-    type: string
+    group_label: "Advanced"
+    type: yesno
+    view_label: "Owned Retail"
+    label: "Location inactive"
     hidden:  yes
-    sql: ${TABLE}."IS_INACTIVE" ;;
+    sql: ${TABLE}."IS_INACTIVE"='T' ;;
   }
 
   dimension_group: last_modified {
