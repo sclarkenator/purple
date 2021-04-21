@@ -158,6 +158,7 @@ view: fit_first_data {
         ) p on t.transaction_id::string = p.transaction_extid::string
       where f.status = 'Approved'
         and f.transaction_type in ('Purchase','Tagged Completion')
+        and not rlike(coalesce(f.ref_num,''),'\\d{14}')
         and {% condition date_selector %} f.time {% endcondition %}
     )
     select
