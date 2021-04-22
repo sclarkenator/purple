@@ -22,7 +22,6 @@ include: "/dashboards/**/*.dashboard"
   explore: attribution_temp {
     from: v_attribution_temp
     hidden: yes
-
   }
 
   explore: c3 {
