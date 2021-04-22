@@ -837,6 +837,26 @@ dimension: medium_source_type {
             END ;;
   }
 
+  parameter: website_test {
+    type: string
+
+    allowed_value: {
+      label: "Sessions"
+      value: "sessions"
+      }
+  }
+
+    measure: website {
+      label_from_parameter: website_test
+      type: number
+      ## value_format: "$0.0,\"K\""
+      sql:
+         CASE
+          WHEN {% parameter website_test %} = 'sessions' THEN sum(${sessions})
+         ELSE NULL
+        END ;;
+  }
+
   parameter: return_metrics {
     type: string
     allowed_value: {
@@ -847,9 +867,17 @@ dimension: medium_source_type {
       label: "Impressions"
       value: "impressions"
     }
-    allowed_value: {
-      label: "CPC"
-      value: "cpc"
-    }
   }
-}
+
+  measure: returns {
+    label_from_parameter: return_metrics
+    type: number
+    ## value_format: "$0.0,\"K\""
+    sql:
+         CASE
+          WHEN {% parameter return_metrics %} = 'clicks' THEN sum(${clicks})
+          WHEN {% parameter return_metrics %} = 'impressions' THEN sum(${impressions})
+         ELSE NULL
+        END ;;
+  }
+  }
