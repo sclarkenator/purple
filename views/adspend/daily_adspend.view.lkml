@@ -146,16 +146,16 @@ view: daily_adspend {
     label: "Total Adspend ($k)"
     group_label: "Advanced"
     description: "Total adspend for selected channels (includes Agency cost)"
-    type: sum
+    type: number
     value_format: "$#,##0,\" K\""
-    sql: ${TABLE}.AGENCY_COST + ${TABLE}.SPEND ;;  }
+    sql: ${agency_cost} + ${adspend_no_agency} ;;  }
 
   measure: adspend_raw {
     label: "  Total Adspend ($)"
     description: "Total adspend for selected channels (includes Agency cost)"
-    type: sum
+    type: number
     value_format: "$#,##0"
-    sql: ${TABLE}.AGENCY_COST + ${TABLE}.SPEND ;;  }
+    sql:  ${adspend};;  }
 
   measure: adspend_no_calc {
     label: "Total Adspend - No Calc ($)"
