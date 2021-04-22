@@ -11,6 +11,10 @@
       'bundle_testing_combo_add_bundle_to_cart', 'bundle_testing_last_chance_bundle_add_to_cart', 'bundle_testing_pdp_add_to_cart_with_bundle_checked',
       --5th anniversary hero event
       'carousel_banner_hero_cta_click'
+      --store finder events for yext
+      --'store_finder_all_top_nav_stores', 'store_finder_clicked_shop_mattresses', 'store_finder_individual_store_page_clicked_get_directions'
+      --, 'store_finder_clicked_get_directions', 'store_finder_individual_store_page_clicked_call_store', --'store_finder_individual_store_page_clicked_shop_mattresses'
+      --, 'store_finder_clicked_appointment', 'store_finder_individual_store_page_clicked_book_appointment'
       ) ;;
     }
 
