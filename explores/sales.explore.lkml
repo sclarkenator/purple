@@ -784,7 +784,7 @@ include: "/dashboards/**/*.dashboard"
   explore: scc {
     from: sleep_country_canada_sales
     hidden: yes
-    fields: [ALL_FIELDS*]
+    #fields: [ALL_FIELDS*]
     label: "SCC Orders"
     group_label: " Orders"
     description: "Sales Orders for SCC"
@@ -800,6 +800,12 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: many_to_one
       sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
+    }
+    join: v_scc_order_flg {
+      type: left_outer
+      view_label: "Scc"
+      relationship:  many_to_one
+      sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
     }
   }
 

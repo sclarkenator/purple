@@ -695,6 +695,27 @@ dimension: medium_source_type {
     sql: ${TABLE}.clicks ;;
   }
 
+  measure: cpm {
+    label: "  CPM"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF((${impressions}/1000),0) ;;  }
+
+  measure: cpc {
+    label: "  CPC"
+    description: "Adspend / Total Clicks"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF(${clicks},0) ;;  }
+
+  measure: ctr {
+    label: "  CTR"
+    description: " (Total Clicks / Total Impressions) *100"
+    type: number
+    value_format: "00.00%"
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
+
   measure: sessions {
     label: "Sessions (#k)"
     description: "Total Sessions - beware filtering by non UTM/Session fields"
@@ -711,6 +732,13 @@ dimension: medium_source_type {
     sql: ${TABLE}.qualified_sessions ;;
   }
 
+  measure: bounce_rate {
+    description: "Percent of sessions where user only viewed one page and left the site"
+    type: number
+    sql: (${sessions}-${qualified_sessions})/${sessions} ;;
+    value_format_name: percent_1
+  }
+
   measure: orders {
     label: "Orders (#)"
     description: "Total Orders - beware filtering by non sales fields"
@@ -719,6 +747,14 @@ dimension: medium_source_type {
     sql: ${TABLE}.orders ;;
   }
 
+  measure: total_cvr {
+    description: "% of all Sessions that resulted in an order. Source: looker.calculation"
+    label: "CVR - All Sessions"
+    type: number
+    view_label: "Sessions"
+    sql: 1.0*(${orders})/NULLIF(${sessions},0) ;;
+    value_format_name: percent_2
+  }
   measure: sales {
     label: "Gross Sales ($k)"
     description: "Total Gross Sales - beware filtering by non sales fields"
@@ -753,6 +789,7 @@ dimension: medium_source_type {
     value_format: "#,##0"
     sql: ${TABLE}.new_customer ;;
   }
+
   measure: repeat_customer {
     label: "Repeat Customer"
     description: "Count of repeat customers"
@@ -760,6 +797,7 @@ dimension: medium_source_type {
     value_format: "#,##0"
     sql: ${TABLE}.repeat_customer ;;
   }
+
   measure: CPA {
     label: "CPA"
     description: "Cost per Acquisition (Adpend/Orders)"
