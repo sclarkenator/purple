@@ -86,4 +86,16 @@ view: sleep_country_canada_sales {
     type: count
     drill_fields: [first_name, last_name]
   }
+
+  dimension: pk {
+    type: string
+    primary_key:  yes
+    sql: ${order_id}||${sku} ;;
+
+  }
+
+  dimension: net_sales_dim {
+    type: number
+    sql: ${TABLE}."NET_SALES" ;;
+  }
 }
