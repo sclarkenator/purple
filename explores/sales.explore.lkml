@@ -1022,6 +1022,7 @@ explore: sessions_in_tests {hidden: yes}
       fields: [zcta5.fulfillment_region_1]}
   }
 
+  explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}
   explore: shop_comm_test {hidden: yes}
   explore: sequential_rules {hidden: yes}

@@ -319,6 +319,20 @@ view: day_aggregations_adspend_target {
 }
 
 ######################################################
+#   wholesale roa calculated amount
+######################################################
+view: whlsl_roa {
+  derived_table: {
+    explore_source: v_new_roa {
+      column: roa_date {}
+      column: roa_amt {}
+    }
+  }
+  dimension: roa_date { type: date }
+  measure: roa_amt { type: sum }
+}
+
+######################################################
 #   Site Sessions and Non-Bounced Sessions
 ######################################################
 
@@ -502,7 +516,9 @@ view: day_aggregations {
           when prod_goal.forecast_date::date < '2019-08-26' then 7800
           else 9800 end as production_target
         , prod_mat.Total_Quantity as production_mattresses
-        , (nvl(dtc.total_gross_Amt_non_rounded,0) + nvl(retail.total_gross_Amt_non_rounded,0) + (nvl(wholesale.total_gross_Amt_non_rounded,0) * 0.50)) as roas_sales
+--        , (nvl(dtc.total_gross_Amt_non_rounded,0) + nvl(retail.total_gross_Amt_non_rounded,0) + (nvl(wholesale.total_gross_Amt_non_rounded,0) * 0.50)) as roas_sales
+        , (nvl(dtc.total_gross_Amt_non_rounded,0) + nvl(retail.total_gross_Amt_non_rounded,0) + nvl(whlsl_roa.roa_amt,0)) as roas_sales
+        , nvl(whlsl_roa.roa_amt,0) whlsl_calc
         , is_deals.count as is_deals
         , is_deals.total_orders as is_cohort_orders
         , is_activities.count as is_activities
@@ -541,6 +557,7 @@ view: day_aggregations {
       left join ${day_agg_retail_auravision.SQL_TABLE_NAME} retail_traffic on retail_traffic.created_date::date = d.date
       left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
       left join ${day_aggregations_wholesale_fulfilled.SQL_TABLE_NAME} wholesale_fulfilled on wholesale_fulfilled.fulfilled_date::date = d.date
+      left join ${whlsl_roa.SQL_TABLE_NAME} whlsl_roa on whlsl_roa.roa_date::date = d.date
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
@@ -1048,7 +1065,7 @@ view: day_aggregations {
   measure: roas_sales {
     label: "ROAs - Total Sales"
     group_label: "Adspend"
-    description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales"
+    description: "100% of DTC Sales, 100% of Owned Retail, 50% of Wholesales Sales lagged 2 weeks from fulfilled date and smoothed acrossed the week. "
     #type: number
     type:  sum
     value_format: "$#,##0"
@@ -1058,6 +1075,7 @@ view: day_aggregations {
 
   measure: roas_sales_calc {
     label: "ROAs - Total Sales (test)"
+    hidden: yes
     group_label: "Adspend"
     description: "Calculations done in lookML not sql"
     type: number
