@@ -807,6 +807,12 @@ include: "/dashboards/**/*.dashboard"
       relationship:  many_to_one
       sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
     }
+    join: scc_targets {
+      type: full_outer
+      view_label: "Targets"
+      relationship: many_to_one
+      sql_on: ${scc.created_date} = ${scc_targets.date_date} and ${scc_targets.source} = ${sleep_country_canada_store.source} ;;
+    }
   }
 
 
