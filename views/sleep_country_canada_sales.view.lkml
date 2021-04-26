@@ -18,6 +18,11 @@ view: sleep_country_canada_sales {
     timeframes: [
       raw,
       time,
+      day_of_week,
+      day_of_month,
+      day_of_year,
+      month_name,
+      quarter_of_year,
       date,
       week,
       month,
