@@ -735,7 +735,7 @@ dimension: medium_source_type {
   measure: bounce_rate {
     description: "Percent of sessions where user only viewed one page and left the site"
     type: number
-    sql: (${sessions}-${qualified_sessions})/${sessions} ;;
+    sql: (${sessions}-${qualified_sessions})/nullif(${sessions},0) ;;
     value_format_name: percent_1
   }
 
