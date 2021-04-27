@@ -686,7 +686,35 @@ dimension: medium_source_type {
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.impressions ;;
   }
-
+  measure: min_impressions {
+    label: "Min Impressions (#k)"
+    description: "Impressions - beware filtering by non adspend fields"
+    type: sum
+    value_format: "#,##0,\" K\""
+    sql: min(${roas_pdt.impressions});;
+  }
+  measure: max_impressions {
+    label: "Max Impressions (#k)"
+    group_label: "Scorecard"
+    description: "Max Impressions - beware filtering by non adspend fields"
+    type: sum
+    value_format: "#,##0,\" K\""
+    sql: max(${roas_pdt.impressions});;
+  }
+  measure: min_max_impressions {
+    label: "Max-Min Impressions (#k)"
+    description: "Max Impressions - beware filtering by non adspend fields"
+    type: sum
+    value_format: "#,##0,\" K\""
+    sql: ${min_impressions} - ${max_impressions};;
+  }
+  measure: normalized_impressions {
+    label: "Max-Min Impressions (#k)"
+    description: "Max Impressions - beware filtering by non adspend fields"
+    type: sum
+    value_format: "0.00\%"
+    sql: (${impressions}-${min_impressions})/${min_max_impressions};;
+  }
   measure: clicks {
     label: "Clicks (#)"
     description: "Total Clicks - beware filtering by non adspend fields"
