@@ -218,9 +218,14 @@ view: sales_order {
     sql: ${TABLE}.CUSTOMER_ID ;; }
 
   dimension: email {
-    hidden: yes
+    group_label: "  Customer details"
+    view_label: "Customer"
+    hidden:  no
+    label: "Customer Email"
+    description: "Customer Email Address on the Netsuite sales order record. Source:netsuite.sales_order"
     type: string
-    sql: ${TABLE}.EMAIL ;; }
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}.email
+              ELSE '**********' || '@' || SPLIT_PART(${TABLE}.email, '@', 2) END ;; }
 
   dimension: etail_order_id {
     hidden: yes

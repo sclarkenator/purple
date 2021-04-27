@@ -44,7 +44,7 @@ view: customer_table {
 
   dimension: email {
     group_label: "  Customer details"
-    hidden:  no
+    hidden:  yes
     label: "Customer Email"
     description: "Customer Email Address on the Netsuite customer record. Source:netsuite.customers"
     type: string
