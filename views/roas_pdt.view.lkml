@@ -694,47 +694,6 @@ dimension: medium_source_type {
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.impressions ;;
   }
-  # measure: impressions_num{
-  #   label: "Impressions num (#k)"
-  #   description: "Total Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: ${TABLE}.impressions ;;
-  # }
-
-  # measure: min_impressions {
-  #   label: "Min Impressions (#k)"
-  #   group_label: "Scorecard"
-  #   ##hidden: yes
-  #   description: "Minimum Impressions - beware filtering by non adspend fields"
-  #   type: min
-  #   value_format: "#,##0"
-  #   sql:${TABLE}.impressions ;;
-  # }
-  # measure: max_impressions {
-  #   label: "Max Impressions (#k)"
-  #   hidden: yes
-  #   description: "Max Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: max(${roas_pdt.impressions});;
-  # }
-  # measure: min_max_impressions {
-  #   label: "Max-Min Impressions (#k)"
-  #   hidden: yes
-  #   description: "Max Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: ${min_impressions} - ${max_impressions};;
-  # }
-  # measure: normalized_impressions {
-  #   label: "Impression (N)"
-  #   group_label: "Scorecard"
-  #   description: "Normalized Impressions"
-  #   type: number
-  #   value_format: "0.00\%"
-  #   sql: (${impressions}-${min_impressions})/${min_max_impressions};;
-  # }
 
   measure: clicks {
     label: "Clicks (#)"
@@ -819,7 +778,7 @@ dimension: medium_source_type {
     type: sum
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
-    sql: ${TABLE}.mattress_sales ;;
+    sql: ${TABLE}.mattress_sales;;
   }
 
   measure: c3_cohort_sales {
