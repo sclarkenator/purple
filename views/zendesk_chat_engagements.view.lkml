@@ -1,4 +1,4 @@
-view: zendesk_chat_engagement {
+view: zendesk_chat_engagements {
 
   view_label: "Chat Engagement"
   sql_table_name: CUSTOMER_CARE.ZENDESK_CHAT_ENGAGEMENTS ;;
@@ -98,7 +98,7 @@ view: zendesk_chat_engagement {
   dimension: agent_name {
     label: "Agent Name"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.agent_name ;;
     drill_fields: [detail*]
   }
@@ -249,7 +249,7 @@ view: zendesk_chat_engagement {
   }
 
   measure: missed_count  {
-    label: "Missed Assignments"
+    label: "Assignments Missed"
     description: "Count of engagements assigned/routed to the agent but were missed or not accepted.  These engamemnts have a 0 duration."
     type: sum
     sql: case when ${accepted} = false
@@ -257,7 +257,7 @@ view: zendesk_chat_engagement {
   }
 
   measure: accepted_count  {
-    label: "Accepted Assignments"
+    label: "Assignments Accepted"
     description: "Count of engagements which were assigned to an agent and accepted by the agent"
     type: sum
     sql: case when ${accepted} = true
@@ -265,14 +265,14 @@ view: zendesk_chat_engagement {
   }
 
   measure: self_assigned_count  {
-    label: "Self Assigned"
+    label: "Assignments Self-Assigned"
     description: "Count of engagements to which an agent assigned themselves."
     type: sum
     sql: case when ${assigned} = false then 1 else 0 end ;;
   }
 
   measure: assignment_acceptance_rate {
-    label: "Acceptance Rate"
+    label: "Assignment Acceptance Rate"
     description: "Accepted Engagements/Assigned Engagements"
     type: number
     value_format_name: percent_2
