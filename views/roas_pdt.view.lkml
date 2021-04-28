@@ -76,6 +76,7 @@ view: sales_pdt {
       column: repeat_customer {field: first_order_flag.repeat_customer}
       column: payment_method {field: sales_order.payment_method}
       column: order_id { field: sales_order.order_id }
+      column: mattress_sales { field: sales_order_line.mattress_sales }
       filters: { field: sales_order_line_base.created_date value: "2 years" }
     }
   }
@@ -90,6 +91,7 @@ view: sales_pdt {
   dimension: repeat_customer {type: number}
   dimension: payment_method {type: string}
   dimension: order_id {type: string}
+  dimension: mattress_sales {type:number}
 
 }
 
@@ -217,6 +219,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -246,6 +249,7 @@ view: roas_pdt {
       , Sum_non_bounced_session as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -275,6 +279,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , total_orders as orders
       , total_gross_Amt_non_rounded as sales
+      , mattress_sales as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , new_customer
@@ -304,6 +309,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , ATTRIBUTION_AMOUNT as c3_cohort_sales
       , TRENDED_AMOUNT as c3_trended_sales
       , null as new_customer
@@ -333,6 +339,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -362,6 +369,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -686,41 +694,55 @@ dimension: medium_source_type {
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.impressions ;;
   }
-  measure: min_impressions {
-    label: "Min Impressions (#k)"
-    description: "Impressions - beware filtering by non adspend fields"
-    type: sum
-    value_format: "#,##0,\" K\""
-    sql: min(${roas_pdt.impressions});;
-  }
-  measure: max_impressions {
-    label: "Max Impressions (#k)"
-    group_label: "Scorecard"
-    description: "Max Impressions - beware filtering by non adspend fields"
-    type: sum
-    value_format: "#,##0,\" K\""
-    sql: max(${roas_pdt.impressions});;
-  }
-  measure: min_max_impressions {
-    label: "Max-Min Impressions (#k)"
-    description: "Max Impressions - beware filtering by non adspend fields"
-    type: sum
-    value_format: "#,##0,\" K\""
-    sql: ${min_impressions} - ${max_impressions};;
-  }
-  measure: normalized_impressions {
-    label: "Max-Min Impressions (#k)"
-    description: "Max Impressions - beware filtering by non adspend fields"
-    type: sum
-    value_format: "0.00\%"
-    sql: (${impressions}-${min_impressions})/${min_max_impressions};;
-  }
+  # measure: impressions_num{
+  #   label: "Impressions num (#k)"
+  #   description: "Total Impressions - beware filtering by non adspend fields"
+  #   type: number
+  #   value_format: "#,##0,\" K\""
+  #   sql: ${TABLE}.impressions ;;
+  # }
+
+  # measure: min_impressions {
+  #   label: "Min Impressions (#k)"
+  #   group_label: "Scorecard"
+  #   ##hidden: yes
+  #   description: "Minimum Impressions - beware filtering by non adspend fields"
+  #   type: min
+  #   value_format: "#,##0"
+  #   sql:${TABLE}.impressions ;;
+  # }
+  # measure: max_impressions {
+  #   label: "Max Impressions (#k)"
+  #   hidden: yes
+  #   description: "Max Impressions - beware filtering by non adspend fields"
+  #   type: number
+  #   value_format: "#,##0,\" K\""
+  #   sql: max(${roas_pdt.impressions});;
+  # }
+  # measure: min_max_impressions {
+  #   label: "Max-Min Impressions (#k)"
+  #   hidden: yes
+  #   description: "Max Impressions - beware filtering by non adspend fields"
+  #   type: number
+  #   value_format: "#,##0,\" K\""
+  #   sql: ${min_impressions} - ${max_impressions};;
+  # }
+  # measure: normalized_impressions {
+  #   label: "Impression (N)"
+  #   group_label: "Scorecard"
+  #   description: "Normalized Impressions"
+  #   type: number
+  #   value_format: "0.00\%"
+  #   sql: (${impressions}-${min_impressions})/${min_max_impressions};;
+  # }
+
   measure: clicks {
     label: "Clicks (#)"
     description: "Total Clicks - beware filtering by non adspend fields"
     type: sum
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.clicks ;;
+
   }
 
   measure: cpm {
@@ -790,6 +812,14 @@ dimension: medium_source_type {
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
     sql: ${TABLE}.sales ;;
+  }
+  measure: mattress_sales {
+    label: "Mattress Sales ($k)"
+    description: "Mattress Sales - beware filtering by non sales fields"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
+    sql: ${TABLE}.mattress_sales ;;
   }
 
   measure: c3_cohort_sales {
