@@ -19,6 +19,7 @@ view: sleep_country_canada_sales {
       raw,
       time,
       day_of_week,
+      day_of_week_index,
       day_of_month,
       day_of_year,
       month_name,
