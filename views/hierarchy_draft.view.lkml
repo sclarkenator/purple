@@ -22,9 +22,9 @@ view: hierarchy_draft {
     sql: ${TABLE}."NAME" ;;
   }
 
-  dimension: tempsku {
+  dimension: sku {
     type: number
-    sql: ${TABLE}."TEMPSKU" ;;
+    sql: ${TABLE}.SKU ;;
   }
 
   dimension: version {
