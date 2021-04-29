@@ -21,6 +21,7 @@ view: lrp_combined {
 
   measure: discount_units {
     group_label: "Amount"
+    type: sum
     value_format: "#,##0"
     sql: ${TABLE}."DISCOUNT_UNITS" ;;
   }
@@ -36,6 +37,7 @@ view: lrp_combined {
   measure: gross_sales {
     type: sum
     group_label: "Amount"
+    label: "Standard Sales"
     value_format: "$#,##0"
     sql: ${TABLE}."GROSS_SALES" ;;
   }
@@ -43,6 +45,7 @@ view: lrp_combined {
 
   measure: promo_units {
     group_label: "Amount"
+    type: sum
     value_format: "#,##0"
     sql: ${TABLE}."PROMO_UNITS" ;;
   }
@@ -61,11 +64,14 @@ view: lrp_combined {
 
   measure: total_units {
     group_label: "Amount"
+    type: sum
     value_format: "#,##0"sql: ${TABLE}."TOTAL_UNITS" ;;
   }
 
   measure: units {
     group_label: "Amount"
+    label: "Standard Units"
+    type: sum
     value_format: "#,##0"
     sql: ${TABLE}."UNITS" ;;
   }
