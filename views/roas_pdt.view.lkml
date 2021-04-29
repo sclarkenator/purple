@@ -755,6 +755,13 @@ dimension: medium_source_type {
     value_format: "#,##0"
     sql: ${TABLE}.orders ;;
   }
+  measure: aov {
+    label: "AOV"
+    description: "Average Order Value (gross sales/orders)"
+    value_format: "$#,##0"
+    type: number
+    sql: ${sales}/${orders} ;;
+  }
 
   measure: total_cvr {
     description: "% of all Sessions that resulted in an order. Source: looker.calculation"
