@@ -882,7 +882,7 @@ dimension: medium_source_type {
     description: "ROAS from website sessions"
     value_format: "$#,##0.00"
     type: number
-    sql:if(${roas_pdt.medium_clean_new}="Other",null,${roas_pdt.sales}/${roas_pdt.adspend});;
+    sql:${roas_pdt.sales}/${roas_pdt.adspend};;
   }
 
   parameter: breakdowns {type: string
