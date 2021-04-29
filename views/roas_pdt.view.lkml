@@ -877,6 +877,13 @@ dimension: medium_source_type {
     type: number
     sql: ${adspend}/nullif(${influenced},0);;
   }
+  measure: site_roas {
+    label: "ROAS"
+    description: "ROAS from website sessions"
+    value_format: "$#,##0.00"
+    type: number
+    sql:if(${roas_pdt.medium_clean_new}="Other",null,${roas_pdt.sales}/${roas_pdt.adspend});;
+  }
 
   parameter: breakdowns {type: string
     allowed_value: { value: "Medium" }
