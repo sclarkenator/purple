@@ -261,4 +261,5 @@ explore: forecast_compared_to_actual_sales {
   explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedited Shipping"}
   explore: ai_transaction {hidden:yes group_label: "Operations"}
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
+  explore: lrp_combined {hidden:yes view_label:"AOP Combined"}
   explore: item_raw {from: item hidden:yes}
