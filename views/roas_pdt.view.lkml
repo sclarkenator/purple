@@ -675,7 +675,11 @@ dimension: medium_source {
   type: string
   sql: concat(${medium_clean_new},${platform_clean}) ;;
 }
-
+  dimension: source_type {
+    label: "Medium/Source"
+    type: string
+    sql: concat(${platform_clean},${campaign_type_clean}) ;;
+  }
 dimension: medium_source_type {
     label: "Medium/Source"
     type: string
@@ -893,6 +897,7 @@ dimension: medium_source_type {
     allowed_value: { value: "Source" }
     allowed_value: { value: "Type" }
     allowed_value: { value: "Medium/Source"}
+    allowed_value: { value: "Source/Type"}
     allowed_value: { value: "Medium/Source/Type"}
   }
 
@@ -903,6 +908,7 @@ dimension: medium_source_type {
              WHEN {% parameter breakdowns %} = 'Medium' THEN ${medium_clean_new}
              WHEN {% parameter breakdowns %} = 'Source' THEN ${platform_clean}
              WHEN {% parameter breakdowns %} = 'Type' THEN ${campaign_type_clean}
+             WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
              WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
              WHEN {% parameter breakdowns %} = 'Medium/Source/Type' THEN ${medium_source_type}
              ELSE NULL
