@@ -909,7 +909,7 @@ dimension: medium_source_type {
              WHEN {% parameter breakdowns %} = 'Source' THEN ${platform_clean}
              WHEN {% parameter breakdowns %} = 'Type' THEN ${campaign_type_clean}
              WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
-             WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
+             WHEN {% parameter breakdowns %} = 'Source/Type' THEN ${source_type}
              WHEN {% parameter breakdowns %} = 'Medium/Source/Type' THEN ${medium_source_type}
              ELSE NULL
             END ;;
