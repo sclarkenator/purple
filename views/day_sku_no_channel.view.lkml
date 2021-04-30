@@ -69,14 +69,14 @@ view: po_day_sku1 {
     explore_source: purcahse_and_transfer_ids {
       column: estimated_arrival_date { field: purchase_order_line.estimated_arrival_date }
       column: sku_id { field: item.sku_id }
-      column: Total_quantity_received { field: purchase_order_line.Total_quantity_received }
+      column: Total_open_quantity { field: purchase_order_line.Total_open_quantity }
       filters: { field: purchase_order_line.estimated_arrival_date value: "3 years" }
-      filters: { field: purchase_order_line.Total_quantity_received value: ">0" }
+      filters: { field: purchase_order_line.Total_open_quantity value: ">0" }
     }
   }
   dimension: estimated_arrival_date { type: date }
   dimension: sku_id {  }
-  dimension: Total_quantity_received { type: number }
+  dimension: Total_open_quantity { type: number }
 }
 
 ######################################################
@@ -97,7 +97,7 @@ view: day_sku_no_channel {
         , sum(f.total_units) over (partition by aa.date, aa.sku_id) as forecast_units
 --        , i.on_hand as units_on_hand
         , i.available as units_available
-        , po.Total_quantity_received as purchased_units_recieved
+        , po.Total_open_quantity as incoming_units
       from (
         select d.date
           , i.sku_id
@@ -281,9 +281,10 @@ view: day_sku_no_channel {
         sql: ${TABLE}.units_available;; }
 
       measure: purchased_units_recieved {
+        label: "Incoming units"
         type: sum
         value_format: "#,##0"
-        sql: ${TABLE}.purchased_units_recieved;; }
+        sql: ${TABLE}.incoming_units;; }
 
       parameter: see_data_by {
         description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
