@@ -90,6 +90,27 @@ view: aop_day_sku {
   dimension: total_units {type: number}
 }
 
+######################################################
+#   LRP
+######################################################
+
+view: lrp_day_sku {
+  derived_table: {
+    explore_source: lrp_combined {
+      column: forecast_date {}
+      column: channel {}
+      column: sku_id {}
+      column: total_sales {}
+      column: total_units {}
+    }
+  }
+  dimension: forecast_date {type: date}
+  dimension: channel {}
+  dimension: sku_id {}
+  dimension: total_sales {type: number}
+  dimension: total_units {type: number}
+}
+
 
 ######################################################
 #   Inventory
@@ -151,6 +172,8 @@ view: day_sku_aggregations {
         , f.total_units as forecast_units
         , aop.total_sales as plan_amount
         , aop.total_units as plan_units
+        , lrp.total_sales as lrp_amount
+        , lrp.total_units as lrp_units
         , i.on_hand as units_on_hand
         , i.available as units_available
         , po.Total_quantity_received as purchased_units_recieved
@@ -172,7 +195,7 @@ view: day_sku_aggregations {
               else 'NA' end as channel
           from analytics.sales.sales_order
         ) s
-        where date between '2019-01-01' and '2021-12-31'
+        where date between '2019-01-01' and '2023-12-31'
       ) aa
       left join ${sales_day_sku.SQL_TABLE_NAME} s on s.created_date::date = aa.date and s.sku_id = aa.sku_id and s.channel2 = aa.channel
       left join ${production_day_sku.SQL_TABLE_NAME} p on p.produced_date::date = aa.date and p.sku_id = aa.sku_id and aa.channel = 'NA'
@@ -180,6 +203,7 @@ view: day_sku_aggregations {
       left join ${inventory_day_sku.SQL_TABLE_NAME} i on i.created_date::date = aa.date and i.sku_id = aa.sku_id and aa.channel = 'NA'
       left join ${po_day_sku.SQL_TABLE_NAME} po on po.estimated_arrival_date::date = aa.date and po.sku_id = aa.sku_id and aa.channel = 'NA'
       left join ${aop_day_sku.SQL_TABLE_NAME} aop on aop.forecast_date::date = aa.date and aop.sku_id = aa.sku_id and aop.channel = aa.channel
+      left join ${lrp_day_sku.SQL_TABLE_NAME} lrp on lrp.forecast_date::date = aa.date and lrp.sku_id = aa.sku_id and lrp.channel = aa.channel
     ;;
     datagroup_trigger: pdt_refresh_6am
   }
@@ -385,6 +409,18 @@ view: day_sku_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.plan_units;; }
+
+  measure: lrp_amount {
+    type: sum
+    label: "LRP Amount $"
+    value_format: "$#,##0"
+    sql: ${TABLE}.lrp_amount;; }
+
+  measure: lrp_units {
+    type: sum
+    label: "LRP Units"
+    value_format: "#,##0"
+    sql: ${TABLE}.lrp_units;; }
 
   measure: units_on_hand {
     type: sum
