@@ -8,7 +8,7 @@ view: item {
     description: "Internal Netsuite ID. Source:netsuite.item"
     link: {
       label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item.item_id._value }}"
+      url: "https://system.na2.netsuite.com/app/common/item/item.nl?id={{ item_id._value }}"
       icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"}
     type: number
     sql: ${TABLE}.ITEM_ID ;;

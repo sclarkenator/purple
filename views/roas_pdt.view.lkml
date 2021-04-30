@@ -76,6 +76,7 @@ view: sales_pdt {
       column: repeat_customer {field: first_order_flag.repeat_customer}
       column: payment_method {field: sales_order.payment_method}
       column: order_id { field: sales_order.order_id }
+      column: mattress_sales { field: sales_order_line.mattress_sales }
       filters: { field: sales_order_line_base.created_date value: "2 years" }
     }
   }
@@ -90,6 +91,7 @@ view: sales_pdt {
   dimension: repeat_customer {type: number}
   dimension: payment_method {type: string}
   dimension: order_id {type: string}
+  dimension: mattress_sales {type:number}
 
 }
 
@@ -217,6 +219,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -246,6 +249,7 @@ view: roas_pdt {
       , Sum_non_bounced_session as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -275,6 +279,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , total_orders as orders
       , total_gross_Amt_non_rounded as sales
+      , mattress_sales as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , new_customer
@@ -304,6 +309,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , ATTRIBUTION_AMOUNT as c3_cohort_sales
       , TRENDED_AMOUNT as c3_trended_sales
       , null as new_customer
@@ -333,6 +339,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -362,6 +369,7 @@ view: roas_pdt {
       , null as qualified_sessions
       , null as orders
       , null as sales
+      , null as mattress_sales
       , null as c3_cohort_sales
       , null as c3_trended_sales
       , null as new_customer
@@ -476,6 +484,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('ash','asher media') then 'AsherMedia'
         when lower(${TABLE}.platform)  in ('bra','brave') then 'BRAVE'
         when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
+        when lower(${TABLE}.platform)  in ('bu', 'bucksense') then 'Bucksense'
         when lower(${TABLE}.platform)  in ('cor','co','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
         when lower(${TABLE}.platform)  in ('couponbytes') then 'Couponbytes'
@@ -495,8 +504,10 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('linkedin', 'li') then 'LinkedIn'
         when lower(${TABLE}.platform)  in ('meredith') then 'Meredith'
         when lower(${TABLE}.platform)  in ('madrivo') then 'Madrivo'
+        when lower(${TABLE}.platform)  in ('nb','nbc') then 'Madrivo'
         when lower(${TABLE}.platform)  in ('adwallet') then 'Adwallet'
-        when lower(${TABLE}.platform)  in ('liveintent') then 'Liveintent'
+        when lower(${TABLE}.platform)  in ('li','liveintent') then 'Liveintent'
+        when lower(${TABLE}.platform)  in ('po', 'pocket') then 'Pocket'
         when lower(${TABLE}.platform)  in ('hulu') then 'Hulu'
         when lower(${TABLE}.platform)  in ('integral media') then 'Integral Media'
         when lower(${TABLE}.platform)  in ('ir', 'impact radius') then 'Impact Radius'
@@ -664,7 +675,11 @@ dimension: medium_source {
   type: string
   sql: concat(${medium_clean_new},${platform_clean}) ;;
 }
-
+  dimension: source_type {
+    label: "Medium/Source"
+    type: string
+    sql: concat(${platform_clean},${campaign_type_clean}) ;;
+  }
 dimension: medium_source_type {
     label: "Medium/Source"
     type: string
@@ -693,6 +708,7 @@ dimension: medium_source_type {
     type: sum
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.clicks ;;
+
   }
 
   measure: cpm {
@@ -735,7 +751,7 @@ dimension: medium_source_type {
   measure: bounce_rate {
     description: "Percent of sessions where user only viewed one page and left the site"
     type: number
-    sql: (${sessions}-${qualified_sessions})/${sessions} ;;
+    sql: (${sessions}-${qualified_sessions})/nullif(${sessions},0) ;;
     value_format_name: percent_1
   }
 
@@ -745,6 +761,13 @@ dimension: medium_source_type {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.orders ;;
+  }
+  measure: aov {
+    label: "AOV"
+    description: "Average Order Value (gross sales/orders)"
+    value_format: "$#,##0"
+    type: number
+    sql: ${sales}/nullif(${orders},0) ;;
   }
 
   measure: total_cvr {
@@ -762,6 +785,14 @@ dimension: medium_source_type {
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
     sql: ${TABLE}.sales ;;
+  }
+  measure: mattress_sales {
+    label: "Mattress Sales ($k)"
+    description: "Mattress Sales - beware filtering by non sales fields"
+    type: sum
+    value_format: "$#,##0,\" K\""
+    #value_format: "$#,##0"
+    sql: ${TABLE}.mattress_sales;;
   }
 
   measure: c3_cohort_sales {
@@ -853,12 +884,20 @@ dimension: medium_source_type {
     type: number
     sql: ${adspend}/nullif(${influenced},0);;
   }
+  measure: site_roas {
+    label: "ROAS"
+    description: "ROAS from website sessions"
+    value_format: "$#,##0.00"
+    type: number
+    sql:${roas_pdt.sales}/nullif(${roas_pdt.adspend},0);;
+  }
 
   parameter: breakdowns {type: string
     allowed_value: { value: "Medium" }
     allowed_value: { value: "Source" }
     allowed_value: { value: "Type" }
     allowed_value: { value: "Medium/Source"}
+    allowed_value: { value: "Source/Type"}
     allowed_value: { value: "Medium/Source/Type"}
   }
 
@@ -870,6 +909,7 @@ dimension: medium_source_type {
              WHEN {% parameter breakdowns %} = 'Source' THEN ${platform_clean}
              WHEN {% parameter breakdowns %} = 'Type' THEN ${campaign_type_clean}
              WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
+             WHEN {% parameter breakdowns %} = 'Source/Type' THEN ${source_type}
              WHEN {% parameter breakdowns %} = 'Medium/Source/Type' THEN ${medium_source_type}
              ELSE NULL
             END ;;

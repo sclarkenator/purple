@@ -1,5 +1,5 @@
 view: hierarchy_draft {
-  sql_table_name: "CSV_UPLOADS"."HIERARCHY_DRAFT"
+  sql_table_name: CSV_UPLOADS.DRAFT_hierarchy_ii
     ;;
 
   dimension: category {
@@ -22,9 +22,9 @@ view: hierarchy_draft {
     sql: ${TABLE}."NAME" ;;
   }
 
-  dimension: tempsku {
+  dimension: sku {
     type: number
-    sql: ${TABLE}."TEMPSKU" ;;
+    sql: ${TABLE}.SKU ;;
   }
 
   dimension: version {
