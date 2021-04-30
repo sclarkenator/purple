@@ -760,7 +760,7 @@ dimension: medium_source_type {
     description: "Average Order Value (gross sales/orders)"
     value_format: "$#,##0"
     type: number
-    sql: ${sales}/${orders} ;;
+    sql: ${sales}/nullif(${orders},0) ;;
   }
 
   measure: total_cvr {
@@ -882,7 +882,7 @@ dimension: medium_source_type {
     description: "ROAS from website sessions"
     value_format: "$#,##0.00"
     type: number
-    sql:${roas_pdt.sales}/${roas_pdt.adspend};;
+    sql:${roas_pdt.sales}/nullif(${roas_pdt.adspend},0);;
   }
 
   parameter: breakdowns {type: string
