@@ -680,7 +680,7 @@ include: "/dashboards/**/*.dashboard"
     }
     join: contact {
       view_label: "Contact"
-      from: tealium_contact
+      from: customer
       type: left_outer
       relationship: one_to_one
       sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
@@ -733,6 +733,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       relationship: one_to_many
       sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_last_order.email}) AND ${customer_last_order.last_order} = true;;
+    }
+    join: customer_all_orders {
+      view_label: " All Orders"
+      from: v_customer_order_sequence
+      type: left_outer
+      relationship: one_to_many
+      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_all_orders.email});;
     }
     # join: customer_table {
     #   view_label: "Customers"
