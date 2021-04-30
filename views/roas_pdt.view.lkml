@@ -484,6 +484,7 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('ash','asher media') then 'AsherMedia'
         when lower(${TABLE}.platform)  in ('bra','brave') then 'BRAVE'
         when lower(${TABLE}.platform)  in ('bg','bing','bing','bn') then 'Bing'
+        when lower(${TABLE}.platform)  in ('bu', 'bucksense') then 'Bucksense'
         when lower(${TABLE}.platform)  in ('cor','co','cordless') then 'Cordless'
         when lower(${TABLE}.platform)  in ('chatbot') then 'Chatbot'
         when lower(${TABLE}.platform)  in ('couponbytes') then 'Couponbytes'
@@ -503,8 +504,10 @@ view: roas_pdt {
         when lower(${TABLE}.platform)  in ('linkedin', 'li') then 'LinkedIn'
         when lower(${TABLE}.platform)  in ('meredith') then 'Meredith'
         when lower(${TABLE}.platform)  in ('madrivo') then 'Madrivo'
+        when lower(${TABLE}.platform)  in ('nb','nbc') then 'Madrivo'
         when lower(${TABLE}.platform)  in ('adwallet') then 'Adwallet'
-        when lower(${TABLE}.platform)  in ('liveintent') then 'Liveintent'
+        when lower(${TABLE}.platform)  in ('li','liveintent') then 'Liveintent'
+        when lower(${TABLE}.platform)  in ('po', 'pocket') then 'Pocket'
         when lower(${TABLE}.platform)  in ('hulu') then 'Hulu'
         when lower(${TABLE}.platform)  in ('integral media') then 'Integral Media'
         when lower(${TABLE}.platform)  in ('ir', 'impact radius') then 'Impact Radius'
@@ -672,7 +675,11 @@ dimension: medium_source {
   type: string
   sql: concat(${medium_clean_new},${platform_clean}) ;;
 }
-
+  dimension: source_type {
+    label: "Medium/Source"
+    type: string
+    sql: concat(${platform_clean},${campaign_type_clean}) ;;
+  }
 dimension: medium_source_type {
     label: "Medium/Source"
     type: string
@@ -694,47 +701,6 @@ dimension: medium_source_type {
     value_format: "#,##0,\" K\""
     sql: ${TABLE}.impressions ;;
   }
-  # measure: impressions_num{
-  #   label: "Impressions num (#k)"
-  #   description: "Total Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: ${TABLE}.impressions ;;
-  # }
-
-  # measure: min_impressions {
-  #   label: "Min Impressions (#k)"
-  #   group_label: "Scorecard"
-  #   ##hidden: yes
-  #   description: "Minimum Impressions - beware filtering by non adspend fields"
-  #   type: min
-  #   value_format: "#,##0"
-  #   sql:${TABLE}.impressions ;;
-  # }
-  # measure: max_impressions {
-  #   label: "Max Impressions (#k)"
-  #   hidden: yes
-  #   description: "Max Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: max(${roas_pdt.impressions});;
-  # }
-  # measure: min_max_impressions {
-  #   label: "Max-Min Impressions (#k)"
-  #   hidden: yes
-  #   description: "Max Impressions - beware filtering by non adspend fields"
-  #   type: number
-  #   value_format: "#,##0,\" K\""
-  #   sql: ${min_impressions} - ${max_impressions};;
-  # }
-  # measure: normalized_impressions {
-  #   label: "Impression (N)"
-  #   group_label: "Scorecard"
-  #   description: "Normalized Impressions"
-  #   type: number
-  #   value_format: "0.00\%"
-  #   sql: (${impressions}-${min_impressions})/${min_max_impressions};;
-  # }
 
   measure: clicks {
     label: "Clicks (#)"
@@ -796,6 +762,13 @@ dimension: medium_source_type {
     value_format: "#,##0"
     sql: ${TABLE}.orders ;;
   }
+  measure: aov {
+    label: "AOV"
+    description: "Average Order Value (gross sales/orders)"
+    value_format: "$#,##0"
+    type: number
+    sql: ${sales}/nullif(${orders},0) ;;
+  }
 
   measure: total_cvr {
     description: "% of all Sessions that resulted in an order. Source: looker.calculation"
@@ -819,7 +792,7 @@ dimension: medium_source_type {
     type: sum
     value_format: "$#,##0,\" K\""
     #value_format: "$#,##0"
-    sql: ${TABLE}.mattress_sales ;;
+    sql: ${TABLE}.mattress_sales;;
   }
 
   measure: c3_cohort_sales {
@@ -911,12 +884,20 @@ dimension: medium_source_type {
     type: number
     sql: ${adspend}/nullif(${influenced},0);;
   }
+  measure: site_roas {
+    label: "ROAS"
+    description: "ROAS from website sessions"
+    value_format: "$#,##0.00"
+    type: number
+    sql:${roas_pdt.sales}/nullif(${roas_pdt.adspend},0);;
+  }
 
   parameter: breakdowns {type: string
     allowed_value: { value: "Medium" }
     allowed_value: { value: "Source" }
     allowed_value: { value: "Type" }
     allowed_value: { value: "Medium/Source"}
+    allowed_value: { value: "Source/Type"}
     allowed_value: { value: "Medium/Source/Type"}
   }
 
@@ -928,6 +909,7 @@ dimension: medium_source_type {
              WHEN {% parameter breakdowns %} = 'Source' THEN ${platform_clean}
              WHEN {% parameter breakdowns %} = 'Type' THEN ${campaign_type_clean}
              WHEN {% parameter breakdowns %} = 'Medium/Source' THEN ${medium_source}
+             WHEN {% parameter breakdowns %} = 'Source/Type' THEN ${source_type}
              WHEN {% parameter breakdowns %} = 'Medium/Source/Type' THEN ${medium_source_type}
              ELSE NULL
             END ;;
