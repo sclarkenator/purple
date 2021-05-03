@@ -54,6 +54,12 @@ view: talkable_referral {
     sql: ${TABLE}."TYPE" ;;
   }
 
+  dimension: sales_order {
+    type: yesno
+    hidden: yes
+    sql: ${sales_order.order_id} is not null ;;
+  }
+
   measure: count {
     type: count
     hidden: yes

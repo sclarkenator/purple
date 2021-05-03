@@ -514,7 +514,7 @@ include: "/dashboards/**/*.dashboard"
       relationship:  one_to_one
     }
     join: talkable_referral {
-      type: left_outer
+      type: full_outer
       sql_on: ${talkable_referral.order_number} = ${sales_order.related_tranid} ;;
       relationship: one_to_one
     }
