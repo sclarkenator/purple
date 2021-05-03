@@ -230,7 +230,7 @@ view: zendesk_chat_engagements {
     label: "Average Engagement Duration"
     description: "Average of engagement duration in sec"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${handle_time} ;;
   }
 
