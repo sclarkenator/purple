@@ -865,7 +865,7 @@ view: day_aggregations {
   measure: forecast_dtc_amount {
     label: "Forecast DTC Amount"
     group_label: "Forecast"
-    description: "Total DTC forecast amount aggregated to the day."
+    description: "Total DTC forecast amount aggregated to the day. Excludes Amazon/Ebay"
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.forecast_dtc_amount;; }
@@ -873,7 +873,7 @@ view: day_aggregations {
   measure: forecast_dtc_units {
     label: "Forecast DTC Units"
     group_label: "Forecast"
-    description: "Total DTC forecast units aggregated to the day."
+    description: "Total DTC forecast units aggregated to the day. Excludes Amazon/Ebay"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.forecast_dtc_units;; }
