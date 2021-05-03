@@ -119,6 +119,21 @@ view: zendesk_chats {
     sql: ${TABLE}."DEPARTMENT_NAME" ;;
   }
 
+  dimension: department_name_clean {
+    type: string
+    ##group_label: "Advanced - Chats"
+    label: "   Department Name Clean"
+    description: "Temporary calculation to attribute as many chats to the appropriate workgroup until the NULL issue is corrected in Zendesk."
+    sql:
+    case
+      when ${department_name}='Sales Chat' then 'Sales Chat'
+      when ${department_name}='Support Chat' then 'Support Chat'
+      when ${agent_lkp.team_type}='Sales' then 'Sales Chat'
+      when ${agent_lkp.team_type}='Chat' then 'Support Chat'
+      else 'Sales Chat'
+    end ;;
+  }
+
   dimension: duration {
     type: number
     group_label: "Advanced - Chats"
