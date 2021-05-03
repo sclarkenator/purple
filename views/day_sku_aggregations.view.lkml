@@ -316,6 +316,24 @@ view: day_sku_aggregations {
     type: yesno
     sql:  date_trunc(week, ${TABLE}.date::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
 
+  dimension: month_buckets{
+    group_label: "Dynamic Date"
+    label: "z - Month Buckets"
+    hidden: no
+    type: string
+    sql: CASE WHEN ${date_month_num} = date_part (month,current_date) - 1 AND ${date_year} = date_part (year,current_date) THEN 'Last Month'
+              WHEN ${date_month_num} = date_part (month,current_date) - 1 AND ${date_year} = date_part (year,current_date)-1 THEN 'Last Month LY'
+              WHEN ${date_month_num} = date_part (month,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Current Month'
+              WHEN ${date_month_num} = date_part (month,current_date) AND ${date_year} = date_part (year,current_date)-1 THEN 'Current Month LY'
+              ELSE 'Other' END;; }
+
+  dimension: ytd_complete_months {
+    group_label: "Dynamic Date"
+    label: "z - YTD Complete Months"
+    hidden: no
+    type: yesno
+    sql: ${date_month_num} <= date_part (month,current_date);; }
+
   dimension: cur_week{
     group_label: "Dynamic Date"
     label: "z - Current Week"
