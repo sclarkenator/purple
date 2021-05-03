@@ -67,12 +67,12 @@ view: sleep_country_canada_sales {
 
   dimension: phone_home {
     type: string
-    sql: ${TABLE}."PHONE_HOME" ;;
+    sql: SPLIT_PART(${TABLE}."PHONE_HOME",'.',0) ;;
   }
 
   dimension: phone_mobile {
     type: string
-    sql: ${TABLE}."PHONE_MOBILE" ;;
+    sql: SPLIT_PART(${TABLE}."PHONE_MOBILE",'.',0) ;;
   }
 
   dimension: product {
