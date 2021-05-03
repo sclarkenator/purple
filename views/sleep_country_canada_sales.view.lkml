@@ -54,6 +54,13 @@ view: sleep_country_canada_sales {
     sql: ${TABLE}."NET_SALES" ;;
   }
 
+  measure: net_sales_no_format {
+    type: sum
+    hidden: yes
+    value_format: "###0"
+    sql: ${TABLE}."NET_SALES" ;;
+  }
+
   dimension: net_units {
     type: number
     value_format: "#,##0"
