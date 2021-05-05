@@ -111,6 +111,6 @@ view: sleep_country_canada_sales {
 
   dimension: net_sales_dim {
     type: number
-    sql: ${TABLE}."NET_SALES" ;;
+    sql: ${TABLE}."NET_SALES_USD" ;;
   }
 }
