@@ -66,13 +66,6 @@ where z.row_num = 1;;
     sql: ${TABLE}."CREATEDBY" ;;
   }
 
-  dimension: cycle_time {
-    hidden: yes
-    description: "Source: l2l.pitch"
-    type: number
-    sql: ${TABLE}."CYCLE_TIME" ;;
-  }
-
   dimension: has_actual_details {
     hidden: yes
     type: yesno
@@ -248,24 +241,28 @@ where z.row_num = 1;;
   }
 
   measure: total_operator_count {
+    hidden: yes
     description: "Total number of Operators; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."OPERATOR_COUNT" ;;
   }
 
   measure: Avg_operator_count {
+    hidden: yes
     description: "Average Operator Count; Source: l2l.pitch"
     type: average
     sql: ${TABLE}."OPERATOR_COUNT" ;;
   }
 
   measure: Total_planned_operator_count {
+    hidden: yes
     description: "Total Planned Operator Count; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
   }
 
   measure: Avg_planned_operator_count {
+    hidden: yes
     description: "Average Planned Operator Count; Source: l2l.pitch"
     type: average
     sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
@@ -284,9 +281,16 @@ where z.row_num = 1;;
     sql: ${TABLE}."SCRAP" ;;
   }
 
+  measure: cycle_time {
+    description: "Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."CYCLE_TIME" ;;
+  }
+
   measure: count {
     hidden: yes
     type: count
     drill_fields: [pitch_id, name]
   }
-}
+
+  }
