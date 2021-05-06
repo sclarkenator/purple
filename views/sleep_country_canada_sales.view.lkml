@@ -49,9 +49,17 @@ view: sleep_country_canada_sales {
   }
 
   measure: net_sales {
+    label: "Net Sales USD"
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}."NET_SALES_USD" ;;
+  }
+
+  measure: net_sales_cad {
+    label: "Net Sales CAD"
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}."NET_SALES_CAD" ;;
   }
 
   measure: net_sales_no_format {
@@ -63,6 +71,12 @@ view: sleep_country_canada_sales {
 
   dimension: net_units {
     type: number
+    value_format: "#,##0"
+    sql: ${TABLE}."NET_UNITS" ;;
+  }
+
+  measure: total_net_units {
+    type: sum
     value_format: "#,##0"
     sql: ${TABLE}."NET_UNITS" ;;
   }
