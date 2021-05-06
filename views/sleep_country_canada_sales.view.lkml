@@ -51,14 +51,14 @@ view: sleep_country_canada_sales {
   measure: net_sales {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}."NET_SALES" ;;
+    sql: ${TABLE}."NET_SALES_USD" ;;
   }
 
   measure: net_sales_no_format {
     type: sum
     hidden: yes
     value_format: "###0"
-    sql: ${TABLE}."NET_SALES" ;;
+    sql: ${TABLE}."NET_SALES_USD" ;;
   }
 
   dimension: net_units {
@@ -111,6 +111,6 @@ view: sleep_country_canada_sales {
 
   dimension: net_sales_dim {
     type: number
-    sql: ${TABLE}."NET_SALES" ;;
+    sql: ${TABLE}."NET_SALES_USD" ;;
   }
 }
