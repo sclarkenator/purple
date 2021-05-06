@@ -233,6 +233,13 @@ where z.row_num = 1;;
     sql: ${TABLE}."NONPRODUCTION_MINUTES" ;;
   }
 
+  measure: operational_availability_avg {
+    hidden: yes
+    type: average
+    value_format: "0\%"
+    sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+  }
+
   measure: operational_availability {
     description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
     type: number
