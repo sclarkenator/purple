@@ -12,12 +12,16 @@ view: customer {
 
   dimension: address_line_1 {
     type: string
-    sql: ${TABLE}."ADDRESS_LINE_1" ;;
+    # sql: ${TABLE}."ADDRESS_LINE_1" -- Adding PII Protection
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}."ADDRESS_LINE_1"
+    ELSE '**********'END ;;
   }
 
   dimension: address_line_2 {
     type: string
-    sql: ${TABLE}."ADDRESS_LINE_2" ;;
+    # sql: ${TABLE}."ADDRESS_LINE_2" -- Adding PII Protection
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}."ADDRESS_LINE_2"
+    ELSE '**********'END;;
   }
 
   dimension: all_devices_used {
@@ -62,7 +66,11 @@ view: customer {
 
   dimension: city {
     type: string
-    sql: ${TABLE}."CITY" ;;
+    # sql: ${TABLE}."CITY" -- Adding PII Protection
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}."CITY"
+    ELSE '**********'END
+
+    ;;
   }
 
   dimension: country {
@@ -71,11 +79,19 @@ view: customer {
     sql: ${TABLE}."COUNTRY" ;;
   }
 
+  # dimension: email_address {
+  #   type: string
+  #   sql: ${TABLE}."EMAIL" ;;
+  #   primary_key: yes
+  # }
+
+  # blocking pii
   dimension: email_address {
-    type: string
-    sql: ${TABLE}."EMAIL" ;;
     primary_key: yes
-  }
+    description: "Customer Email Address in the Customer table. Source:netsuite.sales_order"
+    type: string
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}.email
+      ELSE '**********' || '@' || SPLIT_PART(${TABLE}.email, '@', 2) END ;; }
 
   dimension: email_is_disposable {
     type: yesno
@@ -440,7 +456,9 @@ view: customer {
 
   dimension: phone_number {
     type: string
-    sql: ${TABLE}."PHONE_NUMBER" ;;
+    # sql: ${TABLE}."PHONE_NUMBER" -- Adding PII Protection
+    sql: CASE WHEN '{{ _user_attributes['can_view_pii'] }}' = 'yes' THEN ${TABLE}."PHONE_NUMBER"
+    ELSE '**********'END;;
   }
 
   dimension: qualtrics_survey_count {
