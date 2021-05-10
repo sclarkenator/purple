@@ -332,7 +332,7 @@ view: day_sku_aggregations {
     label: "z - YTD Complete Months"
     hidden: no
     type: yesno
-    sql: ${date_month_num} <= date_part (month,current_date);; }
+    sql: ${date_month_num} < date_part (month,current_date);; }
 
   dimension: cur_week{
     group_label: "Dynamic Date"
