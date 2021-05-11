@@ -2344,14 +2344,14 @@ view: sales_order_line {
   measure: asp_gross_amt_mattress {
     hidden: yes
     type: sum
-    filters: [free_item: "No" , item.category_name: "MATTRESS" ]
+    filters: [free_item: "No" , item.category_name: "MATTRESS", item.line_raw: "-COVER" ]
     sql: ${TABLE}.gross_amt ;;
   }
 
   measure: asp_total_units_mattress {
     hidden: yes
     type: sum
-    filters: [free_item: "No", item.category_name: "MATTRESS"]
+    filters: [free_item: "No",gross_amt: "> 0" , item.category_name: "MATTRESS", item.line_raw: "-COVER" ]
     sql: ${TABLE}.ordered_qty ;;
   }
 
