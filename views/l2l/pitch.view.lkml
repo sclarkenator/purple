@@ -8,7 +8,7 @@ derived_table: {
         , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
     from ANALYTICS.L2L.Pitch
 ) z
-where z.row_num = 1;;
+where z.row_num = 1 and delete_ts is null;;
 }
 
   dimension: pitch_id {
