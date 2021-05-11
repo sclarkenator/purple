@@ -233,18 +233,11 @@ where z.row_num = 1 and delete_ts is null;;
     sql: ${TABLE}."NONPRODUCTION_MINUTES" ;;
   }
 
-  measure: operational_availability_avg {
-    hidden: yes
+  measure: operational_availability {
+    description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
     type: average
     value_format: "0\%"
     sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
-  }
-
-  measure: operational_availability {
-    description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
-    type: number
-    value_format: "0\%"
-    sql: coalesce(((${planned_production_minutes}-${downtime_minutes})/${planned_production_minutes})*100,0) ;;
   }
 
   measure: total_operator_count {
