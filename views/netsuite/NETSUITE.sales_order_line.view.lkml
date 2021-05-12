@@ -1241,7 +1241,7 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
