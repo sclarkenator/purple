@@ -32,6 +32,13 @@ dimension: primary_key {
     sql: ${TABLE}."AGENT_ID" ;;
   }
 
+  dimension: contact_id {
+    type: string
+    description: "Call Segment Incontact ID Source: incontact. rpt_skill_with_disposition_count"
+    hidden: no
+    sql: ${TABLE}."CONTACT_ID" ;;
+  }
+
   dimension: avg_inqueue_time {
     description: "Source: incontact. rpt_skill_with_disposition_count"
     type: number
