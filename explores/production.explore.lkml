@@ -387,13 +387,13 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Pitch"
       type: left_outer
       sql_on: ${scrap_detail.category} = ${scrap_category.id} ;;
-      relationship: one_to_many
+      relationship: one_to_one
     }
     join: product {
       view_label: "Pitch"
       type: left_outer
-      sql_on: ${scrap_detail.product} = ${product.product_id} ;;
-      relationship: one_to_one
+      sql_on: ${ltol_pitch.actual_product} = ${product.product_id};;
+      relationship: one_to_many
     }
     join: v_dispatch_with_downtime_minutes {
       view_label: "Dispatch by Date"
