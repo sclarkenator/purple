@@ -112,13 +112,6 @@ where z.row_num = 1 and delete_ts is null;;
     sql: ${TABLE}."NAME" ;;
   }
 
-  dimension: overall_equipment_effectiveness {
-    hidden: yes
-    description: "Source: l2l.pitch"
-    type: number
-    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
-  }
-
   dimension_group: pitch_end {
     hidden: yes
     description: "Pitch Name (Start of Shift, End of Shift, Break, Lunch, etc); Source: l2l.pitch"
@@ -238,6 +231,13 @@ where z.row_num = 1 and delete_ts is null;;
     type: average
     value_format: "0\%"
     sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+  }
+
+  measure: overall_equipment_effectiveness {
+    hidden: yes
+    description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
+    type: average
+    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
   }
 
   measure: total_operator_count {
