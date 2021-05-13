@@ -157,6 +157,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: shift {
+    hidden: yes
     description: "(Shift 1  is 7am-7pm, Shift 2 is 7pm-7am; Source: l2l.pitch"
     type: number
     sql: ${TABLE}."SHIFT" ;;
