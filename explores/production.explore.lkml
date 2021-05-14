@@ -413,6 +413,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${dispatch.dispatch_id} = ${dispatch_technician.dispatch_id} and ${dispatch.dispatch_number} = ${dispatch_technician.dispatch_number} ;;
       relationship: one_to_many
     }
+    join: resource_shift {
+      view_label: "Shift"
+      type: left_outer
+      sql_on: ${ltol_pitch.shift} = ${resource_shift.id} and ${ltol_pitch.site} = ${resource_shift.site} ;;
+      relationship: one_to_one
+    }
   }
 
   explore: bill_of_materials {
