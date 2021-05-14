@@ -8,6 +8,7 @@ view: sales_base {
       column: line_raw { field: item.line_raw }
       column: model_raw { field: item.model_raw }
       column: product_description_raw { field: item.product_description_raw }
+      column: sku_id { field: item.sku_id }
       column: return_completed { field: return_order.return_completed }
       column: is_warrantied { field: warranty_order_line.is_warrantied }
       column: payment_method_flag { field: sales_order.payment_method_flag }
@@ -19,13 +20,17 @@ view: sales_base {
       column: free_item {}
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
+      column: gross_margin {}
+      column: adj_gross_amt {}
       column: mattress_flg { field: order_flag.mattress_flg }
       column: pillow_flg { field: order_flag.pillow_flg }
       column: sheets_flg { field: order_flag.sheets_flg }
       column: cushion_flg { field: order_flag.cushion_flg }
       filters: { field: sales_order.channel_id value: "1,2,5" }
     }
+    datagroup_trigger: pdt_refresh_6am
   }
+
   extends: [_period_comparison]
 
   #### Used with period comparison view
@@ -107,6 +112,11 @@ view: sales_base {
     group_label: "  Product Hierarchy"
     type: string
   }
+  dimension: sku_id {
+    label: "5. SKU"
+    group_label: "  Product Hierarchy"
+    type: string
+  }
   dimension_group: order {
     group_label: "   Order Date"
     hidden:  no
@@ -141,11 +151,29 @@ view: sales_base {
     type: sum
   }
   measure: orders {
-    label: " Orders"
+    label: "  Orders"
     description: "Count of Distinct Orders"
     value_format: "#,##0"
     type: count_distinct
     sql: ${order_id} ;;
+  }
+  measure: gross_margin {
+    label: " Margin ($)"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${TABLE}.gross_margin ;;
+  }
+  measure: adj_gross_amt {
+    label: " Adjust Gross Sales ($)"
+    value_format: "$#,##0"
+    type: sum
+    sql: ${TABLE}.adj_gross_amt ;;
+  }
+  measure: gm_rate {
+    label: " Margin Rate"
+    value_format: "0.0%"
+    type: number
+    sql: case when ${adj_gross_amt} > 0 then ${gross_margin}/${adj_gross_amt} end ;;
   }
   measure: aov {
     label: "AOV"
