@@ -2,8 +2,16 @@
   view: v_agent_state {
     sql_table_name: CUSTOMER_CARE.v_agent_state ;;
 
-    dimension: reported {
-      type: date
+    dimension_group: reported {
+      type: time
+      timeframes: [
+        raw,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
       sql: ${TABLE}.reported ;;
     }
 
