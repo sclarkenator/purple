@@ -13,6 +13,7 @@ view: sales_day_sku {
       column: adj_gross_amt {}
       column: unfulfilled_orders {}
       column: unfulfilled_orders_units {}
+      column: gross_margin {}
       filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
 ##      filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
       filters: { field: sales_order_line.created_date value: "3 years" }
@@ -26,6 +27,7 @@ view: sales_day_sku {
   dimension: adj_gross_amt { type: number }
   dimension: unfulfilled_orders { type: number }
   dimension: unfulfilled_orders_units { type: number }
+  dimension: gross_margin { type: number }
 }
 
 ######################################################
@@ -165,6 +167,7 @@ view: day_sku_aggregations {
         , s.total_gross_Amt_non_rounded as total_sales
         , s.total_units as total_units
         , s.adj_gross_amt as total_adjusted_sales
+        , s.gross_margin as total_gross_margin
         , s.unfulfilled_orders as unfulfilled_sales
         , s.unfulfilled_orders_units as unfulfilled_units
         , p.Total_Quantity as produced_units
@@ -392,6 +395,11 @@ view: day_sku_aggregations {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.total_adjusted_sales;; }
+
+  measure: total_gross_margin {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.total_gross_margin;; }
 
   measure: unfulfilled_sales{
     type: sum

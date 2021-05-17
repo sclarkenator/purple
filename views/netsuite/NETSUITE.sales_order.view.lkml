@@ -303,7 +303,7 @@ view: sales_order {
     view_label: "Fulfillment"
     type:time
     hidden: no
-    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name,month_num, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: date
     sql:nvl(${TABLE}.SHIP_BY,${TABLE}.Created::date) ;; }

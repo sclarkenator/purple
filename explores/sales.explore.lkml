@@ -55,6 +55,15 @@ include: "/dashboards/**/*.dashboard"
       filters: [sales.channel2: "Owned Retail",
         sales.order_date: "30 days"]
     }
+    aggregate_table: date_sku {
+      query: {
+        dimensions: [order_date,sku_id]
+        measures: [adj_gross_amt, gm_rate, gross_amt, gross_margin]
+      }
+      materialization: {
+        datagroup_trigger: pdt_refresh_6am
+      }
+    }
   }
 
   explore: sales_order_line{
