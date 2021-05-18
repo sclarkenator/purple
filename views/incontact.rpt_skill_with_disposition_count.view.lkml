@@ -158,7 +158,7 @@ dimension: primary_key {
             then 'Sales OB'
         when ${skill} = 'PurpleBoysPodcast'
             then 'PurpleBoysPodcast'
-        when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)')
+        when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
             then 'Ops'
         else 'Admin'
     end
