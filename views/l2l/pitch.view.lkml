@@ -229,7 +229,7 @@ where z.row_num = 1 and delete_ts is null;;
     description: "(Planned Production Minutes - Downtime Minutes) * 60 / Cycle Time; Source: Looker Calculation"
     type: sum
     value_format: "0.##"
-    sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/${cycle_time_dim}) ;;
+    sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
   measure: actual {
