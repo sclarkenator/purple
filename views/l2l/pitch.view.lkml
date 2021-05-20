@@ -3,7 +3,8 @@ view: ltol_pitch {
  # sql_table_name: L2L.PITCH ;;
 
 derived_table: {
-  sql: select * from (
+  sql: select *
+  from (
     select *
         , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
     from ANALYTICS.L2L.Pitch
@@ -189,10 +190,77 @@ where z.row_num = 1 and delete_ts is null;;
     sql: ${TABLE}."SITE" ;;
   }
 
+  dimension: actual_dim {
+    hidden: yes
+    description: "Total amount of Actual Product Produced; Source: l2l.pitch"
+    type: number
+    sql: ${TABLE}."ACTUAL" ;;
+  }
+
+  dimension: scrap_dim {
+  hidden: yes
+    description: "Total number of Actual Products Produced that are Scrap; Source: l2l.pitch"
+    type: number
+    sql: ${TABLE}."SCRAP" ;;
+  }
+
+  dimension: planned_production_minutes_dim {
+    hidden: yes
+    description: "Dimension Version of the Planned Production Minutes; Source l2l.pitch"
+    type: number
+    sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES"  ;;
+  }
+
+  dimension: downtime_minutes_dim {
+    hidden: yes
+    description: "Dimension Version of the Downtime Minutes; Source l2l.pitch"
+    type: number
+    sql: ${TABLE}."DOWNTIME_MINUTES"  ;;
+  }
+
+  dimension: cycle_time_dim {
+    hidden: yes
+    description: "Dimension Version of the cylce Time; Source l2l.pitch"
+    type:number
+    sql: ${TABLE}."CYCLE_TIME" ;;
+  }
+
+  measure: theoretical_parts {
+    description: "(Planned Production Minutes - Downtime Minutes) * 60 / Cycle Time; Source: Looker Calculation"
+    type: sum
+    value_format: "0.##"
+    sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/${cycle_time_dim}) ;;
+  }
+
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."ACTUAL" ;;
+  }
+
+  measure: scrap {
+    label: "Scrap"
+    description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."SCRAP" ;;
+  }
+
+  measure: planned_production_minutes {
+    description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
+  }
+
+  measure: downtime_minutes {
+    description: "Total amount of Downtime Mintues; Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."DOWNTIME_MINUTES" ;;
+  }
+
+  measure: cycle_time {
+    description: "Source: l2l.pitch"
+    type: sum
+    sql: ${TABLE}."CYCLE_TIME" ;;
   }
 
   measure: changeover_earned_hours {
@@ -206,12 +274,6 @@ where z.row_num = 1 and delete_ts is null;;
     description: "Total amount of Demanded Product to be Produced; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."DEMAND" ;;
-  }
-
-  measure: downtime_minutes {
-    description: "Total amount of Downtime Mintues; Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."DOWNTIME_MINUTES" ;;
   }
 
   measure: earned_hours {
@@ -267,25 +329,6 @@ where z.row_num = 1 and delete_ts is null;;
     description: "Average Planned Operator Count; Source: l2l.pitch"
     type: average
     sql: ${TABLE}."PLANNED_OPERATOR_COUNT" ;;
-  }
-
-  measure: planned_production_minutes {
-    description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
-  }
-
-  measure: scrap {
-    label: "Scrap"
-    description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."SCRAP" ;;
-  }
-
-  measure: cycle_time {
-    description: "Source: l2l.pitch"
-    type: sum
-    sql: ${TABLE}."CYCLE_TIME" ;;
   }
 
   measure: count {
