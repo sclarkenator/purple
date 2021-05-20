@@ -518,12 +518,16 @@ view: sessions {
           when ${utm_medium} = 'sh'
           or ${utm_medium} = 'feed'
           or ${utm_medium} ilike '%shopping%' then 'pla'
-          when ${utm_medium} in ('sr','search','cpc') then 'search'
+          when ${utm_medium} in ('sr','search','cpc') and ${utm_term} in ('br') then 'branded search'
+          when ${utm_medium} in ('sr','search','cpc') then 'non branded search'
           when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' or ${utm_medium} ilike '%instagram%' or ${utm_medium} ilike 'twitter' then 'social'
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' or ${utm_source} = 'youtube' then 'video'
           when ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' then 'referral'
           when ${utm_medium} in( 'sms', 'tx') then 'SMS'
           when ${utm_medium} in ('tv','cinema', 'print','linear') then 'traditional'
+          when ${utm_medium} IS NULL and ${referrer} IS NOT NULL then 'organic'
+          when ${utm_medium} IS NULL then 'direct'
+
           else 'other' end ;;
   }
 
