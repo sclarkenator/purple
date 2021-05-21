@@ -390,6 +390,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
       relationship: many_to_one
     }
+    join: team_lead_name {
+      view_label: "Zendesk"
+      type: left_outer
+      sql_on: ${team_lead_name.incontact_id}=${agent_name.incontact_id}
+        and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
+      relationship: many_to_one
+    }
     join: promotions_combined {
       view_label: "Sales Order"
       type: left_outer
