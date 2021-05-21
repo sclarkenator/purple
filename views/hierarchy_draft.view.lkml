@@ -23,8 +23,8 @@ view: hierarchy_draft {
   }
 
   dimension: sku {
-    type: number
-    sql: ${TABLE}.SKU ;;
+    type: string
+    sql: ${TABLE}."SKU" ;;
   }
 
   dimension: version {
