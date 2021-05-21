@@ -1,5 +1,5 @@
 view: hierarchy_draft {
-  sql_table_name: CSV_UPLOADS.DRAFT_hierarchy_ii
+  sql_table_name: CSV_UPLOADS.DRAFT_hierarchy_iii
     ;;
 
   dimension: category {
