@@ -31,6 +31,30 @@ view: sales_day_sku {
 }
 
 ######################################################
+#   Fulfilled
+######################################################
+
+view: fulfilled_day_sku {
+  derived_table: {
+    explore_source: sales_order_line {
+      column: channel2 { field: sales_order.channel2 }
+      column: sku_id { field: item.sku_id }
+      column: fulfilled_date {}
+      column: fulfilled_orders {}
+      column: fulfilled_orders_units {}
+      filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
+      filters: {field: sales_order_line.fulfilled_date value: "3 years"}
+    }
+  }
+
+  dimension: channel2 { }
+  dimension: sku_id { }
+  dimension: fulfilled_date {type: date}
+  dimension: fulfilled_orders {type: number}
+  dimension: fulfilled_orders_units {type: number}
+}
+
+######################################################
 #   Production
 ######################################################
 view: production_day_sku {
@@ -170,6 +194,8 @@ view: day_sku_aggregations {
         , s.gross_margin as total_gross_margin
         , s.unfulfilled_orders as unfulfilled_sales
         , s.unfulfilled_orders_units as unfulfilled_units
+        , ff.fulfilled_orders as fulfilled_sales
+        , ff.fulfilled_orders_units as fulfilled_units
         , p.Total_Quantity as produced_units
         , f.total_amount as forecast_amount
         , f.total_units as forecast_units
@@ -201,6 +227,7 @@ view: day_sku_aggregations {
         where date between '2019-01-01' and '2023-12-31'
       ) aa
       left join ${sales_day_sku.SQL_TABLE_NAME} s on s.created_date::date = aa.date and s.sku_id = aa.sku_id and s.channel2 = aa.channel
+      left join ${fulfilled_day_sku.SQL_TABLE_NAME} ff on ff.fulfilled_date::date = aa.date and ff.sku_id = aa.sku_id and ff.channel2 = aa.channel
       left join ${production_day_sku.SQL_TABLE_NAME} p on p.produced_date::date = aa.date and p.sku_id = aa.sku_id and aa.channel = 'NA'
       left join ${forecast_day_sku.SQL_TABLE_NAME} f on f.date_date::date = aa.date and f.sku_id = aa.sku_id and f.channel = aa.channel
       left join ${inventory_day_sku.SQL_TABLE_NAME} i on i.created_date::date = aa.date and i.sku_id = aa.sku_id and aa.channel = 'NA'
@@ -403,87 +430,115 @@ view: day_sku_aggregations {
 
   measure: unfulfilled_sales{
     type: sum
+    group_label: "Fulfilled"
     value_format: "$#,##0"
     sql: ${TABLE}.unfulfilled_sales;; }
 
   measure: unfulfilled_units {
     type: sum
+    group_label: "Fulfilled"
     value_format: "#,##0"
     sql: ${TABLE}.unfulfilled_units;; }
 
+  measure: fulfilled_sales{
+    type: sum
+    group_label: "Fulfilled"
+    value_format: "$#,##0"
+    sql: ${TABLE}.fulfilled_sales;; }
+
+  measure: fulfilled_units {
+    type: sum
+    group_label: "Fulfilled"
+    value_format: "#,##0"
+    sql: ${TABLE}.fulfilled_units;; }
+
   measure: produced_units {
     type: sum
+    group_label: "Produced"
     value_format: "#,##0"
     sql: ${TABLE}.produced_units;; }
 
   measure: forecast_amount {
     type: sum
+    group_label: "Forecast"
     value_format: "$#,##0"
     sql: ${TABLE}.forecast_amount;; }
 
   measure: forecast_units {
     type: sum
+    group_label: "Forecast"
     value_format: "#,##0"
     sql: ${TABLE}.forecast_units;; }
 
   measure: plan_amount {
     type: sum
+    group_label: "Plan"
     value_format: "$#,##0"
     sql: ${TABLE}.plan_amount;; }
 
   measure: plan_units {
     type: sum
+    group_label: "Plan"
     value_format: "#,##0"
     sql: ${TABLE}.plan_units;; }
 
   measure: lrp_amount {
     type: sum
     label: "LRP Amount $"
+    group_label: "Plan"
     value_format: "$#,##0"
     sql: ${TABLE}.lrp_amount;; }
 
   measure: lrp_units {
     type: sum
     label: "LRP Units"
+    group_label: "Plan"
     value_format: "#,##0"
     sql: ${TABLE}.lrp_units;; }
 
   measure: units_on_hand {
     type: sum
+    group_label: "Inventory"
     value_format: "#,##0"
     sql: ${TABLE}.units_on_hand;; }
 
   measure: units_available {
     type: sum
+    group_label: "Inventory"
     value_format: "#,##0"
     sql: ${TABLE}.units_available;; }
 
   measure: purchased_units_recieved {
     type: sum
+    group_label: "Inventory"
     value_format: "#,##0"
     sql: ${TABLE}.purchased_units_recieved;; }
 
   measure: to_plan_dollars {
     label: "To Plan ($)"
     type: number
+    group_label: "Plan"
     value_format: "0.0%"
     sql: case when ${plan_amount} > 0 then (${total_sales}/${plan_amount})-1 else 0 end;;
   }
   measure: to_plan_units {
     label: "To Plan (units)"
     type: number
+    group_label: "Plan"
     value_format: "0.0%"
     sql: (${total_units}/${plan_units})-1 ;;
   }
   measure: to_forecast_dollars {
     label: "To Forecast ($)"
     type: number
+    group_label: "Forecast"
     value_format: "0.0%"
     sql: case when ${forecast_amount} > 0 then (${total_sales}/${forecast_amount})-1 else 0 end;;
   }
   measure: to_forecast_units {
     label: "To Forecast (units)"
     type: number
+    group_label: "Forecast"
     value_format: "0.0%"
     sql: case when ${forecast_units} > 0 then (${total_units}/${forecast_units})-1 else 0 end ;;
   }
