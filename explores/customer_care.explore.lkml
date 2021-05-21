@@ -330,7 +330,20 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: cc_activities {hidden: yes group_label: "Customer Care"}
+  explore: cc_activities {hidden: yes group_label: "Customer Care"
+    join: agent_lkp {
+      type: left_outer
+      view_label: "Agent Lookup"
+      sql_on: ${cc_activities.agent_email}=${agent_lkp.email} ;;
+      relationship: many_to_one
+    }
+    join: team_lead_name {
+      type:  left_outer
+      view_label: "Agent Lookup"
+      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+        and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+      relationship: many_to_one
+    }}
 
   explore: exchange_items {hidden: yes
     join: item {
