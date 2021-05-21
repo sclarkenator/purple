@@ -334,7 +334,7 @@ include: "/dashboards/**/*.dashboard"
     join: agent_lkp {
       type: left_outer
       view_label: "Agent Lookup"
-      sql_on: ${cc_activities.agent_email}=${agent_lkp.email} ;;
+      sql_on: lower(${cc_activities.agent_email})=lower(${agent_lkp.email}) ;;
       relationship: many_to_one
     }
     join: team_lead_name {
