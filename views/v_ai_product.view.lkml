@@ -44,6 +44,14 @@ view: v_ai_product {
     sql: coalesce (${item.model_raw}, ${TABLE}."PRODUCT_MODEL") ;;
   }
 
+  dimension: product_description_ai {
+    group_label: "Future SKU"
+    label: "4. Name Special"
+    description: "Use with other Future SKU dimensions to see product information for all products, including forecasts for future releases"
+    #hidden: yes
+    sql: coalesce (${item.product_description}, ${TABLE}."DESCRIPTION") ;;
+  }
+
   dimension: sku_id {
     type: string
     label: "SKU ID Special"
