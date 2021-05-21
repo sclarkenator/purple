@@ -305,7 +305,8 @@ include: "/dashboards/**/*.dashboard"
     join: sales_order {
       type:left_outer
       relationship: one_to_one
-      sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;}
+      sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;
+    }
     join: sales_order_line_base {
       type: left_outer
       relationship:one_to_many
@@ -313,8 +314,23 @@ include: "/dashboards/**/*.dashboard"
     join: order_flag {
       type: left_outer
       relationship: one_to_one
-      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;}
+      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+    }
+    join: agent_name {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${agent_name.email_join} = ${cc_deals.agent_email} ;;
+    }
+    join: team_lead_name {
+      type:  left_outer
+      sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
+        and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+      #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+      relationship: one_to_one
+    }
   }
+
+  explore: cc_activities {hidden: yes group_label: "Customer Care"}
 
   explore: exchange_items {hidden: yes
     join: item {
@@ -364,7 +380,7 @@ include: "/dashboards/**/*.dashboard"
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
-  explore: cc_activities {hidden: yes group_label: "Customer Care"}
+
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
   explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
