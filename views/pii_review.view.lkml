@@ -62,8 +62,14 @@ view: pii_review {
     sql: ${TABLE}."ZIP" ;;
   }
 
+  dimension: insert_ts {
+    description: "date inserted"
+    type: date
+    sql: ${TABLE}.insert_ts::date ;;
+  }
+
   measure: count {
-    hidden: yes
+    #hidden: yes
     type: count
     drill_fields: [name]
   }

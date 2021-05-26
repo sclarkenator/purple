@@ -117,7 +117,7 @@ include: "/dashboards/**/*.dashboard"
     join: order_utm {
       type: left_outer
       sql_on: lower(${cordial_activity.email}) = lower(${order_utm.email})
-        and ${cordial_activity.time_time} < ${order_utm.created} and ${cordial_activity.time_time} >= dateadd('hour',-48,${order_utm.created})
+        and ${cordial_activity.time_time} < ${order_utm.created} and ${cordial_activity.time_time} >= dateadd('day',-7,${order_utm.created})
         and ${cordial_activity.action} in ('message-sent','open');;
       relationship: many_to_one
     }
