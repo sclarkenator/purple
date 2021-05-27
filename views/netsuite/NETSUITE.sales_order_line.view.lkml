@@ -2226,15 +2226,6 @@ view: sales_order_line {
               else 0 end ;;
   }
 
-  measure: gross_margin {
-    ##added by Scott Clark 11/25/2020
-    label: "Gross margin"
-    description: "Total margin dollars after all direct product and order related expenses are netted out"
-    type: number
-    view_label: "zz Margin Calculations"
-    value_format: "$#,##0"
-    sql: ${adj_gross_amt}-${vir}-${COGS}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback}-${direct_affiliate}-${warranty_accrual}-${merch_fees}-${mdf}-${promo_adj}-${freight} ;;
-  }
 
   measure: net_revenue {
     label: "Net revenue estimate"
@@ -2242,7 +2233,17 @@ view: sales_order_line {
     type: number
     view_label: "zz Margin Calculations"
     value_format: "$#,##0"
-    sql: ${adj_gross_amt}-${vir}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback} ;;
+    sql: ${adj_gross_amt}-${vir}-${item_return_rate.adj_return_amt}-${item_return_rate.adj_return_clawback}-${mdf}-${promo_adj} ;;
+  }
+
+  measure: gross_margin {
+    ##added by Scott Clark 11/25/2020
+    label: "Gross margin"
+    description: "Total margin dollars after all direct product and order related expenses are netted out"
+    type: number
+    view_label: "zz Margin Calculations"
+    value_format: "$#,##0"
+    sql: ${net_revenue}-${COGS}-${direct_affiliate}-${warranty_accrual}-${merch_fees}-${freight} ;;
   }
 
   measure: gm_rate{
