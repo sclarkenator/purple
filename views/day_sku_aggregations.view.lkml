@@ -11,9 +11,9 @@ view: sales_day_sku {
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
       column: adj_gross_amt {}
+      column: total_discounts {}
       column: unfulfilled_orders {}
       column: unfulfilled_orders_units {}
-      column: gross_margin {}
       filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
 ##      filters: { field: sales_order.is_exchange_upgrade_warranty value: "No" }
       filters: { field: sales_order_line.created_date value: "3 years" }
@@ -25,9 +25,9 @@ view: sales_day_sku {
   dimension: total_gross_Amt_non_rounded { type: number }
   dimension: total_units { type: number }
   dimension: adj_gross_amt { type: number }
+  dimension: total_discounts {type: number}
   dimension: unfulfilled_orders { type: number }
   dimension: unfulfilled_orders_units { type: number }
-  dimension: gross_margin { type: number }
 }
 
 ######################################################
@@ -42,6 +42,7 @@ view: fulfilled_day_sku {
       column: fulfilled_date {}
       column: fulfilled_orders {}
       column: fulfilled_orders_units {}
+      column: gross_margin {}
       filters: { field: sales_order.channel value: "DTC,Wholesale,Owned Retail" }
       filters: {field: sales_order_line.fulfilled_date value: "3 years"}
     }
@@ -52,6 +53,8 @@ view: fulfilled_day_sku {
   dimension: fulfilled_date {type: date}
   dimension: fulfilled_orders {type: number}
   dimension: fulfilled_orders_units {type: number}
+  dimension: gross_margin { type: number }
+
 }
 
 ######################################################
@@ -191,11 +194,12 @@ view: day_sku_aggregations {
         , s.total_gross_Amt_non_rounded as total_sales
         , s.total_units as total_units
         , s.adj_gross_amt as total_adjusted_sales
-        , s.gross_margin as total_gross_margin
+        , s.total_discounts as total_discounts
         , s.unfulfilled_orders as unfulfilled_sales
         , s.unfulfilled_orders_units as unfulfilled_units
         , ff.fulfilled_orders as fulfilled_sales
         , ff.fulfilled_orders_units as fulfilled_units
+        , ff.gross_margin as total_gross_margin
         , p.Total_Quantity as produced_units
         , f.total_amount as forecast_amount
         , f.total_units as forecast_units
@@ -423,9 +427,15 @@ view: day_sku_aggregations {
     value_format: "$#,##0"
     sql: ${TABLE}.total_adjusted_sales;; }
 
+  measure: total_discounts {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${TABLE}.total_discounts;; }
+
   measure: total_gross_margin {
     type: sum
     value_format: "$#,##0"
+    description: "by Fulfilled Date"
     sql: ${TABLE}.total_gross_margin;; }
 
   measure: unfulfilled_sales{
