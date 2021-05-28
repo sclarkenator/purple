@@ -525,8 +525,8 @@ view: sessions {
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' or ${utm_medium} in('vi15','vi30', 'vi7','vi15b','vi30s','vi8','vi8a','vi8b','vi_30s', 'vi_15s','vi15a','vi_8s') or ${utm_source} = 'youtube' then 'video'
           when ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' then 'referral'
           when ${utm_medium} in( 'sms', 'tx') then 'SMS'
-          when ${utm_medium} in ('tv','cinema', 'print','linear') then 'traditional'
-          when ${utm_medium} IS NULL and ${referrer} IS NOT NULL then 'organic'
+          when ${utm_medium} in ('tv','cinema', 'print','linear','tve') then 'traditional'
+          when ${utm_medium} IS NULL and ${referrer} IS NOT NULL or ${utm_medium} in ('organic') then 'organic'
           when ${utm_medium} IS NULL then 'direct'
 
           else 'other' end ;;
