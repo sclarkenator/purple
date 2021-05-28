@@ -154,7 +154,19 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ecommerce.session_id} = ${core_events_click_any_element.session_id} ;;
       relationship: many_to_many
     }
-  }
+    join: ct_session {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on: ${ct_session.session_id}=${ecommerce.session_id} and ${ct_session.user_id}=${ecommerce.user_id} ;;
+      relationship: one_to_one
+    }
+    join: zendesk_sell {
+      view_label: "Zendesk"
+      type: full_outer
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+      relationship: one_to_one
+    }
+    }
 
   explore: ecommerce_canada {
     from: heap_ca_sessions
@@ -174,6 +186,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${heap_ca_purchase.session_id} = ${ecommerce_canada.session_id} ;;
       relationship: one_to_many
     }
+
 
   }
 
