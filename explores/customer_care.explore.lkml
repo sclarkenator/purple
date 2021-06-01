@@ -6,6 +6,75 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+
+#####################################################################
+#####################################################################
+# Agent Attendance Detail
+
+explore: agent_attendance_detail {
+
+  # *** Need accurate attendance points data set ***
+  # *** Need accurate punch data set ***
+
+  label: "Agent Attendance Detail"
+  view_label: "Agent Data"
+  description: "Tracks Agent time punches, states, and attendance points."
+  view_name: agent_lkp
+  hidden: yes
+
+  join: agent_state {
+    view_label: "Agent States"
+    type: full_outer
+    sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+# Contact Phone
+
+explore: incontact_phone {
+  label: "InContact Phone"
+  view_label: "Agent Data"
+  description: "Tracks phone related contact data."
+  view_name: agent_lkp
+  hidden: yes
+
+  join: incontact_phone {
+    view_label: "Phone Calls"
+    type: left_outer
+    sql_on: ${agent_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+## CC_KPIs explore
+
+explore: CC_KPIs {
+
+  label: "CC KPIs"
+  view_name: agent_lkp
+  view_label: "Agent Data"
+  hidden: yes
+
+  join: zendesk_ticket {
+    view_label: "Zendesk Tickets"
+    type: left_outer
+    sql_on: ${agent_lkp.zendesk_id} = ${zendesk_ticket.assignee_id} ;;
+    relationship: many_to_one
+  }
+
+  join: zendesk_chat_engagement {
+    view_label: "Chat Engagement"
+    type: left_outer
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_chat_engagement.ticket_id} ;;
+    relationship: many_to_one
+  }
+}
+
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
     group_label: "Customer Care"
