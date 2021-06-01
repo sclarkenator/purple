@@ -484,6 +484,14 @@ view: sessions {
         label: "President's Day"
       }
       when: {
+        sql:${utm_content} ilike ('%egf_usa%') ;;
+        label: "Evergreen Financing USA"
+      }
+      when: {
+        sql:${utm_content} ilike ('%egf%') ;;
+        label: "Evergreen Financing"
+      }
+      when: {
         sql:${utm_content} ilike ('%ws_eg%') ;;
         label: "Evergreen (Winter Sale)"
       }
@@ -498,14 +506,6 @@ view: sessions {
       when: {
         sql:${utm_content} ilike ('%eg_%') ;;
         label: "Evergreen"
-      }
-      when: {
-        sql:${utm_content} ilike ('%egf%') ;;
-        label: "Evergreen Financing"
-      }
-      when: {
-        sql:${utm_content} ilike ('%egf_usa%') ;;
-        label: "Evergreen Financing USA"
       }
       else: "unknown"
     }
