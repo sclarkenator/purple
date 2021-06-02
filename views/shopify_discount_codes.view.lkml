@@ -1,19 +1,20 @@
 view: shopify_discount_codes {
   derived_table: {
     sql:
-      select o.id::varchar(100) as etail_order_id
-        , o.name as etail_order_name
+    select s.id::varchar(100) as etail_order_id
+        , s.name as etail_order_name
         , d.code as promo
-      from analytics_stage.shopify_us_ft."ORDER" o
-        left join analytics_stage.shopify_us_ft.order_discount_code d on d.order_id = o.id
+      from analytics_stage.shopify_us_ft."ORDER" s
+        left join analytics_stage.shopify_us_ft.order_discount_code d on d.order_id = s.id
       where d.code is not null
       UNION ALL
       select
-        o.order_id as etail_order_id,
-        o.order_number as etail_order_name,
-        d.discount_code_name as promo
-      from analytics.commerce_tools.ct_order_discount_code o
-        left join analytics.commerce_tools.ct_discount_code d on o.discount_code_id = d.discount_code_id
+        c.order_id as etail_order_id,
+        co.order_number as etail_order_name,
+        c.code as promo
+      from analytics.commerce_tools.ct_order_discount_code c
+         left join ANALYTICS.COMMERCE_TOOLS.CT_ORDER co on c.order_id=co.order_id
+
     ;;
   }
 
