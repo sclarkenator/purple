@@ -173,15 +173,18 @@ view: agent_state {
   #####################################################################
   ## SUM MEASURES
 
-  measure: state_duration_sum_sec {
-    label: "State Duration Sec"
+  measure: available_duration_sum_min{
+    label: "Available Time"
     group_label: "Sum Measures"
-    description: "Duration in seconds agent was in a given state."
-    type: sum
-    sql: ${TABLE}."STATE_DURATION" ;;
+    description: "Duration in minutes agent was in a state flaged as Available."
+    type: number
+    value_format_name: decimal_2
+    sql: sum(
+      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"/60
+        end) ;;
   }
 
-  measure: state_duration_sum_min{
+  measure: state_duration_sum_min {
     label: "State Duration Min"
     group_label: "Sum Measures"
     description: "Duration in minutes agent was in a given state."
@@ -190,10 +193,18 @@ view: agent_state {
     sql: sum(${TABLE}."STATE_DURATION")/60 ;;
   }
 
-  measure: unavailable_duration_sum_min{
+  measure: state_duration_sum_sec {
+    label: "State Duration Sec"
+    group_label: "Sum Measures"
+    description: "Duration in seconds agent was in a given state."
+    type: sum
+    sql: ${TABLE}."STATE_DURATION" ;;
+  }
+
+  measure: unavailable_duration_sum_min {
     label: "Unavailable Time"
     group_label: "Sum Measures"
-    description: "Duration in minutes agent was in a state flags as Unavailable."
+    description: "Duration in minutes agent was in a state flaged as Unavailable."
     type: number
     value_format_name: decimal_2
     sql: sum(
@@ -202,14 +213,5 @@ view: agent_state {
         end) / 60 ;;
   }
 
-  measure: available_duration_sum_min{
-    label: "Available Time"
-    group_label: "Sum Measures"
-    description: "Duration in minutes agent was in a state flags as Available."
-    type: number
-    value_format_name: decimal_2
-    sql: sum(
-      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"/60
-        end) ;;
-  }
+
 }
