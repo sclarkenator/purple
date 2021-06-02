@@ -44,6 +44,7 @@ view: incontact_phone {
   dimension: conferences {
     label: "Conferences"
     description: "Number of times a contact was placed in Conference."
+    hidden: yes
     type: number
     sql: ${TABLE}."CONFERENCES" ;;
   }
