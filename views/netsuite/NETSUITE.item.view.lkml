@@ -417,9 +417,18 @@ view: item {
 
     }
   }
+
+  dimension: version_raw {
+    group_label: "Product Hierarchy"
+    label: "4. Version"
+    description: "Harmony/Harmony Vita, Clip Metal/Metal, OG/NOG rolling up into Harmony, Metal, Purple Mattress etc. Source:netsuite.item"
+    #hidden: yes
+    sql: ${TABLE}.version ;;
+  }
+
   dimension: product_description_raw {
     group_label: "Product Hierarchy"
-    label: "4. Name"
+    label: "5. Name"
     description: "Product Description. Source:netsuite.item"
     #hidden: yes
     sql: ${TABLE}.product_description ;;

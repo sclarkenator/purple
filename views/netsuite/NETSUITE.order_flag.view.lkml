@@ -152,96 +152,93 @@ view: order_flag {
     FROM(
       select sol.order_id
         ,sum(sol.gross_amt) GROSS_SALES
-        ,sum(case when (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN 1 ELSE 0 END) MATTRESS_FLG
-        ,sum(case when line = 'COIL' or (description like '%HYBRID%' and line = 'KIT') THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
+        ,sum(case when category = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
+        ,sum(case when line = 'HYBRID' THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
         ,SUM(CASE WHEN line = 'SHEETS' THEN 1 ELSE 0 END) SHEETS_FLG
         ,SUM(CASE WHEN line = 'PROTECTOR' THEN 1 ELSE 0 END) PROTECTOR_FLG
         ,SUM(CASE WHEN category = 'BASE' THEN 1 ELSE 0 END) BASE_FLG
-        ,SUM(CASE WHEN line = 'POWERBASE' THEN 1 ELSE 0 END) POWERBASE_FLG
-        ,SUM(CASE WHEN line = 'POWERBASE' and model = 'REVERIE' THEN 1 ELSE 0 END) REVERIE_POWERBASE_FLG
-        ,SUM(CASE WHEN line = 'POWERBASE' and model = 'ASCENT POWERBASE' THEN 1 ELSE 0 END) ASCENT_POWERBASE_FLG
-        ,SUM(CASE WHEN model = 'METAL' or model = 'CLIP METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
+        ,SUM(CASE WHEN line = 'ADJUSTABLE BASE' THEN 1 ELSE 0 END) POWERBASE_FLG
+        ,SUM(CASE WHEN line = 'ADJUSTABLE BASE' and model = 'REVERIE' THEN 1 ELSE 0 END) REVERIE_POWERBASE_FLG
+        ,SUM(CASE WHEN line = 'ADJUSTABLE BASE' and model = 'ASCENT' THEN 1 ELSE 0 END) ASCENT_POWERBASE_FLG
+        ,SUM(CASE WHEN model = 'METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
-        ,SUM(CASE WHEN line = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
-        ,SUM(CASE WHEN line = 'BLANKET' THEN 1 ELSE 0 END) BLANKET_FLG
-        ,SUM(CASE WHEN line = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
-        ,SUM(CASE WHEN line = 'PET BED' THEN 1 ELSE 0 END) PET_BED_fLG
-        ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
-        ,SUM(CASE WHEN (category = 'MATTRESS' and line <> 'COVER') or (description like '%-SPLIT KING%' and line = 'KIT') THEN SOL.GROSS_AMT ELSE 0 END) MATTRESS_SALES
-        ,SUM(CASE WHEN (line = 'PILLOW' and line <> 'BOOSTER') THEN ORDERED_QTY ELSE 0 END) PILLOW_ORDERED
-        ,sum(case when description like 'POWERBASE-SPLIT KING' then 1 else 0 end) split_king
-        ,sum(case when sku_id in ('AC-10-31-12890','AC-10-31-12895','10-31-12890','10-31-12895','10-31-12891','10-31-12900','10-31-12896','10-31-12905') then 1 else 0 end) harmony
-        ,sum(case when sku_id in ('AC-10-31-12860','AC-10-31-12857','10-31-12860','10-31-12857','10-31-12862') then 1 else 0 end) plush
-        ,sum(case when sku_id in ('AC-10-31-12854','AC-10-31-12855','10-31-12854','10-31-12855','10-31-12863') then 1 else 0 end) purple_pillow
-        ,sum(case when sku_id in ('AC-10-21-68268','10-21-68268') then 1 else 0 end) gravity_mask
-        ,sum(case when sku_id in ('10-38-13050') then 1 else 0 end) gravity_blanket
-        ,sum(case when sku_id in ('AC-10-38-13015','AC-10-38-13010','AC-10-38-13005','AC-10-38-13030','AC-10-38-13025','AC-10-38-13020',
-                                  '10-38-13015','10-38-13010','10-38-13005','10-38-13030','10-38-13025','10-38-13020') then 1 else 0 end) duvet
+        ,SUM(CASE WHEN category = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
+        ,SUM(CASE WHEN line = 'TOP OF BED' THEN 1 ELSE 0 END) BLANKET_FLG
+        ,SUM(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
+        ,SUM(CASE WHEN line = 'PET' THEN 1 ELSE 0 END) PET_BED_fLG
+        ,SUM(CASE WHEN category = 'MATTRESS' THEN ORDERED_QTY ELSE 0 END) MATTRESS_ORDERED
+        ,SUM(CASE WHEN category = 'MATTRESS' THEN SOL.GROSS_AMT ELSE 0 END) MATTRESS_SALES
+        ,SUM(CASE WHEN (category = 'PILLOW' and version <> 'BOOSTER') THEN ORDERED_QTY ELSE 0 END) PILLOW_ORDERED
+        ,sum(CASE WHEN model = 'HARMONY' then 1 else 0 end) harmony
+        ,sum(CASE WHEN model = 'PLUSH'  then 1 else 0 end) plush
+        ,sum(CASE WHEN version = 'PURPLE PILLOW' then 1 else 0 end) purple_pillow
+        ,sum(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) gravity_mask
+        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%split king%' THEN 1 ELSE 0 END) split_king
+        ,sum(case when model = 'WEIGHTED BLANKET' then 1 else 0 end) gravity_blanket
+        ,sum(case when model = 'DUVET' then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
         ,sum(case when (line = 'SHEETS' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt2
-        ,sum(case when (line = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
+        ,sum(case when (category = 'PILLOW' AND discount_amt=50*sol.ORDERED_QTY) then 1 else 0 end) ff_bundle_pt3
         ,sum(case when s.memo ilike ('%flashbundle%') AND s.memo ilike ('%2019%') then 1 else 0 end) ff_bundle_pt4
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%harmony%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdULTpt1
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow 2.0%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdDELpt1
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%plush%' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) pdESSpt1
         ,sum(case when (PRODUCT_DESCRIPTION ilike '%duvet%' AND sol.ORDERED_QTY>=1 and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) pdANYpt2
-        ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'BLANKETS' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
-        ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
-        ,sum(case when (((item.CATEGORY_name = 'BEDDING' and item.line not ilike ('BLANKET')) OR item.category_name = 'PET' OR item.category_name = 'SEATING')
-          ) THEN 1 else 0 end) buymsm1
-        ,sum(case when sku_id in ('10-47-20000','10-47-20002','10-47-20001') then 1 else 0 end) med_mask
-        ,sum(case when sku_id in ('10-31-12863','10-31-13100') then 1 else 0 end) pillow_booster
-        ,sum(case when sku_id in ('10-90-10072','10-90-10071','10-90-10073','10-90-10074','10-90-10076','10-90-10075','10-90-10077',
-        '10-90-10078','10-90-10080','10-90-10079','10-90-10082','10-90-10083','10-90-10086','10-90-10085','10-90-10084','10-90-10081') then 1 else 0 end) sj_pajamas
+        ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND line = 'TOP OF BED' and sol.created::date between '2020-01-21' and '2020-02-15') THEN 1 ELSE 0 END) weight2pt1
+        ,sum(case when (PRODUCT_DESCRIPTION ilike '%gravity%' AND model = 'EYE MASK' and sol.created::date between '2020-01-21' and '2020-02-15') THEN sol.ORDERED_QTY ELSE 0 END) weight2pt2
+        ,sum(case when (((category = 'BEDDING' and line != 'TOP OF BED') OR category = 'PET' OR category = 'SEATING')) THEN 1 else 0 end) buymsm1
+        ,sum(case when model = 'FACE MASK' then 1 else 0 end) med_mask
+        ,sum(case when version = 'BOOSTER' then 1 else 0 end) pillow_booster
+        ,sum(case when model = 'SJ+ PURPLE PAJAMAS' then 1 else 0 end) sj_pajamas
 
         --adding for ecommerce bundles
 
         -- new item flags
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%ultimate%cushion%') THEN 1 ELSE 0 END) ultimate_cushion
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%double%cushion%') THEN 1 ELSE 0 END) double_cushion
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%back%cushion%') THEN 1 ELSE 0 END) back_cushion
-         ,sum(case when (model = 'ORIGINAL SHEETS') THEN 1 ELSE 0 END) original_sheets
-         ,sum(case when (model = 'SOFTSTRETCH' ) THEN 1 ELSE 0 END) softstretch_sheets
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%') THEN 1 ELSE 0 END) royal_cushion
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%') THEN 1 ELSE 0 END) simply_cushion
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%') THEN 1 ELSE 0 END) portable_cushion
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%') THEN 1 ELSE 0 END) everywhere_cushion
-         ,sum(case when sku_id in ('10-41-12526') THEN 1 ELSE 0 END) lite_cushion
-         ,sum(case when (model = 'LIGHT DUVET' ) THEN 1 ELSE 0 END) light_duvet
-         ,sum(case when (model = 'KIDS BED' ) THEN 1 ELSE 0 END) kidbed
-         ,sum(case when (model = 'PURPLE PLUS' ) THEN 1 ELSE 0 END) purpleplusbed
+         ,sum(case when model = 'ULTIMATE' THEN 1 ELSE 0 END) ultimate_cushion
+         ,sum(case when model = 'DOUBLE' THEN 1 ELSE 0 END) double_cushion
+         ,sum(case when model = 'BACK' THEN 1 ELSE 0 END) back_cushion
+         ,sum(case when model = 'ORIGINAL SHEETS' THEN 1 ELSE 0 END) original_sheets
+         ,sum(case when model = 'SOFTSTRETCH' THEN 1 ELSE 0 END) softstretch_sheets
+         ,sum(case when model = 'ROYAL' THEN 1 ELSE 0 END) royal_cushion
+         ,sum(case when model = 'SIMPLY' THEN 1 ELSE 0 END) simply_cushion
+         ,sum(case when model = 'PORTABLE' THEN 1 ELSE 0 END) portable_cushion
+         ,sum(case when model = 'EVERYWHERE' THEN 1 ELSE 0 END) everywhere_cushion
+         ,sum(case when model = 'LITE' THEN 1 ELSE 0 END) lite_cushion
+         ,sum(case when version ilike '%light duvet%' THEN 1 ELSE 0 END) light_duvet
+         ,sum(case when model = 'KID BED' THEN 1 ELSE 0 END) kidbed
+         ,sum(case when model ilike '%PURPLE PLUS%' THEN 1 ELSE 0 END) purpleplusbed
          ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
-         ,sum(case when (model = 'ALL SEASONS DUVET' ) THEN 1 ELSE 0 END) allseasons_duvet
-         ,sum(case when (model = 'KID SHEETS' ) THEN 1 ELSE 0 END) kidsheets
-         ,sum(case when model in ('LIFELINE MATTRESS') then 1 else 0 end) lifeline
+         ,sum(case when version ilike '%all seasons%' THEN 1 ELSE 0 END)allseasons_duvet
+         ,sum(case when model = 'KID SHEETS' THEN 1 ELSE 0 END) kidsheets
+         ,sum(case when model = 'LIFELINE MATTRESS' then 1 else 0 end) lifeline
          ,SUM(CASE WHEN category = 'SEATING' and model not in ('BACK') THEN 1 ELSE 0 END) CUSHION_FLG_sansback
         -- 2's
-         ,SUM(CASE WHEN (line = 'PILLOW' and model = 'HARMONY') THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
-         ,SUM(CASE WHEN (line = 'SHEETS' and model = 'SOFTSTRETCH') THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
-         ,sum(case when (line = 'PILLOW' and model = 'PLUSH') THEN ORDERED_QTY ELSE 0 END) plush_ORDERED
-         ,sum(case when (line = 'PILLOW' and model = 'PILLOW 2.0') THEN ORDERED_QTY ELSE 0 END) purplepillow_ORDERED
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%pillow%booster%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%weighted%eye%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%royal%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%simply%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%portable%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
-         ,sum(case when (PRODUCT_DESCRIPTION ilike '%everywhere%cushion%' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
-         ,sum(case when sku_id in ('10-41-12526') and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
+         ,SUM(CASE WHEN model = 'HARMONY' THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
+         ,SUM(CASE WHEN model = 'SOFTSTRETCH' THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
+         ,sum(case when model = 'PLUSH' THEN ORDERED_QTY ELSE 0 END) plush_ORDERED
+         ,sum(case when model = 'PURPLE PILLOW' THEN ORDERED_QTY ELSE 0 END) purplepillow_ORDERED
+         ,sum(case when (version = 'BOOSTER' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) boostertwobund
+         ,sum(case when (model = 'EYE MASK' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) sleepmasktwobund
+         ,sum(case when (model = 'ROYAL'and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) royalcushtwobund
+         ,sum(case when (model = 'SIMPLY' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) simplycushtwobund
+         ,sum(case when (model = 'PORTABLE' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) portcushtwobund
+         ,sum(case when (model = 'EVERYWHERE' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) everywherecushtwobund
+         ,sum(case when model = 'LITE' and sol.ORDERED_QTY >=2 THEN 1 ELSE 0 END) litecushtwobund
 
         -- BAR / BARB
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
-         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') and line <> 'COVER' THEN 1 ELSE 0 END) large_mattress
+         ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
      --    ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
-         ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+         ,sum(case when (category = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
 
         -- Hybrid Mattresses and Purple Mattress
-         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%2%'  THEN 1 ELSE 0 END) hybrid2
-         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%3%'  THEN 1 ELSE 0 END) hybrid3
-         ,SUM(CASE WHEN line = 'COIL' and model ilike '%HYBRID%4%'  THEN 1 ELSE 0 END) hybrid4
-         ,sum(case when model in ('THE PURPLE MATTRESS W/ OG COVER','THE PURPLE MATTRESS','ORIGINAL PURPLE MATTRESS') then 1 else 0 end) purple_mattress
-        ,sum(case when product_description ilike '%MINI BED SQUISHY%' then 1 else 0 end) mini_bed_squishy
+         ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID 2' THEN 1 ELSE 0 END) hybrid2
+         ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 3'  THEN 1 ELSE 0 END) hybrid3
+         ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 4' THEN 1 ELSE 0 END) hybrid4
+         ,sum(case when model = 'PURPLE MATTRESS' then 1 else 0 end) purple_mattress
+         ,sum(case when product_description ilike '%MINI BED SQUISHY%' then 1 else 0 end) mini_bed_squishy
 
     -- For flagging an order based on UPT --
              ,sum(case when (sol.ORDERED_QTY>0) THEN ORDERED_QTY ELSE 0 END) qty
