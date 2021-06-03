@@ -9,10 +9,12 @@ view: incontact_phone {
   drill_fields: [master_contact_id]
 
   dimension: primary_key {
-    label: "Full Contact ID"
+    label: "PK"
+    description: "Primary key field.  [master_contact_id] & [contact_id]"
     group_label: "IDs"
     description: ""
     primary_key: yes
+    hidden:  yes
     type: string
     sql: ${master_contact_id} || ${contact_id} ;;
   }
@@ -54,6 +56,13 @@ view: incontact_phone {
     description: "Displays the description for a contact."
     type: string
     sql: ${TABLE}."CONTACT_TYPE" ;;
+  }
+
+  dimension: contacts {
+    label: "Contacts"
+    type: number
+    value_format_name: decimal_0
+    sql: 1 ;;
   }
 
   dimension: direction {
@@ -303,7 +312,6 @@ view: incontact_phone {
     label: "Contact ID"
     group_label: "IDs"
     description: "Unique ID of a Contact (call)."
-    hidden: yes
     type: string
     # hidden: yes
     sql: ${TABLE}."CONTACT_ID" ;;
@@ -313,7 +321,7 @@ view: incontact_phone {
     label: "Master Contact ID"
     group_label: "IDs"
     description: "Master/Parent ID of one or more Contacts."
-    hidden: yes
+    # hidden: yes
     type: string
     sql: ${TABLE}."MASTER_CONTACT_ID" ;;
   }
@@ -624,9 +632,9 @@ view: incontact_phone {
   ## COUNT MEASURES
 
   measure: abn_count {
-    label: "ABN Count"
+    label: "Abandon Count"
     group_label: "Count Measures"
-    description: "Counts contacts that were not resolved by IVR and hung up or exited the system before being offered to an agent."
+    description: "Counts abandoned contacts that were not resolved by IVR and hung up or exited the system before being offered to an agent."
     type: sum
     sql: case when ${abandoned} = true then 1 else 0 end ;;
     drill_fields: [detail*]
@@ -645,8 +653,7 @@ view: incontact_phone {
     label: "Callback Request Count"
     group_label: "Count Measures"
     description: "Counts contacts that entered the queue and then requested a callback instead of waiting for an agent to become available."
-    type: sum
-    sql: case when ${callback_requested} = true then 1 else 0 end ;;
+    type: count
     drill_fields: [detail*]
   }
 
@@ -655,7 +662,8 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts all calls."
     # hidden: yes
-    type: count
+    type: count_distinct
+    sql: ${contact_id} ;;
     drill_fields: [detail*]
   }
 
@@ -711,6 +719,15 @@ view: incontact_phone {
     description: "Counts contacts that abandoned call after the designated short abandon time."
     type: sum
     sql: case when ${long_abandon} = true then 1 else 0 end ;;
+    drill_fields: [detail*]
+  }
+
+  measure: out_sla_count {
+    label: "Out SLA Count"
+    group_label: "Count Measures"
+    description: "Counts contacts that were handled outside the defined Service Level Objective."
+    type: sum
+    sql: case when ${in_sla} = true then 0 else 1 end ;;
     drill_fields: [detail*]
   }
 
@@ -904,7 +921,7 @@ view: incontact_phone {
     description: "Percent of queued calls that were handled within the defined Service Level Objective."
     type: number
     value_format_name: percent_1
-    sql: sum(case when ${in_sla} = true then 1 else 0 end) / nullifzero(sum(case when ${queued} = true then 1 else 0 end)) ;;
+    sql: sum(case when ${in_sla} = true then 1 else 0 end) / nullifzero(count(*)) ;;
     drill_fields: [detail*, in_sla]
   }
 
