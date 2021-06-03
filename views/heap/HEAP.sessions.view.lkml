@@ -450,9 +450,10 @@ view: sessions {
     label: "Evergreen Split"
     description: "Evergreen USA (incl.USA Finance) vs all other Evergreen Source: HEAP.sessions"
     type: string
-    sql: case when ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
-    when  ${utm_content} ilike "%eg%" then "Evergreen"
-    else "Other" end;;
+    sql: case
+    when ${utm_content} ilike '%eg%usa%' then 'Evergreen USA'
+    when  ${utm_content} ilike '%eg%' then 'Evergreen'
+    else 'Other' end;;
   }
 
   dimension: promo_name {
