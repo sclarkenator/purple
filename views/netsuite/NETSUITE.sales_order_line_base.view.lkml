@@ -384,9 +384,9 @@ view: sales_order_line_base {
     group_label: "    Order Date"
     label: "z - Current Quarter"
     #hidden:  yes
-    description: "Yes/No for if the date is in the current quarter of the year (for each year). Source: netsuite.sales_order_line"
+    description: "Yes/No for if the date is in the current quarter. Source: netsuite.sales_order_line"
     type: yesno
-    sql: EXTRACT(quarter FROM ${TABLE}.Created::date) = EXTRACT(quarter FROM current_date::date) ;;
+    sql: ${created_quarter}=${current_quarter} ;;
   }
 
   dimension: current_quarter_of_year_filter{
