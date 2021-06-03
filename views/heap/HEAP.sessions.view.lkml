@@ -452,7 +452,7 @@ view: sessions {
     type: string
     sql: case when ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
     when  ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
-    else "Other";;
+    else "Other" end;;
   }
 
   dimension: promo_name {
