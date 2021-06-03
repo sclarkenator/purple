@@ -43,7 +43,7 @@ explore: incontact_phone {
 
   join: incontact_phone {
     view_label: "Phone Calls"
-    type: left_outer
+    type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
     relationship: many_to_one
   }
