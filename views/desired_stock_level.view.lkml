@@ -46,7 +46,7 @@ select
 from production.inventory inv
     left join sales.item i on inv.item_id = i.item_id
     left join sales.location l on inv.location_id = l.location_id
-where i.line = 'MATTRESS COMPONENT' and i.product_description LIKE '%SCRIM PEAK-%' and (i.SKU_ID not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','5','111')
+where i.model = 'MATTRESS SCRIM PEAK' and (i.SKU_ID not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','5','111')
 group by 1,2
 order by 3 desc
 
