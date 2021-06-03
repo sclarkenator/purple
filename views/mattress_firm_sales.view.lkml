@@ -50,7 +50,7 @@ view: mattress_firm_sales {
     label: "Order"
     description: "When order was placed @ Mattress Firm"
     type:  time
-    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
     datatype: date
     sql: ${TABLE}.finalized_date ;; }
 
