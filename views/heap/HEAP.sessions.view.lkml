@@ -445,6 +445,16 @@ view: sessions {
     sql: lower(${TABLE}.utm_content) ;;
   }
 
+  dimension: evergreen_split{
+    group_label: "UTM Tags"
+    label: "Evergreen Split"
+    description: "Evergreen USA (incl.USA Finance) vs all other Evergreen Source: HEAP.sessions"
+    type: string
+    sql: case when ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
+    when  ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
+    else "Other";;
+  }
+
   dimension: promo_name {
     group_label: "UTM Tags"
     label: "Promo Name"
