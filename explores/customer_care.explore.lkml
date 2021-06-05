@@ -43,7 +43,7 @@ explore: incontact_phone {
 
   join: incontact_phone {
     view_label: "Phone Calls"
-    type: left_outer
+    type: full_outer
     sql_on: ${agent_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
     relationship: many_to_one
   }
@@ -67,10 +67,10 @@ explore: CC_KPIs {
     relationship: many_to_one
   }
 
-  join: zendesk_chat_engagement {
+  join: zendesk_chat_engagements {
     view_label: "Chat Engagement"
     type: left_outer
-    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_chat_engagement.ticket_id} ;;
+    sql_on: ${zendesk_ticket.ticket_id} = ${zendesk_chat_engagements.ticket_id} ;;
     relationship: many_to_one
   }
 }

@@ -450,9 +450,10 @@ view: sessions {
     label: "Evergreen Split"
     description: "Evergreen USA (incl.USA Finance) vs all other Evergreen Source: HEAP.sessions"
     type: string
-    sql: case when ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
-    when  ${utm_content} ilike "%eg%usa%" then "Evergreen USA"
-    else "Other";;
+    sql: case
+    when ${utm_content} ilike '%eg%usa%' then 'Evergreen USA'
+    when  ${utm_content} ilike '%eg%' then 'Evergreen'
+    else 'Other' end;;
   }
 
   dimension: promo_name {
@@ -535,28 +536,31 @@ view: sessions {
     type: string
     #hidden: yes
     sql: case
-          when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' then 'affiliate'
+          when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' or ${utm_medium} = 'in' then 'affiliate'
           when ${utm_medium} in ('au','podcast','radio','streaming') then 'audio'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
+          when ${utm_medium} in ('dm') then 'DIRECT MAIL'
           when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
           when ${utm_medium} = 'lc' then 'local'
-          when ${utm_medium} = 'in' then 'influencer'
           when ${utm_medium} = 'nt' or ${utm_medium} in ('native','nativeads') or  ${utm_medium} ilike 'ntvi%' then 'native'
           when ${utm_medium} = 'sh'
           or ${utm_medium} = 'feed'
           or ${utm_medium} ilike '%shopping%' then 'pla'
           when ${utm_medium} in ('sr','search','cpc') and ${utm_term} in ('br') then 'branded search'
           when ${utm_medium} in ('sr','search','cpc') then 'non branded search'
-          when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' or ${utm_medium} ilike '%instagram%' or ${utm_medium} ilike 'twitter' then 'social'
+          when (${utm_medium} = 'so'and lower(${utm_source}) in ('fb')) or ${utm_medium} ilike '%social%' or ${utm_medium} ilike '%facebook%' then 'social'
+          when ${utm_medium} in ('so') then 'social growth'
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' or ${utm_medium} in('vi15','vi30', 'vi7','vi15b','vi30s','vi8','vi8a','vi8b','vi_30s', 'vi_15s','vi15a','vi_8s') or ${utm_source} = 'youtube' then 'video'
           when ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' or ${utm_source}='talkable' then 'referral'
           when ${utm_medium} in( 'sms', 'tx') then 'SMS'
-          when ${utm_medium} in ('tv','cinema', 'print','linear','tve') then 'traditional'
+          when ${utm_medium} in ('tv','linear','tve') then 'tv'
           when ${utm_medium} IS NULL and ${referrer} IS NOT NULL or ${utm_medium} in ('organic') then 'organic'
           when ${utm_medium} IS NULL then 'direct'
 
           else 'other' end ;;
   }
+
+
 
   dimension: utm_source {
     group_label: "UTM Tags"
@@ -575,40 +579,52 @@ view: sessions {
               when ${utm_source} in ('ac') then 'ACUITY'
               when ${utm_source} in ('adme') then 'ADMEDIA'
               when ${utm_source} in ('adm') then 'ADMARKETPLACE'
+              when ${utm_source} in ('al') then 'ADLINGO'
+              when ${utm_source} in ('am') then 'AMAZON MEDIA GROUP'
+              when ${utm_source} in ('ash') then 'ASHER MEDIA'
               when ${utm_source} ilike '%bg%' then 'BING'
+              when ${utm_source} ilike '%bu%' then 'BUCKSENSE'
               when ${utm_source} in ('bra') then 'BRAVE'
               when ${utm_source} in ('co') then 'CORDLESS'
               when ${utm_source} in ('cn') then 'CONDE NASTE'
+              when ${utm_source} in ('eb') then 'EBAY'
+              when ${utm_source} in ('em') AND ${utm_content}='MYM' then 'MYMOVE'
               when ${utm_source} in ('em') then 'Email'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%'  or ${utm_source} in ('instagram')  then 'FB/IG'
               when ${utm_source} in ('findkeeplove') then 'fkl'
               when ${utm_source} = 'goop' then  'GOOP'
               when ${utm_source} ilike '%go%' or ${utm_source} ilike '%google%' or ${utm_source} ilike '%gco%'then 'GOOGLE'
+              when ${utm_source} = 'hg' then 'HOMEGAUGE'
               when ${utm_source} ilike '%yt%' or ${utm_source} ilike '%youtube%' then 'YOUTUBE'
               when ${utm_source} ilike '%snapchat%' then 'SNAPCHAT'
               when ${utm_source} ilike '%adwords%' then 'ADWORDS'
               when ${utm_source} in ('pinterest', 'pt') then 'PINTEREST'
-              when (${utm_source} in ('vr') and ${utm_content} = 'pod') then 'PODCAST'
+              when ${utm_source} in ('li') then 'LIVEINTENT'
               when ${utm_source} in ('ir') then 'IMPACT RADIUS'
+              when ${utm_source} in ('ma') then 'MAVRK'
               when ${utm_source} in ('md') then 'MODUS'
               when ${utm_source} in ('mb') then 'MOBILE FUSE'
+              when ${utm_source} in ('nb') then 'NBC'
               when ${utm_source} in ('nd') then 'NEXTDOOR'
+              when ${utm_source} in ('nrg') then 'NRG'
               when ${utm_source} in ('om','tv') then 'OCEAN MEDIA'
               when ${utm_source} ilike '%ob%' then 'OUTBRAIN'
               when ${utm_source} ilike '%bing%' then 'BING'
               when ${utm_source} ilike '%gemini%' then 'YAHOO'
               when ${utm_source} ilike '%vrz%' or ${utm_source} ilike '%oa%' or ${utm_source} ilike '%yahoo%' then 'VERIZON MEDIA'
-              when (${utm_source} in ('vr') and ${utm_content} = 'rad') then 'RADIO'
+              when ${utm_source} in ('vr') then 'VERITONE'
               when ${utm_source} in ('rk') then 'RAKUTEN'
               when ${utm_source} in ('si') then 'SIMPLIFI'
               when ${utm_source} in ('sn') then 'SNAPCHAT'
+              when ${utm_source} in ('sa') then 'STACKADAPT'
+              when ${utm_source} in ('shid') then 'SHEERID'
               when ${utm_source} in ('sl') then 'SLICK'
               when ${utm_source} in ('spfy') then 'SPOTIFY'
               when (${utm_source} in ('vr') and ${utm_content} = 'str') then 'STREAMING'
               when ${utm_source} ilike '%tab%' then 'TABOOLA'
               when ${utm_source} in ('talkable','ta') then 'TALKABLE'
               when ${utm_source} in ('tk') then 'TIKTOK'
-              when ${utm_source} ilike '%twitter%' then 'TWITTER'
+              when ${utm_source} ilike '%twitter%' or ${utm_source}='tw' then 'TWITTER'
               when ${utm_source} in ('ex') then 'VDX'
               when ${utm_source} in ('ye') then 'YELP'
               when ${utm_source} in ('wa') then 'WAZE'
