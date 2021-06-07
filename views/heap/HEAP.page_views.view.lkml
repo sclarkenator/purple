@@ -4,7 +4,15 @@
 #-------------------------------------------------------------------
 
 view: heap_page_views {
-  sql_table_name: analytics.heap.session_page_flow ;;
+#  sql_table_name: analytics.heap.session_page_flow ;;
+  derived_table: {
+    sql:
+      select p.*
+      from analytics.heap.session_page_flow p
+      left join heap_data.purple.sessions s on s.session_id = p.session_id
+      where browser not in ('SchemaBot 1.2',' KlarnaBot','KlarnaPriceWatcherBot 1.0','BrandVeritySpider 1.0','SemrushBot')
+    ;;
+  }
 
 
   dimension: session_id {
