@@ -12,6 +12,7 @@ view: day_aggregations_dtc_sales {
       column: customer_care_sales {}
       column: customer_care_orders {}
       column: insidesales_orders {}
+      column: new_customer { field: first_order_flag.new_customer }
       filters: { field: sales_order.channel value: "DTC" }
       filters: { field: item.merchandise value: "No" }
       filters: { field: item.finished_good_flg value: "Yes" }
@@ -30,6 +31,7 @@ view: day_aggregations_dtc_sales {
   measure: customer_care_sales {type: sum}
   measure: insidesales_orders {type: sum}
   measure: customer_care_orders {type: sum}
+  measure: new_customer {type: sum}
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${created_date_date}, ${total_gross_Amt_non_rounded}, ${total_units}) ;;
@@ -482,6 +484,7 @@ view: day_aggregations {
         , dtc.customer_care_sales as cc_sales
         , dtc.customer_care_orders as cc_orders
         , dtc.insidesales_orders as is_orders
+        , dtc.new_customer as new_customers
         , wholesale.total_gross_Amt_non_rounded as wholesale_amount
         , wholesale.total_units as wholesale_units
         , wholesale.mattress_units as wholesale_mattress_units
@@ -737,6 +740,18 @@ view: day_aggregations {
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}.dtc_units;; }
+
+
+
+  #dimension: new_customer {
+
+  measure: new_customers {
+    label: "New Customers"
+    group_label: "Sales - DTC"
+    description: "Total new customers (by email) aggregated to the day."
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}.new_customers;; }
 
   measure: wholesale_amount {
     label: "Wholesale Amount"
