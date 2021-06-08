@@ -542,6 +542,7 @@ view: sessions {
     #hidden: yes
     sql: case
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' or ${utm_medium} = 'in' then 'affiliate'
+          when ${utm_medium} in ('alg', 'lg') = 'lead gen'
           when ${utm_medium} in ('au','podcast','radio','streaming') then 'audio'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} in ('dm') then 'DIRECT MAIL'
