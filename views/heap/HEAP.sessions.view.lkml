@@ -544,8 +544,8 @@ view: sessions {
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' or ${utm_medium} = 'in' then 'affiliate'
           when ${utm_medium} in ('alg', 'lg') = 'lead gen'
           when ${utm_medium} in ('au','podcast','radio','streaming') then 'audio'
+          when ${utm_medium} in ('dm') then "crm direct mail"
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
-          when ${utm_medium} in ('dm') then 'DIRECT MAIL'
           when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
           when ${utm_medium} = 'lc' then 'local'
           when ${utm_medium} = 'nt' or ${utm_medium} in ('native','nativeads') or  ${utm_medium} ilike 'ntvi%' then 'native'
@@ -558,7 +558,7 @@ view: sessions {
           when ${utm_medium} in ('so') then 'social growth'
           when ${utm_medium} in ('alg','lg') then 'lead gen'
           when ${utm_medium} = 'vi' or ${utm_medium} ilike 'video' or ${utm_medium} in('vi15','vi30', 'vi7','vi15b','vi30s','vi8','vi8a','vi8b','vi_30s', 'vi_15s','vi15a','vi_8s') or ${utm_source} = 'youtube' then 'video'
-          when ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' or ${utm_source}='talkable' then 'crm'
+          when ${utm_medium} in ('crm') or ${utm_medium} = 'rf' or ${utm_medium} ilike 'referral' or ${utm_source}='talkable' then 'crm'
           when ${utm_medium} in( 'sms', 'tx') then 'SMS'
           when ${utm_medium} in ('tv','linear','tve') then 'tv'
           when ${utm_medium} IS NULL and ${referrer} IS NOT NULL or ${utm_medium} in ('organic') then 'organic'
