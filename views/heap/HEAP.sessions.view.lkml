@@ -542,9 +542,9 @@ view: sessions {
     #hidden: yes
     sql: case
           when ${utm_medium} = 'af' or ${utm_medium} ilike 'affiliate' or ${utm_medium} = 'in' then 'affiliate'
-          when ${utm_medium} in ('alg', 'lg') = 'lead gen'
+          when ${utm_medium} in ('alg', 'lg') then 'lead gen'
           when ${utm_medium} in ('au','podcast','radio','streaming') then 'audio'
-          when ${utm_medium} in ('dm') then "crm direct mail"
+          when ${utm_medium} in ('dm') then 'crm direct mail'
           when ${utm_medium} = 'ds' or ${utm_medium} ilike 'display' then 'display'
           when ${utm_medium} = 'em' or ${utm_medium} ilike '%email%' then 'email'
           when ${utm_medium} = 'lc' then 'local'
@@ -595,7 +595,7 @@ view: sessions {
               when ${utm_source} in ('co') then 'CORDLESS'
               when ${utm_source} in ('cn') then 'CONDE NASTE'
               when ${utm_source} in ('eb') then 'EBAY'
-              when (${utm_medium} = 'alg' AND ${utm_source} = 'em' AND (length(${utm_content},6)) then 'MADRIVO'
+              when ${utm_medium} = 'em' AND ${utm_source} = 'alg' AND length(${utm_content}) = 6 then 'MADRIVO'
               when ${utm_source} in ('em') AND ${utm_content}='MYM' then 'MYMOVE'
               when ${utm_source} in ('em') then 'Email'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%'  or ${utm_source} in ('instagram')  then 'FB/IG'
