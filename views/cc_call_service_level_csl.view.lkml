@@ -46,7 +46,7 @@ view: cc_call_service_level_csl {
   }
 
   measure: first_contacts {
-    description: "Number of first contacts after 30 seconds"
+    description: "Number of first contacts that did not abandon within the first 15 seconds of being in queue"
     type: sum
     sql: ${TABLE}.FIRST_CONTACTS ;;
   }
