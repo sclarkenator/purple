@@ -601,6 +601,7 @@ view: sessions {
               when ${utm_medium} = 'em' AND ${utm_source} = 'alg' AND length(${utm_content}) = 6 then 'MADRIVO'
               when ${utm_source} in ('em') AND ${utm_content}='MYM' then 'MYMOVE'
               when ${utm_source} in ('em') then 'Email'
+              when ${utm_source} in ('exponential') then 'EXPONENTIAL'
               when ${utm_source} ilike '%fb%' or ${utm_source} ilike '%faceboo%'  or ${utm_source} in ('instagram')  then 'FB/IG'
               when ${utm_source} in ('findkeeplove') then 'fkl'
               when contains(${utm_source},'fluent') then 'fluent'
