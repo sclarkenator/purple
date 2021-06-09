@@ -618,7 +618,7 @@ view: sessions {
               when ${utm_source} in ('dom') then 'DOMINO'
               when ${utm_source} in ('eb') then 'EBAY'
               when ${utm_source} in ('im','imdb') then 'IMBD'
-              when ${utm_campaign} in ('givingtues') then 'GIVING TUESDAY'
+              when ${utm_campaign} in ('givingtuesday') then 'GIVING TUESDAY'
               when ${utm_medium} = 'em' AND ${utm_source} = 'alg' AND length(${utm_content}) = 6 then 'MADRIVO'
               when ${utm_source} in ('em') or ${utm_content}='mym' then 'MYMOVE'
               when ${utm_source} in ('em') then 'Email'
