@@ -957,6 +957,7 @@ view: item {
     case: {
       when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
+      when: { sql: ${classification} = 'CM' ;;label: "Purchased Component" }
       when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
       when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
       when: { sql: ${classification} = 'SFG' ;; label: "Semi Finished Goods" }

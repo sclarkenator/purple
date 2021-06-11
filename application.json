@@ -17,63 +17,57 @@
       "dashboards": [
         {
           "id": "208",
-          "name": "Combined Sales",
+          "name": "Sales to Plan",
           "permalink": "sales",
           "singleValueReference": "sales"
         },
         {
           "id": "3459",
-          "name": "Website Sales",
+          "name": "Website Sales to Plan",
           "permalink": "dtc",
           "singleValueReference": "dtc"
         },
         {
           "id": "3642",
-          "name": "Contact Center Sales",
+          "name": "CC Sales to Plan",
           "permalink": "is",
           "singleValueReference": "is"
         },
         {
           "id": "3554",
-          "name": "Wholesale Sales",
+          "name": "Wholesale to Plan",
           "permalink": "wholesale",
           "singleValueReference": "wholesale"
         },
         {
           "id": "3560",
-          "name": "Retail Sales",
+          "name": "Retail Sales to Plan",
           "permalink": "retail",
           "singleValueReference": "retail"
         },
         {
           "id": "4251",
-          "name": "Production",
+          "name": "Production to Goal",
           "permalink": "production",
           "singleValueReference": "prod"
         },
         {
           "id": "3546",
-          "name": "Fulfillment",
+          "name": "Fulfillment (w/w)",
           "permalink": "fulfillment",
           "singleValueReference": "fulfillment"
         },
         {
           "id": "3558",
-          "name": "Marketing",
+          "name": "Marketing (w/w)",
           "permalink": "marketing",
           "singleValueReference": "roa"
         },
         {
           "id": "3559",
-          "name": "Site (Traffic)",
+          "name": "Site Traffic (w/w)",
           "permalink": "site",
           "singleValueReference": "site"
-        },
-        {
-          "id": "3472",
-          "name": "Forecast (MPE)",
-          "permalink": "plan",
-          "singleValueReference": "plan"
         }
       ]
     },
@@ -148,7 +142,7 @@
         {
         "model": "main",
         "view": "sales_order_line",
-        "params": "fields=sales_order_line.SLA_Target_week,sales_order_line.SLA_Achievement_prct&f[sales_order.channel]=DTC%2CWholesale%2COwned+Retail&f[item.finished_good_flg]=Yes&f[sales_order_line.SLA_Target_date]=52+weeks+ago+for+52+weeks&f[sales_order.is_exchange_upgrade_warranty]=&f[item.category_name]=BASE%2CBEDDING%2CMATTRESS%2CPET%2CSEATING&sorts=sales_order_line.SLA_Target_week+desc&limit=500&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Afalse%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22custom_color%22%3A%22%22%2C%22single_value_title%22%3A%22Fulfilled+by+SLA%22%2C%22stacking%22%3A%22%22%2C%22trellis%22%3A%22%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22legend_position%22%3A%22center%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22point_style%22%3A%22none%22%2C%22series_types%22%3A%7B%7D%2C%22limit_displayed_rows%22%3Afalse%2C%22y_axis_combined%22%3Atrue%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22ordering%22%3A%22none%22%2C%22label_rotation%22%3A-90%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Atrue%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23000000%22%2C%22totals_rotation%22%3A-90%2C%22type%22%3A%22single_value%22%2C%22hidden_fields%22%3A%5B%22sales_order_line.SLA_Target_week%22%5D%2C%22y_axes%22%3A%5B%5D%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22sales_order.channel%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22DTC%2CWholesale%2COwned+Retail%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22item.finished_good_flg%22%3A%5B%7B%22type%22%3A%22is%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Yes%22%7D%2C%7B%7D%5D%2C%22id%22%3A2%2C%22error%22%3Afalse%7D%5D%2C%22sales_order_line.SLA_Target_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2252%22%2C%22unit%22%3A%22c_wk%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%2C%22sales_order.is_exchange_upgrade_warranty%22%3A%5B%7B%22type%22%3A%22any%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A9%2C%22error%22%3Afalse%7D%5D%2C%22item.category_name%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22BASE%2CBEDDING%2CMATTRESS%2CPET%2CSEATING%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded",
+        "params": "fields=sales_order_line.SLA_Target_week,sales_order_line.SLA_Achievement_prct&f[sales_order.channel]=DTC%2CWholesale%2COwned+Retail&f[sales_order_line.SLA_Target_date]=3+weeks+ago+for+3+weeks&f[sales_order.is_exchange_upgrade_warranty]=&f[item.category_name]=BASE%2CBEDDING%2CMATTRESS%2CPET%2CSEATING%2CPILLOW%2CLIFESTYLE&sorts=sales_order_line.SLA_Target_week+desc&limit=500&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Afalse%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22custom_color%22%3A%22%22%2C%22single_value_title%22%3A%22Fulfilled+by+SLA%22%2C%22comparison_label%22%3A%22W%2FW%22%2C%22stacking%22%3A%22%22%2C%22trellis%22%3A%22%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22legend_position%22%3A%22center%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22point_style%22%3A%22none%22%2C%22series_types%22%3A%7B%7D%2C%22limit_displayed_rows%22%3Afalse%2C%22y_axis_combined%22%3Atrue%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22ordering%22%3A%22none%22%2C%22label_rotation%22%3A-90%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Atrue%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23000000%22%2C%22totals_rotation%22%3A-90%2C%22type%22%3A%22single_value%22%2C%22hidden_fields%22%3A%5B%22sales_order_line.SLA_Target_week%22%5D%2C%22y_axes%22%3A%5B%5D%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22sales_order.channel%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22DTC%2CWholesale%2COwned+Retail%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22sales_order_line.SLA_Target_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%223%22%2C%22unit%22%3A%22c_wk%22%7D%2C%7B%7D%5D%2C%22id%22%3A4%2C%22error%22%3Afalse%7D%5D%2C%22sales_order.is_exchange_upgrade_warranty%22%3A%5B%7B%22type%22%3A%22any%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A9%2C%22error%22%3Afalse%7D%5D%2C%22item.category_name%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22BASE%2CBEDDING%2CMATTRESS%2CPET%2CSEATING%2CPILLOW%2CLIFESTYLE%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded",
           "fields": {
             "fulfillment" : {
             "inverseChange": false,
@@ -170,11 +164,11 @@
         {
         "model": "main",
         "view": "day_aggregations",
-        "params": "fields=day_aggregations.date_week,day_aggregations.dtc_amount,day_aggregations.wholesale_amount,day_aggregations.forecast_dtc_amount,day_aggregations.forecast_wholesale_amount,day_aggregations.target_dtc_amount,day_aggregations.target_wholesale_amount,day_aggregations.retail_amount,day_aggregations.forecast_retail_amount&f[day_aggregations.date_date]=52+weeks+ago+for+52+weeks&sorts=day_aggregations.date_week+desc&limit=500&query_timezone=America%2FDenver&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22comparison_label%22%3A%22w%2Fw%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Afalse%2C%22show_x_axis_ticks%22%3Afalse%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22%22%2C%22limit_displayed_rows%22%3Afalse%2C%22legend_position%22%3A%22left%22%2C%22point_style%22%3A%22none%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_combined%22%3Atrue%2C%22show_null_points%22%3Atrue%2C%22interpolation%22%3A%22linear%22%2C%22y_axes%22%3A%5B%7B%22label%22%3Anull%2C%22orientation%22%3A%22right%22%2C%22series%22%3A%5B%7B%22axisId%22%3A%22combined%22%2C%22id%22%3A%22combined%22%2C%22name%22%3A%22Combined%22%7D%2C%7B%22axisId%22%3A%22dtc%22%2C%22id%22%3A%22dtc%22%2C%22name%22%3A%22DTC%22%7D%2C%7B%22axisId%22%3A%22wholesale%22%2C%22id%22%3A%22wholesale%22%2C%22name%22%3A%22Wholesale%22%7D%2C%7B%22axisId%22%3A%22top_goal%22%2C%22id%22%3A%22top_goal%22%2C%22name%22%3A%22Top+Goal%22%7D%2C%7B%22axisId%22%3A%22bottom_goal%22%2C%22id%22%3A%22bottom_goal%22%2C%22name%22%3A%22Bottom+Goal%22%7D%5D%2C%22showLabels%22%3Afalse%2C%22showValues%22%3Atrue%2C%22valueFormat%22%3A%22%22%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22type%22%3A%22linear%22%7D%5D%2C%22hidden_series%22%3A%5B%22wholesale_accuracy%22%2C%22dtc_accuracy%22%2C%22wholesale_mpe%22%2C%22dtc_mpe%22%2C%22retail%22%2C%22wholesale%22%2C%22dtc%22%5D%2C%22hide_legend%22%3Afalse%2C%22series_types%22%3A%7B%7D%2C%22series_colors%22%3A%7B%22top_goal%22%3A%22%23FFD95F%22%2C%22bottom_goal%22%3A%22%23FFD95F%22%7D%2C%22series_labels%22%3A%7B%22actuals%22%3A%22Gross+Sales%22%2C%22retail%22%3A%22Owned+Retail%22%7D%2C%22reference_lines%22%3A%5B%7B%22reference_type%22%3A%22range%22%2C%22line_value%22%3A%22mean%22%2C%22margin_top%22%3A%22deviation%22%2C%22margin_value%22%3A%22mean%22%2C%22margin_bottom%22%3A%22deviation%22%2C%22label_position%22%3A%22left%22%2C%22color%22%3A%22%23e3a346%22%2C%22range_start%22%3A%22.1%22%2C%22range_end%22%3A%22-.1%22%2C%22label%22%3A%22%2B%2F-+10%25%22%7D%5D%2C%22ordering%22%3A%22none%22%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Afalse%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23808080%22%2C%22type%22%3A%22single_value%22%2C%22hidden_fields%22%3A%5B%22day_aggregations.forecast_dtc_amount%22%2C%22day_aggregations.forecast_wholesale_amount%22%2C%22day_aggregations.target_dtc_amount%22%2C%22day_aggregations.target_wholesale_amount%22%2C%22day_aggregations.dtc_amount%22%2C%22day_aggregations.wholesale_amount%22%2C%22plan%22%2C%22forecast%22%2C%22actuals%22%2C%22day_aggregations.retail_amount%22%2C%22day_aggregations.forecast_retail_amount%22%2C%22wholesale%22%2C%22dtc%22%2C%22retail%22%2C%22day_aggregations.date_week%22%5D%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%2252%22%2C%22unit%22%3A%22c_wk%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22forecast%22%2C%22label%22%3A%22Forecast%22%2C%22expression%22%3A%22%24%7Bday_aggregations.forecast_dtc_amount%7D%2B%24%7Bday_aggregations.forecast_wholesale_amount%7D%2B%24%7Bday_aggregations.forecast_retail_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22actuals%22%2C%22label%22%3A%22Actuals%22%2C%22expression%22%3A%22%24%7Bday_aggregations.dtc_amount%7D%2B%24%7Bday_aggregations.wholesale_amount%7D%2B%24%7Bday_aggregations.retail_amount%7D%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22combined%22%2C%22label%22%3A%22Combined%22%2C%22expression%22%3A%22%28%28%24%7Bactuals%7D-%24%7Bforecast%7D%29%2F%24%7Bactuals%7D%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22wholesale%22%2C%22label%22%3A%22Wholesale%22%2C%22expression%22%3A%22%28%28%24%7Bday_aggregations.wholesale_amount%7D-%24%7Bday_aggregations.forecast_wholesale_amount%7D%29%2F%24%7Bday_aggregations.wholesale_amount%7D%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22dtc%22%2C%22label%22%3A%22DTC%22%2C%22expression%22%3A%22%28%28%24%7Bday_aggregations.dtc_amount%7D-%24%7Bday_aggregations.forecast_dtc_amount%7D%29%2F%24%7Bday_aggregations.dtc_amount%7D%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22retail%22%2C%22label%22%3A%22Retail%22%2C%22expression%22%3A%22%28%28%24%7Bday_aggregations.retail_amount%7D-%24%7Bday_aggregations.forecast_retail_amount%7D%29%2F%24%7Bday_aggregations.retail_amount%7D%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "params": "fields=day_aggregations.date_week,day_aggregations.total_gross_sales,day_aggregations.forecast_total_amount&f[day_aggregations.date_date]=3+weeks+ago+for+3+weeks&sorts=day_aggregations.date_week+desc&limit=500&vis=%7B%22custom_color_enabled%22%3Atrue%2C%22show_single_value_title%22%3Atrue%2C%22show_comparison%22%3Atrue%2C%22comparison_type%22%3A%22value%22%2C%22comparison_reverse_colors%22%3Afalse%2C%22show_comparison_label%22%3Atrue%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22comparison_label%22%3A%22Last+Week%22%2C%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Atrue%2C%22show_view_names%22%3Afalse%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Afalse%2C%22show_x_axis_ticks%22%3Afalse%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22%22%2C%22limit_displayed_rows%22%3Afalse%2C%22legend_position%22%3A%22left%22%2C%22point_style%22%3A%22none%22%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22auto%22%2C%22y_axis_combined%22%3Atrue%2C%22show_null_points%22%3Atrue%2C%22interpolation%22%3A%22linear%22%2C%22y_axes%22%3A%5B%7B%22label%22%3Anull%2C%22orientation%22%3A%22right%22%2C%22series%22%3A%5B%7B%22axisId%22%3A%22combined%22%2C%22id%22%3A%22combined%22%2C%22name%22%3A%22Combined%22%7D%2C%7B%22axisId%22%3A%22dtc%22%2C%22id%22%3A%22dtc%22%2C%22name%22%3A%22DTC%22%7D%2C%7B%22axisId%22%3A%22wholesale%22%2C%22id%22%3A%22wholesale%22%2C%22name%22%3A%22Wholesale%22%7D%2C%7B%22axisId%22%3A%22top_goal%22%2C%22id%22%3A%22top_goal%22%2C%22name%22%3A%22Top+Goal%22%7D%2C%7B%22axisId%22%3A%22bottom_goal%22%2C%22id%22%3A%22bottom_goal%22%2C%22name%22%3A%22Bottom+Goal%22%7D%5D%2C%22showLabels%22%3Afalse%2C%22showValues%22%3Atrue%2C%22valueFormat%22%3A%22%22%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22type%22%3A%22linear%22%7D%5D%2C%22hidden_series%22%3A%5B%22wholesale_accuracy%22%2C%22dtc_accuracy%22%2C%22wholesale_mpe%22%2C%22dtc_mpe%22%2C%22retail%22%2C%22wholesale%22%2C%22dtc%22%5D%2C%22hide_legend%22%3Afalse%2C%22series_types%22%3A%7B%7D%2C%22series_colors%22%3A%7B%22top_goal%22%3A%22%23FFD95F%22%2C%22bottom_goal%22%3A%22%23FFD95F%22%7D%2C%22series_labels%22%3A%7B%22actuals%22%3A%22Gross+Sales%22%2C%22retail%22%3A%22Owned+Retail%22%7D%2C%22reference_lines%22%3A%5B%7B%22reference_type%22%3A%22range%22%2C%22line_value%22%3A%22mean%22%2C%22margin_top%22%3A%22deviation%22%2C%22margin_value%22%3A%22mean%22%2C%22margin_bottom%22%3A%22deviation%22%2C%22label_position%22%3A%22left%22%2C%22color%22%3A%22%23e3a346%22%2C%22range_start%22%3A%22.1%22%2C%22range_end%22%3A%22-.1%22%2C%22label%22%3A%22%2B%2F-+10%25%22%7D%5D%2C%22ordering%22%3A%22none%22%2C%22show_null_labels%22%3Afalse%2C%22show_totals_labels%22%3Afalse%2C%22show_silhouette%22%3Afalse%2C%22totals_color%22%3A%22%23808080%22%2C%22type%22%3A%22single_value%22%2C%22hidden_fields%22%3A%5B%22plan%22%2C%22forecast%22%2C%22actuals%22%2C%22wholesale%22%2C%22dtc%22%2C%22retail%22%2C%22day_aggregations.date_week%22%2C%22day_aggregations.total_gross_sales%22%2C%22day_aggregations.forecast_total_amount%22%5D%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22day_aggregations.date_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%223%22%2C%22unit%22%3A%22c_wk%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22_kind_hint%22%3A%22measure%22%2C%22table_calculation%22%3A%22mpe%22%2C%22_type_hint%22%3A%22number%22%2C%22category%22%3A%22table_calculation%22%2C%22expression%22%3A%22%28%24%7Bday_aggregations.total_gross_sales%7D-%24%7Bday_aggregations.forecast_total_amount%7D%29%2F%24%7Bday_aggregations.total_gross_sales%7D%22%2C%22label%22%3A%22MPE%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22percent_1%22%7D%5D&origin=share-expanded",
           "fields": {
             "plan" : {
             "inverseChange": false,
-            "field": "combined"
+            "field": "mpe"
           }
         }
         },

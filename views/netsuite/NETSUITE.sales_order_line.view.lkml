@@ -472,7 +472,7 @@ view: sales_order_line {
   }
 
   measure: white_glove_sales_eligible_for_SLA{
-    label: "White Glove Qty Eligible SLA"
+    label: "White Glove Qty Eligible SLA ($)"
     group_label: "Fulfillment SLA ($)"
     hidden:  no
     view_label: "Fulfillment"
@@ -485,7 +485,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder, Speedy Delivery, FragilePak, Purple Home Delivery", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_sales_Fulfilled_in_SLA{
@@ -735,7 +735,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_Qty_Fulfilled_in_SLA{
@@ -752,7 +752,7 @@ view: sales_order_line {
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
         Else 0
       END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "XPO,Pilot,NEHDS,Ryder", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_SLA_Achievement_prct {
