@@ -1139,7 +1139,7 @@ view: sales_order_line_base {
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike  '%speedy%' then'Speedy Delivery'
-          when ${location} ilike  '%fragilepak% then 'FragilePak'
+          when ${location} ilike  '%fragilepak%' then 'FragilePak'
           when ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
