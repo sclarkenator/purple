@@ -255,6 +255,24 @@ explore: forecast_compared_to_actual_sales {
     }
   }
 
+  explore: v_mattress_cogs {
+    hidden: yes
+    join: parent {
+      from: item
+      view_label: "Finished good"
+      type:left_outer
+      sql_on: ${v_mattress_cogs.item_id} = ${parent.item_id};;
+      relationship: many_to_one
+    }
+    join: subcomponent {
+      from: item
+      view_label: "Component"
+      type:left_outer
+      sql_on: ${v_mattress_cogs.sub_component} = ${subcomponent.item_id};;
+      relationship: many_to_one}
+    }
+
+
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
