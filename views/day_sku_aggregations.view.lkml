@@ -623,4 +623,51 @@ view: day_sku_aggregations {
           ${date_date}
         {% endif %};;
     }
+
+##Jared
+##  parameter: param_merch_axis {
+##    description: "This is a parameter filter that changes the value of See Data By dimension.  Source: looker.calculation"
+##    hidden: yes
+##    type: unquoted
+##    allowed_value: {
+##      label: "Last Week"
+##      value: "last week"
+##    }
+##    allowed_value: {
+##      label: "Last Month"
+##      value: "last monh"
+##    }
+##    allowed_value: {
+##      label: "Last Quarter"
+##      value: "last quarter"
+##    }
+##    allowed_value: {
+##      label: "Month to Date"
+##      value: "month to date"
+##    }
+##    allowed_value: {
+##      label: "Quarter to Date"
+##      value: "quarter to date"
+##    }
+##  }
+
+##  dimension: param_merch_date_filter {
+##    label: "See Data By"
+##    description: "This is a dynamic dimension that changes when you change the See Data By filter.  Source: looker.calculation"
+##    hidden: no
+##    sql:
+##        {% if see_data_by._parameter_value == 'day' %}
+##          ${date_date}
+##        {% elsif see_data_by._parameter_value == 'week' %}
+##          ${date_week}
+##        {% elsif see_data_by._parameter_value == 'month' %}
+##          ${date_month}
+##        {% elsif see_data_by._parameter_value == 'quarter' %}
+##          ${date_quarter}
+##        {% elsif see_data_by._parameter_value == 'year' %}
+##          ${date_year}
+##        {% else %}
+##          ${date_date}
+##        {% endif %};;
+##  }
 }
