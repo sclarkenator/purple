@@ -5,23 +5,23 @@ view: agent_state {
   dimension: PK {
     label: "ID"
     description: "Primary key ID. [login_sessin_id] & 3 digit version of [Session State Index]"
-    group_label: "IDs"
+    group_label: "* IDs"
     primary_key: yes
     # hidden: yes
     # sql: login_session_id || '-' || session_state_index  ;;
     sql: login_session_id || right(concat( '00', session_state_index), 3) ;;
   }
 
-
-  #####################################################################
-  #####################################################################
+  ##########################################################################################
+  ##########################################################################################
   ## GENERAL DIMENSIONS
 
   dimension: state_name {
     label: "State Name"
     description: "Name of state agent was logged into."
     type: string
-    sql: ${TABLE}."STATE_NAME" ;;
+    sql: case when ${TABLE}."STATE_NAME" = 'InbountConsult' then 'InboundConsult'
+      else ${TABLE}."STATE_NAME" end;;
   }
 
   dimension: unavailable_code_name {
@@ -39,14 +39,73 @@ view: agent_state {
     sql: ${TABLE}."SESSION_STATE_INDEX" ;;
   }
 
+  ##########################################################################################
+  ##########################################################################################
+  ## YesNo Flag Dimensions
 
-  #####################################################################
-  #####################################################################
+  dimension: available{
+    label: "Available"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'Available' then 1 else 0 end ;;
+  }
+
+  dimension: inbound_consult{
+    label: "Inbound Consult"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'InboundConsult' then 1 else 0 end ;;
+  }
+
+  dimension: inbound_contact{
+    label: "Inbound Contact"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'InboundContact' then 1 else 0 end ;;
+  }
+
+  dimension: loggedin{
+    label: "Logged In"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'LoggedIn' then 1 else 0 end ;;
+  }
+
+  dimension: loggedout{
+    label: "Logged Out"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'LoggedOut' then 1 else 0 end ;;
+  }
+
+  dimension: outbound_consult{
+    label: "Outbound Consult"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'OutboundConsult' then 1 else 0 end ;;
+  }
+
+  dimension: outbound_contact{
+    label: "Outbound Contact"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'OutboundContact' then 1 else 0 end ;;
+  }
+
+  dimension: unavailable{
+    label: "Unavailable"
+    group_label: "* Flags"
+    type: yesno
+    sql: case when ${state_name} = 'Unavailable' then 1 else 0 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
   ## NON-KEY ID DIMENSIONS
 
   dimension: agent_id {
     label: "Agent ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Agent ID is based on InContact ID."
     type: number
     value_format_name: id
@@ -56,7 +115,7 @@ view: agent_state {
 
   dimension: login_session_id {
     label: "Login Session ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "The session ID created when the agent logs in, and ends when they log out.  There may be multiple sessions for the same agent in the same workday. "
     type: number
     value_format_name: id
@@ -66,7 +125,7 @@ view: agent_state {
 
   dimension: state_id {
     label: "State ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Numeric identifier for the Agent State."
     type: number
     value_format_name: id
@@ -76,7 +135,7 @@ view: agent_state {
 
   dimension: unavailable_code_id {
     label: "Unavailable Code ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Unavailable State reason code."
     type: number
     value_format_name: id
@@ -84,9 +143,8 @@ view: agent_state {
     sql: ${TABLE}."UNAVAILABLE_CODE_ID" ;;
   }
 
-
-  #####################################################################
-  #####################################################################
+  ##########################################################################################
+  ##########################################################################################
   ## DATE DIMENSION GROUPS
 
   dimension_group: insert_ts {
@@ -156,26 +214,80 @@ view: agent_state {
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 
-
-  #####################################################################
-  #####################################################################
+  ##########################################################################################
+  ##########################################################################################
   ## COUNT MEASURES
 
-  measure: count {
-    type: count
+  measure: available_count{
+    label: "Available Count"
     group_label: "Count Measures"
+    type: sum
+    sql: ${available} ;;
+  }
+
+  measure: count {
+    group_label: "Count Measures"
+    type: count
     # hidden: yes
     drill_fields: [state_name, unavailable_code_name]
   }
 
+  measure: inbound_consult_count{
+    label: "InboundConsult Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${inbound_consult} ;;
+  }
 
-  #####################################################################
-  #####################################################################
-  ## SUM MEASURES
+  measure: inbound_contact_count{
+    label: "InboundContact Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${inbound_contact} ;;
+  }
+
+  measure: loggedin_count{
+    label: "Logged In Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${loggedin} ;;
+  }
+
+  measure: loggedout_count{
+    label: "Logged Out Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${loggedout} ;;
+  }
+
+  measure: outbound_consult_count{
+    label: "OutboundConsult Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${outbound_consult} ;;
+  }
+
+  measure: outbound_contact_count{
+    label: "OutboundContact Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${outbound_contact} ;;
+  }
+
+  measure: unavailable_count{
+    label: "Unavailable Count"
+    group_label: "Count Measures"
+    type: sum
+    sql: ${unavailable} ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## SUM DURATION MEASURES
 
   measure: available_duration_sum_min{
     label: "Available Time"
-    group_label: "Sum Measures"
+    group_label: "Sum Duration Measures"
     description: "Duration in minutes agent was in a state flaged as Available."
     type: number
     value_format_name: decimal_2
@@ -185,25 +297,17 @@ view: agent_state {
   }
 
   measure: state_duration_sum_min {
-    label: "State Duration Min"
-    group_label: "Sum Measures"
+    label: "State Duration"
+    group_label: "Sum Duration Measures"
     description: "Duration in minutes agent was in a given state."
     type: number
     value_format_name: decimal_2
     sql: sum(${TABLE}."STATE_DURATION")/60 ;;
   }
 
-  measure: state_duration_sum_sec {
-    label: "State Duration Sec"
-    group_label: "Sum Measures"
-    description: "Duration in seconds agent was in a given state."
-    type: sum
-    sql: ${TABLE}."STATE_DURATION" ;;
-  }
-
   measure: unavailable_duration_sum_min {
     label: "Unavailable Time"
-    group_label: "Sum Measures"
+    group_label: "Sum Duration Measures"
     description: "Duration in minutes agent was in a state flaged as Unavailable."
     type: number
     value_format_name: decimal_2
@@ -212,6 +316,5 @@ view: agent_state {
         when ${TABLE}.state_name = 'OutboundPending' then ${TABLE}."STATE_DURATION"
         end) / 60 ;;
   }
-
 
 }

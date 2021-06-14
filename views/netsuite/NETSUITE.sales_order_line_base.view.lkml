@@ -1135,9 +1135,12 @@ view: sales_order_line_base {
           when ${location} ilike '%xpo%' then 'XPO'
           when ${location} ilike '%pilot%' then 'Pilot'
           when ${location} is null then 'FBA'
-          when ${location} ilike '%100-%' then 'Purple'
+          when ${location} ilike '%100-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
+          when ${location} ilike  '%speedy%' then'Speedy Delivery'
+          when ${location} ilike  '%fragilepak%' then 'FragilePak'
+          when ${location} ilike '%100-%' then 'Purple'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
   }
@@ -1149,7 +1152,7 @@ view: sales_order_line_base {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot. Source:netsuite.sales_order_line"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT') THEN 'Purple' Else ${carrier} END;;
+    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
   }
 
   dimension: week_2019_start {

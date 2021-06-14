@@ -143,9 +143,13 @@ view: cc_activities {
 
   dimension_group: activity {
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, day_of_week_index, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created::date  ;; }
 
+  dimension: until_today {
+    type: yesno
+    sql: ${activity_day_of_week_index} < date_part(dow,current_date()) AND ${activity_day_of_week_index} >= 0;;
+  }
   dimension: prev_week{
     group_label: "Activity Date"
     label: "z - Previous Week"
