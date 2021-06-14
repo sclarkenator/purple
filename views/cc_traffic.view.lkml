@@ -209,6 +209,13 @@ view: cc_traffic {
     value_format_name: percent_2
     sql: 1.0*(${order_count})/NULLIF(${activities_count},0) ;;
   }
+  measure: close_rate {
+    label: "Close Rate"
+    description: "% of all IS orders over IS activities. Source: looker.calculation"
+    type: number
+    value_format_name: percent_2
+    sql: 1.0*(${order_count})/NULLIF(${SQL_count},0) ;;
+  }
 
   measure: aov {
     label: "AOV"
