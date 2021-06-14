@@ -1449,7 +1449,9 @@ view: sales_order_line {
       when ${carrier} = 'Carry Out' then ${created_raw}
       when ${carrier_raw} = 'Ryder' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'NEHDS' then ${N_3PL_TRANSMITTED_date}
-      when ${carrier_raw} = 'Purple' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier_raw} = 'Purple Home Delivery' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier_raw} = 'Speedy Delivery' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier_raw} = 'FragilePak' then ${N_3PL_TRANSMITTED_date}
       else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
   }
 
