@@ -35,6 +35,11 @@ view: cc_deals {
     timeframes: [raw, date, day_of_week, day_of_month, day_of_year, hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: ${TABLE}.created ;; }
 
+ dimension: until_today {
+    type: yesno
+    sql: ${created_day_of_week_index} < date_part(dow,current_date()) AND ${created_day_of_week_index} >= 0;;
+  }
+
   dimension: email {
     type:  string
     sql: ${TABLE}.email ;;
