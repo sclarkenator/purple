@@ -5,7 +5,7 @@ view: warranty_order_line {
     type: string
     primary_key:  yes
     hidden: yes
-    sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.order_id,'0')||'-'||NVL(${TABLE}.system,'-')||NVL(${TABLE}.created_ts,'0') ;; }
+    sql: NVL(${TABLE}.item_id,'0')||'-'||NVL(${TABLE}.warranty_order_id,'0')||'-'||NVL(${TABLE}.system,'-')||NVL(${TABLE}.created_ts,'0') ;; }
 
   dimension: is_warrantied {
     label: "     * Is Warrantied"
@@ -80,14 +80,15 @@ view: warranty_order_line {
   measure: quantity_complete_sales {
     group_label: " Advanced"
     label: "Total Warranties Completed ($)"
+    value_format: "$#,##0"
     description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
+    sql_distinct_key: ${primary_key} ;;
     filters: {
       field: warranty_order.status
       value: "Closed"}
     sql: ${TABLE}.QUANTITY*${sales_order_line.gross_amt} ;;
   }
-
 
   dimension: system {
     hidden: yes
@@ -104,8 +105,12 @@ view: warranty_order_line {
     hidden: yes
     #primary_key: yes
     type: number
-    # hidden: yes
     sql: ${TABLE}.WARRANTY_ORDER_ID ;; }
+
+  dimension: warranty_reason_code_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.warranty_reason_code_id ;; }
 
   measure: count {
     hidden:  yes
