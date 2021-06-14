@@ -12,6 +12,11 @@ view: v_retail_orders_without_showroom {
     sql: ${TABLE}."TRANSACTION_TYPE" ;;
   }
 
+  dimension: transaction_number {
+    type: string
+    sql: ${TABLE}."TRANSACTION_NUMBER" ;;
+  }
+
   dimension: transaction_id {
     type: number
     sql: ${TABLE}."TRANSACTION_ID" ;;
