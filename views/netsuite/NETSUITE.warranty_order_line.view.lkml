@@ -72,7 +72,7 @@ view: warranty_order_line {
     description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
     filters: {
-      field: warranty_order.status
+      field: warranty.status
       value: "Closed"}
     sql: ${TABLE}.QUANTITY ;;
   }
@@ -85,7 +85,7 @@ view: warranty_order_line {
     type: sum
     sql_distinct_key: ${primary_key} ;;
     filters: {
-      field: warranty_order.status
+      field: warranty.status
       value: "Closed"}
     sql: ${TABLE}.QUANTITY*${sales_order_line.gross_amt} ;;
   }
