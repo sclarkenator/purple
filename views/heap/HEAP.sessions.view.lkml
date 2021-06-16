@@ -705,8 +705,10 @@ view: sessions {
     group_label: "Adspend Mapping"
     description: "Source: looker calculation"
     type: string
-    sql: case when ${utm_term} ilike '%br%' then 'BRAND'
-      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' or ${utm_term} = 'prosp' then 'PROSPECTING'
+    sql: case
+     when  ${utm_term} ilike '%ptrt%' then 'COMBINED TARGETING'
+      when ${utm_term} ilike '%br%' then 'BRAND'
+      when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' or ${utm_term} = 'prosp' or ${utm_term} ilike '%ptbr%' then 'PROSPECTING'
       when ${utm_term} ilike '%rt%' or ${utm_term} = 'remarketing' or ${utm_term} = 're' then 'RETARGETING'
       else 'OTHER' end ;;
   }
