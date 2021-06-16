@@ -32,7 +32,7 @@ explore: agent_attendance_detail {
 
 #####################################################################
 #####################################################################
-# Contact Phone
+# InContact Phone
 
 explore: incontact_phone {
   label: "InContact Phone"

@@ -39,9 +39,9 @@ view: warehouse_location {
     description: "Warehouses used by Purple (PWest and Mainfreight), White Glove (Nehd, Ryder, XPO, Pilot), Other"
     type: string
     sql: case
-      when ${location_id} = '4' or  ${location_id} = '71' or ${location_id} = '75' or ${location_id} = '101' then 'Purple'
+      when ${location_id} = '4' or  ${location_id} = '71' or ${location_id} = '75' or ${location_id} = '101' or ${location_id} = '111' then 'Purple'
       when ${location_id} = '58' or  ${location_id} = '59' or ${location_id} = '63' or ${location_id} = '76'
-        or ${location_id} = '116' or ${location_id} = '121' then 'White Glove'
+        or ${location_id} = '116' or ${location_id} = '121'or ${location_id} = '146'or ${location_id} = '149' or ${location_id} = '155' or ${location_id} = '158' then 'White Glove'
       else 'Other' end ;;
   }
 
