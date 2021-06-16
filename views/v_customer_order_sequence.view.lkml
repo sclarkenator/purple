@@ -14,6 +14,12 @@ view: v_customer_order_sequence {
     sql: ${TABLE}."MODELS_PURCHASED" ;;
   }
 
+  dimension: lines_purchased {
+    label: " Lines Purchased"
+    type: string
+    sql: ${TABLE}."LINES_PURCHASED" ;;
+  }
+
   dimension: coupon_code {
     type: string
     sql: ${TABLE}."COUPON_CODE" ;;
