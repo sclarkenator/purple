@@ -438,7 +438,7 @@ view: item {
     description: "2, 3, or 4 inch grid height. Source: Looker calculation"
     sql:
       case
-        when ${TABLE}.model in ('KID BED','HYBRID 2','PURPLE MATTRESS','PURPLE PLUS CANADA','PURPLE PLUS US','LIFELINE MATTRESS') OR ${TABLE}.version in ('PURPLE/HYBRID 2 SCRIM PEAK','PURPLE MATTRESS SCRIM PEAK') then '2"'
+        when ${TABLE}.model in ('KID BED','HYBRID 2','PURPLE MATTRESS','PURPLE PLUS CANADA','PURPLE PLUS US','LIFELINE MATTRESS') OR ${TABLE}.version in ('KID BED SCRIM PEAK','PURPLE/HYBRID 2 SCRIM PEAK','PURPLE MATTRESS SCRIM PEAK') then '2"'
         when ${TABLE}.model in ('HYBRID PREMIER 3','REST MATTRESS') OR ${TABLE}.version in ('HYBRID PREMIER 3 SCRIM PEAK','REST MATTRESS SCRIM PEAK') then '3"'
         when ${TABLE}.model = 'HYBRID PREMIER 4' OR ${TABLE}.version = 'HYBRID PREMIER 4 SCRIM PEAK' then '4"'
         else NULL

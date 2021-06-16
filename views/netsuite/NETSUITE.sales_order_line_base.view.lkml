@@ -549,7 +549,7 @@ view: sales_order_line_base {
 
   measure: last_sync_date  {
     ##added by Scott Clark 11/25/2020
-    hidden: yes
+    hidden: no
     group_label: " Sync"
     label: "Netsuite sync date"
     description: "Date of most recent Netsuite sync"
@@ -559,7 +559,7 @@ view: sales_order_line_base {
 
   measure: last_sync_time  {
     ##added by Scott Clark 11/25/2020
-    hidden: yes
+    hidden: no
     group_label: " Sync"
     label: "Netsuite sync time"
     description: "Time of most recent Netsuite sync"
