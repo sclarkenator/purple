@@ -2287,6 +2287,7 @@ view: sales_order_line {
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
+      and ${sales_order.gross_amt} > 0
       then ${gross_amt} else 0 end;;
   }
 
@@ -2301,6 +2302,7 @@ view: sales_order_line {
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
+      and ${sales_order.gross_amt} > 0
       then ${sales_order.order_id} else 0 end;;
   }
 
