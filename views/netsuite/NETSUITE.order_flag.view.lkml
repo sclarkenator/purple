@@ -16,6 +16,7 @@ view: order_flag {
       ,case when PLATFORM_FLG > 0 then 1 else 0 end platform_flg
       ,case when sumo > 0 then 1 else 0 end sumo_flg
       ,case when FOUNDATION_FLG > 0 then 1 else 0 end foundation_flg
+      ,case when HEADBOARD_FLG > 0 then 1 else 0 end headboard_flg
       ,case when PILLOW_FLG > 0 then 1 else 0 end pillow_flg
       ,case when BLANKET_FLG > 0 then 1 else 0 end blanket_flg
       ,CASE WHEN MATTRESS_ORDERED > 1 THEN 1 ELSE 0 END MM_FLG
@@ -164,6 +165,7 @@ view: order_flag {
         ,SUM(CASE WHEN model = 'METAL' THEN 1 ELSE 0 END) PLATFORM_FLG
         ,SUM(case when sku_id in ('10-38-12822','10-38-12815','10-38-12846','10-38-12893','10-38-12892') then 1 else 0 end) sumo
         ,SUM(CASE WHEN model = 'FOUNDATION' THEN 1 ELSE 0 END) FOUNDATION_FLG
+        ,SUM(CASE WHEN line = 'HEADBOARD' OR PRODUCT_DESCRIPTION ilike '%FOUNDATION+HEADBOARD%' THEN 1 ELSE 0 END) HEADBOARD_FLG
         ,SUM(CASE WHEN category = 'PILLOW' THEN 1 ELSE 0 END) PILLOW_FLG
         ,SUM(CASE WHEN line = 'TOP OF BED' THEN 1 ELSE 0 END) BLANKET_FLG
         ,SUM(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) EYE_MASK_FLG
@@ -393,6 +395,15 @@ view: order_flag {
     type:  sum
     sql:  ${TABLE}.foundation_flg ;; }
 
+  measure: headboard_orders {
+    hidden: no
+    group_label: "Total Orders with:"
+    label: "a Headboard"
+    description: "1/0 per order; 1 if there was a headboard in the order. Source:looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  sum
+    sql:  ${TABLE}.headboard_flg ;; }
+
   measure: blanket_orders {
     hidden:  no
     group_label: "Total Orders with:"
@@ -559,6 +570,13 @@ view: order_flag {
     description: "1/0; 1 if there is a Foundation Base in this order. Source:looker.calculation"
     type: yesno
     sql: ${TABLE}.foundation_flg = 1 ;; }
+
+  dimension: headboard_flg {
+    group_label: "    * Orders has:"
+    label: "a Headboard"
+    description: "1/0; 1 if there is a Headboard in this order. Source:looker.calculation"
+    type: yesno
+    sql: ${TABLE}.headboard_flg = 1 ;; }
 
   dimension: pillow_flg {
     group_label: "    * Orders has:"
