@@ -418,11 +418,11 @@ dimension: spend_platform {
       when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate" }
       when: {sql: UPPER(${TABLE}.platform) in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
           or (UPPER(${TABLE}.platform) in ('YOUTUBE') and UPPER(${source})='AUDIO') ;; label: "audio" }
-      when: {sql: (NOT UPPER(${TABLE}.platform) in ('FB/IG')) and ${campaign_name} ilike '%ative%' or ${TABLE}.source in ('Native','NATIVE') OR UPPER(${TABLE}.platform) in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
-                  or (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand:%')
-                  or (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%Brand_%')
-                  or UPPER(${TABLE}.source) = 'AMAZON PPC';; label:"brand search"}
+      when: {sql: ${TABLE}.source in ('Native','NATIVE') OR UPPER(${TABLE}.platform) in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
+      when: {sql: lower(${campaign_name}) not ilike '%non-brand%'
+                  and (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
+                  or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
+                  or UPPER(${TABLE}.source) in  ('AMAZON PPC','SEARCH');; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
       when: {sql: UPPER(${TABLE}.platform) in ('EBAY','AMAZON MEDIA GROUP') OR ${TABLE}.source ilike ('%ispla%') or UPPER(${TABLE}.source) in ('DISPLAY')
           or UPPER(${spend_platform}) = 'AMAZON-SP' or ${campaign_name} ilike '%displa%' or UPPER(${TABLE}.platform) ilike ('ACUITY') ;; label:"display" }
