@@ -270,7 +270,17 @@ view: sales_order_line {
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
   }
-
+  dimension: White_Glove_Due_Date {
+    view_label: "Fulfillment"
+    hidden: no
+    type: date
+    sql: case
+          --white glove carriers have 14 days from date of transmission
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
+            THEN dateadd(d,14,${transmitted_date_date})
+          --catch all is creatd +3
+          Else dateadd(d,3,${transmitted_date_date}) END ;;
+  }
   dimension: Due_Date_new {
     ##added by Scott Clark on 11/6/2020 working on updating actual SLAs for Jane
     view_label: "Fulfillment"
@@ -738,6 +748,25 @@ view: sales_order_line {
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
   }
 
+  measure:White_Glove_Qty_eligible_for_Carrier_SLA{
+    label: "White Glove Qty Eligible Carrier SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "What was eligible to be fulfilled in SLA from the time the order was transmitted - Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${transmitted_date_date} is null THEN 0
+            When ${cancelled_order.cancelled_date} < ${White_Glove_Due_Date} THEN 0
+            WHEN ${cancelled_order.cancelled_date} > ${White_Glove_Due_Date} THEN ${ordered_qty}
+            WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
+            Else 0
+            END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+  }
+
   measure: White_Glove_Qty_Fulfilled_in_SLA{
     label: "White Glove Fulfilled in SLA"
     group_label: "Fulfillment SLA (units)"
@@ -755,6 +784,23 @@ view: sales_order_line {
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
   }
 
+ measure: White_Glove_Qty_Fulfilled_in_Carrier_SLA{
+    label: "White Glove Fulfilled in Carrier SLA"
+    group_label: "Fulfillment SLA (units)"
+    view_label: "Fulfillment"
+    description: "What was fulfilled in the CARRIER only SLA (ignoring time to transmit) - Source: looker.calculation"
+    drill_fields: [fulfillment_details*]
+    type: sum_distinct
+    sql_distinct_key: ${pk_concat} ;;
+    sql: Case
+        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
+        when ${fulfilled_date} <= ${White_Glove_Due_Date} THEN ${ordered_qty}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
+        Else 0
+      END ;;
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+  }
+
   measure: White_Glove_SLA_Achievement_prct {
     view_label: "Fulfillment"
     label: "White Glove SLA Achievement %"
@@ -766,7 +812,19 @@ view: sales_order_line {
     drill_fields: [fulfillment_details*]
     sql: Case when ${White_Glove_Qty_eligible_for_SLA} = 0 then 0 Else ${White_Glove_Qty_Fulfilled_in_SLA}/${White_Glove_Qty_eligible_for_SLA} End ;;
   }
+  measure: Carrier_White_Glove_SLA_Achievement_prct {
+    view_label: "Fulfillment"
+    label: "Carrier ONLY White Glove SLA Achievement %"
+    group_label: "Carrier Fulfillment SLA (units)"
+    description: "Measuring the carrier on only from the time they had posession of the order - Source: looker.calculation"
+    hidden: no
+    value_format_name: percent_1
+    type: number
+    drill_fields: [fulfillment_details*]
+    sql: Case when  --measuring the carrier on only from the time they had posession of the order
+    ${White_Glove_Qty_eligible_for_Carrier_SLA} = 0 THEN 0 ELSE ${White_Glove_Qty_Fulfilled_in_Carrier_SLA}/${White_Glove_Qty_eligible_for_Carrier_SLA} End ;;
 
+  }
   measure:Mattress_Firm_Qty_eligible_for_SLA{
     label: "Mattress Firm Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
@@ -1444,8 +1502,8 @@ view: sales_order_line {
     description: "Looking at the trasmitted date that matches the carrier from sales order line. Source:looker.calculation"
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: case when ${carrier} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
-      when ${carrier} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
+    sql: case when ${carrier_raw} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
+      when ${carrier_raw} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
       when ${carrier} = 'Carry Out' then ${created_raw}
       when ${carrier_raw} = 'Ryder' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'NEHDS' then ${N_3PL_TRANSMITTED_date}
