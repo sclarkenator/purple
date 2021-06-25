@@ -166,7 +166,13 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
       relationship: one_to_one
     }
+    join: aov_driver {
+      view_label: "Sessions"
+      type: left_outer
+      sql_on:  ${aov_driver.session_id}=${ecommerce.session_id} and ${aov_driver.user_id}=${ecommerce.user_id} ;;
+      relationship: one_to_one
     }
+  }
 
   explore: ecommerce_canada {
     from: heap_ca_sessions

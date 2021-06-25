@@ -564,6 +564,7 @@ view: day_aggregations {
       where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
+    publish_as_db_view: yes
   }
   extends: [_period_comparison]
 

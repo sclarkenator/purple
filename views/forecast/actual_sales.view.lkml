@@ -136,7 +136,7 @@ view: actual_sales {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) Amazon"
     description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
-    filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
+    filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA, eBay"]
     type: sum
     value_format: "$#,##0"
     sql:  ${gross_Amt_non_rounded} ;;
@@ -144,8 +144,8 @@ view: actual_sales {
   measure: total_gross_Amt_dtc {
     group_label: "Gross Sales"
     label:  "Gross Sales ($) DTC"
-    description:  "Total the customer paid, excluding cancellations, tax, and freight, in $. Source:netsuite.sales_order_line"
-    filters: [channel: "DTC"]
+    description:  "Total the customer paid, excluding cancellations, tax, and freight in $. Excludes Amazon. Source:netsuite.sales_order_line"
+    filters: [channel: "DTC", source: "-Amazon-FBM-US, -Amazon-FBA-US, -Amazon-FBA-CA, -eBay"]
     type: sum
     value_format: "$#,##0"
     sql:  ${gross_Amt_non_rounded} ;;
@@ -180,7 +180,7 @@ view: actual_sales {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) Amazon"
     description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
-    filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA"]
+    filters: [source: "Amazon-FBM-US, Amazon-FBA-US, Amazon-FBA-CA, eBay"]
     type: sum
     sql:  ${units} ;;
     drill_fields: [actual_sales.order_details_amazon]
@@ -188,8 +188,8 @@ view: actual_sales {
   measure: total_units_dtc {
     group_label: "Gross Sales"
     label:  "Gross Sales (units) DTC"
-    description: "Total units purchased, before returns. Cancellations excluded. Source:netsuite.sales_order_line"
-    filters: [channel: "DTC"]
+    description: "Total units purchased, before returns. Amazon, cancellations excluded. Excludes Amazon Source:netsuite.sales_order_line"
+    filters: [channel: "DTC", source: "-Amazon-FBM-US, -Amazon-FBA-US, -Amazon-FBA-CA, -eBay"]
     type: sum
     sql:  ${units} ;;
     drill_fields: [actual_sales.order_details_dtc]

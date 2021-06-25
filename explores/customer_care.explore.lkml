@@ -428,7 +428,14 @@ explore: CC_KPIs {
       view_label: "Exchange Item"}
   }
 
-  explore: cc_traffic { hidden: yes }
+  explore: cc_traffic { hidden: yes
+    join:bridge_by_agent {
+      type: left_outer
+      relationship: many_to_one
+      view_label: "Bridge Courses"
+      sql_on: ${bridge_by_agent.email} = ${cc_traffic.agent_email};;
+    }
+  }
 
   explore: orphan_orders {
     hidden:  yes
@@ -462,7 +469,7 @@ explore: CC_KPIs {
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
-
+  explore:  bridge_by_agent {}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
   explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}

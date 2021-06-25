@@ -20,8 +20,8 @@ view: v_purple_showroom {
     view_label: "Owned Retail"
     group_label: "Advanced"
     type: yesno
-    label: "Outlet?"
-    sql: ${TABLE}.location_name = 'UT - Factory Outlet SLC' ;;
+    label: "Is Outlet"
+    sql: lower(${TABLE}.location_name) ilike '%outlet%' ;;
   }
 
   dimension: address_1 {
