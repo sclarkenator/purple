@@ -757,6 +757,13 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many
       sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_all_orders.email});;
     }
+    join: customer_journey {
+      view_label: "Customer Journey"
+      from:  customer_journey
+      type:  left_outer
+      relationship:  one_to_one
+      sql_on:  LOWER(${customers.vp_customer_email}) = LOWER(${customer_journey.email});;
+    }
     # join: customer_table {
     #   view_label: "Customers"
     #   type: left_outer
