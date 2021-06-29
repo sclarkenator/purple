@@ -152,25 +152,26 @@
 
     dimension: primary_key {
       primary_key: yes
-      sql: CONCAT(${agent_id}, ${reported}) ;;
+      sql: CONCAT(${agent_id}, ${reported_date}) ;;
       hidden: yes
     }
 
   measure: working_rate_measure {
       label: "Working Rate"
-      type: average
-      value_format_name: decimal_2
-      sql: ${TABLE}.working_rate ;;
+      type: number
+      value_format_name: percent_2
+      sql: (${total_measure}-${personal_measure}-${break_measure}-${lunch_measure})/${total_measure} ;;
 
     }
 
     measure: occupancy_measure {
       label: "Occupancy"
-      type: average
-      value_format_name: decimal_2
-      sql: ${TABLE}.occupancy ;;
+      description: "Measure of agent utilization. Handle/(Handle+Avail)"
+      type: number
+      value_format_name: percent_2
+      sql: ${handle_measure}/(${handle_measure}+${available_measure}) ;;
 
-        }
+    }
 
     measure: total_measure {
       label: "Total"

@@ -167,6 +167,14 @@ view: daily_adspend {
     #agency cost + adspend no agency
     sql:  ${TABLE}.SPEND + COALESCE(${TABLE}.AGENCY_COST,0);; }
 
+  measure: conversion_value {
+    label: "Conversion Value ($ Platform)"
+    description: "In Platform Conversion Value"
+    hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    sql:  ${TABLE}.CONVERSION_VALUE ;;  }
+
   # measure: adspend_current_period{
   #   label: "Total Adspend ($k) current period"
   #   group_label: "Advanced"
