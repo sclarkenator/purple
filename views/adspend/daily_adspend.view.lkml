@@ -521,13 +521,19 @@ dimension: spend_platform {
       when: { sql:  ${TABLE}.campaign_type = 'RETARGETING' ;;  label: "RETARGETING" }
       else: "OTHER" } }
 
+  dimension: device_raw {
+    label: "Device Raw"
+    description: "What device was ad viewed on? (Mobile, Tablet, Desktop, Other)"
+    type: string
+    sql:  ${TABLE}.device;; }
+
   dimension: ad_device {
     label: "  Ad Device"
     description: "What device was ad viewed on? (Mobile, Tablet, Desktop, Other)"
     type: string
     case: {
       when: {
-        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSERS','SMARTPHONE') ;;
+        sql: upper(${TABLE}.device) in ('ANDROID_SMARTPHONE','IPHONE','MOBILE DEVICES WITH FULL BROWSERS','SMARTPHONE','MOBILE') ;;
         label: "MOBILE" }
       when: { sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSERS','IPOD','TABLET') ;;
         label: "TABLET" }
