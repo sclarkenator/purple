@@ -1,5 +1,5 @@
 view: v_scc_sales {
-  sql_table_name: "WHOLESALE"."SCC_SALES"
+  sql_table_name: "WHOLESALE"."SLEEP_COUNTRY_CANADA_SALES"
     ;;
 
   dimension_group: created {
