@@ -538,6 +538,7 @@ dimension: spend_platform {
       when: { sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSERS','IPOD','TABLET') ;;
         label: "TABLET" }
       when: { sql: upper(${TABLE}.device) in ('COMPUTER','COMPUTERS','DESKTOP') ;;  label: "DESKTOP" }
+      when: { sql: upper(${TABLE}.device) in ('CTV') or ${source} in ('CTV') ;;  label: "CTV" }
       else: "OTHER"  } }
 
   dimension: platform_source_group {
