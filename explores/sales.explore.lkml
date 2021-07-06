@@ -541,6 +541,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
       relationship: one_to_one
     }
+    join: v_sla_days {
+      view_label: "Fulfillment"
+      type: left_outer
+      sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
+      relationship: many_to_one
+      }
 
   }
 

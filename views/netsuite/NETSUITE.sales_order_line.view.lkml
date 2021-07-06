@@ -282,7 +282,7 @@ view: sales_order_line {
           Else dateadd(d,3,${transmitted_date_date}) END ;;
   }
   dimension: Due_Date_new {
-    ##added by Scott Clark on 11/6/2020 working on updating actual SLAs for Jane
+    ##updated by Scott Clark on 7/6/2020 working on updating actual SLAs for Jane
     view_label: "Fulfillment"
     group_label: " Advanced"
     label: "SLA-based ship-by"
@@ -294,7 +294,7 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${site_slas.days},5),${created_date})
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${v_sla_days.sla_days},5),${created_date})
           Else dateadd(d,3,${created_date}) END ;;
   }
 
