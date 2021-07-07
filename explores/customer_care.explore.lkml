@@ -15,18 +15,20 @@ explore: TESTING_agent_attendance {
 
   view_name: cc_agent_attendance
   hidden: yes
+
+  join: agent_lkp {
+    view_label: "Agent Lookup"
+    type: left_outer
+    sql_on: ${cc_agent_attendance.ic_id} = ${agent_lkp.incontact_id} ;;
+    relationship: many_to_one
+  }
+
   join: team_lead_name {
     view_label: "Agent Lookup"
     fields: [team_lead_name.team_Name, team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
     type: left_outer
-    sql_on: ${team_lead_name.incontact_id} = ${cc_agent_attendance.ic_id}
+    sql_on: ${agent_lkp.incontact_id} = ${team_lead_name.incontact_id}
       and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
-    relationship: many_to_one
-  }
-  join: agent_lkp {
-    view_label: "Agent Lookup"
-    type: left_outer
-    sql_on: ${team_lead_name.incontact_id} = ${agent_lkp.incontact_id} ;;
     relationship: many_to_one
   }
 }
