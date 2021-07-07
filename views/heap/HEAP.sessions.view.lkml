@@ -574,7 +574,7 @@ view: sessions {
           when ${utm_medium} in ('tv','linear') then 'tv'
           when ${utm_medium} in ('tve') then 'ctv'
           when (${utm_medium} IS NULL and ${referrer} IS NOT NULL and ${utm_source} is null) or ${utm_medium} in ('organic') then 'organic'
-          when ${utm_medium} IS NULL then 'direct'
+          when ${utm_medium} IS NULL AND ${utm_source} IS NULL AND ${referrer} IS NULL then 'direct'
 
           else 'other' end ;;
   }
