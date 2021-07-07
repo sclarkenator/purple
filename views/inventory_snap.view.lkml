@@ -58,6 +58,7 @@ view: inventory_snap {
     sql: ${TABLE}.available ;;  }
 
   measure: average_cost {
+    hidden: yes
     label: "Total Average Cost"
     description: "Summing the average cost field"
     type: sum
@@ -73,7 +74,7 @@ view: inventory_snap {
     label: "Inventory Snap"
     type: time
     timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: to_timestamp_ntz(${TABLE}.CREATED) ;; }
 
   dimension: created_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
@@ -168,6 +169,14 @@ view: inventory_snap {
     type:  number
     value_format: "$#,##0.00"
     sql: ${TABLE}.standard_cost ;;
+  }
+
+  dimension: on_hand_dm {
+    hidden: yes
+    group_label: " Advanced"
+    type: number
+    value_format: "#,##0"
+    sql: ${TABLE}.on_hand ;;
   }
 
   dimension: unit_standard_cost {
