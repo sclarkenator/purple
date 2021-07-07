@@ -262,7 +262,15 @@ view: incontact_phone {
     description: "Length of time the contact spent waiting in the queue prior to the short abandon. This length of time determines whether the contact qualifies as a short abandon or note."
     type: number
     sql: case when ${short_abandon} = true then ${abandon_time} end;;
-    }
+  }
+
+  dimension: speed_of_answer {
+    label: "Speed of Answer Time"
+    group_label: "* Time Dimensions"
+    description: "Length of time taken for agent to answer call."
+    type: number
+    sql: ${TABLE}.speed_of_answer ;;
+  }
 
   dimension: talk_time {
     label: "Talk Time"
@@ -618,7 +626,7 @@ view: incontact_phone {
 
   dimension_group: start_ts {
     label: "Contact Start TS UDP"
-    hidden: yes
+    # hidden: yes
     type: time
     timeframes: [
       raw,
@@ -669,7 +677,7 @@ view: incontact_phone {
     description: "Counts all calls."
     # hidden: yes
     type: number
-    sql: count(*) ;;
+    sql: count(distinct contact_id) ;;
     drill_fields: [detail*]
     }
 
