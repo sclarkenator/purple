@@ -166,6 +166,24 @@ view: heap_page_views {
     sql: split_part(split_part(${query}, 'gclid=',  2), '&', 1) ;;
   }
 
+  dimension: utm_adset {
+    label: "Query - utm_adset"
+    group_label: "Advanced"
+    description: "The landing page's gclid string. Source: Looker calculation"
+    hidden: no
+    view_label: "Sessions"
+    type: string
+    sql: split_part(split_part(${query}, 'utm_adset=',  2), '&', 1) ;;
+  }
+  dimension: utm_ad {
+    label: "Query - utm_ad"
+    group_label: "Advanced"
+    description: "The landing page's gclid string. Source: Looker calculation"
+    hidden: no
+    view_label: "Sessions"
+    type: string
+    sql: split_part(split_part(${query}, 'utm_ad=',  2), '&', 1) ;;
+  }
   dimension: path {
     label: "Parsed Page URL"
 #    hidden: yes

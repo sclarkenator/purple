@@ -33,64 +33,64 @@ explore: TESTING_agent_attendance {
   }
 }
 
-#####################################################################
-#####################################################################
-# Agent Attendance Detail
+# #####################################################################
+# #####################################################################
+# # Agent Attendance Detail
 
-explore: agent_attendance_detail {
+# explore: agent_attendance_detail {
 
-  # *** Need accurate attendance points data set ***
-  # *** Need accurate punch data set ***
+#   # *** Need accurate attendance points data set ***
+#   # *** Need accurate punch data set ***
 
-  label: "Agent Attendance Detail"
-  view_label: "Agent Data"
-  description: "Tracks Agent time punches, states, and attendance points."
-  view_name: agent_lkp
-  hidden: yes
+#   label: "Agent Attendance Detail"
+#   view_label: "Agent Data"
+#   description: "Tracks Agent time punches, states, and attendance points."
+#   view_name: agent_lkp
+#   hidden: yes
 
-  join: agent_state {
-    view_label: "Agent States"
-    type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
-    relationship: one_to_many
-  }
+#   join: agent_state {
+#     view_label: "Agent States"
+#     type: full_outer
+#     sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
+#     relationship: one_to_many
+#   }
 
-  join: incontact_phone{
-    view_label: "InContact Phone Agent Summary"
-    type: left_outer
-    sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
-      and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
-    relationship: one_to_one
-  }
-}
+#   join: incontact_phone{
+#     view_label: "InContact Phone Agent Summary"
+#     type: left_outer
+#     sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
+#       and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
+#     relationship: one_to_one
+#   }
+# }
 
-#####################################################################
-#####################################################################
-# Agent Attendance Detail v2 TEST
+# #####################################################################
+# #####################################################################
+# # Agent Attendance Detail v2 TEST
 
-explore: agent_attendance_detail_v2 {
+# explore: agent_attendance_detail_v2 {
 
-  label: "Agent Attendance Detail v2"
-  view_label: "Agent States"
-  description: "Tracks Agent time punches, states, and attendance points."
-  view_name: agent_state
-  hidden: yes
+#   label: "Agent Attendance Detail v2"
+#   view_label: "Agent States"
+#   description: "Tracks Agent time punches, states, and attendance points."
+#   view_name: agent_state
+#   hidden: yes
 
-  join: incontact_phone{
-    view_label: "InContact Phone Agent Summary"
-    type: left_outer
-    sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
-      and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
-    relationship: one_to_one
-  }
+#   join: incontact_phone{
+#     view_label: "InContact Phone Agent Summary"
+#     type: left_outer
+#     sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
+#       and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
+#     relationship: one_to_one
+#   }
 
-  join: agent_lkp {
-    view_label: "Agent Data"
-    type: full_outer
-    sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
-    relationship: many_to_one
-  }
-}
+#   join: agent_lkp {
+#     view_label: "Agent Data"
+#     type: full_outer
+#     sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
+#     relationship: many_to_one
+#   }
+# }
 
 # #####################################################################
 # #####################################################################

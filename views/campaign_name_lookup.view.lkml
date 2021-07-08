@@ -5,9 +5,13 @@ view: campaign_name_lookup {
       select
         campaign_id
         , campaign_name
+        ,ad_id
+        ,ad_name
       from(
         select campaign_id
             , campaign_name
+            ,ad_id
+            ,ad_name
             , date
             , row_number () over (partition by campaign_id order by date desc) as row_num
         from marketing.adspend
@@ -31,6 +35,19 @@ dimension: campaign_name {
   view_label: "Sessions"
   group_label: "UTM Tags"
   sql: nvl(${TABLE}.campaign_name,${ecommerce.utm_campaign_raw});;
+  }
+
+  dimension: ad_id{
+    type:string
+    hidden: yes
+    sql: ${TABLE}.ad_id ;;
+  }
+  dimension: ad_name {
+    type:string
+    description: "Campaign name from adspend table matched by id"
+    view_label: "Sessions"
+    group_label: "UTM Tags"
+    sql: nvl(${TABLE}.ad_name,${heap_page_views.utm_ad});;
   }
 
 }
