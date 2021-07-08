@@ -950,7 +950,7 @@ view: item {
   dimension: Classification_Groups{
     label: "Classification (buckets)"
     group_label: "Advanced"
-    description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other).
+    description: "Designates the item type (Finished Good, Factory Second, Purchased Component, Semi Finished Goods, Raw Materials, Kit, Other).
       Source: looker calculation"
     type: string
     #sql: ${TABLE}.classification ;;
@@ -958,11 +958,9 @@ view: item {
       when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'CM' ;;label: "Purchased Component" }
-      when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
-      when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
-      when: { sql: ${classification} = 'SFG' ;; label: "Semi Finished Goods" }
-      when: { sql: ${classification} = 'RAW' ;; label: "Raw Materials" }
-      when: { sql: ${classification} = 'PRC' ;; label: "Production Components" }
+      when: { sql: ${classification} = 'SA' ;; label: "Semi Finished Goods" }
+      when: { sql: ${classification} = 'RM' ;; label: "Raw Materials" }
+      when: { sql: ${classification} = 'KIT' ;; label: "Kit" }
       else: "Other" } }
 
   dimension: Product_Dimensions {
