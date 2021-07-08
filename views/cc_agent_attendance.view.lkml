@@ -155,7 +155,7 @@ view: cc_agent_attendance {
     description: "FMLA time used in given period."
     type: sum
     value_format_name: decimal_0
-    sql: ${fmla} ;;
+    sql: case when ${fmla} > 0 then ${fmla} else 0 end ;;
   }
 
   ## ADD OCCURRENCE POINTS SUM MEASURE ONCE IS_OCCURRENCE DIMENSION IS WORKING?
@@ -223,7 +223,7 @@ view: cc_agent_attendance {
     description: "Sick time used in given period."
     type: sum
     value_format_name: decimal_0
-    sql: ${sick_time} ;;
+    sql: case when ${sick_time} > 0 then ${sick_time} else 0 end ;;
   }
 
   measure: warning_level {
