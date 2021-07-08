@@ -29,7 +29,21 @@ view: item {
     sql: ${TABLE}.classification_new ;;
   }
 
-  dimension: classification_raw {
+  dimension: classification1 {
+    label: "Inventory type"
+    group_label: "Advanced"
+    description: "What stage is this item in production?. Source:looker.calculation"
+    hidden:  no
+    case: {
+            when: { sql: ${classification} = 'RM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'SA' ;; label: "WIP"}
+            when: { sql: ${classification} = 'FG' ;; label: "FINISHED GOOD"}
+            when: { sql: ${classification} = 'FS' ;; label: "FACTORY SECOND"}
+            else: "OTHER"}
+  }
+
+
+ dimension: classification_raw {
     hidden:  yes
     type: string
     sql:  ${TABLE}.classification_new ;;
