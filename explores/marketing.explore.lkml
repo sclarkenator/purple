@@ -127,15 +127,15 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${order_utm.pk} = ${first_order_flag.pk} ;;
       relationship: many_to_one
     }
-
   # Added 12/30/2020 to get orders and items - Mason
+  # 07/08/2021 - Exposed full sales_order_line to explore
     join: sales_order_line {
       type: left_outer
       sql_on: ${order_utm.order_id} = ${sales_order_line.order_id} ;;
-      fields: [sales_order_line.order_id,sales_order_line.item_id]
+      # fields: [sales_order_line.order_id,sales_order_line.item_id]
+      fields: []
       relationship: one_to_one
     }
-
     # Added 12/30/2020 to get products - Mason
     join: item {
       type: left_outer
