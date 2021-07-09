@@ -70,7 +70,7 @@ dimension: name {
     label: "CC/ZD Agent Name"
     description: "The name of this agent. Source:incontact.agent_lkp"
     type:  string
-    sql: nvl(${zendesk_sell.name},${TABLE}.name)  ;;
+    sql: REPLACE(nvl(${zendesk_sell.name},${TABLE}.name), '  ', ' ')  ;;
   }
 
   dimension: primary_location{

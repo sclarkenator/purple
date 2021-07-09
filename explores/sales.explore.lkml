@@ -393,7 +393,7 @@ include: "/dashboards/**/*.dashboard"
     join: team_lead_name {
       view_label: "Zendesk"
       type: left_outer
-      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or ${team_lead_name.agent_Name} = ${zendesk_sell.name})
+      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or REPLACE(${team_lead_name.agent_Name}, '  ', ' ') = REPLACE(${zendesk_sell.name}, '  ', ' '))
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
       relationship: many_to_one
     }
