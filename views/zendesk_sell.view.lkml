@@ -68,7 +68,7 @@ view: zendesk_sell {
     label: "Agent Name"
     description: "Null if not linked to a deal. Source: incontact.agent_lkp"
     sql: case when ${TABLE}.name ilike '%Deleted%' then null
-         else replace(${TABLE}.name,'  ',' ')
+         else ${TABLE}.name
          end;;
   }
 
