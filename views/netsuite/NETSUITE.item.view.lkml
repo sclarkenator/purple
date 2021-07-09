@@ -33,9 +33,10 @@ view: item {
     label: "Inventory type"
     group_label: "Advanced"
     description: "What stage is this item in production?. Source:looker.calculation"
-    hidden:  no
+    hidden:  yes
     case: {
             when: { sql: ${classification} = 'RM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'CM' ;; label: "RAW MATERIAL"}
             when: { sql: ${classification} = 'SA' ;; label: "WIP"}
             when: { sql: ${classification} = 'FG' ;; label: "FINISHED GOOD"}
             when: { sql: ${classification} = 'FS' ;; label: "FACTORY SECOND"}
