@@ -9,6 +9,10 @@ view: cc_agent_attendance {
     sql: concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by IC_ID, combined_dates order by occurrence, sub_occurrence, notes)) ;;
   }
 
+  ##########################################################################################
+  ##########################################################################################
+  ## GENERAL DIMENSIONS
+
   dimension: added_by {
     label: "Added By"
     description: "Name of person entering record data."
@@ -30,22 +34,18 @@ view: cc_agent_attendance {
     sql: ${TABLE}."IC_ID" ;;
   }
 
-  ##  NEED TO DECIDE HOW TO FLAG OCCURRENCE VS. NON-OCCURRENCE EVENTS
-  # dimension: is_occurrence {
-  #   description: "Flags whether was an Occurrence event."
-  #   # hidden: yes
-  #   sql: case when ${TABLE}.combined_dates is null then 1 else 0 end ;;
-  # }
 
-  # dimension: is_non_occurrence {
-  #   description: "Flags whether was an Non-Occurrence event."
-  #   hidden: yes
-  #   sql: case when ${TABLE}.combined_dates is null then 0 else 1 end ;;
-  # }
+  dimension: is_occurrence {
+    description: "Flags whether was an Occurrence event."
+    # hidden: yes
+    type: yesno
+    sql: is_occurrence ;;
+  }
 
   dimension: name {
     label: "Agent Name"
     description: "Name of agent to whom this record applies."
+    hidden: yes
     type: string
     sql: ${TABLE}."NAME" ;;
   }
@@ -136,18 +136,10 @@ view: cc_agent_attendance {
   ## MEASURES
 
 
-  ## PLACEHOLDER ONLY - REMOVE ONCE IS_OCCURRENCE DIMENSION IS WORKING
-  measure: test_last_occurrence {
-    label: "TEST Last Occurrence"
-    description: "PLACEHOLDER ONLY."
-    type: date
-    sql: max(case when ${points} >0 then ${combined_date_date}
-      else null end) ;;
-  }
-
   measure: count {
+    label: "Count of all recorded events"
+    hidden: yes
     type: count
-    drill_fields: [name]
   }
 
   measure: fmla_time_used {
@@ -158,33 +150,36 @@ view: cc_agent_attendance {
     sql: case when ${fmla} > 0 then ${fmla} else 0 end ;;
   }
 
-  ## ADD OCCURRENCE POINTS SUM MEASURE ONCE IS_OCCURRENCE DIMENSION IS WORKING?
-  ## ADD LAST OCCURRENCE MEASURE ONCE IS_OCCURRENCE DIMENSION IS WORKING
-  ## ADD PERFECT ATTENDANCE MEASURE ONCE IS_OCCURRENCE DIMENSION IS WORKING
+  measure: last_occurrence {
+    label: "Last Occurrence"
+    description: "Most recent date when an occurrence event was recorded."
+    type: date
+    sql: max(case when ${is_occurrence} = True then ${combined_date_date}
+      else null end) ;;
+  }
 
+  measure: non_occurrence_count {
+    label: "Non-Occurrence Count"
+    description: "Sum count of Non-Occurrence events."
+    hidden: yes
+    type: number
+    value_format_name: decimal_0
+    sql: case when ${is_occurrence}  True then 0 else 1 end ;;
+  }
 
-
-  ## ADD BACK IN ONCE IS_nNON-OCCURRENCE DIMENSION IS WORKING
-  # measure: non_occurrence_count {
-  #   label: "Non-Occurrence Count"
-  #   description: "Sum count of Non-Occurrence events."
-  #   type: sum
-  #   sql: ${is_non_occurrence} ;;
-  # }
-
-  ## ADD BACK IN ONCE IS_OCCURRENCE DIMENSION IS WORKING
-  # measure: occurrence_count {
-  #   label: "Occurrence Count"
-  #   description: "Sum count of Occurrence events."
-  #   type: sum
-  #   sql: ${is_occurrence}  ;;
-  # }
+  measure: occurrence_count {
+    label: "Occurrence Count"
+    description: "Sum count of Occurrence events."
+    type: number
+    value_format_name: decimal_0
+    sql: sum(case when ${is_occurrence} = True then 1 else 0 end) ;;
+  }
 
   measure: occurrence_hit_count {
     label: "Occurrence Hit Count"
-    description: "Count of occurrence hits in period."
+    description: "Count of occurrence hits (positive points) in period."
     type: sum
-    sql: nullifzero(case when ${points} > 0 then 1 end) ;;
+    sql: nullifzero(case when ${is_occurrence} = True and ${points} > 0 then 1 end) ;;
   }
 
   measure: occurrence_points {
@@ -192,7 +187,7 @@ view: cc_agent_attendance {
     description: "Current points earned by Occurrence events."
     type: number
     value_format_name: decimal_1
-    sql: zeroifnull(sum(${points})) ;;
+    sql: zeroifnull(sum(case when ${is_occurrence} = True then ${points} else 0 end)) ;;
   }
 
   measure: occurrence_hit_points {
@@ -200,23 +195,6 @@ view: cc_agent_attendance {
     type: sum
     sql: case when ${points} > 0 then ${points} else 0 end ;;
   }
-
-  # measure: perfect_attendance {
-  #   label: "Perfect Attendance"
-  #   description: "Flags periods where no Occurrence points are earned"
-  #   case: {
-  #     when: {
-  #       sql: ${occurrence_hit_points} = 0 ;;
-  #       label: "P"
-  #     }
-  #     when: {
-  #       sql: ${occurrence_hit_points} is null ;;
-  #       label: "P"
-  #     }
-  #     else: "N"
-  #   }
-  #   # sql: ${occurrence_point_hits} > 0 ;;
-  # }
 
   measure: sick_time_used {
     label: "Sick Time Used"
@@ -229,6 +207,7 @@ view: cc_agent_attendance {
   measure: warning_level {
     label: "Warning Level"
     description: "Warning level is not a difinitive indication of status, but is a generalization based on accumulated occurence points. Actual status may vary based on timing of occurence events and other factors."
+    hidden: yes
     case: {
       when: {
         sql: ${occurrence_points} between 3 and 3.9 ;;
