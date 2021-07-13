@@ -170,7 +170,7 @@ view: daily_adspend {
   measure: conversion_value {
     label: "Conversion Value ($ Platform)"
     description: "In Platform Conversion Value"
-    hidden: yes
+    hidden: no
     type: sum
     value_format: "$#,##0"
     sql:  ${TABLE}.CONVERSION_VALUE ;;  }
