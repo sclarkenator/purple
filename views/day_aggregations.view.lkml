@@ -188,6 +188,8 @@ view: day_aggregations_adspend {
     explore_source: daily_adspend {
       column: ad_date {}
       column: adspend {}
+      column: impressions {}
+      column: clicks {}
       column: amount { field: adspend_target.amount }
     }
   }
@@ -198,6 +200,8 @@ view: day_aggregations_adspend {
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   #}
   measure: adspend { type: sum }
+  measure: impressions { type: sum }
+  measure: clicks { type: sum }
   measure: amount {type: sum}
 }
 
@@ -501,6 +505,8 @@ view: day_aggregations {
         , forecast.retail_amount as forecast_retail_amount
         , forecast.retail_units as forecast_retail_units
         , adspend.adspend
+        , adspend.impressions
+        , adspend.clicks
         , adspend.amount as adspend_adspend_target
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
@@ -934,6 +940,20 @@ view: day_aggregations {
     value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
+  measure: impressions {
+    label: "Impressions"
+    group_label: "Adspend"
+    description: "Impressions"
+    type: sum
+    sql: ${TABLE}.impressions;; }
+
+  measure: clicks {
+    label: "Clicks"
+    group_label: "Adspend"
+    description: "Clicks"
+    type: sum
+    sql: ${TABLE}.clicks;; }
+
   measure: adspend_k {
     label: "Adspend ($K)"
     group_label: "Adspend"
@@ -1017,6 +1037,29 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_adspend_target;; }
+
+  measure: cpm {
+    label: "CPM"
+    group_label: "Adspend"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF((${impressions}/1000),0) ;;  }
+
+  measure: cpc {
+    label: "CPC"
+    group_label: "Adspend"
+    description: "Adspend / Total Clicks"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF(${clicks},0) ;;  }
+
+  measure: ctr {
+    label: "CTR"
+    description: " (Total Clicks / Total Impressions) *100"
+    type: number
+    value_format: "00.00%"
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
 
   measure: total_unique_orders {
     label: "DTC Orders"
