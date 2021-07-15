@@ -34,7 +34,6 @@ view: cc_agent_attendance {
     sql: ${TABLE}."IC_ID" ;;
   }
 
-
   dimension: is_occurrence {
     description: "Flags whether was an Occurrence event."
     # hidden: yes

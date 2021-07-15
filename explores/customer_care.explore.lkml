@@ -511,7 +511,7 @@ explore: CC_KPIs {
   explore:  bridge_by_agent {}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
-  explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+  # explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
   explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
   explore: zendesk_sell_contact {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_deal {hidden:yes group_label: "Customer Care"}
