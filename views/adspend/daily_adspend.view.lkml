@@ -427,10 +427,10 @@ dimension: spend_platform {
       when: {sql: UPPER(${TABLE}.platform) in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
           or (UPPER(${TABLE}.platform) in ('YOUTUBE') and UPPER(${source})='AUDIO') ;; label: "audio" }
       when: {sql: ${TABLE}.source in ('Native','NATIVE') OR UPPER(${TABLE}.platform) in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: lower(${campaign_name}) not ilike '%non-brand%'
+      when: {sql: (lower(${campaign_name}) not ilike '%non-brand%' and ${campaign_name} ilike '%brand%')
                   and (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
                   or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
-                  or UPPER(${TABLE}.source) in  ('AMAZON PPC','SEARCH');; label:"brand search"}
+                  or UPPER(${TABLE}.source) in  ('AMAZON PPC');; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
       when: {sql: (UPPER(${TABLE}.platform)
         in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
