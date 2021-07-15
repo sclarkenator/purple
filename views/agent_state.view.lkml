@@ -103,10 +103,10 @@ view: agent_state {
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
-  dimension_group: state_start_ts {
+  dimension_group: state_start_ts_utc {
     label: "State Start ts UTC"
     description: "Date/time agent state began in UTC."
-    hidden: yes
+    # hidden: yes
     type: time
     timeframes: [
       raw,

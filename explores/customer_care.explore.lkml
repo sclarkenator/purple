@@ -57,9 +57,9 @@ explore:agent_attendance {
   }
 }
 
-# # #####################################################################
-# # #####################################################################
-# # # INCONTACT PHONE AGENT SUMMARY
+#####################################################################
+#####################################################################
+# INCONTACT PHONE AGENT SUMMARY
 
 # explore: incontact_phone_agent_summary {
 #   label: "Incontact Phone Agent Summary"
