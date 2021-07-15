@@ -1056,6 +1056,7 @@ view: day_aggregations {
 
   measure: ctr {
     label: "CTR"
+    group_label: "Adspend"
     description: " (Total Clicks / Total Impressions) *100"
     type: number
     value_format: "00.00%"
