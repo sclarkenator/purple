@@ -142,6 +142,14 @@ view: cc_agent_attendance {
     type: count
   }
 
+  measure: current_points {
+    label: "Current Points"
+    description: "Current summary of Attendence Points"
+    type: number
+    value_format_name: decimal_1
+    sql: zeroifnull(sum(${points})) ;;
+  }
+
   measure: fmla_time_used {
     label: "FMLA Time Used"
     description: "FMLA time used in given period."
@@ -175,20 +183,12 @@ view: cc_agent_attendance {
     sql: sum(case when ${is_occurrence} = True then 1 else 0 end) ;;
   }
 
-  measure: occurrence_hit_count {
-    label: "Occurrence Hit Count"
-    description: "Count of occurrence hits (positive points) in period."
-    type: sum
-    sql: nullifzero(case when ${is_occurrence} = True and ${points} > 0 then 1 end) ;;
-  }
-
-  measure: occurrence_points {
-    label: "Occurrence Points"
-    description: "Current points earned by Occurrence events."
-    type: number
-    value_format_name: decimal_1
-    sql: zeroifnull(sum(case when ${is_occurrence} = True then ${points} else 0 end)) ;;
-  }
+  # measure: occurrence_hit_count {
+  #   label: "Occurrence Hit Count"
+  #   description: "Count of occurrence hits (positive points) in period."
+  #   type: sum
+  #   sql: nullifzero(case when ${is_occurrence} = True and ${points} > 0 then 1 end) ;;
+  # }
 
   measure: occurrence_hit_points {
     # hidden: yes
@@ -204,24 +204,24 @@ view: cc_agent_attendance {
     sql: case when ${sick_time} > 0 then ${sick_time} else 0 end ;;
   }
 
-  measure: warning_level {
-    label: "Warning Level"
-    description: "Warning level is not a difinitive indication of status, but is a generalization based on accumulated occurence points. Actual status may vary based on timing of occurence events and other factors."
-    hidden: yes
-    case: {
-      when: {
-        sql: ${occurrence_points} between 3 and 3.9 ;;
-        label: "Verbal Warning"
-      }
-      when: {
-        sql: ${occurrence_points} between 4 and 4.9 ;;
-        label: "Written Warning"
-      }
-      when: {
-        sql: ${occurrence_points} >= 5 ;;
-        label: "Final Written"
-      }
-      else: ""
-    }
-  }
+  # measure: warning_level {
+  #   label: "Warning Level"
+  #   description: "Warning level is not a difinitive indication of status, but is a generalization based on accumulated occurence points. Actual status may vary based on timing of occurence events and other factors."
+  #   hidden: yes
+  #   case: {
+  #     when: {
+  #       sql: ${occurrence_points} between 3 and 3.9 ;;
+  #       label: "Verbal Warning"
+  #     }
+  #     when: {
+  #       sql: ${occurrence_points} between 4 and 4.9 ;;
+  #       label: "Written Warning"
+  #     }
+  #     when: {
+  #       sql: ${occurrence_points} >= 5 ;;
+  #       label: "Final Written"
+  #     }
+  #     else: ""
+  #   }
+  # }
 }
