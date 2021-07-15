@@ -228,6 +228,21 @@ explore: email_mymove_contact {
     }
   }
 
+
+  explore: email_crm {
+    hidden: yes
+    join: email_crm_product {
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${email_crm.order_id} = ${email_crm_product.order_id} ;;
+    }
+    join: item {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${email_crm_product.item_id} = ${item.item_id} ;;
+    }
+  }
+
   explore: talkable_referral {hidden: yes
     join: sales_order {
       type: left_outer
