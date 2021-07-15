@@ -49,11 +49,13 @@ view: v_fb_conv_post_ios14 {
 
  measure: purchase_conversion_value_7_dc {
     type: sum
+    value_format: "$0"
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DC" ;;
   }
 
   measure: purhcase_conversion_value_1_d_view {
     type: sum
+    value_format: "$0"
     sql: ${TABLE}."PURHCASE_CONVERSION_VALUE_1_D_VIEW" ;;
   }
 
