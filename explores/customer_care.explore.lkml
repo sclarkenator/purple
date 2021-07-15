@@ -1,4 +1,5 @@
 #-------------------------------------------------------------------
+
 #
 # Customer Care Explores
 #
@@ -9,9 +10,25 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+# Agent State
+
+explore: agent_state {
+  view_label: "Agent States"
+  hidden: yes
+
+  join: agent_lkp {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
 # Agent Attendance
 
-explore: TESTING_agent_attendance {
+explore:agent_attendance {
 
   view_label: "Attendance Data"
   view_name: cc_agent_attendance
@@ -42,76 +59,17 @@ explore: TESTING_agent_attendance {
   }
 }
 
-# #####################################################################
-# #####################################################################
-# # Agent Attendance Detail
+# # #####################################################################
+# # #####################################################################
+# # # INCONTACT PHONE AGENT SUMMARY
 
-# explore: agent_attendance_detail {
-
-#   # *** Need accurate attendance points data set ***
-#   # *** Need accurate punch data set ***
-
-#   label: "Agent Attendance Detail"
-#   view_label: "Agent Data"
-#   description: "Tracks Agent time punches, states, and attendance points."
-#   view_name: agent_lkp
+# explore: incontact_phone_agent_summary {
+#   label: "Incontact Phone Agent Summary"
+#   view_label: "InContact Phone Agent Summary"
+#   description: "Summary of Agent Attendance Detail to allow joining in views."
+#   view_name: incontact_phone_agent_summary
 #   hidden: yes
-
-#   join: agent_state {
-#     view_label: "Agent States"
-#     type: full_outer
-#     sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
-#     relationship: one_to_many
 #   }
-
-#   join: incontact_phone{
-#     view_label: "InContact Phone Agent Summary"
-#     type: left_outer
-#     sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
-#       and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
-#     relationship: one_to_one
-#   }
-# }
-
-# #####################################################################
-# #####################################################################
-# # Agent Attendance Detail v2 TEST
-
-# explore: agent_attendance_detail_v2 {
-
-#   label: "Agent Attendance Detail v2"
-#   view_label: "Agent States"
-#   description: "Tracks Agent time punches, states, and attendance points."
-#   view_name: agent_state
-#   hidden: yes
-
-#   join: incontact_phone{
-#     view_label: "InContact Phone Agent Summary"
-#     type: left_outer
-#     sql_on: ${agent_state.state_start_ts_mst_date} = ${incontact_phone.start_ts_mst_date}
-#       and ${agent_state.agent_id} = ${incontact_phone.agent_id} ;;
-#     relationship: one_to_one
-#   }
-
-#   join: agent_lkp {
-#     view_label: "Agent Data"
-#     type: full_outer
-#     sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
-#     relationship: many_to_one
-#   }
-# }
-
-# #####################################################################
-# #####################################################################
-# # INCONTACT PHONE AGENT SUMMARY
-
-explore: incontact_phone_agent_summary {
-  label: "Incontact Phone Agent Summary"
-  view_label: "InContact Phone Agent Summary"
-  description: "Summary of Agent Attendance Detail to allow joining in views."
-  view_name: incontact_phone_agent_summary
-  hidden: yes
-  }
 
 #####################################################################
 #####################################################################
