@@ -47,12 +47,12 @@ view: v_fb_conv_post_ios14 {
     sql: ${TABLE}."DATE" ;;
   }
 
-  dimension: purchase_conversion_value_7_dc {
+ measure: purchase_conversion_value_7_dc {
     type: number
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DC" ;;
   }
 
-  dimension: purhcase_conversion_value_1_d_view {
+  measure: purhcase_conversion_value_1_d_view {
     type: number
     sql: ${TABLE}."PURHCASE_CONVERSION_VALUE_1_D_VIEW" ;;
   }
