@@ -436,15 +436,18 @@ dimension: spend_platform {
         in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
         OR ${TABLE}.source ilike ('%ispla%') or UPPER(${TABLE}.source) in ('DISPLAY') or UPPER(${spend_platform}) = 'AMAZON-SP'
         or ((${campaign_name} ilike '%displa%' AND ad_name not ilike 'Video%') and (${campaign_name} ilike '%displa%' AND ad_name not ilike '%Pre-Roll%'))
-        or (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '%ideo%');; label:"display" }
+        or (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '%ideo%')
+        AND (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '% min%')
+        AND (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '% sec%')
+        ;; label:"display" }
       when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
                   or UPPER(${spend_platform}) in ('AMAZON-HSA')
                   or (${campaign_name} ilike '&ative%earch%' and UPPER(${spend_platform}) = 'ADMARKETPLACE');; label:"search"}
       when: {sql: UPPER(${TABLE}.platform) in ('ADWALLET','FKL','FLUENT','FLUENT','MADRIVO','ROKT','REDCRANE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or UPPER(${TABLE}.source) in ('PLA') ;; label: "pla"}
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or UPPER(${TABLE}.source) = 'VIDEO' or ${ad_name} ilike '%ideo%'
+      when: {sql: (${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or UPPER(${TABLE}.source) = 'VIDEO' or ${ad_name} ilike '%ideo%'
             or (UPPER(${spend_platform}) = 'EXPONENTIAL' and UPPER(${TABLE}.source) <> 'EXPONENTIAL')
-            or UPPER(${TABLE}.source) = 'EXPONENTIAL';; label:"video" }
+            or UPPER(${TABLE}.source) = 'EXPONENTIAL') and ${spend_platform} <> 'LINKEDIN';; label:"video" }
       else: "other" }
   }
 
