@@ -419,19 +419,20 @@ dimension: spend_platform {
     type: string
     case: {
 
-      when: {sql: UPPER(${TABLE}.platform) in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
+      when: {sql: UPPER(${TABLE}.platform) in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK','LINKEDIN') ;; label:"social growth"}
       when: {sql: UPPER(${TABLE}.platform) in ('FB/IG') ;; label:"social"}
       when: {sql: UPPER(${TABLE}.source) = 'TV' or UPPER(${TABLE}.platform) = 'TV' ;; label:"TV"}
-      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT') or ( ${spend_platform} = 'PEBBLEPOST' AND ${ad_date} > '2021-05-21') ;; label: "crm" }
-      when: {sql: UPPER(${TABLE}.platform) in ('USPS','PEBBLEPOST'} ;; label: "direct mail" }
-      when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT')
+                  or (${spend_platform} = 'PEBBLEPOST' AND ${source} ='CRM') ;; label: "crm"}
+      when: {sql: ${source}='DIRECT MAIL' ;; label: "direct mail"}
+      when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate"}
       when: {sql: UPPER(${TABLE}.platform) in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
           or (UPPER(${TABLE}.platform) in ('YOUTUBE') and UPPER(${source})='AUDIO') ;; label: "audio" }
       when: {sql: ${TABLE}.source in ('Native','NATIVE') OR UPPER(${TABLE}.platform) in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
       when: {sql: (lower(${campaign_name}) not ilike '%non-brand%' and ${campaign_name} ilike '%brand%')
                   and (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
                   or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
-                  or UPPER(${TABLE}.source) in  ('AMAZON PPC')or ${campaign_name} ilike '%sr_br_%' or ${campaign_name} IN ('Omnibox-br','Omnibox-ptbr');; label:"brand search"}
+                  or UPPER(${TABLE}.source) in  ('AMAZON PPC')or ${campaign_name} ilike '%sr_br_%';; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
       when: {sql: (UPPER(${TABLE}.platform)
         in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
