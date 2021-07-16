@@ -23,7 +23,7 @@ view: v_sla {
   }
 
   dimension: last_updated {
-    type: date
+    type: string
     sql: ${TABLE}."LAST_UPDATED" ;;
   }
 
