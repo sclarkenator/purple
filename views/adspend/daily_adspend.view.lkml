@@ -430,7 +430,7 @@ dimension: spend_platform {
       when: {sql: (lower(${campaign_name}) not ilike '%non-brand%' and ${campaign_name} ilike '%brand%')
                   and (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
                   or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
-                  or UPPER(${TABLE}.source) in  ('AMAZON PPC');; label:"brand search"}
+                  or UPPER(${TABLE}.source) in  ('AMAZON PPC')or ${campaign_name} ilike '%sr_br_%' or ${campaign_name} IN ('Omnibox-br','Omnibox-ptbr');; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
       when: {sql: (UPPER(${TABLE}.platform)
         in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
