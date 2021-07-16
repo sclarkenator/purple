@@ -422,7 +422,8 @@ dimension: spend_platform {
       when: {sql: UPPER(${TABLE}.platform) in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
       when: {sql: UPPER(${TABLE}.platform) in ('FB/IG') ;; label:"social"}
       when: {sql: UPPER(${TABLE}.source) = 'TV' or UPPER(${TABLE}.platform) = 'TV' ;; label:"TV"}
-      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT') ;; label: "crm" }
+      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT') or ( ${spend_platform} = 'PEBBLEPOST' AND ${ad_date} > '2021-05-21') ;; label: "crm" }
+      when: {sql: UPPER(${TABLE}.platform) in ('USPS','PEBBLEPOST'} ;; label: "direct mail" }
       when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate" }
       when: {sql: UPPER(${TABLE}.platform) in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
           or (UPPER(${TABLE}.platform) in ('YOUTUBE') and UPPER(${source})='AUDIO') ;; label: "audio" }
