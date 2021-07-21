@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  yes
+    hidden:  no
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"

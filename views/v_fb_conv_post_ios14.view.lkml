@@ -47,6 +47,12 @@ view: v_fb_conv_post_ios14 {
     sql: ${TABLE}."DATE" ;;
   }
 
+measure: spend {
+  type: sum
+  value_format: "$#,##0.00"
+  sql: ${TABLE}.SPEND ;;
+}
+
  measure: purchase_conversion_value_7_dc {
     type: sum
     value_format: "$0"
