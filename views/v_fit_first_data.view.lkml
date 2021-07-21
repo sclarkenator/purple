@@ -27,13 +27,13 @@ view: v_fit_first_data {
 
   dimension: gateway_amount {
     type: number
-    value_format: "0,###.##"
+    #value_format: "0,###.##"
     sql: ${TABLE}."GATEWAY_AMOUNT" ;;
   }
 
   dimension: netsuite_amount {
     type: number
-    value_format: "0,###.##"
+    #value_format: "0,###.##"
     sql: ${TABLE}."NETSUITE_AMOUNT" ;;
   }
 
@@ -91,7 +91,7 @@ view: v_fit_first_data {
     label: "Absolute Amount Difference"
     description: "abs(gateway_amount - netsuite_amount)"
     type: sum
-    value_format: "0,###.##"
+    #value_format: "0,###.##"
     sql: abs(${gateway_amount} - ${netsuite_amount}) ;;
   }
 
