@@ -44,7 +44,7 @@ explore:agent_attendance {
     fields: [team_lead_name.team_Name, team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
     type: left_outer
     sql_on: ${agent_lkp.incontact_id} = ${team_lead_name.incontact_id}
-      and ${team_lead_name.end_date} is null ;;
+      and ${team_lead_name.end_date} > getdate() ;;
       # and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
     relationship: many_to_one
   }
