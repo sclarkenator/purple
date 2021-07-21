@@ -8,4 +8,4 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-explore: contact_history {}
+#explore: contact_history {}

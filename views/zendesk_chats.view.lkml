@@ -128,8 +128,8 @@ view: zendesk_chats {
     case
       when ${department_name}='Sales Chat' then 'Sales Chat'
       when ${department_name}='Support Chat' then 'Support Chat'
-      when ${agent_lkp.team_type}='Sales' then 'Sales Chat'
-      when ${agent_lkp.team_type}='Chat' then 'Support Chat'
+      when ${agent_name.team_type}='Sales' then 'Sales Chat'
+      when ${agent_name.team_type}='Chat' then 'Support Chat'
       else 'Sales Chat'
     end ;;
   }
