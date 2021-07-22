@@ -70,8 +70,8 @@ dimension: name {
     label: "CC/ZD Agent Name"
     description: "The name of this agent. Source:incontact.agent_lkp"
     type:  string
-    # commented out by tim 7/21/2021 sql: REPLACE(nvl(${zendesk_sell.name},${TABLE}.name), '  ', ' ')  ;;
-    sql: REPLACE(${TABLE}.name, '  ', ' ')  ;;
+    sql: REPLACE(nvl(${zendesk_sell.name},${TABLE}.name), '  ', ' ')  ;;
+    #sql: REPLACE(${TABLE}.name, '  ', ' ')  ;;
   }
 
   dimension: primary_location{
@@ -89,8 +89,8 @@ dimension: name {
     label: "CC/ZD Agent Email"
     description: "The name of this email. Source:incontact.agent_lkp"
     type:  string
-    # commented out by tim 7/21/2021 sql:  lower(nvl(${zendesk_sell.email},${TABLE}.email)) ;;
-    sql:  lower(${TABLE}.email) ;;
+    sql:  lower(nvl(${zendesk_sell.email},${TABLE}.email)) ;;
+    #sql:  lower(${TABLE}.email) ;;
   }
 
   dimension: email_join {
