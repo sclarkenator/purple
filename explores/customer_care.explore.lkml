@@ -44,7 +44,8 @@ explore:agent_attendance {
     fields: [team_lead_name.team_Name, team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
     type: left_outer
     sql_on: ${agent_lkp.incontact_id} = ${team_lead_name.incontact_id}
-      and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
+      and ${team_lead_name.end_date} > getdate() ;;
+      # and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
     relationship: many_to_one
   }
 
@@ -193,16 +194,16 @@ explore: CC_KPIs {
       sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
       relationship: one_to_many
       }
-      join: agent_lkp {
+      join: agent_name {
         type: left_outer
         view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_lkp.zendesk_id}  ;;
+        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_name.zendesk_id}  ;;
         relationship: many_to_one
       }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
         AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
       relationship: many_to_one
@@ -508,7 +509,7 @@ explore: CC_KPIs {
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
-  explore:  bridge_by_agent {}
+  #explore:  bridge_by_agent {}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
   # explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}

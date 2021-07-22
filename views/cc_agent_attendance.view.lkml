@@ -4,6 +4,7 @@ view: cc_agent_attendance {
 
   dimension: pk {
     label: "Primary Key"
+    primary_key: yes
     type: string
     hidden: yes
     sql: concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by IC_ID, combined_dates order by occurrence, sub_occurrence, notes)) ;;
@@ -30,6 +31,7 @@ view: cc_agent_attendance {
   dimension: ic_id {
     label: "Agent ID"
     description: "Agent's InContact ID."
+    hidden: yes
     type: string
     sql: ${TABLE}."IC_ID" ;;
   }

@@ -168,6 +168,29 @@ view: agent_state {
   #####################################################################
   ## SUM MEASURES
 
+  measure: available_duration_sum_min{
+    label: "Available Time"
+    group_label: "Sum Measures"
+    description: "Duration in minutes agent was in a state flags as Available."
+    type: number
+    value_format_name: decimal_2
+    sql: sum(
+      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"/60
+        end) ;;
+  }
+
+  measure: available_duration_sum_sec{
+    label: "Available Time Sec"
+    group_label: "Sum Measures"
+    description: "Duration in minutes agent was in a state flags as Available."
+    # hidden: yes
+    type: number
+    value_format_name: decimal_0
+    sql: sum(
+      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"
+        end) ;;
+  }
+
   measure: state_duration_sum_sec {
     label: "State Duration Sec"
     group_label: "Sum Measures"
@@ -197,14 +220,16 @@ view: agent_state {
         end) / 60 ;;
   }
 
-  measure: available_duration_sum_min{
-    label: "Available Time"
+  measure: unavailable_duration_sum_sec{
+    label: "Unavailable Time Sec"
     group_label: "Sum Measures"
-    description: "Duration in minutes agent was in a state flags as Available."
+    description: "Duration in minutes agent was in a state flags as Unavailable."
+    # hidden: yes
     type: number
-    value_format_name: decimal_2
+    value_format_name: decimal_0
     sql: sum(
-      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"/60
+      case when ${TABLE}.state_name = 'Unavailable' then ${TABLE}."STATE_DURATION"
+        when ${TABLE}.state_name = 'OutboundPending' then ${TABLE}."STATE_DURATION"
         end) ;;
   }
 }

@@ -229,19 +229,64 @@ explore: email_mymove_contact {
   }
 
 
+# dimension: order_system {
+#   primary_key:  yes
+#   type: string
+#   hidden:  yes
+#   sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
+
   explore: email_crm {
+    from:  sales_order_line_base
+    label:  " Sales"
+    group_label: " Sales"
+    view_label: "Sales Order Line"
+    view_name: sales_order_line
+    # fields: [sales_order_details*]
+    description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
+    #always_join: [fulfillment]
+    # always_filter: {
+    #   filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
+    #   filters: [sales_order.is_exchange_upgrade_warranty: ""]
+    join: sales_order {
+      view_label: "Sales Order"
+      type: left_outer
+      sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
+      relationship: one_to_one}
     hidden: yes
-    join: email_crm_product {
+    join: cordial_activity {
+      type: left_outer
+      sql_on: lower(${cordial_activity.email}) = lower(${sales_order.email})
+      and ${cordial_activity.time_time} < ${sales_order.created} and ${cordial_activity.time_time} >= dateadd('day',-7,${sales_order.created})
+      and ${cordial_activity.action} in ('message-sent','open');;
+      relationship: many_to_one
+    }
+    join:cordial_id  {
       type: left_outer
       relationship: one_to_many
-      sql_on: ${email_crm.order_id} = ${email_crm_product.order_id} ;;
+      sql_on: ${cordial_id.email_join} = lower(${cordial_activity.email}) ;;
+    }
+    join: cordial_bulk_message {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
     }
     join: item {
       type: left_outer
-      relationship: one_to_one
-      sql_on: ${email_crm_product.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
+      sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
     }
-  }
+    join: order_flag_v2 {
+      view_label: "Order Flags"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${order_flag_v2.order_id} ;;
+      relationship: one_to_one
+    }
+    join: first_order_flag {
+      view_label: "Order Flag"
+      relationship: one_to_one
+      sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
+    }
+}
 
   explore: talkable_referral {hidden: yes
     join: sales_order {
