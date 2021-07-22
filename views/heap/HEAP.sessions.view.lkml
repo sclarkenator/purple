@@ -151,7 +151,7 @@ dimension: page_product_type {
     type:  string
     description: "Bucketed landing pages by PDPs. Source: looker calculation"
     sql:  case when ${landing_page} ilike ('%mattress%') and (${landing_page} not ilike '%protector%' or ${landing_page} not ilike '%blog%') then 'Mattress'
-           when ${landing_page} ilike ('%pillows%')  then 'Pillows'
+           when ${landing_page} ilike ('%pillow%')  then 'Pillows'
            when ${landing_page} ilike ('%seat-cushion%') then 'Seat Cushion'
            when ${landing_page} ilike ('%sheets%')
            or ${landing_page} ilike '%mattress-protector%'
