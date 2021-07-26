@@ -18,11 +18,11 @@ view: incontact_phone {
     sql: ${master_contact_id} || ${contact_id} ;;
     }
 
-  measure: test_service_level_count {
-    label: "TEST service level count"
-    type: count_distinct
-    sql: case when ${direction} = 'Inbound' and ${abandoned} = false and ${prequeue_abandon}= false and ${inqueue_time} > 0 then ${contact_id} end ;;
-  }
+                  # measure: test_service_level_count {
+                  #   label: "TEST service level count"
+                  #   type: count_distinct
+                  #   sql: case when ${direction} = 'Inbound' and ${abandoned} = false and ${prequeue_abandon}= false and ${inqueue_time} > 0 then ${contact_id} end ;;
+                  # }
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
@@ -566,7 +566,7 @@ view: incontact_phone {
     }
 
   dimension_group: last_updated_ts_mst {
-    label: "Updated TS MST"
+    label: "Updated TS MT"
     hidden: yes
     type: time
     timeframes: [
@@ -582,7 +582,7 @@ view: incontact_phone {
     }
 
   dimension_group: refuse_ts {
-    label: "Contact Refusal TS UTC"
+    label: "Contact Refusal UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -622,6 +622,8 @@ view: incontact_phone {
     timeframes: [
       raw,
       time,
+      hour,
+      hour_of_day,
       date,
       week,
       day_of_week,
@@ -633,8 +635,8 @@ view: incontact_phone {
   }
 
   dimension_group: start_ts {
-    label: "Contact Start TS UTC"
-    # hidden: yes
+    label: "Contact Start UTC"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -1117,6 +1119,23 @@ view: incontact_phone {
   ##########################################################################################
   ## PERCENTAGE MEASURES
 
+                      # measure: ht_quartile_1 {
+                      #   label: "HT Q1"
+                      #   group_label: "Percentage Measures"
+                      #   # hidden: yes
+                      #   type: percentile_distinct
+                      #   percentile: 25
+                      #   # value_format_name: percent_1
+                      #   sql: percentile_cont(.25) within group (order by avg(case when ${handle_time} > 0 then ${handle_time}) end) ;;
+                      #   # sql: case when ${handle_time} > 0 then ${handle_time} end / 60 ;;
+                      # }
+
+                      # measure: max_ht {
+                      #   label: "Max HT"
+                      #   type: number
+                      #   sql: MAX(${handle_time_average}) OVER (PARTITION BY NULL) ;;
+                      # }
+
   measure: inbound_pct {
     label:  "Inbound Pct"
     group_label: "Percentage Measures"
@@ -1133,7 +1152,7 @@ view: incontact_phone {
     description: "Percent of queued calls that were handled within the defined Service Level Agreement objective."
     type: number
     value_format_name: percent_1
-    sql: ${in_sla_count} / ${sla_offered_count} ;;
+    sql: ${in_sla_count} / nullifzero(${sla_offered_count}) ;;
     # sql: sum(case when ${in_sla} = true then 1 else 0 end) /
     #   nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
     drill_fields: [detail*, in_sla]
@@ -1156,7 +1175,7 @@ view: incontact_phone {
     description: "Percent of queued calls that were NOT handled within the defined Service Level Agreement objective."
     type: number
     value_format_name: percent_1
-    sql: ${out_sla_count} / ${sla_offered_count} ;;
+    sql: ${out_sla_count} / nullifzero(${sla_offered_count}) ;;
     drill_fields: [detail*, in_sla]
     }
 
@@ -1170,9 +1189,4 @@ view: incontact_phone {
       nullifzero(count(*)) ;;
     drill_fields: [detail*]
     }
-
-  measure: service_level {
-    label: "Service Level"
-
-  }
 }
