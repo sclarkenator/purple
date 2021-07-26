@@ -15,9 +15,10 @@ view: order_utm {
     ;;
  }
 
+  # 7/6/2021 - unhid created date for use in cordial_activity explore. -Stevie
   dimension: created {
     type: date_time
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.created ;;
   }
 

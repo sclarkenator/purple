@@ -393,7 +393,7 @@ include: "/dashboards/**/*.dashboard"
     join: team_lead_name {
       view_label: "Zendesk"
       type: left_outer
-      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or ${team_lead_name.agent_Name} = ${zendesk_sell.name})
+      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or REPLACE(${team_lead_name.agent_Name}, '  ', ' ') = REPLACE(${zendesk_sell.name}, '  ', ' '))
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
       relationship: many_to_one
     }
@@ -541,6 +541,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
       relationship: one_to_one
     }
+    join: v_sla_days {
+      view_label: "Fulfillment"
+      type: left_outer
+      sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
+      relationship: many_to_one
+      }
 
   }
 
@@ -789,8 +795,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-  explore: warranty {
-    from: warranty_order
+  explore: warranty_order {
     hidden: yes
   ##  fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
     label: "Warranty"
@@ -798,11 +803,11 @@ include: "/dashboards/**/*.dashboard"
     description: "Current warranty information (not tied back to original sales orders yet)"
     join: warranty_reason {
       type: left_outer
-      sql_on: ${warranty.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+      sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
       relationship: many_to_one}
     join: warranty_order_line {
       type:  left_outer
-      sql_on: ${warranty.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
+      sql_on: ${warranty_order.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
       relationship: one_to_many}
     join: item {
       type:  left_outer
@@ -820,7 +825,7 @@ include: "/dashboards/**/*.dashboard"
     join: sales_order_line {
       type:  left_outer
       fields: [sales_order_line.order_id,sales_order_line.system,sales_order_line.gross_amt]
-      sql_on: ${sales_order_line.order_id} = ${warranty.order_id} and ${sales_order_line.system} = ${warranty.original_system} ;;
+      sql_on: ${sales_order_line.order_id} = ${warranty_order.order_id} and ${sales_order_line.system} = ${warranty_order.original_system} ;;
       relationship: many_to_one}
   }
 
@@ -1071,6 +1076,7 @@ explore: sessions_in_tests {hidden: yes}
       fields: [zcta5.fulfillment_region_1]}
   }
 
+  explore: v_sla {hidden: yes}
   explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}
   explore: shop_comm_test {hidden: yes}

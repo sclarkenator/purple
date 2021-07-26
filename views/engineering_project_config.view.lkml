@@ -10,7 +10,7 @@ view: project_config {
   dimension: budget_amt {
     hidden: yes
     type: number
-    value_format: "$#,##0.##"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."BUDGET_AMT" ;;
   }
 

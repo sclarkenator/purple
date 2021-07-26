@@ -170,7 +170,7 @@ view: daily_adspend {
   measure: conversion_value {
     label: "Conversion Value ($ Platform)"
     description: "In Platform Conversion Value"
-    hidden: yes
+    hidden: no
     type: sum
     value_format: "$#,##0"
     sql:  ${TABLE}.CONVERSION_VALUE ;;  }
@@ -419,29 +419,38 @@ dimension: spend_platform {
     type: string
     case: {
 
-      when: {sql: UPPER(${TABLE}.platform) in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK') ;; label:"social growth"}
+      when: {sql: UPPER(${TABLE}.platform) in ('PINTEREST','SNAPCHAT','QUORA','TWITTER', 'NEXTDOOR', 'TIKTOK','LINKEDIN') ;; label:"social growth"}
       when: {sql: UPPER(${TABLE}.platform) in ('FB/IG') ;; label:"social"}
       when: {sql: UPPER(${TABLE}.source) = 'TV' or UPPER(${TABLE}.platform) = 'TV' ;; label:"TV"}
-      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT') ;; label: "crm" }
-      when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate" }
+      when: {sql: UPPER(${TABLE}.platform) in ('INTEGRAL MEDIA','LIVEINTENT','TALKABLE','POSTIE','PRINT')
+            -- or (${spend_platform} = 'PEBBLEPOST' AND ${source} ='CRM')
+            ;; label: "crm"}
+      when: {sql: ${source}='DIRECT MAIL'  ;; label: "direct mail"}
+      when: {sql: UPPER(${spend_platform}) = 'AFFILIATE' OR UPPER(${TABLE}.platform) in ('AFFILIATE') or UPPER(${source}) in ('AFFILIATE');; label: "affiliate"}
       when: {sql: UPPER(${TABLE}.platform) in ('PODCAST','RADIO','STREAMING','SPOTIFY','SIRIUSXM', 'PANDORA')
           or (UPPER(${TABLE}.platform) in ('YOUTUBE') and UPPER(${source})='AUDIO') ;; label: "audio" }
       when: {sql: ${TABLE}.source in ('Native','NATIVE') OR UPPER(${TABLE}.platform) in ('TABOOLA', 'MATTRESS TABOOLA');; label: "native" }
-      when: {sql: lower(${campaign_name}) not ilike '%non-brand%'
+      when: {sql: (lower(${campaign_name}) not ilike '%non-brand%' and ${campaign_name} ilike '%brand%')
                   and (UPPER(${TABLE}.source) = 'SEARCH' AND LOWER(${campaign_name}) ilike '%_br_%')
                   or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
-                  or UPPER(${TABLE}.source) in  ('AMAZON PPC','SEARCH');; label:"brand search"}
+                  or UPPER(${TABLE}.source) in  ('AMAZON PPC')or ${campaign_name} ilike '%sr_br_%';; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
-      when: {sql: UPPER(${TABLE}.platform) in ('EBAY','AMAZON MEDIA GROUP') OR ${TABLE}.source ilike ('%ispla%') or UPPER(${TABLE}.source) in ('DISPLAY')
-          or UPPER(${spend_platform}) = 'AMAZON-SP' or ${campaign_name} ilike '%displa%' or UPPER(${TABLE}.platform) ilike ('ACUITY') ;; label:"display" }
+      when: {sql: (UPPER(${TABLE}.platform)
+        in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
+        OR ${TABLE}.source ilike ('%ispla%') or UPPER(${TABLE}.source) in ('DISPLAY') or UPPER(${spend_platform}) = 'AMAZON-SP'
+        or ((${campaign_name} ilike '%displa%' AND ad_name not ilike 'Video%') and (${campaign_name} ilike '%displa%' AND ad_name not ilike '%Pre-Roll%'))
+        or (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '%ideo%')
+        AND (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '% min%')
+        AND (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '% sec%')
+        ;; label:"display" }
       when: {sql: (${TABLE}.source ilike ('SEARCH') AND NOT (LOWER(${campaign_name}) ilike 'br%'))
                   or UPPER(${spend_platform}) in ('AMAZON-HSA')
                   or (${campaign_name} ilike '&ative%earch%' and UPPER(${spend_platform}) = 'ADMARKETPLACE');; label:"search"}
       when: {sql: UPPER(${TABLE}.platform) in ('ADWALLET','FKL','FLUENT','FLUENT','MADRIVO','ROKT','REDCRANE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
       when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or UPPER(${TABLE}.source) in ('PLA') ;; label: "pla"}
-      when: {sql: ${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or UPPER(${TABLE}.source) = 'VIDEO'
+      when: {sql: (${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or UPPER(${TABLE}.source) = 'VIDEO' or ${ad_name} ilike '%ideo%'
             or (UPPER(${spend_platform}) = 'EXPONENTIAL' and UPPER(${TABLE}.source) <> 'EXPONENTIAL')
-            or UPPER(${TABLE}.source) = 'EXPONENTIAL';; label:"video" }
+            or UPPER(${TABLE}.source) = 'EXPONENTIAL') and ${spend_platform} <> 'LINKEDIN';; label:"video" }
       else: "other" }
   }
 
@@ -538,6 +547,7 @@ dimension: spend_platform {
       when: { sql: upper(${TABLE}.device) in ('ANDROID_TABLET','IPAD','TABLETS WITH FULL BROWSERS','IPOD','TABLET') ;;
         label: "TABLET" }
       when: { sql: upper(${TABLE}.device) in ('COMPUTER','COMPUTERS','DESKTOP') ;;  label: "DESKTOP" }
+      when: { sql: upper(${TABLE}.device) in ('CTV') or ${source} in ('CTV') ;;  label: "CTV" }
       else: "OTHER"  } }
 
   dimension: platform_source_group {

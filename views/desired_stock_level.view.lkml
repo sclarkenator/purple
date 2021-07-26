@@ -28,11 +28,13 @@ order by 1
 select
   i.sku_id
   , i.product_description
-    , round(coalesce(sum(inv.on_hand ), 0),0) on_hand
+  , round(coalesce(sum(inv.on_hand ), 0),0) on_hand
+  , sum(case when l.location ='200-Purple South' then on_hand else 0 end) psouth_onhand
+  , sum(case when l.location ='100-Purple West' then on_hand else 0 end) pwest_onhand
 from production.inventory inv
     left join sales.item i on inv.item_id = i.item_id
     left join sales.location l on inv.location_id = l.location_id
-where i.category = 'MATTRESS' and i.product_description not like '%SCRIM PEAK-%' and (i.sku_id not like '%AC%' or i.sku_id is null) and i.classification_new = 'FG' and l.location = '100-Purple West' and l.inactive = 0
+where i.category = 'MATTRESS' and (i.sku_id not like '%AC%' or i.sku_id is null) and i.classification_new = 'FG' and l.INACTIVE = 0 and l.location_id in ('4','5','111')
 group by 1,2
 order by 3 desc
 
@@ -42,7 +44,9 @@ order by 3 desc
 select
     i.sku_id
     , i.product_description
-  , round(coalesce(sum(inv.on_hand ), 0),0) on_hand
+    , round(coalesce(sum(inv.on_hand ), 0),0) on_hand
+    , sum(case when l.location ='200-Purple South' then on_hand else 0 end) psouth_onhand
+    , sum(case when l.location ='100-Purple West' then on_hand else 0 end) pwest_onhand
 from production.inventory inv
     left join sales.item i on inv.item_id = i.item_id
     left join sales.location l on inv.location_id = l.location_id
@@ -128,7 +132,11 @@ select zz.new_hep_sku
     , zz.fg_product_description
     , sum(zz.qty_used) as quantity_used
     , sum(zz.fg_on_hand) as fg_on_hand
+    , sum(zz.fg_on_hand_pwest) as fg_on_hand_pwest
+    , sum(zz.fg_on_hand_psouth) as fg_on_hand_psouth
     , max(zz.sfg_on_hand) as sfg_on_hand
+    , max(zz.sfg_on_hand_pwest) as sfg_on_hand_pwest
+    , max(zz.sfg_on_hand_psouth) as sfg_on_hand_psouth
     , case when sum(zz.unfulfilled_units) is null then 0 else sum(zz.unfulfilled_units) end as quantity_remaining
     , case when sum(zz.total_units_new) is null then 0 else sum(zz.total_units_new) end as total_new_units
     , case when sum(zz."14_DAY_FORECAST") is null then 0 else sum(zz."14_DAY_FORECAST") end as fourteen_day_forecast
@@ -146,8 +154,12 @@ from (
       , aa.finished_good_sku
       , aa.count as qty_used
       , bb.on_hand as fg_on_hand
+      , bb.pwest_onhand as fg_on_hand_pwest
+      , bb.psouth_onhand as fg_on_hand_psouth
       , bb.product_description as fg_product_description
       , cc.on_hand as sfg_on_hand
+      , cc.pwest_onhand as sfg_on_hand_pwest
+      , cc.psouth_onhand as sfg_on_hand_psouth
       , cc.product_description as sfg_product_description
       , dd.unfulfilled_orders_units as unfulfilled_units
       , ee.total_units_new as total_units_new
@@ -161,7 +173,7 @@ from (
   left join ee on ee.sku_id = aa.finished_good_sku
 ) zz
 --where new_hep_sku = ''
-group by 1,2,3,4,12,13,14  ;;
+group by 1,2,3,4,16,17,18  ;;
   }
 
   dimension: hep_sku {
@@ -217,11 +229,39 @@ group by 1,2,3,4,12,13,14  ;;
     sql:  ${TABLE}."FG_ON_HAND" ;;
   }
 
+  measure: fg_on_hand_pwest {
+    label: "FG On Hand P-West"
+    description: "source; sales.sales_order_line"
+    type: sum
+    sql:  ${TABLE}."FG_ON_HAND_PWEST" ;;
+  }
+
+  measure: fg_on_hand_psouth {
+    label: "FG On Hand P-South"
+    description: "source; sales.sales_order_line"
+    type: sum
+    sql:  ${TABLE}."FG_ON_HAND_PSOUTH" ;;
+  }
+
   measure: sfg_on_hand {
     label: "SFG on Hand"
     description: "source; looker calculation"
     type: max
     sql:  ${TABLE}."SFG_ON_HAND" ;;
+  }
+
+  measure: sfg_on_hand_pwest {
+    label: "SFG on Hand P-West"
+    description: "source; looker calculation"
+    type: max
+    sql:  ${TABLE}."SFG_ON_HAND_PWEST" ;;
+  }
+
+  measure: sfg_on_hand_psouth {
+    label: "SFG on Hand P-South"
+    description: "source; looker calculation"
+    type: max
+    sql:  ${TABLE}."SFG_ON_HAND_PSOUTH" ;;
   }
 
   measure: quantity_remaining {

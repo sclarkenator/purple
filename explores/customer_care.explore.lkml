@@ -6,29 +6,69 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-
 #####################################################################
 #####################################################################
-# Agent Attendance Detail
+# Agent State
 
-explore: agent_attendance_detail {
-
-  # *** Need accurate attendance points data set ***
-  # *** Need accurate punch data set ***
-
-  label: "Agent Attendance Detail"
-  view_label: "Agent Data"
-  description: "Tracks Agent time punches, states, and attendance points."
-  view_name: agent_lkp
+explore: agent_state {
+  view_label: "Agent States"
   hidden: yes
 
-  join: agent_state {
-    view_label: "Agent States"
-    type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
+  join: agent_lkp {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
     relationship: many_to_one
   }
 }
+
+#####################################################################
+#####################################################################
+# Agent Attendance
+
+explore:agent_attendance {
+
+  view_label: "Attendance Data"
+  view_name: cc_agent_attendance
+  hidden: yes
+
+  join: agent_lkp {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${cc_agent_attendance.ic_id} = ${agent_lkp.incontact_id} ;;
+    relationship: many_to_one
+  }
+
+  join: team_lead_name {
+    view_label: "Agent Data"
+    fields: [team_lead_name.team_Name, team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
+    type: left_outer
+    sql_on: ${agent_lkp.incontact_id} = ${team_lead_name.incontact_id}
+      and ${team_lead_name.end_date} > getdate() ;;
+      # and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
+    relationship: many_to_one
+  }
+
+  join: agent_current_warning_level {
+    view_label: "Attendance Data"
+    fields: [agent_current_warning_level.warning_level]
+    type: left_outer
+    sql_on: ${agent_lkp.incontact_id} = ${agent_current_warning_level.ic_id} ;;
+    relationship: one_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+# INCONTACT PHONE AGENT SUMMARY
+
+# explore: incontact_phone_agent_summary {
+#   label: "Incontact Phone Agent Summary"
+#   view_label: "InContact Phone Agent Summary"
+#   description: "Summary of Agent Attendance Detail to allow joining in views."
+#   view_name: incontact_phone_agent_summary
+#   hidden: yes
+#   }
 
 #####################################################################
 #####################################################################
@@ -154,16 +194,16 @@ explore: CC_KPIs {
       sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
       relationship: one_to_many
       }
-      join: agent_lkp {
+      join: agent_name {
         type: left_outer
         view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_lkp.zendesk_id}  ;;
+        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_name.zendesk_id}  ;;
         relationship: many_to_one
       }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
         AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
       relationship: many_to_one
@@ -469,10 +509,10 @@ explore: CC_KPIs {
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
-  explore:  bridge_by_agent {}
+  #explore:  bridge_by_agent {}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
-  explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+  # explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
   explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
   explore: zendesk_sell_contact {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_deal {hidden:yes group_label: "Customer Care"}

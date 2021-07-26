@@ -1,5 +1,5 @@
 view: v_scc_sales {
-  sql_table_name: "WHOLESALE"."SCC_SALES"
+  sql_table_name: "WHOLESALE"."SLEEP_COUNTRY_CANADA_SALES"
     ;;
 
   dimension_group: created {
@@ -21,9 +21,9 @@ view: v_scc_sales {
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
-  dimension: product_name {
+  dimension: product {
     type: string
-    sql: ${TABLE}."PRODUCT_NAME" ;;
+    sql: ${TABLE}."PRODUCT" ;;
   }
 
   dimension: sku {
@@ -38,22 +38,19 @@ view: v_scc_sales {
 
   measure: units {
     type: sum
-    sql: ${TABLE}."UNITS" ;;
+    sql: ${TABLE}."NET_UNITS" ;;
   }
 
-  measure: amount {
+  measure: net_sales_cad {
     type: sum
-    sql: ${TABLE}."AMOUNT" ;;
+    sql: ${TABLE}."NET_SALES_CAD" ;;
+    value_format: "$#,##0.00"
   }
 
-  measure: gross_margin {
+  measure: net_sales_usd {
     type: sum
-    sql: ${TABLE}."GROSS_MARGIN" ;;
-  }
-
-  measure: gross_profit {
-    type: sum
-    sql: ${TABLE}."GROSS_PROFIT" ;;
+    sql: ${TABLE}."NET_SALES_USD" ;;
+    value_format: "$#,##0.00"
   }
 
   measure: count {

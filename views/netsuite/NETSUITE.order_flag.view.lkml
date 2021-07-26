@@ -233,7 +233,7 @@ view: order_flag {
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
      --    ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
-         ,sum(case when (category = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+         ,sum(case when (category = 'PILLOW' and sol.ORDERED_QTY>=1) THEN 1 ELSE 0 END) anyonepillow
 
         -- Hybrid Mattresses and Purple Mattress
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID 2' THEN 1 ELSE 0 END) hybrid2

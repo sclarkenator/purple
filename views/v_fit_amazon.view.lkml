@@ -35,6 +35,11 @@ view: v_fit_amazon {
     sql: ${TABLE}."GATEWAY_AMOUNT" ;;
   }
 
+  dimension: in_CommerceTools {
+    type: yesno
+    sql: ${TABLE}."IN_COMMERCETOOLS" ;;
+  }
+
   dimension: in_netsuite {
     type: yesno
     sql: ${TABLE}."IN_NETSUITE" ;;
@@ -85,14 +90,14 @@ view: v_fit_amazon {
     sql: ${TABLE}."SECONDARY_ID" ;;
   }
 
-  dimension: shopify_order_id {
+  dimension: order_id {
     type: string
-    sql: ${TABLE}."SHOPIFY_ORDER_ID" ;;
+    sql: ${TABLE}."ORDER_ID" ;;
   }
 
-  dimension: shopify_order_number {
+  dimension: order_number {
     type: string
-    sql: ${TABLE}."SHOPIFY_ORDER_NUMBER" ;;
+    sql: ${TABLE}."ORDER_NUMBER" ;;
   }
 
   dimension: transaction_id {

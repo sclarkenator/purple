@@ -29,7 +29,22 @@ view: item {
     sql: ${TABLE}.classification_new ;;
   }
 
-  dimension: classification_raw {
+  dimension: classification1 {
+    label: "Inventory type"
+    group_label: "Advanced"
+    description: "What stage is this item in production?. Source:looker.calculation"
+    hidden:  yes
+    case: {
+            when: { sql: ${classification} = 'RM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'CM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'SA' ;; label: "WIP"}
+            when: { sql: ${classification} = 'FG' ;; label: "FINISHED GOOD"}
+            when: { sql: ${classification} = 'FS' ;; label: "FACTORY SECOND"}
+            else: "OTHER"}
+  }
+
+
+ dimension: classification_raw {
     hidden:  yes
     type: string
     sql:  ${TABLE}.classification_new ;;
@@ -950,7 +965,7 @@ view: item {
   dimension: Classification_Groups{
     label: "Classification (buckets)"
     group_label: "Advanced"
-    description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other).
+    description: "Designates the item type (Finished Good, Factory Second, Purchased Component, Semi Finished Goods, Raw Materials, Kit, Other).
       Source: looker calculation"
     type: string
     #sql: ${TABLE}.classification ;;
@@ -958,11 +973,9 @@ view: item {
       when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'CM' ;;label: "Purchased Component" }
-      when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
-      when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
-      when: { sql: ${classification} = 'SFG' ;; label: "Semi Finished Goods" }
-      when: { sql: ${classification} = 'RAW' ;; label: "Raw Materials" }
-      when: { sql: ${classification} = 'PRC' ;; label: "Production Components" }
+      when: { sql: ${classification} = 'SA' ;; label: "Semi Finished Goods" }
+      when: { sql: ${classification} = 'RM' ;; label: "Raw Materials" }
+      when: { sql: ${classification} = 'KIT' ;; label: "Kit" }
       else: "Other" } }
 
   dimension: Product_Dimensions {
