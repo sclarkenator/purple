@@ -7,13 +7,7 @@ view: email_contact_merged {
           select z.*
               , row_number () over (partition by email order by created) as rn
           from (
-            select 'FKL' as source, import_date::date as created, email, zipcode, gender, null as target_strategy
-            from analytics.marketing.find_keep_love
-            union
-            select 'Fluent' as source, created::date, email, null as zipcode, null as gender, targeting_strategy
-            from analytics.marketing.fluent_contact
-            union
-            select 'MyMove' as source, created::date, email, postal_code as zipcode, null as gender, null as target_strategy
+            select 'MyMove' as source, created::date as created, email, postal_code as zipcode, null as gender, null as target_strategy
             from analytics.marketing.mymove_contact
             --where created::date >= '2020-03-01'
           ) z
@@ -27,7 +21,7 @@ view: email_contact_merged {
                   from a
                   group by 1,2
               ) c on lower(a.platform) = lower(c.source) and date_trunc(month,a.date) = c.month
-          where a.platform in ('MYMOVE','Fluent','FKL')
+          where a.platform in ('MYMOVE')
           group by 1,2,3
       )
       select a.*,b.spend
