@@ -795,8 +795,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-  explore: warranty {
-    from: warranty_order
+  explore: warranty_order {
     hidden: yes
   ##  fields: [ALL_FIELDS*, -warranty_order_line.quantity_complete]
     label: "Warranty"
@@ -804,11 +803,11 @@ include: "/dashboards/**/*.dashboard"
     description: "Current warranty information (not tied back to original sales orders yet)"
     join: warranty_reason {
       type: left_outer
-      sql_on: ${warranty.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+      sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
       relationship: many_to_one}
     join: warranty_order_line {
       type:  left_outer
-      sql_on: ${warranty.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
+      sql_on: ${warranty_order.warranty_order_id} = ${warranty_order_line.warranty_order_id};;
       relationship: one_to_many}
     join: item {
       type:  left_outer
@@ -826,7 +825,7 @@ include: "/dashboards/**/*.dashboard"
     join: sales_order_line {
       type:  left_outer
       fields: [sales_order_line.order_id,sales_order_line.system,sales_order_line.gross_amt]
-      sql_on: ${sales_order_line.order_id} = ${warranty.order_id} and ${sales_order_line.system} = ${warranty.original_system} ;;
+      sql_on: ${sales_order_line.order_id} = ${warranty_order.order_id} and ${sales_order_line.system} = ${warranty_order.original_system} ;;
       relationship: many_to_one}
   }
 

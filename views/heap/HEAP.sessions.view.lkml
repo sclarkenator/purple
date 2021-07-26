@@ -146,6 +146,20 @@ view: sessions {
            when ${landing_page} ilike ('%/buy%') then 'Buy Page'
            when contains(${landing_page}, '/blog/') then 'Blog' end;; }
 
+dimension: page_product_type {
+    label: "Page Product Type"
+    type:  string
+    description: "Bucketed landing pages by PDPs. Source: looker calculation"
+    sql:  case when (${landing_page} not ilike '%protector%' and ${landing_page} not ilike '%blog%') and ${landing_page} ilike ('%mattress%') then 'Mattress'
+           when ${landing_page} ilike ('%pillow%')  then 'Pillows'
+           when ${landing_page} ilike ('%seat-cushion%') then 'Seat Cushion'
+           when ${landing_page} ilike ('%sheets%')
+           or ${landing_page} ilike '%mattress-protector%'
+           or ${landing_page} ilike '%duvet%'
+           or ${landing_page} ilike '%weighted-blanketthen' then 'Bedding'
+           when ${landing_page} ilike '%bed-frame%' or ${landing_page} ilike '%platform-bed%'then 'Bed Frame'
+           end;; }
+
   dimension: library {
     label: "Library"
     type: string

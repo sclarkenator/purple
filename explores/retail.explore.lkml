@@ -43,7 +43,7 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} and ${sales_order.system} = ${sales_order_line.system} ;;
       relationship:one_to_many
-      fields: [sales_order_line.asp_mattress,sales_order_line.asp_gross_amt_mattress,sales_order_line.asp_total_units_mattress,sales_order_line.free_item]
+      fields: [sales_order_line.asp_mattress,sales_order_line.asp_gross_amt_mattress,sales_order_line.asp_total_units_mattress,sales_order_line.free_item,sales_order_line.gross_amt]
       }
    join: item {
       view_label: "Product"
