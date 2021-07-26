@@ -177,7 +177,7 @@ view: order_flag {
         ,sum(CASE WHEN model = 'PLUSH'  then 1 else 0 end) plush
         ,sum(CASE WHEN version = 'PURPLE PILLOW' then 1 else 0 end) purple_pillow
         ,sum(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) gravity_mask
-        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%split king%' THEN 1 ELSE 0 END) split_king
+        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%SPLIT%' THEN 1 ELSE 0 END) split_king
         ,sum(case when model = 'WEIGHTED BLANKET' then 1 else 0 end) gravity_blanket
         ,sum(case when model = 'DUVET' then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
