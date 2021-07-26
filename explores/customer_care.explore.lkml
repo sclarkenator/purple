@@ -524,3 +524,4 @@ explore: CC_KPIs {
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
   explore: v_zendesk_articles {hidden: yes}
   explore: v_invalid_rma {hidden: yes group_label:"Customer Care" description: "Invalid RMA Finder for Emily Heise"}
+  explore: zendesk_ticket_v2 {hidden: yes  group_label:"Customer Care"  description: "Zendesk ticket data. Explore created June2021"}
