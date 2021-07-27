@@ -1305,6 +1305,16 @@ view: sales_order_line {
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
+  dimension: ff_dayofquarterindex {   #returns day of quarter index int 1-92
+    type: number
+    view_label: "Fulfillment"
+    description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32."
+    group_label: "Fulfilled Date"
+    label: "Day of Quarter"
+    hidden: yes
+    sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date}),${fulfilled_date}) + 1 ;;
+  }
+
   dimension: fulfilled_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
     type: number
