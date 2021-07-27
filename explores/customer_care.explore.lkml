@@ -8,6 +8,15 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+## CONTACT HISTORY
+
+explore: contact_history {
+  view_label: "Contact History"
+  hidden:yes
+}
+
+#####################################################################
+#####################################################################
 # Agent State
 
 explore: agent_state {
@@ -506,6 +515,7 @@ explore: CC_KPIs {
     }
   }
 
+  explore:  agent_current_warning_level {hidden: yes}
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}

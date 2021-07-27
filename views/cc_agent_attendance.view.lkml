@@ -117,8 +117,9 @@ view: cc_agent_attendance {
   }
 
   dimension_group: insert_ts {
-    label: "Date record was inserted in database."
-    hidden: yes
+    label: "Inserted"
+    description: "Date record was inserted in database."
+    # hidden: yes
     type: time
     timeframes: [
       raw,
@@ -184,13 +185,6 @@ view: cc_agent_attendance {
     sql: sum(case when ${is_occurrence} = True then 1 else 0 end) ;;
   }
 
-  # measure: occurrence_hit_count {
-  #   label: "Occurrence Hit Count"
-  #   description: "Count of occurrence hits (positive points) in period."
-  #   type: sum
-  #   sql: nullifzero(case when ${is_occurrence} = True and ${points} > 0 then 1 end) ;;
-  # }
-
   measure: occurrence_hit_points {
     # hidden: yes
     type: sum
@@ -204,25 +198,4 @@ view: cc_agent_attendance {
     value_format_name: decimal_0
     sql: case when ${sick_time} > 0 then ${sick_time} else 0 end ;;
   }
-
-  # measure: warning_level {
-  #   label: "Warning Level"
-  #   description: "Warning level is not a difinitive indication of status, but is a generalization based on accumulated occurence points. Actual status may vary based on timing of occurence events and other factors."
-  #   hidden: yes
-  #   case: {
-  #     when: {
-  #       sql: ${occurrence_points} between 3 and 3.9 ;;
-  #       label: "Verbal Warning"
-  #     }
-  #     when: {
-  #       sql: ${occurrence_points} between 4 and 4.9 ;;
-  #       label: "Written Warning"
-  #     }
-  #     when: {
-  #       sql: ${occurrence_points} >= 5 ;;
-  #       label: "Final Written"
-  #     }
-  #     else: ""
-  #   }
-  # }
 }
