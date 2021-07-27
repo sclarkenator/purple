@@ -9,7 +9,7 @@ view: incontact_phone {
   drill_fields: [master_contact_id, contact_id]
 
   dimension: primary_key {
-    label: "PK"
+    label: "Primary Key"
     group_label: "* IDs"
     description: "Primary key field.  [master_contact_id] & [contact_id]"
     primary_key: yes
@@ -18,12 +18,7 @@ view: incontact_phone {
     sql: ${master_contact_id} || ${contact_id} ;;
     }
 
-                  # measure: test_service_level_count {
-                  #   label: "TEST service level count"
-                  #   type: count_distinct
-                  #   sql: case when ${direction} = 'Inbound' and ${abandoned} = false and ${prequeue_abandon}= false and ${inqueue_time} > 0 then ${contact_id} end ;;
-                  # }
-  # ----- Sets of fields for drilling ------
+  # ----- Set of fields for drilling ------
   set: detail {
     fields: [
       master_contact_id,
@@ -61,13 +56,6 @@ view: incontact_phone {
     type: string
     sql: ${TABLE}."CONTACT_TYPE" ;;
     }
-
-  # dimension: contacts { Delete if no issues caused by removal
-  #   label: "Contacts"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: 1 ;;
-  #   }
 
   dimension: direction {
     label: "Direction"
@@ -1122,12 +1110,12 @@ view: incontact_phone {
                       # measure: ht_quartile_1 {
                       #   label: "HT Q1"
                       #   group_label: "Percentage Measures"
-                      #   # hidden: yes
-                      #   type: percentile_distinct
+                      #   type: percentile
                       #   percentile: 25
                       #   # value_format_name: percent_1
-                      #   sql: percentile_cont(.25) within group (order by avg(case when ${handle_time} > 0 then ${handle_time}) end) ;;
-                      #   # sql: case when ${handle_time} > 0 then ${handle_time} end / 60 ;;
+                      #   # sql: average(${handle_time}) ;;
+                      #   # sql: percentile_cont(.25) within group (order by avg(case when ${handle_time} > 0 then ${handle_time} end)) ;;
+                      #   sql: case when ${handle_time} > 0 then ${handle_time} end ;;
                       # }
 
                       # measure: max_ht {
