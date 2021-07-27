@@ -4,7 +4,7 @@ view: agent_state {
 
   dimension: PK {
     label: "ID"
-    description: "Primary key ID. [login_sessin_id] & 3 digit version of [Session State Index]"
+    description: "Primary key ID. [login_session_id] & 3 digit version of [Session State Index]"
     group_label: "IDs"
     primary_key: yes
     # hidden: yes
