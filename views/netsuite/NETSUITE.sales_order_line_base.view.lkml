@@ -708,6 +708,14 @@ view: sales_order_line_base {
     sql: DATEDIFF('day',date_trunc('quarter',${created_raw}),${created_date}) + 1 ;;
   }
 
+    dimension: current_dayofquarterindex {   #returns day of quarter index int 1-92
+      type: number
+      hidden: yes
+      description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32. Source: netsuite.sales_order_line"
+      sql: DATEDIFF('day',date_trunc('quarter',current_date),current_date) + 1 ;;
+    }
+
+
   parameter: timeframe_picker{
     label: "Date Granularity Sales"
     hidden: yes
