@@ -5,12 +5,14 @@ view: agent_data {
         ,case when inactive is not null then true else false end as "inactive_flag"
         ,l.team_name
         ,l.team_email
+        ,l.start_date as 'team_start_date'
+        ,l.end_date as 'team_end_date'
 
       from analytics.customer_care.agent_lkp a
 
         join analytics.customer_care.team_lead_name l
             on a.incontact_id = l.incontact_id
-            and l.end_date > getdate() ;;
+            and l.end_date = '2099-12-31' ;;
   }
 
   ##########################################################################################
@@ -198,9 +200,9 @@ view: agent_data {
   ## ID DIMENSIONS
 
   dimension: incontact_id {
-    label: "Agent ID"
+    label: "InContact ID"
     group_label: "* IDs"
-    description: "The InContact ID for this agent. Source: incontact.agent_lkp"
+    description: "InContact ID may equate to Agent ID in some reports. Source: incontact.agent_lkp"
     primary_key: yes
     type:  number
     sql: ${TABLE}.incontact_id ;;
