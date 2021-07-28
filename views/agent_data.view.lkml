@@ -5,14 +5,13 @@ view: agent_data {
         ,case when inactive is not null then true else false end as "inactive_flag"
         ,l.team_name
         ,l.team_email
-        ,l.start_date as 'team_start_date'
-        ,l.end_date as 'team_end_date'
+        ,cast(l.start_date as date) as team_begin_date
+        ,cast(l.end_date as date) as team_end_date
 
       from analytics.customer_care.agent_lkp a
 
-        join analytics.customer_care.team_lead_name l
-            on a.incontact_id = l.incontact_id
-            and l.end_date = '2099-12-31' ;;
+        left join analytics.customer_care.team_lead_name l
+            on a.incontact_id = l.incontact_id ;;
   }
 
   ##########################################################################################
@@ -56,7 +55,7 @@ view: agent_data {
 
   dimension: team_type {
     label: "Team Type"
-    description: "Source: incontact.agent_lkp"
+    description: "Current Team Type.  Source: incontact.agent_lkp"
     type: string
     sql: ${TABLE}.team_type ;;
   }
@@ -71,6 +70,15 @@ view: agent_data {
     description: "Whether or not this agent is active in the system. Source: incontact.agent_lkp.inactive is not null."
     type: yesno
     sql: ${TABLE}.inactive is null ;;
+  }
+
+  dimension: is_current_team {
+    label: "Is Current Team"
+    group_label: "* Flags"
+    description: "Flag to indicate current team lead and email. Source: team_lead_name.end_date = '2099-12-31'."
+    type: yesno
+    sql: ${TABLE}.team_end_date = '2099-12-31'
+      and ${TABLE}.team_name is not null;;
   }
 
   dimension: is_mentor {
@@ -178,14 +186,42 @@ view: agent_data {
     label: "* Service Recovery Team"
     type: time
     timeframes: [raw,
-        date,
-        week,
-        month,
-        quarter,
-        year]
+      date,
+      week,
+      month,
+      quarter,
+      year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.service_recovery_team ;;
+  }
+
+  dimension_group: team_begin {
+    label: "* Team Begin"
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    # convert_tz: no
+    datatype: date
+    sql: ${TABLE}.team_begin_date ;;
+  }
+
+  dimension_group: team_end {
+    label: "* Team End"
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    # convert_tz: no
+    # datatype: date
+    sql: ${TABLE}.team_end_date ;;
   }
 
   dimension: update_ts {
