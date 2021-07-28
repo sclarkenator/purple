@@ -13,6 +13,13 @@ include: "/dashboards/**/*.dashboard"
 explore: contact_history {
   view_label: "Contact History"
   hidden:yes
+
+  join: agent_lkp {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${contact_history.agent_id} = ${agent_lkp.incontact_id} ;;
+    relationship: many_to_one
+  }
 }
 
 #####################################################################
@@ -515,7 +522,8 @@ explore: CC_KPIs {
     }
   }
 
-  explore:  agent_current_warning_level {hidden: yes}
+  explore: agent_data {hidden: yes}
+  explore: agent_current_warning_level {hidden: yes}
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
