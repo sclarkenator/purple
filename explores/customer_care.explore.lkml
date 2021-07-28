@@ -14,10 +14,10 @@ explore: contact_history {
   view_label: "Contact History"
   hidden:yes
 
-  join: agent_lkp {
+  join: agent_data {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${contact_history.agent_id} = ${agent_lkp.incontact_id} ;;
+    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
     relationship: many_to_one
   }
 }
@@ -30,10 +30,11 @@ explore: agent_state {
   view_label: "Agent States"
   hidden: yes
 
-  join: agent_lkp {
+  join: agent_data {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${agent_state.agent_id} = ${agent_lkp.incontact_id} ;;
+    sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id}
+      and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_start_date} and ${agent_data.team_end_date} ;;
     relationship: many_to_one
   }
 }
