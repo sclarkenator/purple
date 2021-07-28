@@ -43,7 +43,6 @@ view: agent_data {
     description: "The Team Lead's name for this agent. Source: incontact.team_lead_name"
     type: string
     sql: ${TABLE}.team_name ;;
-
   }
 
   dimension: team_name_email {
