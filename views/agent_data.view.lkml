@@ -131,6 +131,7 @@ view: agent_data {
 
   dimension_group: created {
     label: "* Created"
+    hidden: yes
     type: time
     timeframes: [raw,
       date,
