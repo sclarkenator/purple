@@ -1,6 +1,5 @@
 view: cc_agent_attendance {
-  sql_table_name: "CUSTOMER_CARE"."ATTENDANCE_CHANGES"
-    ;;
+  sql_table_name: "CUSTOMER_CARE"."ATTENDANCE_CHANGES"  ;;
 
   dimension: pk {
     label: "Primary Key"
@@ -37,10 +36,18 @@ view: cc_agent_attendance {
   }
 
   dimension: is_occurrence {
+    label: "Is Occurrence"
     description: "Flags whether was an Occurrence event."
     # hidden: yes
     type: yesno
     sql: is_occurrence ;;
+  }
+
+  dimension: last_update {
+    label: "Last Update"
+    description: "Last date when the data was updated."
+    type: date
+    sql: select max(insert_ts) from "CUSTOMER_CARE"."ATTENDANCE_CHANGES" ;;
   }
 
   dimension: name {
@@ -87,6 +94,7 @@ view: cc_agent_attendance {
   }
 
   dimension: vm {
+    label: "Left Voicemail"
     description: "Identifies if the agent called the attendance line and left a Voice Message."
     type: yesno
     sql: case when ${TABLE}."VM" = 'true' then TRUE else FALSE end ;;
