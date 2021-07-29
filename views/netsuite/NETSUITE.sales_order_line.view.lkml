@@ -1312,7 +1312,7 @@ view: sales_order_line {
     group_label: "Fulfilled Date"
     label: "Day of Quarter"
     hidden: yes
-    sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date}),${fulfilled_date}) + 1 ;;
+    sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date::date}),${fulfilled_date::date}) + 1 ;;
   }
 
   dimension: fulfilled_week_of_year {
