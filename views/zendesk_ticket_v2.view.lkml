@@ -334,7 +334,7 @@ view: zendesk_ticket_v2 {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}."LAST_UPDATED" AS TIMESTAMP_NTZ) ;;
+    sql: CAST(${TABLE}."TICKET_LAST_UPDATED" AS TIMESTAMP_NTZ) ;;
   }
 
     dimension_group: tkt_last_updated_by_requester{
