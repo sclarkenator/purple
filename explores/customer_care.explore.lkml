@@ -8,6 +8,24 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+## REFUSALS
+
+explore: contact_refusals {
+  view_label: "InContact Call Refusals"
+  hidden: yes
+  view_name: contact_history
+  sql_always_where: ${contact_history.contact_state_name} = 'Refused' ;;
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
 ## CONTACT HISTORY
 
 explore: contact_history {
@@ -24,7 +42,7 @@ explore: contact_history {
 
 #####################################################################
 #####################################################################
-# Agent State
+# AGENT STATE
 
 explore: agent_state {
   view_label: "Agent States"
@@ -34,7 +52,7 @@ explore: agent_state {
     view_label: "Agent Data"
     type: left_outer
     sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id}
-      and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_start_date} and ${agent_data.team_end_date} ;;
+      and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
     relationship: many_to_one
   }
 }
@@ -95,13 +113,13 @@ explore: incontact_phone {
   label: "InContact Phone"
   view_label: "Agent Data"
   description: "Tracks phone related contact data."
-  view_name: agent_lkp
+  view_name: agent_data
   hidden: yes
 
   join: incontact_phone {
     view_label: "Phone Calls"
     type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+    sql_on: ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
     relationship: many_to_one
   }
 }
