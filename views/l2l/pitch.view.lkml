@@ -62,7 +62,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: createdby {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."CREATEDBY" ;;
   }
