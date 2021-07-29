@@ -69,6 +69,13 @@ view: sleep_country_canada_sales {
     sql: ${TABLE}."NET_SALES_USD" ;;
   }
 
+  measure: roas_sales {
+    type:  sum
+    description: "50% of Retail Sales, 100% of Online Sales USD"
+    value_format: "$#,##0"
+    sql: case when ${sleep_country_canada_store.source} = 'RETAIL' then ${TABLE}."NET_SALES_USD"*0.5 else ${TABLE}."NET_SALES_USD" end ;;
+  }
+
   dimension: net_units {
     type: number
     value_format: "#,##0"
