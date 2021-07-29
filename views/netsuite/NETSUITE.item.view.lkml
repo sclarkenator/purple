@@ -890,7 +890,7 @@ view: item {
         when ${sku_clean} in ('10-38-12955') then '10-38-12952'
         when ${sku_clean} in ('10-38-52894') then '10-38-52846'
         when ${sku_clean} in ('10-38-12959') then '10-38-12956'
-        when ${item_id} in ('10-38-45896') then '10-38-45862'
+        when ${sku_clean} in ('10-38-45896') then '10-38-45862'
         when ${sku_clean} in ('10-38-45897') then '10-38-45863'
         when ${sku_clean} in ('10-38-45898') then '10-38-45864'
         when ${sku_clean} in ('10-38-45899') then '10-38-45865'
