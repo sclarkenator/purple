@@ -53,7 +53,7 @@ view: cc_agent_attendance {
   dimension: name {
     label: "Agent Name"
     description: "Name of agent to whom this record applies."
-    hidden: yes
+    # hidden: yes
     type: string
     sql: ${TABLE}."NAME" ;;
   }
@@ -158,6 +158,7 @@ view: cc_agent_attendance {
     type: number
     value_format_name: decimal_1
     sql: zeroifnull(sum(${points})) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: fmla_time_used {
@@ -174,6 +175,7 @@ view: cc_agent_attendance {
     type: date
     sql: max(case when ${is_occurrence} = True then ${combined_date_date}
       else null end) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: non_occurrence_count {
