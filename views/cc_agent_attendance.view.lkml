@@ -53,7 +53,7 @@ view: cc_agent_attendance {
   dimension: name {
     label: "Agent Name"
     description: "Name of agent to whom this record applies."
-    hidden: yes
+    # hidden: yes
     type: string
     sql: ${TABLE}."NAME" ;;
   }
