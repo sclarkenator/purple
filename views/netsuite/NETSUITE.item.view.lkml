@@ -70,7 +70,8 @@ view: item {
 
   measure: Weight {
     label: "Total Item Weight"
-    hidden: no
+    hidden: yes
+    value_format: "#,##0.0"
     type: sum
     sql: ${TABLE}.WEIGHT ;;
   }
