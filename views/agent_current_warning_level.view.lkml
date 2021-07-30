@@ -32,6 +32,7 @@ view: agent_current_warning_level {
     description: "Current attendance warning level"
     type: string
     sql: ltrim(rtrim(${TABLE}."WARNING_LEVEL")) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   dimension: sort_order{
