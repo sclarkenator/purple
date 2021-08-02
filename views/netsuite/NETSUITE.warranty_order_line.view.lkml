@@ -71,10 +71,10 @@ view: warranty_order_line {
     label: "Total Warranties Completed (units)"
     description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
-    filters: {
-      field: warranty_order.status
-      value: "Closed"}
-    sql: ${TABLE}.QUANTITY ;;
+##    filters: {
+##      field: warranty_order.status
+##      value: "Closed"}
+    sql: case when ${closed_date} is not null then ${TABLE}.QUANTITY else 0 end ;;
   }
 
   measure: quantity_complete_sales {
@@ -84,10 +84,10 @@ view: warranty_order_line {
     description: "Units from warranties where the warranty has been completed. Source:netsuite.warranty_order_line"
     type: sum
     sql_distinct_key: ${primary_key} ;;
-    filters: {
-      field: warranty_order.status
-      value: "Closed"}
-    sql: ${TABLE}.QUANTITY*${sales_order_line.gross_amt} ;;
+##    filters: {
+##      field: warranty.status
+##      value: "Closed"}
+    sql: (case when ${closed_date} is not null then ${TABLE}.QUANTITY else 0 end) *${sales_order_line.gross_amt} ;;
   }
 
   dimension: system {
