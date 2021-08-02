@@ -52,7 +52,7 @@ view: incontact_phone {
             then 'PurpleBoysPodcast'
         when ${skill_name} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
             then 'Ops'
-        else 'Admin'
+        else 'Other/Unknown'
     end
     ;;
   }
@@ -972,7 +972,7 @@ view: incontact_phone {
   }
 
   measure: speed_of_answer_average {
-    label: "AVG Speed of Average Time"
+    label: "AVG Speed of Answer Time"
     group_label: "Average Measures"
     description: "Time that a Handled Contact spent waiting in the queue after requesting to speak to an agent until the call was routed to the agent.  Does NOT include Abandon calls."
     type: average
