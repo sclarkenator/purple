@@ -544,7 +544,7 @@ view: incontact_phone {
   ## DATE DIMENSION GROUPS
 
   dimension_group: insert_ts {
-    label: "Insert TS UTC"
+    label: "* Insert TS UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -560,7 +560,7 @@ view: incontact_phone {
     }
 
   dimension_group: last_updated_ts {
-    label: "Updated TS UTC"
+    label: "* Updated TS UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -576,7 +576,7 @@ view: incontact_phone {
     }
 
   dimension_group: last_updated_ts_mst {
-    label: "Updated TS MT"
+    label: "* Updated TS"
     hidden: yes
     type: time
     timeframes: [
@@ -592,7 +592,7 @@ view: incontact_phone {
     }
 
   dimension_group: refuse_ts {
-    label: "Contact Refusal UTC"
+    label: "* Contact Refusal UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -609,7 +609,7 @@ view: incontact_phone {
     }
 
   dimension_group: refuse_ts_mst {
-    label: "Contact Refusal"
+    label: "* Contact Refusal"
     # hidden: yes
     type: time
     timeframes: [
@@ -626,7 +626,7 @@ view: incontact_phone {
     }
 
   dimension_group: start_ts_mst {
-    label: "Contact START"
+    label: "* Contact START"
     # hidden: yes
     type: time
     timeframes: [
@@ -645,7 +645,7 @@ view: incontact_phone {
   }
 
   dimension_group: start_ts {
-    label: "Contact Start UTC"
+    label: "* Contact Start UTC"
     hidden: yes
     type: time
     timeframes: [
