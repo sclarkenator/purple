@@ -547,7 +547,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
       relationship: many_to_one
       }
-
+    join: sla {
+      view_label: "Fulfillment"
+      type: left_outer
+      sql_on: ${sales_order_line.created_date} = ${sla.order_date} and ${item.sku_id} = ${sla.sku_id} and ${sales_order.channel_id} in (1,5) ;;
+      relationship: many_to_one
+    }
   }
 
 

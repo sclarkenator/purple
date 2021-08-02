@@ -36,6 +36,7 @@ view: v_sla_days {
 
   dimension: sla_days {
     label: "SLA days"
+    hidden: yes
     group_label: " Advanced"
     description: "Expected SLA days, based on what was stated on site at time of order"
     type: number

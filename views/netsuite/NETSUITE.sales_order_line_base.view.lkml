@@ -1163,6 +1163,14 @@ view: sales_order_line_base {
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
   }
 
+  dimension: ship_flag {
+    view_label: "Fulfillment"
+    group_label: "Website SLAs"
+    label: "Standard Shipping Flag"
+    type: yesno
+    sql: ${DTC_carrier} in ('Purple','MainFreight') ;;
+  }
+
   dimension: week_2019_start {
     hidden: yes
     group_label: "Created Date"
