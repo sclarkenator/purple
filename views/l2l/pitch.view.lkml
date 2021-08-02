@@ -245,6 +245,22 @@ where z.row_num = 1 and delete_ts is null;;
     sql: ${TABLE}."SCRAP" ;;
   }
 
+  measure: first_pass_yield{
+    label: "FPY"
+    description: "Total # of good parts produced divided by total number of shots"
+    type: number
+    value_format: "0.0%"
+    sql: div0(${actual},${actual}+${scrap}) ;;
+  }
+
+  measure: throughput_percent{
+    label: "Throughput %"
+    description: "Actual good parts produced divided by pitch demand"
+    type: number
+    value_format: "0.0%"
+    sql: div0(${actual},${demand}) ;;
+  }
+
   measure: planned_production_minutes {
     description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
     type: sum
