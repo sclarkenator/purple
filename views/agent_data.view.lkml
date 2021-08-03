@@ -1,17 +1,27 @@
 view: agent_data {
   derived_table: {
     sql:
-      select a.*
-        ,case when inactive is not null then true else false end as "inactive_flag"
-        ,l.team_name
-        ,l.team_email
-        ,cast(l.start_date as date) as team_begin_date
-        ,cast(l.end_date as date) as team_end_date
+      select distinct a.*,
+          c.team_name "current_team_lead",
+          case when inactive is not null then true else false end as "inactive_flag",
+          l.team_name,
+          l.team_email,
+          cast(l.start_date as date) as team_begin_date,
+          cast(l.end_date as date) as team_end_date
 
       from analytics.customer_care.agent_lkp a
 
-        left join analytics.customer_care.team_lead_name l
-            on a.incontact_id = l.incontact_id ;;
+          left join analytics.customer_care.team_lead_name l
+              on a.incontact_id = l.incontact_id
+
+          left join (
+              select *,
+                  rank()over(partition by incontact_id order by end_date desc) as rnk
+              from analytics.customer_care.team_lead_name
+              where team_name is not null
+              ) c
+              on a.incontact_id = c.incontact_id
+              and c.rnk = 1 ;;
   }
 
   ##########################################################################################
