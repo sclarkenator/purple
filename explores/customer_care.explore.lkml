@@ -250,16 +250,16 @@ explore: CC_KPIs {
       sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
       relationship: one_to_many
       }
-      join: agent_name {
+      join: agent_lkp {
         type: left_outer
         view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_name.zendesk_id}  ;;
+        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_lkp.zendesk_id}  ;;
         relationship: many_to_one
       }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
         AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
       relationship: many_to_one
