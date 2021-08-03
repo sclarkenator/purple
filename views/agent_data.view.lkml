@@ -2,12 +2,13 @@ view: agent_data {
   derived_table: {
     sql:
       select distinct a.*,
-          c.team_name "current_team_lead",
+          c.team_name as current_team_name,
+          c.team_email as current_team_email,
           case when inactive is not null then true else false end as "inactive_flag",
-          l.team_name,
-          l.team_email,
-          cast(l.start_date as date) as team_begin_date,
-          cast(l.end_date as date) as team_end_date
+          l.team_name as historic_team_name,
+          l.team_email as historic_team_email,
+          cast(l.start_date as date) as historic_team_begin_date,
+          cast(l.end_date as date) as historic_team_end_date
 
       from analytics.customer_care.agent_lkp a
 
@@ -49,18 +50,32 @@ view: agent_data {
     sql: ${TABLE}.employee_type ;;
   }
 
-  dimension: team_name {
-    label: "Team Lead"
-    description: "The Team Lead's name for this agent. Source: incontact.team_lead_name"
+  dimension: historic_team_name {
+    label: "Historic Team Name"
+    description: "The Team Lead's name for this agent according to team start and end dates. Source: incontact.team_lead_name"
     type: string
-    sql: ${TABLE}.team_name ;;
+    sql: ${TABLE}.historic_team_name ;;
+  }
+
+  dimension: historic_team_email {
+    label: "Historic Team Email"
+    description: "This agent's Team Lead's email. Source: incontact.team_lead_name"
+    type: string
+    sql: ${TABLE}.historic_team_email ;;
+  }
+
+  dimension: team_name {
+    label: "Current Team Name"
+    description: "The current Team Lead's name for this agent. Source: incontact.team_lead_name"
+    type: string
+    sql: ${TABLE}.current_team_name ;;
   }
 
   dimension: team_name_email {
-    label: "Team Lead Email"
-    description: "This agent's Team Lead's email. Source: incontact.team_lead_name"
+    label: "Current Team Email"
+    description: "The current Team Lead's email for this agent. Source: incontact.team_lead_name"
     type: string
-    sql: ${TABLE}.team_email ;;
+    sql: ${TABLE}.current_team_email ;;
   }
 
   dimension: team_type {
@@ -82,14 +97,14 @@ view: agent_data {
     sql: ${TABLE}.inactive is null ;;
   }
 
-  dimension: is_current_team {
-    label: "Is Current Team"
-    group_label: "* Flags"
-    description: "Flag to indicate current team lead and email. Source: team_lead_name.end_date = '2099-12-31'."
-    type: yesno
-    sql: ${TABLE}.team_end_date = '2099-12-31'
-      and ${TABLE}.team_name is not null;;
-  }
+  # dimension: is_current_team {
+  #   label: "Is Current Team"
+  #   group_label: "* Flags"
+  #   description: "Flag to indicate current team lead and email. Source: team_lead_name.end_date = '2099-12-31'."
+  #   type: yesno
+  #   sql: ${TABLE}.team_end_date = '2099-12-31'
+  #     and ${TABLE}.team_name is not null;;
+  # }
 
   dimension: is_mentor {
     label: "Is Mentor"
