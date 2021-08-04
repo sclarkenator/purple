@@ -16,7 +16,7 @@ explore: cc_headcount_v2 {
     fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
     type: left_outer
     sql_on: ${team_lead_name.incontact_id} = ${cc_headcount_v2.incontact_id}
-        and ${cc_headcount_v2.by_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date}  ;;
+        and ${cc_headcount_v2.by_date} between cast(${team_lead_name.start_date} as date) and cast(${team_lead_name.end_date} as date)  ;;
     relationship: many_to_one
   }
   join: agent_data {
@@ -72,8 +72,8 @@ explore: agent_state {
   join: agent_data {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id}
-      and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
+    sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id} ;;
+      # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
     relationship: many_to_one
   }
 }
@@ -84,32 +84,32 @@ explore: agent_state {
 
 explore:agent_attendance {
 
-  view_label: "Attendance Data"
-  view_name: cc_agent_attendance
+  view_label: "Agent Data"
+  view_name: agent_data
   hidden: yes
 
-  join: agent_lkp {
-    view_label: "Agent Data"
+  join: attendance_data {
+    view_label: "Attendance Data"
+    from: cc_agent_attendance
     type: left_outer
-    sql_on: ${cc_agent_attendance.ic_id} = ${agent_lkp.incontact_id} ;;
-    relationship: many_to_one
+    sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
+      # and ${attendance_data.event_date_date} between ${agent_data.team_begin_date} and ${agent_data.team_end_date}  ;;
+    relationship: one_to_many
   }
 
-  join: team_lead_name {
-    view_label: "Agent Data"
-    fields: [team_lead_name.team_Name, team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
-    type: left_outer
-    sql_on: ${agent_lkp.incontact_id} = ${team_lead_name.incontact_id}
-      and ${team_lead_name.end_date} > getdate() ;;
-      # and ${cc_agent_attendance.combined_date_date} between ${team_lead_name.start_date} and ${team_lead_name.end_date};;
-    relationship: many_to_one
-  }
+  # join: historic_team_lead {
+  #   view_label: "Historic Teams"
+  #   from: team_lead_name
+  #   type: left_outer
+  #   sql_on:  ${agent_data.incontact_id} = ${historic_team_lead.incontact_id}
+  #     and ${attendance_data.event_date_date} between ${historic_team_lead.start_date} and ${historic_team_lead.end_date}  ;;
+  # }
 
   join: agent_current_warning_level {
     view_label: "Attendance Data"
     fields: [agent_current_warning_level.warning_level]
     type: left_outer
-    sql_on: ${agent_lkp.incontact_id} = ${agent_current_warning_level.ic_id} ;;
+    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.ic_id} ;;
     relationship: one_to_one
   }
 }
