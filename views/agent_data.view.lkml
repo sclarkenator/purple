@@ -52,6 +52,7 @@ view: agent_data {
 
   dimension: historic_team_name {
     label: "Historic Team Name"
+    group_label: "* Team History"
     description: "The Team Lead's name for this agent according to team start and end dates. Source: incontact.team_lead_name"
     type: string
     sql: ${TABLE}.historic_team_name ;;
@@ -59,6 +60,7 @@ view: agent_data {
 
   dimension: historic_team_email {
     label: "Historic Team Email"
+    group_label: "* Team History"
     description: "This agent's Team Lead's email. Source: incontact.team_lead_name"
     type: string
     sql: ${TABLE}.historic_team_email ;;
@@ -223,6 +225,7 @@ view: agent_data {
 
   dimension_group: team_begin {
     label: "* Team Begin"
+    group_label: "* Team History"
     type: time
     timeframes: [raw,
       date,
@@ -237,6 +240,7 @@ view: agent_data {
 
   dimension_group: team_end {
     label: "* Team End"
+    group_label: "* Team History"
     type: time
     timeframes: [raw,
       date,
