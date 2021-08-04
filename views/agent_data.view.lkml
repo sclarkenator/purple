@@ -228,11 +228,7 @@ view: agent_data {
     group_label: "* Team History"
     type: time
     timeframes: [raw,
-      date,
-      week,
-      month,
-      quarter,
-      year]
+      date]
     # convert_tz: no
     datatype: date
     sql: ${TABLE}.team_begin_date ;;
@@ -243,11 +239,7 @@ view: agent_data {
     group_label: "* Team History"
     type: time
     timeframes: [raw,
-      date,
-      week,
-      month,
-      quarter,
-      year]
+      date]
     # convert_tz: no
     # datatype: date
     sql: ${TABLE}.team_end_date ;;
