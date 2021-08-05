@@ -1,5 +1,5 @@
 view: expeditors {
-  sql_table_name: "CSV_UPLOADS"."EXPEDITORS"
+  sql_table_name: shipping."EXPEDITORS"
     ;;
 
   dimension: country_of_origin {
@@ -222,7 +222,7 @@ view: expeditors {
 
   measure: total_item_quantity {
     type: sum
-    sql: ${TABLE}.item_quantity ;;
+    sql: ${TABLE}.item_qty ;;
   }
 
   measure: tariff_rate_2 {
