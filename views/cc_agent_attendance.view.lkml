@@ -14,8 +14,8 @@ view: cc_agent_attendance {
 
               cross join customer_care.attendance_changes a
 
-          --where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
-          --    and incontact_id > 0
+          where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
+              and incontact_id > 0
           ) d
 
           left join customer_care.attendance_changes a
@@ -48,6 +48,7 @@ view: cc_agent_attendance {
   dimension: fmla {
     label: "FMLA"
     description: "How many hours of FMLA was the agent using and needed to submit into Workday."
+    hidden: yes
     type: number
     sql: ${TABLE}."FMLA" ;;
   }
@@ -92,6 +93,7 @@ view: cc_agent_attendance {
   dimension: points {
     label: "Points"
     description: "The value of the points against the agent for occurence events (0.5, 1.0, 1.5, or possibly -.5, -1.0 for earned back time)."
+    hidden: yes
     type: number
     sql: ${TABLE}."POINTS" ;;
   }
@@ -99,6 +101,7 @@ view: cc_agent_attendance {
   dimension: sick_time {
     label: "Sick Time"
     description: "How many hours of Sick Time was the agent using and needed to submit into Workday."
+    hidden: yes
     type: number
     sql: ${TABLE}."SICK_TIME" ;;
   }
