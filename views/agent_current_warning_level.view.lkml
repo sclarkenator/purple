@@ -1,12 +1,33 @@
 view: agent_current_warning_level {
-  sql_table_name: "CUSTOMER_CARE"."AGENT_CURRENT_WARNING_LEVEL"
-    ;;
+  # sql_table_name: "CUSTOMER_CARE"."AGENT_CURRENT_WARNING_LEVEL"  ;;
+  derived_table: {
+    sql:
+    select distinct a.incontact_id as incontact_id,
+        sum(c.points) as current_points,
+        ltrim(rtrim(w.warning_level)) as warning_level,
+        a.insert_ts
 
-  dimension: ic_id {
+    from customer_care.agent_lkp a
+
+        left join customer_care.attendance_changes c
+            on a.incontact_id = c.ic_id
+
+        left join customer_care.agent_current_warning_level w
+            on a.incontact_id = w.ic_id
+
+    where a.incontact_id > 0
+
+    group by a.incontact_id,
+        w.warning_level,
+        ltrim(rtrim(w.warning_level)),
+        a.insert_ts ;;
+  }
+
+  dimension: incontact_id {
     label: "InContact ID"
     primary_key: yes
     type: number
-    sql: ${TABLE}."IC_ID" ;;
+    sql: ${TABLE}.incontact_id ;;
   }
 
   dimension_group: insert_ts {
@@ -22,7 +43,7 @@ view: agent_current_warning_level {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
+    sql: CAST(${TABLE}.insert_ts AS TIMESTAMP_NTZ) ;;
   }
 
   dimension: warning_level {
@@ -31,8 +52,16 @@ view: agent_current_warning_level {
     # hidden: yes
     description: "Current attendance warning level"
     type: string
-    sql: ltrim(rtrim(${TABLE}."WARNING_LEVEL")) ;;
+    sql: ${TABLE}.warning_level ;;
     html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
+  }
+
+  dimension: current_points {
+    label: "Current Points"
+    description: "Current accumulated Occurrence Points."
+    type: number
+    value_format_name: decimal_1
+    sql: ${TABLE}.current_points ;;
   }
 
   dimension: sort_order{

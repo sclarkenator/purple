@@ -7,7 +7,8 @@ view: cc_agent_attendance {
           ,a.*
           ,case when is_occurrence = 'Yes' then 1 end as occurrance_count
 
-      from (select distinct d.date::date as date
+      from (
+          select distinct d.date::date as date
               ,a.ic_id as incontact_id
 
           from analytics.util.warehouse_date d
@@ -21,6 +22,7 @@ view: cc_agent_attendance {
           left join customer_care.attendance_changes a
               on d.incontact_id = a.ic_id
               and d.date = a.combined_dates
+
       where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
               and d.incontact_id > 0
       ;;
@@ -31,7 +33,7 @@ view: cc_agent_attendance {
     primary_key: yes
     type: string
     hidden: yes
-    sql: concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by IC_ID, combined_dates order by occurrence, sub_occurrence, notes)) ;;
+    sql: concat(incontact_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by incontact_id, combined_dates order by occurrence, sub_occurrence, notes)) ;;
   }
 
   ##########################################################################################
@@ -172,9 +174,9 @@ view: cc_agent_attendance {
     type: count
   }
 
-  measure: current_points {
-    label: "Current Points"
-    description: "Current summary of Attendence Points"
+  measure: point_sum {
+    label: "Points Sum"
+    description: "Calculated sum of points earned during a given period."
     type: number
     value_format_name: decimal_1
     sql: zeroifnull(sum(${points})) ;;

@@ -88,13 +88,12 @@ explore:agent_attendance {
   view_name: agent_data
   hidden: yes
 
-  join: attendance_data {
+  join: agent_current_warning_level {
     view_label: "Attendance Data"
-    from: cc_agent_attendance
+    fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
     type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
-      # and ${attendance_data.event_date_date} between ${agent_data.team_begin_date} and ${agent_data.team_end_date}  ;;
-    relationship: one_to_many
+    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id} ;;
+    relationship: one_to_one
   }
 
   # join: historic_team_lead {
@@ -105,12 +104,13 @@ explore:agent_attendance {
   #     and ${attendance_data.event_date_date} between ${historic_team_lead.start_date} and ${historic_team_lead.end_date}  ;;
   # }
 
-  join: agent_current_warning_level {
+  join: attendance_data {
     view_label: "Attendance Data"
-    fields: [agent_current_warning_level.warning_level]
+    from: cc_agent_attendance
     type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.ic_id} ;;
-    relationship: one_to_one
+    sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
+      # and ${attendance_data.event_date_date} between ${agent_data.team_begin_date} and ${agent_data.team_end_date}  ;;
+    relationship: one_to_many
   }
 }
 
