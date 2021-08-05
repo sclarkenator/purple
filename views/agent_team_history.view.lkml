@@ -1,4 +1,4 @@
-view: agent_historic_teams {
+view: agent_team_history {
   sql_table_name: CUSTOMER_CARE.team_lead_name ;;
 
   dimension: end_date {
@@ -44,7 +44,7 @@ view: agent_historic_teams {
     primary_key: yes
     hidden: yes
     type: string
-    sql: concat(${incontact_id}, replace(${start_date}, '-', '')) ;;
+    sql: concat(${TABLE}.incontact_id, replace(${start_date}, '-', '')) ;;
   }
 
   dimension: incontact_id {

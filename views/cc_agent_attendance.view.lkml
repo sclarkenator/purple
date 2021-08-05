@@ -2,13 +2,15 @@ view: cc_agent_attendance {
   derived_table: {
     sql:
       select distinct
-          d.date::date as event_date
+          d.date as event_date
           ,d.incontact_id
           ,a.*
           ,case when is_occurrence = 'Yes' then 1 end as occurrance_count
+          ,concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) ,
+        row_number()over(partition by ic_id, combined_dates order by occurrence, sub_occurrence, notes)) as pk
 
       from (
-          select distinct d.date::date as date
+          select distinct cast(d.date as date) as date
               ,a.ic_id as incontact_id
 
           from analytics.util.warehouse_date d
@@ -32,8 +34,8 @@ view: cc_agent_attendance {
     label: "Primary Key"
     primary_key: yes
     type: string
-    hidden: yes
-    sql: concat(incontact_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by incontact_id, combined_dates order by occurrence, sub_occurrence, notes)) ;;
+    # hidden: yes
+    sql: ${TABLE}.pk ;;
   }
 
   ##########################################################################################

@@ -96,12 +96,11 @@ explore:agent_attendance {
     relationship: one_to_one
   }
 
-  # join: historic_team_lead {
-  #   view_label: "Historic Teams"
-  #   from: team_lead_name
+  # join: agent_team_history {
+  #   view_label: "Attendance Data"
+  #   # from: agent_team_history
   #   type: left_outer
-  #   sql_on:  ${agent_data.incontact_id} = ${historic_team_lead.incontact_id}
-  #     and ${attendance_data.event_date_date} between ${historic_team_lead.start_date} and ${historic_team_lead.end_date}  ;;
+  #   sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id} ;;
   # }
 
   join: attendance_data {
@@ -109,7 +108,7 @@ explore:agent_attendance {
     from: cc_agent_attendance
     type: left_outer
     sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
-      # and ${attendance_data.event_date_date} between ${agent_data.team_begin_date} and ${agent_data.team_end_date}  ;;
+      # and ${attendance_data.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: one_to_many
   }
 }

@@ -4,7 +4,7 @@ view: agent_data {
       select distinct a.*,
           c.team_name as current_team_name,
           c.team_email as current_team_email,
-          case when a.inactive is not null then true else false end as "inactive_flag"
+          case when a.inactive is not null then false else true end as active_flag
 
       from analytics.customer_care.agent_lkp a
 
@@ -44,14 +44,14 @@ view: agent_data {
   }
 
   dimension: team_name {
-    label: "Team Name"
+    label: "Team Lead"
     description: "The current Team Lead's name for this agent. Source: incontact.team_lead_name"
     type: string
     sql: ${TABLE}.current_team_name ;;
   }
 
   dimension: team_name_email {
-    label: "Team Email"
+    label: "Team Lead Email"
     description: "The current Team Lead's email for this agent. Source: incontact.team_lead_name"
     type: string
     sql: ${TABLE}.current_team_email ;;
@@ -73,7 +73,7 @@ view: agent_data {
     group_label: "* Flags"
     description: "Whether or not this agent is active in the system. Source: incontact.agent_lkp.inactive is not null."
     type: yesno
-    sql: ${TABLE}.inactive is null ;;
+    sql: ${TABLE}.active_flag ;;
   }
 
   dimension: is_mentor {
