@@ -18,15 +18,13 @@ view: cc_agent_attendance {
               cross join customer_care.attendance_changes a
 
           where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
+              and ic_id <> '2612383'
               and incontact_id > 0
           ) d
 
           left join customer_care.attendance_changes a
               on d.incontact_id = a.ic_id
               and d.date = a.combined_dates ;;
-
-      # where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
-      #         and d.incontact_id > 0
   }
 
   dimension: pk {

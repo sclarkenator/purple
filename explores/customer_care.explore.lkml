@@ -87,6 +87,7 @@ explore:agent_attendance {
   view_label: "Agent Data"
   view_name: agent_data
   hidden: yes
+  sql_always_where: ${agent_data.incontact_id} <> '2612383' ;;
 
   join: agent_current_warning_level {
     view_label: "Attendance Data"
@@ -105,12 +106,14 @@ explore:agent_attendance {
     relationship: one_to_many
   }
 
-  # join: agent_team_history {
-  #   view_label: "Attendance Data"
-  #   # from: agent_team_history
-  #   type: left_outer
-  #   sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id} ;;
-  # }
+  join: agent_team_history {
+    view_label: "Agent Data"
+    # from: agent_team_history
+    type: left_outer
+    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+      and ${attendance_data.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+    relationship: many_to_one
+  }
 }
 
 #####################################################################
