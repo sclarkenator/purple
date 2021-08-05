@@ -96,13 +96,6 @@ explore:agent_attendance {
     relationship: one_to_one
   }
 
-  # join: agent_team_history {
-  #   view_label: "Attendance Data"
-  #   # from: agent_team_history
-  #   type: left_outer
-  #   sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id} ;;
-  # }
-
   join: attendance_data {
     view_label: "Attendance Data"
     from: cc_agent_attendance
@@ -111,6 +104,13 @@ explore:agent_attendance {
       # and ${attendance_data.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: one_to_many
   }
+
+  # join: agent_team_history {
+  #   view_label: "Attendance Data"
+  #   # from: agent_team_history
+  #   type: left_outer
+  #   sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id} ;;
+  # }
 }
 
 #####################################################################
