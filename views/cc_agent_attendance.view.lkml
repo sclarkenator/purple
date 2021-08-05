@@ -1,5 +1,30 @@
 view: cc_agent_attendance {
-  sql_table_name: "CUSTOMER_CARE"."ATTENDANCE_CHANGES"  ;;
+  derived_table: {
+    sql:
+      select distinct
+          d.date::date as event_date
+          ,d.incontact_id
+          ,a.*
+          ,case when is_occurrence = 'Yes' then 1 end as occurrance_count
+
+      from (select distinct d.date::date as date
+              ,a.ic_id as incontact_id
+
+          from analytics.util.warehouse_date d
+
+              cross join customer_care.attendance_changes a
+
+          --where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
+          --    and incontact_id > 0
+          ) d
+
+          left join customer_care.attendance_changes a
+              on d.incontact_id = a.ic_id
+              and d.date = a.combined_dates
+      where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
+              and d.incontact_id > 0
+      ;;
+  }
 
   dimension: pk {
     label: "Primary Key"
@@ -27,12 +52,12 @@ view: cc_agent_attendance {
     sql: ${TABLE}."FMLA" ;;
   }
 
-  dimension: ic_id {
-    label: "Agent ID"
+  dimension: incontact_id {
+    label: "Incontact ID"
     description: "Agent's InContact ID."
     hidden: yes
     type: string
-    sql: ${TABLE}."IC_ID" ;;
+    sql: ${TABLE}.incontact_id ;;
   }
 
   dimension: is_occurrence {
@@ -48,14 +73,6 @@ view: cc_agent_attendance {
     description: "Last date when the data was updated."
     type: date
     sql: select max(insert_ts) from "CUSTOMER_CARE"."ATTENDANCE_CHANGES" ;;
-  }
-
-  dimension: name {
-    label: "Agent Name"
-    description: "Name of agent to whom this record applies."
-    # hidden: yes
-    type: string
-    sql: ${TABLE}."NAME" ;;
   }
 
   dimension: notes {
@@ -106,8 +123,8 @@ view: cc_agent_attendance {
 
   # The DATE field does not need to be included as a date field.  It is used as more of a flag field.
 
-  dimension_group: combined_date {
-    label: "Event"
+  dimension_group: event_date {
+    label: "* Event"
     description: "The date recorded event took place."
     hidden: no
     type: time
@@ -121,13 +138,13 @@ view: cc_agent_attendance {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."COMBINED_DATES" ;;
+    sql: ${TABLE}.event_date ;;
   }
 
   dimension_group: insert_ts {
-    label: "Inserted"
+    label: "* Inserted"
     description: "Date record was inserted in database."
-    # hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -173,7 +190,7 @@ view: cc_agent_attendance {
     label: "Last Occurrence"
     description: "Most recent date when an occurrence event was recorded."
     type: date
-    sql: max(case when ${is_occurrence} = True then ${combined_date_date}
+    sql: max(case when ${is_occurrence} = True then ${event_date_date}
       else null end) ;;
     html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
@@ -192,7 +209,7 @@ view: cc_agent_attendance {
     description: "Sum count of Occurrence events."
     type: number
     value_format_name: decimal_0
-    sql: sum(case when ${is_occurrence} = True then 1 else 0 end) ;;
+    sql: zeroifnull(sum(${TABLE}.occurrance_count)) ;;
   }
 
   measure: occurrence_hit_points {

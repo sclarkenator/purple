@@ -435,8 +435,8 @@ dimension: spend_platform {
                   or (UPPER(${TABLE}.source) = 'SEARCH' AND ((LOWER(${campaign_name}) ilike '%Brand:%' or LOWER(${campaign_name}) ilike 'Brand_%')))
                   or UPPER(${TABLE}.source) in  ('AMAZON PPC')or ${campaign_name} ilike '%sr_br_%';; label:"brand search"}
       when: {sql: UPPER(${TABLE}.source) = 'CTV' OR UPPER(${TABLE}.platform) in ('HULU');; label:"CTV"}
-      when: {sql: (UPPER(${TABLE}.platform)
-        in ('EBAY','AMAZON MEDIA GROUP', 'VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
+      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon media') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or UPPER(${TABLE}.source) in ('PLA') ;; label: "pla"}
+     when: {sql: (UPPER(${TABLE}.platform) in ('EBAY','AMAZON MEDIA GROUP','VERIZON MEDIA') AND ${campaign_name} NOT ILIKE '%ideo%')
         OR ${TABLE}.source ilike ('%ispla%') or UPPER(${TABLE}.source) in ('DISPLAY') or UPPER(${spend_platform}) = 'AMAZON-SP'
         or ((${campaign_name} ilike '%displa%' AND ad_name not ilike 'Video%') and (${campaign_name} ilike '%displa%' AND ad_name not ilike '%Pre-Roll%'))
         or (UPPER(${TABLE}.platform) ilike ('ACUITY') and ${campaign_name} not ilike '%ideo%')
@@ -447,7 +447,6 @@ dimension: spend_platform {
                   or UPPER(${spend_platform}) in ('AMAZON-HSA')
                   or (${campaign_name} ilike '&ative%earch%' and UPPER(${spend_platform}) = 'ADMARKETPLACE');; label:"search"}
       when: {sql: UPPER(${TABLE}.platform) in ('ADWALLET','FKL','FLUENT','FLUENT','MADRIVO','ROKT','REDCRANE') or ${TABLE}.platform ilike ('MYMOVE%') ;; label: "lead gen" }
-      when: {sql: lower(${TABLE}.platform) in ('google','bing','verizon') and ${campaign_name} ilike ('%shopping%') or ${campaign_name} ilike ('sh_%') or UPPER(${TABLE}.source) in ('PLA') ;; label: "pla"}
       when: {sql: (${TABLE}.platform = 'HARMON' OR ${TABLE}.source ilike ('%outub%') or UPPER(${TABLE}.source) = 'VIDEO' or ${ad_name} ilike '%ideo%'
             or (UPPER(${spend_platform}) = 'EXPONENTIAL' and UPPER(${TABLE}.source) <> 'EXPONENTIAL')
             or UPPER(${TABLE}.source) = 'EXPONENTIAL') and ${spend_platform} <> 'LINKEDIN';; label:"video" }

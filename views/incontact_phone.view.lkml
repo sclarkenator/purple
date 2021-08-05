@@ -637,6 +637,7 @@ view: incontact_phone {
       date,
       week,
       day_of_week,
+                  week_of_year,
       month,
       quarter,
       year

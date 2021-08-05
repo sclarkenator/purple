@@ -1480,6 +1480,7 @@ view: sales_order_line {
   dimension: week_bucket_ff_old{
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
+    hidden: yes
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker.calculation"
     type: string
