@@ -228,8 +228,9 @@ view: expeditors {
   measure: tariff_rate_2 {
     label: "Tariff Calculation"
     description: "duty + mpf + hmf / entered value"
-    value_format_name: percent_1
-    sql: (${total_duty}+${total_hmf_harbor_fee}+${total_mpf})/${total_entered_value} ;;
+    type: number
+    value_format: "0.0%"
+    sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_entered_value}) ;;
   }
 
 }
