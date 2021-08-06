@@ -235,6 +235,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."ACTUAL" ;;
   }
 
@@ -289,6 +290,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: demand {
     description: "Total amount of Demanded Product to be Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."DEMAND" ;;
   }
 
