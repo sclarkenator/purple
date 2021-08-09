@@ -17,7 +17,8 @@ explore:agent_attendance {
   view_label: "Agent Data"
   view_name: agent_data
   hidden: yes
-  sql_always_where: ${agent_data.incontact_id} <> '2612383' ;;
+  sql_always_where: ${agent_data.incontact_id} is not null
+    and ${agent_data.incontact_id} <> '2612383' ;;
 
   join: agent_current_warning_level {
     view_label: "Attendance Data"
@@ -32,7 +33,6 @@ explore:agent_attendance {
     from: cc_agent_attendance
     type: left_outer
     sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
-    # and ${attendance_data.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: one_to_many
   }
 
