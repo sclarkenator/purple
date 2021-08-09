@@ -122,6 +122,10 @@ view: bill_purchase_order {
     type:  date
     sql:${TABLE}.created ;; }
 
+  measure: first_created {
+    type:  date
+    sql: min(${TABLE}.created);; }
+
   dimension: due {
     label: "Due"
     description: "Last due date of any item"
