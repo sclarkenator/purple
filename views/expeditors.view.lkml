@@ -228,8 +228,25 @@ view: expeditors {
   measure: tariff_rate_2 {
     label: "Tariff Calculation"
     description: "duty + mpf + hmf / entered value"
-    value_format_name: percent_1
-    sql: (${total_duty}+${total_hmf_harbor_fee}+${total_mpf})/${total_entered_value} ;;
+    type: number
+    value_format: "0.0%"
+    sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_entered_value}) ;;
+  }
+
+  measure: tariff_per_unit {
+    label: "$ Tariff per Item Unit"
+    description: "duty + mpf + hmf / item quantity"
+    type: number
+    value_format: "$#,##0.00"
+    sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_item_quantity}) ;;
+  }
+
+  measure: total_tariff{
+    label: "Total Tariff"
+    description: "duty + mpf + hmf"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${total_duty}+${total_hmf_harbor_fee}+${total_mpf} ;;
   }
 
 }
