@@ -91,7 +91,7 @@ view: expeditors {
 
   dimension: item_description {
     type: string
-    sql: ${TABLE}."ITEM_DESCRIPTION" ;;
+    sql: ${TABLE}."ITEM_DESCRIP" ;;
   }
 
   dimension: item_number {
