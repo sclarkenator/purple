@@ -6,8 +6,6 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-
-
 #####################################################################
 #####################################################################
 ## AGENT ATTENDANCE cj
@@ -59,6 +57,15 @@ explore: agent_state {
     type: left_outer
     sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id} ;;
     # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
+    relationship: many_to_one
+  }
+
+  join: agent_team_history {
+    view_label: "Agent Data"
+    # from: agent_team_history
+    type: left_outer
+    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+      and ${agent_state.state_start_ts_mst_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: many_to_one
   }
 }

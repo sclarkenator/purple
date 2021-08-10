@@ -17,9 +17,6 @@ view: agent_data {
               on a.incontact_id = c.incontact_id
               and c.rnk = 1 ;;
   }
-                                                                                                              measure: count {  ## This is just for testing and can be removed once our data s pulling correctly.
-                                                                                                                type: count
-                                                                                                              }
 
   ##########################################################################################
   ##########################################################################################
@@ -62,9 +59,11 @@ view: agent_data {
 
   dimension: team_type {
     label: "Team Type"
-    description: "Current Team Type.  Source: incontact.agent_lkp"
+    description: "Current Team Type.  Calculated using data from incontact.agent_lkp"
     type: string
-    sql: ${TABLE}.team_type ;;
+    sql: nullif(case when ${TABLE}.retail = true then 'Retail'
+      when nullif(${TABLE}.team_type, '') is null and ${is_active} = true then 'Admin'
+      else ${TABLE}.team_type end, '') ;;
   }
 
   ##########################################################################################
@@ -152,8 +151,9 @@ view: agent_data {
     sql: ${TABLE}.created ;;
   }
 
-  dimension_group: purple_with_purpose {
-    label: "* Purple with Purpose"
+  dimension_group: hired {
+    label: "* Hired"
+    description: "Date agent was initially hired."
     type: time
     timeframes: [raw,
       date,
@@ -163,7 +163,7 @@ view: agent_data {
       year]
     convert_tz: no
     datatype: timestamp
-    sql: ${TABLE}.purple_with_purpose ;;
+    sql: ${TABLE}.hired ;;
   }
 
   dimension_group: mentor {
@@ -180,6 +180,20 @@ view: agent_data {
     sql: ${TABLE}.mentor ;;
   }
 
+  dimension_group: purple_with_purpose {
+    label: "* Purple with Purpose"
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.purple_with_purpose ;;
+  }
+
   dimension_group: service_recovery_team {
     label: "* Service Recovery Team"
     type: time
@@ -192,6 +206,21 @@ view: agent_data {
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.service_recovery_team ;;
+  }
+
+  dimension_group: terminated {
+    label: "* Terminated"
+    description: "Date of voluntary or involuntary termination."
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      # quarter,
+      year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.terminated ;;
   }
 
   dimension: update_ts {
@@ -208,17 +237,19 @@ view: agent_data {
   dimension: incontact_id {
     label: "InContact ID"
     group_label: "* IDs"
-    description: "InContact ID may equate to Agent ID in some reports. Source: incontact.agent_lkp"
+    description: "Agent's InContact ID, which may equate to Agent ID in some reports. Source: incontact.agent_lkp"
     primary_key: yes
     type:  number
+    value_format_name: id
     sql: ${TABLE}.incontact_id ;;
   }
 
   dimension: zendesk_id {
     label: "Zendesk ID"
     group_label: "* IDs"
-    description: "The ZenDesk ID for this agent. Source: incontact.agent_lkp"
+    description: "Agent's  ZenDesk ID. Source: incontact.agent_lkp"
     type:  number
+    value_format_name: id
     sql: ${TABLE}.zendesk_id ;;
   }
 
@@ -227,14 +258,16 @@ view: agent_data {
     group_label: "* IDs"
     description: "The ZenDesk Sell ID for this agent. Source: incontact.agent_lkp"
     type:  number
+    value_format_name: id
     sql: ${TABLE}.zendesk_sell_user_id ;;
   }
 
   dimension: shopify_id {
     label: "Shopify ID"
     group_label: "* IDs"
-    description: "The Shopify ID for this agent. Source: incontact.agent_lkp"
+    description: "Agent's Shopify ID . Source: incontact.agent_lkp"
     type:  number
+    value_format_name: id
     sql: ${TABLE}.shopify_id ;;
   }
 
@@ -243,7 +276,15 @@ view: agent_data {
     group_label: "* IDs"
     description: "The Shopify POS ID for Retail agent. Source: incontact.agent_lkp"
     type:  number
+    value_format_name: id
     sql: ${TABLE}.shopify_id_pos ;;
   }
-
+  dimension: workday_id {
+    label: "Workday ID"
+    group_label: "* IDs"
+    description: "Agent's Workday ID. Source: incontact.agent_lkp"
+    type:  number
+    value_format_name: id
+    sql: ${TABLE}.workday_id ;;
+  }
 }
