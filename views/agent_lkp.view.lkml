@@ -38,6 +38,12 @@ view: agent_lkp {
     sql: ${TABLE}.shopify_id_pos ;;
   }
 
+  dimension: workday_id {
+    description: "The Workday ID for this agent. Source: incontact.agent_lkp"
+    type:  number
+    sql: ${TABLE}.workday_id  ;;
+  }
+
   dimension: retail {
     hidden: no
     label: " * Is Retail Agent. Source: incontact.agent_lkp"
@@ -130,6 +136,22 @@ view: agent_lkp {
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.service_recovery_team ;;
+  }
+
+  dimension_group: hire {
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.hired ;;
+  }
+
+  dimension_group: termination {
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: ${TABLE}.terminated ;;
   }
 
   #
