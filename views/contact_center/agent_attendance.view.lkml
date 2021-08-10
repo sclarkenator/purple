@@ -29,7 +29,7 @@ view: cc_agent_attendance {
     label: "Primary Key"
     primary_key: yes
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.pk ;;
   }
 

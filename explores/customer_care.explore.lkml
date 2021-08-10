@@ -12,26 +12,26 @@ include: "/dashboards/**/*.dashboard"
 
 explore:agent_attendance {
 
-  view_label: "Agent Data"
-  view_name: agent_data
+  view_label: "Attendance Data"
+  view_name: cc_agent_attendance
   hidden: yes
-  sql_always_where: ${agent_data.incontact_id} is not null
-    and ${agent_data.incontact_id} <> '2612383' ;;
+
+  join: agent_data {
+    view_label: "Agent Data"
+    from: agent_data
+    type: left_outer
+    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
+  }
 
   join: agent_current_warning_level {
     view_label: "Attendance Data"
     fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
     type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id} ;;
+    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id}
+    and ${agent_data.incontact_id} is not null
+      and ${agent_data.incontact_id} <> '2612383' ;;
     relationship: one_to_one
-  }
-
-  join: attendance_data {
-    view_label: "Attendance Data"
-    from: cc_agent_attendance
-    type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${attendance_data.incontact_id} ;;
-    relationship: one_to_many
   }
 
   join: agent_team_history {
@@ -39,7 +39,7 @@ explore:agent_attendance {
     # from: agent_team_history
     type: left_outer
     sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
-      and ${attendance_data.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+      and ${cc_agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: many_to_one
   }
 }
