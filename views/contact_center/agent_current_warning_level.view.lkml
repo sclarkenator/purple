@@ -1,9 +1,8 @@
 view: agent_current_warning_level {
-  # sql_table_name: "CUSTOMER_CARE"."AGENT_CURRENT_WARNING_LEVEL"  ;;
   derived_table: {
     sql:
     select distinct a.incontact_id as incontact_id,
-        sum(c.points) as current_points,
+        coalesce(sum(c.points), 0) as current_points,
         ltrim(rtrim(w.warning_level)) as warning_level,
         a.insert_ts
 
@@ -72,16 +71,4 @@ view: agent_current_warning_level {
       when ${warning_level} like 'Verbal%' then concat('1 ', ltrim(rtrim(${TABLE}."WARNING_LEVEL")))
       else '0' end;;
   }
-
-  # dimension: current_warning_level {
-  #   label: "Warning Level"
-  #   description: "Current ranked attendance warning level"
-  #   sql: ${warning_level} ;;
-  #   html:
-  #     <p>strpos(value, "Final")</p> ;;
-  #     # {% if strpos(value, "Final") !== false %}
-  #     #   <p style="background-color: lightgreen">{{rendered_value}}<p>
-  #     # {% endif %} ;;
-
-  #   }
 }
