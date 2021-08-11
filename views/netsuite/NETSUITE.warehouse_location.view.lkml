@@ -41,7 +41,7 @@ view: warehouse_location {
     sql: case
       when ${location_id} = '4' or  ${location_id} = '71' or ${location_id} = '75' or ${location_id} = '101' or ${location_id} = '111' then 'Purple'
       when ${location_id} = '58' or  ${location_id} = '59' or ${location_id} = '63' or ${location_id} = '76'
-        or ${location_id} = '116' or ${location_id} = '121'or ${location_id} = '146'or ${location_id} = '149' or ${location_id} = '155' or ${location_id} = '158' or ${location_Active}='162' or
+        or ${location_id} = '116' or ${location_id} = '121'or ${location_id} = '146'or ${location_id} = '149' or ${location_id} = '155' or ${location_id} = '158' or ${location_Active}='162'
         or ${location_id} = '170' or ${location_id} = '176' then 'White Glove'
       else 'Other' end ;;
   }
