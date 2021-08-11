@@ -8,6 +8,26 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+## PERFECT ATTENDANCE cj
+
+explore: perfect_attendance_calc {
+
+  view_label: "Agent Attendance"
+  view_name: cc_agent_attendance
+  hidden: yes
+  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+
+  join: agent_data {
+    view_label: "Agent Attendance"
+    from: agent_data
+    type: inner
+    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
+  }
+}
+
+#####################################################################
+#####################################################################
 ## AGENT ATTENDANCE cj
 
 explore:agent_attendance {
