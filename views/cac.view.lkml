@@ -42,12 +42,20 @@ view: cac {
         , count(*) new_customers
         , sum(LTV) LTV
       from (
-        select trandate date
-          , row_number() over (partition by customer_id order by created) purch_num
-          , sum(gross_amt) over (partition by customer_id) LTV
-        from sales.sales_order
-        where channel_id = 1
-      )
+        select so.trandate date
+          , rank() over (partition by so.customer_id order by so.created) purch_num
+          , sum(distinct so.gross_amt) over (partition by so.customer_id) LTV
+        from sales.sales_order so
+        join (select so.order_id
+                    ,sum(case when i.category = 'ANCILLARY' then 1 else 0 end) non_core
+                    ,sum(case when i.category <> 'ANCILLARY' then 1 else 0 end) core
+              from sales.sales_order_line sl join sales.item i on sl.item_id = i.item_id
+              join sales.sales_order so on so.order_id = sl.order_id and so.system = sl.system
+              group by 1
+              having core > 0) c on c.order_id = so.order_id
+
+        where so.channel_id = 1
+        and so.trandate > '2018-01-01')
       where purch_num = 1
       group by 1
 

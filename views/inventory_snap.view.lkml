@@ -58,6 +58,7 @@ view: inventory_snap {
     sql: ${TABLE}.available ;;  }
 
   measure: average_cost {
+    hidden: yes
     label: "Total Average Cost"
     description: "Summing the average cost field"
     type: sum
@@ -73,7 +74,7 @@ view: inventory_snap {
     label: "Inventory Snap"
     type: time
     timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created ;; }
+    sql: to_timestamp_ntz(${TABLE}.CREATED) ;; }
 
   dimension: created_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
@@ -157,12 +158,30 @@ view: inventory_snap {
   dimension: primary_key {
     primary_key: yes
     hidden: yes
-    sql: CONCAT(${TABLE}.location_id,${TABLE}.item_id,${TABLE}.on_hand, ${TABLE}.available) ;;
+    sql: CONCAT(${TABLE}.location_id,${TABLE}.item_id,${created_date},${created_hour_of_day},${TABLE}.on_hand) ;;
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
+  }
+
+  dimension: standard_cost {
+    group_label: " Advanced"
+    label: "Unit Standard Cost"
+    description: "Source:Inventory snapshot table"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.standard_cost ;;
+  }
+
+  dimension: on_hand_dm {
+    hidden: yes
+    group_label: " Advanced"
+    type: number
+    value_format: "#,##0"
+    sql: ${TABLE}.on_hand ;;
   }
 
   dimension: unit_standard_cost {
     group_label: " Advanced"
+    hidden: yes
     label: "Unit Standard Cost"
     description: "Source:netsuite.item_standard_cost"
     type:  number
@@ -175,7 +194,7 @@ view: inventory_snap {
     description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
     type:  sum
     value_format: "$#,##0"
-    sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
+    sql:  ${TABLE}.on_hand * ${standard_cost} ;;
   }
 
   parameter: see_data_by_inv_snap {

@@ -146,6 +146,20 @@ view: sessions {
            when ${landing_page} ilike ('%/buy%') then 'Buy Page'
            when contains(${landing_page}, '/blog/') then 'Blog' end;; }
 
+dimension: page_product_type {
+    label: "Page Product Type"
+    type:  string
+    description: "Bucketed landing pages by PDPs. Source: looker calculation"
+    sql:  case when (${landing_page} not ilike '%protector%' and ${landing_page} not ilike '%blog%') and ${landing_page} ilike ('%mattress%') then 'Mattress'
+           when ${landing_page} ilike ('%pillow%')  then 'Pillows'
+           when ${landing_page} ilike ('%seat-cushion%') then 'Seat Cushion'
+           when ${landing_page} ilike ('%sheets%')
+           or ${landing_page} ilike '%mattress-protector%'
+           or ${landing_page} ilike '%duvet%'
+           or ${landing_page} ilike '%weighted-blanketthen' then 'Bedding'
+           when ${landing_page} ilike '%bed-frame%' or ${landing_page} ilike '%platform-bed%'then 'Bed Frame'
+           end;; }
+
   dimension: library {
     label: "Library"
     type: string
@@ -574,7 +588,7 @@ view: sessions {
           when ${utm_medium} in ('tv','linear') then 'tv'
           when ${utm_medium} in ('tve') then 'ctv'
           when (${utm_medium} IS NULL and ${referrer} IS NOT NULL and ${utm_source} is null) or ${utm_medium} in ('organic') then 'organic'
-          when ${utm_medium} IS NULL then 'direct'
+          when ${utm_medium} IS NULL AND ${utm_source} IS NULL AND ${referrer} IS NULL then 'direct'
 
           else 'other' end ;;
   }
@@ -706,10 +720,9 @@ view: sessions {
     description: "Source: looker calculation"
     type: string
     sql: case
-     when  ${utm_term} ilike '%ptrt%' or ${utm_term} ilike '%ptbr%' then 'COMBINED TARGETING'
-      when ${utm_term} ilike '%br%' then 'BRAND'
+      when ${utm_term} ilike '%br%' or ${utm_term} ilike '%ptbr%' then 'BRAND'
       when ${utm_term} ilike '%pt%' or ${utm_term} = 'pr' or ${utm_term} = 'prosp' then 'PROSPECTING'
-      when ${utm_term} ilike '%rt%' or ${utm_term} = 'remarketing' or ${utm_term} = 're' then 'RETARGETING'
+      when ${utm_term} ilike '%rt%' or ${utm_term} = 'remarketing' or ${utm_term} = 're' or ${utm_term} ilike '%ptrt%' then 'RETARGETING'
       else 'OTHER' end ;;
   }
 

@@ -29,7 +29,22 @@ view: item {
     sql: ${TABLE}.classification_new ;;
   }
 
-  dimension: classification_raw {
+  dimension: classification1 {
+    label: "Inventory type"
+    group_label: "Advanced"
+    description: "What stage is this item in production?. Source:looker.calculation"
+    hidden:  yes
+    case: {
+            when: { sql: ${classification} = 'RM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'CM' ;; label: "RAW MATERIAL"}
+            when: { sql: ${classification} = 'SA' ;; label: "WIP"}
+            when: { sql: ${classification} = 'FG' ;; label: "FINISHED GOOD"}
+            when: { sql: ${classification} = 'FS' ;; label: "FACTORY SECOND"}
+            else: "OTHER"}
+  }
+
+
+ dimension: classification_raw {
     hidden:  yes
     type: string
     sql:  ${TABLE}.classification_new ;;
@@ -56,6 +71,7 @@ view: item {
   measure: Weight {
     label: "Total Item Weight"
     hidden: yes
+    value_format: "#,##0.0"
     type: sum
     sql: ${TABLE}.WEIGHT ;;
   }
@@ -782,6 +798,18 @@ view: item {
         when ${item_id} in ('9824') then '5750'
         when ${item_id} in ('10391') then '5947'
         when ${item_id} in ('11511') then '11508'
+        when ${item_id} in ('14598') then '5949'
+        when ${item_id} in ('14599') then '5950'
+        when ${item_id} in ('14600') then '5951'
+        when ${item_id} in ('14601') then '5953'
+        when ${item_id} in ('14602') then '5952'
+        when ${item_id} in ('14603') then '5954'
+        when ${item_id} in ('14604') then '6000'
+        when ${item_id} in ('14605') then '6001'
+        when ${item_id} in ('14606') then '6002'
+        when ${item_id} in ('14607') then '6003'
+        when ${item_id} in ('14608') then '6004'
+        when ${item_id} in ('14609') then '6005'
         --BEDDING
         when ${item_id} in ('9783') then '7580'
         when ${item_id} in ('9800') then '5923'
@@ -863,6 +891,18 @@ view: item {
         when ${sku_clean} in ('10-38-12955') then '10-38-12952'
         when ${sku_clean} in ('10-38-52894') then '10-38-52846'
         when ${sku_clean} in ('10-38-12959') then '10-38-12956'
+        when ${sku_clean} in ('10-38-45896') then '10-38-45862'
+        when ${sku_clean} in ('10-38-45897') then '10-38-45863'
+        when ${sku_clean} in ('10-38-45898') then '10-38-45864'
+        when ${sku_clean} in ('10-38-45899') then '10-38-45865'
+        when ${sku_clean} in ('10-38-45900') then '10-38-45866'
+        when ${sku_clean} in ('10-38-45901') then '10-38-45867'
+        when ${sku_clean} in ('10-38-45902') then '10-38-45868'
+        when ${sku_clean} in ('10-38-45903') then '10-38-45869'
+        when ${sku_clean} in ('10-38-45904') then '10-38-45870'
+        when ${sku_clean} in ('10-38-45905') then '10-38-45871'
+        when ${sku_clean} in ('10-38-45906') then '10-38-45872'
+        when ${sku_clean} in ('10-38-45907') then '10-38-45873'
         --BEDDING
         when ${sku_clean} in ('10-31-72855') then '10-31-12855'
         when ${sku_clean} in ('10-38-13918') then '10-38-13924'
@@ -950,7 +990,7 @@ view: item {
   dimension: Classification_Groups{
     label: "Classification (buckets)"
     group_label: "Advanced"
-    description: "Designates the item type (Finished Good, Factory Second, FG Component, Production Component, Semi Finished Goods, Raw Materials, Discounts, Other).
+    description: "Designates the item type (Finished Good, Factory Second, Purchased Component, Semi Finished Goods, Raw Materials, Kit, Other).
       Source: looker calculation"
     type: string
     #sql: ${TABLE}.classification ;;
@@ -958,11 +998,9 @@ view: item {
       when: { sql: ${classification} = 'FG' ;; label: "Finished Good" }
       when: { sql: ${classification} = 'FS' ;;label: "Factory Second" }
       when: { sql: ${classification} = 'CM' ;;label: "Purchased Component" }
-      when: { sql: ${classification} = 'FGC' ;; label: "Finished Goods Component" }
-      when: { sql: ${classification} = 'DSC' ;; label: "Discounts" }
-      when: { sql: ${classification} = 'SFG' ;; label: "Semi Finished Goods" }
-      when: { sql: ${classification} = 'RAW' ;; label: "Raw Materials" }
-      when: { sql: ${classification} = 'PRC' ;; label: "Production Components" }
+      when: { sql: ${classification} = 'SA' ;; label: "Semi Finished Goods" }
+      when: { sql: ${classification} = 'RM' ;; label: "Raw Materials" }
+      when: { sql: ${classification} = 'KIT' ;; label: "Kit" }
       else: "Other" } }
 
   dimension: Product_Dimensions {

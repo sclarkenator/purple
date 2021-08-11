@@ -45,7 +45,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: comment {
-    hidden: yes
+    hidden: no
     description: "Source: l2l.pitch"
     type: string
     sql: ${TABLE}."COMMENT" ;;
@@ -62,7 +62,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: createdby {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."CREATEDBY" ;;
   }
@@ -126,7 +126,7 @@ where z.row_num = 1 and delete_ts is null;;
   dimension_group: pitch_start {
     description: "Pitch is an Hour increment, a new Pitch starts every Hour; Source: l2l.pitch"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day,hour, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."PITCH_START" ;;
@@ -235,6 +235,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."ACTUAL" ;;
   }
 
@@ -243,6 +244,22 @@ where z.row_num = 1 and delete_ts is null;;
     description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
+  }
+
+  measure: first_pass_yield{
+    label: "FPY"
+    description: "Total # of good parts produced divided by total number of shots"
+    type: number
+    value_format: "0.0%"
+    sql: div0(${actual},${actual}+${scrap}) ;;
+  }
+
+  measure: throughput_percent{
+    label: "Throughput %"
+    description: "Actual good parts produced divided by pitch demand"
+    type: number
+    value_format: "0.0%"
+    sql: div0(${actual},${demand}) ;;
   }
 
   measure: planned_production_minutes {
@@ -273,6 +290,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: demand {
     description: "Total amount of Demanded Product to be Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."DEMAND" ;;
   }
 

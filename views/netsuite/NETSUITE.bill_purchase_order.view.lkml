@@ -37,6 +37,7 @@ view: bill_purchase_order {
             b.status,
             p.name as accounting_period,
             e.full_name as VENDOR,
+            vcl.list_item_name as VENDOR_CLASSIFICATION,
             b.vendor_email,
             b.billaddress,
             l.amount,
@@ -50,6 +51,7 @@ view: bill_purchase_order {
             left join analytics.finance.bill_line l on b.bill_id = l.bill_id
             left join analytics_stage.ns.accounts a on l.account_id = a.account_id
             left join analytics_stage.ns.entity e on b.entity_id = e.entity_id
+            left join analytics_stage.ns.vendor_classification_list vcl on e.vendor_classification_id = vcl.list_id
             left join analytics.finance.accounting_period p on b.accounting_period_id = p.accounting_period_id
             left join analytics_stage.ns.classes c on l.class_id = c.class_id
             left join analytics.production.purchase_order o on b.purchase_order_id = o.purchase_order_id
@@ -59,6 +61,7 @@ view: bill_purchase_order {
             a.purchase_order_id,
             a.tranid,
             a.vendor,
+            a.vendor_classification,
             a.status,
             min(a.created) as created,
             max(a.due) as due,
@@ -71,6 +74,7 @@ view: bill_purchase_order {
             a.purchase_order_id,
             a.tranid,
             a.vendor,
+            a.vendor_classification,
             a.status
       )
       select * from t1  ;; }
@@ -96,6 +100,11 @@ view: bill_purchase_order {
     type:  string
     sql:${TABLE}.vendor ;; }
 
+  dimension: vendor_classification {
+    label: "Vendor Classification"
+    type:  string
+    sql:${TABLE}.vendor_classification ;; }
+
   dimension: status {
     label: "Status"
      type:  string
@@ -112,6 +121,10 @@ view: bill_purchase_order {
     description: "First created date of any item"
     type:  date
     sql:${TABLE}.created ;; }
+
+  measure: first_created {
+    type:  date
+    sql: min(${TABLE}.created);; }
 
   dimension: due {
     label: "Due"

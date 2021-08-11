@@ -6,52 +6,93 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+#####################################################################
+#####################################################################
+## PERFECT ATTENDANCE cj
+
+explore: perfect_attendance_calc {
+
+  view_label: "Agent Attendance"
+  view_name: cc_agent_attendance
+  hidden: yes
+  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+
+  join: agent_data {
+    view_label: "Agent Attendance"
+    from: agent_data
+    type: inner
+    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
+  }
+}
 
 #####################################################################
 #####################################################################
-# Agent Attendance Detail
+## AGENT ATTENDANCE cj
 
-explore: agent_attendance_detail {
+explore:agent_attendance {
 
-  # *** Need accurate attendance points data set ***
-  # *** Need accurate punch data set ***
-
-  label: "Agent Attendance Detail"
-  view_label: "Agent Data"
-  description: "Tracks Agent time punches, states, and attendance points."
-  view_name: agent_lkp
+  view_label: "Attendance Data"
+  view_name: cc_agent_attendance
   hidden: yes
 
-  join: agent_state {
-    view_label: "Agent States"
-    type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${agent_state.agent_id} ;;
+  join: agent_data {
+    view_label: "Agent Data"
+    from: agent_data
+    type: left_outer
+    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
+  }
+
+  join: agent_current_warning_level {
+    view_label: "Attendance Data"
+    fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
+    type: left_outer
+    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id}
+    and ${agent_data.incontact_id} is not null
+      and ${agent_data.incontact_id} <> '2612383' ;;
+    relationship: one_to_one
+  }
+
+  join: agent_team_history {
+    view_label: "Agent Data"
+    # from: agent_team_history
+    type: left_outer
+    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+      and ${cc_agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: many_to_one
   }
 }
 
 #####################################################################
 #####################################################################
-# InContact Phone
+# AGENT STATE cj
 
-explore: incontact_phone {
-  label: "InContact Phone"
-  view_label: "Agent Data"
-  description: "Tracks phone related contact data."
-  view_name: agent_lkp
+explore: agent_state {
+  view_label: "Agent States"
   hidden: yes
 
-  join: incontact_phone {
-    view_label: "Phone Calls"
-    type: full_outer
-    sql_on: ${agent_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id} ;;
+    # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
+    relationship: many_to_one
+  }
+
+  join: agent_team_history {
+    view_label: "Agent Data"
+    # from: agent_team_history
+    type: left_outer
+    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+      and ${agent_state.state_start_ts_mst_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: many_to_one
   }
 }
 
 #####################################################################
 #####################################################################
-## CC_KPIs explore
+## CC_KPIs cj
 
 explore: CC_KPIs {
 
@@ -74,6 +115,96 @@ explore: CC_KPIs {
     relationship: many_to_one
   }
 }
+
+#####################################################################
+#####################################################################
+## CONTACT HISTORY cj
+
+explore: contact_history {
+  view_label: "Contact History"
+  hidden:yes
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
+    relationship: many_to_one
+  }
+
+  # join: agent_team_history {
+  #   view_label: "Agent Data"
+  #   # from: agent_team_history
+  #   type: left_outer
+  #   sql_on:  ${contact_history.agent_id}.incontact_id} = ${agent_team_history.incontact_id}
+  #     and ${contact_history.start_ts_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+  #   relationship: many_to_one
+  # }
+}
+
+#####################################################################
+#####################################################################
+## HEADCOUNT V2 cj
+
+explore: cc_headcount_v2 {
+  from: cc_headcount_bydate
+  hidden: yes
+  group_label: "Customer Care"
+  view_label: "Agent Info"
+  join: team_lead_name {
+    view_label: "Team Lead"
+    fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
+    type: left_outer
+    sql_on: ${team_lead_name.incontact_id} = ${cc_headcount_v2.incontact_id}
+        and ${cc_headcount_v2.by_date} between cast(${team_lead_name.start_date} as date) and cast(${team_lead_name.end_date} as date)  ;;
+    relationship: many_to_one
+  }
+  join: agent_data {
+    view_label: "Team Lead"
+    type: left_outer
+    sql_on: ${team_lead_name.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+# INCONTACT PHONE cj
+
+explore: incontact_phone {
+  label: "InContact Phone"
+  view_label: "Agent Data"
+  description: "Tracks phone related contact data."
+  view_name: agent_data
+  hidden: yes
+
+  join: incontact_phone {
+    view_label: "Phone Calls"
+    type: full_outer
+    sql_on: ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+## REFUSALS cj
+
+explore: contact_refusals {
+  view_label: "InContact Call Refusals"
+  hidden: yes
+  view_name: contact_history
+  sql_always_where: ${contact_history.contact_state_name} = 'Refused' ;;
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
+    relationship: many_to_one
+  }
+}
+
+
+
 
   explore: customer_satisfaction_survey {
     label: "Agent CSAT"
@@ -466,13 +597,15 @@ explore: CC_KPIs {
     }
   }
 
+  explore: agent_data {hidden: yes} #cj
+  explore: agent_current_warning_level {hidden: yes} #cj
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}
   explore: v_retail_orders_without_showroom {hidden:yes}
-  explore:  bridge_by_agent {}
+  #explore:  bridge_by_agent {}
   explore: agent_company_value {  hidden: yes  label: "Agent Company Value"  group_label: "Customer Care"}
   explore: agent_evaluation {  hidden: yes  label: "Agent Evaluation"  group_label: "Customer Care"}
-  explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
+  # explore: agent_attendance {  hidden: yes  label: "Agent Attendance"  group_label: "Customer Care"}
   explore: v_agent_state  { hidden:  yes  label: "Agent Time States"  group_label: "Customer Care"}
   explore: zendesk_sell_contact {hidden:yes group_label: "Customer Care"}
   explore: zendesk_sell_deal {hidden:yes group_label: "Customer Care"}
@@ -484,3 +617,4 @@ explore: CC_KPIs {
   explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
   explore: v_zendesk_articles {hidden: yes}
   explore: v_invalid_rma {hidden: yes group_label:"Customer Care" description: "Invalid RMA Finder for Emily Heise"}
+  explore: zendesk_ticket_v2 {hidden: yes  group_label:"Customer Care"  description: "Zendesk ticket data. Explore created June2021"}

@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  yes
+    hidden:  no
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"
@@ -472,7 +472,7 @@ include: "/dashboards/**/*.dashboard"
   explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
-
+  explore: vendor {hidden:yes}
   explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
   explore: l2_l_checklists {hidden: yes group_label: "L2L"}
   explore: l2l_qpc_mattress_audit {hidden: yes group_label: "L2L"}

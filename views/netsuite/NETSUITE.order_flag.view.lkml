@@ -177,7 +177,7 @@ view: order_flag {
         ,sum(CASE WHEN model = 'PLUSH'  then 1 else 0 end) plush
         ,sum(CASE WHEN version = 'PURPLE PILLOW' then 1 else 0 end) purple_pillow
         ,sum(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) gravity_mask
-        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%split king%' THEN 1 ELSE 0 END) split_king
+        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%SPLIT%' THEN 1 ELSE 0 END) split_king
         ,sum(case when model = 'WEIGHTED BLANKET' then 1 else 0 end) gravity_blanket
         ,sum(case when model = 'DUVET' then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
@@ -233,7 +233,7 @@ view: order_flag {
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Twin','Twin XL') THEN 1 ELSE 0 END) small_mattress
          ,SUM(CASE WHEN category = 'MATTRESS' and item.size in ('Cal King','SPLIT KING','King','Queen','Full') THEN 1 ELSE 0 END) large_mattress
      --    ,sum(case when (line = 'PILLOW' and sol.ORDERED_QTY>=2) THEN 1 ELSE 0 END) anytwopillows
-         ,sum(case when (category = 'PILLOW' and sol.ORDERED_QTY=1) THEN 1 ELSE 0 END) anyonepillow
+         ,sum(case when (category = 'PILLOW' and sol.ORDERED_QTY>=1) THEN 1 ELSE 0 END) anyonepillow
 
         -- Hybrid Mattresses and Purple Mattress
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID 2' THEN 1 ELSE 0 END) hybrid2
@@ -961,6 +961,17 @@ view: order_flag {
     sql:  ${TABLE}.lite_cushion_flg =1 ;; }
 
 # Bundle flags and measures
+  dimension: is_bundle{
+    group_label: "eComm Bundle Flags"
+    label: "   Is Bundle"
+    description: "Yes if item was in order with one of the listed ecomm bundles. Source: looker.calculation"
+    type:  yesno
+    sql: (${TABLE}.bundle1_flg + ${TABLE}.bundle2_flg + ${TABLE}.bundle3_flg + ${TABLE}.bundle4_flg + ${TABLE}.bundle5_flg
+    + ${TABLE}.bundle6_flg + ${TABLE}.bundle7_flg + ${TABLE}.bundle8_flg  + ${TABLE}.bundle9_flg + ${TABLE}.bundle10_flg
+    + ${TABLE}.bundle11_flg + ${TABLE}.bundle12_flg + ${TABLE}.bundle13_flg + ${TABLE}.bundle14_flg + ${TABLE}.bundle15_flg
+    + ${TABLE}.bundle16_flg + ${TABLE}.bundle17_flg + ${TABLE}.bundle18_flg + ${TABLE}.bundle19_flg + ${TABLE}.portcushtwobund_flg) > 0 ;; }
+
+
   dimension: bundle1_flag {
     group_label: "eComm Bundle Flags"
     label: " Bundle 1"

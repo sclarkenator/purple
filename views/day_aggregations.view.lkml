@@ -14,8 +14,8 @@ view: day_aggregations_dtc_sales {
       column: insidesales_orders {}
       column: new_customer { field: first_order_flag.new_customer }
       filters: { field: sales_order.channel value: "DTC" }
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
       filters: { field: item.product_description value: "-SQUISHY 2.0" }
@@ -50,8 +50,8 @@ view: day_aggregation_dtc_orders {
       column: created_date {}
       column: mattress_orders { field: order_flag.mattress_orders }
       filters: { field: sales_order.channel value: "DTC" }
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       filters: { field: item.product_description value: "-SQUISHY 2.0,-PURPLE SQUISHY MAILER SAMPLE" }
     }
@@ -73,8 +73,8 @@ view: day_aggregations_wholesale_sales {
       column: mattress_units {}
 
       filters: { field: sales_order.channel value: "Wholesale"}
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       #filters: { field: sales_order_line.created_date value: "2 years" }
     }
@@ -139,8 +139,8 @@ view: day_aggregations_retail_sales {
       column: total_gross_Amt_non_rounded {}
       column: total_units {}
       filters: { field: sales_order.channel value: "Owned Retail"}
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes, No" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes, No" }
       #filters: { field: item.modified value: "Yes" }
       #filters: { field: sales_order_line.created_date value: "2 years" }
     }
@@ -188,6 +188,8 @@ view: day_aggregations_adspend {
     explore_source: daily_adspend {
       column: ad_date {}
       column: adspend {}
+      column: impressions {}
+      column: clicks {}
       column: amount { field: adspend_target.amount }
     }
   }
@@ -198,6 +200,8 @@ view: day_aggregations_adspend {
     #NOT STRICTLY UNIQUE, COULD BE DUPLICATES
   #}
   measure: adspend { type: sum }
+  measure: impressions { type: sum }
+  measure: clicks { type: sum }
   measure: amount {type: sum}
 }
 
@@ -238,8 +242,8 @@ view: day_aggregations_dtc_returns {
       column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
       column: return_completed_date { field: return_order.return_completed_date }
       filters: { field: sales_order.channel value: "DTC" }
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       filters: { field: return_order.return_completed_date value: "2 years" }
     }
@@ -265,8 +269,8 @@ view: day_aggregations_wholesale_returns {
       column: total_non_trial_returns_completed_dollars { field: return_order_line.total_non_trial_returns_completed_dollars }
       column: return_completed_date { field: return_order.return_completed_date }
       filters: { field: sales_order.channel value: "Wholesale" }
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       filters: { field: return_order.return_completed_date value: "2 years" }
     }
@@ -291,8 +295,8 @@ view: day_aggregations_dtc_cancels {
       column: amt_cancelled_and_refunded { field: cancelled_order.amt_cancelled_and_refunded }
       column: cancelled_date { field: cancelled_order.cancelled_date }
       filters: { field: sales_order.channel value: "DTC" }
-      filters: { field: item.merchandise value: "No" }
-      filters: { field: item.finished_good_flg value: "Yes" }
+      #filters: { field: item.merchandise value: "No" }
+      #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
       filters: { field: cancelled_order.cancelled_date value: "2 years" }
     }
@@ -501,6 +505,8 @@ view: day_aggregations {
         , forecast.retail_amount as forecast_retail_amount
         , forecast.retail_units as forecast_retail_units
         , adspend.adspend
+        , adspend.impressions
+        , adspend.clicks
         , adspend.amount as adspend_adspend_target
         , targets.dtc_target as target_dtc_amount
         , targets.whlsl_target as target_wholesale_amount
@@ -934,6 +940,20 @@ view: day_aggregations {
     value_format: "$#,##0"
     sql: ${TABLE}.adspend;; }
 
+  measure: impressions {
+    label: "Impressions"
+    group_label: "Adspend"
+    description: "Impressions"
+    type: sum
+    sql: ${TABLE}.impressions;; }
+
+  measure: clicks {
+    label: "Clicks"
+    group_label: "Adspend"
+    description: "Clicks"
+    type: sum
+    sql: ${TABLE}.clicks;; }
+
   measure: adspend_k {
     label: "Adspend ($K)"
     group_label: "Adspend"
@@ -1017,6 +1037,30 @@ view: day_aggregations {
     type: sum
     value_format: "$#,##0,\" K\""
     sql: ${TABLE}.adspend_adspend_target;; }
+
+  measure: cpm {
+    label: "CPM"
+    group_label: "Adspend"
+    description: "Adspend / Total impressions/1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF((${impressions}/1000),0) ;;  }
+
+  measure: cpc {
+    label: "CPC"
+    group_label: "Adspend"
+    description: "Adspend / Total Clicks"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${adspend}/NULLIF(${clicks},0) ;;  }
+
+  measure: ctr {
+    label: "CTR"
+    group_label: "Adspend"
+    description: " (Total Clicks / Total Impressions) *100"
+    type: number
+    value_format: "00.00%"
+    sql: (${clicks}/NULLIF(${impressions},0));;  }
 
   measure: total_unique_orders {
     label: "DTC Orders"
