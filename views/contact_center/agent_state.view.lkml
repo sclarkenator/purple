@@ -169,10 +169,10 @@ view: agent_state {
     group_label: "Other Measures"
     description: "(Total Login Time - Break - Lunch - Personal) / Total Login Time"
     type: number
-    value_format_name: decimal_2
-    sql: ((sum(${TABLE}.duration)
-      - sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
-      /sum(${TABLE}.duration))/60 ;;
+    value_format_name: percent_2
+    sql: (sum(${TABLE}."STATE_DURATION") - (case when (sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      ) is Null then '0' else ( sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      ) end ))/sum(${TABLE}."STATE_DURATION") ;;
   }
 
   #####################################################################
@@ -277,7 +277,8 @@ view: agent_state {
     description: "Total Login Minutes - Break - Lunch - Personal"
     type: number
     value_format_name: decimal_2
-    sql: (sum(${TABLE}."STATE_DURATION") - sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
-      )/60 ;;
+    sql: (sum(${TABLE}."STATE_DURATION") - (case when (sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      ) is Null then '0' else ( sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      ) end ))/60 ;;
   }
 }
