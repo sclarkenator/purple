@@ -5,7 +5,7 @@ view: agent_state {
   dimension: PK {
     label: "ID"
     description: "Primary key ID. [login_session_id] & 3 digit version of [Session State Index]"
-    group_label: "IDs"
+    group_label: "* IDs"
     primary_key: yes
     # hidden: yes
     # sql: login_session_id || '-' || session_state_index  ;;
@@ -44,7 +44,7 @@ view: agent_state {
 
   dimension: agent_id {
     label: "Agent ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Agent ID is based on InContact ID."
     type: number
     value_format_name: id
@@ -54,7 +54,7 @@ view: agent_state {
 
   dimension: login_session_id {
     label: "Login Session ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "The session ID created when the agent logs in, and ends when they log out.  There may be multiple sessions for the same agent in the same workday. "
     type: number
     value_format_name: id
@@ -64,7 +64,7 @@ view: agent_state {
 
   dimension: state_id {
     label: "State ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Numeric identifier for the Agent State."
     type: number
     value_format_name: id
@@ -74,7 +74,7 @@ view: agent_state {
 
   dimension: unavailable_code_id {
     label: "Unavailable Code ID"
-    group_label: "IDs"
+    group_label: "* IDs"
     description: "Unavailable State reason code."
     type: number
     value_format_name: id
@@ -87,7 +87,7 @@ view: agent_state {
   ## DATE DIMENSION GROUPS
 
   dimension_group: insert_ts {
-    label: "Insert ts"
+    label: "* Insert"
     description: "Date record was originally inserted."
     type: time
     hidden: yes
@@ -104,9 +104,9 @@ view: agent_state {
   }
 
   dimension_group: state_start_ts_utc {
-    label: "State Start ts UTC"
+    label: "* State Begin UTC"
     description: "Date/time agent state began in UTC."
-    # hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -121,7 +121,7 @@ view: agent_state {
   }
 
   dimension_group: state_start_ts_mst {
-    label: "State Start ts"
+    label: "* State Begin"
     description: "Date/time agent state began in Mountain Time."
     type: time
     timeframes: [
@@ -137,7 +137,7 @@ view: agent_state {
   }
 
   dimension_group: update_ts {
-    label: "Update ts"
+    label: "* Update"
     description: "Date record was last updated."
     type: time
     hidden: yes
@@ -155,13 +155,24 @@ view: agent_state {
 
   #####################################################################
   #####################################################################
-  ## COUNT MEASURES
+  ## OTHER MEASURES
 
   measure: count {
     type: count
-    group_label: "Count Measures"
+    group_label: "Other Measures"
     # hidden: yes
     drill_fields: [state_name, unavailable_code_name]
+  }
+
+  measure: working_rate {
+    label: "Working Rate"
+    group_label: "Other Measures"
+    description: "(Total Phone Time - Break - Lunch - Personal) / Total Phone Time"
+    type: number
+    value_format_name: decimal_2
+    sql: ((sum(${TABLE}.duration)
+      - sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      /sum(${TABLE}.duration))/60 ;;
   }
 
   #####################################################################
@@ -189,6 +200,33 @@ view: agent_state {
     sql: sum(
       case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"
         end) ;;
+  }
+
+  measure: break_sum_min {
+    label: "Break Time"
+    group_label: "Sum Measures"
+    description: "Duration in minutes agent was in a Break state."
+    type: number
+    value_format_name: decimal_2
+    sql: sum(case when ${TABLE}.unavailable_code_name = 'Break' then ${TABLE}."STATE_DURATION" end)/60 ;;
+  }
+
+  measure: lunch_sum_min {
+    label: "Lunch Time"
+    group_label: "Sum Measures"
+    description: "Duration in minutes agent was in a Lunch state."
+    type: number
+    value_format_name: decimal_2
+    sql: sum(case when ${TABLE}.unavailable_code_name = 'Lunch' then ${TABLE}."STATE_DURATION" end)/60 ;;
+  }
+
+  measure: personal_sum_min {
+    label: "Personal Time"
+    group_label: "Sum Measures"
+    description: "Duration in minutes agent was in a Personal state."
+    type: number
+    value_format_name: decimal_2
+    sql: sum(case when ${TABLE}.unavailable_code_name = 'Personal' then ${TABLE}."STATE_DURATION" end)/60 ;;
   }
 
   measure: state_duration_sum_sec {

@@ -12,7 +12,8 @@ view: contact_history {
 
   dimension: digital_contact_state_name {
     label: "Digital Contact State Name"
-    sql: ${TABLE}."DIGITAL_CONTACT_STATE_NAME" ;;
+    hidden: yes
+    sql: nullif(${TABLE}."DIGITAL_CONTACT_STATE_NAME", '') ;;
   }
 
   dimension: duration {
@@ -44,11 +45,12 @@ view: contact_history {
   ## TIME STATE DIMENSIONS
 
   dimension_group: insert_ts {
+    label: "* Insert"
+    description: "Date record was inserted."
     hidden: yes
     type: time
     timeframes: [
       raw,
-      time,
       date,
       week,
       month,
@@ -59,6 +61,8 @@ view: contact_history {
   }
 
   dimension_group: start_ts {
+    label: "* Contact Begin UTC"
+    description: "Date contact began in UTC time."
     hidden: yes
     type: time
     timeframes: [
@@ -74,7 +78,8 @@ view: contact_history {
   }
 
   dimension_group: start_ts_mst {
-    label: "Start"
+    label: "* Contact Begin"
+    description: "Date contact began."
     type: time
     timeframes: [
       raw,
@@ -87,7 +92,6 @@ view: contact_history {
     ]
     sql: CAST(${TABLE}."START_TS_MST" AS TIMESTAMP_NTZ) ;;
   }
-
 
   ##########################################################################################
   ##########################################################################################
@@ -137,8 +141,20 @@ view: contact_history {
     sql: ${TABLE}."SKILLID" ;;
   }
 
+  ##########################################################################################
+  ##########################################################################################
+  ## MEASURES
+
   measure: count {
     type: count
     drill_fields: [digital_contact_state_name, contact_state_name, skill_name]
+  }
+
+  measure:refused_count {
+    label: "Refused Count"
+    description: "Count of contact refusals"
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${contact_state_name} = 'Refused' then 1 end ;;
   }
 }
