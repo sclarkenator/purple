@@ -167,7 +167,7 @@ view: agent_state {
   measure: working_rate {
     label: "Working Rate"
     group_label: "Other Measures"
-    description: "(Total Phone Time - Break - Lunch - Personal) / Total Phone Time"
+    description: "(Total Login Time - Break - Lunch - Personal) / Total Login Time"
     type: number
     value_format_name: decimal_2
     sql: ((sum(${TABLE}.duration)
@@ -269,5 +269,15 @@ view: agent_state {
       case when ${TABLE}.state_name = 'Unavailable' then ${TABLE}."STATE_DURATION"
         when ${TABLE}.state_name = 'OutboundPending' then ${TABLE}."STATE_DURATION"
         end) ;;
+  }
+
+  measure: working_time_sum_min {
+    label: "Working Time"
+    group_label: "Sum Measures"
+    description: "Total Login Minutes - Break - Lunch - Personal"
+    type: number
+    value_format_name: decimal_2
+    sql: (sum(${TABLE}."STATE_DURATION") - sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
+      )/60 ;;
   }
 }
