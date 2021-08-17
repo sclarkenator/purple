@@ -87,6 +87,14 @@ view: v_quality_mrb_return_bed_qc {
     sql: ${TABLE}."NAME" ;;
   }
 
+  dimension: site {
+    type: string
+    sql: CASE WHEN ${TABLE}.site = '2' THEN 'Grantsville'
+              WHEN ${TABLE}.site = '3' THEN 'Alpine'
+              WHEN ${TABLE}.site = '4' THEN 'McDonough'
+              ELSE ${TABLE}.site END;;
+  }
+
   dimension: number {
     type: string
     sql: ${TABLE}."NUMBER" ;;
