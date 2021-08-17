@@ -38,6 +38,7 @@ view: order_flag {
       , mattress_ordered
       , mattress_sales
       , gross_sales
+      , total_units
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
       ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
       ,case when pillow_booster > 0 then 1 else 0 end pillow_booster_flg
@@ -153,6 +154,7 @@ view: order_flag {
     FROM(
       select sol.order_id
         ,sum(sol.gross_amt) GROSS_SALES
+        ,sum(sol.ordered_qty) total_units
         ,sum(case when category = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
         ,sum(case when line = 'HYBRID' THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
@@ -285,6 +287,11 @@ view: order_flag {
   dimension: mattress_sales {
     hidden: yes
     sql: ${TABLE}.mattress_sales  ;;
+  }
+
+  dimension: order_total_units {
+    hidden: yes
+    sql: ${TABLE}.total_units ;;
   }
 
   measure: mattress_orders_non_zero_amt {
