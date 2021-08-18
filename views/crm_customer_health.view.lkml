@@ -9,6 +9,7 @@ view: crm_customer_health {
 
   dimension: email_join {
     type: string
+  #  primary_key: yes
     hidden: yes
     sql: lower(${TABLE}."EMAIL") ;;
   }
@@ -97,10 +98,76 @@ view: crm_customer_health {
     sql: ${TABLE}."ORDER_VALUE" ;;
   }
 
+}
+
+
+view: crm_customer_health_lifetime {
+  derived_table: {
+    sql: select distinct lower(email) as email_join
+        , sum(mattress_units) as LIFETIME_MATTRESS
+        , sum(pillow_units) AS LIFETIME_PILLOW
+        , count(distinct order_id) as LIFETIME_ORDERS
+        , sum (order_value) AS LIFETIME_ORDER_VALUE
+      from datagrid.looker_scratch.lz_datagrid_sales_order s
+      where sub_channel = 'Website'
+      group by 1;;
+  }
+
+  dimension: email_join {
+    type: string
+    primary_key: yes
+    hidden: yes
+    label: "Email"
+    sql: lower(${TABLE}."EMAIL_JOIN");;
+  }
+
+  dimension: lifetime_mattress {
+    type: number
+    label: "Lifetime Mattress Purchases"
+    sql: ${TABLE}."LIFETIME_MATTRESS" ;;
+  }
+
+  dimension: lifetime_pillow {
+    type: number
+    label: "Lifetime Pillow Purchases"
+    sql: ${TABLE}."LIFETIME_PILLOW" ;;
+  }
+
   dimension: lifetime_orders {
     type: number
-    label: "Number of lifetime orders"
-    sql: ${TABLE}."ORDERS" ;;
+    label: "Lifetime Orders"
+    sql: ${TABLE}."LIFETIME_ORDERS" ;;
+  }
+
+  dimension: lifetime_order_value {
+    type: number
+    label: "Lifetime Order Value"
+    sql: ${TABLE}."LIFETIME_ORDER_VALUE" ;;
+  }
+
+  measure: lifetime_mattress_meas {
+    type: sum
+    label: "Total Lifetime Mattresses"
+    sql: ${TABLE}."LIFETIME_MATTRESS" ;;
+  }
+
+  measure: lifetime_pillow_meas {
+    type: sum
+    label: "Total Lifetime Pillows"
+    sql: ${TABLE}."LIFETIME_PILLOW" ;;
+  }
+
+  measure: lifetime_orders_meas {
+    type: sum
+    label: "Total Lifetime Orders"
+    sql: ${TABLE}."LIFETIME_ORDERS" ;;
+  }
+
+
+  measure: lifetime_order_value_meas {
+    type: sum
+    label: "Total Lifetime Order Value"
+    sql: ${TABLE}."LIFETIME_ORDER_VALUE" ;;
   }
 
 }

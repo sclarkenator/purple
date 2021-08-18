@@ -312,6 +312,26 @@ explore: email_mymove_contact {
     }
   }
 
+  explore: crm_customer_health {
+    hidden:yes
+    label: "CRM: Customer Health"
+    group_label: "Marketing"
+    view_label:"Customer Health"
+    join: crm_customer_health_lifetime {
+      view_label: "Customer Lifetime"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${crm_customer_health.email_join} =  ${crm_customer_health_lifetime.email_join} ;;
+    }
+    join: order_utm {
+      view_label: "Orders"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
+    }
+  }
+
+
   explore: v_fb_adset_freq_weekly {hidden: yes}
   explore: v_fb_all {hidden: yes}
   explore: v_fb_all_breakdown {hidden: yes}
@@ -335,7 +355,7 @@ explore: email_mymove_contact {
   explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}
   explore: target_adspend {hidden: yes group_label: "Marketing"}
   explore: promotion {hidden:yes group_label: "Marketing"}
-  explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
+#  explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}

@@ -276,7 +276,7 @@ view: zendesk_chat_engagements {
     description: "Accepted Engagements/Assigned Engagements"
     type: number
     value_format_name: percent_2
-    sql: ${accepted_count} / nullif(${engagement_count}, 0) ;;
+    sql: ${accepted_count} / nullif(${assignment_count}, 0) ;;
   }
 
   measure: rated_good_count {
