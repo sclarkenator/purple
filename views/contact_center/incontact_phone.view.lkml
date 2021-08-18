@@ -1,6 +1,6 @@
 view: incontact_phone {
 
-  sql_table_name: ANALYTICS.CUSTOMER_CARE.CONTACT ;;
+  sql_table_name: Analytics.customer_care.v_contacts_phone ;;
 
   drill_fields: [master_contact_id, contact_id]
 
