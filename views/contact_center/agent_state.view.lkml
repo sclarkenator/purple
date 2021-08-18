@@ -16,6 +16,14 @@ view: agent_state {
   #####################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: custom_state_name {
+    label: "State Name Custom"
+    description: "State Name data that reassigns some states, such as reassigning 'Zendesk Chat' states to Available from Unavailable."
+    type: string
+    sql: case when ${TABLE}.unavailable_code_name = 'Zendesk Chat' then 'Available'
+      else ${TABLE}.state_name end ;;
+  }
+
   dimension: state_name {
     label: "State Name"
     description: "Name of state agent was logged into."
@@ -162,6 +170,14 @@ view: agent_state {
     group_label: "Other Measures"
     # hidden: yes
     drill_fields: [state_name, unavailable_code_name]
+  }
+
+  measure: state_percentage {
+    label: "State Pct"
+    group_label: "Other Measures"
+    description: "Percent of time spent in a state."
+    type: percent_of_total
+    sql: ${state_duration_sum_min} ;;
   }
 
   measure: working_rate {
