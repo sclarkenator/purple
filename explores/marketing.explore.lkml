@@ -323,6 +323,12 @@ explore: email_mymove_contact {
       relationship: many_to_one
       sql_on: ${crm_customer_health.email_join} =  ${crm_customer_health_lifetime.email_join} ;;
     }
+    join: order_utm {
+      view_label: "Orders"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
+    }
   }
 
 
