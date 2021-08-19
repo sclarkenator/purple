@@ -163,6 +163,13 @@ view: incontact_phone {
     sql: ${TABLE}."TO_DNIS" ;;
     }
 
+  dimension: transfer_type {
+    label: "Transfer Type"
+    description: "If transferred, then what type of transfer was it."
+    type: string
+    sql: case when lower(skill_name) like '%xfer%' then skill_name end ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## RAW TIME DIMENSIONS
