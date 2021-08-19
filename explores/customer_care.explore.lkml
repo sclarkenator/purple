@@ -6,6 +6,26 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+
+#####################################################################
+#####################################################################
+## AGENT TEAM HISTORY cj
+explore:agent_team_history {
+  view_label: "Agent Team History"
+  group_label: "Historic Data"
+  view_name: agent_team_history
+  hidden: yes
+  fields: [agent_data.agent_name, agent_team_history.incontact_id, agent_team_history.current_team_flag, agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_name, agent_team_history.team_email]
+
+  join: agent_data {
+    view_label: "Agent Team History"
+    from: agent_data
+    type: inner
+    sql_on: ${agent_team_history.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
+  }
+  }
+
 #####################################################################
 #####################################################################
 ## PERFECT ATTENDANCE cj

@@ -9,6 +9,24 @@ view: agent_team_history {
     sql: ${TABLE}."END_DATE" ;;
   }
 
+  dimension: incontact_id {
+    label: "InContact ID"
+    description: "Agent's InContact ID"
+    group_label: "* Historic Team Data"
+    type:  number
+    value_format_name: id
+    # hidden: yes
+    sql:  ${TABLE}."INCONTACT_ID" ;;
+  }
+
+  dimension: current_team_flag {
+    label: "Current Team Flag"
+    description: "Flags whether this is the agents current/most recent team."
+    group_label: "* Historic Team Data"
+    type: yesno
+    sql: ${end_date} >= cast(getdate() as date) and ${start_date} <= cast(getdate() as date) ;;
+  }
+
   dimension: start_date {
     label: "Begin Date"
     description: "The first day that an agent was part of a team."
@@ -17,7 +35,7 @@ view: agent_team_history {
     sql:${TABLE}."START_DATE" ;;
   }
 
-  dimension: team_Name {
+  dimension: team_name {
     label: "Team Lead Name"
     description: "Name of team lead"
     group_label: "* Historic Team Data"
@@ -47,14 +65,6 @@ view: agent_team_history {
     sql: concat(${TABLE}.incontact_id, replace(${start_date}, '-', '')) ;;
   }
 
-  dimension: incontact_id {
-    label: "InContact ID"
-    description: "Agent's InContact ID"
-    group_label: "* Historic Team Data"
-    type:  number
-    hidden: yes
-    sql:  ${TABLE}."INCONTACT_ID" ;;
-  }
   dimension: team_lead_id{
     label: "Team Lead ID"
     description: "Team Lead's InContact ID"
