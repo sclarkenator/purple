@@ -68,11 +68,12 @@ view: item {
     sql: ${TABLE}.type ;;
   }
 
-  measure: Weight {
-    label: "Total Item Weight"
-    hidden: yes
-    value_format: "#,##0.0"
-    type: sum
+##changed to a dimension because of aggregation issues when trying to sum as a measure.
+  dimension: Weight {
+    label: "Unit Weight"
+    hidden: no
+    value_format: "#,##0"
+    type: number
     sql: ${TABLE}.WEIGHT ;;
   }
 
