@@ -1055,4 +1055,28 @@ view: item {
     sql: ${TABLE}."LIFECYCLE_STATUS" ;;
   }
 
+  dimension: wms_classification {
+    label: "WMS Classification"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.wms_classification ;;
+  }
+
+  dimension: height {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.height ;;
+  }
+
+  dimension: length {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.length ;;
+  }
+
+  dimension: width {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.width ;;
+  }
 }
