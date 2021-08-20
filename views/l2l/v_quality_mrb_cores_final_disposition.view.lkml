@@ -113,11 +113,6 @@ view: v_quality_mrb_cores_final_disposition {
          ELSE COALESCE (${TABLE}."QUANTITY", 0) END ;;
   }
 
-  dimension: quantity2 {
-    type: string
-    sql: ${TABLE}."QUANTITY" ;;
-  }
-
   dimension: size {
     type: string
     sql: ${TABLE}."SIZE" ;;

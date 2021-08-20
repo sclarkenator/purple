@@ -1378,6 +1378,13 @@ view: order_flag {
     type:  yesno
     sql: ${TABLE}.purple_mattres_flg = 1 ;; }
 
+  measure: purple_plus_orders {
+    group_label: "Total Orders with:"
+    label: "a Purple Plus"
+    description: "Count of Orders with a The Purple Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.purple_plus_flg ;; }
+
   measure: purple_mattress_orders {
     group_label: "Total Orders with:"
     label: "a Purple Mattress"

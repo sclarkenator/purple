@@ -425,6 +425,7 @@ view: item {
     case: {
       when: {sql: ${TABLE}.model = 'KID BED';; label: "1"}
       when: {sql: ${TABLE}.model = 'PURPLE MATTRESS';; label: "2"}
+      when: {sql: ${TABLE}.model = 'PURPLE PLUS US';; label: "2.1"}
       when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "3"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "4"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "5"}
@@ -1054,4 +1055,28 @@ view: item {
     sql: ${TABLE}."LIFECYCLE_STATUS" ;;
   }
 
+  dimension: wms_classification {
+    label: "WMS Classification"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.wms_classification ;;
+  }
+
+  dimension: height {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.height ;;
+  }
+
+  dimension: length {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.length ;;
+  }
+
+  dimension: width {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.width ;;
+  }
 }
