@@ -28,26 +28,6 @@ explore:agent_team_history {
 
 #####################################################################
 #####################################################################
-## PERFECT ATTENDANCE cj
-
-explore: perfect_attendance_calc {
-
-  view_label: "Agent Attendance"
-  view_name: cc_agent_attendance
-  hidden: yes
-  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
-
-  join: agent_data {
-    view_label: "Agent Attendance"
-    from: agent_data
-    type: inner
-    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
-    relationship: one_to_many
-  }
-}
-
-#####################################################################
-#####################################################################
 ## AGENT ATTENDANCE cj
 
 explore:agent_attendance {
@@ -112,6 +92,32 @@ explore: agent_state {
 
 #####################################################################
 #####################################################################
+# HEADCOUNT V2 cj
+
+explore: headcount_v2 {
+  view_label: "Agent Data"
+  view_name: headcount
+  hidden: yes
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${headcount.incontact_id} = ${agent_data.incontact_id} ;;
+    # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
+    relationship: many_to_one
+  }
+
+  join: agent_team_history {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+      and ${headcount.date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
 ## CC_KPIs cj
 
 explore: CC_KPIs {
@@ -161,27 +167,21 @@ explore: contact_history {
   # }
 }
 
-#####################################################################
-#####################################################################
-## HEADCOUNT V2 cj
 
-explore: cc_headcount_v2 {
-  from: cc_headcount_bydate
+#####################################################################
+#####################################################################
+## CONTACT REFUSALS cj
+
+explore: contact_refusals {
+  view_label: "InContact Call Refusals"
   hidden: yes
-  group_label: "Customer Care"
-  view_label: "Agent Info"
-  join: team_lead_name {
-    view_label: "Team Lead"
-    fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
-    type: left_outer
-    sql_on: ${team_lead_name.incontact_id} = ${cc_headcount_v2.incontact_id}
-        and ${cc_headcount_v2.by_date} between cast(${team_lead_name.start_date} as date) and cast(${team_lead_name.end_date} as date)  ;;
-    relationship: many_to_one
-  }
+  view_name: contact_history
+  sql_always_where: ${contact_history.contact_state_name} = 'Refused' ;;
+
   join: agent_data {
-    view_label: "Team Lead"
+    view_label: "Agent Data"
     type: left_outer
-    sql_on: ${team_lead_name.incontact_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
     relationship: many_to_one
   }
 }
@@ -207,19 +207,21 @@ explore: incontact_phone {
 
 #####################################################################
 #####################################################################
-## REFUSALS cj
+## PERFECT ATTENDANCE cj
 
-explore: contact_refusals {
-  view_label: "InContact Call Refusals"
+explore: perfect_attendance_calc {
+
+  view_label: "Agent Attendance"
+  view_name: cc_agent_attendance
   hidden: yes
-  view_name: contact_history
-  sql_always_where: ${contact_history.contact_state_name} = 'Refused' ;;
+  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
 
   join: agent_data {
-    view_label: "Agent Data"
-    type: left_outer
-    sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
-    relationship: many_to_one
+    view_label: "Agent Attendance"
+    from: agent_data
+    type: inner
+    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    relationship: one_to_many
   }
 }
 
