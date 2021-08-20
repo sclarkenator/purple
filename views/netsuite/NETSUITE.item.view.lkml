@@ -425,6 +425,7 @@ view: item {
     case: {
       when: {sql: ${TABLE}.model = 'KID BED';; label: "1"}
       when: {sql: ${TABLE}.model = 'PURPLE MATTRESS';; label: "2"}
+      when: {sql: ${TABLE}.model = 'PURPLE PLUS US';; label: "2.1"}
       when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "3"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "4"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "5"}
