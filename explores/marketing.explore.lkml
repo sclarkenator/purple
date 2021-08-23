@@ -329,6 +329,23 @@ explore: email_mymove_contact {
       relationship: one_to_many
       sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
     }
+    join: sales_order {
+      type: left_outer
+      sql_on: lower(${sales_order.email}) = ${crm_customer_health.email_join} ;;
+      relationship: many_to_one
+      #fields: []
+    }
+    join: sales_order_line_base {
+      type: left_outer
+      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+      relationship: one_to_many
+      fields: []
+    }
+    join: item {
+      type: left_outer
+      sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+      relationship: many_to_one
+    }
   }
 
 
