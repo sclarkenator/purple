@@ -1079,4 +1079,11 @@ view: item {
     type: number
     sql: ${TABLE}.width ;;
   }
+
+  dimension: image_url {
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.image_url ;;
+  }
+
 }
