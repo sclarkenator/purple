@@ -95,25 +95,9 @@ explore: agent_state {
 # HEADCOUNT V2 cj
 
 explore: headcount_v2 {
-  view_label: "Agent Data"
+  # view_label: "Agent Data"
   view_name: headcount
   hidden: yes
-
-  join: agent_data {
-    view_label: "Agent Data"
-    type: left_outer
-    sql_on: ${headcount.incontact_id} = ${agent_data.incontact_id} ;;
-    # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
-    relationship: many_to_one
-  }
-
-  join: agent_team_history {
-    view_label: "Agent Data"
-    type: left_outer
-    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
-      and ${headcount.date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
-    relationship: many_to_one
-  }
 }
 
 #####################################################################
