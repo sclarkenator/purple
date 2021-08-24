@@ -1170,7 +1170,7 @@ view: incontact_phone {
     description: "Percent of queued calls that were handled within the defined Service Level Agreement objective."
     type: number
     value_format_name: percent_1
-    sql: ${in_sla_count} / nullifzero(${sla_offered_count}) ;;
+    sql: case when sum(case when ${service_level_flag} >= 0 then 1 end) > 0 then ${in_sla_count} / nullifzero(${sla_offered_count}) else 0 end ;;
     # sql: sum(case when ${in_sla} = true then 1 else 0 end) /
     #   nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
     drill_fields: [detail*, in_sla]
