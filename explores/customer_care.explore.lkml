@@ -31,16 +31,16 @@ explore:agent_team_history {
 ## AGENT ATTENDANCE cj
 
 explore:agent_attendance {
-
-  view_label: "Attendance Data"
-  view_name: cc_agent_attendance
+  label: "Agent Attendance"
+  view_label: "Agent Data"
+  view_name: agent_data
   hidden: yes
 
-  join: agent_data {
-    view_label: "Agent Data"
-    from: agent_data
+  join: agent_attendance {
+    view_label: "Attendance Data"
+    from: cc_agent_attendance
     type: left_outer
-    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${agent_data.incontact_id} = ${agent_attendance.incontact_id} ;;
     relationship: one_to_many
   }
 
@@ -49,7 +49,7 @@ explore:agent_attendance {
     fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
     type: left_outer
     sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id}
-    and ${agent_data.incontact_id} is not null
+      and ${agent_data.incontact_id} is not null
       and ${agent_data.incontact_id} <> '2612383' ;;
     relationship: one_to_one
   }
@@ -59,7 +59,8 @@ explore:agent_attendance {
     # from: agent_team_history
     type: left_outer
     sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
-      and ${cc_agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+      and ${agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date} ;;
+    fields: [agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_email, agent_team_history.team_name, agent_team_history.current_team_flag]
     relationship: many_to_one
   }
 }
