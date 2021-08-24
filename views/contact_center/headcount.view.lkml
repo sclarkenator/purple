@@ -3,18 +3,19 @@ view: headcount {
     sql:
       select cast(d.date as date) as date
         ,a.incontact_id as incontact_id
-        ,a.name as agent_name
-        ,a.employee_type
-        ,a.team_type as team_type
-        ,case when t.team_name is not null then t.team_name
+        ,ltrim(rtrim(a.name)) as agent_name
+        ,ltrim(rtrim(a.employee_type)) as employee_type
+        ,ltrim(rtrim(a.team_type)) as team_type
+        ,case
             when lower(a.name) like '%wfm%' then 'Non-Agent'
             when lower(a.name) like '%analy%' then 'Non-Agent'
             when a.name like '%API%' then 'Non-Agent'
             when a.name like 'Administrator%' then 'Non-Agent'
             when t.agent_name is null then 'Non-Agent'
             when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
+            when t.team_name is not null then ltrim(rtrim(t.team_name))
             end as team_name
-        ,a.supervisor as is_supervisor
+        ,ltrim(rtrim(a.supervisor)) as is_supervisor
         ,a.retail as is_retail
         ,case when a.inactive is null then true else false end as is_active
         ,a.inactive as inactive_date
@@ -101,12 +102,23 @@ view: headcount {
     sql: ${TABLE}.is_supervisor ;;
   }
 
+  dimension: team_group {
+    label: "Team Group"
+    group_label: "* Current Grouping"
+    description: "The current Team Group for each agent."
+    type: string
+    sql: case when lower(${team_type}) in ('admin', 'wfm') then 'Admin'
+      when lower(${team_type}) in ('training', 'sales')
+        or ${team_type} is null then ${team_type}
+      else 'Customer Care' end ;;
+  }
+
   dimension: team_name {
     label: "Team Lead Name"
     group_label: "* Current Grouping"
     description: "Current Team Lead's name on given date."
     type: string
-    sql: ${TABLE}.team_name ;;
+    sql: ltrim(rtrim(${TABLE}.team_name)) ;;
   }
 
   dimension: team_name_historic {
@@ -114,7 +126,7 @@ view: headcount {
     group_label: "* Historic Grouping"
     description: "Historic Team Lead's name on given date."
     type: string
-    sql: ${TABLE}.team_name_historic ;;
+    sql: ltrim(rtrim(${TABLE}.team_name_historic)) ;;
   }
 
   dimension: team_type {
@@ -122,7 +134,7 @@ view: headcount {
     group_label: "* Current Grouping"
     description: "Current team type."
     type: string
-    sql: ${TABLE}.team_type ;;
+    sql: ltrim(rtrim(${TABLE}.team_type)) ;;
   }
 
   ##########################################################################################
