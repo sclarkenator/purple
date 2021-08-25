@@ -43,21 +43,21 @@ view: agent_data {
     sql: ${TABLE}.employee_type ;;
   }
 
+  dimension: team_group {
+    label: "Team Group"
+    description: "The current Team Group for each agent."
+    type: string
+    sql: case when ${TABLE}.team_type = 'Sales' then 'Sales'
+      when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
+      when ${TABLE}.team_type = 'Training' then 'Training'
+      else 'Customer Care' end ;;
+  }
+
   dimension: team_name {
     label: "Team Lead"
     description: "The current Team Lead's name for this agent."
     type: string
     sql: ${TABLE}.current_team_name ;;
-  }
-
-  dimension: team_group {
-    label: "Team Group"
-    description: "The current Team Group for each agent."
-    type: string
-    sql: case when ${TABLE}.current_team_name like '%sales%' then 'Sales'
-      when ${TABLE}.current_team_name in ('Admin', 'WFM') then 'Administrative'
-      when ${TABLE}.current_team_name = 'Training' then 'Training'
-      else 'Customer Care' end ;;
   }
 
   dimension: team_name_email {
