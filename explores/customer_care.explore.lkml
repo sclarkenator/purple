@@ -41,6 +41,7 @@ explore:agent_attendance {
     from: cc_agent_attendance
     type: left_outer
     sql_on: ${agent_data.incontact_id} = ${agent_attendance.incontact_id} ;;
+    sql_where: ${agent_attendance.added_by} is not null ;;
     relationship: one_to_many
   }
 

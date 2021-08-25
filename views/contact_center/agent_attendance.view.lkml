@@ -5,7 +5,7 @@ view: cc_agent_attendance {
           d.date as event_date,
           d.incontact_id,
           a.*,
-          case when is_occurrence = 'Yes' then 1 end as occurrance_count,
+          case when is_occurrence = 'Yes' then 1 end as occurrence_count,
           concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2),
         row_number()over(partition by ic_id, combined_dates order by occurrence, sub_occurrence, notes)) as pk
 
@@ -106,7 +106,7 @@ view: cc_agent_attendance {
   }
 
   dimension: sub_occurrence {
-    label: "Sub Occurrance"
+    label: "Sub occurrence"
     description: "sub category of the type of Occurrence (was it Sick Time, FMLA or other Standard Procedure for points or was it an Exception/Excused or just for tracking notes/comments"
     type: string
     sql: ${TABLE}."SUB_OCCURRENCE" ;;
@@ -211,7 +211,7 @@ view: cc_agent_attendance {
     description: "Sum count of Occurrence events."
     type: number
     value_format_name: decimal_0
-    sql: zeroifnull(sum(${TABLE}.occurrance_count)) ;;
+    sql: zeroifnull(sum(${TABLE}.occurrence_count)) ;;
   }
 
   measure: occurrence_hit_points {

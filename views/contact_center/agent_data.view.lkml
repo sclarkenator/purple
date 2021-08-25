@@ -244,7 +244,7 @@ view: agent_data {
   ##########################################################################################
   ## ID DIMENSIONS
 
-  dimension: incontact_id {
+  dimension: incontact_id {  # PRIMARY KEY
     label: "InContact ID"
     group_label: "* IDs"
     description: "Agent's InContact ID, which may equate to Agent ID in some reports. Source: incontact.agent_lkp"
