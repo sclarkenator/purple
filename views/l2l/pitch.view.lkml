@@ -251,7 +251,7 @@ where z.row_num = 1 and delete_ts is null;;
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
-    sql: div0(${actual},${actual}+${scrap}) ;;
+    sql: case when ${demand} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
   }
 
   measure: throughput_percent{
@@ -259,7 +259,7 @@ where z.row_num = 1 and delete_ts is null;;
     description: "Actual good parts produced divided by pitch demand"
     type: number
     value_format: "0.0%"
-    sql: div0(${actual},${demand}) ;;
+    sql: case when ${demand} = 0 then null else div0(${actual},${demand}) end;;
   }
 
   measure: planned_production_minutes {
