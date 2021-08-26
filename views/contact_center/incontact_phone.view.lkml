@@ -319,7 +319,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to the Agent.  Matches agent's InContact ID."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."AGENT_ID" ;;
     }
 
@@ -328,7 +329,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to a Campaign."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."CAMPAIGN_ID" ;;
     }
 
@@ -336,7 +338,8 @@ view: incontact_phone {
     label: "Contact ID"
     group_label: "* IDs"
     description: "Unique ID of a Contact (call)."
-    type: string
+    type: number
+    value_format_name: id
     # hidden: yes
     sql: ${TABLE}."CONTACT_ID" ;;
     }
@@ -346,7 +349,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Master/Parent ID of one or more Contacts."
     # hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."MASTER_CONTACT_ID" ;;
     }
 
@@ -356,6 +360,7 @@ view: incontact_phone {
     description: "ID of primary disposition."
     # hidden: yes
     type: number
+    value_format_name: id
     sql: ${TABLE}."PRIMARY_DISPOSITION_ID" ;;
     }
 
@@ -373,7 +378,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Uniique ID given to a Skill."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."SKILL_ID" ;;
     }
 
@@ -382,7 +388,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to the Team."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."TEAM_ID" ;;
     }
 

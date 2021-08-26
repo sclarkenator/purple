@@ -94,16 +94,6 @@ explore: agent_state {
 
 #####################################################################
 #####################################################################
-# HEADCOUNT V2 cj
-
-explore: headcount_v2 {
-  # view_label: "Agent Data"
-  view_name: headcount
-  hidden: yes
-}
-
-#####################################################################
-#####################################################################
 ## CC_KPIs cj
 
 explore: CC_KPIs {
@@ -143,12 +133,11 @@ explore: contact_history {
     relationship: many_to_one
   }
 
-  # join: agent_team_history {
-  #   view_label: "Agent Data"
+  # join: agent_state {
+  #   view_label: "Agent State"
   #   # from: agent_team_history
   #   type: left_outer
-  #   sql_on:  ${contact_history.agent_id}.incontact_id} = ${agent_team_history.incontact_id}
-  #     and ${contact_history.start_ts_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+  #   sql_on:  ${contact_history.agent_id} = ${agent_state.agent_id} ;;
   #   relationship: many_to_one
   # }
 }
@@ -169,6 +158,25 @@ explore: contact_refusals {
     type: left_outer
     sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
     relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+# HEADCOUNT V2 cj
+
+explore: headcount_v2 {
+  view_label: "Headcount"
+  view_name: headcount
+  hidden: yes
+
+  join: agent_state {
+    view_label: "Headcount"
+    type: left_outer
+    fields: [agent_state.state_percentage, working_rate]
+    sql_on: ${headcount.incontact_id} = ${agent_state.agent_id}
+      and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
+    relationship: one_to_many
   }
 }
 

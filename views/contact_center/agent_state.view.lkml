@@ -16,6 +16,16 @@ view: agent_state {
   #####################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: available_time {
+    label: "Available Seconds"
+    description: "Time in seconds spent in an available state."
+    hidden: yes
+    type: number
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.state_name = 'Available'
+        or ${unavailable_code_name} = 'Zendesk Chat' then ${TABLE}.state_duration end ;;
+  }
+
   dimension: custom_state_name {
     label: "State Name Custom"
     description: "State Name data that reassigns some states, such as reassigning 'Zendesk Chat' states to Available from Unavailable."
@@ -44,6 +54,16 @@ view: agent_state {
     type: number
     value_format_name: id
     sql: ${TABLE}."SESSION_STATE_INDEX" ;;
+  }
+
+  dimension: unavailable_time {
+    label: "Unavailable Seconds"
+    description: "Time in seconds spent in an unavailable state."
+    hidden: yes
+    type: number
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.state_name in ('Unavailable', 'OutboundPending')
+      and ${unavailable_code_name} <> 'Zendesk Chat' then ${TABLE}.state_duration end ;;
   }
 
   #####################################################################
@@ -165,6 +185,16 @@ view: agent_state {
   #####################################################################
   ## OTHER MEASURES
 
+  measure: available_pct {
+    label: "Available Pct"
+    group_label: "Other Measures"
+    description: "Percentage of time in available state."
+    type: string
+    value_format_name: percent_2
+    sql: sum(${unavailable_time}) /
+      nullifzero(sum(${unavailable_time}) + sum(${available_time}));;
+  }
+
   measure: count {
     type: count
     group_label: "Other Measures"
@@ -180,6 +210,16 @@ view: agent_state {
     sql: ${state_duration_sum_min} ;;
   }
 
+  measure: unavailable_pct {
+    label: "Unavailable Pct"
+    group_label: "Other Measures"
+    description: "Percentage of time in unavailable state."
+    type: number
+    value_format_name: percent_2
+    sql: sum(${available_time}) /
+      nullifzero(sum(${unavailable_time}) + sum(${available_time})) ;;
+  }
+
   measure: working_rate {
     label: "Working Rate"
     group_label: "Other Measures"
@@ -188,7 +228,7 @@ view: agent_state {
     value_format_name: percent_2
     sql: (sum(${TABLE}."STATE_DURATION") - (case when (sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
       ) is Null then '0' else ( sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
-      ) end ))/sum(${TABLE}."STATE_DURATION") ;;
+      ) end )) / nullifzero(sum(${TABLE}."STATE_DURATION")) ;;
   }
 
   #####################################################################
@@ -201,21 +241,17 @@ view: agent_state {
     description: "Duration in minutes agent was in a state flags as Available."
     type: number
     value_format_name: decimal_2
-    sql: sum(
-      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"/60
-        end) ;;
+    sql: sum(${available_time}) / 60 ;;
   }
 
   measure: available_duration_sum_sec{
     label: "Available Time Sec"
     group_label: "Sum Measures"
-    description: "Duration in minutes agent was in a state flags as Available."
-    # hidden: yes
+    description: "Duration in seconds agent was in a state flags as Available."
+    hidden: yes
     type: number
     value_format_name: decimal_0
-    sql: sum(
-      case when ${TABLE}.state_name = 'Available' then ${TABLE}."STATE_DURATION"
-        end) ;;
+    sql: sum(${available_time}) ;;
   }
 
   measure: break_sum_min {
@@ -268,23 +304,17 @@ view: agent_state {
     description: "Duration in minutes agent was in a state flags as Unavailable."
     type: number
     value_format_name: decimal_2
-    sql: sum(
-      case when ${TABLE}.state_name = 'Unavailable' then ${TABLE}."STATE_DURATION"
-        when ${TABLE}.state_name = 'OutboundPending' then ${TABLE}."STATE_DURATION"
-        end) / 60 ;;
+    sql: sum(${unavailable_time}) / 60 ;;
   }
 
   measure: unavailable_duration_sum_sec{
     label: "Unavailable Time Sec"
     group_label: "Sum Measures"
-    description: "Duration in minutes agent was in a state flags as Unavailable."
-    # hidden: yes
+    description: "Duration in seconds agent was in a state flags as Unavailable."
+    hidden: yes
     type: number
     value_format_name: decimal_0
-    sql: sum(
-      case when ${TABLE}.state_name = 'Unavailable' then ${TABLE}."STATE_DURATION"
-        when ${TABLE}.state_name = 'OutboundPending' then ${TABLE}."STATE_DURATION"
-        end) ;;
+    sql: sum(${unavailable_time}) ;;
   }
 
   measure: working_time_sum_min {
