@@ -3,7 +3,7 @@ view: sla {
     ;;
 
   dimension_group: order {
-    hidden:  yes
+    hidden:  no
     type: time
     timeframes: [
       date
