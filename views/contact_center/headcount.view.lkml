@@ -26,7 +26,7 @@ view: headcount {
 
         left join customer_care.agent_lkp a
           on a.created::date <= d.date
-          and nvl(a.inactive::date,current_date::date) > d.date
+          and nvl(a.inactive::date,current_date::date) >= d.date
 
         left join customer_care.team_lead_name t
           on a.incontact_id = t.incontact_id
@@ -169,7 +169,8 @@ view: headcount {
 
   measure: headcount {
     label: "Headcount"
-    type: count
+    type: count_distinct
     drill_fields: [agent_data*]
+    sql: ${incontact_id} ;;
   }
 }
