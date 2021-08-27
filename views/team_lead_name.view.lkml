@@ -44,6 +44,12 @@ view: team_lead_name {
     sql: ${TABLE}.agent_name ;;
   }
 
+  dimension: agent_email {
+    type:  string
+    hidden: yes
+    sql: ${TABLE}.agent_email ;;
+  }
+
   measure: count {
     type: count
     hidden: yes
