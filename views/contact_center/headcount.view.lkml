@@ -37,7 +37,7 @@ view: headcount {
   }
 
   set: agent_data {
-    fields: [incontact_id, agent_name, team_type, team_name, employee_type]
+    fields: [agent_name, incontact_id, team_group, team_type, team_name, employee_type]
   }
 
   ##########################################################################################
@@ -50,7 +50,7 @@ view: headcount {
   }
 
   dimension_group: date {
-    label: "Headcount"
+    label: "* Headcount" ## Date
     type: time
     timeframes: [
       raw,
@@ -100,6 +100,13 @@ view: headcount {
     description: "Is agent currently a supervisor."
     type: yesno
     sql: ${TABLE}.is_supervisor ;;
+  }
+
+  dimension: last_update{
+    label: "Last Update"
+    description: "Last date when a record was updated in the agent_lkp table."
+    type: date
+    sql: select max(update_ts) from customer_care.agent_lkp ;;
   }
 
   dimension: team_group {
