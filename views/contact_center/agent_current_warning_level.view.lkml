@@ -1,4 +1,7 @@
 view: agent_current_warning_level {
+  ## Tracks only the current warning level and attendance points for each agent
+  ## No historic data is tracked in this table
+
   derived_table: {
     sql:
     select distinct a.incontact_id as incontact_id,

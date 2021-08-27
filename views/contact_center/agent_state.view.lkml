@@ -1,4 +1,7 @@
 view: agent_state {
+  ## Tracks Zendesk agent states throughout the day as per the agent's FAC selections and Unavailable Codes
+  ## e.g. States: Available, Unavailable, LoggedOut and Unavail Codes: Break, Meeting, QA Coaching
+
   sql_table_name: "CUSTOMER_CARE"."AGENT_STATE"
     ;;
 

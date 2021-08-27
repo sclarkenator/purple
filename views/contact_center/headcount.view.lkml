@@ -1,4 +1,7 @@
 view: headcount {
+  ## Provides headcount of agents and supervisors which can be broken out by various characteristics
+  ## such as team_lead, employement_type, etc.
+
   derived_table: {
     sql:
       select cast(d.date as date) as date

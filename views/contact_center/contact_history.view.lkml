@@ -1,4 +1,7 @@
 view: contact_history {
+  ## Provides a list of contact states which a call enters during the course of the call
+  ##     e.g., Active, Prequeue, Transfer
+
   sql_table_name: "CUSTOMER_CARE"."CONTACT_HISTORY" ;;
 
   ##########################################################################################

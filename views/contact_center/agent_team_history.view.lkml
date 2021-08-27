@@ -1,4 +1,6 @@
 view: agent_team_history {
+  ## Historic tracking of agent's team leads.  May be replaced by CDC table for Agent_Lkp
+
   sql_table_name: CUSTOMER_CARE.team_lead_name ;;
 
   dimension: end_date {

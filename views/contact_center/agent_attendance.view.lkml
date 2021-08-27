@@ -1,4 +1,7 @@
 view: cc_agent_attendance {
+  ## Tracks agent attendance stats as entered by WFM in the Master Attendance file.
+  ## File location: https://purplebed.sharepoint.com/:x:/t/PI/EQE9iTrXC5hIrWwGmqNv5pcB5zQQ7CI0XSBJrFogSrjYAA
+
   derived_table: {
     sql:
       select distinct

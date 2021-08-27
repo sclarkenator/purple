@@ -1,4 +1,5 @@
 view: incontact_phone {
+  ## Phone and call performance data from InContact database
 
   sql_table_name: Analytics.customer_care.v_contacts_phone ;;
 

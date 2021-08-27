@@ -1,4 +1,7 @@
 view: agent_data {
+  ## Tracks agent data from agent_lkp table along with current team information
+  ## Does not track historic data
+
   derived_table: {
     sql:
       select distinct a.*,
