@@ -24,21 +24,21 @@ view: agent_data {
 
   dimension: agent_name {
     label: "Agent Name"
-    description: "Agents First and Last name.  Source: incontact.agent_lkp"
+    description: "Agents First and Last name."
     type: string
     sql: ${TABLE}.name ;;
   }
 
   dimension: email {
     label: "Agent Email"
-    description: "The email address for this agent. Source: incontact.agent_lkp"
+    description: "The email address for this agent."
     type:  string
     sql: ${TABLE}.email ;;
   }
 
   dimension: employee_type {
     label: "Employee Type"
-    description: "Source: incontact.agent_lkp"
+    description: "Is agent a Temp or Purple employee."
     type:  string
     sql: ${TABLE}.employee_type ;;
   }
@@ -47,9 +47,9 @@ view: agent_data {
     label: "Team Group"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when ${TABLE}.team_type = 'Sales' then 'Sales'
-      when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
-      when ${TABLE}.team_type = 'Training' then 'Training'
+    # sql: case when ${TABLE}.team_type = 'Sales' then 'Sales'
+    sql: case when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
+      when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
       else 'Customer Care' end ;;
   }
 
@@ -62,7 +62,7 @@ view: agent_data {
 
   dimension: team_name_email {
     label: "Team Lead Email"
-    description: "The current Team Lead's email for this agent. Source: incontact.team_lead_name"
+    description: "The current Team Lead's email for this agent."
     type: string
     sql: ${TABLE}.current_team_email ;;
   }
@@ -83,7 +83,7 @@ view: agent_data {
   dimension: is_active {
     label: "Is Active"
     group_label: "* Flags"
-    description: "Whether or not this agent is active in the system. Source: incontact.agent_lkp.inactive is not null."
+    description: "Whether or not this agent is active in the system."
     type: yesno
     sql: ${TABLE}.active_flag ;;
   }
@@ -91,7 +91,7 @@ view: agent_data {
   dimension: is_mentor {
     label: "Is Mentor"
     group_label: "* Flags"
-    description: "Mentors flag. Source: incontact.agent_lkp.mentor is not null."
+    description: "Mentors flag."
     type: yesno
     sql: ${TABLE}.mentor is not null ;;
   }
@@ -99,7 +99,7 @@ view: agent_data {
   dimension: is_purple_with_purpose {
     label: "Is PWP Cert"
     group_label: "* Flags"
-    description: "Purple with Purpose cetrification flag. Source: incontact.agent_lkp.purple_with_purpose is not null."
+    description: "Purple with Purpose cetrification flag."
     type: yesno
     sql: ${TABLE}.purple_with_purpose is not null ;;
   }
@@ -107,7 +107,7 @@ view: agent_data {
   dimension: is_retail {
     label: "Is Retail Agent"
     group_label: "* Flags"
-    description: "Is this a retail agent. Source: incontact.agent_lkp"
+    description: "Is this a retail agent."
     type:  yesno
     sql: ${TABLE}.retail ;;
   }
@@ -115,7 +115,7 @@ view: agent_data {
   dimension: is_service_recovery_team {
     label: "Is SRT Cert"
     group_label: "* Flags"
-    description: "Service Recovery Team flag. Source: incontact.agent_lkp.service_recovery_team is not null."
+    description: "Service Recovery Team flag."
     type: yesno
     sql: ${TABLE}.service_recovery_team is not null ;;
   }
@@ -123,7 +123,7 @@ view: agent_data {
   dimension: is_supervisor {
     label: "Is Supervisor"
     group_label: "* Flags"
-    description: "Whether or not this agent is a supervisor. Source: incontact.agent_lkp"
+    description: "Whether or not this agent is a supervisor."
     type: yesno
     sql: ${TABLE}.supervisor ;;
   }
@@ -134,7 +134,7 @@ view: agent_data {
 
   dimension_group: inactive {
     label: "* Inactive"
-    description: "Date agent became inactive. Source: incontact.agent_lkp"
+    description: "Date agent became inactive."
     type: time
     timeframes: [raw,
       date,
@@ -247,7 +247,7 @@ view: agent_data {
   dimension: incontact_id {  # PRIMARY KEY
     label: "InContact ID"
     group_label: "* IDs"
-    description: "Agent's InContact ID, which may equate to Agent ID in some reports. Source: incontact.agent_lkp"
+    description: "Agent's InContact ID, which may equate to Agent ID in some reports."
     primary_key: yes
     type:  number
     value_format_name: id
@@ -257,7 +257,7 @@ view: agent_data {
   dimension: zendesk_id {
     label: "Zendesk ID"
     group_label: "* IDs"
-    description: "Agent's  ZenDesk ID. Source: incontact.agent_lkp"
+    description: "Agent's  ZenDesk ID."
     type:  number
     value_format_name: id
     sql: ${TABLE}.zendesk_id ;;
@@ -266,7 +266,7 @@ view: agent_data {
   dimension: zendesk_sell_id {
     label: "Zendesk Sell ID"
     group_label: "* IDs"
-    description: "The ZenDesk Sell ID for this agent. Source: incontact.agent_lkp"
+    description: "The ZenDesk Sell ID for this agent."
     type:  number
     value_format_name: id
     sql: ${TABLE}.zendesk_sell_user_id ;;
@@ -275,7 +275,7 @@ view: agent_data {
   dimension: shopify_id {
     label: "Shopify ID"
     group_label: "* IDs"
-    description: "Agent's Shopify ID . Source: incontact.agent_lkp"
+    description: "Agent's Shopify ID ."
     type:  number
     value_format_name: id
     sql: ${TABLE}.shopify_id ;;
@@ -284,7 +284,7 @@ view: agent_data {
   dimension: shopify_id_pos {
     label: "Shopify POS ID"
     group_label: "* IDs"
-    description: "The Shopify POS ID for Retail agent. Source: incontact.agent_lkp"
+    description: "The Shopify POS ID for Retail agent."
     type:  number
     value_format_name: id
     sql: ${TABLE}.shopify_id_pos ;;
@@ -292,7 +292,7 @@ view: agent_data {
   dimension: workday_id {
     label: "Workday ID"
     group_label: "* IDs"
-    description: "Agent's Workday ID. Source: incontact.agent_lkp"
+    description: "Agent's Workday ID."
     type:  number
     value_format_name: id
     sql: ${TABLE}.workday_id ;;
