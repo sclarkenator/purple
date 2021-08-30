@@ -384,62 +384,62 @@ explore: email_mymove_contact {
 #
 #-------------------------------------------------------------------
 
-# explore: all_events {
-#   hidden: yes
-#   label: "All Events (heap)"
-#   group_label: "Marketing"
-#   description: "All Website Event Data from Heap Block"
-#   join: users {
-#     type: left_outer
-#     sql_on: ${all_events.user_id}::string = ${users.user_id}::string ;;
-#     relationship: many_to_one }
-#   join: sessions {
-#     type: left_outer
-#     sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
-#     relationship: many_to_one }
-#   join: session_facts {
-#     view_label: "Sessions"
-#     type: left_outer
-#     sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+explore: all_events {
+  hidden: yes
+  label: "All Events (heap)"
+  group_label: "Marketing"
+  description: "All Website Event Data from Heap Block"
+  join: users {
+    type: left_outer
+    sql_on: ${all_events.user_id}::string = ${users.user_id}::string ;;
+    relationship: many_to_one }
+  join: sessions {
+    type: left_outer
+    sql_on: ${all_events.session_id}::string = ${sessions.session_id}::string ;;
+    relationship: many_to_one }
+  join: session_facts {
+    view_label: "Sessions"
+    type: left_outer
+    sql_on: ${sessions.session_id}::string = ${session_facts.session_id}::string ;;
+    relationship: one_to_one }
+## event_flow not currently used in content.
+#   join: event_flow {
+#     sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
 #     relationship: one_to_one }
-# ## event_flow not currently used in content.
-# #   join: event_flow {
-# #     sql_on: ${all_events.event_id}::string = ${event_flow.unique_event_id}::string ;;
-# #     relationship: one_to_one }
-#     join: zip_codes_city {
-#       type: left_outer
-#       sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
-#       relationship: one_to_one }
-#     join: dma {
-#       type:  left_outer
-#       sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
-#       relationship: one_to_one }
-#     join: heap_page_views {
-#       type: left_outer
-#       sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
-#       relationship: one_to_many
-#     }
-#     join: date_meta {
-#       type: left_outer
-#       sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
-#       relationship: one_to_many
-#     }
-## I commented this out to see if performance changes
-### Blake
-#   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
-#     query: {
-#       dimensions: [sessions.time_week_of_year, sessions.time_year]
-#       measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
-#       filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
-#       timezone: "America/Denver"
-#     }
-#
-#     materialization: {
-#       datagroup_trigger: pdt_refresh_6am
-#     }
-#   }
+    join: zip_codes_city {
+      type: left_outer
+      sql_on: ${sessions.city} = ${zip_codes_city.city} and ${sessions.region} = ${zip_codes_city.state_name} ;;
+      relationship: one_to_one }
+    join: dma {
+      type:  left_outer
+      sql_on: ${dma.zip} = ${zip_codes_city.city_zip} ;;
+      relationship: one_to_one }
+    join: heap_page_views {
+      type: left_outer
+      sql_on: ${heap_page_views.session_id} = ${all_events.session_id} ;;
+      relationship: one_to_many
+    }
+    join: date_meta {
+      type: left_outer
+      sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
+      relationship: one_to_many
+    }
+# I commented this out to see if performance changes
+## Blake
+  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+    query: {
+      dimensions: [sessions.time_week_of_year, sessions.time_year]
+      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+      timezone: "America/Denver"
+    }
 
-#  }
+    materialization: {
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
+
+  }
 
   explore: funnel_explorer {
     hidden: yes
