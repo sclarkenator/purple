@@ -157,7 +157,10 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'big%sky%' ;; label: "Big Sky" }
       when: { sql: lower(${TABLE}.companyname) like 'sam%' ;; label: "Sam's Club" }
       when: { sql: lower(${TABLE}.companyname) like 'rooms%to%go%' ;; label: "Rooms To Go" }
-      when: { sql: lower(${TABLE}.companyname) like 'levin%' ;; label: "Levin Furniture Co" }
+      when: { sql: lower(${TABLE}.companyname) like 'levin%' ;; label: "Levin Furniture" }
+      when: { sql: lower(${TABLE}.companyname) like 'gardner%white%' ;; label: "Gardner White Furniture" }
+      when: { sql: lower(${TABLE}.companyname) like 'ivan%smith%' ;; label: "Ivan Smith Furniture" }
+      when: { sql: lower(${TABLE}.companyname) like '%cardi%department%' ;; label: "Cardi's Department Store" }
 
 
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }
