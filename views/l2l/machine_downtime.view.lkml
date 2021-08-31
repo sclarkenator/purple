@@ -11,6 +11,12 @@ view: l2l_machine_downtime {
     sql: ${TABLE}."DOWN_DATE" ;;
   }
 
+  dimension: primary_key {
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}."MACHINE_ID" || ${TABLE}."DOWN_DATE" ;;
+  }
+
   dimension: machine_id {
     hidden: yes
     type: number
@@ -20,6 +26,7 @@ view: l2l_machine_downtime {
   measure: minutes_available {
     description: "Total number of minutes a Machine is Available; Source: l2l.machine_downtime"
     type: sum
+    hidden: yes
     sql: ${TABLE}."MINUTES_AVAILABLE" ;;
   }
 
@@ -45,6 +52,7 @@ view: l2l_machine_downtime {
 
   measure: count {
     type: count
+    hidden: yes
     drill_fields: []
   }
 

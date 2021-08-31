@@ -350,7 +350,7 @@ include: "/dashboards/**/*.dashboard"
     join: l2l_machine_downtime {
       view_label: "Machine"
       type: left_outer
-      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id};;
       relationship: one_to_many
     }
     join: machine_schedule {
