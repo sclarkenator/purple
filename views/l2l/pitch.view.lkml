@@ -3,14 +3,18 @@ view: ltol_pitch {
  # sql_table_name: L2L.PITCH ;;
 
 derived_table: {
-  sql: select *
-  from (
-    select *
-        , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
-    from ANALYTICS.L2L.Pitch
-) z
-where z.row_num = 1 and delete_ts is null;;
-}
+  sql: select * from ANALYTICS.L2L.Pitch where delete_ts is null;;
+  }
+
+## Hidden by Jared to fix nulling max machine data - 09/01/2021
+##  select *
+##  from (
+##    select *
+##        , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
+##    from ANALYTICS.L2L.Pitch
+## ) z
+## where z.row_num = 1 and delete_ts is null;;
+
 
   dimension: pitch_id {
     primary_key: yes
