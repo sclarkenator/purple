@@ -1,5 +1,5 @@
 view: scorecard {
-  sql_table_name: "SCRATCH"."SCORECARD"
+  sql_table_name:"DATAGRID"."SCRATCH"."SCORECARD"
     ;;
 
   dimension: aov {
@@ -377,5 +377,9 @@ view: scorecard {
   measure: website{
     type: number
     sql: ${aov_score}+${session_score}+${bounce_rate_score} ;;
+  }
+  measure: total_score{
+    type: number
+    sql: ${value}+${website};;
   }
 }
