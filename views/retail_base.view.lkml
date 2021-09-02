@@ -43,21 +43,24 @@ dimension: store_id{
     hidden: yes
     label: "Location ID"
     type: string
-    sql: ${TABLE}.showroom_name ;;
+    sql: case when ${TABLE}.showroom_name = 'EV-01' then null else  ${TABLE}.showroom_name end  ;;
   }
 
 dimension: open_date  {
     description: "Date retail location first opened"
     label: "Open"
     type: date
-    sql: ${TABLE}.mindate ;;
+    sql: CASE WHEN ${store_id} = 'NJ-01' then '2021-08-13'
+              WHEN ${store_id} = 'OH-02' then '2021-09-08'
+              ELSE ${TABLE}.mindate END;;
   }
 
   dimension: days_open {
     description: "Days between open date and sales date"
     label: "Days Open"
     type: number
-    sql: datediff('day',${open_date},${date_date}) ;;
+    sql: CASE WHEN datediff('day',${open_date},${date_date}) < 0 THEN null
+              ELSE datediff('day',${open_date},${date_date}) END ;;
   }
 
 }
