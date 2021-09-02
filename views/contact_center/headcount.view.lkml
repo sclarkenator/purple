@@ -4,7 +4,8 @@ view: headcount {
 
   derived_table: {
     sql:
-      select cast(d.date as date) as date
+      select concat(cast(d.date as date),a.incontact_id) as pk
+        ,cast(d.date as date) as date
         ,a.incontact_id as incontact_id
         ,ltrim(rtrim(a.name)) as agent_name
         ,ltrim(rtrim(a.employee_type)) as employee_type
@@ -21,9 +22,10 @@ view: headcount {
         ,ltrim(rtrim(a.supervisor)) as is_supervisor
         ,a.retail as is_retail
         ,case when a.inactive is null then true else false end as is_active
-        ,a.inactive as inactive_date
-        ,a.hired as hire_date
-        ,a.terminated as term_date
+        ,a.inactive::date as inactive_date
+        ,a.hired::date as hire_date
+        ,a.terminated::date as term_date
+        ,a.created::date as created_date
 
       from util.warehouse_date d
 
@@ -48,8 +50,15 @@ view: headcount {
   ## GENERAL FIELDS
 
   dimension: agent_name {
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.agent_name ;;
+  }
+
+  dimension: created_date {
+    label: "Created Date"
+    description: "Date the agent's InContact ID was created."
+    # hidden: yes
+    sql: ${TABLE}.created_date ;;
   }
 
   dimension_group: date {
@@ -74,11 +83,34 @@ view: headcount {
     sql: ${TABLE}.employee_type ;;
   }
 
+  dimension_group: end_date {
+    label: "* End Date"
+    description: "Returns lesser value between term  and inactive dates."
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: case when ${term_date} is not null then ${term_date}
+      else ${inactive_date} end ;;
+  }
+
   dimension: hire_date {
-    label: "Hire Date"
+    label: "Hired"
     type: date
-    hidden: yes
-    sql: ${TABLE}.hire.date ;;
+    # hidden: yes
+    sql: ${TABLE}.hire_date ;;
+  }
+
+  dimension: inactive_date {
+    label: "Inactive Date"
+    description: "Date the agent's InContact ID was made inactive."
+    # hidden: yes
+    sql: ${TABLE}.inactive_date ;;
   }
 
   dimension: is_active {
@@ -110,6 +142,16 @@ view: headcount {
     description: "Last date when a record was updated in the agent_lkp table."
     type: date
     sql: select max(update_ts) from customer_care.agent_lkp ;;
+  }
+
+  dimension: start_date {
+    label: "Start Date"
+    description: "Returns greater value between created and hire dates."
+    type: date
+    # hidden: yes
+    sql: case when ${created_date} is null then ${hire_date}
+      when ${hire_date} > ${created_date} then ${hire_date}
+      else ${created_date} end ;;
   }
 
   dimension: team_group {
@@ -147,6 +189,14 @@ view: headcount {
     sql: ltrim(rtrim(${TABLE}.team_type)) ;;
   }
 
+  dimension: term_date {
+    label: "Termed"
+    description: "Last day of employment at Purple."
+    type: date
+    # hidden: yes
+    sql: ${TABLE}.term_date ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## ID FIELDS
@@ -154,14 +204,14 @@ view: headcount {
   dimension: pk {
     primary_key: yes
     hidden: yes
-    sql: concat(${TABLE}.date, ${TABLE}.incontact_id) ;;
+    sql: ${TABLE}.pk ;;
   }
 
   dimension: incontact_id {
     label: "InContact ID"
     group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     value_format_name: id
     sql: ${TABLE}.incontact_id ;;
   }
@@ -174,6 +224,28 @@ view: headcount {
     label: "Headcount"
     type: count_distinct
     drill_fields: [agent_data*]
-    sql: ${incontact_id} ;;
+    sql: case when ${start_date} > ${date_date} then null
+      when ${end_date_date} is null then ${incontact_id}
+      when ${end_date_date} > ${date_date} then ${incontact_id} end ;;
   }
+
+  measure: hired_count {
+    label: "Hired Count"
+    type: count_distinct
+    drill_fields: [agent_data*, hire_date, created_date, inactive_date]
+    link: {
+      label: "List Hired Agents"
+      url: "https://purple.looker.com/explore/main/headcount_v2?fields=headcount.agent_data*,headcount.start_date,headcount.hire_date,headcount.created_date&f[headcount.is_retail]=No&f[headcount.hired_count]=%3E0&f{{headcount.start_date._in_query}}"
+    }
+    sql: case when ${date_date} = ${start_date} then ${incontact_id} else null end ;;
+  }
+
+  measure: term_count {
+    label: "Termed Count"
+    type: count_distinct
+    drill_fields: [agent_data*, end_date_date, term_date, inactive_date]
+    sql: case when ${date_date} = ${end_date_date} then ${incontact_id} end ;;
+  }
+
+
 }
