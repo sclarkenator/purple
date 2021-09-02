@@ -321,6 +321,7 @@ derived_table: {
   measure: overall_equipment_effectiveness {
     hidden: yes
     description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
+    value_format: "0\%"
     type: average
     sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
   }
