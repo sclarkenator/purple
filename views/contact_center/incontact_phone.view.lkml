@@ -8,11 +8,11 @@ view: incontact_phone {
   dimension: primary_key {
     label: "Primary Key"
     group_label: "* IDs"
-    description: "Primary key field.  [master_contact_id] & [contact_id]"
+    description: "Primary key field.  [contact_id]"
     primary_key: yes
     hidden:  yes
     type: string
-    sql: ${master_contact_id} || ${contact_id} ;;
+    sql: ${contact_id} ;;
     }
 
   # ----- Set of fields for drilling ------
@@ -1183,6 +1183,18 @@ view: incontact_phone {
     #   nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
     drill_fields: [detail*, in_sla]
     }
+
+  measure: handled_pct {
+    label: "Handled Pct"
+    group_label: "Percentage Measures"
+    description: "Percent of calls handled by agent. [Handled] / ([Queued] + [Outbound])"
+    type: number
+    value_format_name: percent_1
+    sql: sum(case when ${handled} = true then 1 end)
+      / nullifzero(sum(case when ${queued} = true then 1 end)
+        + sum(case when ${direction} = 'Outbound' then 1 end));;
+    drill_fields: [detail*]
+  }
 
   measure: long_abandon_pct {
     label: "Long Abandon Pct"
