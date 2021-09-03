@@ -51,6 +51,7 @@ view: sla {
     view_label: "Fulfillment"
     label: "Days from SLA - Standard Shipping"
     group_label: "Website SLAs"
+    description: "Day from SLA if the item is going through standard shipping"
     type: number
     sql: datediff(d, current_date, ${sales_order_line.sla_ship});;
   }
@@ -59,8 +60,18 @@ view: sla {
     view_label: "Fulfillment"
     label: "Days from SLA - White Glove"
     group_label: "Website SLAs"
+    description: "Days from SLA if the item is shipping through a Premier Delivery partner"
     type: number
     sql: datediff(d, current_date, ${sales_order_line.wg_sla_ship}) ;;
+  }
+
+  dimension: days_from_sla {
+    view_label: "Fulfillment"
+    label: "Days from SLA"
+    group_label: "Website SLAs"
+    description: "Days from SLA. Negative values indicate we are past the SLA as shown on the date the order was placed."
+    type: number
+    sql: case when ${sales_order_line.ship_flag} then ${sla.days_from_sla_standard} else ${sla.days_from_sla_wg} end  ;;
   }
 
   dimension: white_glove {
