@@ -1300,6 +1300,17 @@ view: sales_order_line_base {
           else ${TABLE}.ordered_qty end;;
     }
 
+
+    dimension: is_locked {
+      view_label: "Fulfillment"
+      label: "     * Is Locked"
+      group_label: " Advanced"
+      description: "Identifies items on orders that are locked by fulfillment"
+      type: yesno
+      sql: ${TABLE}.LOCKED ;;
+    }
+
+
   set: order_details {
     fields: [sales_order_line.sales_order_details*]
   }
