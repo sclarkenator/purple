@@ -728,6 +728,18 @@ view: incontact_phone {
     drill_fields: [detail*]
     }
 
+  measure: handle_qualified_calls_count {
+    label: "Handle Qualified Count"
+    group_label: "Count Measures"
+    description: "Count of calls of types that qualify for use in Handled measures.  Includes all queued and outbound calls."
+    type: number
+    value_format_name: decimal_0
+    sql: sum(case when ${queued} = true then 1
+      when ${direction} = 'Outbound' then 1
+      else 0 end) ;;
+    drill_fields: [detail*, direction, queued]
+  }
+
   measure: handled_count {
     label: "Handled Count"
     group_label: "Count Measures"
@@ -1191,8 +1203,8 @@ view: incontact_phone {
     type: number
     value_format_name: percent_1
     sql: sum(case when ${handled} = true then 1 end)
-      / nullifzero(sum(case when ${queued} = true then 1 end)
-        + sum(case when ${direction} = 'Outbound' then 1 end));;
+      / nullifzero(sum(case when ${queued} = true then 1
+      when ${direction} = 'Outbound' then 1 else 0 end));;
     drill_fields: [detail*]
   }
 
