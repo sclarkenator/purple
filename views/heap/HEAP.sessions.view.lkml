@@ -448,8 +448,8 @@ dimension: page_product_type {
     hidden:  no
     label: " Channel"
     description: "Channel that current session came from. Source: looker calculation"
-    sql:case when utm_medium in ('sr','search','cpc') and utm_term in ('br') then 'branded search'
-            when utm_medium in ('sr','search','cpc', 'lc') then 'non-branded search'
+    sql:case when ${utm_medium} in ('sr','search','cpc') and ${utm_term} in ('br') then 'branded search'
+            when ${utm_medium} in ('sr','search','cpc', 'lc') then 'non-branded search'
                 when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${referrer} ilike '%fb%' or ${referrer} ilike '%facebo%' or ${referrer} ilike '%insta%' or ${referrer} ilike '%l%nk%din%' or ${referrer} ilike '%pinteres%' or ${referrer} ilike '%snapch%' then 'social'
                 when ${utm_medium} ilike 'vi%' or ${referrer} ilike '%y%tube%' then 'video'
                 when utm_medium = 'nt' or utm_medium in ('native','nativeads', 'nativeads?utm_source=yahoo') or  utm_medium like 'ntvi%' or utm_source like '%tab%' then 'native'
