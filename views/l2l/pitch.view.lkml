@@ -318,12 +318,21 @@ derived_table: {
     sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
   }
 
-  measure: overall_equipment_effectiveness {
+  measure: overall_equipment_effectiveness_L2L {
     hidden: yes
     description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
     value_format: "0\%"
     type: average
     sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
+  }
+
+  measure: overall_equipment_effectiveness {
+    label: "OEE"
+    description: "FPY * OA * Throughput %"
+    hidden: no
+    type: number
+    value_format: "0\%"
+    sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
   }
 
   measure: total_operator_count {
