@@ -1204,7 +1204,7 @@ view: incontact_phone {
     value_format_name: percent_1
     sql: sum(case when ${handled} = true then 1 end)
       / nullifzero(sum(case when ${queued} = true then 1
-      when ${direction} = 'Outbound' then 1 else 0 end));;
+      when ${direction} = 'Outbound' then 1 else 0 end)) ;;
     drill_fields: [detail*]
   }
 

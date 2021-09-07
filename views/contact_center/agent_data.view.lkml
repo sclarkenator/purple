@@ -79,6 +79,14 @@ view: agent_data {
       else ${TABLE}.team_type end, '') ;;
   }
 
+  dimension: tenure {
+    label: "Tenure"
+    description: "Agent tenure in months."
+    type: number
+    value_format_name: decimal_0
+    sql: datediff(m, ${start_date}, current_date) ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## FLAG DIMENSIONS
@@ -164,6 +172,20 @@ view: agent_data {
     sql: ${TABLE}.created ;;
   }
 
+  dimension_group: end {
+    label: "End Date"
+    description: "Termination Date if not null, else Inactive Date."
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    sql: case when ${terminated_date} is not null then ${terminated_date}
+      else ${inactive_date}} end;;
+  }
+
   dimension_group: hired {
     label: "* Hired"
     description: "Date agent was initially hired."
@@ -219,6 +241,20 @@ view: agent_data {
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.service_recovery_team ;;
+  }
+
+  dimension_group: start {
+    label: "Start Date"
+    description: "Hire Date if not null, else Created Date."
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    sql: case when ${hired_date} is not null then ${hired_date}
+      else ${created_date} end;;
   }
 
   dimension_group: terminated {
