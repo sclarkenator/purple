@@ -87,7 +87,7 @@ view: ltol_line {
       else ${Line_name} end;;
   }
 
-  dimension: line_buckets{
+  dimension: line_bucket{
     description: "Max Machine, Glue, Roll Pack, Scrim, IMM"
     type: string
     sql: case
