@@ -314,16 +314,25 @@ derived_table: {
   measure: operational_availability {
     description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
     type: average
-    value_format: "0\%"
-    sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+    value_format: "0.0%"
+    sql: ${TABLE}."OPERATIONAL_AVAILABILITY"/100 ;;
+  }
+
+  measure: overall_equipment_effectiveness_L2L {
+    hidden: yes
+    description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
+    value_format: "0.0%"
+    type: average
+    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
   }
 
   measure: overall_equipment_effectiveness {
-    hidden: yes
-    description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
-    value_format: "0\%"
-    type: average
-    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
+    label: "OEE"
+    description: "FPY * OA * Throughput %"
+    hidden: no
+    type: number
+    value_format: "0.0%"
+    sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
   }
 
   measure: total_operator_count {
