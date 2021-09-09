@@ -11,12 +11,12 @@ view: headcount {
         ,ltrim(rtrim(a.employee_type)) as employee_type
         ,ltrim(rtrim(a.team_type)) as team_type
         ,case
-            when lower(a.name) like '%wfm%' then 'Non-Agent'
-            when lower(a.name) like '%analy%' then 'Non-Agent'
-            when a.name like '%API%' then 'Non-Agent'
-            when a.name like 'Administrator%' then 'Non-Agent'
-            when t.agent_name is null then 'Non-Agent'
-            when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
+            when employee_type is null and team_name is null then 'Other'
+            //when lower(a.name) like '%analy%' then 'Non-Agent'
+            // when a.name like '%API%' then 'Non-Agent'
+            //when a.name like 'Administrator%' then 'Non-Agent'
+            //when t.agent_name is null then 'Non-Agent'
+            //when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
             when t.team_name is not null then ltrim(rtrim(t.team_name))
             end as team_name
         ,ltrim(rtrim(a.supervisor)) as is_supervisor
@@ -223,28 +223,36 @@ view: headcount {
   measure: headcount {
     label: "Headcount"
     type: count_distinct
-    drill_fields: [agent_data*]
     sql: case when ${start_date} > ${date_date} then null
       when ${end_date_date} is null then ${incontact_id}
       when ${end_date_date} > ${date_date} then ${incontact_id} end ;;
+    drill_fields: [agent_data*]
+    link: {
+      label: "View Headcount Detail"
+      url: "https://purple.looker.com/looks/5760"
+    }
   }
 
   measure: hired_count {
     label: "Hired Count"
     type: count_distinct
+    sql: case when ${date_date} = ${start_date} then ${incontact_id} else null end ;;
     drill_fields: [agent_data*, hire_date, created_date, inactive_date]
     link: {
-      label: "List Hired Agents"
-      url: "https://purple.looker.com/explore/main/headcount_v2?fields=headcount.agent_data*,headcount.start_date,headcount.hire_date,headcount.created_date&f[headcount.is_retail]=No&f[headcount.hired_count]=%3E0&f{{headcount.start_date._in_query}}"
+      label: "View Headcount Detail"
+      url: "https://purple.looker.com/looks/5760"
     }
-    sql: case when ${date_date} = ${start_date} then ${incontact_id} else null end ;;
   }
 
   measure: term_count {
     label: "Termed Count"
     type: count_distinct
-    drill_fields: [agent_data*, end_date_date, term_date, inactive_date]
     sql: case when ${date_date} = ${end_date_date} then ${incontact_id} end ;;
+    drill_fields: [agent_data*, end_date_date, term_date, inactive_date]
+    link: {
+      label: "View Headcount Detail"
+      url: "https://purple.looker.com/looks/5760"
+    }
   }
 
 

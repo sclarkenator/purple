@@ -50,8 +50,8 @@ view: agent_data {
     label: "Team Group"
     description: "The current Team Group for each agent."
     type: string
-    # sql: case when ${TABLE}.team_type = 'Sales' then 'Sales'
-    sql: case when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
+    sql: case when employee_type is null and ${TABLE}.current_team_name is null then 'Other'
+      when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
       when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
       else 'Customer Care' end ;;
   }
@@ -84,7 +84,15 @@ view: agent_data {
     description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
-    sql: datediff(m, ${start_date}, current_date) ;;
+    sql: datediff(mm, ${start_date}, current_date) ;;
+  }
+
+  dimension: tenure_buckets {
+    label: "Tenure Bucket"
+    type: tier
+    style: integer
+    tiers: [0, 4, 7, 10]
+    sql: ${tenure} ;;
   }
 
   ##########################################################################################
@@ -143,20 +151,6 @@ view: agent_data {
   ##########################################################################################
   ## DATE/TIME STAMP DIMENSIONS
 
-  dimension_group: inactive {
-    label: "* Inactive"
-    description: "Date agent became inactive."
-    type: time
-    timeframes: [raw,
-      date,
-      week,
-      month,
-      quarter,
-      year]
-    datatype: timestamp
-    sql: ${TABLE}.inactive ;;
-  }
-
   dimension_group: created {
     label: "* Created"
     hidden: yes
@@ -173,7 +167,7 @@ view: agent_data {
   }
 
   dimension_group: end {
-    label: "End Date"
+    label: "* End"
     description: "Termination Date if not null, else Inactive Date."
     type: time
     timeframes: [raw,
@@ -183,7 +177,7 @@ view: agent_data {
       quarter,
       year]
     sql: case when ${terminated_date} is not null then ${terminated_date}
-      else ${inactive_date}} end;;
+      else ${inactive_date} end;;
   }
 
   dimension_group: hired {
@@ -199,6 +193,20 @@ view: agent_data {
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}.hired ;;
+  }
+
+  dimension_group: inactive {
+    label: "* Inactive"
+    description: "Date agent became inactive."
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year]
+    datatype: timestamp
+    sql: ${TABLE}.inactive ;;
   }
 
   dimension_group: mentor {
@@ -244,7 +252,7 @@ view: agent_data {
   }
 
   dimension_group: start {
-    label: "Start Date"
+    label: "* Start"
     description: "Hire Date if not null, else Created Date."
     type: time
     timeframes: [raw,
@@ -335,5 +343,31 @@ view: agent_data {
     type:  number
     value_format_name: id
     sql: ${TABLE}.workday_id ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## MEASURES
+
+  measure: count {
+    label: "Count"
+    description: "Count of Agents."
+    type: count
+    link: {
+      label: "View Tenure Detail"
+      url: "https://purple.looker.com/looks/5759"
+    }
+  }
+
+  measure: tenure_average {
+    label: "Tenure Average"
+    description: "Average tenure in months."
+    type: average
+    value_format_name: decimal_1
+    sql: ${tenure} ;;
+    link: {
+      label: "View Tenure Detail"
+      url: "https://purple.looker.com/looks/5759"
+    }
   }
 }
