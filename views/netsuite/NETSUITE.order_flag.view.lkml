@@ -124,7 +124,6 @@ view: order_flag {
      ,case when hybrid3 > 0 then 1 else 0 end hybrid3_flg
      ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
      ,case when purple_mattress >0 then 1 else 0 end purple_mattres_flg
-
     -- Room Set Completion
      ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
 
@@ -149,6 +148,7 @@ view: order_flag {
             when hybrid3_flg = 1 then 'Premier 3'
             when hybrid4_flg = 1 then 'Premier 4'
             when kid_bed_flg = 1 then 'Kid bed'
+            when purple_plus_flg = 1 then 'Purple Plus'
             else 'none' end mattress_order_model
 
     FROM(
@@ -211,8 +211,6 @@ view: order_flag {
          ,sum(case when model = 'EVERYWHERE' THEN 1 ELSE 0 END) everywhere_cushion
          ,sum(case when model = 'LITE' THEN 1 ELSE 0 END) lite_cushion
          ,sum(case when version ilike '%light duvet%' THEN 1 ELSE 0 END) light_duvet
-         ,sum(case when model = 'KID BED' THEN 1 ELSE 0 END) kidbed
-         ,sum(case when model ilike '%PURPLE PLUS%' THEN 1 ELSE 0 END) purpleplusbed
          ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
          ,sum(case when version ilike '%all seasons%' THEN 1 ELSE 0 END)allseasons_duvet
          ,sum(case when model = 'KID SHEETS' THEN 1 ELSE 0 END) kidsheets
@@ -242,6 +240,8 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 3'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 4' THEN 1 ELSE 0 END) hybrid4
          ,sum(case when model = 'PURPLE MATTRESS' then 1 else 0 end) purple_mattress
+         ,sum(case when model = 'KID BED' THEN 1 ELSE 0 END) kidbed
+         ,sum(case when model ilike '%PURPLE PLUS%' THEN 1 ELSE 0 END) purpleplusbed
          ,sum(case when product_description ilike '%MINI BED SQUISHY%' then 1 else 0 end) mini_bed_squishy
 
     -- For flagging an order based on UPT --
