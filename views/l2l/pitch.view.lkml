@@ -314,8 +314,8 @@ derived_table: {
   measure: operational_availability {
     description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
     type: average
-    value_format: "0.0\%"
-    sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+    value_format: "0.0%"
+    sql: ${TABLE}."OPERATIONAL_AVAILABILITY"/100 ;;
   }
 
   measure: overall_equipment_effectiveness_L2L {
@@ -331,7 +331,7 @@ derived_table: {
     description: "FPY * OA * Throughput %"
     hidden: no
     type: number
-    value_format: "0.0\%"
+    value_format: "0.0%"
     sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
   }
 
