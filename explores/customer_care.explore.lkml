@@ -613,6 +613,10 @@ explore: perfect_attendance_calc {
     }
   }
 
+  explore: liveperson_agent {hidden: yes} #cj
+  explore: liveperson_conversation {hidden: yes} #cj
+  explore: liveperson_conversation_message {hidden: yes} #cj
+  explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {hidden: yes} #cj
   explore: agent_current_warning_level {hidden: yes} #cj
   explore: shopify_refund {hidden:yes}
