@@ -83,7 +83,7 @@ view: headcount {
     sql: ${TABLE}.employee_type ;;
   }
 
-  dimension_group: end_date {
+  dimension_group: end {
     label: "* End Date"
     description: "Returns lesser value between term  and inactive dates."
     type: time
@@ -224,8 +224,8 @@ view: headcount {
     label: "Headcount"
     type: count_distinct
     sql: case when ${start_date} > ${date_date} then null
-      when ${end_date_date} is null then ${incontact_id}
-      when ${end_date_date} > ${date_date} then ${incontact_id} end ;;
+      when ${end_date} is null then ${incontact_id}
+      when ${end_date} > ${date_date} then ${incontact_id} end ;;
     drill_fields: [agent_data*]
     link: {
       label: "View Headcount Detail"
@@ -237,7 +237,7 @@ view: headcount {
     label: "Hired Count"
     type: count_distinct
     sql: case when ${date_date} = ${start_date} then ${incontact_id} else null end ;;
-    drill_fields: [agent_data*, hire_date, created_date, inactive_date]
+    drill_fields: [agent_data*, start_date]
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
@@ -247,8 +247,8 @@ view: headcount {
   measure: term_count {
     label: "Termed Count"
     type: count_distinct
-    sql: case when ${date_date} = ${end_date_date} then ${incontact_id} end ;;
-    drill_fields: [agent_data*, end_date_date, term_date, inactive_date]
+    sql: case when ${date_date} = ${end_date} then ${incontact_id} end ;;
+    drill_fields: [agent_data*, end_date]
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
