@@ -1,5 +1,5 @@
 view: aop_combined {
-  sql_table_name: "SALES"."FORECAST_AOP"
+  sql_table_name: "SALES"."V_FORECAST_AOP"
     ;;
 
   dimension: account {
