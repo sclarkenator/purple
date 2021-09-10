@@ -136,6 +136,39 @@ derived_table: {
     sql: ${TABLE}."PITCH_START" ;;
   }
 
+  dimension: liquid_date {
+    group_label: "Pitch Start Date"
+    label: "  Dynamic Date"
+    description: "If > 365 days in the look, then month, if > 30 then week, if > 5 then day, else hour"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >365
+      THEN cast(${pitch_start_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >30
+      THEN cast(${pitch_start_week} as varchar)
+        WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >5
+      THEN cast(${pitch_start_date} as varchar)
+      else ${pitch_start_hour}
+      END
+    ;;
+  }
+
+
   dimension: current_day_numb  {
     view_label: "Pitch"
     group_label: "Pitch Start Date"
