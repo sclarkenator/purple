@@ -1,58 +1,35 @@
-view: liveperson_conversation_message {
-  sql_table_name: "LIVEPERSON"."CONVERSATION_MESSAGE"
+view: liveperson_conversation_transfer {
+  sql_table_name: "LIVEPERSON"."CONVERSATION_TRANSFER"
     ;;
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
-  dimension: audience {
-    label: "Audience"
+  dimension: reason {
+    label: "Reason"
     type: string
-    sql: ${TABLE}."AUDIENCE" ;;
-  }
-
-  dimension: context_data {
-    label: "Context Data"
-    type: string
-    hidden: yes
-    sql: ${TABLE}."CONTEXT_DATA" ;;
-  }
-
-  dimension: device {
-    label: "Device"
-    type: string
-    sql: ${TABLE}."DEVICE" ;;
-  }
-
-  dimension: message {
-    label: "Message"
-    type: string
-    sql: ${TABLE}."MESSAGE" ;;
-  }
-
-  dimension: sent_by {
-    label: "Sent By"
-    type: string
-    sql: ${TABLE}."SENT_BY" ;;
-  }
-
-  dimension: seq {
-    label: "Seq"
-    type: number
-    sql: ${TABLE}."SEQ" ;;
-  }
-
-  dimension: type {
-    label: "Type"
-    type: string
-    hidden: yes
-    sql: ${TABLE}."TYPE" ;;
+    sql: ${TABLE}."REASON" ;;
   }
 
   ##########################################################################################
   ##########################################################################################
   ## DATE DIMENSIONS
+
+  dimension_group: created {
+    label: "* Created"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+  }
 
   dimension_group: insert_ts {
     label: "* Inserted"
@@ -73,33 +50,53 @@ view: liveperson_conversation_message {
   ##########################################################################################
   ## IDs
 
-  dimension: dialog_id {
-    label: "Dialog ID"
-    group_label: "* IDs"
-    type: string
-    sql: ${TABLE}."DIALOG_ID" ;;
+  dimension: assigned_agent_id {
+    label: "Assigned Agent ID"
+    group_label: "* ID"
+    type: number
+    sql: ${TABLE}."ASSIGNED_AGENT_ID" ;;
   }
 
   dimension: conversation_id {
     label: "Conversation ID"
-    group_label: "* IDs"
+    group_label: "* ID"
     type: string
-    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
-  dimension: message_id {
-    label: "Message ID"
-    group_label: "* IDs"
+  dimension: dialog_id {
+    label: "Dialog ID"
+    group_label: "* ID"
     type: string
-    sql: ${TABLE}."MESSAGE_ID" ;;
+    sql: ${TABLE}."DIALOG_ID" ;;
   }
 
-  dimension: participant_id {
-    label: "Participant ID"
-    group_label: "* IDs"
-    type: string
-    sql: ${TABLE}."PARTICIPANT_ID" ;;
+  dimension: source_agent_id {
+    label: "Source Agent ID"
+    group_label: "* ID"
+    type: number
+    sql: ${TABLE}."SOURCE_AGENT_ID" ;;
+  }
+
+  dimension: source_skill_id {
+    label: "Source Skill ID"
+    group_label: "* ID"
+    type: number
+    sql: ${TABLE}."SOURCE_SKILL_ID" ;;
+  }
+
+  dimension: target_skill_id {
+    label: "Target Skill ID"
+    group_label: "* ID"
+    type: number
+    sql: ${TABLE}."TARGET_SKILL_ID" ;;
+  }
+
+  dimension: transfered_by_id {
+    label: "Transfered By ID"
+    group_label: "* ID"
+    type: number
+    sql: ${TABLE}."TRANSFERED_BY_ID" ;;
   }
 
   ##########################################################################################
@@ -108,6 +105,6 @@ view: liveperson_conversation_message {
 
   measure: count {
     type: count
-    drill_fields: [conversation.conversation_id]
+    drill_fields: []
   }
 }
