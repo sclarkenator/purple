@@ -1,4 +1,5 @@
 view: liveperson_conversation_transfer {
+  # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html#:~:text=string-,Transfer%20info,-NAME
   sql_table_name: "LIVEPERSON"."CONVERSATION_TRANSFER"
     ;;
 
