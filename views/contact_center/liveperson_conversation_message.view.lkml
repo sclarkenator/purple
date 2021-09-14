@@ -82,13 +82,6 @@ view: liveperson_conversation_message {
   ##########################################################################################
   ## IDs
 
-  dimension: dialog_id {
-    label: "Dialog ID"
-    group_label: "* IDs"
-    type: string
-    sql: ${TABLE}."DIALOG_ID" ;;
-  }
-
   dimension: conversation_id {
     label: "Conversation ID"
     group_label: "* IDs"
