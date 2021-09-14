@@ -55,6 +55,7 @@ view: liveperson_conversation_transfer {
     label: "Assigned Agent ID"
     group_label: "* ID"
     type: number
+    hidden: yes
     sql: ${TABLE}."ASSIGNED_AGENT_ID" ;;
   }
 
@@ -62,6 +63,7 @@ view: liveperson_conversation_transfer {
     label: "Conversation ID"
     group_label: "* ID"
     type: string
+    hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
@@ -69,6 +71,7 @@ view: liveperson_conversation_transfer {
     label: "Dialog ID"
     group_label: "* ID"
     type: string
+    hidden: yes
     sql: ${TABLE}."DIALOG_ID" ;;
   }
 
@@ -76,6 +79,7 @@ view: liveperson_conversation_transfer {
     label: "Source Agent ID"
     group_label: "* ID"
     type: number
+    hidden: yes
     sql: ${TABLE}."SOURCE_AGENT_ID" ;;
   }
 
@@ -83,6 +87,7 @@ view: liveperson_conversation_transfer {
     label: "Source Skill ID"
     group_label: "* ID"
     type: number
+    hidden: yes
     sql: ${TABLE}."SOURCE_SKILL_ID" ;;
   }
 
@@ -90,6 +95,7 @@ view: liveperson_conversation_transfer {
     label: "Target Skill ID"
     group_label: "* ID"
     type: number
+    hidden: yes
     sql: ${TABLE}."TARGET_SKILL_ID" ;;
   }
 
@@ -97,6 +103,7 @@ view: liveperson_conversation_transfer {
     label: "Transfered By ID"
     group_label: "* ID"
     type: number
+    hidden: yes
     sql: ${TABLE}."TRANSFERED_BY_ID" ;;
   }
 

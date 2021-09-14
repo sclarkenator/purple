@@ -86,7 +86,7 @@ view: liveperson_conversation_message {
     label: "Conversation ID"
     group_label: "* IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
@@ -94,6 +94,7 @@ view: liveperson_conversation_message {
     label: "Message ID"
     group_label: "* IDs"
     type: string
+    hidden: yes
     sql: ${TABLE}."MESSAGE_ID" ;;
   }
 
@@ -101,6 +102,7 @@ view: liveperson_conversation_message {
     label: "Participant ID"
     group_label: "* IDs"
     type: string
+    hidden: yes
     sql: ${TABLE}."PARTICIPANT_ID" ;;
   }
 
