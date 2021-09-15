@@ -491,7 +491,7 @@ view: zendesk_ticket_v2 {
   dimension: contact_id_first{
     group_label: "Ticket Custom Fields"
     description: "First inContact Contact ID's associated with a phone ticket"
-    type: number
+    type: string
     sql: ${TABLE}."CONTACT_ID" ;;
   }
 
@@ -755,7 +755,7 @@ view: zendesk_ticket_v2 {
     sql: replace(${TABLE}."CUSTOM_SECONDARY_DISPOSITION", '_', ' ');;
   }
 
-  dimension: secondary_disposition-call {
+  dimension: secondary_disposition_call {
     group_label: "Ticket Disposition"
     description: "Secondary disposition of the call segment, as captured in FAC.  A ticket may have multiple secondary call dispositions due to multiple call segments being associated with a ticket. "
     type: string
