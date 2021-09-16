@@ -4,10 +4,12 @@ view: agent_data {
 
   derived_table: {
     sql:
-      select distinct a.*,
+      select distinct
+          a.*,
           c.team_name as current_team_name,
           c.team_email as current_team_email,
-          case when a.inactive is null then true else false end as active_flag
+          case when a.inactive is null then true else false end as active_flag,
+          la.agent_id as liveperson_id
 
       from analytics.customer_care.agent_lkp a
 
@@ -18,7 +20,10 @@ view: agent_data {
               where team_name is not null
               ) c
               on a.incontact_id = c.incontact_id
-              and c.rnk = 1 ;;
+              and c.rnk = 1
+
+          left join liveperson.agent la
+            on a.incontact_id = la.employee_id ;;
   }
 
   ##########################################################################################
@@ -81,6 +86,7 @@ view: agent_data {
 
   dimension: tenure {
     label: "Tenure"
+    group_label: "* Tenure Metrics"
     description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
@@ -89,6 +95,7 @@ view: agent_data {
 
   dimension: tenure_buckets {
     label: "Tenure Bucket"
+    group_label: "* Tenure Metrics"
     type: tier
     style: integer
     tiers: [0, 4, 7, 10]
@@ -101,7 +108,7 @@ view: agent_data {
 
   dimension: is_active {
     label: "Is Active"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Whether or not this agent is active in the system."
     type: yesno
     sql: ${TABLE}.active_flag ;;
@@ -109,7 +116,7 @@ view: agent_data {
 
   dimension: is_mentor {
     label: "Is Mentor"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Mentors flag."
     type: yesno
     sql: ${TABLE}.mentor is not null ;;
@@ -117,7 +124,7 @@ view: agent_data {
 
   dimension: is_purple_with_purpose {
     label: "Is PWP Cert"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Purple with Purpose cetrification flag."
     type: yesno
     sql: ${TABLE}.purple_with_purpose is not null ;;
@@ -125,7 +132,7 @@ view: agent_data {
 
   dimension: is_retail {
     label: "Is Retail Agent"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Is this a retail agent."
     type:  yesno
     sql: ${TABLE}.retail ;;
@@ -133,7 +140,7 @@ view: agent_data {
 
   dimension: is_service_recovery_team {
     label: "Is SRT Cert"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Service Recovery Team flag."
     type: yesno
     sql: ${TABLE}.service_recovery_team is not null ;;
@@ -141,7 +148,7 @@ view: agent_data {
 
   dimension: is_supervisor {
     label: "Is Supervisor"
-    group_label: "* Flags"
+    group_label: "* Agent Flags"
     description: "Whether or not this agent is a supervisor."
     type: yesno
     sql: ${TABLE}.supervisor ;;
@@ -152,7 +159,7 @@ view: agent_data {
   ## DATE/TIME STAMP DIMENSIONS
 
   dimension_group: created {
-    label: "* Created"
+    label: "- Created"
     hidden: yes
     type: time
     timeframes: [raw,
@@ -167,7 +174,7 @@ view: agent_data {
   }
 
   dimension_group: end {
-    label: "* End"
+    label: "- End"
     description: "Termination Date if not null, else Inactive Date."
     type: time
     timeframes: [raw,
@@ -181,7 +188,7 @@ view: agent_data {
   }
 
   dimension_group: hired {
-    label: "* Hired"
+    label: "- Hired"
     description: "Date agent was initially hired."
     type: time
     timeframes: [raw,
@@ -196,7 +203,7 @@ view: agent_data {
   }
 
   dimension_group: inactive {
-    label: "* Inactive"
+    label: "- Inactive"
     description: "Date agent became inactive."
     type: time
     timeframes: [raw,
@@ -210,7 +217,7 @@ view: agent_data {
   }
 
   dimension_group: mentor {
-    label: "* Mentor"
+    label: "- Mentor"
     type: time
     timeframes: [raw,
       date,
@@ -224,7 +231,7 @@ view: agent_data {
   }
 
   dimension_group: purple_with_purpose {
-    label: "* Purple with Purpose"
+    label: "- Purple with Purpose"
     type: time
     timeframes: [raw,
       date,
@@ -238,7 +245,7 @@ view: agent_data {
   }
 
   dimension_group: service_recovery_team {
-    label: "* Service Recovery Team"
+    label: "- Service Recovery Team"
     type: time
     timeframes: [raw,
       date,
@@ -252,7 +259,7 @@ view: agent_data {
   }
 
   dimension_group: start {
-    label: "* Start"
+    label: "- Start"
     description: "Hire Date if not null, else Created Date."
     type: time
     timeframes: [raw,
@@ -266,7 +273,7 @@ view: agent_data {
   }
 
   dimension_group: terminated {
-    label: "* Terminated"
+    label: "- Terminated"
     description: "Date of voluntary or involuntary termination."
     type: time
     timeframes: [raw,
@@ -281,7 +288,7 @@ view: agent_data {
   }
 
   dimension: update_ts {
-    label: "* Update TS"
+    label: "- Update TS"
     hidden: yes
     type:  date_time
     sql: ${TABLE}.update_ts ;;
@@ -350,7 +357,7 @@ view: agent_data {
   ## MEASURES
 
   measure: count {
-    label: "Count"
+    label: "Agent Count"
     description: "Count of Agents."
     type: count
     link: {

@@ -1,7 +1,19 @@
 view: liveperson_conversation_transfer {
   # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html#:~:text=string-,Transfer%20info,-NAME
-  sql_table_name: "LIVEPERSON"."CONVERSATION_TRANSFER"
-    ;;
+  derived_table: {
+    sql:
+      select ct.*
+        ,s.name as source_skill
+        ,t.name as target_skill
+
+      from liveperson.conversation_transfer ct
+
+        join liveperson.skill s
+          on ct.source_skill_id = s.skill_id
+
+        join liveperson.skill t
+          on ct.source_skill_id = t.skill_id ;;
+    }
 
   ##########################################################################################
   ##########################################################################################
@@ -13,12 +25,25 @@ view: liveperson_conversation_transfer {
     sql: ${TABLE}."REASON" ;;
   }
 
+  dimension: source_skill {
+    label: "Source Skill"
+    type: string
+    sql: ${TABLE}.source_skill ;;
+  }
+
+  dimension: target_skill {
+    label: "Target Skill"
+    type: string
+    sql: ${TABLE}.target_skill ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## DATE DIMENSIONS
 
-  dimension_group: created {
-    label: "* Created"
+  dimension_group: transfer {
+    label: "- Transfer"
+    description: "TS when transfer was logged."
     type: time
     timeframes: [
       raw,
@@ -29,11 +54,13 @@ view: liveperson_conversation_transfer {
       quarter,
       year
     ]
+    # hidden: yes
     sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: insert_ts {
-    label: "* Inserted"
+    label: "- Inserted"
+    description: "TS when transfer record was updated in database."
     type: time
     timeframes: [
       raw,
@@ -44,6 +71,7 @@ view: liveperson_conversation_transfer {
       quarter,
       year
     ]
+    hidden: yes
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -53,57 +81,58 @@ view: liveperson_conversation_transfer {
 
   dimension: assigned_agent_id {
     label: "Assigned Agent ID"
-    group_label: "* ID"
+    group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."ASSIGNED_AGENT_ID" ;;
   }
 
   dimension: conversation_id {
-    label: "Conversation ID"
-    group_label: "* ID"
+    label: "Conversation IDs"
+    group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
-  dimension: dialog_id {
-    label: "Dialog ID"
-    group_label: "* ID"
+  dimension: pk {
+    label: "Primary Key"
+    group_label: "* IDs"
     type: string
-    hidden: yes
-    sql: ${TABLE}."DIALOG_ID" ;;
+    primary_key: yes
+    # hidden: yes
+    sql: concat(${conversation_id}, ${transfer_time}) ;;
   }
 
   dimension: source_agent_id {
     label: "Source Agent ID"
-    group_label: "* ID"
+    group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."SOURCE_AGENT_ID" ;;
   }
 
   dimension: source_skill_id {
     label: "Source Skill ID"
-    group_label: "* ID"
+    group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."SOURCE_SKILL_ID" ;;
   }
 
   dimension: target_skill_id {
     label: "Target Skill ID"
-    group_label: "* ID"
+    group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."TARGET_SKILL_ID" ;;
   }
 
   dimension: transfered_by_id {
     label: "Transfered By ID"
-    group_label: "* ID"
+    group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."TRANSFERED_BY_ID" ;;
   }
 
@@ -111,8 +140,15 @@ view: liveperson_conversation_transfer {
   ##########################################################################################
   ## MEASURES
 
-  measure: count {
-    type: count
-    drill_fields: []
+  measure: transfer_count {
+    label: "Transfer Count"
+    type: count_distinct
+    sql: ${pk} ;;
+  }
+
+  measure: transfer_percent {
+    label: "Transfer Percent"
+    type: percent_of_total
+    sql: count(distinct ${pk}) ;;
   }
 }

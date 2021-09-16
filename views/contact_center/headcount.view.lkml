@@ -19,9 +19,9 @@ view: headcount {
             //when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
             when t.team_name is not null then ltrim(rtrim(t.team_name))
             end as team_name
-        ,ltrim(rtrim(a.supervisor)) as is_supervisor
-        ,a.retail as is_retail
-        ,case when a.inactive is null then true else false end as is_active
+        ,to_boolean(trim(rtrim(a.supervisor))) as is_supervisor
+        ,to_boolean(a.retail) as is_retail
+        ,to_boolean(case when a.inactive is null then true else false end) as is_active
         ,a.inactive::date as inactive_date
         ,a.hired::date as hire_date
         ,a.terminated::date as term_date
@@ -226,7 +226,7 @@ view: headcount {
     sql: case when ${start_date} > ${date_date} then null
       when ${end_date} is null then ${incontact_id}
       when ${end_date} > ${date_date} then ${incontact_id} end ;;
-    drill_fields: [agent_data*]
+    drill_fields: [agent_data*, is_supervisor]
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
@@ -237,7 +237,7 @@ view: headcount {
     label: "Hired Count"
     type: count_distinct
     sql: case when ${date_date} = ${start_date} then ${incontact_id} else null end ;;
-    drill_fields: [agent_data*, start_date]
+    drill_fields: [agent_data*, start_date, is_supervisor]
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
@@ -248,7 +248,7 @@ view: headcount {
     label: "Termed Count"
     type: count_distinct
     sql: case when ${date_date} = ${end_date} then ${incontact_id} end ;;
-    drill_fields: [agent_data*, end_date]
+    drill_fields: [agent_data*, end_date, is_supervisor]
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"

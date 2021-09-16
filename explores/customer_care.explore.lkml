@@ -9,6 +9,63 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+## LIVEPERSON CONVERSATION cj
+explore: liveperson_conversations {
+  label: "LivePerson Conversations"
+  view_label: "Agent Data"
+  from: agent_data
+  hidden: yes
+
+  join: liveperson_agent {
+    view_label: "Agent Data"
+    type: inner
+    sql_on: ${liveperson_conversations.incontact_id} = ${liveperson_agent.employee_id} ;;
+    relationship: one_to_one
+  }
+
+  join: liveperson_conversation {
+    view_label: "LivePerson Conversations"
+    type: full_outer
+    sql_on: cast(${liveperson_agent.agent_id} as char(10)) = cast(${liveperson_conversation.last_agent_id} as char(10)) ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
+## LIVEPERSON MESSAGES cj
+explore: liveperson_messages {
+  label: "LivePerson Messages"
+  description: "LivePerson conversations message data."
+  view_label: "Agent Data"
+  from: agent_data
+  hidden: yes
+
+  join: liveperson_agent {
+    view_label: "Agent Data"
+    type: full_outer
+    sql_on: ${liveperson_messages.incontact_id} = ${liveperson_agent.employee_id} ;;
+    relationship: one_to_one
+  }
+
+  join: liveperson_conversation_message {
+    view_label: "LivePerson Messages"
+    type: full_outer
+    sql_on: len(${liveperson_conversation_message.participant_id}) = 10
+      and cast(${liveperson_agent.agent_id} as char(10)) = cast(left(${liveperson_conversation_message.participant_id}, 10) as char(10)) ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_conversation {
+    view_label: "LivePerson Conversation Data"
+    type: full_outer
+    sql_on: ${liveperson_conversation_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
 ## AGENT TEAM HISTORY cj
 explore:agent_team_history {
   view_label: "Agent Team History"
@@ -615,7 +672,7 @@ explore: perfect_attendance_calc {
 
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
-  explore: liveperson_conversation {hidden: yes} #cj
+  # explore: liveperson_conversation {hidden: yes} #cj
   explore: liveperson_conversation_message {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {hidden: yes} #cj

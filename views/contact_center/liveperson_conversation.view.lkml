@@ -1,6 +1,7 @@
 view: liveperson_conversation {
   # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 
+  view_label: "LivePerson Conversations"
   sql_table_name: "LIVEPERSON"."CONVERSATION"
     ;;
   drill_fields: [conversation_id]
@@ -101,7 +102,7 @@ view: liveperson_conversation {
   ## DATE DIMENSIONS
 
   dimension_group: ended {
-    label: "* Ended"
+    label: "- Conversation Ended"
     description: "End-time of the conversation."
     type: time
     timeframes: [
@@ -117,7 +118,8 @@ view: liveperson_conversation {
   }
 
   dimension_group: insert_ts {
-    label: "* Inserted"
+    label: "- Inserted"
+    description: "TS when conversation record was inserted in database."
     type: time
     timeframes: [
       raw,
@@ -133,7 +135,7 @@ view: liveperson_conversation {
   }
 
   dimension_group: started {
-    label: "* Started"
+    label: "- Conversation Started"
     description: "Start-time of the conversation."
     type: time
     timeframes: [
@@ -149,7 +151,8 @@ view: liveperson_conversation {
   }
 
   dimension_group: update_ts {
-    label: "* Updated"
+    label: "- Updated"
+    description: "TS when conversation record was updated in database."
     type: time
     timeframes: [
       raw,
@@ -170,10 +173,11 @@ view: liveperson_conversation {
 
   dimension: alerted_mcs_id {
     label: "Alerted MCS ID"
+    group_label: "* IDs"
     description: "Alerted MCS ID"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."ALERTED_MCS" ;;
   }
 
@@ -181,7 +185,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     primary_key: yes
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
@@ -189,7 +193,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CAMPAIGN_ENGAGEMENT_ID" ;;
   }
 
@@ -197,7 +201,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CAMPAIGN_ID" ;;
   }
 
@@ -205,7 +209,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."GOAL_ID" ;;
   }
 
@@ -213,7 +217,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."INTERACTION_CONTEXT_ID" ;;
   }
 
@@ -221,7 +225,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LAST_AGENT_GROUP_ID" ;;
   }
 
@@ -229,7 +233,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LAST_AGENT_ID" ;;
   }
 
@@ -237,7 +241,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LAST_SKILL_ID" ;;
   }
 
@@ -245,7 +249,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LOB_ID" ;;
   }
 
@@ -253,14 +257,14 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LOCATION_ID" ;;
   }
 
   dimension: session_id {
     group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
@@ -268,14 +272,14 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."VISITOR_BEHAVIOR_ID" ;;
   }
 
   dimension: visitor_id {
     group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."VISITOR_ID" ;;
   }
 
@@ -283,7 +287,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."VISITOR_PROFILE_ID" ;;
   }
 
@@ -291,8 +295,16 @@ view: liveperson_conversation {
   ##########################################################################################
   ## MEASURES
 
-  measure: count {
+  measure: conversation_count {
+    label: "Conversation Count"
     type: count
-    drill_fields: [conversation_id, conversation_message.count]
+    # type: count_distinct
+    # sql: ${conversation_id} ;;
   }
+
+  # measure: conversation_percentage { # USE TABLE CALCULATIONS FOR PERCENTAGE OF CONVERSATIONS
+  #   label: "Conversation Percentage"
+  #   type: percent_of_total
+  #   sql: count(distinct ${conversation_id}) ;;
+  # }
 }

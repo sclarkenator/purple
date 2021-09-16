@@ -18,7 +18,7 @@ view: liveperson_skill {
 
   dimension: deleted {
     label: "Deleted"
-    description: "Whether the item is deleted or not."
+    description: "Whether the item has been deleted."
     type: yesno
     sql: ${TABLE}."DELETED" ;;
   }
@@ -38,14 +38,14 @@ view: liveperson_skill {
   }
 
   dimension: max_wait_time {
-    label: "Max Wait Time"
-    description: "The skill’s max wait time. Defaults to 120."
+    label: "Max Allowed Wait Time"
+    description: "The skill’s maximum allowed wait time.  This is a setting, not a measure. Defaults to 120."
     type: number
     sql: ${TABLE}."MAX_WAIT_TIME" ;;
   }
 
   dimension: name {
-    label: "Name"
+    label: "Skill Name"
     description: "Skill’s unique name."
     type: string
     sql: ${TABLE}."NAME" ;;
@@ -74,7 +74,7 @@ view: liveperson_skill {
   }
 
   dimension: transfer_list {
-    label: "Transfer List"
+    label: "Transfers To"
     description: "The list of Skill ids to which this skill can transfer conversations."
     type: string
     sql: ${TABLE}."TRANSFER_LIST" ;;
@@ -85,7 +85,8 @@ view: liveperson_skill {
   ## DATE DIMENSIONS
 
   dimension_group: insert_ts {
-    label: "* Inserted"
+    label: "- Inserted"
+    description: "TS when skill record was originally inserted into database."
     type: time
     timeframes: [
       raw,
@@ -101,7 +102,8 @@ view: liveperson_skill {
   }
 
   dimension_group: modified {
-    label: "* Modified"
+    label: "- Skill Modified"
+    description: "TS when skill was modified in LivePerson."
     type: time
     timeframes: [
       raw,
@@ -116,7 +118,8 @@ view: liveperson_skill {
   }
 
   dimension_group: update_ts {
-    label: "* Updated"
+    label: "- Updated"
+    description: "TS when skill record was updated in database."
     type: time
     timeframes: [
       raw,
@@ -162,7 +165,9 @@ view: liveperson_skill {
   ## MEASURES
 
   measure: count {
+    label: "Count Skills"
     type: count
+    hidden: yes
     drill_fields: [skill_id, name]
   }
 }
