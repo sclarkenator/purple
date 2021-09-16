@@ -613,6 +613,7 @@ explore: perfect_attendance_calc {
     }
   }
 
+  explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
   explore: liveperson_conversation {hidden: yes} #cj
   explore: liveperson_conversation_message {hidden: yes} #cj
