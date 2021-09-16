@@ -33,7 +33,7 @@ view: bom_demand_matrix {
 
   dimension: base_unit {
     hidden: no
-    label: "Measureing Unit"
+    label: "Measuring Unit"
     description: "Unit type for measuring (EAS,Oz,Lbs,Ft,Etc)"
     type: string
     sql: ${TABLE}.base_unit ;;  }
