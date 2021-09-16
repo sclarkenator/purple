@@ -52,6 +52,7 @@ dimension: open_date  {
     type: date
     sql: CASE WHEN ${store_id} = 'NJ-01' then '2021-08-13'
               WHEN ${store_id} = 'OH-02' then '2021-09-08'
+              WHEN ${store_id} = 'AZ-03' then '2021-09-12'
               ELSE ${TABLE}.mindate END;;
   }
 
