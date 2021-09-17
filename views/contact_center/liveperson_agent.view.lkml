@@ -9,9 +9,16 @@ view: liveperson_agent {
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: agent_name_lp {
+    label: "CC LP Agent Name"
+    group_label: "* LivePerson Agent Data"
+    description: "Agents First and Last name. Uses LivePerson data if CC data is missing."
+    type: string
+    sql: nvl(${agent_data.agent_name}, ${TABLE}.full_name);;
+  }
+
   dimension: api_user {
     label: "API User"
-    group_label: "* LivePerson Agent Data"
     description: "A User which is created as an API User doesn't have a password."
     type: yesno
     hidden: yes
@@ -56,7 +63,7 @@ view: liveperson_agent {
     group_label: "* LivePerson Agent Data"
     description: "User's full name."
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."FULL_NAME" ;;
   }
 

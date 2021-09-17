@@ -308,6 +308,15 @@ view: agent_data {
     sql: ${TABLE}.incontact_id ;;
   }
 
+  dimension: liveperson_id {
+    label: "LivePerson ID"
+    group_label: "* IDs"
+    description: "LivePerson Agent ID."
+    type:  number
+    value_format_name: id
+    sql: ${TABLE}.liveperson_id ;;
+  }
+
   dimension: zendesk_id {
     label: "Zendesk ID"
     group_label: "* IDs"

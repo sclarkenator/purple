@@ -13,20 +13,20 @@ include: "/dashboards/**/*.dashboard"
 explore: liveperson_conversations {
   label: "LivePerson Conversations"
   view_label: "Agent Data"
-  from: agent_data
+  from: liveperson_agent
   hidden: yes
 
-  join: liveperson_agent {
+  join: agent_data {
     view_label: "Agent Data"
-    type: inner
-    sql_on: ${liveperson_conversations.incontact_id} = ${liveperson_agent.employee_id} ;;
+    type: left_outer
+    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.incontact_id} ;;
     relationship: one_to_one
   }
 
   join: liveperson_conversation {
     view_label: "LivePerson Conversations"
     type: full_outer
-    sql_on: cast(${liveperson_agent.agent_id} as char(10)) = cast(${liveperson_conversation.last_agent_id} as char(10)) ;;
+    sql_on: ${agent_data.liveperson_id}= ${liveperson_conversation.last_agent_id} ;;
     relationship: many_to_one
   }
 }
@@ -38,13 +38,13 @@ explore: liveperson_messages {
   label: "LivePerson Messages"
   description: "LivePerson conversations message data."
   view_label: "Agent Data"
-  from: agent_data
+  from: liveperson_agent
   hidden: yes
 
-  join: liveperson_agent {
+  join: agent_data {
     view_label: "Agent Data"
-    type: full_outer
-    sql_on: ${liveperson_messages.incontact_id} = ${liveperson_agent.employee_id} ;;
+    type: left_outer
+    sql_on: ${liveperson_messages.employee_id} = ${agent_data.incontact_id} ;;
     relationship: one_to_one
   }
 
@@ -52,7 +52,7 @@ explore: liveperson_messages {
     view_label: "LivePerson Messages"
     type: full_outer
     sql_on: len(${liveperson_conversation_message.participant_id}) = 10
-      and cast(${liveperson_agent.agent_id} as char(10)) = cast(left(${liveperson_conversation_message.participant_id}, 10) as char(10)) ;;
+      and cast(${agent_data.incontact_id} as char(10)) = cast(left(${liveperson_conversation_message.participant_id}, 10) as char(10)) ;;
     relationship: many_to_one
   }
 
