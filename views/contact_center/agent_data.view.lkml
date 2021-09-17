@@ -56,7 +56,7 @@ view: agent_data {
     description: "The current Team Group for each agent."
     type: string
     sql: case when employee_type is null and ${TABLE}.current_team_name is null then 'Other'
-      when ${TABLE}.team_type in ('Admin', 'WFM') then 'Administrative'
+      when ${TABLE}.team_type in ('Admin', 'WFM', 'QA') then 'Admin'
       when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
       else 'Customer Care' end ;;
   }
@@ -90,7 +90,8 @@ view: agent_data {
     description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
-    sql: datediff(mm, ${start_date}, current_date) ;;
+    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(mm, ${start_date}, current_date) end ;;
+
   }
 
   dimension: tenure_buckets {

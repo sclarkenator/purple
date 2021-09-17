@@ -443,7 +443,8 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags whether the Inbound or Outbound contact was handled by an agent at some point."
     type: yesno
-    sql: ${TABLE}."HANDLED" ;;
+    sql: ${handle_time} > 0 ;;
+    # sql: ${TABLE}."HANDLED" ;;
   }
 
   dimension: held {
@@ -866,7 +867,7 @@ view: incontact_phone {
   measure: sla_offered_count {
     label: "SLA Offered Count"
     group_label: "Count Measures"
-    description: "Counts contacts that are included in SLA calculations."
+    description: "Count of calls that are counted toward Service Level."
     type: sum
     value_format_name: decimal_0
     sql: case when ${service_level_flag} >= 0 then 1 end ;;

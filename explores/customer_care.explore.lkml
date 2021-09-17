@@ -235,6 +235,7 @@ explore: headcount_v2 {
       and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
     relationship: one_to_many
   }
+  sql_always_where: ${headcount.team_group} <> 'Other' ;;
 }
 
 #####################################################################

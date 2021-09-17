@@ -6,7 +6,7 @@ view: activities_all_sources {
         'call' as activity_type
         ,case when c.campaign_name = 'Sales Team Phone'
           then 'sales' else 'support' end as team
-        ,c.start_ts_mst as created
+        , c.start_ts_mst as created
         , a.name as agent_name
         , a.email as agent_email
         , c.handle_time as duration
