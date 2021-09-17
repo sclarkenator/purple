@@ -4,8 +4,8 @@ view: headcount {
 
   derived_table: {
     sql:
-      select concat(cast(d.date as date),a.incontact_id) as pk
-        ,cast(d.date as date) as date
+      select concat(d.date::date, a.incontact_id) as pk
+        ,d.date::date as date
         ,a.incontact_id as incontact_id
         ,ltrim(rtrim(a.name)) as agent_name
         ,ltrim(rtrim(a.employee_type)) as employee_type
@@ -35,7 +35,7 @@ view: headcount {
 
         left join customer_care.team_lead_name t
           on a.incontact_id = t.incontact_id
-          and d.date between t.start_date and t.end_date
+          and d.date between t.start_date::date and t.end_date::date
 
       where d.date between '2019-01-01' and current_date
     ;;
@@ -72,7 +72,7 @@ view: headcount {
       quarter,
       year
     ]
-    sql: cast(${TABLE}.date as date) ;;
+    sql: ${TABLE}.date ;;
   }
 
   dimension: employee_type {
@@ -95,15 +95,15 @@ view: headcount {
       quarter,
       year
     ]
-    sql: case when ${term_date} is not null then ${term_date}
-      else ${inactive_date} end ;;
+    sql: case when ${term_date} is null then ${inactive_date}
+      else ${term_date} end ;;
   }
 
   dimension: hire_date {
     label: "Hired"
     type: date
     # hidden: yes
-    sql: ${TABLE}.hire_date ;;
+    sql: ${TABLE}.hire_date::date ;;
   }
 
   dimension: inactive_date {
@@ -149,9 +149,8 @@ view: headcount {
     description: "Returns greater value between created and hire dates."
     type: date
     # hidden: yes
-    sql: case when ${created_date} is null then ${hire_date}
-      when ${hire_date} > ${created_date} then ${hire_date}
-      else ${created_date} end ;;
+    sql: case when ${hire_date} is not null then ${created_date}
+      else ${hire_date} end ;;
   }
 
   dimension: team_group {
@@ -159,7 +158,8 @@ view: headcount {
     group_label: "* Current Grouping"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when lower(${team_type}) in ('admin', 'wfm') then 'Admin'
+    sql: case when lower(${team_type}) in ('admin', 'wfm', 'QA') then 'Admin'
+      when ${team_type} is null then 'Other'
       when lower(${team_type}) in ('training', 'sales')
         or ${team_type} is null then ${team_type}
       else 'Customer Care' end ;;
@@ -194,7 +194,7 @@ view: headcount {
     description: "Last day of employment at Purple."
     type: date
     # hidden: yes
-    sql: ${TABLE}.term_date ;;
+    sql: ${TABLE}.term_date::date ;;
   }
 
   ##########################################################################################
@@ -225,7 +225,7 @@ view: headcount {
     type: count_distinct
     sql: case when ${start_date} > ${date_date} then null
       when ${end_date} is null then ${incontact_id}
-      when ${end_date} > ${date_date} then ${incontact_id} end ;;
+      when ${end_date} >= ${date_date} then ${incontact_id} end ;;
     drill_fields: [agent_data*, is_supervisor]
     link: {
       label: "View Headcount Detail"
