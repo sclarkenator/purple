@@ -6,13 +6,13 @@ view: activities_all_sources {
         'call' as activity_type
         ,case when c.campaign_name = 'Sales Team Phone'
           then 'sales' else 'support' end as team
+        ,c.start_ts_mst as created
         , a.name as agent_name
         , a.email as agent_email
-        , c.handle_time
+        , c.handle_time as duration
         , case when c.handle_time > 0 then 'F' else 'T' end as missed
         , c.skill_name as skill
         , null as email
-        ,c.agent_id
       from Analytics.customer_care.v_contacts_phone  c
       left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
       union
