@@ -95,6 +95,7 @@ view: ltol_line {
             when ${Line_name} ilike '%Max%' then 'Max Machine'
             when ${Line_name} ilike '%Roll%' then 'Roll Pack'
             when ${Line_name} ilike '%Scrim%' then 'Scrim'
+            when ${Line_name} ilike 'Assembly Line%' then 'Assembly Line'
             when  ${TABLE}."DESCRIPTION" ilike '%Injection Molding Line%' then 'IMM'
             else ${Line_name} end;;
   }
