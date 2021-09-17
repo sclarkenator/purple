@@ -1,7 +1,8 @@
 view: activities_all_sources {
   derived_table: {
-sql:
-    --calls (RPT Skills/Incontact)    select
+    sql:
+      --calls (incontact contacts)
+      select
         'call' as activity_type
         ,case when c.campaign_name = 'Sales Team Phone'
           then 'sales' else 'support' end as team
@@ -12,13 +13,9 @@ sql:
         , c.skill_name as skill
         , null as email
         ,c.agent_id
-    -- select distinct media_type
-
-    from Analytics.customer_care.v_contacts_phone  c
-
-    left join customer_care.agent_lkp a
-        on a.incontact_id = c.agent_id
-    union
+      from Analytics.customer_care.v_contacts_phone  c
+      left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
+      union
 
     --chats (zendesk tickets)
     select 'chat' as activity_type
@@ -54,37 +51,14 @@ sql:
     where t.via_channel in ('email','facebook','web')
   ;;}
 
+  ##########################################################################################
+  ##########################################################################################
+  ## GENERAL DIMENSIONS
+
 
   dimension: activity_type {
     type:  string
     sql: ${TABLE}.activity_type ;;
-  }
-
-  dimension_group: activity {
-    type: time
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, day_of_week_index, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: ${TABLE}.created::date  ;; }
-
-  dimension: until_today {
-    type: yesno
-    sql: ${activity_day_of_week_index} < date_part(dow,current_date()) AND ${activity_day_of_week_index} >= 0;;
-  }
-  dimension: prev_week{
-    group_label: "Activity Date"
-    label: "z - Previous Week"
-    type: yesno
-    sql:  date_trunc(week, ${TABLE}.created::date) = dateadd(week, -1, date_trunc(week, current_date)) ;; }
-
-  dimension_group: activity_time {
-    type: time
-    hidden: no
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour]
-    sql: ${TABLE}.created  ;; }
-
-
-  dimension: duration_dim {
-    type:  string
-    sql: ${TABLE}.duration ;;
   }
 
   dimension: agent_name {
@@ -97,6 +71,32 @@ sql:
     sql: lower(${TABLE}.agent_email) ;;
   }
 
+  dimension: duration_dim {
+    type:  string
+    sql: ${TABLE}.duration ;;
+  }
+
+  dimension: email {
+    type:  string
+    sql: ${TABLE}.email ;;
+  }
+
+  dimension: missed {
+    type:  yesno
+    sql: ${TABLE}.missed = 'T' ;;
+  }
+  dimension: prev_week{
+    group_label: "Activity Date"
+    label: "z - Previous Week"
+    type: yesno
+    sql:  date_trunc(week, ${TABLE}.created::date) = dateadd(week, -1, date_trunc(week, current_date)) ;;
+  }
+
+  dimension: skill {
+    type:  string
+    sql: ${TABLE}.skill ;;
+  }
+
   dimension: team {
     type:  string
     sql: ${TABLE}.team ;;
@@ -107,43 +107,67 @@ sql:
     sql: case when ${TABLE}.team = 'sales' then 'sales' else 'support' end ;;
   }
 
-  dimension: email {
-    type:  string
-    sql: ${TABLE}.email ;;
+  dimension: until_today {
+    type: yesno
+    sql: ${activity_day_of_week_index} < date_part(dow,current_date()) AND ${activity_day_of_week_index} >= 0;;
   }
 
-  dimension: skill {
-    type:  string
-    sql: ${TABLE}.skill ;;
+  ##########################################################################################
+  ##########################################################################################
+  ## DATE DIMENSIONS
+
+  dimension_group: activity {  ## IS THIS REALLY NEEDED?  SEEMS TO BE COVERED BELOW.
+    type: time
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year, week, day_of_week_index, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    sql: ${TABLE}.created::date  ;;
   }
 
-  dimension: missed {
-    type:  yesno
-    sql: ${TABLE}.missed = 'T' ;;
+  dimension_group: activity_time {
+    type: time
+    hidden: no
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour]
+    sql: ${TABLE}.created  ;; }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## IDs
+
+  dimension: pk {
+    label: "Primary Key"
+    type: string
+    sql: concat(${activity_type}, ${TABLE}.created) ;;
   }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## MEASURES
 
   measure: count {
+    label: "Count"
     type: count
   }
 
   measure: chats {
+    label: "Chat Count"
     type: sum
     sql: case when ${activity_type} = 'chat' then 1 else 0 end ;;
   }
 
   measure: calls {
+    label: "Call Count"
     type: sum
     sql: case when ${activity_type} = 'call' then 1 else 0 end ;;
   }
 
   measure: emails {
+    label: "Email Count"
     type: sum
     sql: case when ${activity_type} = 'email' then 1 else 0 end ;;
   }
 
   measure: duration {
+    label: "Duration Total"
     type: sum
     sql: ${TABLE}.duration ;;
   }
-}
 }

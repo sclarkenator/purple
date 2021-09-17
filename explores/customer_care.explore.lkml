@@ -670,9 +670,9 @@ explore: perfect_attendance_calc {
     }
   }
 
+  explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
-  # explore: liveperson_conversation {hidden: yes} #cj
   explore: liveperson_conversation_message {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {hidden: yes} #cj
