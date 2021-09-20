@@ -302,18 +302,21 @@ derived_table: {
   measure: planned_production_minutes {
     description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
   }
 
   measure: downtime_minutes {
     description: "Total amount of Downtime Mintues; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."DOWNTIME_MINUTES" ;;
   }
 
   measure: cycle_time {
     description: "Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
 
