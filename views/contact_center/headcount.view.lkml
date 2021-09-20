@@ -158,7 +158,7 @@ view: headcount {
     group_label: "* Current Grouping"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when lower(${team_type}) in ('admin', 'wfm', 'QA') then 'Admin'
+    sql: case when lower(${team_type}) in ('admin', 'wfm', 'qa') then 'Admin'
       when ${team_type} is null then 'Other'
       when lower(${team_type}) in ('training', 'sales')
         or ${team_type} is null then ${team_type}
@@ -231,6 +231,10 @@ view: headcount {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
     }
+    link: {
+      label: "Go To Headcount Dashboard"
+      url: "https://purple.looker.com/dashboards-next/4502?Headcount%20Date=today&Team%20Type=&Employee%20Type=&Team%20Lead%20Name=-Other&Team%20Group="
+    }
   }
 
   measure: hired_count {
@@ -242,6 +246,10 @@ view: headcount {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
     }
+    link: {
+      label: "Go To Headcount Dashboard"
+      url: "https://purple.looker.com/dashboards-next/4502?Headcount%20Date=today&Team%20Type=&Employee%20Type=&Team%20Lead%20Name=-Other&Team%20Group="
+    }
   }
 
   measure: term_count {
@@ -252,6 +260,10 @@ view: headcount {
     link: {
       label: "View Headcount Detail"
       url: "https://purple.looker.com/looks/5760"
+    }
+    link: {
+      label: "Go To Headcount Dashboard"
+      url: "https://purple.looker.com/dashboards-next/4502?Headcount%20Date=today&Team%20Type=&Employee%20Type=&Team%20Lead%20Name=-Other&Team%20Group="
     }
   }
 

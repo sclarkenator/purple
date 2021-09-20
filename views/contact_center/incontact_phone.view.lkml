@@ -680,6 +680,16 @@ view: incontact_phone {
 
   ##########################################################################################
   ##########################################################################################
+  ## COUNTERS
+
+  dimension: queue_counter {
+    description: "1 if queued, 0 if unqueued."
+    hidden: yes
+    sql: case when ${queued} = true then 1 else 0 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
   ## COUNT MEASURES
 
   measure: abandon_count {
@@ -833,7 +843,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that entered the system through the IVR Prequeue state."
     type: sum
-    sql: case when ${queued} = true then 1 else 0 end ;;
+    sql: ${queue_counter} ;;
     drill_fields: [detail*]
     }
 
@@ -1158,22 +1168,16 @@ view: incontact_phone {
   ##########################################################################################
   ## PERCENTAGE MEASURES
 
-                      # measure: ht_quartile_1 {
-                      #   label: "HT Q1"
-                      #   group_label: "Percentage Measures"
-                      #   type: percentile
-                      #   percentile: 25
-                      #   # value_format_name: percent_1
-                      #   # sql: average(${handle_time}) ;;
-                      #   # sql: percentile_cont(.25) within group (order by avg(case when ${handle_time} > 0 then ${handle_time} end)) ;;
-                      #   sql: case when ${handle_time} > 0 then ${handle_time} end ;;
-                      # }
-
-                      # measure: max_ht {
-                      #   label: "Max HT"
-                      #   type: number
-                      #   sql: MAX(${handle_time_average}) OVER (PARTITION BY NULL) ;;
-                      # }
+  measure: abandon_pct {
+    label: "Abandon Pct"
+    group_label: "Percentage Measures"
+    description: "Percent of queued calls that were abandoned."
+    type: number
+    value_format_name: percent_1
+    sql: sum(case when ${queued} = TRUE and ${abandoned} = true then 1 end)
+      / nullifzero(sum(case when queued = true then 1 end)) ;;
+    drill_fields: [detail*]
+  }
 
   measure: inbound_pct {
     label:  "Inbound Pct"

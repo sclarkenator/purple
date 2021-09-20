@@ -23,7 +23,7 @@ view: agent_data {
               and c.rnk = 1
 
           left join liveperson.agent la
-            on a.incontact_id = la.employee_id ;;
+            on a.incontact_id = la.employee_id  ;;
   }
 
   ##########################################################################################
@@ -385,6 +385,10 @@ view: agent_data {
     link: {
       label: "View Tenure Detail"
       url: "https://purple.looker.com/looks/5759"
+    }
+    link: {
+      label: "Go To Headcount Dashboard"
+      url: "https://purple.looker.com/dashboards-next/4502?Headcount%20Date=today&Team%20Type=&Employee%20Type=&Team%20Lead%20Name=-Other&Team%20Group="
     }
   }
 }
