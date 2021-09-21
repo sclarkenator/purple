@@ -141,6 +141,7 @@ view: bill_purchase_order {
   measure: amount {
     label: "Total Amount"
     type:  sum
+    value_format: "$#,##0"
     sql:${TABLE}.amount ;; }
 
   measure: amount_paid {
@@ -155,6 +156,7 @@ view: bill_purchase_order {
     label: "Total Units"
     description: "Sum of all units of that item included in that bill"
     type:  sum
+    value_format: "#,##0"
     sql:${TABLE}.items ;; }
 
   measure: items_paid {
