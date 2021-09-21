@@ -253,7 +253,7 @@ explore: incontact_phone {
     view_label: "Phone Calls"
     type: full_outer
     sql_on: ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
-    relationship: many_to_one
+    relationship: one_to_many
   }
 }
 
