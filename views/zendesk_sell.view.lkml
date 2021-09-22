@@ -75,7 +75,7 @@ view: zendesk_sell {
   dimension: email {
     type: string
     hidden: yes
-    sql:  ${TABLE}.email ;;
+    sql:  upper(${TABLE}.email) ;;
   }
 
   dimension: draft_order_name {
