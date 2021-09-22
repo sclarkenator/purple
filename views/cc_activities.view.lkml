@@ -134,7 +134,12 @@ view: cc_activities {
 #   = replace(replace(replace(replace(replace(replace(replace((c.contact_info_from)::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','')
 # --where c.reported::date = '2020-06-18'
 
-
+  dimension: pk {
+    label: "Primary Key"
+    type: string
+    primary_key: yes
+    sql: concat(${activity_type}, ${TABLE}.created) ;;
+  }
 
   dimension: activity_type {
     type:  string

@@ -1,7 +1,13 @@
 view: incontact_phone {
   ## Phone and call performance data from InContact database
 
-  sql_table_name: Analytics.customer_care.v_contacts_phone ;;
+  # sql_table_name: Analytics.customer_care.v_contacts_phone ;;
+  derived_table: {
+      sql:
+        select *
+        from Analytics.customer_care.v_contacts_phone
+        where skill_name not in ('Test IB', 'Test Line');;
+  }
 
   drill_fields: [master_contact_id, contact_id]
 
@@ -22,7 +28,6 @@ view: incontact_phone {
       start_ts_mst_time,
       campaign_name,
       skill_name,
-      team_name,
       poc_name,
       from_ani
       ]
@@ -97,8 +102,8 @@ view: incontact_phone {
     label: "From_ANI"
     description: "Phone number that the call originates from."
     type: string
-    sql: ${TABLE}."FROM_ANI" ;;
-    }
+    sql: ${TABLE}.from_ani ;;
+  }
 
   dimension: holds {
     label: "Holds"
@@ -585,6 +590,7 @@ view: incontact_phone {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -618,6 +624,7 @@ view: incontact_phone {
       week,
       day_of_week,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -653,8 +660,9 @@ view: incontact_phone {
       date,
       week,
       day_of_week,
-                  week_of_year,
+      week_of_year,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -672,6 +680,7 @@ view: incontact_phone {
       week,
       day_of_week,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -904,7 +913,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${abandon_time} > 0 then ${abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, abandon_time]
   }
 
   measure: acd_time_average {
@@ -914,7 +923,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${acd_time} > 0 then ${acd_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, acd_time]
   }
 
   measure: acw_time_average {
@@ -924,7 +933,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${acw_time} > 0 then ${acw_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, acw_time]
   }
 
   measure: active_talk_time_average {
@@ -934,7 +943,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${active_talk_time} > 0 then ${active_talk_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, active_talk_time]
   }
 
   measure: holds_per_call_average {
@@ -945,7 +954,7 @@ view: incontact_phone {
     value_format_name: decimal_2
     hidden: yes
     sql:${holds}  ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, holds]
   }
 
   measure: conference_time_average {
@@ -955,7 +964,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${conference_time} > 0 then ${conference_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, conference_time]
   }
 
   measure: handle_time_average {
@@ -966,7 +975,7 @@ view: incontact_phone {
     value_format: "###0.00"
     # hidden: yes
     sql: case when ${handle_time} > 0 then ${handle_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, handle_time]
   }
 
   measure: hold_time_average {
@@ -977,7 +986,7 @@ view: incontact_phone {
     value_format: "###0.00"
     # hidden: yes
     sql: case when ${hold_time} > 0 then ${hold_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, hold_time]
   }
 
   measure: in_queue_time_average {
@@ -987,7 +996,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${inqueue_time} > 0 then ${inqueue_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, inqueue_time]
   }
 
   measure: long_abn_time_average {
@@ -997,7 +1006,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${long_abandon_time} > 0 then ${long_abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, long_abandon_time]
   }
 
   measure: short_abn_time_average {
@@ -1007,7 +1016,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${short_abandon_time} > 0 then ${short_abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, short_abandon_time]
   }
 
   measure: speed_of_answer_average {
@@ -1017,7 +1026,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${speed_of_answer} > 0 then ${speed_of_answer} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, speed_of_answer]
   }
 
   measure: talk_time_average {
@@ -1027,7 +1036,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${talk_time} > 0 then ${talk_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, talk_time]
   }
 
   measure: total_contact_time_average {
@@ -1037,7 +1046,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${total_contact_time} > 0 then ${total_contact_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, total_contact_time]
   }
 
   ##########################################################################################
@@ -1219,8 +1228,8 @@ view: incontact_phone {
     description: "Percent of agent offered calls that were abandoned after short abandon threshhold."
     type: number
     value_format_name: percent_1
-    sql: sum(case when ${long_abandon} = true then 1 else 0 end) /
-      nullifzero(sum(case when ${agent_offered} = true then 1 else 0 end)) ;;
+    sql: sum(case when ${queued} = TRUE and ${long_abandon} = true then 1 end)
+      / nullifzero(sum(case when queued = true then 1 end)) ;;
     drill_fields: [detail*, long_abandon, agent_offered]
     }
 

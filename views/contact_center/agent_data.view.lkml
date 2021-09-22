@@ -85,7 +85,17 @@ view: agent_data {
   }
 
   dimension: tenure {
-    label: "Tenure"
+    label: "Tenure by Month"
+    group_label: "* Tenure Metrics"
+    description: "Agent tenure in weeks."
+    type: number
+    value_format_name: decimal_0
+    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
+
+  }
+
+  dimension: tenure_week {
+    label: "Tenure by Week"
     group_label: "* Tenure Metrics"
     description: "Agent tenure in months."
     type: number

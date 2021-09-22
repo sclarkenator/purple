@@ -167,20 +167,10 @@ view: cc_agent_attendance {
   ##########################################################################################
   ## MEASURES
 
-
   measure: count {
     label: "Count of all recorded events"
     hidden: yes
     type: count
-  }
-
-  measure: point_sum {
-    label: "Points Sum"
-    description: "Calculated sum of points earned during a given period."
-    type: number
-    value_format_name: decimal_1
-    sql: zeroifnull(sum(${points})) ;;
-    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: fmla_time_used {
@@ -221,6 +211,15 @@ view: cc_agent_attendance {
     # hidden: yes
     type: sum
     sql: case when ${points} > 0 then ${points} else 0 end ;;
+  }
+
+  measure: point_sum {
+    label: "Points Sum"
+    description: "Calculated sum of points earned during a given period."
+    type: number
+    value_format_name: decimal_1
+    sql: zeroifnull(sum(${points})) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: sick_time_used {
