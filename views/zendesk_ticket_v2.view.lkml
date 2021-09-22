@@ -260,7 +260,8 @@ view: zendesk_ticket_v2 {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week
     ]
     sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
   }
