@@ -144,7 +144,8 @@ view: customer_satisfaction_survey {
   dimension: star_rating_score {
     label: "Agent CSAT Score"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
-    type: string
+    type: number
+    value_format_name: decimal_0
     sql: ${TABLE}."STAR_RATING" ;;
   }
 
@@ -152,6 +153,7 @@ view: customer_satisfaction_survey {
     label: "Total Agent CSAT Score"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: sum
+    value_format_name: decimal_2
     sql: ${TABLE}."STAR_RATING" ;;
   }
 
@@ -159,6 +161,7 @@ view: customer_satisfaction_survey {
     label: "Total Agent CSATs"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: count_distinct
+    value_format_name: decimal_2
     sql_distinct_key: ${pk} ;;
     sql:  case when ${TABLE}."STAR_RATING" is not null then ${pk} end;;
   }
@@ -167,7 +170,7 @@ view: customer_satisfaction_survey {
     label: "Average Agent CSAT Score"
     description: "CSAT score give by customer. Range 0 to 5. Source: stella_connect.customer_satisfaction_survey"
     type: average
-    value_format: "0.##"
+    value_format_name: decimal_2
     sql: ${TABLE}."STAR_RATING" ;;
   }
 

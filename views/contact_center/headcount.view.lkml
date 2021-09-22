@@ -202,6 +202,7 @@ view: headcount {
   ## ID FIELDS
 
   dimension: pk {
+    label: "Primary Key"
     primary_key: yes
     hidden: yes
     sql: ${TABLE}.pk ;;

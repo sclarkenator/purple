@@ -135,6 +135,7 @@ view: activities_all_sources {
   dimension: pk {
     label: "Primary Key"
     type: string
+    primary_key: yes
     sql: concat(${activity_type}, ${TABLE}.created) ;;
   }
 

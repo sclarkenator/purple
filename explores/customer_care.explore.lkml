@@ -671,12 +671,29 @@ explore: perfect_attendance_calc {
     }
   }
 
+    explore: agent_stats_w_agent{
+      hidden: yes
+      label: "Agent Stats w/ Agent Data"
+      view_label: "Agent Data"
+      group_label: "Customer Care"
+      description: "From InContact Agent Stats Daily."
+      from: agent_data
+
+      join: rpt_agent_stats {
+        view_label: "Agent Stats"
+        sql_on: ${agent_stats_w_agent.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+        type: left_outer
+        relationship: one_to_many
+      }
+    }
+
+  explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
   explore: liveperson_conversation_message {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
-  explore: agent_data {hidden: yes} #cj
+  explore: agent_data {group_label: "Customer Care"} #cj
   explore: agent_current_warning_level {hidden: yes} #cj
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}

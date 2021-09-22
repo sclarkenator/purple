@@ -228,7 +228,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact was actively handled by an agent. (ATT+ACW+Conf+Hold)."
     type: number
-    sql: ${active_talk_time} + ${acw_time} + ${conference_time} + ${hold_time} ;;
+    sql: ifnull(${active_talk_time}, 0) + ifnull(${acw_time}, 0) + ifnull(${conference_time}, 0) + ifnull(${hold_time}, 0) ;;
     }
 
   dimension: hold_time {
