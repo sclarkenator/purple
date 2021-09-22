@@ -81,4 +81,11 @@ view: wfh_comparisons {
     sql: ${TABLE}.acw_duration/60 ;;
   }
 
+  measure: acw_count{
+    label: "ACW Count"
+    type: count
+    value_format_name: decimal_0
+    # sql: ${TABLE}.acw_duration/60 ;;
+  }
+
   }
