@@ -273,6 +273,17 @@ explore: forecast_compared_to_actual_sales {
     }
 
 
+  explore: bin_location {
+    hidden: yes
+    group_label:"Production"
+    label: "Highjump Bin Location"
+    join: item {
+      type:left_outer
+      sql_on: ${item.sku_id} = ${bin_location.sku};;
+      relationship: many_to_one}
+    }
+
+
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
@@ -281,4 +292,3 @@ explore: forecast_compared_to_actual_sales {
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
   explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
   explore: item_raw {from: item hidden:yes}
-  ##explore: bin_location {hidden:yes}
