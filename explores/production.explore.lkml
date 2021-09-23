@@ -469,7 +469,6 @@ include: "/dashboards/**/*.dashboard"
   explore: change_mgmt {hidden:yes group_label: "Production"}
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
-  explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
   explore: vendor {hidden:yes}
