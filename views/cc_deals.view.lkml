@@ -19,6 +19,13 @@ view: cc_deals {
     ;;
   }
 
+  dimension: user_id {
+    label: "Zendesk Sell User ID"
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.user_id ;;
+  }
+
   dimension: deal_id {
     primary_key: yes
     type:  string
