@@ -281,4 +281,4 @@ explore: forecast_compared_to_actual_sales {
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
   explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
   explore: item_raw {from: item hidden:yes}
-  explore: bin_location {hidden:yes}
+  ##explore: bin_location {hidden:yes}
