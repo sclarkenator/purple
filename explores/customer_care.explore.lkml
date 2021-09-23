@@ -671,7 +671,7 @@ explore: perfect_attendance_calc {
     }
   }
 
-    explore: agent_stats_w_agent{
+    explore: agent_stats_w_agent{ #cj
       hidden: yes
       label: "Agent Stats w/ Agent Data"
       view_label: "Agent Data"
@@ -686,6 +686,47 @@ explore: perfect_attendance_calc {
         relationship: one_to_many
       }
     }
+
+  explore: conversion_wfh {
+    view_label: "cc_activities"
+    hidden: yes
+    from: cc_activities
+
+    join: agent_lkp {
+      view_label: "agent_lkp"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${conversion_wfh.incontact_id} = ${agent_lkp.incontact_id} ;;
+    }
+
+    join: cc_deals {
+      view_label: "cc_deals"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${agent_lkp.zendesk_sell_id} = ${cc_deals.user_id} ;;
+    }
+
+    join: sales_order {
+      view_label: "Sales Order"
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${cc_deals.order_id} = ${sales_order.order_id} ;;
+      }
+
+    join: sales_order_line {
+      view_label: "Sales Order Line"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} ;;
+    }
+
+    join: zendesk_sell {
+      view_label: "Zendesk Sell"
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${sales_order.order_id} = ${zendesk_sell.order_id} ;;
+    }
+  }
 
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
