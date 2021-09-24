@@ -1136,7 +1136,7 @@ view: sales_order_line_base {
     group_label: " Advanced"
     label: "Carrier (expected)"
     description: "Derived field based on fulfillment location. Source:netsuite.sales_order_line"
-    #hidden: yes
+    hidden: yes
     type: string
     sql: case
           when ${location} ilike '%mainfreight%' then 'MainFreight'

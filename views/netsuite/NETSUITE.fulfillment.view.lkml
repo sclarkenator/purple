@@ -44,7 +44,7 @@ view: fulfillment {
   dimension: carrier {
     group_label: " Advanced"
     label: "Carrier (actual)"
-    #hidden: yes
+    hidden: yes
     description: "Shipping provider was used to fulfill this part of the order. Source:netsuite.fulfillment"
     type: string
     sql: ${TABLE}.carrier ;;  }
