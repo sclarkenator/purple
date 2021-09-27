@@ -78,7 +78,11 @@ view: fulfillment {
     #hidden: yes
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: coalesce(${TABLE}.IN_HAND_SLA, ${fulfilled_F_raw}) ;; }
+    sql: coalesce(${TABLE}.IN_HAND_SLA, ${fulfilled_F_raw}) ;;
+   ## sql: CASE WHEN ${fedex_tracking.fedex_status_code} IS NOT NULL AND ${fedex_tracking.completed} then  ${fedex_tracking.status_ts_time}
+   ##          WHEN ${fedex_tracking.fedex_status_code} IS NOT NULL AND ${fedex_tracking.completed} = 'No' then null
+   ##        ELSE ${fulfilled_F_raw} END ;; --Pending better fedex join. 9-27-21
+    }
 
   dimension_group: fulfilled_F {
     hidden: yes
