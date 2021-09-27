@@ -481,6 +481,10 @@ view: item {
       when ${product_description_raw} ilike '%SOFT LILAC%' then 'SOFT LILAC'
       when ${product_description_raw} ilike '%MORNING%' then 'MORNING MIST'
       when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
+      when ${product_description_raw} ilike '%CLOUD WHITE%' then 'CLOUD WHITE'
+      when ${product_description_raw} ilike '%BLUSH PINK%' then 'BLUSH PINK'
+      when ${product_description_raw} ilike '%DUSKY NAVY%' then 'DUSKY NAVY'
+      when ${product_description_raw} ilike '%MISTY BLUE%' then 'MISTY BLUE'
       else null end ;; }
 
   dimension_group: created_ts {
