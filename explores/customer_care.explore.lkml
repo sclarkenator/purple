@@ -671,7 +671,7 @@ explore: perfect_attendance_calc {
     }
   }
 
-    explore: agent_stats_w_agent{
+    explore: agent_stats_w_agent{ #cj
       hidden: yes
       label: "Agent Stats w/ Agent Data"
       view_label: "Agent Data"
@@ -687,6 +687,64 @@ explore: perfect_attendance_calc {
       }
     }
 
+  explore: conversion_wfh {
+    view_label: "Date Table"
+    hidden: yes
+    from: warehouse_date_table
+
+    join: cc_activities {
+      view_label: "CC Activities"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${conversion_wfh.date_date} = ${cc_activities.activity_date} ;;
+    }
+
+    join: agent_data {
+      view_label: "Agent Data"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${cc_activities.incontact_id} = ${agent_data.incontact_id} ;;
+    }
+
+    join: cc_deals {
+      view_label: "cc_deals"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${conversion_wfh.date_date} = ${cc_deals.created_date}
+        and ${agent_data.zendesk_sell_id} = ${cc_deals.user_id} ;;
+    }
+
+    join: zendesk_sell {
+      view_label: "Zendesk Sell"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${conversion_wfh.date_date} = ${zendesk_sell.deal_created}
+        and ${agent_data.zendesk_sell_id} = ${zendesk_sell.user_id} ;;
+      sql_where: ${zendesk_sell.inside_sales_order} = true ;;
+    }
+
+    join: sales_order {
+      view_label: "Sales Order"
+      type: left_outer
+      relationship: one_to_one
+
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id}
+        and ${sales_order.system}='NETSUITE'
+        and ${sales_order.is_exchange_upgrade_warranty} = false;;
+      # sql_on: ${conversion_wfh.date_date} = ${sales_order.created_date}
+      #   and ${zendesk_sell.zendesk_id} = ${sales_order.created_by_id} ;;
+      # sql_where: ${sales_order.is_exchange_upgrade_warranty} = false;;
+      }
+
+    # join: sales_order_line {
+    #   view_label: "Sales Order Line"
+    #   type: left_outer
+    #   relationship: one_to_many
+    #   sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} ;;
+    # }
+  }
+
+  explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj

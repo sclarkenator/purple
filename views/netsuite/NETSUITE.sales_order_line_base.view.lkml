@@ -231,7 +231,6 @@ view: sales_order_line_base {
 
   dimension: order_system {
     type: string
-    primary_key:  no
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }

@@ -12,6 +12,7 @@ view: cc_activities {
         , case when c.handle_time > 0 then 'F' else 'T' end as missed
         , c.skill
         , null as email
+        ,a.incontact_id
     from (
       select row_number () over (partition by c.contacted, c.contact_id order by agent_id desc) as rownum
           , c.*
@@ -37,6 +38,7 @@ view: cc_activities {
         , c.missed
         , c.department_name as skill
         , c.visitor_email
+        ,a.incontact_id
     from customer_care.v_zendesk_chats c
     left join customer_care.zendesk_ticket t on c.zendesk_ticket_id = t.ticket_id
     left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
@@ -54,6 +56,7 @@ view: cc_activities {
         , 'F' as missed
         , t.subject
         , u.email
+        ,a.incontact_id
     from customer_care.zendesk_ticket t
     left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
     left join analytics_stage.zendesk.user u on u.id = t.requester_id
@@ -146,6 +149,12 @@ view: cc_activities {
     sql: concat(${activity_type}, ${TABLE}.created) ;;
   }
 
+  dimension: incontact_id {
+    label: "InContact ID"
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.incontact_id ;;
+  }
   dimension: activity_type {
     type:  string
     sql: ${TABLE}.activity_type ;;
