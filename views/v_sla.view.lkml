@@ -27,6 +27,23 @@ view: v_sla {
     sql: ${TABLE}."LAST_UPDATED" ;;
   }
 
+  dimension_group: last_update {
+    type: time
+    label: "SLA last changed"
+    timeframes: [date]
+    sql: ${TABLE}."LAST_UPDATE" ;;
+  }
+
+ dimension: sla_range {
+   type: string
+   sql:  ${TABLE}.sla_range ;;
+ }
+
+  dimension: wg_sla_range {
+    type: string
+    sql:  ${TABLE}.wg_sla_range ;;
+  }
+
   dimension: line {
     type: string
     sql: ${TABLE}."LINE" ;;

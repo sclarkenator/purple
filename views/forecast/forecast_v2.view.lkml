@@ -185,6 +185,12 @@ view: forecast_v2 {
     value_format: "#,##0"
     sql:${TABLE}.total_units ;; }
 
+  measure: total_units_without_floor {
+    label: "Total Units without Floor Units"
+    type:  sum
+    value_format: "#,##0"
+    sql:coalesce(${TABLE}.total_units,0) - coalesce(${TABLE}.floor_units,0) ;; }
+
   measure: total_amount {
     label: "Total Amount"
     type:  sum
@@ -220,6 +226,12 @@ view: forecast_v2 {
     type:  sum
     value_format: "#,##0"
     sql:${TABLE}.promo_units;; }
+
+  measure: floor_units {
+    label: "Total Floor Units"
+    type:  sum
+    value_format: "#,##0"
+    sql:${TABLE}.floor_units;; }
 
   measure: standard_unit_cost{
     label: "Standard Unit Cost"

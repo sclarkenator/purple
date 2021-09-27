@@ -708,6 +708,14 @@ view: sales_order_line_base {
     sql: DATEDIFF('day',date_trunc('quarter',${created_raw}),${created_date}) + 1 ;;
   }
 
+    dimension: current_dayofquarterindex {   #returns day of quarter index int 1-92
+      type: number
+      hidden: yes
+      description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32. Source: netsuite.sales_order_line"
+      sql: DATEDIFF('day',date_trunc('quarter',current_date),current_date) + 1 ;;
+    }
+
+
   parameter: timeframe_picker{
     label: "Date Granularity Sales"
     hidden: yes
@@ -1128,7 +1136,7 @@ view: sales_order_line_base {
     group_label: " Advanced"
     label: "Carrier (expected)"
     description: "Derived field based on fulfillment location. Source:netsuite.sales_order_line"
-    #hidden: yes
+    hidden: yes
     type: string
     sql: case
           when ${location} ilike '%mainfreight%' then 'MainFreight'
@@ -1136,10 +1144,12 @@ view: sales_order_line_base {
           when ${location} ilike '%pilot%' then 'Pilot'
           when ${location} is null then 'FBA'
           when ${location} ilike '%100-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
+          when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike  '%speedy%' then'Speedy Delivery'
           when ${location} ilike  '%fragilepak%' then 'FragilePak'
+          when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%100-%' then 'Purple'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
@@ -1153,6 +1163,14 @@ view: sales_order_line_base {
     hidden: no
     type: string
     sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
+  }
+
+  dimension: ship_flag {
+    view_label: "Fulfillment"
+    group_label: "Website SLAs"
+    label: "Standard Shipping Flag"
+    type: yesno
+    sql: ${DTC_carrier} in ('Purple','MainFreight') ;;
   }
 
   dimension: week_2019_start {
@@ -1281,6 +1299,17 @@ view: sales_order_line_base {
           when ${item_id} in ('9077') then ${TABLE}.ordered_qty*1
           else ${TABLE}.ordered_qty end;;
     }
+
+
+    dimension: is_locked {
+      view_label: "Fulfillment"
+      label: "     * Is Locked"
+      group_label: " Advanced"
+      description: "Identifies items on orders that are locked by fulfillment"
+      type: yesno
+      sql: ${TABLE}.LOCKED ;;
+    }
+
 
   set: order_details {
     fields: [sales_order_line.sales_order_details*]

@@ -130,6 +130,7 @@ view: rpt_agent_stats {
 
 
   measure: count {
+    label: "Agent Stats Count"
     type: count
     drill_fields: []
   }

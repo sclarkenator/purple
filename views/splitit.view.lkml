@@ -190,7 +190,7 @@ view: splitit {
 
   measure: ns_refund_amt {
     type: sum
-    value_format: "$0,0##.##"
+    value_format: "$#,##0.00"
     sql:${TABLE}.ns_refund_amt;;
   }
 

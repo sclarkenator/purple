@@ -83,7 +83,7 @@ view: zendesk_chats {
   dimension_group:created {
     type: time
     timeframes: [date,week,month,quarter,year,hour_of_day,month_name,time, minute30, day_of_week]
-    convert_tz: yes
+    #convert_tz: yes
     datatype: datetime
     ##group_label: "Advanced - Chats"
     label: "  Chat"
@@ -95,7 +95,7 @@ view: zendesk_chats {
   dimension_group:end_time {
     type: time
     timeframes: [date,week,month,quarter,year,hour_of_day,month_name,time, minute30]
-    convert_tz: yes
+    #convert_tz: yes
     datatype: datetime
     ##group_label: "Advanced - Chats"
     label: "Chat End"

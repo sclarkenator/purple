@@ -75,7 +75,7 @@ view: zendesk_sell {
   dimension: email {
     type: string
     hidden: yes
-    sql:  ${TABLE}.email ;;
+    sql:  upper(${TABLE}.email) ;;
   }
 
   dimension: draft_order_name {
@@ -110,13 +110,13 @@ view: zendesk_sell {
     sql: ${TABLE}.order_id is not null ;;
   }
 
-  dimension: related_tranid {
-    type: string
-    group_label: "Advanced - Sell"
-    label: "Related Tran ID"
-    description: "Source: zendesk_sell.inside_sales"
-    sql: ${TABLE}.RELATED_TRANID;;
-  }
+  # dimension: related_tranid {
+  #   type: string
+  #   group_label: "Advanced - Sell"
+  #   label: "Related Tran ID"
+  #   description: "Source: zendesk_sell.inside_sales"
+  #   sql: ${TABLE}.draft_order_name;;
+  # }
 
   dimension: zendesk_id {
     type: string

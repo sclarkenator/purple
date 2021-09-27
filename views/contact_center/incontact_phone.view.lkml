@@ -1,31 +1,33 @@
 view: incontact_phone {
+  ## Phone and call performance data from InContact database
 
-
-  # Add Refusals to count, avg and pct measures
-  # Add % inbound and % outbound measures
-
-  sql_table_name: ANALYTICS.CUSTOMER_CARE.CONTACT ;;
+  # sql_table_name: Analytics.customer_care.v_contacts_phone ;;
+  derived_table: {
+      sql:
+        select *
+        from Analytics.customer_care.v_contacts_phone
+        where skill_name not in ('Test IB', 'Test Line');;
+  }
 
   drill_fields: [master_contact_id, contact_id]
 
   dimension: primary_key {
-    label: "PK"
+    label: "Primary Key"
     group_label: "* IDs"
-    description: "Primary key field.  [master_contact_id] & [contact_id]"
+    description: "Primary key field.  [contact_id]"
     primary_key: yes
     hidden:  yes
     type: string
-    sql: ${master_contact_id} || ${contact_id} ;;
+    sql: ${contact_id} ;;
     }
 
-  # ----- Sets of fields for drilling ------
+  # ----- Set of fields for drilling ------
   set: detail {
     fields: [
       master_contact_id,
       start_ts_mst_time,
       campaign_name,
       skill_name,
-      team_name,
       poc_name,
       from_ani
       ]
@@ -34,6 +36,32 @@ view: incontact_phone {
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
+
+  dimension: call_type {
+    description: ""
+    type: string
+    sql:
+    case
+        when ${skill_name} in ('8885Purple','888Purple','AAA EnCompass','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','CDL_Trucker _Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Mantra Wellness magazine','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher_Discount','Teacher Discount','Time Magazine')
+            then 'Sales Inbound'
+        when ${skill_name} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty','Support Tier 1 to Tier 2 xfer')
+            then 'Support Inbound'
+        when ${skill_name} in ('Service Recovery','Sleep Country Canada','Sleep County Canada')
+            then 'SRT'
+        when ${skill_name} = 'Customer Service OB'
+            then 'Support OB'
+        when ${skill_name} in ('Fraud (Avail M-F 8a-6p)','Verification (Avail M-F 8a-5p)','Verification')
+            then 'Verification'
+        when ${skill_name} = 'Sales Team OB'
+            then 'Sales OB'
+        when ${skill_name} = 'PurpleBoysPodcast'
+            then 'PurpleBoysPodcast'
+        when ${skill_name} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
+            then 'Ops'
+        else 'Other/Unknown'
+    end
+    ;;
+  }
 
   dimension: campaign_name {
     label: "Campaign Name"
@@ -57,13 +85,6 @@ view: incontact_phone {
     sql: ${TABLE}."CONTACT_TYPE" ;;
     }
 
-  # dimension: contacts { Delete if no issues caused by removal
-  #   label: "Contacts"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: 1 ;;
-  #   }
-
   dimension: direction {
     label: "Direction"
     description: "Direction of the contact (Inbound or Outbound)."
@@ -81,8 +102,8 @@ view: incontact_phone {
     label: "From_ANI"
     description: "Phone number that the call originates from."
     type: string
-    sql: ${TABLE}."FROM_ANI" ;;
-    }
+    sql: ${TABLE}.from_ani ;;
+  }
 
   dimension: holds {
     label: "Holds"
@@ -148,13 +169,20 @@ view: incontact_phone {
     sql: ${TABLE}."TO_DNIS" ;;
     }
 
+  dimension: transfer_type {
+    label: "Transfer Type"
+    description: "If transferred, then what type of transfer was it."
+    type: string
+    sql: case when lower(skill_name) like '%xfer%' then skill_name end ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## RAW TIME DIMENSIONS
 
   dimension: abandon_time {
     label: "Abandon Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time the contact spent in the queue prior to abandoning "
     type: number
     sql: ${TABLE}."ABANDON_TIME" ;;
@@ -162,7 +190,7 @@ view: incontact_phone {
 
   dimension: acd_time {
     label: "ACD Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Total length of time the contact spend in the Automatic Call Distributor (ACD)."
     type: number
     sql: ${TABLE}."ACD_TIME" ;;
@@ -170,7 +198,7 @@ view: incontact_phone {
 
   dimension: active_talk_time {
     label: "Active Talk Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time the contact spend in active conversation with the primary agent. Note: Does not include Hold Time or Conference Time."
     type: number
     sql: ${TABLE}."ACTIVE_TALK_TIME" ;;
@@ -178,7 +206,7 @@ view: incontact_phone {
 
   dimension: acw_time {
     label: "ACW Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "The length of time the agent spent on work that is necessitated by and immediately follows a call/contact."
     type: number
     sql: ${TABLE}."ACW_TIME" ;;
@@ -186,15 +214,15 @@ view: incontact_phone {
 
   dimension: callback_time {
     label: "Callback Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time contact spent waiting for the NICE inContact system to call back after the caller requested a callback."
     type: number
-    sql: ${TABLE}."CALLBACK_TIME" ;;
+    sql: cast(${TABLE}."CALLBACK_TIME" / 1000 as integer) ;;
     }
 
   dimension: conference_time {
     label: "Conference Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time agent spent in conference with another agent and the caller."
     type: number
     sql: ${TABLE}."CONFERENCE_TIME" ;;
@@ -202,15 +230,15 @@ view: incontact_phone {
 
   dimension: handle_time {
     label: "Handle Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time contact was actively handled by an agent. (ATT+ACW+Conf+Hold)."
     type: number
-    sql: ${active_talk_time} + ${acw_time} + ${conference_time} + ${hold_time} ;;
+    sql: ifnull(${active_talk_time}, 0) + ifnull(${acw_time}, 0) + ifnull(${conference_time}, 0) + ifnull(${hold_time}, 0) ;;
     }
 
   dimension: hold_time {
     label: "Hold Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time contact spent on hold with an agent."
     type: number
     sql: ${TABLE}."HOLD_TIME" ;;
@@ -218,7 +246,7 @@ view: incontact_phone {
 
   dimension: inqueue_time {
     label: "In Queue Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time contact spent in the queue waiting for an agetn starting when the contact entered the queue until the contact was answered by the agent."
     type: number
     sql: ${TABLE}."INQUEUE_TIME" ;;
@@ -226,15 +254,15 @@ view: incontact_phone {
 
   dimension: long_abandon_time {
     label: "Long Abandon Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time the contact spent waiting in the queue prior to the long abandon. This length of time determines if the contact is a long abandon based on the short abandon threshold configured on the skill."
     type: number
-    sql: case when ${long_abandon} = true then ${abandon_time} end;;
+    sql: case when ${long_abandon} = true then ${abandon_time} end ;;
     }
 
   dimension: postqueue_time {
     label: "Post Queue Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Time after an agent has left a call but before the caller hangs up.  This time is accrued only if the script performs an UNLINK.  This disassociates the agent from the call and lets the call return to an IVR state. It is possible to do another ReqAgent and talk to a second agent, or be transferred to an outside number among other things. This can be used to offer callers a post call survey."
     type: number
     sql: ${TABLE}."POSTQUEUE_TIME" ;;
@@ -242,7 +270,7 @@ view: incontact_phone {
 
   dimension: release_time {
     label: "Release Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time a script spends executing in an On Release event.  At this point the Contact and the Agent have disconnected but the script that is processing that contact continues to run due to subsequent script actions."
     type: number
     sql: ${TABLE}."RELEASE_TIME" ;;
@@ -250,39 +278,39 @@ view: incontact_phone {
 
   dimension: routing_time {
     label: "Routing Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time contact spent being routed to an agent after entering the queue."
     type: number
-    sql: ${TABLE}."ROUTING_TIME" ;;
-    }
+    sql: cast(${TABLE}."ROUTING_TIME" / 1000 as integer) ;;
+  }
 
   dimension: short_abandon_time {
     label: "Short Abandon Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time the contact spent waiting in the queue prior to the short abandon. This length of time determines whether the contact qualifies as a short abandon or note."
     type: number
-    sql: case when ${short_abandon} = true then ${abandon_time} end;;
+    sql: case when ${short_abandon} = true then ${abandon_time} end ;;
   }
 
   dimension: speed_of_answer {
     label: "Speed of Answer Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time taken for agent to answer call."
     type: number
-    sql: ${TABLE}.speed_of_answer ;;
+    sql: case when ${abandoned} = True then null else ${inqueue_time} end ;;
   }
 
   dimension: talk_time {
     label: "Talk Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "Length of time the contact spent connected with an agent from 'hello' to 'goodbye'. Includes anything that may happen during a conversation, including placeing customers on hold to confer with supervisors or other.  May include both inbound time and outbound time depending on report filters.  [Active Talk Time] + [Hold Time] + [Conference Time]"
     type: number
-    sql: ${active_talk_time} + ${hold_time} + ${conference_time};;
+    sql: ${active_talk_time} + ${hold_time} + ${conference_time} ;;
     }
 
   dimension: total_contact_time {
     label: "Total Contact Time"
-    group_label: "* Time Dimensions"
+    group_label: "* Duration Dimensions"
     description: "CONFIRM WHICH FIELD THIS MATCHES"
     type: number
     sql: ${TABLE}."TOTAL_CONTACT_DURATION" ;;
@@ -297,7 +325,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to the Agent.  Matches agent's InContact ID."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."AGENT_ID" ;;
     }
 
@@ -306,7 +335,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to a Campaign."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."CAMPAIGN_ID" ;;
     }
 
@@ -314,7 +344,8 @@ view: incontact_phone {
     label: "Contact ID"
     group_label: "* IDs"
     description: "Unique ID of a Contact (call)."
-    type: string
+    type: number
+    value_format_name: id
     # hidden: yes
     sql: ${TABLE}."CONTACT_ID" ;;
     }
@@ -324,7 +355,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Master/Parent ID of one or more Contacts."
     # hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."MASTER_CONTACT_ID" ;;
     }
 
@@ -334,6 +366,7 @@ view: incontact_phone {
     description: "ID of primary disposition."
     # hidden: yes
     type: number
+    value_format_name: id
     sql: ${TABLE}."PRIMARY_DISPOSITION_ID" ;;
     }
 
@@ -351,7 +384,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Uniique ID given to a Skill."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."SKILL_ID" ;;
     }
 
@@ -360,7 +394,8 @@ view: incontact_phone {
     group_label: "* IDs"
     description: "Unique ID given to the Team."
     hidden: yes
-    type: string
+    type: number
+    value_format_name: id
     sql: ${TABLE}."TEAM_ID" ;;
     }
 
@@ -413,7 +448,8 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags whether the Inbound or Outbound contact was handled by an agent at some point."
     type: yesno
-    sql: ${TABLE}."HANDLED" ;;
+    sql: ${handle_time} > 0 ;;
+    # sql: ${TABLE}."HANDLED" ;;
   }
 
   dimension: held {
@@ -429,7 +465,8 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that were handled within the defined Service Level Objective."
     type: yesno
-    sql: ${TABLE}."IN_SLA" ;;
+    # sql: ${TABLE}."IN_SLA" ;;
+    sql: case when ${service_level_flag} = 0 then true else false end;;
   }
 
   dimension: long_abandon {
@@ -445,8 +482,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags whether the contact was NOT handled within the defined Service Level Objective (Abandons being taken into account is conditional on Skill Configuration)."
     type: yesno
-    sql: case when ${service_level_flag} = 1 then true
-      else false end;;
+    sql: case when ${service_level_flag} = 1 then true else false end;;
   }
 
   dimension: prequeue_abandon {
@@ -529,7 +565,7 @@ view: incontact_phone {
   ## DATE DIMENSION GROUPS
 
   dimension_group: insert_ts {
-    label: "Insert TS UDP"
+    label: "* Insert TS UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -545,7 +581,7 @@ view: incontact_phone {
     }
 
   dimension_group: last_updated_ts {
-    label: "Updated TS UDP"
+    label: "* Updated TS UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -554,6 +590,7 @@ view: incontact_phone {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -561,7 +598,7 @@ view: incontact_phone {
     }
 
   dimension_group: last_updated_ts_mst {
-    label: "Updated TS MST"
+    label: "* Updated TS"
     hidden: yes
     type: time
     timeframes: [
@@ -577,7 +614,7 @@ view: incontact_phone {
     }
 
   dimension_group: refuse_ts {
-    label: "Contact Refusal TS UDP"
+    label: "* Contact Refusal UTC"
     hidden: yes
     type: time
     timeframes: [
@@ -585,7 +622,9 @@ view: incontact_phone {
       time,
       date,
       week,
+      day_of_week,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -593,7 +632,7 @@ view: incontact_phone {
     }
 
   dimension_group: refuse_ts_mst {
-    label: "Contact Refusal"
+    label: "* Contact Refusal"
     # hidden: yes
     type: time
     timeframes: [
@@ -601,6 +640,7 @@ view: incontact_phone {
       time,
       date,
       week,
+      day_of_week,
       month,
       quarter,
       year
@@ -609,15 +649,20 @@ view: incontact_phone {
     }
 
   dimension_group: start_ts_mst {
-    label: "Contact START"
+    label: "* Contact START"
     # hidden: yes
     type: time
     timeframes: [
       raw,
       time,
+      hour,
+      hour_of_day,
       date,
       week,
+      day_of_week,
+      week_of_year,
       month,
+      month_name,
       quarter,
       year
       ]
@@ -625,20 +670,32 @@ view: incontact_phone {
   }
 
   dimension_group: start_ts {
-    label: "Contact Start TS UDP"
-    # hidden: yes
+    label: "* Contact Start UTC"
+    hidden: yes
     type: time
     timeframes: [
       raw,
       time,
       date,
       week,
+      day_of_week,
       month,
+      month_name,
       quarter,
       year
       ]
     sql: CAST(${TABLE}."START_TS" AS TIMESTAMP_NTZ) ;;
     }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## COUNTERS
+
+  dimension: queue_counter {
+    description: "1 if queued, 0 if unqueued."
+    hidden: yes
+    sql: case when ${queued} = true then 1 else 0 end ;;
+  }
 
   ##########################################################################################
   ##########################################################################################
@@ -691,12 +748,26 @@ view: incontact_phone {
     drill_fields: [detail*]
     }
 
+  measure: handle_qualified_calls_count {
+    label: "Handle Qualified Count"
+    group_label: "Count Measures"
+    description: "Count of calls of types that qualify for use in Handled measures.  Includes all queued and outbound calls."
+    type: number
+    value_format_name: decimal_0
+    sql: sum(case when ${queued} = true then 1
+      when ${direction} = 'Outbound' then 1
+      else 0 end) ;;
+    drill_fields: [detail*, direction, queued]
+  }
+
   measure: handled_count {
     label: "Handled Count"
     group_label: "Count Measures"
     description: "Counts Inbound or Outbound contact that were handled by an agent at some point."
-    type: sum
-    sql: case when ${handled} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: case when ${handled} = true then ${contact_id} end ;;
+    # sql: ${contact_id} ;;
+    # filters: [handled : "True"]
     drill_fields: [detail*]
     }
 
@@ -717,7 +788,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that were handled within the defined Service Level Objective."
     type: sum
-    sql: cast(${in_sla} as integer) ;;
+    sql: case when ${service_level_flag} = 0 then 1 end ;;
     drill_fields: [detail*]
     }
 
@@ -744,7 +815,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that were handled outside the defined Service Level Objective."
     type: sum
-    sql: case when ${service_level_flag} = 1 then 1 else 0 end ;;
+    sql: case when ${service_level_flag} = 1 then 1 end ;;
     drill_fields: [detail*]
     }
 
@@ -771,16 +842,17 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that enter the skill queue contact_state = Inqueue or Callback for the first time during an interval or time period."
     type: sum
+    # sql: case when ${queue_offered} = true then ${contact_id} end ;;
     sql: case when ${queue_offered} = true then 1 else 0 end ;;
     drill_fields: [detail*]
-    }
+  }
 
   measure: queued_count {
     label: "Queued Count"
     group_label: "Count Measures"
     description: "Counts contacts that entered the system through the IVR Prequeue state."
     type: sum
-    sql: case when ${queued} = true then 1 else 0 end ;;
+    sql: ${queue_counter} ;;
     drill_fields: [detail*]
     }
 
@@ -811,6 +883,16 @@ view: incontact_phone {
     drill_fields: [detail*]
     }
 
+  measure: sla_offered_count {
+    label: "SLA Offered Count"
+    group_label: "Count Measures"
+    description: "Count of calls that are counted toward Service Level."
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${service_level_flag} >= 0 then 1 end ;;
+    drill_fields: [detail*]
+  }
+
   measure: transfer_count {
     label: "Transfer Count"
     group_label: "Count Measures"
@@ -831,7 +913,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${abandon_time} > 0 then ${abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, abandon_time]
   }
 
   measure: acd_time_average {
@@ -841,7 +923,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${acd_time} > 0 then ${acd_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, acd_time]
   }
 
   measure: acw_time_average {
@@ -851,7 +933,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${acw_time} > 0 then ${acw_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, acw_time]
   }
 
   measure: active_talk_time_average {
@@ -861,7 +943,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${active_talk_time} > 0 then ${active_talk_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, active_talk_time]
   }
 
   measure: holds_per_call_average {
@@ -872,7 +954,7 @@ view: incontact_phone {
     value_format_name: decimal_2
     hidden: yes
     sql:${holds}  ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, holds]
   }
 
   measure: conference_time_average {
@@ -882,7 +964,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${conference_time} > 0 then ${conference_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, conference_time]
   }
 
   measure: handle_time_average {
@@ -891,9 +973,20 @@ view: incontact_phone {
     description: "Average handle time. (ATT+ACW+Conf+Hold)"
     type: average
     value_format: "###0.00"
-    hidden: yes
+    # hidden: yes
     sql: case when ${handle_time} > 0 then ${handle_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, handle_time]
+  }
+
+  measure: hold_time_average {
+    label: "AVG Hold Time"
+    group_label: "Average Measures"
+    description: "Average hold time."
+    type: average
+    value_format: "###0.00"
+    # hidden: yes
+    sql: case when ${hold_time} > 0 then ${hold_time} end / 60 ;;
+    drill_fields: [detail*, hold_time]
   }
 
   measure: in_queue_time_average {
@@ -903,7 +996,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${inqueue_time} > 0 then ${inqueue_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, inqueue_time]
   }
 
   measure: long_abn_time_average {
@@ -913,7 +1006,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${long_abandon_time} > 0 then ${long_abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, long_abandon_time]
   }
 
   measure: short_abn_time_average {
@@ -923,7 +1016,17 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${short_abandon_time} > 0 then ${short_abandon_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, short_abandon_time]
+  }
+
+  measure: speed_of_answer_average {
+    label: "AVG Speed of Answer Time"
+    group_label: "Average Measures"
+    description: "Time that a Handled Contact spent waiting in the queue after requesting to speak to an agent until the call was routed to the agent.  Does NOT include Abandon calls."
+    type: average
+    value_format: "###0.00"
+    sql: case when ${speed_of_answer} > 0 then ${speed_of_answer} end / 60 ;;
+    drill_fields: [detail*, speed_of_answer]
   }
 
   measure: talk_time_average {
@@ -933,7 +1036,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${talk_time} > 0 then ${talk_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, talk_time]
   }
 
   measure: total_contact_time_average {
@@ -943,7 +1046,7 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     sql: case when ${total_contact_time} > 0 then ${total_contact_time} end / 60 ;;
-    drill_fields: [detail*]
+    drill_fields: [detail*, total_contact_time]
   }
 
   ##########################################################################################
@@ -1074,6 +1177,17 @@ view: incontact_phone {
   ##########################################################################################
   ## PERCENTAGE MEASURES
 
+  measure: abandon_pct {
+    label: "Abandon Pct"
+    group_label: "Percentage Measures"
+    description: "Percent of queued calls that were abandoned."
+    type: number
+    value_format_name: percent_1
+    sql: sum(case when ${queued} = TRUE and ${abandoned} = true then 1 end)
+      / nullifzero(sum(case when queued = true then 1 end)) ;;
+    drill_fields: [detail*]
+  }
+
   measure: inbound_pct {
     label:  "Inbound Pct"
     group_label: "Percentage Measures"
@@ -1090,10 +1204,23 @@ view: incontact_phone {
     description: "Percent of queued calls that were handled within the defined Service Level Agreement objective."
     type: number
     value_format_name: percent_1
-    sql: sum(case when ${in_sla} = true then 1 else 0 end) /
-      nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
+    sql: case when sum(case when ${service_level_flag} >= 0 then 1 end) > 0 then ${in_sla_count} / nullifzero(${sla_offered_count}) else 0 end ;;
+    # sql: sum(case when ${in_sla} = true then 1 else 0 end) /
+    #   nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
     drill_fields: [detail*, in_sla]
     }
+
+  measure: handled_pct {
+    label: "Handled Pct"
+    group_label: "Percentage Measures"
+    description: "Percent of calls handled by agent. [Handled] / ([Queued] + [Outbound])"
+    type: number
+    value_format_name: percent_1
+    sql: sum(case when ${handled} = true then 1 end)
+      / nullifzero(sum(case when ${queued} = true then 1
+      when ${direction} = 'Outbound' then 1 else 0 end)) ;;
+    drill_fields: [detail*]
+  }
 
   measure: long_abandon_pct {
     label: "Long Abandon Pct"
@@ -1101,8 +1228,8 @@ view: incontact_phone {
     description: "Percent of agent offered calls that were abandoned after short abandon threshhold."
     type: number
     value_format_name: percent_1
-    sql: sum(case when ${long_abandon} = true then 1 else 0 end) /
-      nullifzero(sum(case when ${agent_offered} = true then 1 else 0 end)) ;;
+    sql: sum(case when ${queued} = TRUE and ${long_abandon} = true then 1 end)
+      / nullifzero(sum(case when queued = true then 1 end)) ;;
     drill_fields: [detail*, long_abandon, agent_offered]
     }
 
@@ -1112,8 +1239,7 @@ view: incontact_phone {
     description: "Percent of queued calls that were NOT handled within the defined Service Level Agreement objective."
     type: number
     value_format_name: percent_1
-    sql: sum(case when ${service_level_flag} = 1 then 1 else 0 end) /
-      nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
+    sql: ${out_sla_count} / nullifzero(${sla_offered_count}) ;;
     drill_fields: [detail*, in_sla]
     }
 

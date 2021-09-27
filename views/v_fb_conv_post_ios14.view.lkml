@@ -47,11 +47,39 @@ view: v_fb_conv_post_ios14 {
     sql: ${TABLE}."DATE" ;;
   }
 
-measure: spend {
-  type: sum
-  value_format: "$#,##0.00"
-  sql: ${TABLE}.SPEND ;;
-}
+  measure: spend {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.SPEND ;;
+  }
+
+  measure: impressions {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.impressions ;;
+  }
+
+  measure: clicks {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.clicks ;;
+  }
+
+  measure: CPM {
+    label: "CPM"
+    description: "CPM = (Spend/Impressions)*1000"
+    type: number
+    value_format: "$#,##0.00"
+    sql: 1000 * DIV0(${spend},${impressions}) ;;
+  }
+
+  measure: CPC {
+    label: "CPC"
+    description: "Cost Per Click = Spend/Clicks"
+    value_format: "$#,##0.00"
+    type: number
+    sql: DIV0(${spend},${clicks}) ;;
+  }
 
  measure: purchase_conversion_value_7_dc {
     type: sum

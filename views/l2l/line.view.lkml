@@ -40,6 +40,7 @@ view: ltol_line {
     type: string
     sql: case when ${TABLE}."DESCRIPTION" = 'Scrim Line Red Max 2 and 5' then 'Scrim Red'
           when ${TABLE}."DESCRIPTION" = 'Scrim Line Blue Max 3 and 4' then 'Scrim Blue'
+          when ${TABLE}."DESCRIPTION" = 'Scrim Line Yellow Max 6 and 7' then 'Scrim Yellow'
           when ${TABLE}."DESCRIPTION" = 'Regrind Line' then 'Regrind'
           when ${TABLE}."DESCRIPTION" = 'Max Line' then 'Max 1'
           when ${TABLE}."DESCRIPTION" = 'Max Two Line' then 'Max 2'
@@ -76,6 +77,7 @@ view: ltol_line {
 
   dimension: line_name_bucket {
     description: "Bucketed Line Name (Glue 1 + Roll Pack 1 = Assembly Line 1, etc); Source: Looker Calculation"
+    hidden: yes
     type: string
     sql: case
       when ${Line_name} = 'Glue 1' or  ${Line_name} = 'Roll Pack 1' then 'Assembly Line 1'
@@ -84,6 +86,20 @@ view: ltol_line {
       when ${Line_name} = 'Glue 4' or  ${Line_name} = 'Roll Pack 4' then 'Assembly Line 4'
       else ${Line_name} end;;
   }
+
+  dimension: line_bucket{
+    description: "Max Machine, Glue, Roll Pack, Scrim, IMM"
+    type: string
+    sql: case
+            when ${Line_name} ilike '%Glue%' then 'Glue'
+            when ${Line_name} ilike '%Max%' then 'Max Machine'
+            when ${Line_name} ilike '%Roll%' then 'Roll Pack'
+            when ${Line_name} ilike '%Scrim%' then 'Scrim'
+            when ${Line_name} ilike 'Assembly Line%' then 'Assembly Line'
+            when  ${TABLE}."DESCRIPTION" ilike '%Injection Molding Line%' then 'IMM'
+            else ${Line_name} end;;
+  }
+
 
   dimension: inactive {
     description: "Source: l2l.line"

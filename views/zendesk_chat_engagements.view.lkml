@@ -276,14 +276,14 @@ view: zendesk_chat_engagements {
     description: "Accepted Engagements/Assigned Engagements"
     type: number
     value_format_name: percent_2
-    sql: ${accepted_count} / nullif(${engagement_count}, 0) ;;
+    sql: ${accepted_count} / nullif(${assignment_count}, 0) ;;
   }
 
   measure: rated_good_count {
     label: "Good Ratings"
     description: "Not connected to CSAT. These are Zendesk chat ratings"
     type: sum
-    value_format_name: number
+    value_format_name: decimal_0
     hidden: yes
     sql:case when lower(${rating}) = 'good' then 1 end ;;
   }
@@ -292,7 +292,7 @@ view: zendesk_chat_engagements {
     label: "Bad Ratings"
     description: "Not connected to CSAT. These are Zendesk chat ratings"
     type: sum
-    value_format_name: number
+    value_format_name: decimal_0
     hidden: yes
     sql:case when lower(${rating}) = 'bad' then 1 end ;;
   }
@@ -301,7 +301,7 @@ view: zendesk_chat_engagements {
     label: "Not Rated"
     description: "Not connected to CSAT. These are Zendesk chat ratings"
     type: sum
-    value_format_name: number
+    value_format_name: decimal_0
     hidden: yes
     sql:case when ${rating} is null then 1 else 0 end ;;
   }
@@ -310,7 +310,7 @@ view: zendesk_chat_engagements {
     label: "Rated Count"
     description: "Count of all engagements that received a rating of 'good' or 'bad' at the end of the engagemtnt. Not related to CSAT"
     type: sum
-    value_format_name: number
+    value_format_name: decimal_0
     hidden: yes
     sql:case when ${rating} is not null then 1 else 0 end ;;
   }

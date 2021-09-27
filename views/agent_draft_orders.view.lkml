@@ -39,6 +39,12 @@ view: agent_draft_orders {
 
     dimension_group: created_at {
       type: time
+      timeframes: [raw,
+        date,
+        week,
+        month,
+        quarter,
+        year]
       sql: ${TABLE}."CREATED_AT" ;;
     }
 

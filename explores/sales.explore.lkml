@@ -393,7 +393,7 @@ include: "/dashboards/**/*.dashboard"
     join: team_lead_name {
       view_label: "Zendesk"
       type: left_outer
-      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or REPLACE(${team_lead_name.agent_Name}, '  ', ' ') = REPLACE(${zendesk_sell.name}, '  ', ' '))
+      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or ${team_lead_name.agent_email} = ${zendesk_sell.email})
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
       relationship: many_to_one
     }
@@ -547,7 +547,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
       relationship: many_to_one
       }
-
+    join: sla {
+      view_label: "Fulfillment"
+      type: left_outer
+      sql_on: ${sales_order_line.created_date} = ${sla.order_date} and ${item.sku_id} = ${sla.sku_id} and ${sales_order.channel_id} in (1,5) ;;
+      relationship: many_to_one
+    }
   }
 
 
@@ -1077,6 +1082,12 @@ explore: sessions_in_tests {hidden: yes}
       fields: [zcta5.fulfillment_region_1]}
   }
 
+  explore: sla {
+    hidden: yes
+    join: item {
+    type: left_outer
+    sql_on: ${sla.sku_id} = ${item.sku_id} ;;
+    relationship: one_to_one}}
   explore: v_sla {hidden: yes}
   explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}

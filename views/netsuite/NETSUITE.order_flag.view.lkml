@@ -38,6 +38,7 @@ view: order_flag {
       , mattress_ordered
       , mattress_sales
       , gross_sales
+      , total_units
       ,case when buymsm1 > 0 then 1 else 0 end buymsm
       ,case when med_mask > 0 then 1 else 0 end medical_mask_flg
       ,case when pillow_booster > 0 then 1 else 0 end pillow_booster_flg
@@ -123,7 +124,6 @@ view: order_flag {
      ,case when hybrid3 > 0 then 1 else 0 end hybrid3_flg
      ,case when hybrid4 > 0 then 1 else 0 end hybrid4_flg
      ,case when purple_mattress >0 then 1 else 0 end purple_mattres_flg
-
     -- Room Set Completion
      ,case when MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG > 0 then MATTRESS_FLG + SHEETS_FLG + PROTECTOR_FLG + BASE_FLG + PILLOW_FLG else 0 end room_set
 
@@ -148,11 +148,13 @@ view: order_flag {
             when hybrid3_flg = 1 then 'Premier 3'
             when hybrid4_flg = 1 then 'Premier 4'
             when kid_bed_flg = 1 then 'Kid bed'
+            when purple_plus_flg = 1 then 'Purple Plus'
             else 'none' end mattress_order_model
 
     FROM(
       select sol.order_id
         ,sum(sol.gross_amt) GROSS_SALES
+        ,sum(sol.ordered_qty) total_units
         ,sum(case when category = 'MATTRESS' THEN 1 ELSE 0 END) MATTRESS_FLG
         ,sum(case when line = 'HYBRID' THEN 1 ELSE 0 END) HYBRID_MATTRESS_FLG
         ,SUM(CASE WHEN category = 'SEATING' THEN 1 ELSE 0 END) CUSHION_FLG
@@ -177,7 +179,7 @@ view: order_flag {
         ,sum(CASE WHEN model = 'PLUSH'  then 1 else 0 end) plush
         ,sum(CASE WHEN version = 'PURPLE PILLOW' then 1 else 0 end) purple_pillow
         ,sum(CASE WHEN model = 'EYE MASK' THEN 1 ELSE 0 END) gravity_mask
-        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%split king%' THEN 1 ELSE 0 END) split_king
+        ,sum(CASE WHEN category = 'MATRESS' and PRODUCT_DESCRIPTION ilike '%SPLIT%' THEN 1 ELSE 0 END) split_king
         ,sum(case when model = 'WEIGHTED BLANKET' then 1 else 0 end) gravity_blanket
         ,sum(case when model = 'DUVET' then 1 else 0 end) duvet
         ,sum(case when (line = 'PROTECTOR' AND discount_amt=50*sol.ORDERED_QTY) THEN 1 ELSE 0 END) ff_bundle_pt1
@@ -209,8 +211,6 @@ view: order_flag {
          ,sum(case when model = 'EVERYWHERE' THEN 1 ELSE 0 END) everywhere_cushion
          ,sum(case when model = 'LITE' THEN 1 ELSE 0 END) lite_cushion
          ,sum(case when version ilike '%light duvet%' THEN 1 ELSE 0 END) light_duvet
-         ,sum(case when model = 'KID BED' THEN 1 ELSE 0 END) kidbed
-         ,sum(case when model ilike '%PURPLE PLUS%' THEN 1 ELSE 0 END) purpleplusbed
          ,sum(case when (model = 'KID PILLOW' ) THEN 1 ELSE 0 END) kidpillow
          ,sum(case when version ilike '%all seasons%' THEN 1 ELSE 0 END)allseasons_duvet
          ,sum(case when model = 'KID SHEETS' THEN 1 ELSE 0 END) kidsheets
@@ -240,6 +240,8 @@ view: order_flag {
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 3'  THEN 1 ELSE 0 END) hybrid3
          ,SUM(CASE WHEN line = 'HYBRID' and model = 'HYBRID PREMIER 4' THEN 1 ELSE 0 END) hybrid4
          ,sum(case when model = 'PURPLE MATTRESS' then 1 else 0 end) purple_mattress
+         ,sum(case when model = 'KID BED' THEN 1 ELSE 0 END) kidbed
+         ,sum(case when model ilike '%PURPLE PLUS%' THEN 1 ELSE 0 END) purpleplusbed
          ,sum(case when product_description ilike '%MINI BED SQUISHY%' then 1 else 0 end) mini_bed_squishy
 
     -- For flagging an order based on UPT --
@@ -285,6 +287,11 @@ view: order_flag {
   dimension: mattress_sales {
     hidden: yes
     sql: ${TABLE}.mattress_sales  ;;
+  }
+
+  dimension: order_total_units {
+    hidden: yes
+    sql: ${TABLE}.total_units ;;
   }
 
   measure: mattress_orders_non_zero_amt {
@@ -961,6 +968,17 @@ view: order_flag {
     sql:  ${TABLE}.lite_cushion_flg =1 ;; }
 
 # Bundle flags and measures
+  dimension: is_bundle{
+    group_label: "eComm Bundle Flags"
+    label: "   Is Bundle"
+    description: "Yes if item was in order with one of the listed ecomm bundles. Source: looker.calculation"
+    type:  yesno
+    sql: (${TABLE}.bundle1_flg + ${TABLE}.bundle2_flg + ${TABLE}.bundle3_flg + ${TABLE}.bundle4_flg + ${TABLE}.bundle5_flg
+    + ${TABLE}.bundle6_flg + ${TABLE}.bundle7_flg + ${TABLE}.bundle8_flg  + ${TABLE}.bundle9_flg + ${TABLE}.bundle10_flg
+    + ${TABLE}.bundle11_flg + ${TABLE}.bundle12_flg + ${TABLE}.bundle13_flg + ${TABLE}.bundle14_flg + ${TABLE}.bundle15_flg
+    + ${TABLE}.bundle16_flg + ${TABLE}.bundle17_flg + ${TABLE}.bundle18_flg + ${TABLE}.bundle19_flg + ${TABLE}.portcushtwobund_flg) > 0 ;; }
+
+
   dimension: bundle1_flag {
     group_label: "eComm Bundle Flags"
     label: " Bundle 1"
@@ -1359,6 +1377,13 @@ view: order_flag {
     description: "1/0; 1 if there is a The Purple Mattress in this order. Source: looker.calculation"
     type:  yesno
     sql: ${TABLE}.purple_mattres_flg = 1 ;; }
+
+  measure: purple_plus_orders {
+    group_label: "Total Orders with:"
+    label: "a Purple Plus"
+    description: "Count of Orders with a The Purple Mattress. Source: looker.calculation"
+    type:  sum
+    sql: ${TABLE}.purple_plus_flg ;; }
 
   measure: purple_mattress_orders {
     group_label: "Total Orders with:"

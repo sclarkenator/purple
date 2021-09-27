@@ -252,7 +252,7 @@ view: sales_order_line {
 
   dimension: Due_Date {
     view_label: "Fulfillment"
-    hidden: no
+    hidden: yes
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
@@ -270,9 +270,10 @@ view: sales_order_line {
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
   }
+
   dimension: White_Glove_Due_Date {
     view_label: "Fulfillment"
-    hidden: no
+    hidden: yes
     type: date
     sql: case
           --white glove carriers have 14 days from date of transmission
@@ -287,7 +288,7 @@ view: sales_order_line {
     group_label: " Advanced"
     label: "SLA-based ship-by"
     description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
-    hidden: no
+    hidden: yes
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
@@ -295,6 +296,40 @@ view: sales_order_line {
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${v_sla_days.sla_days},5),${created_date})
+          Else dateadd(d,3,${created_date}) END ;;
+  }
+
+  dimension: wg_sla_ship {
+    ##updated by Scott Clark on 7/30/2021 working on updating actual SLAs for Jane
+    view_label: "Fulfillment"
+    group_label: "Website SLAs"
+    label: "White-glove SLA ship-by"
+    description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
+    hidden: no
+    type: date
+    sql: case
+          -- wholesale is ship by date (from sales order)
+          WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
+            THEN ${sales_order.ship_by_date}
+          -- fedex is min ship date
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.white_glove},14),${created_date})
+          Else dateadd(d,14,${created_date}) END ;;
+  }
+
+  dimension: sla_ship {
+    ##updated by Scott Clark on 7/30/2021 working on updating actual SLAs for Jane
+    view_label: "Fulfillment"
+    group_label: "Website SLAs"
+    label: "Site SLA ship-by"
+    description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
+    hidden: no
+    type: date
+    sql: case
+          -- wholesale is ship by date (from sales order)
+          WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
+            THEN ${sales_order.ship_by_date}
+          -- fedex is min ship date
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},5),${created_date})
           Else dateadd(d,3,${created_date}) END ;;
   }
 
@@ -306,6 +341,7 @@ view: sales_order_line {
 
   dimension_group: SLA_Target {
     ## Scott Clark 1/8/21 Swapping out week of year
+    hidden:  yes
     label: "SLA Target"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
@@ -318,6 +354,7 @@ view: sales_order_line {
 
   dimension: SLA_Target_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+    hidden:  yes
     type: number
     label: "Week of Year"
     view_label: "Fulfillment"
@@ -330,6 +367,7 @@ view: sales_order_line {
 
   dimension: SLA_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
+    hidden:  yes
     type: number
     label: "z - 2021 adj year"
     view_label: "Fulfillment"
@@ -337,8 +375,6 @@ view: sales_order_line {
     description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
     sql:  case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 2021 else ${SLA_Target_year::number} end   ;;
   }
-
-
 
   dimension: SLA_Buckets {
     group_label: " Advanced"
@@ -352,6 +388,7 @@ view: sales_order_line {
   }
 
   dimension: sla_Before_today{
+    hidden:  yes
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Is Before Today (mtd)"
@@ -360,6 +397,7 @@ view: sales_order_line {
   }
 
   dimension: sla_current_week_num{
+    hidden:  yes
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Before Current Week"
@@ -368,6 +406,7 @@ view: sales_order_line {
   }
 
   dimension: sla_prev_week{
+    hidden:  yes
     group_label: "SLA Target Date"
     view_label: "Fulfillment"
     label: "z - Previous Week"
@@ -1305,6 +1344,16 @@ view: sales_order_line {
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
   }
 
+  dimension: ff_dayofquarterindex {   #returns day of quarter index int 1-92
+    type: number
+    view_label: "Fulfillment"
+    description: "Returns a date's number position in its quarter. Ex. Jan 1 = 1; Feb 1 = 32."
+    group_label: "Fulfilled Date"
+    label: "Day of Quarter"
+    hidden: yes
+    sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date::date}),${fulfilled_date::date}) + 1 ;;
+  }
+
   dimension: fulfilled_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
     type: number
@@ -1431,6 +1480,7 @@ view: sales_order_line {
   dimension: week_bucket_ff_old{
     group_label: "    Fulfilled Date"
     view_label: "Fulfillment"
+    hidden: yes
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker.calculation"
     type: string

@@ -71,6 +71,7 @@ dimension: name {
     description: "The name of this agent. Source:incontact.agent_lkp"
     type:  string
     sql: REPLACE(nvl(${zendesk_sell.name},${TABLE}.name), '  ', ' ')  ;;
+    #sql: REPLACE(${TABLE}.name, '  ', ' ')  ;;
   }
 
   dimension: primary_location{
@@ -89,6 +90,7 @@ dimension: name {
     description: "The name of this email. Source:incontact.agent_lkp"
     type:  string
     sql:  lower(nvl(${zendesk_sell.email},${TABLE}.email)) ;;
+    #sql:  lower(${TABLE}.email) ;;
   }
 
   dimension: email_join {

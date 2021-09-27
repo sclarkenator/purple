@@ -72,7 +72,6 @@
       sql: ${TABLE}.inbound_pending ;;
     }
 
-
     dimension: lunch {
       type: number
       value_format_name: decimal_2
@@ -139,7 +138,7 @@
       value_format_name: decimal_2
       sql: ${TABLE}.occupancy ;;
     }
-    dimension: true_occupancy {
+    dimension: true_occupancy {  # DON'T USE THIS
       type: number
       value_format_name: decimal_2
       sql: ${TABLE}.true_occupancy ;;
@@ -161,7 +160,6 @@
       type: number
       value_format_name: percent_2
       sql: (${total_measure}-${personal_measure}-${break_measure}-${lunch_measure})/${total_measure} ;;
-
     }
 
     measure: occupancy_measure {
@@ -170,7 +168,6 @@
       type: number
       value_format_name: percent_2
       sql: ${handle_measure}/(${handle_measure}+${available_measure}) ;;
-
     }
 
     measure: total_measure {
@@ -178,7 +175,6 @@
       type: sum
       value_format_name: decimal_2
       sql: ${TABLE}.total ;;
-
     }
 
     measure: personal_measure {
@@ -194,7 +190,6 @@
       type: sum
       value_format_name: decimal_2
       sql: ${TABLE}.break ;;
-
     }
 
     measure: lunch_measure {
@@ -202,7 +197,6 @@
       type: sum
       value_format_name: decimal_2
       sql: ${TABLE}.lunch ;;
-
     }
 
     measure: handle_measure {
@@ -210,7 +204,6 @@
       type: sum
       value_format_name: decimal_2
       sql: ${TABLE}.handle ;;
-
     }
 
     measure: available_measure {
@@ -218,7 +211,6 @@
       type: sum
       value_format_name: decimal_2
       sql: ${TABLE}.available ;;
-
     }
 
     measure: count {

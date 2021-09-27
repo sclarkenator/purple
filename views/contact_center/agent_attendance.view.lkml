@@ -1,12 +1,39 @@
 view: cc_agent_attendance {
-  sql_table_name: "CUSTOMER_CARE"."ATTENDANCE_CHANGES"
-    ;;
+  ## Tracks agent attendance stats as entered by WFM in the Master Attendance file.
+  ## File location: https://purplebed.sharepoint.com/:x:/t/PI/EQE9iTrXC5hIrWwGmqNv5pcB5zQQ7CI0XSBJrFogSrjYAA
+
+  derived_table: {
+    sql:
+      select distinct
+          d.date as event_date,
+          d.incontact_id,
+          a.*,
+          case when is_occurrence = 'Yes' then 1 end as occurrence_count,
+          concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2),
+        row_number()over(partition by ic_id, combined_dates order by occurrence, sub_occurrence, notes)) as pk
+
+      from (
+          select distinct cast(d.date as date) as date
+              ,a.ic_id as incontact_id
+
+          from analytics.util.warehouse_date d
+
+              cross join customer_care.attendance_changes a
+
+          where d.date between '2020-01-01' and dateadd(d, -1, cast(getdate() as date))
+          ) d
+
+          left join customer_care.attendance_changes a
+              on d.incontact_id = a.ic_id
+              and d.date = a.combined_dates ;;
+  }
 
   dimension: pk {
     label: "Primary Key"
+    primary_key: yes
     type: string
     hidden: yes
-    sql: concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2) , rank()over(partition by IC_ID, combined_dates order by occurrence, sub_occurrence, notes)) ;;
+    sql: ${TABLE}.pk ;;
   }
 
   ##########################################################################################
@@ -23,30 +50,32 @@ view: cc_agent_attendance {
   dimension: fmla {
     label: "FMLA"
     description: "How many hours of FMLA was the agent using and needed to submit into Workday."
+    hidden: yes
     type: number
     sql: ${TABLE}."FMLA" ;;
   }
 
-  dimension: ic_id {
-    label: "Agent ID"
+  dimension: incontact_id {
+    label: "Incontact ID"
     description: "Agent's InContact ID."
+    hidden: yes
     type: string
-    sql: ${TABLE}."IC_ID" ;;
+    sql: ${TABLE}.incontact_id ;;
   }
 
   dimension: is_occurrence {
+    label: "Is Occurrence"
     description: "Flags whether was an Occurrence event."
     # hidden: yes
     type: yesno
     sql: is_occurrence ;;
   }
 
-  dimension: name {
-    label: "Agent Name"
-    description: "Name of agent to whom this record applies."
-    hidden: yes
-    type: string
-    sql: ${TABLE}."NAME" ;;
+  dimension: last_update {
+    label: "Last Update"
+    description: "Last date when the data was updated."
+    type: date
+    sql: select max(insert_ts) from "CUSTOMER_CARE"."ATTENDANCE_CHANGES" ;;
   }
 
   dimension: notes {
@@ -66,6 +95,7 @@ view: cc_agent_attendance {
   dimension: points {
     label: "Points"
     description: "The value of the points against the agent for occurence events (0.5, 1.0, 1.5, or possibly -.5, -1.0 for earned back time)."
+    hidden: yes
     type: number
     sql: ${TABLE}."POINTS" ;;
   }
@@ -73,18 +103,20 @@ view: cc_agent_attendance {
   dimension: sick_time {
     label: "Sick Time"
     description: "How many hours of Sick Time was the agent using and needed to submit into Workday."
+    hidden: yes
     type: number
     sql: ${TABLE}."SICK_TIME" ;;
   }
 
   dimension: sub_occurrence {
-    label: "Sub Occurrance"
+    label: "Sub occurrence"
     description: "sub category of the type of Occurrence (was it Sick Time, FMLA or other Standard Procedure for points or was it an Exception/Excused or just for tracking notes/comments"
     type: string
     sql: ${TABLE}."SUB_OCCURRENCE" ;;
   }
 
   dimension: vm {
+    label: "Left Voicemail"
     description: "Identifies if the agent called the attendance line and left a Voice Message."
     type: yesno
     sql: case when ${TABLE}."VM" = 'true' then TRUE else FALSE end ;;
@@ -96,8 +128,8 @@ view: cc_agent_attendance {
 
   # The DATE field does not need to be included as a date field.  It is used as more of a flag field.
 
-  dimension_group: combined_date {
-    label: "Event"
+  dimension_group: event_date {
+    label: "* Event"
     description: "The date recorded event took place."
     hidden: no
     type: time
@@ -111,11 +143,12 @@ view: cc_agent_attendance {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."COMBINED_DATES" ;;
+    sql: ${TABLE}.event_date ;;
   }
 
   dimension_group: insert_ts {
-    label: "Date record was inserted in database."
+    label: "* Inserted"
+    description: "Date record was inserted in database."
     hidden: yes
     type: time
     timeframes: [
@@ -134,19 +167,10 @@ view: cc_agent_attendance {
   ##########################################################################################
   ## MEASURES
 
-
   measure: count {
     label: "Count of all recorded events"
     hidden: yes
     type: count
-  }
-
-  measure: current_points {
-    label: "Current Points"
-    description: "Current summary of Attendence Points"
-    type: number
-    value_format_name: decimal_1
-    sql: zeroifnull(sum(${points})) ;;
   }
 
   measure: fmla_time_used {
@@ -161,8 +185,9 @@ view: cc_agent_attendance {
     label: "Last Occurrence"
     description: "Most recent date when an occurrence event was recorded."
     type: date
-    sql: max(case when ${is_occurrence} = True then ${combined_date_date}
+    sql: max(case when ${is_occurrence} = True then ${event_date_date}
       else null end) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: non_occurrence_count {
@@ -179,20 +204,22 @@ view: cc_agent_attendance {
     description: "Sum count of Occurrence events."
     type: number
     value_format_name: decimal_0
-    sql: sum(case when ${is_occurrence} = True then 1 else 0 end) ;;
+    sql: zeroifnull(sum(${TABLE}.occurrence_count)) ;;
   }
-
-  # measure: occurrence_hit_count {
-  #   label: "Occurrence Hit Count"
-  #   description: "Count of occurrence hits (positive points) in period."
-  #   type: sum
-  #   sql: nullifzero(case when ${is_occurrence} = True and ${points} > 0 then 1 end) ;;
-  # }
 
   measure: occurrence_hit_points {
     # hidden: yes
     type: sum
     sql: case when ${points} > 0 then ${points} else 0 end ;;
+  }
+
+  measure: point_sum {
+    label: "Points Sum"
+    description: "Calculated sum of points earned during a given period."
+    type: number
+    value_format_name: decimal_1
+    sql: zeroifnull(sum(${points})) ;;
+    html: <a href="https://purple.looker.com/dashboards-next/4398">{{ value }}</a> ;;
   }
 
   measure: sick_time_used {
@@ -202,25 +229,4 @@ view: cc_agent_attendance {
     value_format_name: decimal_0
     sql: case when ${sick_time} > 0 then ${sick_time} else 0 end ;;
   }
-
-  # measure: warning_level {
-  #   label: "Warning Level"
-  #   description: "Warning level is not a difinitive indication of status, but is a generalization based on accumulated occurence points. Actual status may vary based on timing of occurence events and other factors."
-  #   hidden: yes
-  #   case: {
-  #     when: {
-  #       sql: ${occurrence_points} between 3 and 3.9 ;;
-  #       label: "Verbal Warning"
-  #     }
-  #     when: {
-  #       sql: ${occurrence_points} between 4 and 4.9 ;;
-  #       label: "Written Warning"
-  #     }
-  #     when: {
-  #       sql: ${occurrence_points} >= 5 ;;
-  #       label: "Final Written"
-  #     }
-  #     else: ""
-  #   }
-  # }
 }

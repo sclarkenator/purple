@@ -64,6 +64,7 @@ view: bin_location {
 
   measure: unallocated {
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."UNALLOCATED" ;;
   }
 
@@ -82,8 +83,4 @@ view: bin_location {
     sql: ${TABLE}."ZONE" ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }

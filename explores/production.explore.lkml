@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  yes
+    hidden:  no
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"
@@ -350,7 +350,7 @@ include: "/dashboards/**/*.dashboard"
     join: l2l_machine_downtime {
       view_label: "Machine"
       type: left_outer
-      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id};;
       relationship: one_to_many
     }
     join: machine_schedule {
@@ -469,16 +469,20 @@ include: "/dashboards/**/*.dashboard"
   explore: change_mgmt {hidden:yes group_label: "Production"}
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
-  explore: bin_location {hidden: yes group_label:"Production" label: "Highjump Bin Location"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
   explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
-
+  explore: vendor {hidden:yes}
   explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
   explore: l2_l_checklists {hidden: yes group_label: "L2L"}
   explore: l2l_qpc_mattress_audit {hidden: yes group_label: "L2L"}
   explore: l2l_quality_yellow_card {hidden: yes group_label: "L2L"}
   explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "L2L"}
   explore: l2l_machine_downtime {hidden: yes group_label: "L2L"}
+  explore: v_quality_mrb_cores_final_disposition {hidden: yes label: "Quality MRB Cores Final Disposition" group_label: "L2L"}
+  explore: v_quality_mrb_rework_finished_bed {hidden: yes label: "Quality MRB Rework Finished Bed" group_label: "L2L"}
+  explore: v_quality_mrb_cover {hidden: yes label: "Quality MRB Cover" group_label: "L2L"}
+  explore: v_quality_mrb_return_bed_qc {hidden: yes label: "Quality MRB Return Bed QC" group_label: "L2L"}
+  explore: v_incoming_inspection_form {hidden: yes label: "Incoming Inspection Form" group_label: "L2L"}
   explore: incoming_inspection_form {
     from:  date_meta
     group_label: "L2L Inspection Form"

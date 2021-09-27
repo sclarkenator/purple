@@ -68,10 +68,12 @@ view: item {
     sql: ${TABLE}.type ;;
   }
 
-  measure: Weight {
-    label: "Total Item Weight"
-    hidden: yes
-    type: sum
+##changed to a dimension because of aggregation issues when trying to sum as a measure.
+  dimension: Weight {
+    label: "Unit Weight"
+    hidden: no
+    value_format: "#,##0"
+    type: number
     sql: ${TABLE}.WEIGHT ;;
   }
 
@@ -423,6 +425,8 @@ view: item {
     case: {
       when: {sql: ${TABLE}.model = 'KID BED';; label: "1"}
       when: {sql: ${TABLE}.model = 'PURPLE MATTRESS';; label: "2"}
+      when: {sql: ${TABLE}.model = 'PURPLE PLUS CANADA';; label: "2.1"}
+      when: {sql: ${TABLE}.model = 'PURPLE PLUS US';; label: "2.2"}
       when: {sql: ${TABLE}.model = 'HYBRID 2';; label: "3"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 3';; label: "4"}
       when: {sql: ${TABLE}.model = 'HYBRID PREMIER 4';; label: "5"}
@@ -801,6 +805,18 @@ view: item {
         when ${item_id} in ('9824') then '5750'
         when ${item_id} in ('10391') then '5947'
         when ${item_id} in ('11511') then '11508'
+        when ${item_id} in ('14598') then '5949'
+        when ${item_id} in ('14599') then '5950'
+        when ${item_id} in ('14600') then '5951'
+        when ${item_id} in ('14601') then '5953'
+        when ${item_id} in ('14602') then '5952'
+        when ${item_id} in ('14603') then '5954'
+        when ${item_id} in ('14604') then '6000'
+        when ${item_id} in ('14605') then '6001'
+        when ${item_id} in ('14606') then '6002'
+        when ${item_id} in ('14607') then '6003'
+        when ${item_id} in ('14608') then '6004'
+        when ${item_id} in ('14609') then '6005'
         --BEDDING
         when ${item_id} in ('9783') then '7580'
         when ${item_id} in ('9800') then '5923'
@@ -882,6 +898,18 @@ view: item {
         when ${sku_clean} in ('10-38-12955') then '10-38-12952'
         when ${sku_clean} in ('10-38-52894') then '10-38-52846'
         when ${sku_clean} in ('10-38-12959') then '10-38-12956'
+        when ${sku_clean} in ('10-38-45896') then '10-38-45862'
+        when ${sku_clean} in ('10-38-45897') then '10-38-45863'
+        when ${sku_clean} in ('10-38-45898') then '10-38-45864'
+        when ${sku_clean} in ('10-38-45899') then '10-38-45865'
+        when ${sku_clean} in ('10-38-45900') then '10-38-45866'
+        when ${sku_clean} in ('10-38-45901') then '10-38-45867'
+        when ${sku_clean} in ('10-38-45902') then '10-38-45868'
+        when ${sku_clean} in ('10-38-45903') then '10-38-45869'
+        when ${sku_clean} in ('10-38-45904') then '10-38-45870'
+        when ${sku_clean} in ('10-38-45905') then '10-38-45871'
+        when ${sku_clean} in ('10-38-45906') then '10-38-45872'
+        when ${sku_clean} in ('10-38-45907') then '10-38-45873'
         --BEDDING
         when ${sku_clean} in ('10-31-72855') then '10-31-12855'
         when ${sku_clean} in ('10-38-13918') then '10-38-13924'
@@ -1030,6 +1058,37 @@ view: item {
     group_label: "Advanced"
     type: string
     sql: ${TABLE}."LIFECYCLE_STATUS" ;;
+  }
+
+  dimension: wms_classification {
+    label: "WMS Classification"
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.wms_classification ;;
+  }
+
+  dimension: height {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.height ;;
+  }
+
+  dimension: length {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.length ;;
+  }
+
+  dimension: width {
+    group_label: "Advanced"
+    type: number
+    sql: ${TABLE}.width ;;
+  }
+
+  dimension: image_url {
+    group_label: "Advanced"
+    type: string
+    sql: ${TABLE}.image_url ;;
   }
 
 }

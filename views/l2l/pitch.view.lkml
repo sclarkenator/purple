@@ -3,14 +3,18 @@ view: ltol_pitch {
  # sql_table_name: L2L.PITCH ;;
 
 derived_table: {
-  sql: select *
-  from (
-    select *
-        , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
-    from ANALYTICS.L2L.Pitch
-) z
-where z.row_num = 1 and delete_ts is null;;
-}
+  sql: select * from ANALYTICS.L2L.Pitch where delete_ts is null;;
+  }
+
+## Hidden by Jared to fix nulling max machine data - 09/01/2021
+##  select *
+##  from (
+##    select *
+##        , row_number () over(partition by pitch_start, area, line order by id desc) as row_num
+##    from ANALYTICS.L2L.Pitch
+## ) z
+## where z.row_num = 1 and delete_ts is null;;
+
 
   dimension: pitch_id {
     primary_key: yes
@@ -45,7 +49,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: comment {
-    hidden: yes
+    hidden: no
     description: "Source: l2l.pitch"
     type: string
     sql: ${TABLE}."COMMENT" ;;
@@ -62,7 +66,7 @@ where z.row_num = 1 and delete_ts is null;;
   }
 
   dimension: createdby {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}."CREATEDBY" ;;
   }
@@ -126,11 +130,44 @@ where z.row_num = 1 and delete_ts is null;;
   dimension_group: pitch_start {
     description: "Pitch is an Hour increment, a new Pitch starts every Hour; Source: l2l.pitch"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day,hour, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
     convert_tz: no
     datatype: timestamp
     sql: ${TABLE}."PITCH_START" ;;
   }
+
+  dimension: liquid_date {
+    group_label: "Pitch Start Date"
+    label: "  Dynamic Date"
+    description: "If > 365 days in the look, then month, if > 30 then week, if > 5 then day, else hour"
+    sql:
+    CASE
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >365
+      THEN cast(${pitch_start_month} as varchar)
+      WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >30
+      THEN cast(${pitch_start_week} as varchar)
+        WHEN
+        datediff(
+                'day',
+                cast({% date_start pitch_start_date %} as date),
+                cast({% date_end pitch_start_date  %} as date)
+                ) >5
+      THEN cast(${pitch_start_date} as varchar)
+      else ${pitch_start_hour}
+      END
+    ;;
+  }
+
 
   dimension: current_day_numb  {
     view_label: "Pitch"
@@ -235,6 +272,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."ACTUAL" ;;
   }
 
@@ -245,21 +283,40 @@ where z.row_num = 1 and delete_ts is null;;
     sql: ${TABLE}."SCRAP" ;;
   }
 
+  measure: first_pass_yield{
+    label: "FPY"
+    description: "Total # of good parts produced divided by total number of shots"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${demand} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
+  }
+
+  measure: throughput_percent{
+    label: "Throughput %"
+    description: "Actual good parts produced divided by pitch demand"
+    type: number
+    value_format: "0.0%"
+    sql: case when ${demand} = 0 then null else div0(${actual},${demand}) end;;
+  }
+
   measure: planned_production_minutes {
     description: "Total amount of Planned Minutes spent Producing; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."PLANNED_PRODUCTION_MINUTES" ;;
   }
 
   measure: downtime_minutes {
     description: "Total amount of Downtime Mintues; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."DOWNTIME_MINUTES" ;;
   }
 
   measure: cycle_time {
     description: "Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
 
@@ -273,6 +330,7 @@ where z.row_num = 1 and delete_ts is null;;
   measure: demand {
     description: "Total amount of Demanded Product to be Produced; Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."DEMAND" ;;
   }
 
@@ -292,15 +350,25 @@ where z.row_num = 1 and delete_ts is null;;
   measure: operational_availability {
     description: "(Planned Production Minutes - Downtime Minutes)/Planned Production Mintues; Source: l2l.pitch"
     type: average
-    value_format: "0\%"
-    sql: ${TABLE}."OPERATIONAL_AVAILABILITY" ;;
+    value_format: "0.0%"
+    sql: ${TABLE}."OPERATIONAL_AVAILABILITY"/100 ;;
+  }
+
+  measure: overall_equipment_effectiveness_L2L {
+    hidden: yes
+    description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
+    value_format: "0.0%"
+    type: average
+    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
   }
 
   measure: overall_equipment_effectiveness {
-    hidden: yes
-    description: "Operational Availability% * Quality% * Performance Per Part%; Source: l2l.pitch"
-    type: average
-    sql: ${TABLE}."OVERALL_EQUIPMENT_EFFECTIVENESS" ;;
+    label: "OEE"
+    description: "FPY * OA * Throughput %"
+    hidden: no
+    type: number
+    value_format: "0.0%"
+    sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
   }
 
   measure: total_operator_count {

@@ -229,19 +229,64 @@ explore: email_mymove_contact {
   }
 
 
+# dimension: order_system {
+#   primary_key:  yes
+#   type: string
+#   hidden:  yes
+#   sql: ${TABLE}.order_id||'-'||${TABLE}.system ;; }
+
   explore: email_crm {
+    from:  sales_order_line_base
+    label:  " Sales"
+    group_label: " Sales"
+    view_label: "Sales Order Line"
+    view_name: sales_order_line
+    # fields: [sales_order_details*]
+    description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
+    #always_join: [fulfillment]
+    # always_filter: {
+    #   filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
+    #   filters: [sales_order.is_exchange_upgrade_warranty: ""]
+    join: sales_order {
+      view_label: "Sales Order"
+      type: left_outer
+      sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
+      relationship: one_to_one}
     hidden: yes
-    join: email_crm_product {
+    join: cordial_activity {
+      type: left_outer
+      sql_on: lower(${cordial_activity.email}) = lower(${sales_order.email})
+      and ${cordial_activity.time_time} < ${sales_order.created} and ${cordial_activity.time_time} >= dateadd('day',-7,${sales_order.created})
+      and ${cordial_activity.action} in ('message-sent','open');;
+      relationship: many_to_one
+    }
+    join:cordial_id  {
       type: left_outer
       relationship: one_to_many
-      sql_on: ${email_crm.order_id} = ${email_crm_product.order_id} ;;
+      sql_on: ${cordial_id.email_join} = lower(${cordial_activity.email}) ;;
+    }
+    join: cordial_bulk_message {
+      type: left_outer
+      relationship: one_to_one
+      sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
     }
     join: item {
       type: left_outer
-      relationship: one_to_one
-      sql_on: ${email_crm_product.item_id} = ${item.item_id} ;;
+      relationship: many_to_one
+      sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
     }
-  }
+    join: order_flag_v2 {
+      view_label: "Order Flags"
+      type: left_outer
+      sql_on: ${sales_order.order_id} = ${order_flag_v2.order_id} ;;
+      relationship: one_to_one
+    }
+    join: first_order_flag {
+      view_label: "Order Flag"
+      relationship: one_to_one
+      sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
+    }
+}
 
   explore: talkable_referral {hidden: yes
     join: sales_order {
@@ -267,8 +312,46 @@ explore: email_mymove_contact {
     }
   }
 
+  explore: crm_customer_health {
+    hidden:yes
+    label: "CRM: Customer Health"
+    group_label: "Marketing"
+    view_label:"Customer Health"
+    join: crm_customer_health_lifetime {
+      view_label: "Customer Lifetime"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${crm_customer_health.email_join} =  ${crm_customer_health_lifetime.email_join} ;;
+    }
+    join: order_utm {
+      view_label: "Orders"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
+    }
+    join: sales_order {
+      type: left_outer
+      sql_on: lower(${sales_order.email}) = ${crm_customer_health.email_join} ;;
+      relationship: many_to_one
+      #fields: []
+    }
+    join: sales_order_line_base {
+      type: left_outer
+      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+      relationship: one_to_many
+      fields: []
+    }
+    join: item {
+      type: left_outer
+      sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+      relationship: many_to_one
+    }
+  }
+
+
   explore: v_fb_adset_freq_weekly {hidden: yes}
   explore: v_fb_all {hidden: yes}
+  explore: v_fb_all_breakdown {hidden: yes}
   explore: v_fb_conv_post_ios14 {hidden: yes}
   explore: v_google_search_site_report {hidden: yes}
   explore: v_google_keyword_page_report {hidden: yes}
@@ -289,6 +372,7 @@ explore: email_mymove_contact {
   explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}
   explore: target_adspend {hidden: yes group_label: "Marketing"}
   explore: promotion {hidden:yes group_label: "Marketing"}
+#  explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
@@ -340,20 +424,20 @@ explore: all_events {
       sql_on: ${date_meta.date}::date = ${sessions.time_date}::date;;
       relationship: one_to_many
     }
-## I commented this out to see if performance changes
-### Blake
-#   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
-#     query: {
-#       dimensions: [sessions.time_week_of_year, sessions.time_year]
-#       measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
-#       filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
-#       timezone: "America/Denver"
-#     }
-#
-#     materialization: {
-#       datagroup_trigger: pdt_refresh_6am
-#     }
-#   }
+# I commented this out to see if performance changes
+## Blake
+  aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
+    query: {
+      dimensions: [sessions.time_week_of_year, sessions.time_year]
+      measures: [heap_page_views.Sum_non_bounced_session, sessions.count]
+      filters: [sessions.current_week_num: "Yes", sessions.time_date: "after 2019/01/01"]
+      timezone: "America/Denver"
+    }
+
+    materialization: {
+      datagroup_trigger: pdt_refresh_6am
+    }
+  }
 
   }
 
@@ -373,7 +457,7 @@ explore: all_events {
       relationship: one_to_one
     }
   }
-
+  explore: scorecard {hidden:yes}
   explore: pageviews_bounced_pdt {hidden: yes group_label: "Marketing" label: "Pageviews Bounced"}
   explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
   explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}

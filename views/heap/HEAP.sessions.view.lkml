@@ -146,6 +146,20 @@ view: sessions {
            when ${landing_page} ilike ('%/buy%') then 'Buy Page'
            when contains(${landing_page}, '/blog/') then 'Blog' end;; }
 
+dimension: page_product_type {
+    label: "Page Product Type"
+    type:  string
+    description: "Bucketed landing pages by PDPs. Source: looker calculation"
+    sql:  case when (${landing_page} not ilike '%protector%' and ${landing_page} not ilike '%blog%') and ${landing_page} ilike ('%mattress%') then 'Mattress'
+           when ${landing_page} ilike ('%pillow%')  then 'Pillows'
+           when ${landing_page} ilike ('%seat-cushion%') then 'Seat Cushion'
+           when ${landing_page} ilike ('%sheets%')
+           or ${landing_page} ilike '%mattress-protector%'
+           or ${landing_page} ilike '%duvet%'
+           or ${landing_page} ilike '%weighted-blanketthen' then 'Bedding'
+           when ${landing_page} ilike '%bed-frame%' or ${landing_page} ilike '%platform-bed%'then 'Bed Frame'
+           end;; }
+
   dimension: library {
     label: "Library"
     type: string
@@ -413,7 +427,7 @@ view: sessions {
 
   dimension: channel {
     type: string
-    hidden:  no
+    hidden:  yes
     label: " Channel"
     description: "Channel that current session came from. Source: looker calculation"
     sql: case when ${utm_medium} = 'sr' or ${utm_medium} = 'search' or ${utm_medium} = 'cpc' /*or qsp.search = 1*/ then 'search'
@@ -422,11 +436,30 @@ view: sessions {
           when ${utm_medium} ilike 'nt' or ${utm_medium} ilike 'native' then 'native'
           when ${utm_medium} ilike 'ds' or ${utm_medium} ilike 'display' or ${referrer} ilike '%outbrain%' or ${referrer} ilike '%doubleclick%' or ${referrer} ilike '%googlesyndica%' then 'display'
           when ${utm_medium} ilike 'sh' or ${utm_medium} ilike 'shopping' then 'shopping'
-          when ${utm_medium} ilike 'af' or ${utm_medium} ilike 'ir' or ${utm_medium} ilike '%affiliate%' then 'affiliate'
+          when ${utm_medium} ilike 'af' or ${utm_medium} ilike 'ir' or ${utm_medium} ilike 'rk'or ${utm_medium} ilike 'rakuten' or ${utm_medium} ilike '%affiliate%' then 'affiliate'
           when ${utm_medium} ilike 'em' or ${utm_medium} ilike 'email' or ${referrer} ilike '%mail.%' or ${referrer} ilike '%outlook.live%' then 'email'
           when ${utm_medium} is null and (${referrer} ilike '%google%' or ${referrer} ilike '%bing%' or ${referrer} ilike '%yahoo%' or ${referrer} ilike '%ask%' or ${referrer} ilike '%aol%' or ${referrer} ilike '%msn%' or ${referrer} ilike '%yendex%' or ${referrer} ilike '%duckduck%') then 'organic'
           when ${utm_medium} ilike 'rf' or ${utm_medium} ilike 'referral' or ${utm_medium} ilike '%partner platfo%' or lower(${referrer}) not like '%purple%' then 'referral'
           when (${referrer} ilike '%purple%' and ${utm_medium} is null) or ${referrer} is null then 'direct' else 'undefined' end ;;
+  }
+
+  dimension: channel2 {
+    type: string
+    hidden:  no
+    label: " Channel"
+    description: "Channel that current session came from. Source: looker calculation"
+    sql:case when ${utm_medium} in ('sr','search','cpc') and ${utm_term} in ('br') then 'branded search'
+            when ${utm_medium} in ('sr','search','cpc', 'lc') then 'non-branded search'
+                when ${utm_medium} = 'so' or ${utm_medium} ilike '%social%' or ${referrer} ilike '%fb%' or ${referrer} ilike '%facebo%' or ${referrer} ilike '%insta%' or ${referrer} ilike '%l%nk%din%' or ${referrer} ilike '%pinteres%' or ${referrer} ilike '%snapch%' then 'social'
+                when ${utm_medium} ilike 'vi%' or ${referrer} ilike '%y%tube%' then 'video'
+                when ${utm_medium} = 'nt' or ${utm_medium} in ('native','nativeads', 'nativeads?utm_source=yahoo') or  ${utm_medium} like 'ntvi%' or ${utm_source} like '%tab%' then 'native'
+            when ${utm_medium} ilike 'ds' or ${utm_medium} ilike 'display' or ${referrer} ilike '%outbrain%' or ${referrer} ilike '%doubleclick%' or ${referrer} ilike '%googlesyndica%' then 'display'
+                when ${utm_medium} = 'sh' or ${utm_medium} = 'feed' or ${utm_medium} like '%shopping%' or ${utm_source}='googlepla' then 'shopping'
+                when ${utm_medium} ilike 'af' or ${utm_medium} ilike 'ir' or ${utm_medium} ilike 'rk'or ${utm_medium} ilike 'rakuten' or ${utm_medium} ilike '%affiliate%' then 'affiliate'
+                when ${utm_medium} ilike 'em' or ${utm_medium} ilike 'email' or ${referrer} ilike '%mail.%' or ${referrer} ilike '%outlook.live%' then 'email'
+                when (${utm_medium} is null and (${referrer} ilike '%google%' or ${referrer} ilike '%bing%' or ${referrer} ilike '%yahoo%' or ${referrer} ilike '%ask%' or ${referrer} ilike '%aol%' or ${referrer} ilike '%msn%' or ${referrer} ilike '%yendex%' or ${referrer} ilike '%duckduck%')) or ${utm_medium} in ('organic') then 'organic'
+                when ${utm_medium} ilike 'rf' or ${utm_medium} ilike 'referral' or ${utm_medium} ilike '%partner platfo%' or lower(${referrer}) not like '%purple%' then 'referral'
+                when (${referrer} ilike '%purple%' and ${utm_medium} is null) or ${referrer} is null then 'direct' else 'undefined' end ;;
   }
 
   dimension: utm_campaign {

@@ -24,7 +24,12 @@ view: cc_activities {
 
     --chats (zendesk tickets)
     select 'chat' as activity_type
-        , case when c.department_name ilike '%Sales%' then 'sales' else 'support' end as team
+        , case
+            when c.department_name ilike '%Sales%' then 'sales'
+            when c.department_name ilike '%Support%' then 'support'
+            when a.team_type ilike '%Sales%' then 'sales'
+            when a.team_type ilike '%Chat%' then 'support'
+            else 'sales' end as team
         , c.created as created
         , a.name as agent_name
         , a.email as agent_email
@@ -134,7 +139,12 @@ view: cc_activities {
 #   = replace(replace(replace(replace(replace(replace(replace((c.contact_info_from)::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','')
 # --where c.reported::date = '2020-06-18'
 
-
+  dimension: pk {
+    label: "Primary Key"
+    type: string
+    primary_key: yes
+    sql: concat(${activity_type}, ${TABLE}.created) ;;
+  }
 
   dimension: activity_type {
     type:  string
