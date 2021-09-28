@@ -1169,7 +1169,7 @@ view: sales_order_line_base {
     group_label: "Website SLAs"
     label: "Standard Shipping Flag"
     type: yesno
-    sql: ${DTC_carrier} in ('Purple','MainFreight') ;;
+    sql: ${DTC_carrier} in ('Purple','Mainfreight','Will Call','Carry Out') ;;
   }
 
   dimension: week_2019_start {
