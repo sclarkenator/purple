@@ -76,7 +76,7 @@ view: sla {
 
   dimension: past_sla_days {
   view_label: "Fulfillment"
-  label: "Days past SLA grouping"
+  label: "Days past due"
   group_label: "Website SLAs"
   description: "Days from SLA. Negative values indicate we are past the SLA as shown on the date the order was placed."
   case: {
@@ -88,25 +88,25 @@ view: sla {
       label: "Due today"}
     when: {
       sql: ${days_from_sla}>-3 ;;
-      label: "<3 days past due"}
+      label: "<3 days"}
     when: {
       sql: ${days_from_sla}>-8 ;;
-      label: "<1 week past due"}
+      label: "<1 week"}
     when: {
       sql: ${days_from_sla}>-15 ;;
-      label: "1-2 weeks past due"}
+      label: "1-2 weeks"}
     when: {
       sql: ${days_from_sla}>-22 ;;
-      label: "2-3 weeks past due"}
+      label: "2-3 weeks"}
     when: {
       sql: ${days_from_sla}>-28 ;;
-      label: "3-4 weeks past due"}
+      label: "3-4 weeks"}
     when: {
       sql: ${days_from_sla} >-61 ;;
-      label: "1-2 months past due"}
+      label: "1-2 months"}
     when: {
       sql: ${days_from_sla}<-60 ;;
-      label: "2+ months overdue"}
+      label: "2+ months"}
     }
   }
 
