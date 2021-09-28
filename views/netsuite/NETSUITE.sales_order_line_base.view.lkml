@@ -1077,7 +1077,8 @@ view: sales_order_line_base {
   }
 
   dimension:  is_packed {
-    hidden: yes
+    view_label: "Fulfillment"
+    hidden: no
     type: yesno
     sql: ${TABLE}.PACKED=${TABLE}.ordered_qty ;;
   }

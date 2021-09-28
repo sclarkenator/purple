@@ -259,6 +259,22 @@ view: sales_order {
     type: string
     sql: ${TABLE}.kount_status ;; }
 
+  dimension: fraud {
+    hidden: no
+    label: "Kount Status grouped"
+    group_label: " Advanced"
+    case: {
+      when: {sql: ${Kount_Status} is null OR ${Kount_Status} = 'Approved' ;;
+            label: "Clear"}
+      when: {sql: ${Kount_Status} = 'Denied' ;;
+        label: "Denied"}
+      when: {sql: ${Kount_Status} = 'Under Review' ;;
+        label: "Under Review"}
+      when: {sql: ${Kount_Status} = 'New' ;;
+        label: "New"}
+      }
+    }
+
   dimension_group: minimum_ship {
     label: "Minimum Ship by"
     description: "Wholesale = The earliest date the order could be fulfilled, DTC = Customer requested a delay.
