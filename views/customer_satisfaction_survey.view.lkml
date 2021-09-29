@@ -119,6 +119,24 @@ view: customer_satisfaction_survey {
     sql: ${TABLE}."NPS_RATING" ;;
   }
 
+  measure: nps_calc {
+    hidden: yes
+     type: number
+    sql: case when ${TABLE}."NPS_RATING" in (1,2,3,4,5,6) then -1
+        when ${TABLE}."NPS_RATING" in (9,10) then 1
+        when ${TABLE}."NPS_RATING" in (7,8) then 0
+        else null end ;;
+  }
+
+  measure: nps_score {
+    hidden: no
+    label: "NPS Score"
+    description: "NPS Score (% of Promoters)-(% of Detractors)"
+    type: number
+    value_format_name: decimal_2
+    sql: (sum(${nps_calc})/count(${nps_calc}))*100  ;;
+  }
+
   dimension_group: response_received {
     description: "When the customer responded to the CSAT survey. Source: stella_connect.customer_satisfaction_survey"
     type: time
