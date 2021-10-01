@@ -42,7 +42,7 @@ view: liveperson_conversation {
 
   dimension: conversation_duration{
     label: "Conversation Duration"
-    description: "conversation duration from the first moement of connection until the contact is ended in seconds."
+    description: "conversation duration from the first moement of connection until the conversation is closed in seconds."
     type: number
     value_format_name: decimal_0
     sql: datediff(seconds, ${started_time}, ${ended_time}) ;;
@@ -149,8 +149,8 @@ view: liveperson_conversation {
   }
 
   dimension_group: ended {
-    label: "- Conversation Ended"
-    description: "End-time of the conversation."
+    label: "- Conversation Closed"
+    description: "Time the conversation was closed."
     type: time
     timeframes: [
       raw,
@@ -365,7 +365,7 @@ view: liveperson_conversation {
   }
 
   measure: conversations_ended_count {
-    label: "Conversations Ended Count"
+    label: "Conversations Closed Count"
     type: sum
     sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
   }
