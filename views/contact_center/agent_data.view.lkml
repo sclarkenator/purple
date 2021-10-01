@@ -87,25 +87,23 @@ view: agent_data {
   dimension: tenure {
     label: "Tenure by Month"
     group_label: "* Tenure Metrics"
-    description: "Agent tenure in weeks."
+    description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
-
+    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(month, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_week {
     label: "Tenure by Week"
     group_label: "* Tenure Metrics"
-    description: "Agent tenure in months."
+    description: "Agent tenure in weeks."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(mm, ${start_date}, current_date) end ;;
-
+    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_buckets {
-    label: "Tenure Bucket"
+    label: "Tenure Bucket by Month"
     group_label: "* Tenure Metrics"
     type: tier
     style: integer
@@ -177,7 +175,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     convert_tz: no
     datatype: timestamp
@@ -192,7 +190,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     sql: case when ${terminated_date} is not null then ${terminated_date}
       else ${inactive_date} end;;
@@ -206,7 +204,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     convert_tz: no
     datatype: timestamp
@@ -221,7 +219,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     datatype: timestamp
     sql: ${TABLE}.inactive ;;
@@ -234,7 +232,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     convert_tz: no
     datatype: timestamp
@@ -248,7 +246,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     convert_tz: no
     datatype: timestamp
@@ -262,7 +260,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     convert_tz: no
     datatype: timestamp
@@ -277,7 +275,7 @@ view: agent_data {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year]
     sql: case when ${hired_date} is not null then ${hired_date}
       else ${created_date} end;;
@@ -312,7 +310,7 @@ view: agent_data {
   dimension: incontact_id {  # PRIMARY KEY
     label: "InContact ID"
     group_label: "* IDs"
-    description: "Agent's InContact ID, which may equate to Agent ID in some reports."
+    description: "Agent's InContact ID. May equate to Agent ID in some reports."
     primary_key: yes
     type:  number
     value_format_name: id
@@ -331,7 +329,7 @@ view: agent_data {
   dimension: zendesk_id {
     label: "Zendesk ID"
     group_label: "* IDs"
-    description: "Agent's  ZenDesk ID."
+    description: "Agent's ZenDesk ID."
     type:  number
     value_format_name: id
     sql: ${TABLE}.zendesk_id ;;
@@ -361,6 +359,7 @@ view: agent_data {
     description: "The Shopify POS ID for Retail agent."
     type:  number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.shopify_id_pos ;;
   }
   dimension: workday_id {

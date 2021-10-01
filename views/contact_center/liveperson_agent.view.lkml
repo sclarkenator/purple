@@ -9,12 +9,13 @@ view: liveperson_agent {
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
-  dimension: agent_name_lp {
-    label: "CC LP Agent Name"
+  dimension: agent_name_cc_lp {
+    label: "Agent Name"
     group_label: "* LivePerson Agent Data"
     description: "Agents First and Last name. Uses LivePerson data if CC data is missing."
     type: string
-    sql: nvl(${agent_data.agent_name}, ${TABLE}.full_name);;
+    # sql: nvl(${agent_data.agent_name}, ${TABLE}.full_name)
+    sql: ${TABLE}.full_name ;;
   }
 
   dimension: api_user {
@@ -241,7 +242,7 @@ view: liveperson_agent {
     sql: ${TABLE}."PID" ;;
   }
 
-  dimension: profile_ids {
+  dimension: profile_id {
     label: "Profile ID"
     group_label: "* LivePerson IDs"
     type: string
@@ -249,7 +250,7 @@ view: liveperson_agent {
     sql: ${TABLE}."PROFILE_IDS" ;;
   }
 
-  dimension: skill_ids {
+  dimension: skill_id {
     label: "Skill ID"
     group_label: "* LivePerson IDs"
     type: string

@@ -44,7 +44,8 @@ view: liveperson_skill {
     sql: ${TABLE}."MAX_WAIT_TIME" ;;
   }
 
-  dimension: name {
+  dimension: skill_name {
+    alias: [name]
     label: "Skill Name"
     description: "Skill’s unique name."
     type: string

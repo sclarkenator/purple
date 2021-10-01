@@ -34,33 +34,46 @@ explore: liveperson_conversations {
 #####################################################################
 #####################################################################
 ## LIVEPERSON MESSAGES cj
-explore: liveperson_messages {
-  label: "LivePerson Messages"
+explore: liveperson_conversation_to_message {
+  label: "LivePerson Conversations & Messages"
   description: "LivePerson conversations message data."
   view_label: "Agent Data"
   from: liveperson_agent
   hidden: yes
+  fields: [liveperson_conversation_to_message.deleted, liveperson_conversation_to_message.disabled_manually, liveperson_conversation_to_message.enabled, agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
+        ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor, liveperson_skill.skill_name
+        ,liveperson_message*, liveperson_conversation*]
 
   join: agent_data {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${liveperson_messages.employee_id} = ${agent_data.incontact_id} ;;
     relationship: one_to_one
+    sql_on: ${liveperson_conversation_to_message.employee_id} = ${agent_data.incontact_id} ;;
+    # fields: [agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
+    #     ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor]
   }
 
-  join: liveperson_conversation_message {
+  join: liveperson_skill {
+    view_label: "Agent Data"
+    # fields: [skill_name]
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${liveperson_conversation_to_message.skill_id} = ${liveperson_skill.skill_id} ;;
+  }
+
+  join: liveperson_message {
     view_label: "LivePerson Messages"
     type: full_outer
-    sql_on: len(${liveperson_conversation_message.participant_id}) = 10
-      and cast(${agent_data.incontact_id} as char(10)) = cast(left(${liveperson_conversation_message.participant_id}, 10) as char(10)) ;;
     relationship: many_to_one
+    sql_on: len(${liveperson_message.participant_id}) = 10
+      and cast(${agent_data.liveperson_id} as char(10)) = cast(left(${liveperson_message.participant_id}, 10) as char(10)) ;;
   }
 
   join: liveperson_conversation {
-    view_label: "LivePerson Conversation Data"
+    view_label: "LivePerson Conversation"
     type: full_outer
-    sql_on: ${liveperson_conversation_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
     relationship: many_to_one
+    sql_on: ${liveperson_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
   }
 }
 
@@ -681,7 +694,7 @@ explore: perfect_attendance_calc {
     }
   }
 
-    explore: agent_stats_w_agent{
+    explore: agent_stats_w_agent{ #cj
       hidden: yes
       label: "Agent Stats w/ Agent Data"
       view_label: "Agent Data"
@@ -697,11 +710,69 @@ explore: perfect_attendance_calc {
       }
     }
 
+  explore: conversion_wfh {
+    view_label: "Date Table"
+    hidden: yes
+    from: warehouse_date_table
+
+    join: cc_activities {
+      view_label: "CC Activities"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${conversion_wfh.date_date} = ${cc_activities.activity_date} ;;
+    }
+
+    join: agent_data {
+      view_label: "Agent Data"
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${cc_activities.incontact_id} = ${agent_data.incontact_id} ;;
+    }
+
+    join: cc_deals {
+      view_label: "cc_deals"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${conversion_wfh.date_date} = ${cc_deals.created_date}
+        and ${agent_data.zendesk_sell_id} = ${cc_deals.user_id} ;;
+    }
+
+    join: zendesk_sell {
+      view_label: "Zendesk Sell"
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${conversion_wfh.date_date} = ${zendesk_sell.deal_created}
+        and ${agent_data.zendesk_sell_id} = ${zendesk_sell.user_id} ;;
+      sql_where: ${zendesk_sell.inside_sales_order} = true ;;
+    }
+
+    join: sales_order {
+      view_label: "Sales Order"
+      type: left_outer
+      relationship: one_to_one
+
+      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id}
+        and ${sales_order.system}='NETSUITE'
+        and ${sales_order.is_exchange_upgrade_warranty} = false;;
+      # sql_on: ${conversion_wfh.date_date} = ${sales_order.created_date}
+      #   and ${zendesk_sell.zendesk_id} = ${sales_order.created_by_id} ;;
+      # sql_where: ${sales_order.is_exchange_upgrade_warranty} = false;;
+      }
+
+    # join: sales_order_line {
+    #   view_label: "Sales Order Line"
+    #   type: left_outer
+    #   relationship: one_to_many
+    #   sql_on: ${sales_order.order_id} = ${sales_order_line.order_id} ;;
+    # }
+  }
+
+  explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
-  explore: liveperson_conversation_message {hidden: yes} #cj
+  explore: liveperson_message {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {group_label: "Customer Care"} #cj
   explore: agent_current_warning_level {hidden: yes} #cj

@@ -231,7 +231,6 @@ view: sales_order_line_base {
 
   dimension: order_system {
     type: string
-    primary_key:  no
     hidden:  yes
     sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
   }
@@ -1078,7 +1077,8 @@ view: sales_order_line_base {
   }
 
   dimension:  is_packed {
-    hidden: yes
+    view_label: "Fulfillment"
+    hidden: no
     type: yesno
     sql: ${TABLE}.PACKED=${TABLE}.ordered_qty ;;
   }
@@ -1136,7 +1136,7 @@ view: sales_order_line_base {
     group_label: " Advanced"
     label: "Carrier (expected)"
     description: "Derived field based on fulfillment location. Source:netsuite.sales_order_line"
-    #hidden: yes
+    hidden: yes
     type: string
     sql: case
           when ${location} ilike '%mainfreight%' then 'MainFreight'
@@ -1170,7 +1170,7 @@ view: sales_order_line_base {
     group_label: "Website SLAs"
     label: "Standard Shipping Flag"
     type: yesno
-    sql: ${DTC_carrier} in ('Purple','MainFreight') ;;
+    sql: ${DTC_carrier} in ('Purple','Mainfreight','Will Call','Carry Out') ;;
   }
 
   dimension: week_2019_start {

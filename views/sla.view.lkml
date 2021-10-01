@@ -3,7 +3,7 @@ view: sla {
     ;;
 
   dimension_group: order {
-    hidden:  no
+    hidden:  yes
     type: time
     timeframes: [
       date
@@ -72,6 +72,48 @@ view: sla {
     description: "Days from SLA. Negative values indicate we are past the SLA as shown on the date the order was placed."
     type: number
     sql: case when ${sales_order_line.ship_flag} then ${sla.days_from_sla_standard} else ${sla.days_from_sla_wg} end  ;;
+  }
+
+  dimension: past_sla_days {
+  view_label: "Fulfillment"
+  label: "Days past due"
+  group_label: "Website SLAs"
+  description: "Days from SLA. Negative values indicate we are past the SLA as shown on the date the order was placed."
+  case: {
+    when: {
+      sql: ${days_from_sla} >0 ;;
+      label: "Within SLA"}
+    when: {
+      sql: ${days_from_sla} = 0 ;;
+      label: "Due today"}
+    when: {
+      sql: ${days_from_sla}>-3 ;;
+      label: "<3 days"}
+    when: {
+      sql: ${days_from_sla}>-8 ;;
+      label: "<1 week"}
+    when: {
+      sql: ${days_from_sla}>-15 ;;
+      label: "1-2 weeks"}
+    when: {
+      sql: ${days_from_sla}>-22 ;;
+      label: "2-3 weeks"}
+    when: {
+      sql: ${days_from_sla}>-28 ;;
+      label: "3-4 weeks"}
+    when: {
+      sql: ${days_from_sla} >-61 ;;
+      label: "1-2 months"}
+    when: {
+      sql: ${days_from_sla}<-60 ;;
+      label: "2+ months"}
+    }
+  }
+
+  dimension: site_sla_to_use {
+    hidden: yes
+    type: date
+    sql: case when ${sales_order_line.carrier_raw} in ('Parcel','Will Call','Carry Out','Mainfreight')  ;;
   }
 
   dimension: white_glove {
