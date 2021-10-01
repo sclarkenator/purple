@@ -140,7 +140,10 @@ view: liveperson_conversation {
       week,
       month,
       # quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
     ]
     sql: CAST(${TABLE}.date AS TIMESTAMP_NTZ) ;;
   }
@@ -156,7 +159,10 @@ view: liveperson_conversation {
       week,
       month,
       # quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
     ]
     # hidden: yes
     sql: CAST(${TABLE}."ENDED" AS TIMESTAMP_NTZ) ;;
@@ -190,7 +196,10 @@ view: liveperson_conversation {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
     ]
     # hidden: yes
     sql: CAST(${TABLE}."STARTED" AS TIMESTAMP_NTZ) ;;
@@ -371,18 +380,17 @@ view: liveperson_conversation {
   }
 
   measure: conversation_duration_avg {
-    label: "Converrsation Duration Avg"
+    label: "Conversation Duration Avg"
     type: average
     value_format_name: decimal_0
     sql: ${conversation_duration} ;;
   }
 
-  # measure: consumers_active {
-  #   label: "Active Consumers"
-  #   type: count_distinct
-  #   sql: ${visitor_id} ;;
-  #   where:
-  # }
+   measure: consumers_active {
+     label: "Active Consumers"
+     type: count_distinct
+     sql: ${visitor_id} ;;
+  }
 
   # measure: conversation_percentage { # USE TABLE CALCULATIONS FOR PERCENTAGE OF CONVERSATIONS
   #   label: "Conversation Percentage"
