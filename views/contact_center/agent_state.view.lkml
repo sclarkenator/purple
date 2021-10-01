@@ -184,6 +184,33 @@ view: agent_state {
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 
+  parameter: dynamic_date_granularity {
+    description: "This parameter changes the date range visualized."
+    type: unquoted
+    allowed_value: {label:"Day" value:"day"}
+    allowed_value: {label:"Week" value:"week"}
+    allowed_value: {label:"Month" value:"month"}
+    allowed_value: {label:"Quarter" value:"quarter"}
+    allowed_value: {label:"Year" value:"year"}
+  }
+
+  dimension: dynamic_date {
+    sql:
+    {% if dynamic_date_granularity._parameter_value == 'day' %}
+      ${state_start_ts_mst_date}
+    {% elsif dynamic_date_granularity._parameter_value == 'week' %}
+      ${state_start_ts_mst_week}
+    {% elsif dynamic_date_granularity._parameter_value == 'month' %}
+      ${state_start_ts_mst_month}
+    {% elsif dynamic_date_granularity._parameter_value == 'quarter' %}
+      ${state_start_ts_mst_quarter}
+    {% elsif dynamic_date_granularity._parameter_value == 'year' %}
+      ${state_start_ts_mst_year}
+    {% else %}
+      NULL
+    {% endif %};;
+  }
+
   #####################################################################
   #####################################################################
   ## OTHER MEASURES
