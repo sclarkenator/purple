@@ -56,4 +56,11 @@ view: warehouse_location {
       when: { sql: ${location_id} = '5' ;; label: "Alpine"}
     }
   }
+
+  dimension: warehouse_type {
+    label: "Warehouse Type"
+    description: "Source: netsuite.location"
+    type: string
+    sql: ${TABLE}.warehouse_type ;;
+  }
 }

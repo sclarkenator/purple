@@ -2,8 +2,21 @@ view: liveperson_conversation {
   # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 
   view_label: "LivePerson Conversations"
-  sql_table_name: "LIVEPERSON"."CONVERSATION"
-    ;;
+  # sql_table_name: "
+  derived_table: {
+    sql:
+      select
+        dt.date::date as date
+        ,c.started::date as start_date
+        ,c.ended::date as end_date
+        ,s.name as last_skill
+        ,c.*
+      from util.warehouse_date dt
+        join liveperson.conversation c
+            on dt.date::date between c.started::date and c.ended::date
+        join liveperson.skill s
+            on c.last_skill_id = s.skill_id ;;
+    }
   drill_fields: [conversation_id]
 
   ##########################################################################################
@@ -25,6 +38,14 @@ view: liveperson_conversation {
     description: "The browser or hosted application of the engagement."
     type: string
     sql: ${TABLE}."BROWSER" ;;
+  }
+
+  dimension: conversation_duration{
+    label: "Conversation Duration"
+    description: "conversation duration from the first moement of connection until the conversation is closed in seconds."
+    type: number
+    value_format_name: decimal_0
+    sql: datediff(seconds, ${started_time}, ${ended_time}) ;;
   }
 
   dimension: device {
@@ -69,9 +90,16 @@ view: liveperson_conversation {
     sql: ${TABLE}."LAST_QUEUE_STATE" ;;
   }
 
+  dimension: last_skill {
+    label: "Last Skill"
+    description: "Last assigned skill in conversation"
+    type: string
+    sql: ${TABLE}.last_skill ;;
+  }
+
   dimension: mcs {
     label: "MCS"
-    description: "Range of Meaningful Conversation Score in a particular conversation (including the boundaries)."
+    description: "Meaningful Conversation Score (MCS - an automated, real time measurement of consumer sentiment) for closed conversations, including unassigned conversations. This metric is attributed only to the last assigned agent in the conversation."
     type: number
     sql: ${TABLE}."MCS" ;;
   }
@@ -101,9 +129,28 @@ view: liveperson_conversation {
   ##########################################################################################
   ## DATE DIMENSIONS
 
+  dimension_group: conversation_dates {
+    label: "- Active Conversation"
+    description: "Reflects conversation dates from start to end dates."
+    type: time
+    timeframes: [
+      raw,
+      # time,
+      date,
+      week,
+      month,
+      # quarter,
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
+    ]
+    sql: CAST(${TABLE}.date AS TIMESTAMP_NTZ) ;;
+  }
+
   dimension_group: ended {
-    label: "- Conversation Ended"
-    description: "End-time of the conversation."
+    label: "- Conversation Closed"
+    description: "Time the conversation was closed."
     type: time
     timeframes: [
       raw,
@@ -111,14 +158,18 @@ view: liveperson_conversation {
       date,
       week,
       month,
-      quarter,
-      year
+      # quarter,
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
     ]
+    # hidden: yes
     sql: CAST(${TABLE}."ENDED" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: insert_ts {
-    label: "- Inserted"
+    label: "- Conversation Inserted"
     description: "TS when conversation record was inserted in database."
     type: time
     timeframes: [
@@ -127,7 +178,7 @@ view: liveperson_conversation {
       date,
       week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -145,13 +196,17 @@ view: liveperson_conversation {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day,
+      minute30
     ]
+    # hidden: yes
     sql: CAST(${TABLE}."STARTED" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: update_ts {
-    label: "- Updated"
+    label: "- Conversation Updated"
     description: "TS when conversation record was updated in database."
     type: time
     timeframes: [
@@ -171,29 +226,29 @@ view: liveperson_conversation {
   ##########################################################################################
   ## IDs
 
+  dimension: pk {
+    group_label: "* IDs"
+    primary_key: yes
+    type: string
+    hidden: yes
+    sql: concat(${TABLE}."CONVERSATION_ID", ${conversation_dates_date});;
+  }
+
   dimension: alerted_mcs_id {
     label: "Alerted MCS ID"
     group_label: "* IDs"
     description: "Alerted MCS ID"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."ALERTED_MCS" ;;
-  }
-
-  dimension: conversation_id {
-    group_label: "* IDs"
-    primary_key: yes
-    type: string
-    # hidden: yes
-    sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
   dimension: campaign_engagement_id {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."CAMPAIGN_ENGAGEMENT_ID" ;;
   }
 
@@ -201,15 +256,22 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."CAMPAIGN_ID" ;;
+  }
+
+  dimension: conversation_id {
+    group_label: "* IDs"
+    type: string
+    hidden: yes
+    sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
   dimension: goal_id {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."GOAL_ID" ;;
   }
 
@@ -217,7 +279,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."INTERACTION_CONTEXT_ID" ;;
   }
 
@@ -225,7 +287,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."LAST_AGENT_GROUP_ID" ;;
   }
 
@@ -233,7 +295,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."LAST_AGENT_ID" ;;
   }
 
@@ -241,7 +303,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."LAST_SKILL_ID" ;;
   }
 
@@ -249,7 +311,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."LOB_ID" ;;
   }
 
@@ -257,14 +319,14 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."LOCATION_ID" ;;
   }
 
   dimension: session_id {
     group_label: "* IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
@@ -272,14 +334,14 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."VISITOR_BEHAVIOR_ID" ;;
   }
 
   dimension: visitor_id {
     group_label: "* IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."VISITOR_ID" ;;
   }
 
@@ -287,7 +349,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."VISITOR_PROFILE_ID" ;;
   }
 
@@ -295,11 +357,39 @@ view: liveperson_conversation {
   ##########################################################################################
   ## MEASURES
 
-  measure: conversation_count {
-    label: "Conversation Count"
-    type: count
+  measure: conversations_opened_count {
+    label: "Conversations Opened Count"
+    type: sum
     # type: count_distinct
-    # sql: ${conversation_id} ;;
+    sql: case when ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
+  }
+
+  measure: conversations_ended_count {
+    label: "Conversations Closed Count"
+    type: sum
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
+
+  measure: mcs_avg {
+    label: "MCS Average"
+    type: average
+    value_format_name: decimal_2
+    sql: case when average(${mcs}) >= 33 then 'Positive'
+      when average(${mcs}) <= -33 then 'Negative'
+      when average(${mcs}) between -32 and 32 then 'Neutral' end ;;
+  }
+
+  measure: conversation_duration_avg {
+    label: "Conversation Duration Avg"
+    type: average
+    value_format_name: decimal_0
+    sql: ${conversation_duration} ;;
+  }
+
+   measure: consumers_active {
+     label: "Active Consumers"
+     type: count_distinct
+     sql: ${visitor_id} ;;
   }
 
   # measure: conversation_percentage { # USE TABLE CALCULATIONS FOR PERCENTAGE OF CONVERSATIONS
