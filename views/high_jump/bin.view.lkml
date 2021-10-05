@@ -138,4 +138,9 @@ view: bin {
     sql: ${TABLE}."ZONE" ;;
   }
 
+  measure: count {
+    type: count_distinct
+    sql: ${bin_label} ;;
+  }
+
 }

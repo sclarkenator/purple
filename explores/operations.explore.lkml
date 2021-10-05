@@ -283,6 +283,12 @@ explore: forecast_compared_to_actual_sales {
       relationship: many_to_one}
     }
 
+explore: bin {
+  hidden: yes
+  group_label:"Production"
+  label: "Highjump Bin Location"
+}
+
 
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
