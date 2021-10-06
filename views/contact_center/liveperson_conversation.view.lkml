@@ -371,7 +371,7 @@ view: liveperson_conversation {
   }
 
   measure: conversation_duration_avg {
-    label: "Converrsation Duration Avg"
+    label: "Conversation Duration Avg"
     type: average
     value_format_name: decimal_0
     sql: ${conversation_duration} ;;
