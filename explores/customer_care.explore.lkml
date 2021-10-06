@@ -614,8 +614,18 @@ explore: perfect_attendance_calc {
       relationship: many_to_one
       type: left_outer
       sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
-      view_label: "Agent Evaluator"
+      view_label: "Agent Evaluation Team"
       fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
+    }
+    join: agent_data {
+      type: full_outer
+      sql_on: ${cc_agent_data.incontact_id} = ${agent_data.incontact_id} ;;
+      relationship: one_to_many
+    }
+    join: agent_state {
+      type:  full_outer
+      sql_on: ${cc_agent_data.incontact_id} = ${agent_state.agent_id} ;;
+      relationship: one_to_many
     }
     required_access_grants: [is_customer_care_manager]
   }

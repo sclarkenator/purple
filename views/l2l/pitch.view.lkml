@@ -284,7 +284,7 @@ derived_table: {
   }
 
   measure: first_pass_yield{
-    label: "FPY"
+    label: "Quality"
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
@@ -292,7 +292,7 @@ derived_table: {
   }
 
   measure: throughput_percent{
-    label: "Throughput %"
+    label: "Performance"
     description: "Actual good parts produced divided by pitch demand"
     type: number
     value_format: "0.0%"

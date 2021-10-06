@@ -421,6 +421,12 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
     }
+    join: ryder_summary_data {
+      view_label: "Fulfillment"
+      type: full_outer
+      relationship: many_to_one
+      sql_on: ${ryder_summary_data.order_id} =  ${sales_order.order_id};;
+    }
     join: optimizely_experiment_lookup {
       view_label: "Sales Order"
       type: left_outer
