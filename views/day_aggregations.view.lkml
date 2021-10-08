@@ -17,7 +17,13 @@ view: day_aggregations_dtc_sales {
       #filters: { field: item.merchandise value: "No" }
       #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
-      filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
+      filters: { field: item.product_description value: "-3X3 SAMPLE-MAILER" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-10 PK" }
+      filters: { field: item.product_description value: "-SQUISHY MINI-BED" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-50 PK" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-25 PACK" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-2 PK" }
+      filters: { field: item.product_description value: "-MINI BED SQUISHY SAMPLE" }
       filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
   }
