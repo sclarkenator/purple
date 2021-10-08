@@ -28,6 +28,7 @@ view: order_flag_v2 {
         ,sum(case when line = 'SHEETS' then ordered_qty else 0 end) sheets
         ,sum(case when (model = 'ORIGINAL SHEETS') then ordered_qty else 0 end) original_sheets
         ,sum(case when (model = 'SOFTSTRETCH' ) then ordered_qty else 0 end) softstretch_sheets
+        ,sum(case when (model = 'COMPLETE COMFORT' ) then ordered_qty else 0 end) complete_comfort_sheets
         ,sum(case when (model = 'KID SHEETS' ) then ordered_qty else 0 end) kidsheets
         --protector
         ,sum(case when line = 'PROTECTOR' then ordered_qty else 0 end) protector
