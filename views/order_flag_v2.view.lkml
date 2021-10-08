@@ -725,6 +725,13 @@ view: order_flag_v2 {
     type:  yesno
     sql:  ${TABLE}.softstretch_sheets > 0 ;; }
 
+  dimension: complete_comfort_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "Sheets - Complete Comfort"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.complete_comfort_sheets > 0 ;; }
+
   dimension: royal_cushion_flag {
     group_label: "    * Orders has:"
     label: "a Cushion - Royal"
