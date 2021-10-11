@@ -63,6 +63,20 @@ view: cc_activities {
     left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
     where t.via_channel in ('email','facebook','web')
 
+    union
+    ---missed chats in moving to liveperson
+    select 'chat' as activity_type
+        , 'sales' as team
+        , chat_date as created
+        , null as agent_name
+        , null as agent_email
+        , null as duration
+        , 'F' as missed
+        , 'MissedChat' as subject
+        , null as email
+        , metric as incontact_id
+    from analytics.csv_uploads.missed_chats_temp
+
   ;;}
 
 # OLD SQL
@@ -146,7 +160,7 @@ view: cc_activities {
     label: "Primary Key"
     type: string
     primary_key: yes
-    sql: concat(${activity_type}, ${TABLE}.created) ;;
+    sql: ${activity_type} || ${TABLE}.created || ${TABLE}.incontact_id ;;
   }
 
   dimension: incontact_id {
@@ -222,13 +236,17 @@ view: cc_activities {
     sql: ${TABLE}.missed = 'T' ;;
   }
 
+
   measure: count {
-    type: count
+    type: sum
+    sql: case when ${activity_type} = 'chat' and ${skill} = 'MissedChat' then ${incontact_id}
+    when ${activity_type} = 'chat' then 1 else 0 end;;
   }
 
   measure: chats {
     type: sum
-    sql: case when ${activity_type} = 'chat' then 1 else 0 end ;;
+    sql: case when ${skill} = 'MissedChat' then ${incontact_id}
+      when ${activity_type} = 'chat' then 1 else 0 end ;;
   }
 
   measure: calls {
