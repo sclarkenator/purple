@@ -631,7 +631,7 @@ explore: perfect_attendance_calc {
     join: agent_lkp {
       type: left_outer
       view_label: "Agent Lookup"
-      sql_on: lower(${cc_activities.agent_email})=lower(${agent_lkp.email}) ;;
+      sql_on: ${cc_activities.incontact_id}=${agent_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
