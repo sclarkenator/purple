@@ -222,6 +222,11 @@ include: "/dashboards/**/*.dashboard"
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
       relationship: many_to_one}
+    join: fedex_fulfillment_date{
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.fulfillment_id} = ${fedex_fulfillment_date.fulfillment_id} ;;
+      relationship: many_to_one}
     join: ups_tracking {
       view_label: "Fulfillment"
       type: full_outer
