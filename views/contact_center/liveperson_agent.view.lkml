@@ -3,19 +3,26 @@ view: liveperson_agent {
   label: "LivePerson Agent"
   sql_table_name: "LIVEPERSON"."AGENT"
     ;;
-  drill_fields: [agent_id]
+  # drill_fields: [agent_id]
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: agent_name {
+    label: "Agent Name"
+    # group_label: "* LivePerson Agent Data"
+    description: "Agents First and Last name."
+    type: string
+    sql: ${TABLE}.full_name ;;
+  }
+
   dimension: agent_name_cc_lp {
     label: "Agent Name"
-    group_label: "* LivePerson Agent Data"
-    description: "Agents First and Last name. Uses LivePerson data if CC data is missing."
+    # group_label: "* LivePerson Agent Data"
+    description: "Agents First and Last name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
     type: string
-    # sql: nvl(${agent_data.agent_name}, ${TABLE}.full_name)
-    sql: ${TABLE}.full_name ;;
+    sql: nvl(${TABLE}.full_name, ${agent_data.agent_name}) ;;
   }
 
   dimension: api_user {
@@ -136,7 +143,7 @@ view: liveperson_agent {
     description: "The user’s permission groups."
     type: string
                                                                       hidden: yes
-    sql: try_cast(${TABLE}."PERMISSION_GROUPS" as varchar(64)) ;;
+    sql: ${TABLE}."PERMISSION_GROUPS"::text ;;
   }
 
   ##########################################################################################
@@ -222,7 +229,7 @@ view: liveperson_agent {
     group_label: "* IDs"
     primary_key: yes
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."AGENT_ID" ;;
   }
 
@@ -238,7 +245,7 @@ view: liveperson_agent {
     label: "Process ID"
     group_label: "* LivePerson IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."PID" ;;
   }
 
@@ -246,7 +253,7 @@ view: liveperson_agent {
     label: "Profile ID"
     group_label: "* LivePerson IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."PROFILE_IDS" ;;
   }
 
@@ -254,7 +261,7 @@ view: liveperson_agent {
     label: "Skill ID"
     group_label: "* LivePerson IDs"
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."SKILL_IDS" ;;
   }
 
@@ -262,7 +269,7 @@ view: liveperson_agent {
     label: "User Type ID"
     group_label: "* LivePerson IDs"
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."USER_TYPE_ID" ;;
   }
 

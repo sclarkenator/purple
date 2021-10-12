@@ -28,6 +28,7 @@ view: order_flag_v2 {
         ,sum(case when line = 'SHEETS' then ordered_qty else 0 end) sheets
         ,sum(case when (model = 'ORIGINAL SHEETS') then ordered_qty else 0 end) original_sheets
         ,sum(case when (model = 'SOFTSTRETCH' ) then ordered_qty else 0 end) softstretch_sheets
+        ,sum(case when (model = 'COMPLETE COMFORT' ) then ordered_qty else 0 end) complete_comfort_sheets
         ,sum(case when (model = 'KID SHEETS' ) then ordered_qty else 0 end) kidsheets
         --protector
         ,sum(case when line = 'PROTECTOR' then ordered_qty else 0 end) protector
@@ -723,6 +724,13 @@ view: order_flag_v2 {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.softstretch_sheets > 0 ;; }
+
+  dimension: complete_comfort_sheets_flag {
+    group_label: "    * Orders has:"
+    label: "Sheets - Complete Comfort"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.complete_comfort_sheets > 0 ;; }
 
   dimension: royal_cushion_flag {
     group_label: "    * Orders has:"

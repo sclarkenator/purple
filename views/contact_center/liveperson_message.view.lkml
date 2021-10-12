@@ -6,39 +6,83 @@ view: liveperson_message {
     sql:
       with CMRows as (
         select *
-            ,right(message_id, len(message_id) - position('msg:', message_id)-3)::int as seq
-            ,ROW_NUMBER() OVER (ORDER BY conversation_id, right(message_id, len(message_id) - position('msg:', message_id)-3)::int) AS rn
+            -- ,right(message_id, len(message_id) - position('msg:', message_id)-3)::int as seq
+            ,ROW_NUMBER() OVER (ORDER BY conversation_id
+                , right(message_id, len(message_id) - position('msg:', message_id)-3)::int) AS rn
         from liveperson.conversation_message c
         )
 
-        select
-            case when a.full_name ilike '%-bot' then 'Bot'
-                when a.full_name ilike '%virtual assistant' then 'Virtual Assistant'
-                else cm1.sent_by end as Sender
-            ,a.full_name as agent_name
-            ,cm1.*
-            ,datediff(second, case when cm1.conversation_id = cm2.conversation_id then cm2.created end, cm1.created) as response_time
-        from CMRows cm1
-            left join CMRows cm2
-                on cm1.rn = cm2.rn +1
-            left join liveperson.agent a
-                on cm1.sent_by = 'Agent'
-                and cm1.participant_id = a.agent_id::varchar(50)
-        order by cm1.conversation_id, cm1.seq
-        ;;
+      select
+          case when a.full_name ilike '%-bot' then 'Bot'
+              when a.full_name ilike '%virtual assistant' then 'Virtual Assistant'
+              else cm1.sent_by end as Sender
+          ,a.full_name as agent_name
+          ,case when not(a.full_name ilike '%-bot' or a.full_name ilike '%virtual assistant') then cm1.participant_id end as liveperson_id
+          ,cm1.*
+          ,datediff(second, case when cm1.conversation_id = cm2.conversation_id then cm2.created end, cm1.created) as response_time
+          ,case when f.min_seq is not null then TRUE end as agent_first
+      from CMRows cm1
+          left join CMRows cm2
+              on cm1.rn = cm2.rn +1
+          left join liveperson.agent a
+              on cm1.sent_by = 'Agent'
+              and cm1.participant_id = a.agent_id::text
+          left join (
+              select conversation_id
+                  ,min(seq) as min_seq
+              from CMRows cm1
+                  join liveperson.agent a
+                      on cm1.sent_by = 'Agent'
+                      and cm1.participant_id = a.agent_id::text
+                      and a.full_name not ilike '%-bot'
+                      and a.full_name not ilike '%virtual assistant'
+              group by conversation_id
+          ) f
+          on cm1.conversation_id = f.conversation_id
+          and cm1.seq = f.min_seq
+      order by cm1.rn
+      ;;
   }
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: agent_first {
+    label: "Agent First Flag"
+    description: "Flags first message that comes from a live agent."
+    type: yesno
+    sql: ${TABLE}.agent_first ;;
+  }
+
+  dimension: agent_first_response_time {
+    label: "Agent First Response Time"
+    description: "Response time from a live agent in seconds."
+    # group_label: "* Message Details"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.response_time ;;
+  }
+
   dimension: agent_name {
     label: "Agent Name"
+    view_label: "Agent Data"
     description: "Name of agent sending message."
     type: string
     sql: ${TABLE}.agent_name ;;
-    hidden: yes
+    # hidden: yes
   }
+
+  # dimension: agent_type {
+  #   label: "Agent Type"
+  #   view_label: "Agent Data"
+  #   description: "Is agent a bot, virtual assistant, or live agent."
+  #   type: string
+  #   sql: case when ${sender} in ('Bot', 'Virtual Assistant') then ${sender}
+  #     when ${agent_name} is not null then 'Agent'
+  #     else ;;
+  #   # hidden: yes
+  # }
 
   dimension: audience {
     label: "Audience"
@@ -73,6 +117,7 @@ view: liveperson_message {
     type: string
     sql: ${TABLE}."MESSAGE" ;;
   }
+
   dimension: response_time {
     label: "Response Time"
     description: "Response time in seconds."
@@ -83,10 +128,11 @@ view: liveperson_message {
   }
 
   dimension: testing_only_rn {
-    label: "RN (TESTING TOOL)"
+    label: "Row Number"
+    description: "Used to sort records by Conversation ID then by Message ID."
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.rn ;;
   }
 
@@ -171,18 +217,28 @@ view: liveperson_message {
     label: "Conversation ID"
     group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
-  dimension: employee_id {
+  dimension: incontact_id {
     label: "InContact ID"
     group_label: "* IDs"
     description: "Agent's InContact ID."
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.employee_id ;;
+  }
+
+  dimension: liveperson_id {
+    label: "LivePerson ID"
+    group_label: "* IDs"
+    description: "Agent's LivePerson ID."
+    type: number
+    value_format_name: id
+    # hidden: yes
+    sql: ${TABLE}.liveperson_id ;;
   }
 
   dimension: message_id {
@@ -207,11 +263,25 @@ view: liveperson_message {
   ##########################################################################################
   ## MEASURES
 
-  measure: consumers_active {
+  measure: active_consumers {
+    alias: [consumers_active]
     label: "Active Consumers"
-    # type: count
+    group_label: "* Consumer Measures"
     type: count_distinct
-    sql: ${participant_id} ;;
+    sql: case when sent_by = 'Consumer' then ${participant_id} end ;;
+  }
+
+  measure: agent_first_response_time_avg {
+    label: "Agent First Response Time Avg"
+    group_label: "* Agent Measures"
+    type: average
+    sql:${agent_first_response_time} ;;
+  }
+
+  measure: conversation_count {
+    label: "Conversation Count"
+    type: count_distinct
+    sql: ${conversation_id} ;;
   }
 
   measure: message_count {
@@ -220,16 +290,18 @@ view: liveperson_message {
     sql: ${message_id} ;;
   }
 
-  measure: message_consumer_count {
-    label: "Message Consumer Count"
+  measure: message_agent_count {
+    label: "Agent Message Count"
+    group_label: "* Agent Measures"
     type: count_distinct
-    sql: case when sent_by = 'Consumer' then ${message_id} end ;;
+    sql: case when ${sender} ='Agent' then ${message_id} end ;;
   }
 
-  measure: message_agent_count {
-    label: "Message Agent Count"
+  measure: message_consumer_count {
+    label: "Consumer Message Count"
+    group_label: "* Consumer Measures"
     type: count_distinct
-    sql: case when sent_by = 'Agent' then ${message_id} end ;;
+    sql: case when ${sender} = 'Consumer' then ${message_id} end ;;
   }
 
   measure: message_percentage {
@@ -253,21 +325,23 @@ view: liveperson_message {
   measure: response_time_avg {
     label: "Avg Response Time"
     description: "Average response time in seconds."
-    type: average
+    type: number
     value_format_name: decimal_2
-    sql: ${response_time}/60 ;;
+    sql: average(${response_time})/60 ;;
   }
 
-  measure: agent_response_time_avg {
-    label: "Avg Agent Response Time"
+  measure: response_time_agent_avg {
+    label: "Agent Avg Response Time"
+    group_label: "* Agent Measures"
     description: "Average response time in seconds."
-    type: average
-    value_format_name: decimal_2
-    sql: case when ${sender} = 'Agent' then ${response_time}/60 end ;;
+    type: string
+    sql: concat(0 + floor(avg(case when ${sender} = 'Agent' then ${response_time} end)/60), ':'
+      , right(concat('0', floor(mod(avg(case when ${sender} = 'Agent' then ${response_time} end), 60))), 2)) ;;
   }
 
   measure: consumer_response_time_avg {
-    label: "Avg Consumer Response Time"
+    label: "Consumer Avg Response Time"
+    group_label: "* Consumer Measures"
     description: "Average response time in seconds."
     type: average
     value_format_name: decimal_2

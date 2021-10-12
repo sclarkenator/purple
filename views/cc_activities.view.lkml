@@ -170,7 +170,7 @@ view: cc_activities {
     label: "Primary Key"
     type: string
     primary_key: yes
-    sql: concat(${activity_type}, ${TABLE}.created) ;;
+    sql: ${activity_type} || ${TABLE}.created || ${TABLE}.incontact_id ;;
   }
 
   dimension: incontact_id {
@@ -245,6 +245,7 @@ view: cc_activities {
     type:  yesno
     sql: ${TABLE}.missed = 'T' ;;
   }
+
 
   measure: count {
     type: count

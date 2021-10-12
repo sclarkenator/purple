@@ -8,7 +8,7 @@ view: agent_data {
           a.*,
           c.team_name as current_team_name,
           c.team_email as current_team_email,
-          case when a.inactive is null then true else false end as active_flag,
+          case when a.inactive is null and a.terminated is null then true else false end as active_flag,
           la.agent_id as liveperson_id
 
       from analytics.customer_care.agent_lkp a
@@ -24,6 +24,13 @@ view: agent_data {
 
           left join liveperson.agent la
             on a.incontact_id = la.employee_id  ;;
+  }
+
+  set: agents_minimal_grouping {
+    fields: [
+      agent_name, team_group, team_type, team_name, is_active, is_retail, is_supervisor
+    ]
+
   }
 
   ##########################################################################################

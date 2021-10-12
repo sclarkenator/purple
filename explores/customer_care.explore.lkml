@@ -34,6 +34,40 @@ explore: liveperson_conversations {
 #####################################################################
 #####################################################################
 ## LIVEPERSON MESSAGES cj
+
+explore: liveperson_messages {
+  label: "LivePerson Message"
+  view_label: "Agent Data"
+  from: liveperson_agent
+  hidden: yes
+  fields: [
+    # liveperson_messages.agent_name_cc_lp
+    # ,liveperson_messages.agent_name
+    agent_data*
+    ,liveperson_message*]
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: left_outer
+    sql_on: ${liveperson_message.liveperson_id} = ${agent_data.liveperson_id} ;;
+    relationship: one_to_one
+    fields: [agents_minimal_grouping*, -agent_name]
+  }
+
+  join: liveperson_message {
+    view_label: "LivePerson Message"
+    type: full_outer
+    sql_on: len(${liveperson_message.participant_id}) = 10
+      and ${liveperson_messages.agent_id}::text = ${liveperson_message.liveperson_id} ;;
+    relationship: one_to_many
+    # fields: [*]
+  }
+  }
+
+#####################################################################
+#####################################################################
+## LIVEPERSON CONVERSATION TO MESSAGES cj
+
 explore: liveperson_conversation_to_message {
   label: "LivePerson Conversations & Messages"
   description: "LivePerson conversations message data."
@@ -64,7 +98,7 @@ explore: liveperson_conversation_to_message {
   join: liveperson_message {
     view_label: "LivePerson Messages"
     type: full_outer
-    relationship: many_to_one
+    relationship: one_to_many
     sql_on: len(${liveperson_message.participant_id}) = 10
       and cast(${agent_data.liveperson_id} as char(10)) = cast(left(${liveperson_message.participant_id}, 10) as char(10)) ;;
   }
@@ -300,7 +334,7 @@ explore: perfect_attendance_calc {
     description: "Customer satisfaction of interactions with Customer Care agents"
     join: agent_lkp {
       type: left_outer
-      sql_on: ${customer_satisfaction_survey.agent_id}=${agent_lkp.incontact_id} ;;
+      sql_on: ${customer_satisfaction_survey.agent_id} = ${agent_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
@@ -772,7 +806,6 @@ explore: perfect_attendance_calc {
   explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
-  explore: liveperson_message {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {group_label: "Customer Care"} #cj
   explore: agent_current_warning_level {hidden: yes} #cj

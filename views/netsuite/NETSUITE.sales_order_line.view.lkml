@@ -2100,12 +2100,25 @@ view: sales_order_line {
     group_label: " Advanced"
     label: "Order Age (bucket 3)"
     hidden: yes
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
+    description: "Number of days between sales order creation and the date order was fulfilled (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
     Source: netsuite.sales_order"
     type:  tier
     tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     style: integer
     sql: datediff(day,${sales_order_line.created_date}, ${sales_order_line.fulfilled_date}) ;;
+  }
+
+  dimension: order_age_bucket_transmitted {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Order Age Bucket (Transmitted)"
+    hidden: no
+    description: "Number of days between today and when order was transmitted (1,2,3,4,5,6,7,11,15,21)
+    Source: netsuite.sales_order_line"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,11,15,21]
+    style: integer
+    sql: datediff(day,${transmitted_date_date}, ${current_date}) ;;
   }
 
   measure: adj_gross_amt {
