@@ -97,6 +97,17 @@ view: resource_shift {
     sql: ${TABLE}."NAME" ;;
   }
 
+  dimension: name_clean {
+    description: "Full name of Shift (1st Shift Mon-Wed, 1st Shift Thursday-Saturday, etc); Source: l2l.resource_shift"
+    label: "Name (Grouped)"
+    type: string
+    sql: CASE WHEN ${TABLE}."NAME" in ('1st Shift Mon-Wed','Shift 1','1st shift M-W') THEN '1st Shift Mon-Wed'
+              WHEN ${TABLE}."NAME" in ('2nd Shift Mon-Wed','Shift 2','2nd Shift M-W') THEN '2nd Shift Mon-Wed'
+              WHEN ${TABLE}."NAME" in ('1st Shift Thursday-Saturday','Shift 3','3rd Shift T-S') THEN '3rd Shift Thu-Sat'
+              WHEN ${TABLE}."NAME" in ('2nd Shift Thursday-Saturday','Shift 4','4th shift T-SN') THEN '4th Shift Thu-Sat'
+              ELSE ${TABLE}."NAME" END ;;
+  }
+
   dimension: schedule {
     hidden: yes
     type: string
