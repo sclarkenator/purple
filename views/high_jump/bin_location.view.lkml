@@ -78,6 +78,22 @@ view: bin_location {
     sql: ${TABLE}."WAREHOUSE_ID" ;;
   }
 
+  dimension: warehouse_name {
+    type: string
+    sql: CASE WHEN ${TABLE}."WAREHOUSE_ID" = '4' THEN '100-Purple West'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '5' THEN '150-Alpine'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '12' THEN '109-West Quality Hold Sub W/H'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '17' THEN '900 - Employee Store'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '62' THEN '013-PRODUCT DESTRUCTION'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '66' THEN '100-INTERNAL'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '71' THEN '100 Purple West : Depot'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '111' THEN '200-Purple South'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '115' THEN '115-Retail Openings'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '154' THEN '209-South Quality Hold Sub W/H'
+              ELSE 'Other' END
+              ;;
+  }
+
   dimension: zone {
     type: string
     sql: ${TABLE}."ZONE" ;;
