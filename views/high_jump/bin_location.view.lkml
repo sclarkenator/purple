@@ -2,6 +2,12 @@ view: bin_location {
   sql_table_name: "HIGHJUMP"."BIN_LOCATION"
     ;;
 
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    sql: ${sku}||'-'||${bin_label} ;;
+  }
+
   dimension: bin_label {
     type: string
     sql: ${TABLE}."BIN_LABEL" ;;
@@ -64,6 +70,7 @@ view: bin_location {
 
   measure: unallocated {
     type: sum
+    label: "HJ - Unallocated"
     value_format: "#,##0"
     sql: ${TABLE}."UNALLOCATED" ;;
   }
