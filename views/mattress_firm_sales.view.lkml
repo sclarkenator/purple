@@ -54,6 +54,74 @@ view: mattress_firm_sales {
     datatype: date
     sql: ${TABLE}.finalized_date ;; }
 
+
+
+#McKinsey Brand test dates added by Danielle
+  dimension: custom_weeks{
+    group_label: "  Session Date"
+    hidden: yes
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+    sql:  CASE  WHEN ${finalized_date} >= '2019-10-17' AND ${finalized_date} < '2019-10-24'     THEN 'Testing Week 01 - 10/17/19 - 10/23/19'
+                WHEN ${finalized_date} >= '2019-10-24' AND ${finalized_date} < '2019-10-31'     THEN 'Testing Week 02 - 10/24/19 - 10/30/19'
+                WHEN ${finalized_date} >= '2019-10-31' AND ${finalized_date} < '2019-11-07'     THEN 'Testing Week 03 - 10/31/19 - 11/6/19'
+                WHEN ${finalized_date} >= '2019-11-07' AND ${finalized_date} < '2019-11-14'     THEN 'Testing Week 04 - 11/7/19 - 11/13/19'
+                WHEN ${finalized_date} >= '2019-11-14' AND ${finalized_date} < '2019-11-21'     THEN 'Testing Week 05 - 11/14/19 - 11/20/19'
+                WHEN ${finalized_date} >= '2019-11-21' AND ${finalized_date} < '2019-11-28'     THEN 'Testing Week 06 - 11/21/19 - 11/27/19'
+                WHEN ${finalized_date} >= '2019-11-28' AND ${finalized_date} < '2019-12-05'     THEN 'Testing Week 07 - 11/28/19 - 12/4/19'
+                WHEN ${finalized_date} >= '2019-12-05' AND ${finalized_date} < '2019-12-12'     THEN 'Testing Week 08 - 12/5/19 - 12/11/19'
+                WHEN ${finalized_date} >= '2019-12-12' AND ${finalized_date} < '2019-12-19'     THEN 'Testing Week 09 - 12/12/19 - 12/18/19'
+                WHEN ${finalized_date} >= '2019-12-19' AND ${finalized_date} < '2019-12-26'     THEN 'Testing Week 10 - 12/19/19 - 12/25/19'
+                WHEN ${finalized_date} >= '2019-12-26' AND ${finalized_date} < '2020-01-02'     THEN 'Testing Week 11 - 12/26/19 - 1/1/20'
+                WHEN ${finalized_date} >= '2021-10-07' AND ${finalized_date} < '2021-10-14'     THEN 'Baseline 10/7/21 - 10/13/21'
+                WHEN ${finalized_date} >= '2021-10-14' AND ${finalized_date} < '2021-10-21'     THEN 'Testing Week 01 - 10/14/21 - 10/20/21'
+                WHEN ${finalized_date} >= '2021-10-21' AND ${finalized_date} < '2021-10-28'     THEN 'Testing Week 02 - 10/21/21 - 10/27/21'
+                WHEN ${finalized_date} >= '2021-10-28' AND ${finalized_date} < '2021-11-04'     THEN 'Testing Week 03 - 10/28/21 - 11/3/21'
+                WHEN ${finalized_date} >= '2021-11-04' AND ${finalized_date} < '2021-11-11'     THEN 'Testing Week 04 - 11/4/21 - 11/10/21'
+                WHEN ${finalized_date} >= '2021-11-11' AND ${finalized_date} < '2021-11-18'     THEN 'Testing Week 05 - 11/11/21 - 11/17/21'
+                WHEN ${finalized_date} >= '2021-11-18' AND ${finalized_date} < '2021-11-25'     THEN 'Testing Week 06 - 11/18/21 - 11/24/21'
+                WHEN ${finalized_date} >= '2021-11-25' AND ${finalized_date} < '2021-12-02'     THEN 'Testing Week 07 - 11/25/21 - 12/1/21'
+                WHEN ${finalized_date} >= '2021-12-02' AND ${finalized_date} < '2021-12-09'     THEN 'Testing Week 08 - 12/2/21 - 12/8/21'
+                WHEN ${finalized_date} >= '2021-12-09' AND ${finalized_date} < '2021-12-16'     THEN 'Testing Week 09 - 12/9/21 - 12/15/21'
+                WHEN ${finalized_date} >= '2021-12-16' AND ${finalized_date} < '2021-12-23'     THEN 'Testing Week 10 - 12/16/21 - 12/22/21'
+                WHEN ${finalized_date} >= '2021-12-23' AND ${finalized_date} < '2021-12-30'     THEN 'Testing Week 11 - 12/23/21 - 12/29/21'
+                ELSE 'Not included'
+          END;;
+  }
+
+#McKinsey Brand test dates for average added by Danielle
+  dimension: custom_weeks_for_average{
+    group_label: "  Session Date"
+    hidden: yes
+    label: "z - Week Bucket"
+    description: "Grouping by week, for comparing last week, to the week before, to last year"
+    type: string
+    sql:  CASE  WHEN ${finalized_date} >= '2021-08-19' AND ${finalized_date} < '2021-08-26'     THEN 'Baseline Week 01 - 8/19/21 - 8/25/21'
+                WHEN ${finalized_date} >= '2021-08-26' AND ${finalized_date} < '2021-09-02'     THEN 'Baseline Week 02 - 8/26/21 - 9/1/21'
+                WHEN ${finalized_date} >= '2021-09-02' AND ${finalized_date} < '2021-09-09'     THEN 'Baseline Week 03 - 9/2/21 - 9/8/21'
+                WHEN ${finalized_date} >= '2021-09-09' AND ${finalized_date} < '2021-09-16'     THEN 'Baseline Week 04 - 9/9/21 - 9/15/21'
+                WHEN ${finalized_date} >= '2021-09-16' AND ${finalized_date} < '2021-09-23'     THEN 'Baseline Week 05 - 9/16/21 - 9/22/21'
+                WHEN ${finalized_date} >= '2021-09-23' AND ${finalized_date} < '2021-09-30'     THEN 'Baseline Week 06 - 9/23/21 - 9/29/21'
+                WHEN ${finalized_date} >= '2021-09-30' AND ${finalized_date} < '2021-10-07'     THEN 'Baseline Week 07 - 9/30/21 - 10/6/21'
+                WHEN ${finalized_date} >= '2021-10-07' AND ${finalized_date} < '2021-10-14'     THEN 'Baseline Week 08 - 8/19/21 - 10/13/21'
+                WHEN ${finalized_date} >= '2021-10-14' AND ${finalized_date} < '2021-10-21'     THEN 'Testing Week 01 - 10/14/21 - 10/20/21'
+                WHEN ${finalized_date} >= '2021-10-21' AND ${finalized_date} < '2021-10-28'     THEN 'Testing Week 02 - 10/21/21 - 10/27/21'
+                WHEN ${finalized_date} >= '2021-10-28' AND ${finalized_date} < '2021-11-04'     THEN 'Testing Week 03 - 10/28/21 - 11/3/21'
+                WHEN ${finalized_date} >= '2021-11-04' AND ${finalized_date} < '2021-11-11'     THEN 'Testing Week 04 - 11/4/21 - 11/10/21'
+                WHEN ${finalized_date} >= '2021-11-11' AND ${finalized_date} < '2021-11-18'     THEN 'Testing Week 05 - 11/11/21 - 11/17/21'
+                WHEN ${finalized_date} >= '2021-11-18' AND ${finalized_date} < '2021-11-25'     THEN 'Testing Week 06 - 11/18/21 - 11/24/21'
+                WHEN ${finalized_date} >= '2021-11-25' AND ${finalized_date} < '2021-12-02'     THEN 'Testing Week 07 - 11/25/21 - 12/1/21'
+                WHEN ${finalized_date} >= '2021-12-02' AND ${finalized_date} < '2021-12-09'     THEN 'Testing Week 08 - 12/2/21 - 12/8/21'
+                WHEN ${finalized_date} >= '2021-12-09' AND ${finalized_date} < '2021-12-16'     THEN 'Testing Week 09 - 12/9/21 - 12/15/21'
+                WHEN ${finalized_date} >= '2021-12-16' AND ${finalized_date} < '2021-12-23'     THEN 'Testing Week 10 - 12/16/21 - 12/22/21'
+                WHEN ${finalized_date} >= '2021-12-23' AND ${finalized_date} < '2021-12-30'     THEN 'Testing Week 11 - 12/23/21 - 12/29/21'
+                ELSE 'Not included'
+          END;;
+  }
+
+
+
   dimension: created_week_of_year {
     ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
     type: number
