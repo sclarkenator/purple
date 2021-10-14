@@ -202,6 +202,11 @@ view: dispatch_info {
     sql: ${TABLE}."TECHNICIANS" ;;
   }
 
+  dimension: reason {
+    type: string
+    sql:  ${TABLE}."REASON" ;;
+  }
+
   measure: count {
     hidden:  no
     type: count
