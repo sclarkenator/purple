@@ -71,8 +71,18 @@ view: bin_location {
   measure: unallocated {
     type: sum
     label: "HJ - Unallocated"
+    description: "Excludes Zones from HJ related to quality, ee store, and waste management"
     value_format: "#,##0"
-    sql: ${TABLE}."UNALLOCATED" ;;
+    sql: CASE WHEN (${zone} IN ('1', '2', '3', '4', 'A', 'B', 'C', 'G', 'I', 'K', 'M', 'N', 'O', 'P', 'R', 'S', '5', '6', 'X', 'Y', 'Z')) THEN ${TABLE}."UNALLOCATED"
+              ELSE 0 END;;
+  }
+
+  measure: unallocated_unfiltered{
+    type: sum
+    label: "HJ - Unallocated (Unfiltered)"
+    description: "Includes all Zones"
+    value_format: "#,##0"
+    sql: ${TABLE}."UNALLOCATED";;
   }
 
   dimension: user {
