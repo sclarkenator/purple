@@ -14,14 +14,35 @@ view: cordial_subscribe {
       sql: ${TABLE}."EMAIL" ;;
     }
 
-    dimension: opt_in_date {
-      type: date
-      sql: ${TABLE}."OPT_IN_DATE" ;;
-    }
+  dimension_group: opt_in_date {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      hour,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}."OPT_IN_DATE" ;;
+  }
 
-  dimension: opt_out_date {
-    type: date
+  dimension_group: opt_out_date {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      hour,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}."OPT_OUT_DATE" ;;
   }
+
 
 }
