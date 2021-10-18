@@ -2,6 +2,12 @@ view: bin_location {
   sql_table_name: "HIGHJUMP"."BIN_LOCATION"
     ;;
 
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    sql: ${sku}||'-'||${bin_label} ;;
+  }
+
   dimension: bin_label {
     type: string
     sql: ${TABLE}."BIN_LABEL" ;;
@@ -64,8 +70,19 @@ view: bin_location {
 
   measure: unallocated {
     type: sum
+    label: "HJ - Unallocated"
+    description: "Excludes Zones from HJ related to quality, ee store, and waste management"
     value_format: "#,##0"
-    sql: ${TABLE}."UNALLOCATED" ;;
+    sql: CASE WHEN (${zone} IN ('1', '2', '3', '4', 'A', 'B', 'C', 'G', 'I', 'K', 'M', 'N', 'O', 'P', 'R', 'S', '5', '6', 'X', 'Y', 'Z')) THEN ${TABLE}."UNALLOCATED"
+              ELSE 0 END;;
+  }
+
+  measure: unallocated_unfiltered{
+    type: sum
+    label: "HJ - Unallocated (Unfiltered)"
+    description: "Includes all Zones"
+    value_format: "#,##0"
+    sql: ${TABLE}."UNALLOCATED";;
   }
 
   dimension: user {
@@ -76,6 +93,22 @@ view: bin_location {
   dimension: warehouse_id {
     type: number
     sql: ${TABLE}."WAREHOUSE_ID" ;;
+  }
+
+  dimension: warehouse_name {
+    type: string
+    sql: CASE WHEN ${TABLE}."WAREHOUSE_ID" = '4' THEN '100-Purple West'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '5' THEN '150-Alpine'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '12' THEN '109-West Quality Hold Sub W/H'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '17' THEN '900 - Employee Store'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '62' THEN '013-PRODUCT DESTRUCTION'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '66' THEN '100-INTERNAL'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '71' THEN '100 Purple West : Depot'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '111' THEN '200-Purple South'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '115' THEN '115-Retail Openings'
+              WHEN ${TABLE}."WAREHOUSE_ID" = '154' THEN '209-South Quality Hold Sub W/H'
+              ELSE 'Other' END
+              ;;
   }
 
   dimension: zone {
