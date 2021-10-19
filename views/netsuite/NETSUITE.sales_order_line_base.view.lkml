@@ -1066,6 +1066,16 @@ view: sales_order_line_base {
     sql: ${TABLE}.QUANTITY_COMMITTED ;;
   }
 
+    dimension: is_committed {
+      view_label: "Fulfillment"
+      group_label: "By Status"
+      label: "Is Committed"
+      type: yesno
+      drill_fields: [order_details*, sales_order_line.fulfill_details*]
+      description: "Yes when committed units is > 0. Source:netsuite.sales_order_line"
+      sql: ${TABLE}.QUANTITY_COMMITTED>0 ;;
+    }
+
   measure: Qty_Packed {
     view_label: "Fulfillment"
     group_label: "By Status"

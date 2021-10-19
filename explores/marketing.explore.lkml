@@ -104,6 +104,16 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
     group_label: "Marketing"
     label: "Email (cordial)"
+    join:cordial_id  {
+      type: left_outer
+      relationship: many_to_one
+      sql_on: ${cordial_id.email_join} = lower(${cordial_activity.email}) ;;
+    }
+    join: cordial_subscribe {
+      type: left_outer
+      relationship: one_to_many
+      sql_on: ${cordial_id.email_join} = lower(${cordial_subscribe.email}) ;;
+    }
     join: cordial_message_analytic {
       type: left_outer
       sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;

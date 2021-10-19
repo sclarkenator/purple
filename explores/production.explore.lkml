@@ -165,6 +165,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
       relationship: one_to_one}
+    join: bin_location {
+      type: left_outer
+      view_label: "Inventory"
+      fields: [bin_location.unallocated]
+      sql_on: ${bin_location.warehouse_id} = ${warehouse_location.location_id} and ${bin_location.sku} = ${item.sku_id};;
+      relationship:many_to_many}
+
  ##   join: derived_inventory {
 ##      type: left_outer
 ##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;

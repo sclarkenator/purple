@@ -3,7 +3,7 @@ view: liveperson_skill {
 
   sql_table_name: "LIVEPERSON"."SKILL"
     ;;
-  drill_fields: [name, ]
+  drill_fields: [skill_name, ]
 
   ##########################################################################################
   ##########################################################################################
@@ -169,6 +169,6 @@ view: liveperson_skill {
     label: "Count Skills"
     type: count
     hidden: yes
-    drill_fields: [skill_id, name]
+    drill_fields: [skill_id, skill_name]
   }
 }

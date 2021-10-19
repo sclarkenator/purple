@@ -184,6 +184,15 @@ view: l2l_quality_yellow_card {
     sql: ${TABLE}.COVER_SEALED ;;
   }
 
+  dimension: site {
+    label: "Production Site"
+    type: string
+    sql: CASE WHEN ${TABLE}.site = '2' THEN 'Grantsville'
+              WHEN ${TABLE}.site = '3' THEN 'Alpine'
+              WHEN ${TABLE}.site = '4' THEN 'McDonough'
+              ELSE ${TABLE}.site END;;
+  }
+
   measure: quantity {
     type: sum
     sql: ${TABLE}."QUANTITY" ;;

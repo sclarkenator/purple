@@ -21,7 +21,7 @@ view: cc_activities {
     left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
     where c.rownum = 1
     --and c.contacted::date between '2020-06-01' and '2020-06-30'
-    union
+    union all
 
     --chats (zendesk tickets)
     select 'chat' as activity_type
@@ -36,7 +36,7 @@ view: cc_activities {
         , a.email as agent_email
         , c.duration
         , c.missed
-        , c.department_name as skill
+        , 'ZD Chat' as skill
         , c.visitor_email
         ,a.incontact_id
     from customer_care.v_zendesk_chats c
@@ -44,7 +44,30 @@ view: cc_activities {
     left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
     left join analytics_stage.zendesk.user u on u.id = t.requester_id
     left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
-    union
+     union all
+
+
+      --messaging (liveperson converations)
+    select  'chat' as activity_type
+        ,case
+          when s.name = 'Sales' then 'sales'
+          when s.name = 'Support' then 'support' else null end as team
+        , lp.ended as created
+        , a.name as agent_name
+        , a.email as agent_email
+        , null as duration
+        , 'F' as missed
+        , 'LP Conversation' as skill
+        , null as email
+        , a.incontact_id
+    from liveperson.conversation lp
+       left join liveperson.skill s on s.skill_id = lp.last_skill_id
+       left join liveperson.agent ag on ag.agent_id = lp.last_agent_id
+       left join customer_care.agent_lkp a on a.incontact_id = ag.employee_id
+       left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
+       where lp.ended > '2021-09-08'
+     union all
+
 
     --emails/facebook (zendesk tickets)
     select  'email' as activity_type
@@ -54,7 +77,7 @@ view: cc_activities {
         , a.email as agent_email
         , null as duration
         , 'F' as missed
-        , t.subject
+        , team as skill
         , u.email
         ,a.incontact_id
     from customer_care.zendesk_ticket t
@@ -63,19 +86,6 @@ view: cc_activities {
     left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
     where t.via_channel in ('email','facebook','web')
 
-    union
-    ---missed chats in moving to liveperson
-    select 'chat' as activity_type
-        , 'sales' as team
-        , chat_date as created
-        , null as agent_name
-        , null as agent_email
-        , null as duration
-        , 'F' as missed
-        , 'MissedChat' as subject
-        , null as email
-        , metric as incontact_id
-    from analytics.csv_uploads.missed_chats_temp
 
   ;;}
 
@@ -218,7 +228,7 @@ view: cc_activities {
 
   dimension: team_clean {
     type:  string
-    sql: case when ${TABLE}.team = 'sales' then 'sales' else 'support' end ;;
+    sql: case when ${TABLE}.team = 'sales' then 'sales' when ${TABLE}.team = 'support' then 'support' else 'other' end ;;
   }
 
   dimension: email {
@@ -238,15 +248,12 @@ view: cc_activities {
 
 
   measure: count {
-    type: sum
-    sql: case when ${activity_type} = 'chat' and ${skill} = 'MissedChat' then ${incontact_id}
-    when ${activity_type} = 'chat' then 1 else 0 end;;
+    type: count
   }
 
   measure: chats {
     type: sum
-    sql: case when ${skill} = 'MissedChat' then ${incontact_id}
-      when ${activity_type} = 'chat' then 1 else 0 end ;;
+    sql: case when ${activity_type} = 'chat' then 1 else 0 end ;;
   }
 
   measure: calls {
