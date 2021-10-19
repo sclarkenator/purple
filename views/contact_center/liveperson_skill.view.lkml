@@ -93,9 +93,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -110,9 +110,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     sql: CAST(${TABLE}."MODIFIED" AS TIMESTAMP_NTZ) ;;
@@ -126,9 +126,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -144,6 +144,7 @@ view: liveperson_skill {
     group_label: "* IDs"
     primary_key: yes
     type: number
+    hidden: yes
     sql: ${TABLE}."SKILL_ID" ;;
   }
 
@@ -151,6 +152,7 @@ view: liveperson_skill {
     label: "Special Occasion ID"
     group_label: "* IDs"
     type: number
+    hidden: yes
     sql: ${TABLE}."SPECIAL_OCCASION_ID" ;;
   }
 
@@ -158,6 +160,7 @@ view: liveperson_skill {
     label: "Working Hours ID"
     group_label: "* IDs"
     type: number
+    hidden: yes
     sql: ${TABLE}."WORKING_HOURS_ID" ;;
   }
 
