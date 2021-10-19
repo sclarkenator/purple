@@ -8,21 +8,29 @@ view: liveperson_profile {
   ## GENERAL DIMENSIONS
 
   dimension: assigned_to_lpa {
+    label: "Assigned to LPA"
+    description: "Profile flagged as LivePerson Administrators"
     type: yesno
     sql: ${TABLE}."ASSIGNED_TO_LPA" ;;
   }
 
   dimension: deleted {
+    label: "Deleted"
+    description: "Flags profiles that are marked as deleted."
     type: yesno
     sql: ${TABLE}."DELETED" ;;
   }
 
   dimension: description {
+    label: "Description"
+    description: "Profile's description."
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
 
   dimension: name {
+    label: "Profile Name"
+    description: "Name of profile."
     type: string
     sql: ${TABLE}."NAME" ;;
   }
@@ -37,9 +45,9 @@ view: liveperson_profile {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -47,14 +55,15 @@ view: liveperson_profile {
   }
 
   dimension_group: modified {
+    label: "Modified"
     type: time
     timeframes: [
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     sql: CAST(${TABLE}."MODIFIED" AS TIMESTAMP_NTZ) ;;
@@ -66,9 +75,9 @@ view: liveperson_profile {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -82,11 +91,13 @@ view: liveperson_profile {
   dimension: profile_id {
     primary_key: yes
     type: number
+    hidden: yes
     sql: ${TABLE}."PROFILE_ID" ;;
   }
 
   dimension: role_type_id {
     type: number
+    hidden: yes
     sql: ${TABLE}."ROLE_TYPE_ID" ;;
   }
 
@@ -96,6 +107,7 @@ view: liveperson_profile {
 
   measure: count {
     type: count
+    hidden: yes
     drill_fields: [profile_id, name]
   }
 }

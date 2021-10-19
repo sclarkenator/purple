@@ -158,9 +158,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -176,9 +176,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     sql: CAST(${TABLE}."LAST_PASSWORD_CHANGE" AS TIMESTAMP_NTZ) ;;
@@ -193,9 +193,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -211,9 +211,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
