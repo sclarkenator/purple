@@ -357,28 +357,6 @@ view: liveperson_conversation {
   ##########################################################################################
   ## MEASURES
 
-  measure: conversations_opened_count {
-    label: "Conversations Opened Count"
-    type: sum
-    # type: count_distinct
-    sql: case when ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
-  }
-
-  measure: conversations_ended_count {
-    label: "Conversations Closed Count"
-    type: sum
-    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
-  }
-
-  measure: mcs_avg {
-    label: "MCS Average"
-    type: average
-    value_format_name: decimal_2
-    sql: case when average(${mcs}) >= 33 then 'Positive'
-      when average(${mcs}) <= -33 then 'Negative'
-      when average(${mcs}) between -32 and 32 then 'Neutral' end ;;
-  }
-
   measure: conversation_duration_avg {
     label: "Conversation Duration Avg"
     type: average
@@ -386,15 +364,95 @@ view: liveperson_conversation {
     sql: ${conversation_duration} ;;
   }
 
-   measure: consumers_active {
-     label: "Active Consumers"
-     type: count_distinct
-     sql: ${visitor_id} ;;
+  ##########################################################################################
+  ##########################################################################################
+  ## COUNT MEASURES
+
+  measure: consumers_active_count {
+    label: "Active Consumers"
+    group_label: "Count Metrics"
+    type: count_distinct
+    sql: ${visitor_id} ;;
   }
 
-  # measure: conversation_percentage { # USE TABLE CALCULATIONS FOR PERCENTAGE OF CONVERSATIONS
-  #   label: "Conversation Percentage"
-  #   type: percent_of_total
-  #   sql: count(distinct ${conversation_id}) ;;
-  # }
+  measure: conversations_opened_count {
+    label: "Conversations Opened"
+    group_label: "Count Metrics"
+    type: sum
+    # type: count_distinct
+    sql: case when ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
+  }
+
+  measure: conversations_ended_count {
+    label: "Conversations Closed"
+    group_label: "Count Metrics"
+    type: sum
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## DEVICE MEASURES
+
+  measure: device_desktop_count {
+    label: "Desktop Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'DESKTOP'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: device_tablet_count {
+    label: "Tablet Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'TABLET'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: device_mobile_count {
+    label: "Mobile Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'MOBILE'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## DEVICE MEASURES
+
+  measure: mcs_positive_count {
+    label: "MCS Positive Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Positive'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: mcs_neutral_count {
+    label: "MCS Neutral Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Neutral'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: mcs_negative_count {
+    label: "MCS Negative Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Negative'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: mcs_avg {
+    label: "MCS Average"
+    group_label: "MCS Metrics"
+    type: average
+    value_format_name: decimal_2
+    sql: case when average(${mcs}) >= 33 then 'Positive'
+      when average(${mcs}) <= -33 then 'Negative'
+      when average(${mcs}) between -32 and 32 then 'Neutral' end ;;
+  }
 }

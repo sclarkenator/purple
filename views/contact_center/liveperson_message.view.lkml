@@ -47,22 +47,21 @@ view: liveperson_message {
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
+                                      # dimension: agent_first {
+                                      #   label: "Agent First Flag"
+                                      #   description: "Flags first message that comes from a live agent."
+                                      #   type: yesno
+                                      #   sql: ${TABLE}.agent_first ;;
+                                      # }
 
-  dimension: agent_first {
-    label: "Agent First Flag"
-    description: "Flags first message that comes from a live agent."
-    type: yesno
-    sql: ${TABLE}.agent_first ;;
-  }
-
-  dimension: agent_first_response_time {
-    label: "Agent First Response Time"
-    description: "Response time from a live agent in seconds."
-    # group_label: "* Message Details"
-    type: number
-    value_format_name: decimal_0
-    sql: ${TABLE}.response_time ;;
-  }
+                                      # dimension: agent_first_response_time {
+                                      #   label: "Agent First Response Time"
+                                      #   description: "Response time from a live agent in seconds."
+                                      #   # group_label: "* Message Details"
+                                      #   type: number
+                                      #   value_format_name: decimal_0
+                                      #   sql: ${TABLE}.response_time ;;
+                                      # }
 
   dimension: agent_name {
     label: "Agent Name"
@@ -127,14 +126,14 @@ view: liveperson_message {
     sql: ${TABLE}.response_time ;;
   }
 
-  dimension: testing_only_rn {
-    label: "Row Number"
-    description: "Used to sort records by Conversation ID then by Message ID."
-    type: number
-    value_format_name: id
-    # hidden: yes
-    sql: ${TABLE}.rn ;;
-  }
+                                          # dimension: testing_only_rn {
+                                          #   label: "Row Number"
+                                          #   description: "Used to sort records by Conversation ID then by Message ID."
+                                          #   type: number
+                                          #   value_format_name: id
+                                          #   # hidden: yes
+                                          #   sql: ${TABLE}.rn ;;
+                                          # }
 
   dimension: sender {
     label: "Sender Type"
@@ -183,7 +182,7 @@ view: liveperson_message {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
       # quarter,
       year
@@ -200,7 +199,7 @@ view: liveperson_message {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
       # quarter,
       year
@@ -261,40 +260,64 @@ view: liveperson_message {
 
   ##########################################################################################
   ##########################################################################################
-  ## MEASURES
+  ## AGENT MEASURES
 
-  measure: active_consumers {
-    alias: [consumers_active]
-    label: "Active Consumers"
-    group_label: "* Consumer Measures"
+  measure: active_agent_count {
+    label: "Active Agent Count"
+    description: "Count of agents that were active in a given period."
+    group_label: "* Agent Measures"
     type: count_distinct
     sql: case when sent_by = 'Consumer' then ${participant_id} end ;;
   }
 
-  measure: agent_first_response_time_avg {
-    label: "Agent First Response Time Avg"
-    group_label: "* Agent Measures"
-    type: average
-    sql:${agent_first_response_time} ;;
-  }
-
-  measure: conversation_count {
-    label: "Conversation Count"
-    type: count_distinct
-    sql: ${conversation_id} ;;
-  }
-
-  measure: message_count {
-    label: "Message Count"
-    type: count_distinct
-    sql: ${message_id} ;;
-  }
-
-  measure: message_agent_count {
+  measure: message_count_agent {
     label: "Agent Message Count"
+    description: "Count of messages sent by a human agent."
     group_label: "* Agent Measures"
     type: count_distinct
-    sql: case when ${sender} ='Agent' then ${message_id} end ;;
+    sql: case when ${sender} = 'Agent' then ${message_id} end ;;
+  }
+
+  measure: response_time_agent_avg {
+    label: "Response Time Agent Avg"
+    description: "Average response time in seconds."
+    group_label: "* Agent Measures"
+    type: string
+    sql: concat(0 + floor(avg(case when ${sender} = 'Agent' then ${response_time} end)/60), ':'
+      , right(concat('0', floor(mod(avg(case when ${sender} = 'Agent' then ${response_time} end), 60))), 2)) ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## BOT MEASURES
+
+  measure: message_count_bot {
+    label: "Bot Message Count"
+    description: "Count of messages sent by a bot."
+    group_label: "* Bot Measures"
+    type: count_distinct
+    sql: case when ${sender} = 'Bot' then ${message_id} end ;;
+  }
+
+  measure: bot_response_time_avg {
+    label: "Bot Response Time Avg"
+    group_label: "* Bot Measures"
+    description: "Average bot response time in seconds."
+    type: average
+    value_format_name: decimal_2
+    sql: case when ${sender} = 'Bot' then ${response_time}/60 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## CONSUMER MEASURES
+
+  measure: active_consumers_count {
+    alias: [consumers_active]
+    label: "Active Consumer Count"
+    group_label: "* Consumer Measures"
+    type: count_distinct
+    sql: case when sent_by = 'Consumer' then ${participant_id} end ;;
   }
 
   measure: message_consumer_count {
@@ -304,47 +327,105 @@ view: liveperson_message {
     sql: case when ${sender} = 'Consumer' then ${message_id} end ;;
   }
 
-  measure: message_percentage {
-    label: "Message Percentage"
-    type: percent_of_total
-    value_format: "##0.0"
-    sql: count(distinct ${message_id}) ;;
+  measure: message_count_consumer {
+    label: "Consumer Message Count"
+    description: "Count of messages sent by a consumer."
+    group_label: "* Consumer Measures"
+    type: count_distinct
+    sql: case when ${sender} = 'Consumer' then ${message_id} end ;;
   }
-                                                                            dimension: duration_days {
-                                                                              type: number
-                                                                              sql: ${response_time} / 86400 ;;
-                                                                            }
 
-                                                                            measure: response_time_avg_test {
-                                                                              label: "Avg Response Time TEST"
-                                                                              description: "Average response time in seconds."
-                                                                              type: date_time
-                                                                              # value_format_name: "HH:mm"
-                                                                              sql: ${duration_days} ;;
-                                                                            }
+  measure: consumer_response_time_avg {
+    label: "Consumer Response Time Avg"
+    description: "Average response time in seconds."
+    group_label: "* Consumer Measures"
+    type: average
+    value_format_name: decimal_2
+    sql: case when ${sender} = 'Consumer' then ${response_time}/60 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## VIRTUAL ASSISTANT MEASURES
+
+  measure: message_count_virtual_assistant {
+    label: "Virtual Assistant Message Count"
+    description: "Count of messages sent by a virtual agent."
+    group_label: "* Virtual Assistant Measures"
+    type: count_distinct
+    sql: case when ${sender} = 'Virtual Assistant' then ${message_id} end ;;
+  }
+
+  measure: response_time_virtual_assistant_avg {
+    label: "Virtual Assistant Response Time Avg"
+    description: "Average bot response time in seconds."
+    group_label: "* Virtual Assistant Measures"
+    type: average
+    value_format_name: decimal_2
+    sql: case when ${sender} = 'Bot' then ${response_time}/60 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## DEVICE MEASURES
+
+  measure: device_desktop_count {
+    label: "Desktop Message Count"
+    description: "Count of consumer messages from a Desktop computer."
+    group_label: "* Device Measures"
+    type: count_distinct
+    sql: case when ${device}  = 'DESKTOP' then ${message_id} end ;;
+  }
+
+  measure: device_tablet_count {
+    label: "Tablet Message Count"
+    description: "Count of consumer messages from a Tablet device."
+    group_label: "* Device Measures"
+    type: count_distinct
+    sql: case when ${device}  = 'TABLET' then ${message_id} end ;;
+  }
+
+  measure: device_mobile_count {
+    label: "Mobile Message Count"
+    description: "Count of consumer messages from a Mobile (phone) device."
+    group_label: "* Device Measures"
+    type: count_distinct
+    sql: case when ${device}  = 'MOBILE' then ${message_id} end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## GENERAL MEASURES
+
+  measure: conversation_count {
+    label: "Active Conversation Count"
+    type: count_distinct
+    sql: ${conversation_id} ;;
+  }
+
+                                                          # dimension: duration_days {
+                                                          #   type: number
+                                                          #   sql: ${response_time} / 86400 ;;
+                                                          # }
+
+  measure: message_count {
+    label: "Message Count"
+    type: count_distinct
+    sql: ${message_id} ;;
+  }
+
+                                                          # measure: message_percentage {
+                                                          #   label: "Message Percentage"
+                                                          #   type: percent_of_total
+                                                          #   value_format: "##0.0"
+                                                          #   sql: count(distinct ${message_id}) ;;
+                                                          # }
+
   measure: response_time_avg {
     label: "Avg Response Time"
     description: "Average response time in seconds."
     type: number
     value_format_name: decimal_2
     sql: average(${response_time})/60 ;;
-  }
-
-  measure: response_time_agent_avg {
-    label: "Agent Avg Response Time"
-    group_label: "* Agent Measures"
-    description: "Average response time in seconds."
-    type: string
-    sql: concat(0 + floor(avg(case when ${sender} = 'Agent' then ${response_time} end)/60), ':'
-      , right(concat('0', floor(mod(avg(case when ${sender} = 'Agent' then ${response_time} end), 60))), 2)) ;;
-  }
-
-  measure: consumer_response_time_avg {
-    label: "Consumer Avg Response Time"
-    group_label: "* Consumer Measures"
-    description: "Average response time in seconds."
-    type: average
-    value_format_name: decimal_2
-    sql: case when ${sender} = 'Consumer' then ${response_time}/60 end ;;
   }
 }
