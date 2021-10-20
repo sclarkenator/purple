@@ -193,7 +193,7 @@ select      'First Data' as gateway,
 from        analytics.accounting.first_data_transaction f
 
 
-  left join     analytics.commerce_tools.ct_payment_gateway_link gl on          on f.tag::string = gl.gateway_link
+  left join     analytics.commerce_tools.ct_payment_gateway_link gl             on f.tag::string = gl.gateway_link
                 left join analytics.commerce_tools.ct_transaction ctt           on gl.interaction_id  = ctt.interaction_id
                 left join analytics.commerce_tools.ct_payment ctp               on ctt.payment_id = ctp.payment_id
                 left join analytics.commerce_tools.ct_order_payment ctop        on ctp.payment_id = ctop.payment_id
