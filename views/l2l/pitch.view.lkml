@@ -257,7 +257,7 @@ derived_table: {
 
   dimension: cycle_time_dim {
     hidden: yes
-    description: "Dimension Version of the cylce Time; Source l2l.pitch"
+    description: "Dimension Version of the cylce time in seconds; Source l2l.pitch"
     type:number
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
@@ -267,6 +267,13 @@ derived_table: {
     type: sum
     value_format: "0.##"
     sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
+  }
+
+  measure: theoretical_max_production_rate{
+    description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
+    type: sum
+    value_format: "0.##"
+    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
   measure: actual {
@@ -288,15 +295,15 @@ derived_table: {
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
+    sql: case when ${operational_availability} = 0 then null when ${cycle_time} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
   }
 
-  measure: throughput_percent{
+  measure: performance_percent{
     label: "Performance"
-    description: "Actual good parts produced divided by pitch demand"
+    description: "OEE / (Operational Availability * Quality)"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${demand}) end;;
+    sql: case when ${operational_availability} = 0 then null when ${cycle_time} = 0 then null else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield})) end ;;
   }
 
   measure: planned_production_minutes {
@@ -364,11 +371,11 @@ derived_table: {
 
   measure: overall_equipment_effectiveness {
     label: "OEE"
-    description: "FPY * OA * Throughput %"
+    description: "Pitch Acutal / (Theoretical Max Production Rate * (Planned Production Minutes / 60))"
     hidden: no
     type: number
     value_format: "0.0%"
-    sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
+    sql: case when ${operational_availability} = 0 then null when ${cycle_time}=0 then null else div0(${actual},(${theoretical_max_production_rate}*(${planned_production_minutes}/60))) end ;;
   }
 
   measure: total_operator_count {
