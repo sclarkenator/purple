@@ -276,6 +276,13 @@ derived_table: {
     sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
+  dimension: theoretical_max_production_rate_dim{
+    description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
+    type: number
+    value_format: "0.##"
+    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
+  }
+
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
@@ -323,6 +330,13 @@ derived_table: {
   measure: cycle_time {
     description: "Source: l2l.pitch"
     type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."CYCLE_TIME" ;;
+  }
+
+  dimension: cycle_time_test {
+    description: "Source: l2l.pitch"
+    type: number
     value_format: "#,##0"
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
@@ -375,7 +389,7 @@ derived_table: {
     hidden: no
     type: number
     value_format: "0.0%"
-    sql: case when ${operational_availability} = 0 then null when ${cycle_time}=0 then null else div0(${actual},(${theoretical_max_production_rate}*(${planned_production_minutes}/60))) end ;;
+    sql: case when ${operational_availability} = 0 then null when ${cycle_time}=0 then null else div0(${actual},(${theoretical_max_production_rate_dim}*(${planned_production_minutes}/60))) end ;;
   }
 
   measure: total_operator_count {
