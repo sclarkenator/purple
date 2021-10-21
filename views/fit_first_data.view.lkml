@@ -119,7 +119,9 @@ first_data_raw as(
                   left join analytics_stage.shopify_us_ft."ORDER" o
                     on          s.order_id = o.id
 
-    left join     analytics.commerce_tools.ct_transaction ctt                     on f.tag::string = ctt.interaction_id
+    left join
+                  analytics.commerce_tools.ct_payment_gateway_link gl             on f.auth_no = gl.gateway_link
+                  left join analytics.commerce_tools.ct_transaction ctt           on gl.interaction_id  = ctt.interaction_id
                   left join analytics.commerce_tools.ct_payment ctp               on ctt.payment_id = ctp.payment_id
                   left join analytics.commerce_tools.ct_order_payment ctop        on ctp.payment_id = ctop.payment_id
                   left join analytics.commerce_tools.ct_order cto                 on ctop.order_id = cto.order_id
