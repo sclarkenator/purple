@@ -269,19 +269,13 @@ derived_table: {
     sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
-#  measure: theoretical_max_production_rate{
-#    description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
-#    type: sum
-#    value_format: "0.##"
-#    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
-#  }
+  measure: theoretical_max_production_rate{
+    description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
+    type: sum
+    value_format: "#,##0"
+    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
+  }
 
-#  dimension: theoretical_max_production_rate_dim{
-#   description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
-#    type: number
-#    value_format: "0.##"
-#    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
-#  }
 
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
@@ -302,7 +296,7 @@ derived_table: {
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
+    sql: case when ${actual}+${scrap} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
   }
 
   measure: throughput_percent{
@@ -310,7 +304,7 @@ derived_table: {
     description: "Pitch Actual divided by Pitch Demand"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${demand}) end;;
+    sql: case when ${operational_availability} = 0 then null when ${cycle_time} = 0 then null else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield})) end;;
   }
 
   measure: planned_production_minutes {
@@ -330,16 +324,10 @@ derived_table: {
   measure: cycle_time {
     description: "Source: l2l.pitch"
     type: sum
+    hidden: yes
     value_format: "#,##0"
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
-
-#  dimension: cycle_time_test {
-#    description: "Source: l2l.pitch"
-#    type: number
-#    value_format: "#,##0"
-#    sql: ${TABLE}."CYCLE_TIME" ;;
-#  }
 
   measure: changeover_earned_hours {
     hidden: yes
@@ -385,12 +373,12 @@ derived_table: {
 
   measure: overall_equipment_effectiveness {
     label: "OEE"
-    description: "Operational Availability * Quality * Performance"
+    description: "Pitch Acutal / Theoretical Max Production"
     hidden: no
     type: number
     value_format: "0.0%"
-    sql: ${operational_availability}*${first_pass_yield}*${throughput_percent} ;;
-  }
+    sql: div0(${actual},${theoretical_max_production_rate}) ;;
+    }
 
   measure: total_operator_count {
     hidden: yes
