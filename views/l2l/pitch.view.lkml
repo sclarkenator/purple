@@ -301,7 +301,7 @@ derived_table: {
 
   measure: throughput_percent{
     label: "Performance"
-    description: "Pitch Actual divided by Pitch Demand"
+    description: "Backing into performance by taking OEE and dividing by (OA * Quality %)"
     type: number
     value_format: "0.0%"
     sql: case when ${operational_availability} = 0 then null when ${cycle_time} = 0 then null else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield})) end;;
