@@ -33,12 +33,22 @@ view: v_fit_affirm {
         sum(aft.amount) as affirm_total,
         listagg(t.amt, ';') within group (order by t.amt) as etail_amounts,
         sum(t.amt) as etail_total
-      from analytics.commerce_tools.ct_transaction t
-        join analytics.commerce_tools.ct_payment p on t.payment_id = p.payment_id
-        join analytics.commerce_tools.ct_order_payment op on p.payment_id = op.payment_id
-        join analytics.commerce_tools.ct_order o on op.order_id = o.order_id
-        left join analytics.accounting.affirm_transaction aft on t.interaction_id = aft.event_id
-        left join analytics.accounting.affirm_header afh on aft.entry_id = afh.id
+
+        --from analytics.commerce_tools.ct_transaction t
+        --join analytics.commerce_tools.ct_payment p on t.payment_id = p.payment_id
+        --join analytics.commerce_tools.ct_order_payment op on p.payment_id = op.payment_id
+        --join analytics.commerce_tools.ct_order o on op.order_id = o.order_id
+        --left join analytics.accounting.affirm_transaction aft on t.interaction_id = aft.event_id
+        --left join analytics.accounting.affirm_header afh on aft.entry_id = afh.id
+
+       from         analytics.commerce_tools.ct_transaction             t
+       join         analytics.commerce_tools.ct_payment                 p   on t.payment_id = p.payment_id
+       join         analytics.commerce_tools.ct_order_payment           op  on p.payment_id = op.payment_id
+       join         analytics.commerce_tools.ct_order                   o   on op.order_id = o.order_id
+       left join    analytics.commerce_tools.ct_payment_gateway_link    gl  on t.interaction_id = gl.interaction_id
+       left join    analytics.accounting.affirm_transaction             aft on gl.gateway_link = aft.event_id
+       left join    analytics.accounting.affirm_header                  afh on aft.entry_id = afh.id
+
       where t.state = 'Success' and t.type = 'Refund' and aft.event_type = 'refund'
         and {% condition date_selector %} to_date(t.transaction_ts) {% endcondition %}
         and afh.merchant_external_reference ilike 'CT%'
