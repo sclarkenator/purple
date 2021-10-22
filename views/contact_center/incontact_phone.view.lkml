@@ -116,6 +116,7 @@ view: incontact_phone {
     label: "Media Type"
     description: "Displays the media type/channel of a contact."
     type: string
+    hidden:  yes
     sql: ${TABLE}."MEDIA_TYPE" ;;
     }
 

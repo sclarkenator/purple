@@ -64,52 +64,52 @@ explore: liveperson_messages {
   }
   }
 
-#####################################################################
-#####################################################################
-## LIVEPERSON CONVERSATION TO MESSAGES cj
+# #####################################################################
+# #####################################################################
+# ## LIVEPERSON CONVERSATION TO MESSAGES cj
 
-explore: liveperson_conversation_to_message {
-  label: "LivePerson Conversations & Messages"
-  description: "LivePerson conversations message data."
-  view_label: "Agent Data"
-  from: liveperson_agent
-  hidden: yes
-  fields: [liveperson_conversation_to_message.deleted, liveperson_conversation_to_message.disabled_manually, liveperson_conversation_to_message.enabled, agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
-        ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor, liveperson_skill.skill_name
-        ,liveperson_message*, liveperson_conversation*]
+# explore: liveperson_conversation_to_message {
+#   label: "LivePerson Conversations & Messages"
+#   description: "LivePerson conversations message data."
+#   view_label: "Agent Data"
+#   from: liveperson_agent
+#   hidden: yes
+#   fields: [liveperson_conversation_to_message.deleted, liveperson_conversation_to_message.disabled_manually, liveperson_conversation_to_message.enabled, agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
+#         ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor, liveperson_skill.skill_name
+#         ,liveperson_message*, liveperson_conversation*]
 
-  join: agent_data {
-    view_label: "Agent Data"
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${liveperson_conversation_to_message.employee_id} = ${agent_data.incontact_id} ;;
-    # fields: [agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
-    #     ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor]
-  }
+#   join: agent_data {
+#     view_label: "Agent Data"
+#     type: left_outer
+#     relationship: one_to_one
+#     sql_on: ${liveperson_conversation_to_message.employee_id} = ${agent_data.incontact_id} ;;
+#     # fields: [agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
+#     #     ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor]
+#   }
 
-  join: liveperson_skill {
-    view_label: "Agent Data"
-    # fields: [skill_name]
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${liveperson_conversation_to_message.skill_id} = ${liveperson_skill.skill_id} ;;
-  }
+#   join: liveperson_skill {
+#     view_label: "Agent Data"
+#     # fields: [skill_name]
+#     type: left_outer
+#     relationship: many_to_one
+#     sql_on: ${liveperson_conversation_to_message.skill_id} = ${liveperson_skill.skill_id} ;;
+#   }
 
-  join: liveperson_message {
-    view_label: "LivePerson Messages"
-    type: full_outer
-    relationship: one_to_many
-    sql_on: len(${liveperson_message.participant_id}) = 10
-      and cast(${agent_data.liveperson_id} as char(10)) = cast(left(${liveperson_message.participant_id}, 10) as char(10)) ;;
-  }
+#   join: liveperson_message {
+#     view_label: "LivePerson Messages"
+#     type: full_outer
+#     relationship: one_to_many
+#     sql_on: len(${liveperson_message.participant_id}) = 10
+#       and cast(${agent_data.liveperson_id} as char(10)) = cast(left(${liveperson_message.participant_id}, 10) as char(10)) ;;
+#   }
 
-  join: liveperson_conversation {
-    view_label: "LivePerson Conversation"
-    type: full_outer
-    relationship: many_to_one
-    sql_on: ${liveperson_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
-  }
-}
+#   join: liveperson_conversation {
+#     view_label: "LivePerson Conversation"
+#     type: full_outer
+#     relationship: many_to_one
+#     sql_on: ${liveperson_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
+#   }
+# }
 
 #####################################################################
 #####################################################################
@@ -282,6 +282,7 @@ explore: headcount_v2 {
       and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
     relationship: one_to_many
   }
+
   sql_always_where: ${headcount.team_group} <> 'Other' ;;
 }
 
