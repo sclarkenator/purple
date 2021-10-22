@@ -233,6 +233,14 @@ view: expeditors {
     sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_entered_value}) ;;
   }
 
+  # measure: duty_rate {
+  #   label: "Tariff Calculation"
+  #   description: "duty + mpf + hmf / entered value"
+  #   type: number
+  #   value_format: "0.0%"
+  #   sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_entered_value}) ;;
+  # }
+
   measure: tariff_per_unit {
     label: "$ Tariff per Item Unit"
     description: "duty + mpf + hmf / item quantity"
@@ -241,6 +249,27 @@ view: expeditors {
     sql: div0(${total_duty}+${total_hmf_harbor_fee}+${total_mpf},${total_item_quantity}) ;;
   }
 
+  # measure: duty_per_unit {
+  #   label: "$ Duty per Item Unit"
+  #   description: "duty / item quantity"
+  #   type: number
+  #   value_format: "$#,##0.00"
+  #   sql: div0(${total_duty},${total_item_quantity}) ;;
+  # }
+  # measure: mpf_per_unit {
+  #   label: "$ Mpf per Item Unit"
+  #   description: "mpf / item quantity"
+  #   type: number
+  #   value_format: "$#,##0.00"
+  #   sql: div0(${total_mpf},${total_item_quantity}) ;;
+  # }
+  # measure: hmf_harbor_fee_per_unit {
+  #   label: "$ Hmf per Item Unit"
+  #   description: "Hmf / item quantity"
+  #   type: number
+  #   value_format: "$#,##0.00"
+  #   sql: div0(${total_hmf_harbor_fee},${total_item_quantity}) ;;
+  # }
   measure: total_tariff{
     label: "Total Tariff"
     description: "duty + mpf + hmf"
