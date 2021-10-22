@@ -15,8 +15,10 @@ view: liveperson_conversation {
         join liveperson.conversation c
             on dt.date::date between c.started::date and c.ended::date
         join liveperson.skill s
-            on c.last_skill_id = s.skill_id ;;
+            on c.last_skill_id = s.skill_id
+      ;;
     }
+
   drill_fields: [conversation_id]
 
   ##########################################################################################
@@ -30,7 +32,7 @@ view: liveperson_conversation {
     sql: case when ${alerted_mcs_id} = -1 then 'Negative'
       when ${alerted_mcs_id} = 0 then 'Neutral'
       when ${alerted_mcs_id} = 1 then 'Positive'
-      end;;
+      end ;;
   }
 
   dimension: browser {
@@ -231,7 +233,7 @@ view: liveperson_conversation {
     primary_key: yes
     type: string
     hidden: yes
-    sql: concat(${TABLE}."CONVERSATION_ID", ${conversation_dates_date});;
+    sql: concat(${conversation_id}, ${conversation_dates_date});;
   }
 
   dimension: alerted_mcs_id {
@@ -420,7 +422,7 @@ view: liveperson_conversation {
 
   ##########################################################################################
   ##########################################################################################
-  ## DEVICE MEASURES
+  ## MCS MEASURES
 
   measure: mcs_positive_count {
     label: "MCS Positive Count"
