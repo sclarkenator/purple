@@ -74,11 +74,12 @@ view: wholesale_stores {
   sql: ${TABLE}.add_purple_dt ;;
   }
 
-  dimension: is_inactive {
-    type: yesno
-    hidden: no
-    sql: ${TABLE}.is_inactive = 'T' ;;
-  }
+  #Danielle- Removed this dimension bc Hyrum dropped the column in snowflake
+  #dimension: is_inactive {
+    #type: yesno
+    #hidden: no
+    #sql: ${TABLE}.is_inactive = 'T' ;;
+  #}
 
   dimension: primary_key {
     primary_key: yes
