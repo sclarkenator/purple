@@ -1,8 +1,7 @@
-# The name of this view in Looker is "Campaign"
+## REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 view: liveperson_campaign {
 
-  sql_table_name: "LIVEPERSON"."CAMPAIGN"
-    ;;
+  sql_table_name: liveperson.campaign ;;
   drill_fields: [campaign_id]
 
   ##########################################################################################
@@ -10,56 +9,67 @@ view: liveperson_campaign {
   ## GENERAL DIMENSIONS
 
   dimension: behavior_system_default {
+    label: "Behavior System Default"
     type: yesno
     sql: ${TABLE}."BEHAVIOR_SYSTEM_DEFAULT" ;;
   }
 
   dimension: campaign_name {
+    label: "Campaign Name"
     type: string
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
   dimension: engagement_name {
+    label: "Engagement Name"
     type: string
     sql: ${TABLE}."ENGAGEMENT_NAME" ;;
   }
 
   dimension: engagement_type {
+    label: "Engagement Type"
     type: string
     sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
   }
 
   dimension: goal_name {
+    label: "Goal Name"
     type: string
     sql: ${TABLE}."GOAL_NAME" ;;
   }
 
   dimension: lob_name {
+    label: "LOB Name"
     type: string
     sql: ${TABLE}."LOB_NAME" ;;
   }
 
   dimension: location_name {
+    label: "Location Name"
     type: string
     sql: ${TABLE}."LOCATION_NAME" ;;
   }
 
   dimension: profile_system_default {
+    label: "Profile System Default"
     type: yesno
     sql: ${TABLE}."PROFILE_SYSTEM_DEFAULT" ;;
   }
 
   dimension: source {
+    label: "Source Name"
     type: string
     sql: ${TABLE}."SOURCE" ;;
   }
 
   dimension: visitor_behavior_name {
+    label: "Visitor Behavor"
     type: string
     sql: ${TABLE}."VISITOR_BEHAVIOR_NAME" ;;
   }
 
   dimension: visitor_profile_name {
+    label: "Visitor Profile Name"
     type: string
     sql: ${TABLE}."VISITOR_PROFILE_NAME" ;;
   }
@@ -80,6 +90,7 @@ view: liveperson_campaign {
       quarter,
       year
     ]
+    hidden: yes
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -130,7 +141,6 @@ view: liveperson_campaign {
     sql: ${TABLE}."VISITOR_PROFILE_ID" ;;
   }
 
-
   ##########################################################################################
   ##########################################################################################
   ## MEASURES
@@ -138,24 +148,20 @@ view: liveperson_campaign {
   measure: campaign_count {
     label: "Campaign Count"
     type: count
-    drill_fields: [detail*]
+    hidden: yes
   }
 
-  # These sum and average measures are hidden by default.
-  # If you want them to show up in your explore, remove hidden: yes.
-
-
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      campaign_id,
-      goal_name,
-      visitor_profile_name,
-      visitor_behavior_name,
-      engagement_name,
-      lob_name,
-      campaign_name,
-      location_name
-    ]
-  }
+  # set: campaigns {
+  #   fields: [
+  #     campaign_name,
+  #     engagement_name,
+  #     engagement_type,
+  #     location_name,
+  #     visitor_behavior_name,
+  #     visitor_profile_name,
+  #     source,
+  #     behavior_system_default,
+  #     profile_system_default
+  #   ]
+  # }
 }

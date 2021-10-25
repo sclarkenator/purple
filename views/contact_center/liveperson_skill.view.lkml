@@ -1,5 +1,5 @@
+## REFERENCE: https://developers.liveperson.com/administration-skills-appendix.html
 view: liveperson_skill {
-  # REFERENCE: https://developers.liveperson.com/administration-skills-appendix.html
 
   sql_table_name: "LIVEPERSON"."SKILL"
     ;;

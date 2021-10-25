@@ -1,4 +1,7 @@
+
+
 view: liveperson_profile {
+
   sql_table_name: "LIVEPERSON"."PROFILE"
     ;;
   drill_fields: [profile_id]
@@ -105,7 +108,8 @@ view: liveperson_profile {
   ##########################################################################################
   ## MEASURES
 
-  measure: count {
+  measure: profile_count {
+    label: "Profile Count"
     type: count
     hidden: yes
     drill_fields: [profile_id, name]

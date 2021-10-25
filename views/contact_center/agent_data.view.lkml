@@ -31,7 +31,13 @@ view: agent_data {
 
   set: agents_minimal_grouping {
     fields: [
-      agent_name, team_group, team_type, team_name, is_active, is_retail, is_supervisor
+      agent_name,
+      team_group,
+      team_type,
+      team_name,
+      is_active,
+      is_retail,
+      is_supervisor
     ]
 
   }

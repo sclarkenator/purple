@@ -1,5 +1,6 @@
+## REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
+
 view: liveperson_conversation {
-  # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 
   view_label: "LivePerson Conversations"
   # sql_table_name: "

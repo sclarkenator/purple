@@ -1,7 +1,32 @@
-# The name of this view in Looker is "Agent Status"
+## REFERENCE: https://developers.liveperson.com/agent-metrics-api-methods-agent-status.html
 view: liveperson_agent_status {
   sql_table_name: "LIVEPERSON"."AGENT_STATUS" ;;
 
+  set: default_agent_status {
+    fields: [
+      type,
+      sub_type,
+      reason,
+      # session_id,
+      # sequence_number,
+      status_change_date,
+      status_change_time,
+      status_change_week,
+      status_change_month,
+      status_change_year,
+      pk
+    ]
+    }
+    set: agent_login_time {
+      fields: [
+        status_change_date,
+        status_change_time,
+        status_change_week,
+        status_change_month,
+        status_change_year,
+        time_logged_in
+      ]
+  }
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
@@ -12,18 +37,30 @@ view: liveperson_agent_status {
     sql: ${TABLE}."REASON" ;;
   }
 
+  dimension: session_sequence {
+    label: "Session Sequence"
+    type: string
+  }
+
   dimension: sub_type {
-    label: "Sub Type ID"
-    type: number
-    value_format_name: id
-    sql: ${TABLE}."SUB_TYPE" ;;
+    label: "Sub-Type"
+    description: "Subtype of status change where Type = 'Status Changed'."
+    type: string
+    sql: case when ${TABLE}.sub_type = 1 then 'Offline'
+      when ${TABLE}.sub_type = 2 then 'Online'
+      when ${TABLE}.sub_type = 3 then 'Occupied'
+      when ${TABLE}.sub_type = 4 then 'Away'
+      end ;;
   }
 
   dimension: type {
-    label: "Type ID"
-    type: number
-    value_format_name: id
-    sql: ${TABLE}."TYPE" ;;
+    label: "Type"
+    description: "Type of status change."
+    type: string
+    sql: case when ${TABLE}.type = 1 then 'Status Changed'
+      when ${TABLE}.type = 3 then 'Login'
+      when ${TABLE}.type = 4 then 'Logout'
+      end ;;
   }
 
   ##########################################################################################
@@ -61,7 +98,7 @@ view: liveperson_agent_status {
   }
 
 dimension_group: status_change {
-  label: "Status Change"
+  label: "- Status Change"
   type: time
   timeframes: [
     raw,
@@ -80,6 +117,8 @@ dimension_group: status_change {
   ## IDs
 
   dimension: pk {
+    label: "Session Sequence ID"
+    description: "[Agent ID] - [Session ID] - [Sequence Number]"
     type: string
     # hidden: yes
     primary_key: yes
@@ -87,26 +126,31 @@ dimension_group: status_change {
   }
 
   dimension: agent_id {
+    description: "Agent's LivePerson ID"
     type: number
-    # hidden: yes
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}."AGENT_ID" ;;
   }
 
   dimension: sequence_number {
     label: "Sequence Number"
+    description: "Sequential number of this status change within the session."
     type: number
     value_format_name: id
     sql: ${TABLE}."SEQUENCE_NUMBER" ;;
   }
 
   dimension: session_id {
+    description: "Identifier of the session during which this status change took place."
     type: number
     value_format_name: id
+    # hidden: yes
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
   dimension: status_reason_id {
+    description: "Identifier of optional custom reason for the status change."
     type: number
     value_format_name: id
     hidden: yes
@@ -120,42 +164,14 @@ dimension_group: status_change {
   measure: agent_status_count {
     label: "Agent Status Count"
     type: count
-    drill_fields: []
+    hidden: yes
+    drill_fields: [pk]
   }
 
-  measure: total_sequence_number {
-    type: sum
-    hidden: yes
-    sql: ${sequence_number} ;;
-  }
-
-  measure: average_sequence_number {
-    type: average
-    hidden: yes
-    sql: ${sequence_number} ;;
-  }
-
-  measure: total_sub_type {
-    type: sum
-    hidden: yes
-    sql: ${sub_type} ;;
-  }
-
-  measure: average_sub_type {
-    type: average
-    hidden: yes
-    sql: ${sub_type} ;;
-  }
-
-  measure: total_type {
-    type: sum
-    hidden: yes
-    sql: ${type} ;;
-  }
-
-  measure: average_type {
-    type: average
-    hidden: yes
-    sql: ${type} ;;
+  measure: time_logged_in {
+    label: "Time Logged In"
+    description: "Time spent logged in during designated period of time."
+    type: number
+    sql: sum(case when ${type} = 'Login' then ${status_change_time} end) ;;
   }
 }
