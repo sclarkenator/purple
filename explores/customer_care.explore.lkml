@@ -29,6 +29,13 @@ explore: liveperson_conversations {
     sql_on: ${agent_data.liveperson_id}= ${liveperson_conversation.last_agent_id} ;;
     relationship: many_to_one
   }
+
+  join: liveperson_campaign {
+    view_label: "LivePerson Campaign"
+    type: full_outer
+    sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
+    relationship: many_to_one
+  }
 }
 
 #####################################################################
@@ -802,6 +809,8 @@ explore: perfect_attendance_calc {
     # }
   }
 
+  explore: liveperson_agent_status {hidden:yes} #cj
+  explore: liveperson_campaign {hidden:yes} #cj
   explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj

@@ -23,7 +23,10 @@ view: agent_data {
               and c.rnk = 1
 
           left join liveperson.agent la
-            on a.incontact_id = la.employee_id  ;;
+            on a.incontact_id = la.employee_id
+
+      where team_type <> 'Systems'
+      ;;
   }
 
   set: agents_minimal_grouping {
