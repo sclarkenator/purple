@@ -74,6 +74,7 @@ explore: liveperson_conversations {
   join: liveperson_campaign {
     view_label: "Campaigns"
     type: full_outer
+    fields: [liveperson_campaign.campaign_default*]
     sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
     relationship: many_to_one
   }

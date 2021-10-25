@@ -4,6 +4,20 @@ view: liveperson_campaign {
   sql_table_name: liveperson.campaign ;;
   drill_fields: [campaign_id]
 
+  set: campaign_default {
+    fields: [
+      campaign_name,
+      engagement_name,
+      engagement_type,
+      location_name,
+      visitor_behavior_name,
+      visitor_profile_name,
+      source,
+      behavior_system_default,
+      profile_system_default
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
@@ -150,18 +164,4 @@ view: liveperson_campaign {
     type: count
     hidden: yes
   }
-
-  # set: campaigns {
-  #   fields: [
-  #     campaign_name,
-  #     engagement_name,
-  #     engagement_type,
-  #     location_name,
-  #     visitor_behavior_name,
-  #     visitor_profile_name,
-  #     source,
-  #     behavior_system_default,
-  #     profile_system_default
-  #   ]
-  # }
 }
