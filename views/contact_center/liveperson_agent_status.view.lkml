@@ -33,18 +33,19 @@ view: liveperson_agent_status {
 
   dimension: reason {
     label: "Reason"
+    description: "Optional custom reason for the status change. Null if no custom reason was provided by the agent."
     type: string
     sql: ${TABLE}."REASON" ;;
   }
 
-  dimension: session_sequence {
-    label: "Session Sequence"
-    type: string
-  }
+  # dimension: session_sequence {
+  #   label: "Session Sequence"
+  #   type: string
+  # }
 
   dimension: sub_type {
     label: "Sub-Type"
-    description: "Subtype of status change where Type = 'Status Changed'."
+    description: "Subtype of status change when Type = 'Status Changed'."
     type: string
     sql: case when ${TABLE}.sub_type = 1 then 'Offline'
       when ${TABLE}.sub_type = 2 then 'Online'
@@ -161,6 +162,19 @@ dimension_group: status_change {
   ##########################################################################################
   ## MEASURES
 
+  measure: agent_count {
+    label: "Agent Count"
+    type: count_distinct
+    hidden: yes
+    sql: agent_id ;;
+    drill_fields: [pk]
+    html:
+      <ul>
+        <li> Time Logged In: {{value}} </li>
+        <li> Agent Count: {{value}} </li>
+      </ul>;;
+  }
+
   measure: agent_status_count {
     label: "Agent Status Count"
     type: count
@@ -172,6 +186,12 @@ dimension_group: status_change {
     label: "Time Logged In"
     description: "Time spent logged in during designated period of time."
     type: number
-    sql: sum(case when ${type} = 'Login' then ${status_change_time} end) ;;
+    sql: sum(case when ${type} = 'Login' then to_numeric(${status_change_time}) end) ;;
+    html:
+      <ul>
+        <li> Time Logged In: {{rendered_value}}} </li>
+        <li> Time Logged Out: {{rendered_value}}} </li>
+        <li> Agent Count: {{liveperson_agent_status.agent_count._rendered_value}} </li>
+      </ul>;;
   }
 }

@@ -358,17 +358,6 @@ view: liveperson_conversation {
 
   ##########################################################################################
   ##########################################################################################
-  ## MEASURES
-
-  measure: conversation_duration_avg {
-    label: "Conversation Duration Avg"
-    type: average
-    value_format_name: decimal_0
-    sql: ${conversation_duration} ;;
-  }
-
-  ##########################################################################################
-  ##########################################################################################
   ## COUNT MEASURES
 
   measure: consumers_active_count {
@@ -378,19 +367,67 @@ view: liveperson_conversation {
     sql: ${visitor_id} ;;
   }
 
+  ##########################################################################################
+  ##########################################################################################
+  ## CONVERSATION MEASURES
+
+  measure: conversation_duration_avg {
+    label: "Conversation Duration Avg"
+    group_label: "Conversation Metrics"
+    type: average
+    value_format_name: decimal_0
+    sql: ${conversation_duration} ;;
+  }
+
+  # measure: conversation_first_conversation_average {
+  #   label: "First Conversation Pct"
+  #   group_label: "Conversation Metrics"
+  #   type: number
+  #   value_format_name: percent_1
+  #   sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
+  #     / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
+
+  #   html:
+  #     <ul>
+  #       <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
+  #       <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
+  #       <li> Followup Conversation: {{followup_conversation_count._rendered_value}}</li>
+  #     </ul> ;;
+  # }
+
+  measure: first_conversation_count {
+    label: "First Conversation Count"
+    group_label: "Conversation Metrics"
+    description: "Count of conversations that ARE flagged as a first conversation."
+    # group_label: "Conversation Metrics"
+    type: sum
+    sql: case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
+
+  measure: followup_conversation_count {
+    label: "Followup Conversation Count"
+    group_label: "Conversation Metrics"
+    description: "Count of conversations that ARE NOT flagged as a first conversation."
+    # group_label: "Conversation Metrics"
+    type: sum
+    sql: case when ${first_conversation} = false and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
+
   measure: conversations_opened_count {
     label: "Conversations Opened"
-    group_label: "Count Metrics"
+    group_label: "Conversation Metrics"
     type: sum
     # type: count_distinct
     sql: case when ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
   }
 
   measure: conversations_ended_count {
-    label: "Conversations Closed"
-    group_label: "Count Metrics"
+    label: "Closed Conversations"
+    # group_label: "Conversation Metrics"
+    description: "Count of closed conversations.  This is typically the primary measure used in counting conversations."
+    # group_label: "Conversation Metrics"
     type: sum
-    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 end ;;
   }
 
   ##########################################################################################
@@ -454,8 +491,6 @@ view: liveperson_conversation {
     group_label: "MCS Metrics"
     type: average
     value_format_name: decimal_2
-    sql: case when average(${mcs}) >= 33 then 'Positive'
-      when average(${mcs}) <= -33 then 'Negative'
-      when average(${mcs}) between -32 and 32 then 'Neutral' end ;;
+    sql: ${mcs} ;;
   }
 }

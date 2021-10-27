@@ -25,7 +25,7 @@ view: agent_data {
           left join liveperson.agent la
             on a.incontact_id = la.employee_id
 
-      where team_type <> 'Systems'
+      where team_type not ilike 'system%'
       ;;
   }
 

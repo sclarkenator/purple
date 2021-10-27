@@ -38,6 +38,7 @@ view: headcount {
           and d.date between t.start_date::date and t.end_date::date
 
       where d.date between '2019-01-01' and current_date
+        and team_type not ilike 'system%'
     ;;
   }
 

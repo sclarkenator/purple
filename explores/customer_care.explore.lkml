@@ -6,26 +6,26 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-#####################################################################
-#####################################################################
-## LIVEPERSON AGENT LOGIN TIME cj
+# #####################################################################
+# #####################################################################
+# ## LIVEPERSON AGENT LOGIN TIME cj
 
-explore: liveperson_agent_login_time {
-  label: "LivePerson Time Logged In"
-  view_label: "Agent Data"
-  from: agent_data
-  fields: [liveperson_agent_login_time.agents_minimal_grouping*,
-    liveperson_agent_status.agent_login_time*]
+# explore: liveperson_agent_login_time {
+#   label: "LivePerson Time Logged In"
+#   view_label: "Agent Data"
+#   from: agent_data
+#   fields: [liveperson_agent_login_time.agents_minimal_grouping*,
+#     liveperson_agent_status.agent_login_time*]
 
-  join: liveperson_agent_status {
-    view_label: "Agent Time Logged In"
-    from: liveperson_agent_status
-    type: left_outer
-    sql_on: ${liveperson_agent_login_time.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
-    relationship: one_to_many
-    sql_where: ${liveperson_agent_status.type} in ('Login', 'Logout') ;;
-  }
-}
+#   join: liveperson_agent_status {
+#     view_label: "Agent Time Logged In"
+#     from: liveperson_agent_status
+#     type: left_outer
+#     sql_on: ${liveperson_agent_login_time.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
+#     relationship: one_to_many
+#     sql_where: ${liveperson_agent_status.type} in ('Login', 'Logout') ;;
+#   }
+# }
 
 #####################################################################
 #####################################################################
@@ -36,7 +36,8 @@ explore: lp_agent_status {
   view_label: "Agent Data"
   from: agent_data
   fields: [lp_agent_status.agents_minimal_grouping*,
-    liveperson_agent_status.default_agent_status*]
+    liveperson_agent_status.default_agent_status*,
+       liveperson_agent_status.agent_count]
 
   join: liveperson_agent_status {
     view_label: "Agent Status"
@@ -44,6 +45,8 @@ explore: lp_agent_status {
     type: left_outer
     sql_on: ${lp_agent_status.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
     relationship: one_to_many
+  #   fields: [liveperson_agent_status.default_agent_status*,
+  #     liveperson_agent_status.agent_count]
   }
 }
 
@@ -60,6 +63,7 @@ explore: liveperson_conversations {
   join: agent_data {
     view_label: "Agent Data"
     type: left_outer
+    fields: [agent_data.agents_minimal_grouping*]
     sql_on: ${liveperson_conversations.employee_id} = ${agent_data.incontact_id} ;;
     relationship: one_to_one
   }
@@ -72,10 +76,16 @@ explore: liveperson_conversations {
   }
 
   join: liveperson_campaign {
-    view_label: "Campaigns"
+    # view_label: "Campaigns"
     type: full_outer
-    fields: [liveperson_campaign.campaign_default*]
     sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_engagement {
+    # view_label: "Engagements"
+    type: full_outer
+    sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
     relationship: many_to_one
   }
 }
@@ -852,7 +862,7 @@ explore: perfect_attendance_calc {
   }
 
   explore: liveperson_consumer_participant {hidden:yes} #cj
-  explore: liveperson_campaign {hidden:yes } #cj
+  explore: liveperson_campaign {hidden:yes} #cj
   explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
