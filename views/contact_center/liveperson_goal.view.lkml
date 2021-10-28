@@ -11,7 +11,7 @@ view: liveperson_goal {
   }
 
   dimension: goal_name {
-    label: "Goal Name"
+    label: "Goal"
     type: string
     sql: ${TABLE}.goal_name ;;
   }

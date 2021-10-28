@@ -89,27 +89,27 @@ explore: liveperson_conversations {
     sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
     relationship: many_to_one
   }
+  ## The following joins are disabled because they do not return any meaningful data. <<<<<<<<<<<<<<<<<<<<<<<<<<
+  # join: liveperson_goal {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.goal_id} = ${liveperson_goal.goal_id} ;;
+  #   relationship: many_to_one
+  # }
 
-  join: liveperson_goal {
-    view_label: "Conversations"
-    type: full_outer
-    sql_on: ${liveperson_conversation.goal_id} = ${liveperson_goal.goal_id} ;;
-    relationship: many_to_one
-  }
+  # join: liveperson_location {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.location_id} = ${liveperson_location.location_id} ;;
+  #   relationship: many_to_one
+  # }
 
-  join: liveperson_location {
-    view_label: "Conversations"
-    type: full_outer
-    sql_on: ${liveperson_conversation.location_id} = ${liveperson_location.location_id} ;;
-    relationship: many_to_one
-  }
-
-  join: liveperson_lob {
-    view_label: "Conversations"
-    type: full_outer
-    sql_on: ${liveperson_conversation.lob_id} = ${liveperson_lob.lob_id} ;;
-    relationship: many_to_one
-  }
+  # join: liveperson_lob {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.lob_id} = ${liveperson_lob.lob_id} ;;
+  #   relationship: many_to_one
+  # }
 
   join: liveperson_visitor_behavior {
     view_label: "Conversations"
