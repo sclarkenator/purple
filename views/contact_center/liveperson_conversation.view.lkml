@@ -1,5 +1,6 @@
+## REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
+
 view: liveperson_conversation {
-  # REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 
   view_label: "LivePerson Conversations"
   # sql_table_name: "
@@ -15,8 +16,10 @@ view: liveperson_conversation {
         join liveperson.conversation c
             on dt.date::date between c.started::date and c.ended::date
         join liveperson.skill s
-            on c.last_skill_id = s.skill_id ;;
+            on c.last_skill_id = s.skill_id
+      ;;
     }
+
   drill_fields: [conversation_id]
 
   ##########################################################################################
@@ -30,7 +33,7 @@ view: liveperson_conversation {
     sql: case when ${alerted_mcs_id} = -1 then 'Negative'
       when ${alerted_mcs_id} = 0 then 'Neutral'
       when ${alerted_mcs_id} = 1 then 'Positive'
-      end;;
+      end ;;
   }
 
   dimension: browser {
@@ -231,7 +234,7 @@ view: liveperson_conversation {
     primary_key: yes
     type: string
     hidden: yes
-    sql: concat(${TABLE}."CONVERSATION_ID", ${conversation_dates_date});;
+    sql: concat(${conversation_id}, ${conversation_dates_date});;
   }
 
   dimension: alerted_mcs_id {
@@ -263,7 +266,7 @@ view: liveperson_conversation {
   dimension: conversation_id {
     group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
@@ -295,7 +298,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LAST_AGENT_ID" ;;
   }
 
@@ -355,46 +358,139 @@ view: liveperson_conversation {
 
   ##########################################################################################
   ##########################################################################################
-  ## MEASURES
+  ## COUNT MEASURES
+
+  measure: consumers_active_count {
+    label: "Active Consumers"
+    group_label: "Count Metrics"
+    type: count_distinct
+    sql: ${visitor_id} ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## CONVERSATION MEASURES
+
+  measure: conversation_duration_avg {
+    label: "Conversation Duration Avg"
+    group_label: "Conversation Metrics"
+    type: average
+    value_format_name: decimal_0
+    sql: ${conversation_duration} ;;
+  }
+
+  # measure: conversation_first_conversation_average {
+  #   label: "First Conversation Pct"
+  #   group_label: "Conversation Metrics"
+  #   type: number
+  #   value_format_name: percent_1
+  #   sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
+  #     / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
+
+  #   html:
+  #     <ul>
+  #       <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
+  #       <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
+  #       <li> Followup Conversation: {{followup_conversation_count._rendered_value}}</li>
+  #     </ul> ;;
+  # }
+
+  measure: first_conversation_count {
+    label: "First Conversation Count"
+    group_label: "Conversation Metrics"
+    description: "Count of conversations that ARE flagged as a first conversation."
+    # group_label: "Conversation Metrics"
+    type: sum
+    sql: case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
+
+  measure: followup_conversation_count {
+    label: "Followup Conversation Count"
+    group_label: "Conversation Metrics"
+    description: "Count of conversations that ARE NOT flagged as a first conversation."
+    # group_label: "Conversation Metrics"
+    type: sum
+    sql: case when ${first_conversation} = false and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  }
 
   measure: conversations_opened_count {
-    label: "Conversations Opened Count"
+    label: "Conversations Opened"
+    group_label: "Conversation Metrics"
     type: sum
     # type: count_distinct
     sql: case when ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
   }
 
   measure: conversations_ended_count {
-    label: "Conversations Closed Count"
+    label: "Closed Conversations"
+    # group_label: "Conversation Metrics"
+    description: "Count of closed conversations.  This is typically the primary measure used in counting conversations."
+    # group_label: "Conversation Metrics"
     type: sum
-    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## DEVICE MEASURES
+
+  measure: device_desktop_count {
+    label: "Desktop Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'DESKTOP'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: device_tablet_count {
+    label: "Tablet Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'TABLET'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: device_mobile_count {
+    label: "Mobile Conv Count"
+    group_label: "Device Metrics"
+    type: count_distinct
+    sql: case when ${device}  = 'MOBILE'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## MCS MEASURES
+
+  measure: mcs_positive_count {
+    label: "MCS Positive Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Positive'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: mcs_neutral_count {
+    label: "MCS Neutral Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Neutral'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  }
+
+  measure: mcs_negative_count {
+    label: "MCS Negative Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    sql: case when ${alerted_mcs}  = 'Negative'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
   }
 
   measure: mcs_avg {
     label: "MCS Average"
+    group_label: "MCS Metrics"
     type: average
     value_format_name: decimal_2
-    sql: case when average(${mcs}) >= 33 then 'Positive'
-      when average(${mcs}) <= -33 then 'Negative'
-      when average(${mcs}) between -32 and 32 then 'Neutral' end ;;
+    sql: ${mcs} ;;
   }
-
-  measure: conversation_duration_avg {
-    label: "Conversation Duration Avg"
-    type: average
-    value_format_name: decimal_0
-    sql: ${conversation_duration} ;;
-  }
-
-   measure: consumers_active {
-     label: "Active Consumers"
-     type: count_distinct
-     sql: ${visitor_id} ;;
-  }
-
-  # measure: conversation_percentage { # USE TABLE CALCULATIONS FOR PERCENTAGE OF CONVERSATIONS
-  #   label: "Conversation Percentage"
-  #   type: percent_of_total
-  #   sql: count(distinct ${conversation_id}) ;;
-  # }
 }

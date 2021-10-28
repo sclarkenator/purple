@@ -1,9 +1,9 @@
+## REFERENCE: https://developers.liveperson.com/administration-skills-appendix.html
 view: liveperson_skill {
-  # REFERENCE: https://developers.liveperson.com/administration-skills-appendix.html
 
   sql_table_name: "LIVEPERSON"."SKILL"
     ;;
-  drill_fields: [skill_name, ]
+  drill_fields: [skill_name ]
 
   ##########################################################################################
   ##########################################################################################
@@ -93,9 +93,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -110,9 +110,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     sql: CAST(${TABLE}."MODIFIED" AS TIMESTAMP_NTZ) ;;
@@ -126,9 +126,9 @@ view: liveperson_skill {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -144,6 +144,7 @@ view: liveperson_skill {
     group_label: "* IDs"
     primary_key: yes
     type: number
+    hidden: yes
     sql: ${TABLE}."SKILL_ID" ;;
   }
 
@@ -151,6 +152,7 @@ view: liveperson_skill {
     label: "Special Occasion ID"
     group_label: "* IDs"
     type: number
+    hidden: yes
     sql: ${TABLE}."SPECIAL_OCCASION_ID" ;;
   }
 
@@ -158,6 +160,7 @@ view: liveperson_skill {
     label: "Working Hours ID"
     group_label: "* IDs"
     type: number
+    hidden: yes
     sql: ${TABLE}."WORKING_HOURS_ID" ;;
   }
 
@@ -166,7 +169,7 @@ view: liveperson_skill {
   ## MEASURES
 
   measure: count {
-    label: "Count Skills"
+    label: "Skills Count"
     type: count
     hidden: yes
     drill_fields: [skill_id, skill_name]

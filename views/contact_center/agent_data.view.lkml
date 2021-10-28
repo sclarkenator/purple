@@ -23,12 +23,23 @@ view: agent_data {
               and c.rnk = 1
 
           left join liveperson.agent la
-            on a.incontact_id = la.employee_id  ;;
+            on a.zendesk_id = la.employee_id
+            or a.incontact_id = la.employee_id
+
+
+      where team_type not ilike 'system%'
+      ;;
   }
 
   set: agents_minimal_grouping {
     fields: [
-      agent_name, team_group, team_type, team_name, is_active, is_retail, is_supervisor
+      agent_name,
+      team_group,
+      team_type,
+      team_name,
+      is_active,
+      is_retail,
+      is_supervisor
     ]
 
   }

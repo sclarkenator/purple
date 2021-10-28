@@ -1,16 +1,17 @@
+## REFERENCE PAGE: https://developers.liveperson.com/administration-users-appendix.html
 view: liveperson_agent {
-  # REFERENCE PAGE: https://developers.liveperson.com/administration-users-appendix.html
+
   label: "LivePerson Agent"
   sql_table_name: "LIVEPERSON"."AGENT"
     ;;
-  # drill_fields: [agent_id]
+  drill_fields: [agent_id]
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
   dimension: agent_name {
-    label: "Agent Name"
+    label: "Agent Name 2"
     # group_label: "* LivePerson Agent Data"
     description: "Agents First and Last name."
     type: string
@@ -18,7 +19,7 @@ view: liveperson_agent {
   }
 
   dimension: agent_name_cc_lp {
-    label: "Agent Name"
+    label: "Agent Name 1"
     # group_label: "* LivePerson Agent Data"
     description: "Agents First and Last name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
     type: string
@@ -158,9 +159,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -176,9 +177,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     sql: CAST(${TABLE}."LAST_PASSWORD_CHANGE" AS TIMESTAMP_NTZ) ;;
@@ -193,9 +194,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -211,9 +212,9 @@ view: liveperson_agent {
       raw,
       time,
       date,
-      week,
+      # week,
       month,
-      quarter,
+      # quarter,
       year
     ]
     hidden: yes
@@ -277,8 +278,9 @@ view: liveperson_agent {
   ##########################################################################################
   ## MEASURES
 
-  # measure: count {
-  #   type: count
-  #   drill_fields: [agent_id, login_name, full_name, nickname]
-  # }
+  measure: measure_count {
+    type: count
+    hidden: yes
+    drill_fields: [agent_id, login_name, full_name, nickname]
+  }
 }

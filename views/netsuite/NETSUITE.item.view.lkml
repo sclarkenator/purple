@@ -411,7 +411,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.model ;;
     order_by_field: model_raw_order
   }
@@ -420,8 +419,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
-    #hidden: yes
-    #sql: ${TABLE}.model ;;
     case: {
       when: {sql: ${TABLE}.model = 'KID BED';; label: "1"}
       when: {sql: ${TABLE}.model = 'PURPLE MATTRESS';; label: "2"}
@@ -439,7 +436,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "4. Version"
     description: "Harmony/Harmony Vita, Clip Metal/Metal, OG/NOG rolling up into Harmony, Metal, Purple Mattress etc. Source:netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.version ;;
   }
 
@@ -447,7 +443,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "5. Name"
     description: "Product Description. Source:netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.product_description ;;
   }
 
@@ -504,10 +499,24 @@ view: item {
     label: " Product Size"
     description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.). Source: looker calculation"
     type: string
+    order_by_field: size_order
     sql: case when ${TABLE}.size = 'NA' OR ${TABLE}.size is null then 'OTHER'
               when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
               else ${TABLE}.size end ;; }
 
+  dimension: size_order {
+    hidden:  yes
+    case: {
+      when: {sql: ${TABLE}.size = 'Twin';; label: "1"}
+      when: {sql: ${TABLE}.size = 'Twin XL';; label: "2"}
+      when: {sql: ${TABLE}.size = 'Full';; label: "3"}
+      when: {sql: ${TABLE}.size = 'Queen';; label: "4"}
+      when: {sql: ${TABLE}.size = 'King';; label: "5"}
+      when: {sql: ${TABLE}.size = 'Cal King';; label: "6"}
+      else: "7"
+
+    }
+  }
 
   dimension: sku_id {
     label: "SKU ID"

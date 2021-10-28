@@ -6,10 +6,54 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
+# #####################################################################
+# #####################################################################
+# ## LIVEPERSON AGENT LOGIN TIME cj
+
+# explore: liveperson_agent_login_time {
+#   label: "LivePerson Time Logged In"
+#   view_label: "Agent Data"
+#   from: agent_data
+#   fields: [liveperson_agent_login_time.agents_minimal_grouping*,
+#     liveperson_agent_status.agent_login_time*]
+
+#   join: liveperson_agent_status {
+#     view_label: "Agent Time Logged In"
+#     from: liveperson_agent_status
+#     type: left_outer
+#     sql_on: ${liveperson_agent_login_time.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
+#     relationship: one_to_many
+#     sql_where: ${liveperson_agent_status.type} in ('Login', 'Logout') ;;
+#   }
+# }
+
+#####################################################################
+#####################################################################
+## LIVEPERSON AGENT STATUS cj
+
+explore: lp_agent_status {
+  label: "LivePerson Agent Status"
+  view_label: "Agent Data"
+  from: agent_data
+  fields: [lp_agent_status.agents_minimal_grouping*,
+    liveperson_agent_status.default_agent_status*,
+       liveperson_agent_status.agent_count]
+
+  join: liveperson_agent_status {
+    view_label: "Agent Status"
+    from: liveperson_agent_status
+    type: left_outer
+    sql_on: ${lp_agent_status.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
+    relationship: one_to_many
+  #   fields: [liveperson_agent_status.default_agent_status*,
+  #     liveperson_agent_status.agent_count]
+  }
+}
 
 #####################################################################
 #####################################################################
 ## LIVEPERSON CONVERSATION cj
+
 explore: liveperson_conversations {
   label: "LivePerson Conversations"
   view_label: "Agent Data"
@@ -19,14 +63,58 @@ explore: liveperson_conversations {
   join: agent_data {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.incontact_id} ;;
+    fields: [agent_data.agents_minimal_grouping*]
+    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id}
+      or ${liveperson_conversations.employee_id} = ${agent_data.incontact_id};;
     relationship: one_to_one
   }
 
   join: liveperson_conversation {
-    view_label: "LivePerson Conversations"
+    view_label: "Conversations"
     type: full_outer
-    sql_on: ${agent_data.liveperson_id}= ${liveperson_conversation.last_agent_id} ;;
+    sql_on: ${agent_data.liveperson_id} = ${liveperson_conversation.last_agent_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_campaign {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_engagement {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
+    relationship: many_to_one
+  }
+  ## The following joins are disabled because they do not return any meaningful data. <<<<<<<<<<<<<<<<<<<<<<<<<<
+  # join: liveperson_goal {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.goal_id} = ${liveperson_goal.goal_id} ;;
+  #   relationship: many_to_one
+  # }
+
+  # join: liveperson_location {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.location_id} = ${liveperson_location.location_id} ;;
+  #   relationship: many_to_one
+  # }
+
+  # join: liveperson_lob {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.lob_id} = ${liveperson_lob.lob_id} ;;
+  #   relationship: many_to_one
+  # }
+
+  join: liveperson_visitor_behavior {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.visitor_behavior_id} = ${liveperson_visitor_behavior.visitor_behavior_id} ;;
     relationship: many_to_one
   }
 }
@@ -55,7 +143,7 @@ explore: liveperson_messages {
   }
 
   join: liveperson_message {
-    view_label: "LivePerson Message"
+    view_label: "Messages"
     type: full_outer
     sql_on: len(${liveperson_message.participant_id}) = 10
       and ${liveperson_messages.agent_id}::text = ${liveperson_message.liveperson_id} ;;
@@ -63,53 +151,6 @@ explore: liveperson_messages {
     # fields: [*]
   }
   }
-
-#####################################################################
-#####################################################################
-## LIVEPERSON CONVERSATION TO MESSAGES cj
-
-explore: liveperson_conversation_to_message {
-  label: "LivePerson Conversations & Messages"
-  description: "LivePerson conversations message data."
-  view_label: "Agent Data"
-  from: liveperson_agent
-  hidden: yes
-  fields: [liveperson_conversation_to_message.deleted, liveperson_conversation_to_message.disabled_manually, liveperson_conversation_to_message.enabled, agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
-        ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor, liveperson_skill.skill_name
-        ,liveperson_message*, liveperson_conversation*]
-
-  join: agent_data {
-    view_label: "Agent Data"
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${liveperson_conversation_to_message.employee_id} = ${agent_data.incontact_id} ;;
-    # fields: [agent_data.agent_name, agent_data.employee_type, agent_data.team_group, agent_data.team_name, agent_data.team_type
-    #     ,agent_data.is_active, agent_data.is_mentor, agent_data.is_purple_with_purpose, agent_data.is_retail, agent_data.is_service_recovery_team, agent_data.is_supervisor]
-  }
-
-  join: liveperson_skill {
-    view_label: "Agent Data"
-    # fields: [skill_name]
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${liveperson_conversation_to_message.skill_id} = ${liveperson_skill.skill_id} ;;
-  }
-
-  join: liveperson_message {
-    view_label: "LivePerson Messages"
-    type: full_outer
-    relationship: one_to_many
-    sql_on: len(${liveperson_message.participant_id}) = 10
-      and cast(${agent_data.liveperson_id} as char(10)) = cast(left(${liveperson_message.participant_id}, 10) as char(10)) ;;
-  }
-
-  join: liveperson_conversation {
-    view_label: "LivePerson Conversation"
-    type: full_outer
-    relationship: many_to_one
-    sql_on: ${liveperson_message.conversation_id} = ${liveperson_conversation.conversation_id} ;;
-  }
-}
 
 #####################################################################
 #####################################################################
@@ -282,6 +323,7 @@ explore: headcount_v2 {
       and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
     relationship: one_to_many
   }
+
   sql_always_where: ${headcount.team_group} <> 'Other' ;;
 }
 
@@ -801,6 +843,8 @@ explore: perfect_attendance_calc {
     # }
   }
 
+  explore: liveperson_consumer_participant {hidden:yes} #cj
+  explore: liveperson_campaign {hidden:yes} #cj
   explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   explore: activities_all_sources {hidden: yes} #cj
