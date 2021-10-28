@@ -26,7 +26,6 @@ view: agent_data {
             on a.zendesk_id = la.employee_id
             or a.incontact_id = la.employee_id
 
-
       where team_type not ilike 'system%'
       ;;
   }
@@ -41,7 +40,13 @@ view: agent_data {
       is_retail,
       is_supervisor
     ]
+  }
 
+  set: agents_liveperson_linked {
+    fields: [
+      is_active,
+      is_supervisor
+    ]
   }
 
   ##########################################################################################

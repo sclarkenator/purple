@@ -6,24 +6,83 @@ view: liveperson_agent {
     ;;
   drill_fields: [agent_id]
 
+  set: default_liveperson_agent_linked {
+    fields: [
+      agent_name_cc_lp,
+      team_lead_cc_lp,
+      team_type_cc_lp,
+      team_group_cc_lp,
+      is_active_cc_lp,
+      is_supervisor_cc_lp
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
   dimension: agent_name {
-    label: "Agent Name 2"
+    label: "Agent Name"
     # group_label: "* LivePerson Agent Data"
     description: "Agents First and Last name."
     type: string
     sql: ${TABLE}.full_name ;;
   }
 
+  dimension: is_active_cc_lp {
+    label: "Is Active"
+    # group_label: "* LivePerson Agent Data"
+    description: "Team Type name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
+    type: yesno
+    sql: nvl(case when ${agent_name} ilike '%bot' then 'Yes'
+        when ${agent_name} ilike '%virtual%' then 'Yes' end
+      , ${agent_data.is_active}) ;;
+  }
+
+  dimension: is_supervisor_cc_lp {
+    label: "Is Supervisor"
+    # group_label: "* LivePerson Agent Data"
+    description: "Supervisor flag. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
+    type: yesno
+    sql: nvl(case when ${agent_id} in (3263325330, 3566812330, 3293544230, 3511734130) then 'No'
+        else null end
+      , ${agent_data.is_supervisor}) ;;
+  }
+
   dimension: agent_name_cc_lp {
-    label: "Agent Name 1"
+    label: "Agent Name"
     # group_label: "* LivePerson Agent Data"
     description: "Agents First and Last name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
     type: string
     sql: nvl(${TABLE}.full_name, ${agent_data.agent_name}) ;;
+  }
+
+  dimension: team_lead_cc_lp {
+    label: "Team Lead"
+    # group_label: "* LivePerson Agent Data"
+    description: "Team Lead name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
+    type: string
+    sql: nvl(case when ${agent_id} in (3263325330, 3566812330) then 'Bot'
+        when ${agent_id} in (3293544230, 3511734130) then 'Virtual Assistant' end
+      , ${agent_data.team_name}) ;;
+  }
+
+  dimension: team_type_cc_lp {
+    label: "Team Type"
+    # group_label: "* LivePerson Agent Data"
+    description: "Team Type name. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
+    type: string
+    sql: nvl(case when ${agent_id} in (3263325330, 3566812330, 3293544230, 3511734130) then 'Bot/VA' end
+      , ${agent_data.team_type}) ;;
+  }
+
+  dimension: team_group_cc_lp {
+    label: "Team Group"
+    # group_label: "* LivePerson Agent Data"
+    description: "Team Group including bot and virtual assistants. Uses LivePerson data if CC data is missing. Requires agent_data be linked in the explore, otherwise throws error."
+    type: string
+    sql: nvl(case when ${agent_id} in (3263325330, 3566812330, 3293544230, 3511734130) then 'Bot/VA' end
+      , ${agent_data.team_group}) ;;
   }
 
   dimension: api_user {
@@ -230,15 +289,15 @@ view: liveperson_agent {
     group_label: "* IDs"
     primary_key: yes
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."AGENT_ID" ;;
   }
 
   dimension: employee_id {
-    label: "InContact ID"
+    label: "Zendesk ID"
     group_label: "* IDs"
     type: number
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."EMPLOYEE_ID" ;;
   }
 
