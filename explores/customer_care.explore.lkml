@@ -64,28 +64,57 @@ explore: liveperson_conversations {
     view_label: "Agent Data"
     type: left_outer
     fields: [agent_data.agents_minimal_grouping*]
-    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id}
+      or ${liveperson_conversations.employee_id} = ${agent_data.incontact_id};;
     relationship: one_to_one
   }
 
   join: liveperson_conversation {
     view_label: "Conversations"
     type: full_outer
-    sql_on: ${agent_data.liveperson_id}= ${liveperson_conversation.last_agent_id} ;;
+    sql_on: ${agent_data.liveperson_id} = ${liveperson_conversation.last_agent_id} ;;
     relationship: many_to_one
   }
 
   join: liveperson_campaign {
-    # view_label: "Campaigns"
+    view_label: "Conversations"
     type: full_outer
     sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
     relationship: many_to_one
   }
 
   join: liveperson_engagement {
-    # view_label: "Engagements"
+    view_label: "Conversations"
     type: full_outer
     sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_goal {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.goal_id} = ${liveperson_goal.goal_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_location {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.location_id} = ${liveperson_location.location_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_lob {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.lob_id} = ${liveperson_lob.lob_id} ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_visitor_behavior {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_conversation.visitor_behavior_id} = ${liveperson_visitor_behavior.visitor_behavior_id} ;;
     relationship: many_to_one
   }
 }

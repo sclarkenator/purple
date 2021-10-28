@@ -266,7 +266,7 @@ view: liveperson_conversation {
   dimension: conversation_id {
     group_label: "* IDs"
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."CONVERSATION_ID" ;;
   }
 
@@ -298,7 +298,7 @@ view: liveperson_conversation {
     group_label: "* IDs"
     type: number
     value_format_name: id
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."LAST_AGENT_ID" ;;
   }
 

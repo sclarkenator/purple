@@ -3,6 +3,7 @@ view: liveperson_campaign {
 
   dimension: campaign_id {
     label: "Campaign ID"
+    group_label: "* Engagment Data"
     type: number
     value_format_name: id
     hidden: yes
@@ -19,6 +20,6 @@ view: liveperson_campaign {
     label: "Campaign Type"
     description: "Designates conversations as Proactive or Passive."
     type: string
-    sql: case when campaign_name ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
+    sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
   }
 }

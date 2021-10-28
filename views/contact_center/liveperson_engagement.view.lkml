@@ -3,8 +3,10 @@ view: liveperson_engagement {
 
   dimension: engagement_id {
     label: "Engagement ID"
+    group_label: "* Engagment Data"
     type: number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.engagement_id ;;
   }
 
