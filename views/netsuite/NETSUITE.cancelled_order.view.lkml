@@ -43,7 +43,7 @@ view: cancelled_order {
     description: "Whether the order was cancelled.
       Source: netsuite.cancelled_order"
     type: yesno
-    sql: ${cancelled_date} is not NULL ;; }
+    sql: ${cancelled_date} is not NULL AND ${sales_order.status} = 'Cancelled' ;; }
 
   dimension: is_cancelled_wholesale {
     label:  "     * Is Cancelled Wholesale"
