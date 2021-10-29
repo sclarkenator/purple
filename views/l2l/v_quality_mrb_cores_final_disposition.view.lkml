@@ -103,7 +103,7 @@ view: v_quality_mrb_cores_final_disposition {
 
   dimension: quality_mrb_final_disposition_coil_foam_cores {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."QUALITY_MRB_FINAL_DISPOSITION_COIL_FOAM_CORES" ;;
   }
 
@@ -133,7 +133,7 @@ view: v_quality_mrb_cores_final_disposition {
 
   dimension: technology {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."TECHNOLOGY" ;;
   }
 
@@ -149,7 +149,7 @@ view: v_quality_mrb_cores_final_disposition {
 
   measure: count {
     type: count
-    hidden: yes
+    hidden: no
     drill_fields: [name]
   }
 }

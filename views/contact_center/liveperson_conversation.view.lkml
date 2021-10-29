@@ -379,21 +379,21 @@ view: liveperson_conversation {
     sql: ${conversation_duration} ;;
   }
 
-  # measure: conversation_first_conversation_average {
-  #   label: "First Conversation Pct"
-  #   group_label: "Conversation Metrics"
-  #   type: number
-  #   value_format_name: percent_1
-  #   sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
-  #     / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
+  measure: conversation_first_conversation_average {
+    label: "First Conversation Pct"
+    group_label: "Conversation Metrics"
+    type: number
+    value_format_name: percent_1
+    sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
+      / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
 
-  #   html:
-  #     <ul>
-  #       <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
-  #       <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
-  #       <li> Followup Conversation: {{followup_conversation_count._rendered_value}}</li>
-  #     </ul> ;;
-  # }
+    html:
+      <ul>
+        <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
+        <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
+        <li> Followup Conversation: {{followup_conversation_count._rendered_value}}</li>
+      </ul> ;;
+  }
 
   measure: first_conversation_count {
     label: "First Conversation Count"

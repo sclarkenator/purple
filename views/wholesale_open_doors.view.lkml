@@ -1,5 +1,5 @@
-view: wholesale_open_doors {
-  sql_table_name: "WHOLESALE"."WHOLESALE_OPEN_DOORS"
+view: v_wholesale_open_doors {
+  sql_table_name: "WHOLESALE"."V_WHOLESALE_OPEN_DOORS"
     ;;
 
   dimension: pk {

@@ -58,37 +58,49 @@ explore: liveperson_conversations {
   label: "LivePerson Conversations"
   view_label: "Agent Data"
   from: liveperson_agent
+  fields: [liveperson_conversations.default_liveperson_agent_linked*,
+    liveperson_conversation*,
+    liveperson_campaign_old.campaign_default*,
+    liveperson_conversations.agent_name
+    ]
   hidden: yes
 
   join: agent_data {
     view_label: "Agent Data"
-    type: left_outer
-    fields: [agent_data.agents_minimal_grouping*]
-    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id}
-      or ${liveperson_conversations.employee_id} = ${agent_data.incontact_id};;
+    type: full_outer
+    # fields: [agent_data.agents_minimal_grouping*, -agent_data.agent_name, -agent_data.team_type, -agent_data.team_group]
+    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id} ;;
     relationship: one_to_one
   }
 
   join: liveperson_conversation {
     view_label: "Conversations"
     type: full_outer
-    sql_on: ${agent_data.liveperson_id} = ${liveperson_conversation.last_agent_id} ;;
+    sql_on: ${liveperson_conversations.agent_id} = ${liveperson_conversation.last_agent_id} ;;
     relationship: many_to_one
   }
 
-  join: liveperson_campaign {
+  join: liveperson_campaign_old {
     view_label: "Conversations"
     type: full_outer
-    sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
-    relationship: many_to_one
+    # fields: [liveperson_campaign_old.campaign_default*]
+    sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign_old.campaign_id}
+      and ${liveperson_conversation.conversation_id} = ${liveperson_campaign_old.conversation_id};;
   }
 
-  join: liveperson_engagement {
-    view_label: "Conversations"
-    type: full_outer
-    sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
-    relationship: many_to_one
-  }
+  # join: liveperson_campaign {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id} ;;
+  #   relationship: many_to_one
+  # }
+
+  # # join: liveperson_engagement {
+  # #   view_label: "Conversations"
+  # #   type: full_outer
+  # #   sql_on: ${liveperson_conversation.campaign_engagement_id} = ${liveperson_engagement.engagement_id} ;;
+  # #   relationship: many_to_one
+  # }
   ## The following joins are disabled because they do not return any meaningful data. <<<<<<<<<<<<<<<<<<<<<<<<<<
   # join: liveperson_goal {
   #   view_label: "Conversations"
@@ -843,6 +855,7 @@ explore: perfect_attendance_calc {
     # }
   }
 
+  explore: liveperson_campaign_old {hidden:yes} #cj
   explore: liveperson_consumer_participant {hidden:yes} #cj
   explore: liveperson_campaign {hidden:yes} #cj
   explore: liveperson_profile {hidden: yes} #cj
