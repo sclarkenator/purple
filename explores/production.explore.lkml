@@ -168,7 +168,7 @@ include: "/dashboards/**/*.dashboard"
     join: bin_location {
       type: left_outer
       view_label: "Inventory"
-      fields: [bin_location.unallocated]
+      fields: [bin_location.quantity]
       sql_on: ${bin_location.warehouse_id} = ${warehouse_location.location_id} and ${bin_location.sku} = ${item.sku_id};;
       relationship:many_to_many}
 
