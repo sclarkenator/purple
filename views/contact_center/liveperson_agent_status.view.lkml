@@ -43,26 +43,26 @@ view: liveperson_agent_status {
   #   type: string
   # }
 
-  dimension: sub_type {
-    label: "Sub-Type"
-    description: "Subtype of status change when Type = 'Status Changed'."
-    type: string
-    sql: case when ${TABLE}.sub_type = 1 then 'Offline'
-      when ${TABLE}.sub_type = 2 then 'Online'
-      when ${TABLE}.sub_type = 3 then 'Occupied'
-      when ${TABLE}.sub_type = 4 then 'Away'
-      end ;;
-  }
+  # dimension: sub_type {
+  #   label: "Sub-Type"
+  #   description: "Subtype of status change when Type = 'Status Changed'."
+  #   type: string
+  #   sql: case when ${TABLE}.sub_type = 1 then 'Offline'
+  #     when ${TABLE}.sub_type = 2 then 'Online'
+  #     when ${TABLE}.sub_type = 3 then 'Occupied'
+  #     when ${TABLE}.sub_type = 4 then 'Away'
+  #     end ;;
+  # }
 
-  dimension: type {
-    label: "Type"
-    description: "Type of status change."
-    type: string
-    sql: case when ${TABLE}.type = 1 then 'Status Changed'
-      when ${TABLE}.type = 3 then 'Login'
-      when ${TABLE}.type = 4 then 'Logout'
-      end ;;
-  }
+  # dimension: type {
+  #   label: "Type"
+  #   description: "Type of status change."
+  #   type: string
+  #   sql: case when ${TABLE}.type = 1 then 'Status Changed'
+  #     when ${TABLE}.type = 3 then 'Login'
+  #     when ${TABLE}.type = 4 then 'Logout'
+  #     end ;;
+  # }
 
   ##########################################################################################
   ##########################################################################################
