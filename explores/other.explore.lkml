@@ -284,6 +284,8 @@ explore: alert_testing {
 
   explore: warehouse_metering_history {hidden: yes}
 
+  explore: v_qualtrics_delivery_survey {hidden: yes}
+
   # explore: columns {hidden: yes}
   #
   # explore: databases {hidden: yes}
