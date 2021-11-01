@@ -4,29 +4,30 @@ view: liveperson_agent_status {
 
   set: default_agent_status {
     fields: [
-      type,
-      sub_type,
       reason,
-      # session_id,
-      # sequence_number,
       status_change_date,
       status_change_time,
+      status_change_minute,
+      status_change_minute15,
+      status_change_hour,
       status_change_week,
       status_change_month,
       status_change_year,
       pk
     ]
     }
-    set: agent_login_time {
-      fields: [
-        status_change_date,
-        status_change_time,
-        status_change_week,
-        status_change_month,
-        status_change_year,
-        time_logged_in
-      ]
-  }
+
+    # set: agent_login_time {
+    #   fields: [
+    #     status_change_date,
+    #     status_change_time,
+    #     status_change_week,
+    #     status_change_month,
+    #     status_change_year,
+    #     time_logged_in
+    #   ]
+  # }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
@@ -41,27 +42,6 @@ view: liveperson_agent_status {
   # dimension: session_sequence {
   #   label: "Session Sequence"
   #   type: string
-  # }
-
-  # dimension: sub_type {
-  #   label: "Sub-Type"
-  #   description: "Subtype of status change when Type = 'Status Changed'."
-  #   type: string
-  #   sql: case when ${TABLE}.sub_type = 1 then 'Offline'
-  #     when ${TABLE}.sub_type = 2 then 'Online'
-  #     when ${TABLE}.sub_type = 3 then 'Occupied'
-  #     when ${TABLE}.sub_type = 4 then 'Away'
-  #     end ;;
-  # }
-
-  # dimension: type {
-  #   label: "Type"
-  #   description: "Type of status change."
-  #   type: string
-  #   sql: case when ${TABLE}.type = 1 then 'Status Changed'
-  #     when ${TABLE}.type = 3 then 'Login'
-  #     when ${TABLE}.type = 4 then 'Logout'
-  #     end ;;
   # }
 
   ##########################################################################################
@@ -89,6 +69,9 @@ view: liveperson_agent_status {
     timeframes: [
       raw,
       time,
+      minute,
+      minute15,
+      hour,
       date,
       week,
       month,
@@ -102,13 +85,16 @@ dimension_group: status_change {
   label: "- Status Change"
   type: time
   timeframes: [
-    raw,
-    time,
-    date,
-    week,
-    month,
-    quarter,
-    year
+      raw,
+      time,
+      minute,
+      minute15,
+      hour,
+      date,
+      week,
+      month,
+      quarter,
+      year
   ]
   sql: CAST(${TABLE}."STATUS_CHANGE" AS TIMESTAMP_NTZ) ;;
   }
@@ -118,7 +104,7 @@ dimension_group: status_change {
   ## IDs
 
   dimension: pk {
-    label: "Session Sequence ID"
+    label: "Session Sequence ID (pk)"
     description: "[Agent ID] - [Session ID] - [Sequence Number]"
     type: string
     # hidden: yes
@@ -158,6 +144,22 @@ dimension_group: status_change {
     sql: ${TABLE}."STATUS_REASON_ID" ;;
   }
 
+  dimension: subtype_id {
+    label: "Subtype ID"
+    description: "Subtype ID of status change when Type = 'Status Changed'."
+    type: string
+    hidden: yes
+    sql: ${TABLE}.sub_type ;;
+  }
+
+  dimension: type_id{
+    label: "Type ID"
+    description: "Type ID of status change."
+    type: string
+    hidden: yes
+    sql: ${TABLE}.type ;;
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## MEASURES
@@ -168,11 +170,11 @@ dimension_group: status_change {
     hidden: yes
     sql: agent_id ;;
     drill_fields: [pk]
-    html:
-      <ul>
-        <li> Time Logged In: {{value}} </li>
-        <li> Agent Count: {{value}} </li>
-      </ul>;;
+    # html:
+    #   <ul>
+    #     <li> Time Logged In: {{value}} </li>
+    #     <li> Agent Count: {{value}} </li>
+    #   </ul>;;
   }
 
   measure: agent_status_count {
@@ -180,18 +182,5 @@ dimension_group: status_change {
     type: count
     hidden: yes
     drill_fields: [pk]
-  }
-
-  measure: time_logged_in {
-    label: "Time Logged In"
-    description: "Time spent logged in during designated period of time."
-    type: number
-    sql: sum(case when ${type} = 'Login' then to_numeric(${status_change_time}) end) ;;
-    html:
-      <ul>
-        <li> Time Logged In: {{rendered_value}}} </li>
-        <li> Time Logged Out: {{rendered_value}}} </li>
-        <li> Agent Count: {{liveperson_agent_status.agent_count._rendered_value}} </li>
-      </ul>;;
   }
 }

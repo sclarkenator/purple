@@ -37,7 +37,9 @@ explore: lp_agent_status {
   from: agent_data
   fields: [lp_agent_status.agents_minimal_grouping*,
     liveperson_agent_status.default_agent_status*,
-       liveperson_agent_status.agent_count]
+    liveperson_agent_status.agent_count,
+    liveperson_agent_status_type*,
+    liveperson_agent_status_subtype*]
 
   join: liveperson_agent_status {
     view_label: "Agent Status"
@@ -47,11 +49,19 @@ explore: lp_agent_status {
     relationship: one_to_many
   }
 
-  # join: liveperson_agent_status_type {
-  #   view_label: "Agent Status"
-  #   type: left_outer
-  #   sql_on: liveperson_agent_status.type ;;
-  # }
+  join: liveperson_agent_status_type {
+    view_label: "Agent Status"
+    type: left_outer
+    sql_on: ${liveperson_agent_status.type_id} = ${liveperson_agent_status_type.type_id};;
+    relationship: many_to_one
+  }
+
+  join: liveperson_agent_status_subtype {
+    view_label: "Agent Status"
+    type: left_outer
+    sql_on: ${liveperson_agent_status.subtype_id} = ${liveperson_agent_status_subtype.subtype_id};;
+    relationship: many_to_one
+  }
 }
 
 #####################################################################

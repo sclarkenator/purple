@@ -3,7 +3,8 @@ view: liveperson_agent_status_type {
   # sql_table_name: "LIVEPERSON"."AGENT_STATUS_TYPE" ;;
 
   dimension: agent_status_type_name {
-    label: "Agent Status Type Name"
+    label: "Status Type"
+    description: "Type of status change."
     type: string
     sql: ${TABLE}."NAME" ;;
   }
