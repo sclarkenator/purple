@@ -33,9 +33,9 @@ view: v_splitit {
     sql: ${TABLE}."REF_NUM" ;;
   }
 
-  dimension: shopify_order_number {
+  dimension: order_number {
     type: string
-    sql: ${TABLE}."SHOPIFY_ORDER_NUMBER" ;;
+    sql: ${TABLE}."ORDER_NUMBER" ;;
   }
 
   dimension: status {
