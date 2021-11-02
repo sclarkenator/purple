@@ -1,15 +1,4 @@
-# The name of this view in Looker is "V Qualtrics Delivery Survey"
-view: v_qualtrics_delivery_survey {
-  # The sql_table_name parameter indicates the underlying database table
-  # to be used for all fields in this view.
-  sql_table_name: "SHIPPING"."V_QUALTRICS_DELIVERY_SURVEY"
-    ;;
-  # No primary key is defined for this view. In order to join this view in an Explore,
-  # define primary_key: yes on a dimension that has no repeated values.
-
-  # Here's what a typical dimension looks like in LookML.
-  # A dimension is a groupable field that can be used to filter query results.
-  # This dimension will be called "Additional Comments" in Explore.
+view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIVERY_SURVEY" ;;
 
   dimension: additional_comments {
     type: string
@@ -41,9 +30,6 @@ view: v_qualtrics_delivery_survey {
     sql: ${TABLE}."EMAIL" ;;
   }
 
-  # Dates and timestamps can be represented in Looker using a dimension group of type: time.
-  # Looker converts dates and timestamps to the specified timeframes within the dimension group.
-
   dimension_group: fulfilled {
     type: time
     timeframes: [
@@ -70,12 +56,14 @@ view: v_qualtrics_delivery_survey {
   }
 
   dimension: response_id {
+    primary_key: yes
     type: string
     sql: ${TABLE}."RESPONSE_ID" ;;
   }
 
   dimension: state {
     type: string
+    map_layer_name: us_states
     sql: ${TABLE}."STATE" ;;
   }
 
@@ -97,6 +85,30 @@ view: v_qualtrics_delivery_survey {
   dimension: tranid {
     type: string
     sql: ${TABLE}."TRANID" ;;
+  }
+
+  measure: delivery_schedule_measure {
+    label: "Delivery Schedule"
+    group_label: "Average"
+    type: average
+    value_format: "0.0"
+    sql: ${TABLE}."DELIVERY_SCHEDULE" ;;
+  }
+
+  measure: delivery_crew_measure {
+    label: "Delivery Crew"
+    group_label: "Average"
+    type: average
+    value_format: "0.0"
+    sql: ${TABLE}."DELIVERY_CREW" ;;
+  }
+
+  measure: overall_experience_measure {
+    label: "Overall Experience"
+    group_label: "Average"
+    type: average
+    value_format: "0.0"
+    sql: ${TABLE}."OVERALL_EXPERIENCE" ;;
   }
 
   measure: count {
