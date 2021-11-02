@@ -664,6 +664,7 @@ view: incontact_phone {
       week_of_year,
       month,
       month_name,
+      minute30,
       quarter,
       year
       ]
@@ -680,6 +681,7 @@ view: incontact_phone {
       date,
       week,
       day_of_week,
+      minute30,
       month,
       month_name,
       quarter,
