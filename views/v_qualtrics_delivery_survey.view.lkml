@@ -99,7 +99,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   }
 
   measure: scheduling_rating_measure {
-    label: "Delivery Schedule"
+    label: "Schedule Rating"
     group_label: "Average"
     type: average
     value_format: "0.0"
@@ -107,7 +107,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   }
 
   measure: crew_rating_measure {
-    label: "Delivery Crew"
+    label: "Crew Rating"
     group_label: "Average"
     type: average
     value_format: "0.0"
@@ -115,7 +115,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   }
 
   measure: overall_delivery_rating_measure {
-    label: "Overall Experience"
+    label: "Overall Delivery Rating"
     group_label: "Average"
     type: average
     value_format: "0.0"
