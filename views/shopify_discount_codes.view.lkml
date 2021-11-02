@@ -9,11 +9,13 @@ view: shopify_discount_codes {
       where d.code is not null
       UNION ALL
       select
-        c.order_id as etail_order_id,
+        co.order_id as etail_order_id,
         co.order_number as etail_order_name,
-        c.code as promo
-      from analytics.commerce_tools.ct_order_discount_code c
-         left join ANALYTICS.COMMERCE_TOOLS.CT_ORDER co on c.order_id=co.order_id
+        c.coupon_code as promo
+     from analytics.commerce_tools.ct_order_line_discount c
+      left join analytics.commerce_tools.ct_order_line as col on col.order_line_id = c.order_line_id
+      left join ANALYTICS.COMMERCE_TOOLS.CT_ORDER co on col.order_id=co.order_id
+
 
     ;;
   }
