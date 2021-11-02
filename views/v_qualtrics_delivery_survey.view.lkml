@@ -15,14 +15,19 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     sql: ${TABLE}."CITY" ;;
   }
 
-  dimension: delivery_crew {
+  dimension: crew_rating {
     type: string
-    sql: ${TABLE}."DELIVERY_CREW" ;;
+    sql: ${TABLE}."CREW_RATING" ;;
   }
 
-  dimension: delivery_schedule {
+  dimension: scheduling_rating {
     type: string
-    sql: ${TABLE}."DELIVERY_SCHEDULE" ;;
+    sql: ${TABLE}."SCHEDULING_RATING" ;;
+  }
+
+  dimension: overall_delivery_rating {
+    type: string
+    sql: ${TABLE}."OVERALL_DELIVERY_RATING" ;;
   }
 
   dimension: email {
@@ -46,13 +51,9 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   }
 
   dimension: item_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ITEM_ID" ;;
-  }
-
-  dimension: overall_experience {
-    type: string
-    sql: ${TABLE}."OVERALL_EXPERIENCE" ;;
   }
 
   dimension: response_id {
@@ -82,33 +83,43 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     sql: ${TABLE}."SURVEY_COMPLETTION_DATE" ;;
   }
 
+  dimension: order_id {
+    type: string
+    sql: ${TABLE}."ORDER_ID" ;;
+  }
+
   dimension: tranid {
     type: string
+  ##  link: {
+  ##    label: "NetSuite"
+  ##    url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+  ##    icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+  ##  }
     sql: ${TABLE}."TRANID" ;;
   }
 
-  measure: delivery_schedule_measure {
+  measure: scheduling_rating_measure {
     label: "Delivery Schedule"
     group_label: "Average"
     type: average
     value_format: "0.0"
-    sql: ${TABLE}."DELIVERY_SCHEDULE" ;;
+    sql: ${TABLE}."SCHEDULING_RATING" ;;
   }
 
-  measure: delivery_crew_measure {
+  measure: crew_rating_measure {
     label: "Delivery Crew"
     group_label: "Average"
     type: average
     value_format: "0.0"
-    sql: ${TABLE}."DELIVERY_CREW" ;;
+    sql: ${TABLE}."CREW_RATING" ;;
   }
 
-  measure: overall_experience_measure {
+  measure: overall_delivery_rating_measure {
     label: "Overall Experience"
     group_label: "Average"
     type: average
     value_format: "0.0"
-    sql: ${TABLE}."OVERALL_EXPERIENCE" ;;
+    sql: ${TABLE}."OVERALL_DELIVERY_RATING" ;;
   }
 
   measure: count {
