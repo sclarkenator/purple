@@ -79,7 +79,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     sql: ${TABLE}."RESPONSE_ID" ;;
   }
 
-  dimension_group: survey_complettion {
+  dimension_group: survey_completion {
     type: time
     timeframes: [
       raw,
@@ -91,7 +91,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."SURVEY_COMPLETTION_DATE" ;;
+    sql: ${TABLE}."SURVEY_COMPLETION_DATE" ;;
   }
 
   dimension: order_id {
