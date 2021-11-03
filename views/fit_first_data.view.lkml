@@ -127,7 +127,10 @@ view: fit_first_data {
     and         ctt.type = 'Refund'
     and         f.status = 'Approved'
     and         to_date(f.time) in (select * from param_dates)
-    and         not rlike(coalesce(f.ref_num,''),'\\d{14}')
+    and         case platform
+                  when 'Shopify' then iff(not rlike(coalesce(f.ref_num,''),'\\d{14}'),'payeezy','splitit')
+                  when 'Commerce Tools' then ctp.payment_interface
+                end = 'payeezy'
 
 )
 ,first_data_stage_f as (
