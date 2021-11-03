@@ -1156,6 +1156,7 @@ view: sales_order_line_base {
           when ${location} ilike '%100-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%200-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
+          when ${location} ilike '%201-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike  '%speedy%' then'Speedy Delivery'
