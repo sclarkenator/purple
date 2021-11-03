@@ -11,8 +11,25 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   }
 
   dimension: city {
+    group_label: "Address"
     type: string
     sql: ${TABLE}."CITY" ;;
+  }
+
+  dimension: state {
+    group_label: "Address"
+    type: string
+    map_layer_name: us_states
+    sql: ${TABLE}."STATE" ;;
+  }
+
+  dimension: zip {
+    group_label: "Address"
+    label: "Zipcode (5)"
+    description: "Source: netsuite.sales_order_line"
+    type: zipcode
+    map_layer_name: us_zipcode_tabulation_areas
+    sql: split_part(${TABLE}."ZIP",'-',1) ;;
   }
 
   dimension: crew_rating {
@@ -60,12 +77,6 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     primary_key: yes
     type: string
     sql: ${TABLE}."RESPONSE_ID" ;;
-  }
-
-  dimension: state {
-    type: string
-    map_layer_name: us_states
-    sql: ${TABLE}."STATE" ;;
   }
 
   dimension_group: survey_complettion {
