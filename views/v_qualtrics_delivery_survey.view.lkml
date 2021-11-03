@@ -101,11 +101,11 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
 
   dimension: tranid {
     type: string
-  ##  link: {
-  ##    label: "NetSuite"
-  ##    url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
-  ##    icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
-  ##  }
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    }
     sql: ${TABLE}."TRANID" ;;
   }
 
