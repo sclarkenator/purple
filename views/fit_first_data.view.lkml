@@ -8,7 +8,7 @@ view: fit_first_data {
     with param_dates as(
 
   SELECT      date
-  FROM        analytics.util.warehouse_timestamp
+  FROM        analytics.util.warehouse_date
   where       {% condition date_selector %} to_date(date) {% endcondition %}
 
 ),
