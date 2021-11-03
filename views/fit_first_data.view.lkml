@@ -238,7 +238,7 @@ from        analytics.accounting.first_data_transaction f
 where   f.status = 'Approved'
   and   f.transaction_type in ('Purchase','Tagged Completion')
   and   not rlike(coalesce(f.ref_num,''),'\\d{14}')
-  and   f.time in (select * from param_dates)
+  and   to_date(f.time) in (select * from param_dates)
 )
 
 select      gateway,
