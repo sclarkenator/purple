@@ -249,8 +249,6 @@ select
         netsuite_customer_id
 
 from    first_data_stage_g
-
-;
       ;;
   }
 
@@ -267,6 +265,11 @@ from    first_data_stage_g
   dimension: transaction_id {
     type: string
     sql:${TABLE}.transaction_id;;
+  }
+
+  dimension: platform {
+    type: string
+    sql: ${TABLE}.platform ;;
   }
 
   dimension: secondary_id {
