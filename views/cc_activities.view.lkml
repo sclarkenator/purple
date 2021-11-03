@@ -202,7 +202,7 @@ view: cc_activities {
   dimension_group: activity_time {
     type: time
     hidden: no
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour, minute30]
     sql: ${TABLE}.created  ;; }
 
 
