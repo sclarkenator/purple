@@ -124,7 +124,7 @@ view: fit_first_data {
     left join   analytics.commerce_tools.ct_transaction             ctt     on  ctp.payment_id = ctt.payment_id
 
     where       f.transaction_type = 'Tagged Refund'
-    and         ctt.type = 'Refund'
+    and         lower(coalesce(ctt.type, s.kind)) = 'refund'
     and         f.status = 'Approved'
     and         to_date(f.time) in (select * from param_dates)
     and         case platform
