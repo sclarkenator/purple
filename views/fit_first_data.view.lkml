@@ -109,7 +109,7 @@ view: fit_first_data {
                 f.auth_no,
                 iff(ctt.interaction_id is null,o.id::string,ctop.order_id) as id,
                 iff(ctt.interaction_id is null,regexp_replace(o.name,'[ #N]{1,}',''),cto.order_number) as order_number,
-                f.time as created,
+                f.time as created
 
     from        analytics.accounting.first_data_transaction         f
     left join   analytics_stage.shopify_us_ft.transaction           s       on  f.ref_num = s.receipt:reference_no
