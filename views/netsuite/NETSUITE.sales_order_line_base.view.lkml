@@ -1162,6 +1162,7 @@ view: sales_order_line_base {
           when ${location} ilike  '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%100-%' then 'Purple'
+          when ${location} ilike '%200-%' then 'Purple'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
   }
