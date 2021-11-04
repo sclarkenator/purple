@@ -6,26 +6,60 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-# #####################################################################
-# #####################################################################
-# ## LIVEPERSON AGENT LOGIN TIME cj
+#####################################################################
+#####################################################################
+## WFM WEEKLY PERFORMANCE - consolidates performance fields cj
 
-# explore: liveperson_agent_login_time {
-#   label: "LivePerson Time Logged In"
-#   view_label: "Agent Data"
-#   from: agent_data
-#   fields: [liveperson_agent_login_time.agents_minimal_grouping*,
-#     liveperson_agent_status.agent_login_time*]
+explore: wfm_weekly_performance {
+  label: "WFM Weekly Performance Summary"
+  view_label: "Summary Data"
+  from: warehouse_date_table
 
-#   join: liveperson_agent_status {
-#     view_label: "Agent Time Logged In"
-#     from: liveperson_agent_status
-#     type: left_outer
-#     sql_on: ${liveperson_agent_login_time.liveperson_id} = ${liveperson_agent_status.agent_id} ;;
-#     relationship: one_to_many
-#     sql_where: ${liveperson_agent_status.type} in ('Login', 'Logout') ;;
-#   }
-# }
+  fields: [
+    wfm_weekly_performance.default_fields*,
+    agent_data.agents_minimal_grouping*,
+    incontact_phone.performance_summary*,
+    zendesk_ticket_v2.ticket_count,
+    agent_state.working_rate,
+    agent_state.unavailable_pct,
+    liveperson_conversation.conversations_ended_count
+  ]
+
+  join: agent_data {
+    view_label: "Agent Data"
+    type: cross
+  }
+
+  join: incontact_phone {
+    view_label: "Summary Data"
+    type: left_outer
+    sql_on: ${wfm_weekly_performance.date_date} = ${incontact_phone.start_ts_mst_date}
+      and ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
+  }
+
+  join: zendesk_ticket_v2 {
+    view_label: "Summary Data"
+    type: left_outer
+    sql_on: ${wfm_weekly_performance.date_date} = ${zendesk_ticket_v2.tkt_created_date}
+      and ${agent_data.incontact_id} = ${zendesk_ticket_v2.assignee_id}
+      and ${zendesk_ticket_v2.channel} in ('email', 'web', 'facebook') ;;
+  }
+
+  join: agent_state {
+    view_label: "Summary Data"
+    type: left_outer
+    sql_on: ${wfm_weekly_performance.date_date} = ${agent_state.state_start_ts_mst_date}
+      and ${agent_data.incontact_id} = ${agent_state.agent_id} ;;
+  }
+
+  join: liveperson_conversation {
+    view_label: "Summary Data"
+    type: left_outer
+    sql_on: ${wfm_weekly_performance.date_date} = ${liveperson_conversation.ended_date}
+      and ${agent_data.incontact_id} = ${liveperson_conversation.last_agent_id};;
+  }
+
+}
 
 #####################################################################
 #####################################################################
@@ -73,9 +107,7 @@ explore: liveperson_conversations {
   view_label: "Agent Data"
   from: liveperson_agent
   fields: [liveperson_conversations.default_liveperson_agent_linked*,
-    liveperson_conversation*,
-    liveperson_conversations.agent_name,
-    liveperson_campaign.campaign_default*
+    liveperson_conversation*
     ]
   hidden: yes
 
@@ -94,14 +126,14 @@ explore: liveperson_conversations {
     relationship: many_to_one
   }
 
-  join: liveperson_campaign {
-    view_label: "Conversations"
-    type: full_outer
-    # fields: [liveperson_campaign.campaign_default*]
-    sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id}
-      and ${liveperson_conversation.conversation_id} = ${liveperson_campaign.conversation_id};;
-    relationship: one_to_one
-  }
+  # join: liveperson_campaign {
+  #   view_label: "Conversations"
+  #   type: full_outer
+  #   # fields: [liveperson_campaign.campaign_default*]
+  #   sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id}
+  #     and ${liveperson_conversation.conversation_id} = ${liveperson_campaign.conversation_id};;
+  #   relationship: one_to_one
+  # }
 }
 
 #####################################################################
@@ -829,11 +861,11 @@ explore: perfect_attendance_calc {
   }
 
   explore: liveperson_campaign {hidden:yes} #cj
-  # explore: liveperson_consumer_participant {hidden:yes} #cj
+  explore: liveperson_consumer_participant {hidden:yes} #cj
   # explore: liveperson_campaign {hidden:yes} #cj
   # explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
-  explore: activities_all_sources {hidden: yes} #cj
+  # explore: activities_all_sources {hidden: yes} #cj
   explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
