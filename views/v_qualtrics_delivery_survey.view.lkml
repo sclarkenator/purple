@@ -67,6 +67,11 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     sql: ${TABLE}."FULFILLED" ;;
   }
 
+  dimension: tracking_numbers {
+    type: string
+    sql: ${TABLE}.tracking_numbers ;;
+  }
+
   dimension: item_id {
     hidden: yes
     type: number
@@ -112,7 +117,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   measure: scheduling_rating_measure {
     label: "Schedule Rating"
     group_label: "Average"
-    type: average
+    type: average_distinct
     value_format: "0.0"
     sql: ${TABLE}."SCHEDULING_RATING" ;;
   }
@@ -120,7 +125,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   measure: crew_rating_measure {
     label: "Crew Rating"
     group_label: "Average"
-    type: average
+    type: average_distinct
     value_format: "0.0"
     sql: ${TABLE}."CREW_RATING" ;;
   }
@@ -128,9 +133,14 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
   measure: overall_delivery_rating_measure {
     label: "Overall Delivery Rating"
     group_label: "Average"
-    type: average
+    type: average_distinct
     value_format: "0.0"
     sql: ${TABLE}."OVERALL_DELIVERY_RATING" ;;
+  }
+
+  measure: totatl_responses {
+    type: count_distinct
+    sql:  ${TABLE}."RESPONSE_ID" ;;
   }
 
   measure: count {
