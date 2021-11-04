@@ -174,10 +174,13 @@ view: liveperson_message {
       raw,
       time,
       date,
-      # week,
+      week,
       month,
-      # quarter,
-      year
+      quarter,
+      year,
+      minute30,
+      hour_of_day,
+      day_of_week
     ]
     # hidden: yes
     sql: CAST(${TABLE}.created AS TIMESTAMP_NTZ) ;;
