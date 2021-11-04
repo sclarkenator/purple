@@ -63,7 +63,7 @@ view: cc_activities {
     from liveperson.conversation lp
        left join liveperson.skill s on s.skill_id = lp.last_skill_id
        left join liveperson.agent ag on ag.agent_id = lp.last_agent_id
-       left join customer_care.agent_lkp a on a.incontact_id = ag.employee_id
+       left join customer_care.agent_lkp a on a.zendesk_id = ag.employee_id
        left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
        where lp.ended > '2021-09-08'
      union all
