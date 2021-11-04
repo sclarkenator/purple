@@ -12,15 +12,34 @@ view: liveperson_conversation {
         ,c.ended::date as end_date
         ,s.name as last_skill
         ,c.*
+        ,mcs.name as alerted_mcs_name
       from util.warehouse_date dt
         join liveperson.conversation c
             on dt.date::date between c.started::date and c.ended::date
         join liveperson.skill s
             on c.last_skill_id = s.skill_id
+        join liveperson.liveperson_alerted_mcs_subtype mcs
+            on c.alerted_mcs = mcs.subtype_id
       ;;
     }
 
   drill_fields: [conversation_id]
+
+  # set: conversation_default_fields {
+  #   fields: [
+  #     # alerted_mcs,
+  #     # browser,
+  #     # conversation_duration,
+  #   ]
+  # }
+
+  # set: campaign_default_fields {
+  #   fields: [
+  #     campaign_name,
+  #     engagement_name,
+  #     engagement_type
+  #   ]
+  # }
 
   ##########################################################################################
   ##########################################################################################
@@ -28,24 +47,39 @@ view: liveperson_conversation {
 
   dimension: alerted_mcs {
     label: "Alerted MCS"
-    description: "Divides the MCS score into 3 groups: Positive, Neutral, Negative."
+    group_label: "* Conversation Metrics"
     type: string
-    sql: case when ${alerted_mcs_id} = -1 then 'Negative'
-      when ${alerted_mcs_id} = 0 then 'Neutral'
-      when ${alerted_mcs_id} = 1 then 'Positive'
-      end ;;
+    sql: ${TABLE}.alerted_mcs_name ;;
   }
 
   dimension: browser {
     label: "Browser"
+    group_label: "* Conversation Source Data"
     description: "The browser or hosted application of the engagement."
     type: string
     sql: ${TABLE}."BROWSER" ;;
   }
 
-  dimension: conversation_duration{
+  dimension: close_reason {
+    label: "Close Reason"
+    group_label: "* Conversation Status"
+    description: ""
+    type: string
+    sql: ${TABLE}.close_reason ;;
+  }
+
+  dimension: close_reason_description {
+    label: "Close Reason Description"
+    group_label: "* Conversation Status"
+    description: ""
+    type: string
+    sql: ${TABLE}.close_reason_description ;;
+  }
+
+  dimension: conversation_duration {
     label: "Conversation Duration"
-    description: "conversation duration from the first moement of connection until the conversation is closed in seconds."
+    group_label: "* Conversation Metrics"
+    description: "Conversation duration from the first moment of connection until the conversation is closed in seconds."
     type: number
     value_format_name: decimal_0
     sql: datediff(seconds, ${started_time}, ${ended_time}) ;;
@@ -53,6 +87,7 @@ view: liveperson_conversation {
 
   dimension: device {
     label: "Device"
+    group_label: "* Conversation Source Data"
     description: "Type of device from which the conversation was initially opened."
     type: string
     sql: ${TABLE}."DEVICE" ;;
@@ -60,20 +95,23 @@ view: liveperson_conversation {
 
   dimension: duration_seconds {
     label: "Duration"
+    group_label: "* Conversation Metrics"
     description: "Contact duration in seconds."
     type: number
     sql: ${TABLE}."DURATION_SECONDS" ;;
   }
 
-  dimension: engagementsource {
+  dimension: engagement_source {
     label: "Engagement Source"
+    group_label: "* Conversation Source Data"
     description: "The source of the campaign's engagement e.g. WEB_SITE, SOCIAL_MEDIA, etc."
     type: string
-    sql: ${TABLE}."ENGAGEMENTSOURCE" ;;
+    sql: ${TABLE}.campaign_engagement_source ;;
   }
 
   dimension: first_conversation {
     label: "First Conversation"
+    group_label: "* Conversation Status"
     description: "Whether it is the consumer's first conversation."
     type: yesno
     sql: ${TABLE}."FIRST_CONVERSATION" ;;
@@ -81,13 +119,14 @@ view: liveperson_conversation {
 
   dimension: full_dialog_status {
     label: "Full Dialog Status"
-
+    group_label: "* Conversation Status"
     type: string
     sql: ${TABLE}."FULL_DIALOG_STATUS" ;;
   }
 
   dimension: last_queue_state {
     label: "Last Queue State"
+    group_label: "* Conversation Status"
     description: "The queue state of the conversation. Valid values: IN_QUEUE,ACTIVE"
     type: string
     sql: ${TABLE}."LAST_QUEUE_STATE" ;;
@@ -95,13 +134,15 @@ view: liveperson_conversation {
 
   dimension: last_skill {
     label: "Last Skill"
+    group_label: "* Conversation Status"
     description: "Last assigned skill in conversation"
     type: string
     sql: ${TABLE}.last_skill ;;
   }
 
   dimension: mcs {
-    label: "MCS"
+    label: "MCS Score"
+    group_label: "* Conversation Metrics"
     description: "Meaningful Conversation Score (MCS - an automated, real time measurement of consumer sentiment) for closed conversations, including unassigned conversations. This metric is attributed only to the last assigned agent in the conversation."
     type: number
     sql: ${TABLE}."MCS" ;;
@@ -109,6 +150,7 @@ view: liveperson_conversation {
 
   dimension: partial {
     label: "Partial"
+    group_label: "* Conversation Status"
     description: "Indicates whether the conversation's data is partial.  Responses my be truncated under certain circumstances."
     type: yesno
     sql: ${TABLE}."PARTIAL" ;;
@@ -116,6 +158,7 @@ view: liveperson_conversation {
 
   dimension: source {
     label: "Source"
+    group_label: "* Conversation Source Data"
     description: "Origin  from which the conversation was initially opened (Facebook, App etc.)."
     type: string
     sql: ${TABLE}."SOURCE" ;;
@@ -123,9 +166,94 @@ view: liveperson_conversation {
 
   dimension: status {
     label: "Status"
+    group_label: "* Conversation Status"
     description: "Latest status of the conversation."
     type: string
     sql: ${TABLE}."STATUS" ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## CAMPAIGN DIMENSIONS
+
+  dimension: behavior_system_default {
+    label: "Behavior System Default"
+    group_label: "* Campaign Data"
+    type: yesno
+    # hidden: yes
+    sql: ${TABLE}."CAMPAIGN_BEHAVIOR_SYSTEM_DEFAULT" ;;
+  }
+
+  dimension: campaign_name {
+    label: "Campaign Name"
+    group_label: "* Campaign Data"
+    type: string
+    sql: ${TABLE}."CAMPAIGN_NAME" ;;
+  }
+
+  dimension: engagement_name {
+    label: "Engagement Name"
+    group_label: "* Campaign Data"
+    type: string
+    sql: ${TABLE}.campaign_engagement_name ;;
+  }
+
+  dimension: engagement_type {
+    label: "Engagement Type"
+    group_label: "* Campaign Data"
+    type: string
+    sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
+  }
+
+  dimension: goal_name {
+    label: "Goal Name"
+    group_label: "* Campaign Data"
+    type: string
+    # hidden: yes
+    sql: ${TABLE}.campaign_goal_name ;;
+  }
+
+  dimension: lob_name {
+    label: "LOB Name"
+    group_label: "* Campaign Data"
+    type: string
+    # hidden: yes
+    sql: ${TABLE}.campaign_lob_name ;;
+  }
+
+  dimension: location_name {
+    label: "Location Name"
+    group_label: "* Campaign Data"
+    type: string
+    sql: ${TABLE}.campaign_location_name ;;
+  }
+
+  dimension: profile_system_default {
+    label: "Profile System Default"
+    group_label: "* Campaign Data"
+    type: yesno
+    sql: ${TABLE}.campaign_profile_system_default ;;
+  }
+
+  # dimension: source {
+  #   label: "Source Name"
+  #   group_label: "* Campaign Data"
+  #   type: string
+  #   sql: ${TABLE}."SOURCE" ;;
+  # }
+
+  dimension: visitor_behavior_name {
+    label: "Visitor Behavor"
+    group_label: "* Campaign Data"
+    type: string
+    sql: ${TABLE}.campaign_visitor_behavior_name ;;
+  }
+
+  dimension: visitor_profile_name {
+    label: "Visitor Profile Name"
+    group_label: "* Campaign Data"
+    type: string
+    sql: ${TABLE}.campaign_visitor_profile_name ;;
   }
 
   ##########################################################################################
@@ -462,35 +590,35 @@ view: liveperson_conversation {
   ##########################################################################################
   ## MCS MEASURES
 
-  measure: mcs_positive_count {
-    label: "MCS Positive Count"
+  measure: mcs_avg {
+    label: "MCS Average Score"
     group_label: "MCS Metrics"
-    type: count_distinct
-    sql: case when ${alerted_mcs}  = 'Positive'
-      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
-  }
-
-  measure: mcs_neutral_count {
-    label: "MCS Neutral Count"
-    group_label: "MCS Metrics"
-    type: count_distinct
-    sql: case when ${alerted_mcs}  = 'Neutral'
-      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+    type: average
+    value_format_name: decimal_2
+    sql: ${mcs} ;;
   }
 
   measure: mcs_negative_count {
     label: "MCS Negative Count"
     group_label: "MCS Metrics"
     type: count_distinct
-    sql: case when ${alerted_mcs}  = 'Negative'
-      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+    value_format_name: decimal_0
+    sql: case when ${mcs} = 'Negative' then ${pk} end ;;
   }
 
-  measure: mcs_avg {
-    label: "MCS Average"
+  measure: mcs_neutral_count {
+    label: "MCS Neutral Count"
     group_label: "MCS Metrics"
-    type: average
-    value_format_name: decimal_2
-    sql: ${mcs} ;;
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: case when ${mcs} = 'Neutral' then ${pk} end ;;
+  }
+
+  measure: mcs_positive_count {
+    label: "MCS Positive Count"
+    group_label: "MCS Metrics"
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: case when ${mcs} = 'Positive' then ${pk} end ;;
   }
 }

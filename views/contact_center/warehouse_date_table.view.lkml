@@ -2,6 +2,16 @@ view: warehouse_date_table {
   sql_table_name: "UTIL"."WAREHOUSE_DATE"
     ;;
 
+  set: default_fields {
+    fields: [
+      date_date,
+      date_month,
+      date_week,
+      date_quarter,
+      date_year
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS

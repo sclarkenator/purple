@@ -13,7 +13,8 @@ view: liveperson_agent {
       team_type_cc_lp,
       team_group_cc_lp,
       is_active_cc_lp,
-      is_supervisor_cc_lp
+      is_supervisor_cc_lp,
+      user_type
     ]
   }
 
@@ -27,6 +28,14 @@ view: liveperson_agent {
     description: "Agents First and Last name."
     type: string
     sql: ${TABLE}.full_name ;;
+  }
+
+  dimension: agent_config_status {
+    label: "Agent Configuration Status"
+    type: string
+    sql: case when ${deleted} = true then 'Deleted'
+      when ${enabled} = false then 'Disabled'
+      else 'Enabled' end ;;
   }
 
   dimension: is_active_cc_lp {
@@ -202,8 +211,18 @@ view: liveperson_agent {
     group_label: "* LivePerson Agent Data"
     description: "The user’s permission groups."
     type: string
-                                                                      hidden: yes
+    hidden: yes
     sql: ${TABLE}."PERMISSION_GROUPS"::text ;;
+  }
+
+  dimension: user_type {
+    label: "User Type"
+    # group_label: "* LivePerson Agent Data"
+    description: "Options: 'Agent', 'Bot', 'Virtual Assistant'"
+    type: string
+    sql: case when ${TABLE}.user_type_id = 1 then 'Agent'
+      when ${agent_name} ilike '%Virtual Assistant%' then 'Virtual Assistant'
+      when ${agent_name} ilike '%bot' then 'Bot' end ;;
   }
 
   ##########################################################################################
@@ -317,20 +336,12 @@ view: liveperson_agent {
     sql: ${TABLE}."PROFILE_IDS" ;;
   }
 
-  dimension: skill_id {
-    label: "Skill ID"
-    group_label: "* LivePerson IDs"
-    type: string
-    hidden: yes
-    sql: ${TABLE}."SKILL_IDS" ;;
-  }
-
   dimension: user_type_id {
     label: "User Type ID"
     group_label: "* LivePerson IDs"
-    type: number
-    hidden: yes
-    sql: ${TABLE}."USER_TYPE_ID" ;;
+    type: string
+    # hidden: yes
+    sql: ${TABLE}.user_type_id ;;
   }
 
   ##########################################################################################

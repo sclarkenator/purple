@@ -109,7 +109,7 @@ dimension_group: status_change {
     type: string
     # hidden: yes
     primary_key: yes
-    sql: concat(${agent_id}, '-', ${session_id}, '-', right(concat('00', ${sequence_number}), 2)) ;;
+    sql: concat(${agent_id}, '-', ${session_id}, '-', right(concat('00', ${sequence_number}), 2), ${status_change_time}) ;;
   }
 
   dimension: agent_id {

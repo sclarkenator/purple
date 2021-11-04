@@ -1,173 +1,197 @@
 ## REFERENCE: https://developers.liveperson.com/messaging-interactions-api-methods-conversations.html
 view: liveperson_campaign {
 
-  sql_table_name: liveperson.campaign ;;
-  # drill_fields: [campaign_id]
+  ## DELETE THIS VIEW AFTER 12/1/2021 IF NO ISSUES ARE EXPERIENCED
 
-  set: campaign_default {
-    fields: [
-      campaign_name,
-      engagement_name,
-      engagement_type
-    ]
-  }
+#   sql_table_name: liveperson.campaign ;;
+#   # drill_fields: [campaign_id]
 
-  ##########################################################################################
-  ##########################################################################################
-  ## GENERAL DIMENSIONS
+#   set: campaign_default {
+#     fields: [
+#       campaign_name,
+#       engagement_name,
+#       campaign_type
+#     ]
+#   }
 
-  dimension: behavior_system_default {
-    label: "Behavior System Default"
-    type: yesno
-    sql: ${TABLE}."BEHAVIOR_SYSTEM_DEFAULT" ;;
-  }
+#   # engagement_type - Only calculate after 10/20
+#   # rename engagement_type to campaign_type
 
-  dimension: campaign_name {
-    label: "Campaign Name"
-    type: string
-    sql: ${TABLE}."CAMPAIGN_NAME" ;;
-  }
+#   ##########################################################################################
+#   ##########################################################################################
+#   ## GENERAL DIMENSIONS
 
-  dimension: engagement_name {
-    label: "Engagement Name"
-    type: string
-    sql: ${TABLE}."ENGAGEMENT_NAME" ;;
-  }
+#   dimension: behavior_system_default {
+#     label: "Behavior System Default"
+#     group_label: "* Campaign Data"
+#     type: yesno
+#     sql: ${TABLE}."BEHAVIOR_SYSTEM_DEFAULT" ;;
+#   }
 
-  dimension: engagement_type {
-    label: "Engagement Type"
-    type: string
-    sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
-  }
+#   dimension: campaign_name {
+#     label: "Campaign Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."CAMPAIGN_NAME" ;;
+#   }
 
-  dimension: goal_name {
-    label: "Goal Name"
-    type: string
-    sql: ${TABLE}."GOAL_NAME" ;;
-  }
+#   dimension: engagement_name {
+#     label: "Engagement Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."ENGAGEMENT_NAME" ;;
+#   }
 
-  dimension: lob_name {
-    label: "LOB Name"
-    type: string
-    sql: ${TABLE}."LOB_NAME" ;;
-  }
+#   dimension: engagement_source {
+#     label: "Engagement Source Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}.engagement_source ;;
+#   }
 
-  dimension: location_name {
-    label: "Location Name"
-    type: string
-    sql: ${TABLE}."LOCATION_NAME" ;;
-  }
+#   dimension: campaign_type {
+#     alias: [engagement_type]
+#     label: "Campaign Type"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
+#   }
 
-  dimension: profile_system_default {
-    label: "Profile System Default"
-    type: yesno
-    sql: ${TABLE}."PROFILE_SYSTEM_DEFAULT" ;;
-  }
+#   dimension: goal_name {
+#     label: "Goal Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."GOAL_NAME" ;;
+#   }
 
-  dimension: source {
-    label: "Source Name"
-    type: string
-    sql: ${TABLE}."SOURCE" ;;
-  }
+#   dimension: lob_name {
+#     label: "LOB Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."LOB_NAME" ;;
+#   }
 
-  dimension: visitor_behavior_name {
-    label: "Visitor Behavor"
-    type: string
-    sql: ${TABLE}."VISITOR_BEHAVIOR_NAME" ;;
-  }
+#   dimension: location_name {
+#     label: "Location Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."LOCATION_NAME" ;;
+#   }
 
-  dimension: visitor_profile_name {
-    label: "Visitor Profile Name"
-    type: string
-    sql: ${TABLE}."VISITOR_PROFILE_NAME" ;;
-  }
+#   dimension: profile_system_default {
+#     label: "Profile System Default"
+#     group_label: "* Campaign Data"
+#     type: yesno
+#     sql: ${TABLE}."PROFILE_SYSTEM_DEFAULT" ;;
+#   }
+
+#   dimension: source {
+#     label: "Source Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."SOURCE" ;;
+#   }
+
+#   dimension: visitor_behavior_name {
+#     label: "Visitor Behavor"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."VISITOR_BEHAVIOR_NAME" ;;
+#   }
+
+#   dimension: visitor_profile_name {
+#     label: "Visitor Profile Name"
+#     group_label: "* Campaign Data"
+#     type: string
+#     sql: ${TABLE}."VISITOR_PROFILE_NAME" ;;
+#   }
 
 
-  ##########################################################################################
-  ##########################################################################################
-  ## DATE DIMENSIONS
+# ##########################################################################################
+# ##########################################################################################
+# ## DATE DIMENSIONS
 
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    hidden: yes
-    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
-  }
+#   dimension_group: insert_ts {
+#     type: time
+#     timeframes: [
+#       raw,
+#       time,
+#       date,
+#       week,
+#       month,
+#       quarter,
+#       year
+#     ]
+#     hidden: yes
+#     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
+#   }
 
-  ##########################################################################################
-  ##########################################################################################
-  ## IDs
+#   ##########################################################################################
+#   ##########################################################################################
+#   ## IDs
 
-  dimension: pk {
-    primary_key: yes
-    type: string
-    hidden: yes
-    sql: conversation_id || campaign_id ;;
-  }
+#   dimension: pk {
+#     primary_key: yes
+#     type: string
+#     hidden: yes
+#     sql: conversation_id || campaign_id ;;
+#   }
 
-  dimension: campaign_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."CAMPAIGN_ID" ;;
-  }
+#   dimension: campaign_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."CAMPAIGN_ID" ;;
+#   }
 
-  dimension: conversation_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.conversation_id ;;
-  }
+#   dimension: conversation_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}.conversation_id ;;
+#   }
 
-  dimension: engagement_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."ENGAGEMENT_ID" ;;
-  }
+#   dimension: engagement_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."ENGAGEMENT_ID" ;;
+#   }
 
-  dimension: goal_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."GOAL_ID" ;;
-  }
+#   dimension: goal_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."GOAL_ID" ;;
+#   }
 
-  dimension: lob_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."LOB_ID" ;;
-  }
+#   dimension: lob_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."LOB_ID" ;;
+#   }
 
-  dimension: location_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."LOCATION_ID" ;;
-  }
+#   dimension: location_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."LOCATION_ID" ;;
+#   }
 
-  dimension: visitor_behavior_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."VISITOR_BEHAVIOR_ID" ;;
-  }
+#   dimension: visitor_behavior_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."VISITOR_BEHAVIOR_ID" ;;
+#   }
 
-  dimension: visitor_profile_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."VISITOR_PROFILE_ID" ;;
-  }
+#   dimension: visitor_profile_id {
+#     type: number
+#     hidden: yes
+#     sql: ${TABLE}."VISITOR_PROFILE_ID" ;;
+#   }
 
-  ##########################################################################################
-  ##########################################################################################
-  ## MEASURES
+#   ##########################################################################################
+#   ##########################################################################################
+#   ## MEASURES
 
-  measure: campaign_count {
-    label: "Campaign Count"
-    type: count
-    # hidden: yes
-  }
+#   measure: campaign_count {
+#     label: "Campaign Count"
+#     type: count
+#     # hidden: yes
+  # }
 }

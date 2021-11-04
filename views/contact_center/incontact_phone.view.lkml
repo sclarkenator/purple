@@ -33,6 +33,15 @@ view: incontact_phone {
       ]
     }
 
+  set: performance_summary {
+    fields: [
+      handled_count,
+      acw_time_average,
+      handle_time_average,
+      hold_time_average
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS

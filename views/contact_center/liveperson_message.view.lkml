@@ -101,18 +101,10 @@ view: liveperson_message {
     sql: ${TABLE}."CONTEXT_DATA" ;;
   }
 
-  dimension: device {
-    label: "Device"
-    # group_label: "* Message Details"
-    description: "Device the message was sent from.  Depreciated (not supported)"
-    type: string
-    # hidden: yes
-    sql: ${TABLE}."DEVICE" ;;
-  }
-
   dimension: message {
     label: "Message"
     # group_label: "* Message Details"
+    description: "Message value."
     type: string
     sql: ${TABLE}."MESSAGE" ;;
   }
@@ -166,7 +158,7 @@ view: liveperson_message {
     # group_label: "* Message Details"
     description: "The message data type, i.e. TEXT_PLAIN, TEXT_HTML, LINK, etc."
     type: string
-    hidden: yes
+    hidden: yes  # Hidden because there is currently only one value in this field
     sql: ${TABLE}."TYPE" ;;
   }
 
@@ -226,7 +218,7 @@ view: liveperson_message {
     description: "Agent's InContact ID."
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.employee_id ;;
   }
 
@@ -236,7 +228,7 @@ view: liveperson_message {
     description: "Agent's LivePerson ID."
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.liveperson_id ;;
   }
 
@@ -246,7 +238,7 @@ view: liveperson_message {
     group_label: "* IDs"
     primary_key: yes
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."MESSAGE_ID" ;;
   }
 
