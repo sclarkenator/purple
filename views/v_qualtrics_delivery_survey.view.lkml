@@ -138,7 +138,7 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     sql: ${TABLE}."OVERALL_DELIVERY_RATING" ;;
   }
 
-  measure: totatl_responses {
+  measure: total_unique_responses {
     type: count_distinct
     sql:  ${TABLE}."RESPONSE_ID" ;;
   }
