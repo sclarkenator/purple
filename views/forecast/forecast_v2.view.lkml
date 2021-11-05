@@ -426,13 +426,13 @@ view: forecast_v2 {
     label: "Amazon Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA','Amazon') then ${total_units_dimension} else 0 end ;;}
 
   measure: amazon_amount {
     label: "Amazon Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA','Amazon') then ${total_amount_dimension} else 0 end ;;}
 
   measure: retail_units {
     type:  sum
