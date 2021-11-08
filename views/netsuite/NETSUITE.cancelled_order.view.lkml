@@ -1,5 +1,5 @@
 view: cancelled_order {
-  sql_table_name: SALES.CANCELLED_ORDER ;;
+  sql_table_name: SALES.CANCELLATION ;;
 
   measure: units_cancelled {
     label: "      Cancelled Orders (units)"
