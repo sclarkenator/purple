@@ -147,4 +147,158 @@ view: v_qualtrics_delivery_survey {sql_table_name: "SHIPPING"."V_QUALTRICS_DELIV
     type: count
     drill_fields: []
   }
+
+  dimension: crew_rating_top_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${crew_rating} > 5 then 1
+          else 0
+          end;;
+  }
+
+  dimension: crew_rating_bottom_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${crew_rating} < 3 then 1
+          else 0
+          end;;
+  }
+
+  dimension: crew_rating_neutral {
+    hidden: yes
+    type: string
+    sql: case
+          when ${crew_rating} >= 3 AND ${crew_rating} <= 5 then 1
+          else 0
+          end;;
+  }
+
+  measure: crew_rating_top_2_measure {
+    label: "Crew: Satisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${crew_rating_top_2};;
+  }
+
+  measure: crew_rating_bottom_2_measure {
+    label: "Crew: Dissatisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${crew_rating_bottom_2};;
+  }
+
+  measure: crew_rating_neutral_measure {
+    label: "Crew: Neutral"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${crew_rating_neutral};;
+  }
+
+  dimension: scheduling_rating_top_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${scheduling_rating} > 5 then 1
+          else 0
+          end;;
+  }
+
+  dimension: scheduling_rating_bottom_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${scheduling_rating} < 3 then 1
+          else 0
+          end;;
+  }
+
+  dimension: scheduling_rating_neutral {
+    hidden: yes
+    type: string
+    sql: case
+          when ${scheduling_rating} >= 3 AND ${scheduling_rating} <= 5 then 1
+          else 0
+          end;;
+  }
+
+  measure: scheduling_rating_top_2_measure {
+    label: "Scheduling: Satisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${scheduling_rating_top_2};;
+  }
+
+  measure: scheduling_rating_bottom_2_measure {
+    label: "Scheduling: Dissatisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${scheduling_rating_bottom_2};;
+  }
+
+  measure: scheduling_rating_neutral_measure {
+    label: "Scheduling: Neutral"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${scheduling_rating_neutral};;
+  }
+
+  dimension: overall_rating_top_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${overall_delivery_rating} > 5 then 1
+          else 0
+          end;;
+  }
+
+  dimension: overall_rating_bottom_2 {
+    hidden: yes
+    type: string
+    sql: case
+          when ${overall_delivery_rating} < 3 then 1
+          else 0
+          end;;
+  }
+
+  dimension: overall_rating_neutral {
+    hidden: yes
+    type: string
+    sql: case
+          when ${overall_delivery_rating} >= 3 AND ${overall_delivery_rating} <= 5 then 1
+          else 0
+          end;;
+  }
+
+  measure: overall_rating_top_2_measure {
+    label: "Overall: Satisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${overall_rating_top_2};;
+  }
+
+  measure: overall_rating_bottom_2_measure {
+    label: "Overall: Dissatisfied"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${overall_rating_bottom_2};;
+  }
+
+  measure: overall_rating_neutral_measure {
+    label: "Overall: Neutral"
+    group_label: "Satisfaction"
+    type: average_distinct
+    value_format: "0.0%"
+    sql: ${overall_rating_neutral};;
+  }
+
 }

@@ -1,5 +1,5 @@
 view: cancelled_order {
-  sql_table_name: SALES.CANCELLED_ORDER ;;
+  sql_table_name: SALES.CANCELLATION ;;
 
   measure: units_cancelled {
     label: "      Cancelled Orders (units)"
@@ -24,7 +24,7 @@ view: cancelled_order {
     type: count_distinct
     filters: {
       field: refunded
-      value: "Yes"
+      value: Yes
     }
     sql: ${order_id} ;;
     hidden:yes}
@@ -36,14 +36,14 @@ view: cancelled_order {
     drill_fields: [sales_order_line.sales_order_details*]
     type: sum
     value_format: "$#,##0.00"
-    sql: ${TABLE}.gross_amt ;; }
+    sql: ${TABLE}.cancelled_amt ;; }
 
   dimension: is_cancelled {
     label:  "     * Is Cancelled"
     description: "Whether the order was cancelled.
       Source: netsuite.cancelled_order"
     type: yesno
-    sql: ${cancelled_date} is not NULL ;; }
+    sql: ${cancelled_date} is not NULL OR ${sales_order.status} = 'Cancelled';; }
 
   dimension: is_cancelled_wholesale {
     label:  "     * Is Cancelled Wholesale"
@@ -62,9 +62,9 @@ view: cancelled_order {
     value_format: "$#,##0.00"
     filters: {
       field: refunded
-      value: "Yes"
+      value: "TRUE"
     }
-    sql: ${TABLE}.gross_amt ;; }
+    sql: ${TABLE}.cancelled_amt ;; }
 
   measure: qty_cancelled_and_refunded {
     label:  "Total Cancellations Completed (units)"
@@ -74,7 +74,7 @@ view: cancelled_order {
     hidden: yes
     filters: {
       field: refunded
-      value: "Yes"
+      value: "TRUE"
     }
     sql: ${TABLE}.cancelled_qty ;; }
 
@@ -197,7 +197,7 @@ view: cancelled_order {
       Source: netsuite.cancelled_order"
     type:  number
     group_label: "Advanced"
-    sql: ${TABLE}.gross_amt ;;}
+    sql: ${TABLE}.cancelled_amt ;;}
 
   dimension: gross_amt_tier {
     label:  "Total Cancelled (bucket)"
@@ -208,7 +208,7 @@ view: cancelled_order {
     style:  integer
     group_label: "Advanced"
     tiers: [0,1,100,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
-    sql: ${TABLE}.gross_amt ;;}
+    sql: ${TABLE}.cancelled_amt ;;}
 
   dimension: order_id {
     hidden:  yes
@@ -221,7 +221,6 @@ view: cancelled_order {
   dimension: refunded {
     description: "Yes if cancellation was completed and customer's money was refunded.
       Source: netsuite.cancelled_order"
-    type: string
     sql: ${TABLE}.REFUNDED ;;
     hidden:yes}
 
