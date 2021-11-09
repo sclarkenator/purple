@@ -239,7 +239,7 @@ view: cancelled_order {
     type: number
     sql: ${TABLE}.CANCEL_REASON_ID ;; }
 
-  dimension: shopify_discount_code {
+  dimension: discount_code {
     hidden:  yes
     type: string
     sql: ${TABLE}.DISCOUNT_CODE ;; }
