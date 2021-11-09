@@ -1570,8 +1570,31 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql: datediff('day',${created_raw}::date,${transmitted_date_raw}::date) ;;
+  }
+
+  measure: order_to_ship_by_days {
+    label: "Order to Ship By (days)"
+    view_label: "Fulfillment"
+    group_label: "Time Between Benchmarks"
+    description: "The average difference between the order date and scheduled ship by date. Source: looker.calculation"
+    drill_fields: [sales_order_line.fulfillment_details]
+    type: average
+    value_format: "0.0"
+    sql: datediff('day',${created_raw}::date,${min_ship_date_raw}::date) ;;
+  }
+
+  measure: ship_by_to_left_purple_days {
+    label: "Ship-by to Left Purple (days)"
+    view_label: "Fulfillment"
+    group_label: "Time Between Benchmarks"
+    description: "The average difference between the scheduled ship-by date and left purple date. Source: looker.calculation"
+    drill_fields: [sales_order_line.fulfillment_details]
+    type: average
+    value_format: "0.0"
+    sql_distinct_key: ${fulfillment.PK} ;;
+    sql: datediff('day',${min_ship_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: order_to_left_purple_days {
@@ -1581,7 +1604,7 @@ view: sales_order_line {
     description: "The average difference between the order date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
@@ -1593,7 +1616,7 @@ view: sales_order_line {
     description: "The average difference between the transmitted date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
@@ -1605,7 +1628,7 @@ view: sales_order_line {
     description: "The average difference between the transmitted date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1617,7 +1640,7 @@ view: sales_order_line {
     description: "The average difference between the order date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1629,7 +1652,7 @@ view: sales_order_line {
     description: "The average difference between the left purple date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${fulfillment.left_purple_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1642,7 +1665,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date in hours. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql: timediff('hour',${created_raw},${transmitted_date_raw}) ;;
   }
 
@@ -1654,7 +1677,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date in hours. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
