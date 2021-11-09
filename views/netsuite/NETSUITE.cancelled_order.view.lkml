@@ -233,16 +233,16 @@ view: cancelled_order {
     sql: ${TABLE}.REVENUE_ITEM ;;
   }
 
-  dimension: shopify_cancel_reason_id {
+  dimension: cancel_reason_id {
     label: "Cancellation Reason"
     hidden:  yes
     type: number
-    sql: ${TABLE}.SHOPIFY_CANCEL_REASON_ID ;; }
+    sql: ${TABLE}.CANCEL_REASON_ID ;; }
 
   dimension: shopify_discount_code {
     hidden:  yes
     type: string
-    sql: ${TABLE}.SHOPIFY_DISCOUNT_CODE ;; }
+    sql: ${TABLE}.DISCOUNT_CODE ;; }
 
   dimension: system {
     hidden:  yes
