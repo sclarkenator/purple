@@ -1,5 +1,5 @@
 view: liveperson_alerted_mcs_subtype {
-  sql_table_name: "LIVEPERSON"."LIVEPERSON_ALERTED_MCS_SUBTYPE" ;;
+  sql_table_name: "LIVEPERSON"."ALERTED_MCS_SUBTYPE" ;;
   # sql_table_name: "LIVEPERSON"."ALERTED_MCS_SUBTYPE" ;;
 
   dimension: alerted_mcs_name {

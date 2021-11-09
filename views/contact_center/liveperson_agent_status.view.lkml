@@ -1,10 +1,30 @@
 ## REFERENCE: https://developers.liveperson.com/agent-metrics-api-methods-agent-status.html
 view: liveperson_agent_status {
-  sql_table_name: "LIVEPERSON"."AGENT_STATUS" ;;
+  derived_table: {
+    sql:
+      select stat.Agent_id,
+          stat.session_id,
+          stat.sequence_number,
+          stat.reason,
+          status_change,
+          last.name as type,
+          lass.name as subtype
+
+      from liveperson.agent_status as stat
+
+          left join liveperson.agent_status_type as last
+              on stat.type = last.type_id
+
+          left join liveperson.agent_status_subtype as lass
+              on stat.sub_type = lass.subtype_id
+        ;;
+    }
 
   set: default_agent_status {
     fields: [
       reason,
+      type,
+      subtype,
       status_change_date,
       status_change_time,
       status_change_minute,
@@ -13,6 +33,7 @@ view: liveperson_agent_status {
       status_change_week,
       status_change_month,
       status_change_year,
+      agent_status_count,
       pk
     ]
     }
@@ -37,6 +58,22 @@ view: liveperson_agent_status {
     description: "Optional custom reason for the status change. Null if no custom reason was provided by the agent."
     type: string
     sql: ${TABLE}."REASON" ;;
+  }
+
+  dimension: subtype {
+    label: "Subtype"
+    description: "Subtype of status change when Type = 'Status Changed'."
+    type: string
+    # hidden: yes
+    sql: ${TABLE}.subtype ;;
+  }
+
+  dimension: type{
+    label: "Type"
+    description: "Type of status change."
+    type: string
+    # hidden: yes
+    sql: ${TABLE}.type ;;
   }
 
   # dimension: session_sequence {
@@ -144,22 +181,6 @@ dimension_group: status_change {
     sql: ${TABLE}."STATUS_REASON_ID" ;;
   }
 
-  dimension: subtype_id {
-    label: "Subtype ID"
-    description: "Subtype ID of status change when Type = 'Status Changed'."
-    type: string
-    hidden: yes
-    sql: ${TABLE}.sub_type ;;
-  }
-
-  dimension: type_id{
-    label: "Type ID"
-    description: "Type ID of status change."
-    type: string
-    hidden: yes
-    sql: ${TABLE}.type ;;
-  }
-
   ##########################################################################################
   ##########################################################################################
   ## MEASURES
@@ -170,17 +191,36 @@ dimension_group: status_change {
     hidden: yes
     sql: agent_id ;;
     drill_fields: [pk]
-    # html:
-    #   <ul>
-    #     <li> Time Logged In: {{value}} </li>
-    #     <li> Agent Count: {{value}} </li>
-    #   </ul>;;
   }
 
   measure: agent_status_count {
     label: "Agent Status Count"
     type: count
-    hidden: yes
+    # hidden: yes
     drill_fields: [pk]
+  }
+
+  measure: away_count {
+    label: "Away Count"
+    type: count_distinct
+    sql: case when ${subtype} = "Away" then ${pk} end ;;
+  }
+
+  measure: occupied_count {
+    label: "Occupied Count"
+    type: count_distinct
+    sql: case when ${subtype} = "Occupied" then ${pk} end ;;
+  }
+
+  measure: offline_count {
+    label: "Offline Count"
+    type: count_distinct
+    sql: case when ${subtype} = "Offline" then ${pk} end ;;
+  }
+
+  measure: online_count {
+    label: "Online Count"
+    type: count_distinct
+    sql: case when ${subtype} = "Online" then ${pk} end ;;
   }
 }

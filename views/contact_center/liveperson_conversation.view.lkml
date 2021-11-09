@@ -16,9 +16,9 @@ view: liveperson_conversation {
       from util.warehouse_date dt
         join liveperson.conversation c
             on dt.date::date between c.started::date and c.ended::date
-        join liveperson.skill s
+        left join liveperson.skill s
             on c.last_skill_id = s.skill_id
-        join liveperson.liveperson_alerted_mcs_subtype mcs
+        left join liveperson.alerted_mcs_subtype mcs
             on c.alerted_mcs = mcs.subtype_id
       ;;
     }

@@ -12,7 +12,7 @@ view: liveperson_conversation_transfer {
           on ct.source_skill_id = s.skill_id
 
         join liveperson.skill t
-          on ct.source_skill_id = t.skill_id ;;
+          on ct.target_skill_id = t.skill_id ;;
     }
 
   ##########################################################################################

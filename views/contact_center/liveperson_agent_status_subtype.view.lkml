@@ -1,5 +1,5 @@
 view: liveperson_agent_status_subtype {
-  sql_table_name: "LIVEPERSON"."LIVEPERSON_AGENT_STATUS_SUBTYPE" ;;
+  sql_table_name: "LIVEPERSON"."AGENT_STATUS_SUBTYPE" ;;
   # sql_table_name: "LIVEPERSON"."AGENT_STATUS_SUBTYPE" ;;
 
   dimension: status_subtype_name {
