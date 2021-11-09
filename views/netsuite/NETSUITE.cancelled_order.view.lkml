@@ -165,18 +165,18 @@ view: cancelled_order {
     type: number
     sql: ${TABLE}.CANCELLED_QTY ;; }
 
-  dimension: channel_id {
-    label: "Cancelled Channel ID"
-    description: "Channel ID for orders that have been cancelled.
-      Source: netsuite.cancelled_order"
-    hidden:  yes
-    type: number
-    sql: ${TABLE}.CHANNEL_ID ;; }
+  # dimension: channel_id_dep {
+  #   label: "Cancelled Channel ID"
+  #   description: "Channel ID for orders that have been cancelled.
+  #     Source: netsuite.cancelled_order"
+  #   hidden:  yes
+  #   type: number
+  #   sql: ${TABLE}.CHANNEL_ID ;; }
 
-  dimension: full_cancelled_ts {
-    hidden:  yes
-    type: string
-    sql: ${TABLE}.FULL_CANCELLED_TS ;; }
+  # dimension: full_cancelled_ts_dep {
+  #   hidden:  yes
+  #   type: string
+  #   sql: ${TABLE}.FULL_CANCELLED_TS ;; }
 
   dimension: insert_ts {
     hidden:  yes
@@ -224,14 +224,14 @@ view: cancelled_order {
     sql: ${TABLE}.REFUNDED ;;
     hidden:yes}
 
-  dimension: revenue_item {
-    label:"Is Revenue Item"
-    hidden: yes
-    description:  "Yes for all product-specific refunds. No to just capture non-product (recycle-fee, freight, etc).
-      Source: netsuite.cancelled_order"
-    type: string
-    sql: ${TABLE}.REVENUE_ITEM ;;
-  }
+  # dimension: revenue_item_dep {
+  #   label:"Is Revenue Item"
+  #   hidden: yes
+  #   description:  "Yes for all product-specific refunds. No to just capture non-product (recycle-fee, freight, etc).
+  #     Source: netsuite.cancelled_order"
+  #   type: string
+  #   sql: ${TABLE}.REVENUE_ITEM ;;
+  # }
 
   dimension: cancel_reason_id {
     label: "Cancellation Reason"
@@ -250,9 +250,9 @@ view: cancelled_order {
     type: string
     sql: ${TABLE}.SYSTEM ;; }
 
-  dimension: update_ts {
-    hidden:  yes
-    type: string
-    sql: ${TABLE}.UPDATE_TS ;; }
+#   dimension: update_ts_dep {
+#     hidden:  yes
+#     type: string
+#     sql: ${TABLE}.UPDATE_TS ;; }
 
 }
