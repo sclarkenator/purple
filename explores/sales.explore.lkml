@@ -205,7 +205,7 @@ include: "/dashboards/**/*.dashboard"
     join: NETSUITE_cancelled_reason {
       view_label: "Cancellations"
       type: left_outer
-      sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
+      sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.cancel_reason_id} ;;
       relationship: many_to_one}
     join: order_flag {
       view_label: "Sales Order"
