@@ -14,32 +14,19 @@ view: liveperson_conversation {
         ,c.*
         ,mcs.name as alerted_mcs_name
       from util.warehouse_date dt
+
         join liveperson.conversation c
             on dt.date::date between c.started::date and c.ended::date
+
         left join liveperson.skill s
             on c.last_skill_id = s.skill_id
+
         left join liveperson.alerted_mcs_subtype mcs
             on c.alerted_mcs = mcs.subtype_id
       ;;
     }
 
   drill_fields: [conversation_id]
-
-  # set: conversation_default_fields {
-  #   fields: [
-  #     # alerted_mcs,
-  #     # browser,
-  #     # conversation_duration,
-  #   ]
-  # }
-
-  # set: campaign_default_fields {
-  #   fields: [
-  #     campaign_name,
-  #     engagement_name,
-  #     engagement_type
-  #   ]
-  # }
 
   ##########################################################################################
   ##########################################################################################
@@ -48,6 +35,7 @@ view: liveperson_conversation {
   dimension: alerted_mcs {
     label: "Alerted MCS"
     group_label: "* Conversation Metrics"
+    description: "Alerted MCS of the conversation up until the most recent message."
     type: string
     sql: ${TABLE}.alerted_mcs_name ;;
   }
@@ -63,16 +51,18 @@ view: liveperson_conversation {
   dimension: close_reason {
     label: "Close Reason"
     group_label: "* Conversation Status"
-    description: ""
+    description: "Reason for closing the conversation. (by agent / consumer / system)"
     type: string
-    sql: ${TABLE}.close_reason ;;
+    sql: case when ${TABLE}.close_reason = 'TIMEOUT' then 'SYSTEM'
+        else ${TABLE}.close_reason end ;;
   }
 
   dimension: close_reason_description {
     label: "Close Reason Description"
     group_label: "* Conversation Status"
-    description: ""
+    description: "Reason for closing the conversation. (brand auto close / manual close)."
     type: string
+    # hidden: yes
     sql: ${TABLE}.close_reason_description ;;
   }
 
@@ -121,6 +111,7 @@ view: liveperson_conversation {
     label: "Full Dialog Status"
     group_label: "* Conversation Status"
     type: string
+    # hidden: yes
     sql: ${TABLE}."FULL_DIALOG_STATUS" ;;
   }
 
@@ -156,6 +147,14 @@ view: liveperson_conversation {
     sql: ${TABLE}."PARTIAL" ;;
   }
 
+  dimension: repeat_conversation {
+    label: "Repeat Conversation"
+    group_label: "* Conversation Status"
+    description: "Whether it is the consumer's first conversation."
+    type: yesno
+    sql: if ${TABLE}."FIRST_CONVERSATION" = true then false else true end  ;;
+  }
+
   dimension: source {
     label: "Source"
     group_label: "* Conversation Source Data"
@@ -179,6 +178,7 @@ view: liveperson_conversation {
   dimension: behavior_system_default {
     label: "Behavior System Default"
     group_label: "* Campaign Data"
+    description: "Indicates whether behavioral targeting rule is the default one."
     type: yesno
     # hidden: yes
     sql: ${TABLE}."CAMPAIGN_BEHAVIOR_SYSTEM_DEFAULT" ;;
@@ -187,6 +187,7 @@ view: liveperson_conversation {
   dimension: campaign_name {
     label: "Campaign Name"
     group_label: "* Campaign Data"
+    description: "Name of the campaign."
     type: string
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
@@ -194,6 +195,7 @@ view: liveperson_conversation {
   dimension: engagement_name {
     label: "Engagement Name"
     group_label: "* Campaign Data"
+    description: "Name of the campaign's engagement."
     type: string
     sql: ${TABLE}.campaign_engagement_name ;;
   }
@@ -201,6 +203,7 @@ view: liveperson_conversation {
   dimension: engagement_type {
     label: "Engagement Type"
     group_label: "* Campaign Data"
+    description: "Engagement's application type name."
     type: string
     sql: case when ${campaign_name} ilike '%proactive%' then 'Proactive' else 'Passive' end ;;
   }
@@ -208,6 +211,7 @@ view: liveperson_conversation {
   dimension: goal_name {
     label: "Goal Name"
     group_label: "* Campaign Data"
+    description: "Name of the campaign's goal."
     type: string
     # hidden: yes
     sql: ${TABLE}.campaign_goal_name ;;
@@ -216,6 +220,7 @@ view: liveperson_conversation {
   dimension: lob_name {
     label: "LOB Name"
     group_label: "* Campaign Data"
+    description: "Name of the line of business of the campaign."
     type: string
     # hidden: yes
     sql: ${TABLE}.campaign_lob_name ;;
@@ -224,6 +229,7 @@ view: liveperson_conversation {
   dimension: location_name {
     label: "Location Name"
     group_label: "* Campaign Data"
+    description: "Describes the engagement display location."
     type: string
     sql: ${TABLE}.campaign_location_name ;;
   }
@@ -231,6 +237,7 @@ view: liveperson_conversation {
   dimension: profile_system_default {
     label: "Profile System Default"
     group_label: "* Campaign Data"
+    description: "Indicates whether behavioral targeting rule is the default one."
     type: yesno
     sql: ${TABLE}.campaign_profile_system_default ;;
   }
@@ -245,6 +252,7 @@ view: liveperson_conversation {
   dimension: visitor_behavior_name {
     label: "Visitor Behavor"
     group_label: "* Campaign Data"
+    description: "Name of the behavioral targeting rule defined for the campaign's engagement (in case engagememt id is available)."
     type: string
     sql: ${TABLE}.campaign_visitor_behavior_name ;;
   }
@@ -252,6 +260,7 @@ view: liveperson_conversation {
   dimension: visitor_profile_name {
     label: "Visitor Profile Name"
     group_label: "* Campaign Data"
+    description: "Name of the visitor profile defined for the campaign."
     type: string
     sql: ${TABLE}.campaign_visitor_profile_name ;;
   }
@@ -266,15 +275,12 @@ view: liveperson_conversation {
     type: time
     timeframes: [
       raw,
-      # time,
       date,
       week,
       month,
-      # quarter,
+      quarter,
       year,
-      day_of_week,
-      hour_of_day,
-      minute30
+      day_of_week
     ]
     sql: CAST(${TABLE}.date AS TIMESTAMP_NTZ) ;;
   }
@@ -306,11 +312,7 @@ view: liveperson_conversation {
     timeframes: [
       raw,
       time,
-      date,
-      week,
-      month,
-      # quarter,
-      year
+      date
     ]
     hidden: yes
     sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
@@ -332,7 +334,7 @@ view: liveperson_conversation {
       hour_of_day,
       minute30
     ]
-    # hidden: yes
+    hidden: yes
     sql: CAST(${TABLE}."STARTED" AS TIMESTAMP_NTZ) ;;
   }
 
@@ -343,11 +345,7 @@ view: liveperson_conversation {
     timeframes: [
       raw,
       time,
-      date,
-      week,
-      month,
-      quarter,
-      year
+      date
     ]
     hidden: yes
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
@@ -501,10 +499,11 @@ view: liveperson_conversation {
 
   measure: conversation_duration_avg {
     label: "Conversation Duration Avg"
+    description: "Conversation length in minutes."
     group_label: "Conversation Metrics"
     type: average
     value_format_name: decimal_0
-    sql: ${conversation_duration} ;;
+    sql: ${conversation_duration}/60 ;;
   }
 
   measure: conversation_first_conversation_average {
@@ -515,12 +514,12 @@ view: liveperson_conversation {
     sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
       / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
 
-    html:
-      <ul>
-        <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
-        <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
-        <li> Followup Conversation: {{followup_conversation_count._rendered_value}}</li>
-      </ul> ;;
+    # html:
+    #   <ul>
+    #     <li> Percentage: {{conversation_first_conversation_average._rendered_value}} </li>
+    #     <li> First Conversation: {{first_conversation_count._rendered_value}}</li>
+    #     <li> Repeat Conversation: {{repeat_conversation_count._rendered_value}}</li>
+    #   </ul> ;;
   }
 
   measure: first_conversation_count {
@@ -529,16 +528,18 @@ view: liveperson_conversation {
     description: "Count of conversations that ARE flagged as a first conversation."
     # group_label: "Conversation Metrics"
     type: sum
-    sql: case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+    sql: case when ${first_conversation} = true
+        and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
   }
 
-  measure: followup_conversation_count {
-    label: "Followup Conversation Count"
+  measure: repeat_conversation_count {
+    label: "Repeat Conversation Count"
     group_label: "Conversation Metrics"
     description: "Count of conversations that ARE NOT flagged as a first conversation."
     # group_label: "Conversation Metrics"
     type: sum
-    sql: case when ${first_conversation} = false and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+    sql: case when ${first_conversation} = false
+        and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
   }
 
   measure: conversations_opened_count {
@@ -556,6 +557,56 @@ view: liveperson_conversation {
     # group_label: "Conversation Metrics"
     type: sum
     sql: case when ${conversation_dates_date}::date = ${ended_date}::date then 1 end ;;
+  }
+
+  measure: closed_conversation_pct {
+    label: "Closed Conversations Pct"
+    group_label: "Conversation Closure Metrics"
+    type: percent_of_total
+    sql: ${conversations_ended_count} ;;
+  }
+
+  # measure: conversations_closed_manually_count {
+  #   label: "Conversations Closed Manually"
+  #   type: sum
+  #   value_format_name: decimal_0
+  #   sql: case when ${conversation_dates_date}::date = ${ended_date}::date
+  #     and ${close_reason_description} = 'MANUAL_CLOSE' then 1 end ;;
+  # }
+
+  # measure: conversations_closed_auto_count {
+  #   label: "Conversations Auto Closed"
+  #   type: sum
+  #   value_format_name: decimal_0
+  #   sql: case when ${conversation_dates_date}::date = ${ended_date}::date
+  #     and ${close_reason_description} = 'BRAND_AUTO_CLOSE' then 1 end ;;
+  # }
+
+  measure: conversations_closed_by_agent_count {
+    label: "Closed By Agent"
+    group_label: "Conversation Closure Metrics"
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date
+      and ${close_reason} = 'AGENT' then 1 end ;;
+  }
+
+  measure: conversations_closed_by_consumer_count {
+    label: "Closed By Consumer"
+    group_label: "Conversation Closure Metrics"
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date
+      and ${close_reason} = 'CONSUMER' then 1 end ;;
+  }
+
+  measure: conversations_closed_by_system_count {
+    label: "Closed by System"
+    group_label: "Conversation Closure Metrics"
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${conversation_dates_date}::date = ${ended_date}::date
+      and ${close_reason} = 'TIMEOUT' then 1 end ;;
   }
 
   ##########################################################################################
@@ -603,15 +654,18 @@ view: liveperson_conversation {
     group_label: "MCS Metrics"
     type: count_distinct
     value_format_name: decimal_0
-    sql: case when ${mcs} = 'Negative' then ${pk} end ;;
+    sql: case when ${alerted_mcs} = 'Negative'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
   }
 
   measure: mcs_neutral_count {
     label: "MCS Neutral Count"
     group_label: "MCS Metrics"
+    description: "Count of MCS conversations that "
     type: count_distinct
     value_format_name: decimal_0
-    sql: case when ${mcs} = 'Neutral' then ${pk} end ;;
+    sql: case when ${alerted_mcs} = 'Neutral'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
   }
 
   measure: mcs_positive_count {
@@ -619,6 +673,7 @@ view: liveperson_conversation {
     group_label: "MCS Metrics"
     type: count_distinct
     value_format_name: decimal_0
-    sql: case when ${mcs} = 'Positive' then ${pk} end ;;
+    sql: case when ${alerted_mcs} = 'Positive'
+      and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
   }
 }

@@ -8,9 +8,14 @@ view: warehouse_date_table {
       date_month,
       date_week,
       date_quarter,
-      date_year,
-      dynamic_date_granularity,
-      dynamic_date
+      date_year
+    ]
+  }
+
+  set: dynamic_fields {
+    fields: [
+      dynamic_date,
+      dynamic_date_granularity
     ]
   }
 

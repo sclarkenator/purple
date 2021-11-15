@@ -8,6 +8,77 @@ include: "/dashboards/**/*.dashboard"
 
 #####################################################################
 #####################################################################
+## LIVEPERSON COMBINED cj
+
+explore: liveperson_combined_data {
+  label: "LivePerson"
+  description: "Combined LivePerson data"
+  view_label: "Agent Data (Conversation Level)"
+  from: liveperson_agent
+  hidden: yes
+
+  fields: [liveperson_combined_data.default_liveperson_agent_linked*,
+    warehouse_date_table.default_fields*,
+    liveperson_conversation*,
+    liveperson_message*,
+    liveperson_agent_message.default_liveperson_agent_linked*,
+    liveperson_agent_status*,
+    # -liveperson_message.created_ts_date,
+    -liveperson_message.created_ts_day_of_week,
+    -liveperson_message.created_ts_month,
+    -liveperson_message.created_ts_quarter,
+    -liveperson_message.created_ts_week,
+    -liveperson_message.created_ts_year
+  ]
+
+  join: warehouse_date_table {
+    view_label: "* Dates"
+    type: cross
+    sql_where: ${warehouse_date_table.date_date} >= '2021-08-01' ;; # Liveperson rollout/testing started 8/5/2021
+  }
+
+  join: agent_data {
+    view_label: "Agent Data (Conversations Level)"
+    type: full_outer
+    sql_on: ${liveperson_combined_data.employee_id} = ${agent_data.zendesk_id} ;;
+    relationship: one_to_one
+  }
+
+  join: liveperson_agent_status {
+    view_label: "Agent Status"
+    type: full_outer
+    sql_on: ${warehouse_date_table.date_date}::date = ${liveperson_agent_status.status_change_date}::date
+        and ${agent_data.liveperson_id} = ${liveperson_agent_status.agent_id};;
+    relationship: one_to_many
+  }
+
+  join: liveperson_conversation {
+    view_label: "Conversations"
+    type: full_outer
+    sql_on: ${liveperson_combined_data.agent_id} = ${liveperson_conversation.last_agent_id}
+        and ${warehouse_date_table.date_date}::date = ${liveperson_conversation.conversation_dates_date}::date ;;
+    relationship: many_to_one
+  }
+
+  join: liveperson_message {
+    view_label: "Messages"
+    type: full_outer
+    sql_on: ${liveperson_conversation.conversation_id} = ${liveperson_message.conversation_id}
+        and ${liveperson_conversation.conversation_dates_date}::date = ${liveperson_message.created_ts_date}::date ;;
+    relationship: many_to_many
+  }
+
+  join: liveperson_agent_message {
+    view_label: "Agent Data (Messages Level)"
+    from: liveperson_agent
+    type: full_outer
+    sql_on: ${liveperson_agent_message.agent_id} = ${liveperson_agent_message.agent_id} ;;
+    relationship: many_to_one
+  }
+}
+
+#####################################################################
+#####################################################################
 ## WFM WEEKLY PERFORMANCE - consolidates performance fields cj
 
 explore: wfm_weekly_performance {
