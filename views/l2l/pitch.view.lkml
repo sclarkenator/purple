@@ -296,7 +296,10 @@ derived_table: {
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
-    sql: case when ${actual}+${scrap} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
+    sql: case
+            when ${actual}+${scrap} = 0 then null
+            else div0(${actual},${actual}+${scrap})
+         end;;
   }
 
   measure: throughput_percent{
@@ -304,7 +307,11 @@ derived_table: {
     description: "Backing into performance by taking OEE and dividing by (OA * Quality %)"
     type: number
     value_format: "0.0%"
-    sql: case when ${operational_availability} = 0 then null when ${cycle_time} = 0 then null else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield})) end;;
+    sql: case
+            when ${operational_availability} = 0 then null
+            when ${cycle_time} = 0 then null
+            else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield}))
+         end;;
   }
 
   measure: planned_production_minutes {
@@ -377,7 +384,11 @@ derived_table: {
     hidden: no
     type: number
     value_format: "0.0%"
-    sql: div0(${actual},${theoretical_max_production_rate}) ;;
+    sql: case
+          when ${operational_availability} = 0 or ${operational_availability} is null then null
+          -- when ${cycle_time} = 0 or ${cycle_time} is null then null
+          else div0(${actual},${theoretical_max_production_rate})
+        end;;
     }
 
   measure: total_operator_count {
