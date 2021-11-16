@@ -152,6 +152,22 @@ view: liveperson_message {
     sql: CAST(${TABLE}.created AS TIMESTAMP_NTZ) ;;
   }
 
+  dimension_group: created_ts_date {
+    label: "- Message Created"
+    description: "TS when message was created in MT."
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week
+    ]
+    # hidden: yes
+    sql: ${TABLE}.created::date ;;
+  }
+
   dimension: minute_30_only {
     type: string
     group_label: "- Message Created Date"
