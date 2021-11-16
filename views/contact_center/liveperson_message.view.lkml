@@ -152,6 +152,12 @@ view: liveperson_message {
     sql: CAST(${TABLE}.created AS TIMESTAMP_NTZ) ;;
   }
 
+  dimension: minute_30_only {
+    type: string
+    group_label: "- Message Created Date"
+    sql: right(${created_ts_minute30},5) ;;
+  }
+
   dimension_group: insert_ts {
     label: "- Message Inserted"
     description: "TS when message record was inserted in database in MT."
