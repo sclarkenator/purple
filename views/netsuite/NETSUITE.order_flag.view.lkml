@@ -66,6 +66,7 @@ view: order_flag {
      ,case when ( portable_cushion >0 ) then 1 else 0 end portable_cushion_flg
      ,case when ( everywhere_cushion >0 ) then 1 else 0 end everywhere_cushion_flg
      ,case when ( lite_cushion >0 ) then 1 else 0 end lite_cushion_flg
+     ,case when ( bearaby_weighted_blanket >0 ) then 1 else 0 end bearaby_weighted_blanket_flg
 -- bundles
      ,case when ( harmony_ORDERED > 1 and original_sheets > 0 and protector_flg >0) then 1 else 0 end bundle1_flg
      ,case when ( double_cushion >0 and simply_cushion >0) then 1 else 0 end bundle2_flg
@@ -216,6 +217,7 @@ view: order_flag {
          ,sum(case when model = 'KID SHEETS' THEN 1 ELSE 0 END) kidsheets
          ,sum(case when model = 'LIFELINE MATTRESS' then 1 else 0 end) lifeline
          ,SUM(CASE WHEN category = 'SEATING' and model not in ('BACK') THEN 1 ELSE 0 END) CUSHION_FLG_sansback
+         ,sum(case when model = 'BEARABY WEIGHTED BLANKET' THEN 1 ELSE 0 END) bearaby_weighted_blanket
         -- 2's
          ,SUM(CASE WHEN model = 'HARMONY' THEN ORDERED_QTY ELSE 0 END) harmony_ORDERED
          ,SUM(CASE WHEN model = 'SOFTSTRETCH' THEN ORDERED_QTY ELSE 0 END) softstretch_ORDERED
@@ -966,6 +968,14 @@ view: order_flag {
     drill_fields: [sales_order_line.sales_order_details*]
     type:  yesno
     sql:  ${TABLE}.lite_cushion_flg =1 ;; }
+
+  dimension: bearaby_weighted_blanket_flag {
+    group_label: "    * Orders has:"
+    label: "a Bearaby Weighted Blanket"
+    description: "1/0 per order; 1 if the order contains a Bearaby Weighted Blanket. Source: looker.calculation"
+    drill_fields: [sales_order_line.sales_order_details*]
+    type:  yesno
+    sql:  ${TABLE}.bearaby_weighted_blanket_flg =1 ;; }
 
 # Bundle flags and measures
   dimension: is_bundle{
