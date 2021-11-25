@@ -211,7 +211,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:v_site_feedback{hidden: yes}
-
+  explore: v_session_hour_projection {hidden:yes}
 
 #   explore: ecommerce_qualtrics {
 #     hidden: yes
