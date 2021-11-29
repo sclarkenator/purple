@@ -440,12 +440,25 @@ view: sales_order {
     type: string
     sql: ${TABLE}.PAYMENT_METHOD ;; }
 
+    dimension: fin_flag {
+    label: "     * Is Financed"
+    hidden: yes
+    description: "For Shopify-US orders only. Payment with Affirm, Progressive, Splitit, or Zibby.
+      Source: netsuite.sales_order"
+    type: number
+    sql: case when (${TABLE}.PAYMENT_METHOD ilike 'AFFIRM'
+                  or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE'
+                  or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT'
+                  or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY') then 1
+              when ${TABLE}.payment_method is null then 0 else 0 end ;; }
+
+
   dimension: payment_method_flag {
     label: "     * Is Financed"
     description: "For Shopify-US orders only. Payment with Affirm, Progressive, Splitit, or Zibby.
       Source: netsuite.sales_order"
     type: yesno
-    sql: ${TABLE}.PAYMENT_METHOD ilike 'AFFIRM' or ${TABLE}.PAYMENT_METHOD ilike 'PROGRESSIVE' or ${TABLE}.PAYMENT_METHOD ilike 'SPLITIT' or ${TABLE}.PAYMENT_METHOD ilike 'ZIBBY' ;; }
+    sql: ${fin_flag}=1 ;; }
 
   dimension: recycle_fee_amt {
     label: "Recycle Fee"

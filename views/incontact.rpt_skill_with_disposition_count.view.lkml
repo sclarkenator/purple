@@ -139,6 +139,12 @@ dimension: primary_key {
     sql: ${TABLE}."SKILL" ;;
   }
 
+  dimension: campaign {
+      description: "Campaign is the call type and skill grouping from inContact"
+      type: string
+      sql: ${TABLE}."CAMPAIGN" ;;
+  }
+
   dimension: call_type {
     description: ""
     type: string
