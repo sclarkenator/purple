@@ -8,6 +8,7 @@ view: inventory {
 
   measure: on_hand {
     label: "  On Hand"
+    value_format: "#,##0"
     description: "The quantity of an item physically in a warehouse."
     type: sum
     sql: ${TABLE}.ON_HAND ;; }
