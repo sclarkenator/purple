@@ -125,11 +125,21 @@ view: inventory {
 
   measure: NetSuite_Stocklevel {
     group_label: "Netsuite_values"
-    label: "NetSuite preferred Stock Level"
+    label: "NetSuite Preferred Stock Level"
     type: sum
     hidden:  no
     description: "The aggregation of item stock levels per item per warehouse."
     sql: ${TABLE}.PREFERRED_STOCK_LEVEL ;; }
+
+  measure: to_build {
+    label: "To Build"
+    description: "Difference between NS Preferred Stock and current On Hand"
+    type: sum
+    hidden:  no
+    sql: case when ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND > 0
+              then ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND
+          else 0 end;; }
+
 
   dimension: Average_Cost {
     hidden: yes
