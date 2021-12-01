@@ -12,6 +12,24 @@ view: inventory {
     type: sum
     sql: ${TABLE}.ON_HAND ;; }
 
+  dimension: unit_standard_cost {
+    group_label: " Advanced"
+    hidden: yes
+    label: "Unit Standard Cost"
+    description: "Source:netsuite.item_standard_cost"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${standard_cost.standard_cost} ;;
+  }
+
+  measure: total_standard_cost {
+    label: "Total Standard Cost (On Hand)"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    type:  sum
+    value_format: "$#,##0"
+    sql:  ${TABLE}.on_hand * ${unit_standard_cost} ;;
+  }
+
   measure: open_orders {
     label: "  Open orders"
     description: "Total unfulfilled units ordered across all channels in the last 35 days that are due within the next 7 days"
@@ -50,6 +68,15 @@ view: inventory {
     description: "On-hand - open orders where open orders > on hand, aggregated from the location-level"
     type: sum
     sql: nvl(${TABLE}.calculated_backordered,0)*-1 ;; }
+
+  dimension: standard_cost {
+    group_label: " Advanced"
+    label: "Unit Standard Cost"
+    description: "Source:Inventory snapshot table"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.standard_cost ;;
+  }
 
   measure: nets_available {
     group_label: "Netsuite_values"
