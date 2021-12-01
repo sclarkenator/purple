@@ -21,17 +21,21 @@ view: liveperson_message {
           ,cm1.*
           ,datediff(second, case when cm1.conversation_id = cm2.conversation_id then cm2.created end, cm1.created) as response_time
           ,case when f.min_seq is not null then TRUE end as agent_first
+
       from CMRows cm1
+
           left join CMRows cm2
               on cm1.rn = cm2.rn +1
+
           left join liveperson.agent a
               on cm1.sent_by = 'Agent'
               and cm1.participant_id = a.agent_id::text
+
           left join (
               select conversation_id
                   ,min(seq) as min_seq
               from CMRows cm1
-                  join liveperson.agent a
+                  left join liveperson.agent a
                       on cm1.sent_by = 'Agent'
                       and cm1.participant_id = a.agent_id::text
                       and a.full_name not ilike '%-bot'
@@ -40,6 +44,7 @@ view: liveperson_message {
           ) f
           on cm1.conversation_id = f.conversation_id
           and cm1.seq = f.min_seq
+
       order by cm1.rn
       ;;
   }
@@ -47,48 +52,22 @@ view: liveperson_message {
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
-                                      # dimension: agent_first {
-                                      #   label: "Agent First Flag"
-                                      #   description: "Flags first message that comes from a live agent."
-                                      #   type: yesno
-                                      #   sql: ${TABLE}.agent_first ;;
-                                      # }
-
-                                      # dimension: agent_first_response_time {
-                                      #   label: "Agent First Response Time"
-                                      #   description: "Response time from a live agent in seconds."
-                                      #   # group_label: "* Message Details"
-                                      #   type: number
-                                      #   value_format_name: decimal_0
-                                      #   sql: ${TABLE}.response_time ;;
-                                      # }
 
   dimension: agent_name {
     label: "Agent Name"
-    view_label: "Agent Data"
+    group_label: "Agent Data (Message)"
     description: "Name of agent sending message."
     type: string
     sql: ${TABLE}.agent_name ;;
     # hidden: yes
   }
 
-  # dimension: agent_type {
-  #   label: "Agent Type"
-  #   view_label: "Agent Data"
-  #   description: "Is agent a bot, virtual assistant, or live agent."
-  #   type: string
-  #   sql: case when ${sender} in ('Bot', 'Virtual Assistant') then ${sender}
-  #     when ${agent_name} is not null then 'Agent'
-  #     else ;;
-  #   # hidden: yes
-  # }
-
   dimension: audience {
     label: "Audience"
     # group_label: "* Message Details"
     description: "Who can receive the message. Valid values: 'ALL', 'AGENTS_AND_MANAGERS'"
     type: string
-    hidden: yes  # Hidden because there is currently only one value in this field
+    hidden: yes  # Hidden because there is currently only one value showing in this field
     sql: ${TABLE}."AUDIENCE" ;;
   }
 
@@ -102,17 +81,14 @@ view: liveperson_message {
   }
 
   dimension: device {
-    label: "Device"
-    # group_label: "* Message Details"
-    description: "Device the message was sent from.  Depreciated (not supported)"
-    type: string
-    # hidden: yes
-    sql: ${TABLE}."DEVICE" ;;
+    label: "Message Device"
+    description: "Type of device used to send consumer message.  (MOBILE / DESKTOP / TABLET)"
   }
 
   dimension: message {
     label: "Message"
     # group_label: "* Message Details"
+    description: "Message value."
     type: string
     sql: ${TABLE}."MESSAGE" ;;
   }
@@ -126,15 +102,6 @@ view: liveperson_message {
     sql: ${TABLE}.response_time ;;
   }
 
-                                          # dimension: testing_only_rn {
-                                          #   label: "Row Number"
-                                          #   description: "Used to sort records by Conversation ID then by Message ID."
-                                          #   type: number
-                                          #   value_format_name: id
-                                          #   # hidden: yes
-                                          #   sql: ${TABLE}.rn ;;
-                                          # }
-
   dimension: sender {
     label: "Sender Type"
     # group_label: "* Message Details"
@@ -143,17 +110,8 @@ view: liveperson_message {
     sql: ${TABLE}.sender ;;
   }
 
-  dimension: sent_by {
-    label: "Sent By"
-    # group_label: "* Message Details"
-    description: "Who sent the message. Valid values: 'Agent', 'Consumer'"
-    type: string
-    hidden: yes # Replaced with sender dimension above.  Can be reenabled if needed.
-    sql: ${TABLE}."SENT_BY" ;;
-  }
-
   dimension: seq {
-    label: "Seq"
+    label: "Sequence Number"
     # group_label: "* Message Details"
     description: "Message's sequence in the conversation.  Does not have to be continuous, i.e. 0, 2, 5, etc."
     type: number
@@ -162,11 +120,11 @@ view: liveperson_message {
   }
 
   dimension: type {
-    label: "Type"
+    label: "Message Type"
     # group_label: "* Message Details"
     description: "The message data type, i.e. TEXT_PLAIN, TEXT_HTML, LINK, etc."
     type: string
-    hidden: yes
+    hidden: yes  # Hidden because there is currently only one value in this field
     sql: ${TABLE}."TYPE" ;;
   }
 
@@ -182,13 +140,38 @@ view: liveperson_message {
       raw,
       time,
       date,
-      # week,
+      week,
       month,
-      # quarter,
-      year
+      quarter,
+      year,
+      minute30,
+      hour_of_day,
+      day_of_week
     ]
     # hidden: yes
     sql: CAST(${TABLE}.created AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension_group: created_ts_date {
+    label: "- Message Created"
+    description: "TS when message was created in MT."
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week
+    ]
+    # hidden: yes
+    sql: ${TABLE}.created::date ;;
+  }
+
+  dimension: minute_30_only {
+    type: string
+    group_label: "- Message Created Date"
+    sql: right(${created_ts_minute30},5) ;;
   }
 
   dimension_group: insert_ts {
@@ -226,7 +209,7 @@ view: liveperson_message {
     description: "Agent's InContact ID."
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.employee_id ;;
   }
 
@@ -236,17 +219,17 @@ view: liveperson_message {
     description: "Agent's LivePerson ID."
     type: number
     value_format_name: id
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.liveperson_id ;;
   }
 
   dimension: message_id {
     label: "Message ID"
     description: "Combined Conversation ID and Seq #"
-    group_label: "* IDs"
+    # group_label: "* IDs"
     primary_key: yes
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}."MESSAGE_ID" ;;
   }
 
@@ -260,28 +243,28 @@ view: liveperson_message {
 
   ##########################################################################################
   ##########################################################################################
-  ## AGENT MEASURES
+  ## HUMAN AGENT MEASURES
 
-  measure: active_agent_count {
+  measure: active_human_agent_count {
     label: "Active Agent Count"
-    description: "Count of agents that were active in a given period."
-    group_label: "* Agent Measures"
+    description: "Count of human agents that were active in a given period."
+    group_label: "* Human Agent Measures"
     type: count_distinct
     sql: case when sent_by = 'Consumer' then ${participant_id} end ;;
   }
 
-  measure: message_count_agent {
-    label: "Agent Message Count"
+  measure: message_human_agent_count {
+    label: "Message Count - Agents"
     description: "Count of messages sent by a human agent."
-    group_label: "* Agent Measures"
+    group_label: "* Human Agent Measures"
     type: count_distinct
     sql: case when ${sender} = 'Agent' then ${message_id} end ;;
   }
 
-  measure: response_time_agent_avg {
-    label: "Response Time Agent Avg"
-    description: "Average response time in seconds."
-    group_label: "* Agent Measures"
+  measure: response_time_human_agent_avg {
+    label: "Response Time Avg - Agents"
+    description: "Average response time in seconds for human agent."
+    group_label: "* Human Agent Measures"
     type: string
     sql: concat(0 + floor(avg(case when ${sender} = 'Agent' then ${response_time} end)/60), ':'
       , right(concat('0', floor(mod(avg(case when ${sender} = 'Agent' then ${response_time} end), 60))), 2)) ;;
@@ -289,10 +272,32 @@ view: liveperson_message {
 
   ##########################################################################################
   ##########################################################################################
+  ## PURPLE MEASURES - Includes humans, bots, and virtual assistants
+
+  measure: message_all_agent_count {
+    label: "Message Count - Purple"
+    description: "Count of messages sent by a human, bot, and virtual assistant agent."
+    group_label: "* All Agent Measures"
+    type: count_distinct
+    # sql: case when ${sender} in ('Agent', 'Bot', 'Virtual Assistant') then ${message_id} end ;;
+    sql: case when ${sender} in ('Agent', 'Bot', 'Virtual Assistant') then ${message_id} end ;;
+  }
+
+  measure: response_time_all_agent_avg {
+    label: "Response Time Avg - Purple"
+    description: "Average response time in secondsfor human, bot, and virtual assistant agents."
+    group_label: "* All Agent Measures"
+    type: string
+    sql: concat(0 + floor(avg(case when in ('Agent', 'Bot', 'Virtual Assistant') then ${response_time} end)/60), ':'
+      , right(concat('0', floor(mod(avg(case when ${sender}in ('Agent', 'Bot', 'Virtual Assistant')  then ${response_time} end), 60))), 2)) ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
   ## BOT MEASURES
 
   measure: message_count_bot {
-    label: "Bot Message Count"
+    label: "Message Count - Bots"
     description: "Count of messages sent by a bot."
     group_label: "* Bot Measures"
     type: count_distinct
@@ -300,7 +305,7 @@ view: liveperson_message {
   }
 
   measure: bot_response_time_avg {
-    label: "Bot Response Time Avg"
+    label: "Response Time Avg - Bots"
     group_label: "* Bot Measures"
     description: "Average bot response time in seconds."
     type: average
@@ -320,15 +325,8 @@ view: liveperson_message {
     sql: case when sent_by = 'Consumer' then ${participant_id} end ;;
   }
 
-  measure: message_consumer_count {
-    label: "Consumer Message Count"
-    group_label: "* Consumer Measures"
-    type: count_distinct
-    sql: case when ${sender} = 'Consumer' then ${message_id} end ;;
-  }
-
   measure: message_count_consumer {
-    label: "Consumer Message Count"
+    label: "Message Count - Consumers"
     description: "Count of messages sent by a consumer."
     group_label: "* Consumer Measures"
     type: count_distinct
@@ -336,7 +334,7 @@ view: liveperson_message {
   }
 
   measure: consumer_response_time_avg {
-    label: "Consumer Response Time Avg"
+    label: "Response Time Avg - Consumers"
     description: "Average response time in seconds."
     group_label: "* Consumer Measures"
     type: average
@@ -349,7 +347,7 @@ view: liveperson_message {
   ## VIRTUAL ASSISTANT MEASURES
 
   measure: message_count_virtual_assistant {
-    label: "Virtual Assistant Message Count"
+    label: "Message Count - Virtual Assistants"
     description: "Count of messages sent by a virtual agent."
     group_label: "* Virtual Assistant Measures"
     type: count_distinct
@@ -357,7 +355,7 @@ view: liveperson_message {
   }
 
   measure: response_time_virtual_assistant_avg {
-    label: "Virtual Assistant Response Time Avg"
+    label: "Response Time Avg - Virtual Assistants"
     description: "Average bot response time in seconds."
     group_label: "* Virtual Assistant Measures"
     type: average
@@ -370,7 +368,7 @@ view: liveperson_message {
   ## DEVICE MEASURES
 
   measure: device_desktop_count {
-    label: "Desktop Message Count"
+    label: "Message Count Desktop"
     description: "Count of consumer messages from a Desktop computer."
     group_label: "* Device Measures"
     type: count_distinct
@@ -378,7 +376,7 @@ view: liveperson_message {
   }
 
   measure: device_tablet_count {
-    label: "Tablet Message Count"
+    label: "Message Count Tablet"
     description: "Count of consumer messages from a Tablet device."
     group_label: "* Device Measures"
     type: count_distinct
@@ -386,7 +384,7 @@ view: liveperson_message {
   }
 
   measure: device_mobile_count {
-    label: "Mobile Message Count"
+    label: "Message Count Mobile"
     description: "Count of consumer messages from a Mobile (phone) device."
     group_label: "* Device Measures"
     type: count_distinct
@@ -401,6 +399,7 @@ view: liveperson_message {
     label: "Active Conversation Count"
     type: count_distinct
     sql: ${conversation_id} ;;
+    hidden: yes
   }
 
                                                           # dimension: duration_days {

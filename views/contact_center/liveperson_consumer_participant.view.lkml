@@ -27,6 +27,7 @@ view: liveperson_consumer_participant {
     label: "First Name"
     group_label: "* Details"
     type: string
+    hidden: yes
     sql: ${TABLE}."FIRST_NAME" ;;
   }
 
@@ -34,11 +35,13 @@ view: liveperson_consumer_participant {
     label: "Last Name"
     group_label: "* Details"
     type: string
+    hidden: yes
     sql: ${TABLE}."LAST_NAME" ;;
   }
 
   dimension: name {
-    label: "Name"
+    label: "Consumer Name"
+    description: "Consumer participant's full name."
     type: string
     sql: ${TABLE}."NAME" ;;
   }

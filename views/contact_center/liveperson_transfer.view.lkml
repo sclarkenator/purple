@@ -12,17 +12,32 @@ view: liveperson_conversation_transfer {
           on ct.source_skill_id = s.skill_id
 
         join liveperson.skill t
-          on ct.source_skill_id = t.skill_id ;;
+          on ct.target_skill_id = t.skill_id ;;
     }
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
 
+  dimension: testing_skill_match {
+    label: "Testing Skill Matching"
+    description: "Testing whether Source and Target skill values typeically match."
+    type: yesno
+    sql: ${source_skill_id} = ${target_skill_id} ;;
+  }
+
   dimension: reason {
     label: "Reason"
+    description: "Reason for transfer (back2Q, Agent, SuggestedAgentTimeout, Skill, TakeOver)"
     type: string
     sql: ${TABLE}."REASON" ;;
+    ## NOTE: the reason property gives you insight into why the conversation was transferred:
+    ##    * back2Q - the agent transferred the conversation back to the queue.
+    ##    * Agent - the conversation was transferred to a specific agent.
+    ##    * SuggestedAgentTimeout - the conversation was transferred to a specific agent but they did not accept
+    ##        it in time and it was transferred back to the queue.
+    ##    * Skill - the conversation was transferred to a skill.
+    ##    * TakeOver - a manager has taken over the conversation.
   }
 
   dimension: source_skill {

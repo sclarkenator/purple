@@ -255,7 +255,7 @@ from (
   left join ee on ee.sku_id = aa.finished_good_sku
   left join ff on ff.sku_id = aa.finished_good_sku
 ) zz
-where forecast_version ='Current S&OP'
+--where forecast_version ='Working'
 group by 1,2,3,4,24,25,26,27, 28;;  }
 
   dimension: hep_sku {

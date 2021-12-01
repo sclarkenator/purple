@@ -23,31 +23,6 @@ view: v_splitit {
     sql: ${TABLE}."CARDHOLDER_NAME" ;;
   }
 
-  dimension: installment_plan {
-    type: string
-    sql: ${TABLE}."INSTALLMENT_PLAN" ;;
-  }
-
-  dimension: ref_num {
-    type: string
-    sql: ${TABLE}."REF_NUM" ;;
-  }
-
-  dimension: shopify_order_number {
-    type: string
-    sql: ${TABLE}."SHOPIFY_ORDER_NUMBER" ;;
-  }
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}."STATUS" ;;
-  }
-
-  dimension: tag {
-    type: string
-    sql: ${TABLE}."TAG" ;;
-  }
-
   dimension_group: created {
     type: time
     timeframes: [
@@ -60,6 +35,36 @@ view: v_splitit {
       year
     ]
     sql: CAST(${TABLE}."TIME" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension: installment_plan {
+    type: string
+    sql: ${TABLE}."INSTALLMENT_PLAN" ;;
+  }
+
+  dimension: order_number {
+    type: string
+    sql: ${TABLE}."ORDER_NUMBER" ;;
+  }
+
+  dimension: platform {
+    type: string
+    sql:  ${TABLE}."PLATFORM" ;;
+  }
+
+  dimension: ref_num {
+    type: string
+    sql: ${TABLE}."REF_NUM" ;;
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}."STATUS" ;;
+  }
+
+  dimension: tag {
+    type: string
+    sql: ${TABLE}."TAG" ;;
   }
 
   dimension: transaction_type {

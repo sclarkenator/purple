@@ -53,8 +53,11 @@ view: bin_location {
     sql: ${TABLE}."PACK_SIZE" ;;
   }
 
-  measure: quantity {
+  measure: quantity_unfiltered {
     type: sum
+    hidden: no
+    label: "HJ - Quantity (Unfiltered)"
+    description: "Includes all Zones"
     sql: ${TABLE}."QUANTITY" ;;
   }
 
@@ -67,6 +70,16 @@ view: bin_location {
     type: string
     sql: ${TABLE}."SKU" ;;
   }
+
+  measure: quantity {
+    type: sum
+    label: "HJ - Quantity"
+    description: "Excludes Zones from HJ related to quality, ee store, and waste management"
+    value_format: "#,##0"
+    sql: CASE WHEN (${zone} IN ('1', '2', '3', '4', 'A', 'B', 'C', 'G', 'I', 'K', 'M', 'N', 'O', 'P', 'R', 'S', '5', '6', 'X', 'Y', 'Z')) THEN ${TABLE}."QUANTITY"
+      ELSE 0 END;;
+  }
+
 
   measure: unallocated {
     type: sum

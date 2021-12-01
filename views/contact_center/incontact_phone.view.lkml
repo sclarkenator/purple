@@ -33,6 +33,15 @@ view: incontact_phone {
       ]
     }
 
+  set: performance_summary {
+    fields: [
+      handled_count,
+      acw_time_average,
+      handle_time_average,
+      hold_time_average
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
@@ -42,7 +51,7 @@ view: incontact_phone {
     type: string
     sql:
     case
-        when ${skill_name} in ('8885Purple','888Purple','AAA EnCompass','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','CDL_Trucker _Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Mantra Wellness magazine','Military Officer','MyMove','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher_Discount','Teacher Discount','Time Magazine')
+        when ${skill_name} in ('8885Purple','888Purple','AAA EnCompass','Abandoned Carts','American Legion Auxiliary','Archaeology Magazine','Arthritis Today','BOGO 50','C_D_L_Trucker_Discount','CDL_Trucker _Discount','Discover Magazine Ad','Doctors_Medical_Discount','Elks','FB Campaign','FKL Free Sheets 2Pillow','FKL_10Percent off Mattress','FKL_20Dollar_Off','FKL_SleepMask','Financing','First 100 Days','Fluent','Inbound Sales','Innovation and Tech Today','Magazine Ad','Mantra Wellness magazine','Military Officer','MyMove','Online Chat','Parade 1','Parade 2','Presidents Day Promo','Progressive','Progressive Corporate Support','Purple Call Campaign','Sales Team Landing Page 1','Sales Team Landing Page 2','Sales Xfer (From Support)','Sleep Bundles','Smithsonian','Spring Sale','TV Ads','Teacher_Discount','Teacher Discount','Time Magazine','SheerID Discount')
             then 'Sales Inbound'
         when ${skill_name} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty','Support Tier 1 to Tier 2 xfer')
             then 'Support Inbound'
@@ -664,6 +673,7 @@ view: incontact_phone {
       week_of_year,
       month,
       month_name,
+      minute30,
       quarter,
       year
       ]
@@ -680,6 +690,7 @@ view: incontact_phone {
       date,
       week,
       day_of_week,
+      minute30,
       month,
       month_name,
       quarter,

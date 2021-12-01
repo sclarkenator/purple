@@ -213,6 +213,14 @@ view: receipt_line {
     drill_fields: [receipt_line_id]
   }
 
+  measure: item_unit_price_measure{
+    label: "Item Unit Price"
+    description: "Source: netsuite.receipt_line"
+    value_format: "$#,##0.00"
+    type: sum
+    sql: ${TABLE}."ITEM_UNIT_PRICE" ;;
+  }
+
   measure: item_count {
     group_label: " Advanced"
     description: "Source: netsuite.receipt_line"

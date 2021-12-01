@@ -1,35 +1,76 @@
 ## REFERENCE: https://developers.liveperson.com/agent-metrics-api-methods-agent-status.html
 view: liveperson_agent_status {
-  sql_table_name: "LIVEPERSON"."AGENT_STATUS" ;;
+  sql_table_name: liveperson.agent_status ;;
+  # derived_table: {
+    # sql:
+      # select stat.agent_id,
+      #     stat.status_change,
+      #     stat.sequence_number,
+      #     # stat.session_id,
+      #     last.name as type,
+      #     lass.name as subtype,
+      #     stat.duration,
+      #     stat.reason
+
+      # from liveperson.agent_status as stat
+
+      #     left join liveperson.agent_status_type as last
+      #         on stat.type = last.type_id
+
+      #     left join liveperson.agent_status_subtype as lass
+      #         on stat.sub_type = lass.subtype_id
+        # ;;
+    #   sql:  select stat.agent_id,
+    # stat.status_change,
+    # sequence_number,
+    # last.name as type,
+    # lass.name as subtype,
+    # stat.duration,
+    # stat.reason,
+    # stat.agent_id || status_change || sequence_number as pk
+
+
+# from liveperson.agent_status as stat
+
+#     left join liveperson.agent_status_type as last
+#         on stat.type = last.type_id
+
+#     left join liveperson.agent_status_subtype as lass
+#         on stat.sub_type = lass.subtype_id
+
+# order by agent_id, status_change, sequence_number
+# ;;
+
 
   set: default_agent_status {
     fields: [
-      type,
-      sub_type,
       reason,
-      # session_id,
-      # sequence_number,
+      type,
+      subtype,
+      duration,
       status_change_date,
       status_change_time,
+      status_change_minute,
+      status_change_minute15,
+      status_change_hour,
       status_change_week,
       status_change_month,
       status_change_year,
+      agent_status_count,
       pk
     ]
     }
-    set: agent_login_time {
-      fields: [
-        status_change_date,
-        status_change_time,
-        status_change_week,
-        status_change_month,
-        status_change_year,
-        time_logged_in
-      ]
-  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
+
+  dimension: duration {
+    label: "Duration"
+    description: "Duration in seconds"
+    type: number
+    sql: ${TABLE}.duration ;;
+  }
 
   dimension: reason {
     label: "Reason"
@@ -38,30 +79,20 @@ view: liveperson_agent_status {
     sql: ${TABLE}."REASON" ;;
   }
 
-  # dimension: session_sequence {
-  #   label: "Session Sequence"
-  #   type: string
-  # }
-
-  dimension: sub_type {
-    label: "Sub-Type"
+  dimension: subtype {
+    label: "Subtype"
     description: "Subtype of status change when Type = 'Status Changed'."
     type: string
-    sql: case when ${TABLE}.sub_type = 1 then 'Offline'
-      when ${TABLE}.sub_type = 2 then 'Online'
-      when ${TABLE}.sub_type = 3 then 'Occupied'
-      when ${TABLE}.sub_type = 4 then 'Away'
-      end ;;
+    # hidden: yes
+    sql: ${TABLE}.sub_type ;;
   }
 
-  dimension: type {
+  dimension: type{
     label: "Type"
     description: "Type of status change."
     type: string
-    sql: case when ${TABLE}.type = 1 then 'Status Changed'
-      when ${TABLE}.type = 3 then 'Login'
-      when ${TABLE}.type = 4 then 'Logout'
-      end ;;
+    # hidden: yes
+    sql: ${TABLE}.type ;;
   }
 
   ##########################################################################################
@@ -89,6 +120,9 @@ view: liveperson_agent_status {
     timeframes: [
       raw,
       time,
+      minute,
+      minute15,
+      hour,
       date,
       week,
       month,
@@ -102,13 +136,16 @@ dimension_group: status_change {
   label: "- Status Change"
   type: time
   timeframes: [
-    raw,
-    time,
-    date,
-    week,
-    month,
-    quarter,
-    year
+      raw,
+      time,
+      minute,
+      minute15,
+      hour,
+      date,
+      week,
+      month,
+      quarter,
+      year
   ]
   sql: CAST(${TABLE}."STATUS_CHANGE" AS TIMESTAMP_NTZ) ;;
   }
@@ -118,12 +155,12 @@ dimension_group: status_change {
   ## IDs
 
   dimension: pk {
-    label: "Session Sequence ID"
-    description: "[Agent ID] - [Session ID] - [Sequence Number]"
+    label: "Primary Key"
+    description: "[Agent ID] - [Status Change Time] - [Sequence Number]"
     type: string
     # hidden: yes
     primary_key: yes
-    sql: concat(${agent_id}, '-', ${session_id}, '-', right(concat('00', ${sequence_number}), 2)) ;;
+    sql: concat(${agent_id}, '-', ${status_change_time}, right(concat('00', ${sequence_number}), 2)) ;;
   }
 
   dimension: agent_id {
@@ -142,13 +179,13 @@ dimension_group: status_change {
     sql: ${TABLE}."SEQUENCE_NUMBER" ;;
   }
 
-  dimension: session_id {
-    description: "Identifier of the session during which this status change took place."
-    type: number
-    value_format_name: id
-    # hidden: yes
-    sql: ${TABLE}."SESSION_ID" ;;
-  }
+  # dimension: session_id {
+  #   description: "Identifier of the session during which this status change took place."
+  #   type: number
+  #   value_format_name: id
+  #   # hidden: yes
+  #   sql: ${TABLE}."SESSION_ID" ;;
+  # }
 
   dimension: status_reason_id {
     description: "Identifier of optional custom reason for the status change."
@@ -160,7 +197,7 @@ dimension_group: status_change {
 
   ##########################################################################################
   ##########################################################################################
-  ## MEASURES
+  ## COUNT MEASURES
 
   measure: agent_count {
     label: "Agent Count"
@@ -168,30 +205,71 @@ dimension_group: status_change {
     hidden: yes
     sql: agent_id ;;
     drill_fields: [pk]
-    html:
-      <ul>
-        <li> Time Logged In: {{value}} </li>
-        <li> Agent Count: {{value}} </li>
-      </ul>;;
   }
 
   measure: agent_status_count {
     label: "Agent Status Count"
+    description: "Count of all status changes.  Includes 'Login' and 'Logout'."
     type: count
-    hidden: yes
+    # hidden: yes
     drill_fields: [pk]
   }
 
-  measure: time_logged_in {
-    label: "Time Logged In"
-    description: "Time spent logged in during designated period of time."
-    type: number
-    sql: sum(case when ${type} = 'Login' then to_numeric(${status_change_time}) end) ;;
-    html:
-      <ul>
-        <li> Time Logged In: {{rendered_value}}} </li>
-        <li> Time Logged Out: {{rendered_value}}} </li>
-        <li> Agent Count: {{liveperson_agent_status.agent_count._rendered_value}} </li>
-      </ul>;;
+  measure: count_away {
+    label: "Count Away"
+    description: "Count of status changes to 'Away' status."
+    type: count_distinct
+    sql: case when ${subtype} = 'Away' then ${pk} end ;;
   }
+
+  measure: count_occupied {
+    label: "Count Occupied"
+    description: "Count of status changes to 'Occupied' status."
+    type: count_distinct
+    sql: case when ${subtype} = 'Occupied' then ${pk} end ;;
+  }
+
+  measure: count_offline {
+    label: "Count Offline"
+    description: "Count of status changes to 'Offline' status."
+    type: count_distinct
+    sql: case when ${subtype} = 'Offline' then ${pk} end ;;
+  }
+
+  measure: online_count {
+    label: "Count Online"
+    description: "Count of status changes to 'Online' status."
+    type: count_distinct
+    sql: case when ${subtype} = 'Online' then ${pk} end ;;
+  }
+
+  ##########################################################################################
+  ##########################################################################################
+  ## DURATION MEASURES
+
+  measure: duration_away {
+    label: "Duration Away"
+    description: "Duration in away status in minutes."
+    type: number
+    sql: sum(case when ${subtype} = 'Away' then ${duration} end) / 60 ;;
+  }
+
+  measure: duration_occupied {
+    label: "Duration Occupied"
+    type: number
+    sql: sum(case when ${subtype} = 'Occupied' then ${duration} end) / 60 end ;;
+  }
+
+  measure: duration_offline {
+    label: "Duration Offline"
+    type: number
+    sql: sum(case when ${subtype} = 'Offline' then ${duration} end) / 60 ;;
+  }
+
+  measure: duration_online {
+    label: "Duration Online"
+    type: number
+    sql: sum(case when ${subtype} = 'Online' then ${duration} end) / 60 ;;
+  }
+
 }

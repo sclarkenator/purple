@@ -147,6 +147,12 @@ view: v_quality_mrb_cores_final_disposition {
     sql: ${TABLE}."YELLOW_CARD_NUMBER" ;;
   }
 
+  dimension: is_accurate {
+    type: string
+    sql: CASE WHEN ${TABLE}."IS_ACCURATE" = '' THEN NULL
+              ELSE ${TABLE}."IS_ACCURATE" END;;
+  }
+
   measure: count {
     type: count
     hidden: no
