@@ -36,6 +36,7 @@ view: agent_data {
       team_group,
       team_type,
       team_name,
+      incontact_id,
       is_active,
       is_retail,
       is_supervisor
