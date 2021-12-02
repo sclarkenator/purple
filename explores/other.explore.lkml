@@ -88,11 +88,13 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
     }
     query: required_courses_for_compliance{
-          dimensions: [bridge_course.title]
-          measures: [completion_rate]
-          filters: [bridge_course.title: "California Harassment Prevention,California Harassment Prevention | Supervisor,Harassment Prevention,Harassment Prevention | Supervisor,Illinois Human Rights Act,Utah Antidiscrimination Act,New York State Human Rights Law,Code of Ethics,Insider Trading - 2021,HIPAA for Purple Managers,HIPAA Overview for HR,Crisis Communication Policy for Employees,Crisis Communication Policy for Managers,\"Purple's Antitrust Policy Training and Acknowledgement\",Substance Abuse Policy for Safety-Sensitive Positions"]
-        }
-
+        measures: [completion_rate, completions, count]
+        filters: [
+          bridge_course.title: "California Harassment Prevention,California Harassment Prevention | Supervisor,Harassment Prevention,Harassment Prevention | Supervisor,Illinois Human Rights Act,Utah Antidiscrimination Act,New York State Human Rights Law,Code of Ethics,Insider Trading - 2021,HIPAA for Purple Managers,HIPAA Overview for HR,Crisis Communication Policy for Employees,Crisis Communication Policy for Managers,\"Purple's Antitrust Policy Training and Acknowledgement\",Substance Abuse Policy for Safety-Sensitive Positions",
+          bridge_enrollment.is_active: "Yes",
+          bridge_user.department: "-NULL"
+        ]
+      }
   }
 
 #-------------------------------------------------------------------
