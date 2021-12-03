@@ -298,3 +298,4 @@ explore: bin {
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
   explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
   explore: item_raw {from: item hidden:yes}
+  explore: forecast_snapshot {hidden:yes}
