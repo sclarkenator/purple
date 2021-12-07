@@ -428,7 +428,7 @@ derived_table: {
   measure: target {
     hidden: yes
     description: "Target number for Average Shots per Max Machine Per Hour (Set by McKinsy)"
-    type: sum
+    type: number
     sql: case when ${machine.description} = 'Max 2' then 16
       when ${machine.description} = 'Max 3' then 16
       when ${machine.description} = 'Max 4' then 18
