@@ -1,5 +1,5 @@
 view: customer_journey {
-  sql_table_name: DATAGRID.MARKETING.V_CUSTOMER_JOURNEY
+  sql_table_name: MARKETING.EMAIL.V_CUSTOMER_JOURNEY
     ;;
 
   dimension: email {
