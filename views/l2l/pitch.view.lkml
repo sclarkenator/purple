@@ -425,4 +425,24 @@ derived_table: {
     drill_fields: [pitch_id, name]
   }
 
+  measure: target {
+    description: "Target number for Average Shots per Max Machine Per Hour (Set by McKinsy)"
+    type: number
+    sql: case when ${machine.description} = 'Max 2' then 16
+      when ${machine.description} = 'Max 3' then 16
+      when ${machine.description} = 'Max 4' then 18
+      when ${machine.description} = 'Max 5' then 21
+      when ${machine.description} = 'Max 6' then 16
+      when ${machine.description} = 'Max 7' then 20
+      else 0
+      end ;;
+  }
+
+  measure: avgerage_shots {
+    type: number
+    description: "Perfrmance * Taret"
+    value_format: "0.0"
+    sql: ${throughput_percent}*${target} ;;
+  }
+
   }
