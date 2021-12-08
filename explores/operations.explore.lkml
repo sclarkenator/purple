@@ -298,3 +298,4 @@ explore: bin {
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
   explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
   explore: item_raw {from: item hidden:yes}
+  explore: open_po_report {hidden: yes view_label:"International Inbound Open PO"}
