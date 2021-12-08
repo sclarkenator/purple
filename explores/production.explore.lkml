@@ -402,12 +402,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ltol_pitch.actual_product} = ${product.product_id};;
       relationship: one_to_many
     }
-    join: v_dispatch_with_downtime_minutes {
-      view_label: "Dispatch by Date"
-      type: left_outer
-      sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
-      relationship: one_to_many
-    }
+    ##join: v_dispatch_with_downtime_minutes {
+      ##view_label: "Dispatch by Date"
+      ##type: left_outer
+      ##sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
+      ##relationship: one_to_many
+    ##}
     join: reason {
       view_label: "Dispatch"
       type: left_outer

@@ -1,5 +1,5 @@
 view: crm_customer_health {
-  sql_table_name: "DATAGRID"."MARKETING"."V_CUSTOMER_HEALTH"
+  sql_table_name: "MARKETING"."EMAIL"."V_CUSTOMER_HEALTH"
   ;;
 
   dimension: email {
@@ -108,8 +108,8 @@ view: crm_customer_health_lifetime {
         , sum(pillow_units) AS LIFETIME_PILLOW
         , count(distinct order_id) as LIFETIME_ORDERS
         , sum (order_value) AS LIFETIME_ORDER_VALUE
-      from datagrid.looker_scratch.lz_datagrid_sales_order s
-      where sub_channel = 'Website'
+      from analytics.looker_scratch.LR$LZSMG1624579802607_SALES_ORDER s
+      --where sub_channel = 'Website'
       group by 1;;
   }
 

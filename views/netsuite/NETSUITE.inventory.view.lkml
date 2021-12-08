@@ -8,9 +8,28 @@ view: inventory {
 
   measure: on_hand {
     label: "  On Hand"
+    value_format: "#,##0"
     description: "The quantity of an item physically in a warehouse."
     type: sum
     sql: ${TABLE}.ON_HAND ;; }
+
+  dimension: unit_standard_cost {
+    group_label: " Advanced"
+    hidden: yes
+    label: "Unit Standard Cost"
+    description: "Source:netsuite.item_standard_cost"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${standard_cost.standard_cost} ;;
+  }
+
+  measure: total_standard_cost {
+    label: "Total Standard Cost (On Hand)"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    type:  sum
+    value_format: "$#,##0"
+    sql:  ${TABLE}.on_hand * ${unit_standard_cost} ;;
+  }
 
   measure: open_orders {
     label: "  Open orders"
@@ -50,6 +69,15 @@ view: inventory {
     description: "On-hand - open orders where open orders > on hand, aggregated from the location-level"
     type: sum
     sql: nvl(${TABLE}.calculated_backordered,0)*-1 ;; }
+
+  dimension: standard_cost {
+    group_label: " Advanced"
+    label: "Unit Standard Cost"
+    description: "Source:Inventory snapshot table"
+    type:  number
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.standard_cost ;;
+  }
 
   measure: nets_available {
     group_label: "Netsuite_values"
@@ -98,11 +126,21 @@ view: inventory {
 
   measure: NetSuite_Stocklevel {
     group_label: "Netsuite_values"
-    label: "NetSuite preferred Stock Level"
+    label: "NetSuite Preferred Stock Level"
     type: sum
     hidden:  no
     description: "The aggregation of item stock levels per item per warehouse."
     sql: ${TABLE}.PREFERRED_STOCK_LEVEL ;; }
+
+  measure: to_build {
+    label: "To Build"
+    description: "Difference between NS Preferred Stock and current On Hand"
+    type: sum
+    hidden:  no
+    sql: case when ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND > 0
+              then ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND
+          else 0 end;; }
+
 
   dimension: Average_Cost {
     hidden: yes
