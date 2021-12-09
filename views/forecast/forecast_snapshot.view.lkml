@@ -1,5 +1,5 @@
 view: forecast_snapshot {
-sql_table_name: "SALES"."FORECAST_SNAPSHOT"
+sql_table_name: analytics.forecast.monthly_snapshot
   ;;
 
 dimension: primary_key {
@@ -16,14 +16,11 @@ dimension_group: date {
   datatype: date
   sql: ${TABLE}.forecast ;; }
 
-  dimension_group: final_date {
-    label: "Final"
-    type: time
-    timeframes: [date, day_of_week, day_of_month, week,month, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.insert_ts ;; }
-
+dimension: snapshot_month {
+  type: date
+  convert_tz: no
+  datatype: date
+  sql: ${TABLE}.month ;; }
 
 dimension: date_week_of_year {
   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
@@ -110,6 +107,4 @@ dimension: cur_week{
     type:  sum
     value_format: "$#,##0"
     sql:${TABLE}.total_sales ;; }
-
-
-      }
+  }
