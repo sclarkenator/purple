@@ -12,55 +12,55 @@ view: customer_journey {
   dimension: has_Mattress {
     type:  yesno
     label: "Has purchased a mattress"
-    sql: ${TABLE}."HAS_MATTRESS" = 'Y' ;;
+    sql: ${TABLE}."HASMATTRESS" = 'Y' ;;
   }
 
   dimension: has_Base {
     type:  yesno
     label: "Has purchased a base"
-    sql: ${TABLE}."HAS_BASE" = 'Y' ;;
+    sql: ${TABLE}."HASBASE" = 'Y' ;;
   }
 
   dimension: has_Headboard {
     type:  yesno
     label: "Has purchased a headboard"
-    sql: ${TABLE}."HAS_HEADBOARD" = 'Y' ;;
+    sql: ${TABLE}."HASHEADBOARD" = 'Y' ;;
   }
 
   dimension: has_Pet {
     type:  yesno
     label: "Has purchased a pet product"
-    sql: ${TABLE}."HAS_PET" = 'Y' ;;
+    sql: ${TABLE}."HASPET" = 'Y' ;;
   }
 
   dimension: has_Pillow {
     type:  yesno
     label: "Has purchased a pillow"
-    sql: ${TABLE}."HAS_PILLOW" = 'Y' ;;
+    sql: ${TABLE}."HASPILLOW" = 'Y' ;;
   }
 
   dimension: has_Protector {
     type:  yesno
     label: "Has purchased a Protector"
-    sql: ${TABLE}."HAS_PROTECTOR" = 'Y' ;;
+    sql: ${TABLE}."HASPROTECTOR" = 'Y' ;;
   }
 
   dimension: has_Seating {
     type:  yesno
     label: "Has purchased a seating product"
-    sql: ${TABLE}."HAS_SEATING" = 'Y' ;;
+    sql: ${TABLE}."HASSEATING" = 'Y' ;;
   }
 
   dimension: has_Sheets {
     type:  yesno
     label: "Has purchased sheets"
-    sql: ${TABLE}."HAS_SHEETS" = 'Y' ;;
+    sql: ${TABLE}."HASSHEETS" = 'Y' ;;
   }
 
   dimension: has_Wearable {
     type:  yesno
     label: "Has purchased a wearable product"
-    sql: ${TABLE}."HAS_WEARABLE" = 'Y' ;;
+    sql: ${TABLE}."HASWEARABLE" = 'Y' ;;
   }
 
   dimension: share_of_bedroom {
