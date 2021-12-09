@@ -192,7 +192,7 @@ view: inventory_snap {
 
   measure: total_standard_cost {
     label: "Total Standard Cost (On Hand)"
-    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units"
     type:  sum
     value_format: "$#,##0"
     sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
