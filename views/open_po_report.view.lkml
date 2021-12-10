@@ -20,6 +20,7 @@ view: open_po_report {
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
   dimension_group: arrival_notice_received {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -35,6 +36,7 @@ view: open_po_report {
   }
 
   dimension_group: cargo_ready {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -70,6 +72,7 @@ view: open_po_report {
   }
 
   dimension_group: discharged {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -89,7 +92,8 @@ view: open_po_report {
     sql: ${TABLE}."DIVERSION_REQUEST" ;;
   }
 
-  dimension_group: eta {
+  dimension_group: ETA {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -104,7 +108,8 @@ view: open_po_report {
     sql: ${TABLE}."ETA" ;;
   }
 
-  dimension_group: etd {
+  dimension_group: ETD {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -130,6 +135,8 @@ view: open_po_report {
   }
 
   dimension_group: insert_ts {
+    view_label: "Dates"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -153,7 +160,8 @@ view: open_po_report {
     sql: ${TABLE}."ITEM_NUMBER" ;;
   }
 
-  dimension_group: lfd {
+  dimension_group: LFD {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -169,6 +177,7 @@ view: open_po_report {
   }
 
   dimension: mbol_mawb_hbol_hawb {
+    label: "Tracking Info"
     type: string
     sql: ${TABLE}."MBOL_MAWB_HBOL_HAWB" ;;
   }
@@ -178,7 +187,8 @@ view: open_po_report {
     sql: ${TABLE}."MODE" ;;
   }
 
-  dimension_group: netsuite_eta {
+  dimension_group: netsuite_ETA {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -214,11 +224,13 @@ view: open_po_report {
   }
 
   dimension: po_number {
+    label: "PO Number"
     type: string
     sql: ${TABLE}."PO_NUMBER" ;;
   }
 
   dimension_group: purple_in_hand {
+    view_label: "Dates"
     type: time
     timeframes: [
       raw,
@@ -234,6 +246,7 @@ view: open_po_report {
   }
 
   dimension: shipment_cbms {
+    label: "Shipment CBMS"
     type: string
     sql: ${TABLE}."SHIPMENT_CBMS" ;;
   }
@@ -254,11 +267,14 @@ view: open_po_report {
   }
 
   dimension: to_number {
+    label: "TO Number"
     type: string
     sql: ${TABLE}."TO_NUMBER" ;;
   }
 
   dimension_group: upload {
+    view_label: "Dates"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -276,10 +292,5 @@ view: open_po_report {
   dimension: vendor_mid {
     type: string
     sql: ${TABLE}."VENDOR_MID" ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: []
   }
 }
