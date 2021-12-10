@@ -108,8 +108,8 @@ view: crm_customer_health_lifetime {
         , sum(pillow_units) AS LIFETIME_PILLOW
         , count(distinct order_id) as LIFETIME_ORDERS
         , sum (order_value) AS LIFETIME_ORDER_VALUE
-      from analytics.looker_scratch.LR$LZSMG1624579802607_SALES_ORDER s
-      --where sub_channel = 'Website'
+      from Datagrid.prod.sales_order s
+      where sub_channel = 'Website'
       group by 1;;
   }
 
