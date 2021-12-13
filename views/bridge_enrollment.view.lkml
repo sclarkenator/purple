@@ -90,6 +90,11 @@ view: bridge_enrollment {
     drill_fields: []
   }
 
+  measure: enrollments {
+    type: number
+    sql: case when ${count} >= 1 then 1 else 0 end;;
+  }
+
   measure: completions {
     type: sum
     sql: case when ${completed_date} is not null then 1 else 0 end;;
@@ -97,7 +102,7 @@ view: bridge_enrollment {
 
   measure: completion_rate {
     type: number
-    sql: ${completions}/${count}*100 ;;
+    sql: ${completions}/${enrollments}*100 ;;
     value_format: "0.0\%"
   }
 }
