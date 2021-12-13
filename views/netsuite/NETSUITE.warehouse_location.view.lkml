@@ -39,11 +39,13 @@ view: warehouse_location {
     description: "Warehouses used by Purple (PWest and Mainfreight), White Glove (Nehds, Ryder, XPO, Pilot, Speedy, FragilePak), Other"
     type: string
     sql: case
-      when ${location_id} = '4' or  ${location_id} = '71' or ${location_id} = '75' or ${location_id} = '101' or ${location_id} = '111' then 'Purple'
-      when ${location_id} = '58' or  ${location_id} = '59' or ${location_id} = '63' or ${location_id} = '76'
-        or ${location_id} = '116' or ${location_id} = '121'or ${location_id} = '146'or ${location_id} = '149' or ${location_id} = '155' or ${location_id} = '158'
-        or ${location_id} = '170' or ${location_id} = '176' or ${location_id} = '162' then 'White Glove'
-      else 'Other' end ;;
+        when ${TABLE}.parent_id = '4' or ${TABLE}.parent_id = '111' or ${TABLE}.location_id = '4' or ${TABLE}.location_id = '5'
+          or ${TABLE}.location_id = '41' or ${TABLE}.location_id = '71' or ${TABLE}.location_id = '111' then 'Purple'
+        when ${TABLE}.location like '%WFD%' then 'WFD'
+        when ${TABLE}.location ilike '%trans%' then 'In-transit'
+        when ${TABLE}.whiteglove_warehouse = TRUE or ${TABLE}.warehouse_type = '3PL Warehouse' then 'White Glove'
+        when ${TABLE}.warehouse_type = 'Showroom' then 'Owned Retail'
+        else 'Other' end ;;
   }
 
   dimension: production_location{

@@ -12,9 +12,45 @@ view: warehouse_date_table {
     ]
   }
 
+  set: dynamic_fields {
+    fields: [
+      dynamic_date,
+      dynamic_date_granularity
+    ]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
+
+  parameter: dynamic_date_granularity {
+    description: "This parameter changes the date range visualized."
+    type: unquoted
+    allowed_value: {label:"Day" value:"day"}
+    allowed_value: {label:"Week" value:"week"}
+    allowed_value: {label:"Month" value:"month"}
+    allowed_value: {label:"Quarter" value:"quarter"}
+    # allowed_value: {label:"Year" value:"year"}
+  }
+
+  dimension: dynamic_date {
+    label_from_parameter: dynamic_date_granularity
+    type: date
+    sql:
+    {% if dynamic_date_granularity._parameter_value == 'day' %}
+      ${date_date}
+    {% elsif dynamic_date_granularity._parameter_value == 'week' %}
+      ${date_week}
+    {% elsif dynamic_date_granularity._parameter_value == 'month' %}
+      ${first_day_of_month}
+    {% elsif dynamic_date_granularity._parameter_value == 'quarter' %}
+      ${quarter}
+    --{% elsif dynamic_date_granularity._parameter_value == 'year' %}
+    --  ${date_year} || '-01-01'
+    {% else %}
+      NULL
+    {% endif %};;
+  }
 
   dimension: day_in_month {
     type: number
@@ -51,10 +87,15 @@ view: warehouse_date_table {
     sql: ${TABLE}."IS_US_HOLIDAY" ;;
   }
 
-  dimension: month {
-    type: number
-    sql: ${TABLE}."MONTH" ;;
+  dimension: first_day_of_month {
+    type: date
+    sql: ${TABLE}."FIRST_DAY_OF_MONTH" ;;
   }
+
+  # dimension: month {
+  #   type: number
+  #   sql: ${TABLE}."MONTH" ;;
+  # }
 
   dimension: month_name {
     type: string
@@ -71,25 +112,25 @@ view: warehouse_date_table {
     sql: ${TABLE}."US_HOLIDAY" ;;
   }
 
-  dimension: week_of_month {
-    type: number
-    sql: ${TABLE}."WEEK_OF_MONTH" ;;
-  }
+  # dimension: week_of_month {
+  #   type: number
+  #   sql: ${TABLE}."WEEK_OF_MONTH" ;;
+  # }
 
-  dimension: week_of_quarter {
-    type: number
-    sql: ${TABLE}."WEEK_OF_QUARTER" ;;
-  }
+  # dimension: week_of_quarter {
+  #   type: number
+  #   sql: ${TABLE}."WEEK_OF_QUARTER" ;;
+  # }
 
-  dimension: week_of_year {
-    type: number
-    sql: ${TABLE}."WEEK_OF_YEAR" ;;
-  }
+  # dimension: week_of_year {
+  #   type: number
+  #   sql: ${TABLE}."WEEK_OF_YEAR" ;;
+  # }
 
-  dimension: year {
-    type: number
-    sql: ${TABLE}."YEAR" ;;
-  }
+  # dimension: year {
+  #   type: number
+  #   sql: ${TABLE}."YEAR" ;;
+  # }
 
   ##########################################################################################
   ##########################################################################################
@@ -108,36 +149,6 @@ view: warehouse_date_table {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."DATE" ;;
-  }
-
-  dimension_group: first_day_of_month {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."FIRST_DAY_OF_MONTH" ;;
-  }
-
-  dimension_group: last_day_of_month {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."LAST_DAY_OF_MONTH" ;;
   }
 
   ##########################################################################################

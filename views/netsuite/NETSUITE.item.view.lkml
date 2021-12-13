@@ -461,26 +461,30 @@ view: item {
 
   dimension: color {
     label: " Product Color"
-    description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: looker calculation"
+    description: "Gives color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: NetSuite"
     type: string
-    sql: case when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'GREY'
-      when ${product_description_raw} ilike '%CHARCL%' then 'CHARCOAL'
-      when ${product_description_raw} ilike '%SLATE%' then 'SLATE'
-      when ${product_description_raw} ilike '%SAND%' then 'SAND'
-      when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'WHITE'
-      when ${product_description_raw} ilike '%TRUE WHITE%' then 'TRUE WHITE'
-      when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'PURPLE'
-      when ${product_description_raw} ilike '%NATURAL OAT%' then 'NATURAL OAT'
-      when ${product_description_raw} ilike '%NATURAL GREY%' then 'NATURAL GREY'
-      when ${product_description_raw} ilike '%STORMY%' then 'STORMY GREY'
-      when ${product_description_raw} ilike '%SOFT LILAC%' then 'SOFT LILAC'
-      when ${product_description_raw} ilike '%MORNING%' then 'MORNING MIST'
-      when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
-      when ${product_description_raw} ilike '%CLOUD WHITE%' then 'CLOUD WHITE'
-      when ${product_description_raw} ilike '%BLUSH PINK%' then 'BLUSH PINK'
-      when ${product_description_raw} ilike '%DUSKY NAVY%' then 'DUSKY NAVY'
-      when ${product_description_raw} ilike '%MISTY BLUE%' then 'MISTY BLUE'
-      else null end ;; }
+    sql: ${TABLE}.color
+     -- commented out by Jared Nov 18 in favor of new NS field
+     -- case when ${TABLE}.color is not null then ${TABLE}.color
+     --  when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'Grey'
+     --  when ${product_description_raw} ilike '%CHARCL%' then 'Charcoal'
+     --  when ${product_description_raw} ilike '%SLATE%' then 'Slate'
+     --  when ${product_description_raw} ilike '%SAND%' then 'Sand'
+     --  when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'White'
+     --  when ${product_description_raw} ilike '%TRUE WHITE%' then 'True White'
+     --  when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'Purple'
+     --  when ${product_description_raw} ilike '%NATURAL OAT%' then 'Natural Oat'
+     --  when ${product_description_raw} ilike '%NATURAL GREY%' then 'Natural Grey'
+     --  when ${product_description_raw} ilike '%STORMY%' then 'Stormy Grey'
+     --  when ${product_description_raw} ilike '%SOFT LILAC%' then 'Soft Lilac'
+     --  when ${product_description_raw} ilike '%MORNING%' then 'Morning Mist'
+     --  when ${product_description_raw} ilike '%DEEP PURPLE%' then 'Deep Purple'
+     --  when ${product_description_raw} ilike '%CLOUD WHITE%' then 'Cloud White'
+     --  when ${product_description_raw} ilike '%BLUSH PINK%' then 'Blush Pink'
+     --  when ${product_description_raw} ilike '%DUSKY NAVY%' then 'Dusky Navy'
+     --  when ${product_description_raw} ilike '%MISTY BLUE%' then 'Misty Blue'
+     --  else null end
+     ;; }
 
   dimension_group: created_ts {
     hidden: yes
