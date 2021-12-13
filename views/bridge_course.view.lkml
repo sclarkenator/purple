@@ -178,6 +178,13 @@ view: bridge_course {
     drill_fields: [id]
   }
 
+  measure: enrollment_count{
+    view_label: "Bridge Enrollment"
+    type: sum_distinct
+    sql: ${TABLE}."TITLE";;
+  }
+
+
   measure: overdue_total {
     type: sum
     sql: ${enrollment_counts_overdue};;
