@@ -102,7 +102,7 @@ view: bridge_enrollment {
 
   measure: completion_rate {
     type: number
-    sql: ${completions}/${enrollments}*100 ;;
+    sql: ${completions}/${count}*100 ;;
     value_format: "0.0\%"
   }
 }
