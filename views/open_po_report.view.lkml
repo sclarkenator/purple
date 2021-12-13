@@ -25,8 +25,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -41,8 +44,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -77,8 +83,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -98,8 +107,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -114,8 +126,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -140,10 +155,12 @@ view: open_po_report {
     type: time
     timeframes: [
       raw,
-      time,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -166,8 +183,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -193,8 +213,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -235,8 +258,11 @@ view: open_po_report {
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
@@ -274,13 +300,16 @@ view: open_po_report {
 
   dimension_group: upload {
     view_label: "Dates"
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [
       raw,
       date,
+      day_of_year,
       week,
+      week_of_year,
       month,
+      month_num,
       quarter,
       year
     ]
