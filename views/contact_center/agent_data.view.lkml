@@ -114,7 +114,7 @@ view: agent_data {
     description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(month, ${start_date}, current_date) end ;;
+    sql: case when not (${TABLE}.employee_type is null and ${TABLE}.current_team_name is null) then datediff(month, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_week {
@@ -123,7 +123,7 @@ view: agent_data {
     description: "Agent tenure in weeks."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
+    sql: case when not (${TABLE}.employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_buckets {
