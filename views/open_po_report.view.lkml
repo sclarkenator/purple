@@ -1,5 +1,5 @@
 # The name of this view in Looker is "Open Po Report"
-view: open_po_report {
+view: international_open_po_report {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
   sql_table_name: "SHIPPING"."OPEN_PO_REPORT"
