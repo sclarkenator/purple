@@ -490,6 +490,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_quality_mrb_cover {hidden: yes label: "Quality MRB Cover" group_label: "L2L"}
   explore: v_quality_mrb_return_bed_qc {hidden: yes label: "Quality MRB Return Bed QC" group_label: "L2L"}
   explore: v_incoming_inspection_form {hidden: yes label: "Incoming Inspection Form" group_label: "L2L"}
+  explore: v_quality_mrb_core_stock_check {hidden: yes label: "Quality MRB Core Stock Check" group_label: "L2L"}
   explore: incoming_inspection_form {
     from:  date_meta
     group_label: "L2L Inspection Form"
