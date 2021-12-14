@@ -289,7 +289,7 @@ explore: bin {
   label: "Highjump Bin Location"
 }
 
-  explore: open_po_report {hidden: yes view_label:"International Inbound Open PO"}
+  explore: international_open_po_report {hidden: yes view_label:"International Open POs"}
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
