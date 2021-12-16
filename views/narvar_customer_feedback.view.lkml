@@ -10,7 +10,12 @@ view: narvar_customer_feedback {
   }
 
   dimension: order_id {
-    type: number
+    type: string
+    link: {
+      label: "NetSuite"
+      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    }
     sql: ${TABLE}."ORDER_ID" ;;
     primary_key: yes
   }
@@ -64,15 +69,13 @@ view: narvar_customer_feedback {
   }
 
   dimension: zendesk_loaded {
+    hidden: yes
     type: yesno
     sql: ${TABLE}."ZENDESK_LOADED" ;;
   }
 
-
-
-
-
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -88,6 +91,7 @@ view: narvar_customer_feedback {
   }
 
   dimension_group: update_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -102,11 +106,7 @@ view: narvar_customer_feedback {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
-
-
   measure: count {
     type: count
   }
-
-
  }
