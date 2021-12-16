@@ -289,7 +289,6 @@ explore: bin {
   label: "Highjump Bin Location"
 }
 
-  explore: narvar_customer_feedback {hidden: yes view_label: "Narvar Customer Feedback"}
   explore: international_open_po_report {hidden: yes view_label:"International Open POs"}
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
