@@ -1363,8 +1363,8 @@ MEDIANS as
             ,METRIC
            ,DETAIL_LEVEL
             ,AMOUNT
-            ,abs(amount - median(amount) over (partition by DIMENSIONS||metric)) diff_median
-            ,median(amount) over (partition by DIMENSIONS||metric) median
+            ,abs(amount - median(amount) over (partition by DIMENSIONS||metric||bus_unit)) diff_median
+            ,median(amount) over (partition by DIMENSIONS||metric||bus_unit) median
       ,POLARITY
       ,HURDLE_DESCRIPTION
       ,SIG_HURDLE
@@ -1380,12 +1380,12 @@ select date
         ,DETAIL_LEVEL
         ,amount
         ,median
-        ,median-1.5*(median(diff_median) over (partition by dimensions||metric)) neg_one_SD
-        ,median-3*(median(diff_median) over (partition by dimensions||metric)) neg_two_SD
-        ,median+1.5*(median(diff_median) over (partition by dimensions||metric)) plus_one_SD
-        ,median+3*(median(diff_median) over (partition by dimensions||metric)) plus_two_SD
-        ,lead(amount,1,0) over (partition by dimensions||metric order by date desc) one_day_ago
-        ,lead(amount,2,0) over (partition by dimensions||metric order by date desc) two_days_ago
+        ,median-1.5*(median(diff_median) over (partition by dimensions||metric||bus_unit)) neg_one_SD
+        ,median-3*(median(diff_median) over (partition by dimensions||metric||bus_unit)) neg_two_SD
+        ,median+1.5*(median(diff_median) over (partition by dimensions||metric||bus_unit)) plus_one_SD
+        ,median+3*(median(diff_median) over (partition by dimensions||metric||bus_unit)) plus_two_SD
+        ,lead(amount,1,0) over (partition by dimensions||metric||bus_unit order by date desc) one_day_ago
+        ,lead(amount,2,0) over (partition by dimensions||metric||bus_unit order by date desc) two_days_ago
         ,case
             when amount > plus_two_SD then '2 SD above median'
             when amount < neg_two_SD then '2 SD below median'
