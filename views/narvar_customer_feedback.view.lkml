@@ -4,7 +4,7 @@ view: narvar_customer_feedback {
   sql_table_name: CUSTOMER_CARE.NARVAR_CUSTOMER_FEEDBACK ;;
 
   dimension: tracking_id {
-    type: number
+    type: string
     sql: ${TABLE}."TRACKING_ID" ;;
 
   }
