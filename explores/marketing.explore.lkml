@@ -404,6 +404,15 @@ explore: email_mymove_contact {
       type: left_outer
       sql_on: ${narvar_customer_feedback.tranid} = ${sales_order.tranid}  ;;
       relationship: one_to_one }
+    join: v_qualtrics_delivery_survey {
+      type: left_outer
+      sql_on:  ${narvar_customer_feedback.tranid} = ${v_qualtrics_delivery_survey.tranid} ;;
+      relationship: one_to_one}
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
+      relationship: many_to_one}
     }
 
 #-------------------------------------------------------------------
