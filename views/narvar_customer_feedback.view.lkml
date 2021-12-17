@@ -11,16 +11,14 @@ view: narvar_customer_feedback {
 
   dimension: order_id {
     type: string
-    link: {
-      label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
-      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
-    }
+    # link: {
+    #   label: "NetSuite"
+    #   url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+    #   icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    # }
     sql: ${TABLE}."ORDER_ID" ;;
     primary_key: yes
   }
-
-
 
   dimension_group: created {
     type: time
@@ -36,7 +34,6 @@ view: narvar_customer_feedback {
     datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
-
 
   dimension: ship {
     type: date
