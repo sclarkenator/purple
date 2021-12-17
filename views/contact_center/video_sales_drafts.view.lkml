@@ -168,4 +168,12 @@ view: video_sales_drafts {
     sql: ${draft_order} ;;
   }
 
+measure: sales_conversion {
+  label: "Draft Conversation Rate"
+  description: "Percent of draft orders converted to orders."
+  type: number
+  value_format_name: percent_2
+  sql: count(distinct ${converted_order}) / count(distinct draft_order) ;;
+}
+
 }
