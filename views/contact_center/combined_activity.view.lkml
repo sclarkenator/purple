@@ -92,7 +92,9 @@ view: combined_activity {
       week,
       month,
       quarter,
-      year
+      year,
+      month_name,
+      month_num
     ]
   }
 
