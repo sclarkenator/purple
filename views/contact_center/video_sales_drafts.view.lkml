@@ -150,7 +150,7 @@ view: video_sales_drafts {
     label: "Order Count"
     description: "Average Order Value"
     type: count_distinct
-    sql: case when ${status} = 'completed' then ${draft_order} end ;;
+    sql: case when ${status} = 'completed' then ${converted_order} end ;;
   }
 
   measure: AMOV_count {
@@ -158,7 +158,14 @@ view: video_sales_drafts {
     description: "Average Mattress Order Value"
     type: count_distinct
     sql: case when ${mattress_flag} = 'Yes'
-      and ${status} = 'completed' then ${draft_order} end ;;
+      and ${status} = 'completed' then ${converted_order} end ;;
+  }
+
+  measure: draft_count {
+    label: "Draft Order Count"
+    description: "Count of drafts created"
+    type: count_distinct
+    sql: ${draft_order} ;;
   }
 
 }
