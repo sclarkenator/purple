@@ -153,6 +153,16 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
       relationship: many_to_one
     }
+    join: v_email_nps  {
+      type: left_outer
+      view_label: "NPS"
+      sql_on: lower(${cordial_activity.email}) = lower(${v_email_nps.email}) ;;
+    }
+    join: cordial_propensity_scores {
+      type: left_outer
+      view_label: "Cordial Propensity Scores"
+      sql_on: lower(${cordial_activity.email}) = lower(${cordial_propensity_scores.email});;
+    }
   }
 
   explore: email_contact_merged {
@@ -386,7 +396,15 @@ explore: email_mymove_contact {
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
-  explore: narvar_customer_feedback {hidden: yes group_label: "Marketing" label: "Narvar customer feedback"}
+  explore: narvar_customer_feedback {
+    hidden: yes
+    group_label: "Marketing"
+    label: "Narvar customer feedback"
+    join: sales_order {
+      type: left_outer
+      sql_on: ${narvar_customer_feedback.tranid} = ${sales_order.tranid}  ;;
+      relationship: one_to_one }
+    }
 
 #-------------------------------------------------------------------
 #

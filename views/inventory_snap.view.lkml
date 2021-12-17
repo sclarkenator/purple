@@ -166,6 +166,7 @@ view: inventory_snap {
     group_label: " Advanced"
     label: "Unit Standard Cost"
     description: "Source:Inventory snapshot table"
+    hidden:  yes
     type:  number
     value_format: "$#,##0.00"
     sql: ${TABLE}.standard_cost ;;
@@ -191,10 +192,10 @@ view: inventory_snap {
 
   measure: total_standard_cost {
     label: "Total Standard Cost (On Hand)"
-    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units"
     type:  sum
     value_format: "$#,##0"
-    sql:  ${TABLE}.on_hand * ${standard_cost} ;;
+    sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
   }
 
   parameter: see_data_by_inv_snap {

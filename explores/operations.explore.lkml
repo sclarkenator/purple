@@ -289,7 +289,7 @@ explore: bin {
   label: "Highjump Bin Location"
 }
 
-
+  explore: international_open_po_report {hidden: yes view_label:"International Open POs"}
   explore: day_pending {hidden:yes group_label: "Operations"}
   explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
   explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
@@ -298,3 +298,11 @@ explore: bin {
   explore: aop_combined {hidden:yes view_label:"AOP Combined"}
   explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
   explore: item_raw {from: item hidden:yes}
+  explore: forecast_snapshot {
+    hidden:yes
+    join: item {
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
+      relationship: many_to_one }
+    }

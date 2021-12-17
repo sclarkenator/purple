@@ -53,7 +53,8 @@ view: production_report {
       quarter,
       quarter_of_year,
       year,
-      hour]
+      hour,
+      hour_of_day]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.created) ;; }

@@ -266,7 +266,7 @@ view: sales_order_line {
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
-            THEN dateadd(d,14,${created_date})
+            THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
   }
