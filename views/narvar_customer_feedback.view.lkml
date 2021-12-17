@@ -9,7 +9,9 @@ view: narvar_customer_feedback {
 
   }
 
-  dimension: order_id {
+  dimension: tranid {
+    label: "Transaction ID"
+    hidden: yes
     type: string
     # link: {
     #   label: "NetSuite"

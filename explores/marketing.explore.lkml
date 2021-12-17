@@ -396,7 +396,15 @@ explore: email_mymove_contact {
 
   explore: narvarcustomer{hidden:yes}
   explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
-  explore: narvar_customer_feedback {hidden: yes group_label: "Marketing" label: "Narvar customer feedback"}
+  explore: narvar_customer_feedback {
+    hidden: yes
+    group_label: "Marketing"
+    label: "Narvar customer feedback"
+    join: sales_order {
+      type: left_outer
+      sql_on: ${narvar_customer_feedback.tranid} = ${sales_order.tranid}  ;;
+      relationship: one_to_one }
+    }
 
 #-------------------------------------------------------------------
 #
