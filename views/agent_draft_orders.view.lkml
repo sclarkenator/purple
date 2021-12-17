@@ -27,7 +27,7 @@ view: agent_draft_orders {
 
     dimension: user_id {
       type: number
-      hidden: yes
+      # hidden: yes
       sql: ${TABLE}."USER_ID" ;;
     }
 
