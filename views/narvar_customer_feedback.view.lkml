@@ -108,4 +108,10 @@ view: narvar_customer_feedback {
   measure: count {
     type: count
   }
+
+  measure: average_star_rating{
+    type: average
+    sql: ${star_rating} ;;
+    value_format: "0.##"
+  }
  }
