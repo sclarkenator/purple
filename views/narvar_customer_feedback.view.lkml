@@ -63,6 +63,7 @@ view: narvar_customer_feedback {
   }
 
   dimension: row_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ROW_ID" ;;
   }
