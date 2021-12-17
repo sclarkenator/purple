@@ -8,26 +8,15 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 
+#####################################################################
+#####################################################################
+## COMBINED ACTIVITY cj
+
 explore: combined_activity {hidden:yes} #cj
 
-explore: chat_combined {
-  from: warehouse_date_table
-  view_label: "Dates"
-
-  join: zendesk_chats {
-    type: full_outer
-    sql_on: ${chat_combined.date_date} = ${zendesk_chats.created_date} ;;
-    relationship: one_to_many
-    # sql_where: ${zendesk_chats.department_name_clean} = 'Sales' ;;
-  }
-
-  # join: liveperson_conversation {
-  #   type: full_outer
-  #   sql_on: ${chat_combined.date_date} = ${liveperson_conversation.started_date}
-  #     and ${liveperson_conversation.started_date} >= '2021-09-08' ;;
-  #   relationship: one_to_many
-  # }
-  }
+#####################################################################
+#####################################################################
+## cj
 
 explore: sales_draft_data {
   hidden: yes

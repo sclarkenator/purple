@@ -30,8 +30,8 @@ view: video_sales_drafts {
 
     where ((value ='LoftonE'
             and d.created_at::date between '2021-11-08' and dateadd(days, -1, current_date()))
-        or (value is null
-            and d.created_at::date between '2021-11-08' and dateadd(days, -1, current_date()))
+        --or (value is null
+        --    and d.created_at::date between '2021-11-08' and dateadd(days, -1, current_date()))
         or (value ='autumn'
             and d.created_at::date between '2021-11-26' and '2021-12-01')
 
