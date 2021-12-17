@@ -1,79 +1,79 @@
 view: combined_activity {
   derived_table: {
-    sql: select distinct c.chat_id::string as id,
-    c.created::date as activity_date,
-    case when c.department_name = 'Sales Chat' then 'sales'
-        when c.department_name ilike '%support%' then 'support'
-        when a.team_type = 'Sales' then 'sales'
-        when a.team_type = 'Chat' then 'support'
-        else 'sales' end as team_type,
-    'chat' as activity_type
+    sql:
+    select distinct c.chat_id::string as id,
+      c.created::date as activity_date,
+      case when c.department_name = 'Sales Chat' then 'sales'
+          when c.department_name ilike '%support%' then 'support'
+          when a.team_type = 'Sales' then 'sales'
+          when a.team_type = 'Chat' then 'support'
+          else 'sales' end as team_type,
+      'chat' as activity_type
 
-from customer_care.v_zendesk_chats c
+  from customer_care.v_zendesk_chats c
 
-    left join customer_care.agent_lkp a
-        on c.agent_id::string = a.zendesk_id::string
+      left join customer_care.agent_lkp a
+          on c.agent_id::string = a.zendesk_id::string
 
-where c.missed = 'F'
+  where c.missed = 'F'
 
-union all
+  union all
 
-select distinct
-    l.conversation_id as id,
-    l.started::date as activity_date,
-    s.name as type,
-    'chat' as activity_type
+  select distinct
+      l.conversation_id as id,
+      l.started::date as activity_date,
+      s.name as type,
+      'chat' as activity_type
 
-from liveperson.conversation l
+  from liveperson.conversation l
 
-    left join liveperson.skill s
-        on l.last_skill_id = s.skill_id
+      left join liveperson.skill s
+          on l.last_skill_id = s.skill_id
 
-where s.name in ('Sales', 'Support', 'SRT')
-    and started::date >= '2021-09-08'
+  where s.name in ('Sales', 'Support', 'SRT')
+      and started::date >= '2021-09-08'
 
-union all
+  union all
 
-select distinct
-   t. ticket_id::string as id,
-    t.created::date as activity_date,
-    case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales'
-        when a.zendesk_id is null then 'none'
-        else 'support' end as team_type,
-    'email' as activity_type
+  select distinct
+     t. ticket_id::string as id,
+      t.created::date as activity_date,
+      case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales'
+          when a.zendesk_id is null then 'none'
+          else 'support' end as team_type,
+      'email' as activity_type
 
-from customer_care.zendesk_ticket t
+  from customer_care.zendesk_ticket t
 
-    left join customer_care.agent_lkp a
-        on a.zendesk_id = t.assignee_id
+      left join customer_care.agent_lkp a
+          on a.zendesk_id = t.assignee_id
 
-    left join analytics_stage.zendesk.user u
-        on u.id = t.requester_id
+      left join analytics_stage.zendesk.user u
+          on u.id = t.requester_id
 
-    left join analytics_stage.zendesk_sell.users uu
-        on uu.user_id = a.zendesk_sell_user_id
+      left join analytics_stage.zendesk_sell.users uu
+          on uu.user_id = a.zendesk_sell_user_id
 
-where t.via_channel in ('email','facebook','web')
+  where t.via_channel in ('email','facebook','web')
 
-union all
+  union all
 
-select
-    c.contact_id::string as id,
-    c.contacted::date as activity_date,
-    case when c.campaign = 'Sales Team Phone' then 'sales'
-        else 'support' end as team_type,
-    'call' as activity_type
+    select distinct
+        c.contact_id::string as id,
+        c.start_ts_mst::date as activity_date,
+        case when c.campaign_name ilike 'sales%' then 'sales'
+          else 'support' end as team_type,
+        'call' as activity_type
 
-from (
-    select row_number () over (partition by c.contacted, c.contact_id order by agent_id desc) as rownum
-      , c.*
-    from customer_care.rpt_skill_with_disposition_count c
-    )  c
+    from (
+        select *,
+            row_number () over (partition by c.contact_id order by c.start_ts_mst desc) as rn
+        from Analytics.customer_care.v_contacts_phone c
+        where handle_time > 0
+        ) c
 
-    left join customer_care.agent_lkp a
-        on a.incontact_id = c.agent_id
-
-where c.rownum = 1 ;;
+    where skill_name not in ('Test IB', 'Test Line')
+        and rn = 1;;
   }
 
   ##########################################################################################
