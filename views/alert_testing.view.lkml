@@ -1456,7 +1456,7 @@ from medians
     description: "Metric||Dimension combined into a single field"
     label: "  Metric||Dimension"
     type: string
-    sql: ${metric}||'||'||${dimensions} ;;
+    sql: ${metric}||'||'||${dimensions}||'||'||${bus_unit} ;;
     link: {
       label: "Show trend chart"
       url: "https://purple.looker.com/looks/4647?f[alert_testing.met_dim]={{ value }}"
