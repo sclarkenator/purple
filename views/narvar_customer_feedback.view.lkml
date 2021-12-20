@@ -4,23 +4,23 @@ view: narvar_customer_feedback {
   sql_table_name: CUSTOMER_CARE.NARVAR_CUSTOMER_FEEDBACK ;;
 
   dimension: tracking_id {
-    type: number
+    type: string
     sql: ${TABLE}."TRACKING_ID" ;;
 
   }
 
-  dimension: order_id {
+  dimension: tranid {
+    label: "Transaction ID"
+    hidden: yes
     type: string
-    link: {
-      label: "NetSuite"
-      url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
-      icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
-    }
+    # link: {
+    #   label: "NetSuite"
+    #   url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+    #   icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    # }
     sql: ${TABLE}."ORDER_ID" ;;
     primary_key: yes
   }
-
-
 
   dimension_group: created {
     type: time
@@ -36,7 +36,6 @@ view: narvar_customer_feedback {
     datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
-
 
   dimension: ship {
     type: date
@@ -64,6 +63,7 @@ view: narvar_customer_feedback {
   }
 
   dimension: row_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ROW_ID" ;;
   }
@@ -108,5 +108,11 @@ view: narvar_customer_feedback {
 
   measure: count {
     type: count
+  }
+
+  measure: average_star_rating{
+    type: average
+    sql: ${star_rating} ;;
+    value_format: "0.##"
   }
  }
