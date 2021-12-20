@@ -3,14 +3,17 @@ view: combined_activity {
     sql:
     select distinct c.chat_id::string as id,
       c.created::date as activity_date,
-      case when c.department_name = 'Sales Chat' then 'sales'
-          when c.department_name ilike '%support%' then 'support'
-          when a.team_type = 'Sales' then 'sales'
-          when a.team_type = 'Chat' then 'support'
-          else 'sales' end as team_type,
+
+      case when c.department_name ilike '%Sales%' then 'sales'
+        when c.department_name ilike '%support%' then 'support'
+        when c.department_name ilike '%srt%' then 'srt'
+        when a.team_type = 'Sales' then 'sales'
+        when a.team_type = 'Chat' then 'support'
+        when a.team_type = 'SRT' then 'srt'
+        else 'sales' end as team_type,
       'chat' as activity_type
 
-  from customer_care.v_zendesk_chats c
+    from customer_care.v_zendesk_chats c
 
       left join customer_care.agent_lkp a
           on c.agent_id::string = a.zendesk_id::string
@@ -22,7 +25,7 @@ view: combined_activity {
   select distinct
       l.conversation_id as id,
       l.started::date as activity_date,
-      s.name as type,
+      lower(s.name) as type,
       'chat' as activity_type
 
   from liveperson.conversation l
@@ -76,6 +79,8 @@ view: combined_activity {
         and rn = 1;;
   }
 
+
+
   ##########################################################################################
   ##########################################################################################
   ## DIMENSIONS
@@ -112,28 +117,28 @@ view: combined_activity {
     label: "Activity Count"
     type: count_distinct
     sql: ${TABLE}.id ;;
+    drill_fields: [activity_date, activity_type, id, team_type]
   }
 
   measure: count_sales {
     label: "Activity Count (Sales)"
     type: count_distinct
-    sql: case when ${team_type} = 'sales' then ${TABLE}.id end ;;
+    sql: ${TABLE}.id ;;
+    filters: [team_type: "sales"]
   }
 
   measure: count_support {
     label: "Activity Count (Support)"
     type: count_distinct
-    sql: case when ${team_type} = 'support' then ${TABLE}.id end ;;
+    sql: ${TABLE}.id ;;
+    filters: [team_type: "support"]
   }
 
   measure: count_srt {
     label: "Activity Count (SRT)"
     type: count_distinct
-    sql: case when ${team_type} = 'srt' then ${TABLE}.id end ;;
+    sql: ${TABLE}.id ;;
+    filters: [team_type: "srt"]
   }
 
-  # measure: count_email {
-
-  # }
-
-  }
+}
