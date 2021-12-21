@@ -32,13 +32,15 @@ view: cc_agent_attendance {
     label: "Primary Key"
     primary_key: yes
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.pk ;;
   }
 
   ##########################################################################################
   ##########################################################################################
   ## GENERAL DIMENSIONS
+
+  # dimension:  {}
 
   dimension: added_by {
     label: "Added By"
@@ -95,7 +97,7 @@ view: cc_agent_attendance {
   dimension: points {
     label: "Points"
     description: "The value of the points against the agent for occurence events (0.5, 1.0, 1.5, or possibly -.5, -1.0 for earned back time)."
-    hidden: yes
+    # hidden: yes
     type: number
     sql: ${TABLE}."POINTS" ;;
   }
@@ -103,7 +105,7 @@ view: cc_agent_attendance {
   dimension: sick_time {
     label: "Sick Time"
     description: "How many hours of Sick Time was the agent using and needed to submit into Workday."
-    hidden: yes
+    # hidden: yes
     type: number
     sql: ${TABLE}."SICK_TIME" ;;
   }
