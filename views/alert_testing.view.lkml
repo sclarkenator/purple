@@ -1356,49 +1356,50 @@ AND date < CURRENT_DATE
 ) --closing bracket for main query CTE
 
 ,
-MEDIANS as
-(select distinct date
-            ,bus_unit
-            ,DIMENSIONS
-            ,METRIC
-           ,DETAIL_LEVEL
-            ,AMOUNT
-            ,abs(amount - median(amount) over (partition by DIMENSIONS||metric||bus_unit)) diff_median
-            ,median(amount) over (partition by DIMENSIONS||metric||bus_unit) median
-      ,POLARITY
-      ,HURDLE_DESCRIPTION
-      ,SIG_HURDLE
-      ,HURDLE_VALUE
-      ,METRIC_WITHIN_DIMENSIONS
-from MAIN_QUERY)
+medians AS
+(SELECT
+ DISTINCT date
+,bus_unit
+,DIMENSIONS
+,METRIC
+,DETAIL_LEVEL
+,AMOUNT
+,abs(amount - median(amount) over (PARTITION BY DIMENSIONS||metric||bus_unit)) diff_median
+,median(amount) over (PARTITION BY DIMENSIONS||metric||bus_unit) median
+,POLARITY
+,HURDLE_DESCRIPTION
+,SIG_HURDLE
+,HURDLE_VALUE
+,METRIC_WITHIN_DIMENSIONS
+FROM main_query)
 
 --******// THE MAGIC //*****
-select date
-        ,bus_unit
-        ,DIMENSIONS
-        ,METRIC
-        ,DETAIL_LEVEL
-        ,amount
-        ,median
-        ,median-1.5*(median(diff_median) over (partition by dimensions||metric||bus_unit)) neg_one_SD
-        ,median-3*(median(diff_median) over (partition by dimensions||metric||bus_unit)) neg_two_SD
-        ,median+1.5*(median(diff_median) over (partition by dimensions||metric||bus_unit)) plus_one_SD
-        ,median+3*(median(diff_median) over (partition by dimensions||metric||bus_unit)) plus_two_SD
-        ,lead(amount,1,0) over (partition by dimensions||metric||bus_unit order by date desc) one_day_ago
-        ,lead(amount,2,0) over (partition by dimensions||metric||bus_unit order by date desc) two_days_ago
-        ,case
-            when amount > plus_two_SD then '2 SD above median'
-            when amount < neg_two_SD then '2 SD below median'
-            when amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD then 'Trending above SD'
-            when amount < neg_one_SD  AND one_day_ago < neg_one_SD  AND two_days_ago < neg_one_SD  then 'Trending below SD'
-            else null
-        end alert
-    ,HURDLE_DESCRIPTION
-    ,sig_hurdle
-    ,METRIC_WITHIN_DIMENSIONS
-    ,case when greatest(hurdle_value,median) >= sig_hurdle then 1 else 0 end sig_flag
-    ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
-from medians
+SELECT
+date
+,bus_unit
+,DIMENSIONS
+,METRIC
+,DETAIL_LEVEL
+,amount
+,median
+,median - 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_one_SD
+,median - 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_two_SD
+,median + 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_one_SD
+,median + 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_two_SD
+,lead(amount,1,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) one_day_ago
+,lead(amount,2,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) two_days_ago
+,CASE WHEN amount > plus_two_SD THEN '2 SD above median'
+    WHEN amount < neg_two_SD THEN '2 SD below median'
+    WHEN amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD THEN 'Trending above SD'
+    WHEN amount < neg_one_SD  AND one_day_ago < neg_one_SD  AND two_days_ago < neg_one_SD  THEN 'Trending below SD'
+    ELSE NULL
+    END AS alert
+,HURDLE_DESCRIPTION
+,sig_hurdle
+,METRIC_WITHIN_DIMENSIONS
+,CASE WHEN greatest(hurdle_value,median) >= sig_hurdle THEN 1 ELSE 0 END sig_flag
+,CASE WHEN (amount-median)*polarity > 0 THEN 'GOOD' ELSE 'BAD' END pos_neg_flag
+FROM medians
 
        ;;
    }
@@ -1456,7 +1457,7 @@ from medians
     description: "Metric||Dimension combined into a single field"
     label: "  Metric||Dimension"
     type: string
-    sql: ${metric}||'||'||${dimensions} ;;
+    sql: ${metric}||'||'||${dimensions}||'||'||${bus_unit} ;;
     link: {
       label: "Show trend chart"
       url: "https://purple.looker.com/looks/4647?f[alert_testing.met_dim]={{ value }}"
