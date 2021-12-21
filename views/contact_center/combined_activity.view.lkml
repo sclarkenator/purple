@@ -3,7 +3,6 @@ view: combined_activity {
     sql:
     select distinct c.chat_id::string as id,
       c.created::date as activity_date,
-
       case when c.department_name ilike '%Sales%' then 'sales'
         when c.department_name ilike '%support%' then 'support'
         when c.department_name ilike '%srt%' then 'srt'
@@ -119,7 +118,7 @@ view: combined_activity {
     label: "Activity Count"
     type: count_distinct
     sql: ${TABLE}.id ;;
-    drill_fields: [activity_date, activity_type, id, team_type]
+    drill_fields: [activity_date_date, activity_type, id, team_type]
   }
 
   measure: count_sales {
