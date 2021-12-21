@@ -12,13 +12,9 @@ view: zendesk_chats {
     from (
       select *
       from "CUSTOMER_CARE"."ZENDESK_CHATS" z
-      where z.created::date = '2021-08-01'
-          and missed = false
       )z
       left join customer_care.agent_lkp agent_lkp
           on z.agent_ids::string = agent_lkp.zendesk_id::string
-  where z.created::date = '2021-08-01'
-      and missed = false
     ;;
     }
 
