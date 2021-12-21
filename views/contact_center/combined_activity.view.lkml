@@ -3,10 +3,11 @@ view: combined_activity {
     sql:
     select distinct c.chat_id::string as id,
       c.created::date as activity_date,
-      case when c.department_name = 'Sales Chat' then 'sales'
+      case when c.department_name ilike '%sales%' then 'sales'
           when c.department_name ilike '%support%' then 'support'
           when a.team_type = 'Sales' then 'sales'
           when a.team_type = 'Chat' then 'support'
+          when a.team_type = 'SRT' then 'srt'
           else 'sales' end as team_type,
       'chat' as activity_type
 
