@@ -29,8 +29,7 @@ view: headcount {
         ,case when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
           when lower(team_name) in ('administrator administrator') then 'Admin'
           when team_type is null then 'Other'
-          when lower(team_type) in ('training', 'sales')
-            or team_type is null then team_type
+          when lower(team_type) in ('training', 'sales') then team_type
           else 'Customer Care' end as team_group
 
       from util.warehouse_date d
@@ -43,7 +42,7 @@ view: headcount {
           on a.incontact_id = t.incontact_id
           and d.date between t.start_date::date and t.end_date::date
 
-      where d.date = dateadd(days, -1, current_date())::date
+      where d.date between '2019-01-01' and current_date
         and team_type not ilike 'system%'
     ;;
   }
