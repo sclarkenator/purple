@@ -29,6 +29,7 @@ view: headcount {
         ,case when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
           when lower(team_name) in ('administrator administrator') then 'Admin'
           when team_type is null then 'Other'
+          when a.name in ('Jimmy Drake') then 'Other'
           when lower(team_type) in ('training', 'sales') then team_type
           else 'Customer Care' end as team_group
 
@@ -267,7 +268,10 @@ view: headcount {
   measure: headcount {
     label: "Headcount"
     type: count_distinct
-    sql: case when ${start_date} > ${date_date} then null
+    sql: case
+      when ${team_name} = 'Jimmy Drake' then null
+      when ${agent_name} = 'Jimmy Drake' then null
+      when ${start_date} > ${date_date} then null
       when ${end_date} is null then ${incontact_id}
       when ${end_date} >= ${date_date} then ${incontact_id} end ;;
     drill_fields: [agent_data*, is_supervisor]
