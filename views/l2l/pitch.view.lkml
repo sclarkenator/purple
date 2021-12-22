@@ -117,6 +117,42 @@ derived_table: {
     sql: ${TABLE}."NAME" ;;
   }
 
+dimension: hours_to_steady {
+    type: number
+    hidden: yes
+    value_format: "#,##0"
+    sql: case when ${line} = 5 then 5
+              when ${line} = 43 then 2
+              when ${line} = 44 then 3
+              when ${line} = 153 then 1
+         else null end
+         ;; }
+
+
+dimension: startup_hours{
+    type: string
+    hidden: yes
+    sql: case when line = 5 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 11 then 'Startup'
+              when line = 43 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 8 then 'Startup'
+              when line = 44 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 9 then 'Startup'
+              when line = 153 and ${pitch_start_hour_of_day} = 7 then 'Startup'
+              else 'Steady State' end
+         ;; }
+
+measure: startup_average{
+    type: average
+    hidden: yes
+    value_format: "#,##0.0"
+    sql: case when ${startup_hours}='Startup'then ${actual_dim} else null end ;;
+    }
+
+measure: steady_state_average{
+  type: average
+  hidden: yes
+  value_format: "#,##0.0"
+  sql: case when ${startup_hours}='Steady State'then ${actual_dim} else null end ;;
+    }
+
   dimension_group: pitch_end {
     hidden: yes
     description: "Pitch Name (Start of Shift, End of Shift, Break, Lunch, etc); Source: l2l.pitch"
@@ -276,7 +312,6 @@ derived_table: {
     sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
-
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
     type: sum
@@ -423,6 +458,28 @@ derived_table: {
     hidden: yes
     type: count
     drill_fields: [pitch_id, name]
+  }
+
+  measure: target {
+    hidden: yes
+    description: "Target number for Average Shots per Max Machine Per Hour (Set by McKinsy)"
+    type: number
+    sql: case when ${machine.description} = 'Max 2' then 16
+      when ${machine.description} = 'Max 3' then 16
+      when ${machine.description} = 'Max 4' then 18
+      when ${machine.description} = 'Max 5' then 21
+      when ${machine.description} = 'Max 6' then 16
+      when ${machine.description} = 'Max 7' then 20
+      else 0
+      end ;;
+  }
+
+  measure: avgerage_shots {
+    hidden: yes
+    type: number
+    description: "Perfrmance * Taret"
+    value_format: "0.0"
+    sql: ${throughput_percent}*${target} ;;
   }
 
   }

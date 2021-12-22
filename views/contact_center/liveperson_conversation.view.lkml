@@ -270,8 +270,9 @@ view: liveperson_conversation {
   ## DATE DIMENSIONS
 
   dimension_group: conversation_dates {
-    label: "- Active Conversation"
+    label: "Active Conversation"
     description: "Reflects conversation dates from start to end dates."
+    view_label: "* Dates"
     type: time
     timeframes: [
       raw,
@@ -286,8 +287,9 @@ view: liveperson_conversation {
   }
 
   dimension_group: ended {
-    label: "- Conversation Closed"
+    label: "Conversation Closed"
     description: "Time the conversation was closed."
+    view_label: "* Dates"
     type: time
     timeframes: [
       raw,
@@ -305,22 +307,10 @@ view: liveperson_conversation {
     sql: CAST(${TABLE}."ENDED" AS TIMESTAMP_NTZ) ;;
   }
 
-  dimension_group: insert_ts {
-    label: "- Conversation Inserted"
-    description: "TS when conversation record was inserted in database."
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date
-    ]
-    hidden: yes
-    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
-  }
-
   dimension_group: started {
-    label: "- Conversation Started"
+    label: "Conversation Started"
     description: "Start-time of the conversation."
+    view_label: "* Dates"
     type: time
     timeframes: [
       raw,
@@ -334,8 +324,21 @@ view: liveperson_conversation {
       hour_of_day,
       minute30
     ]
-    hidden: yes
+    # hidden: yes
     sql: CAST(${TABLE}."STARTED" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension_group: insert_ts {
+    label: "- Conversation Inserted"
+    description: "TS when conversation record was inserted in database."
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date
+    ]
+    hidden: yes
+    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension_group: update_ts {

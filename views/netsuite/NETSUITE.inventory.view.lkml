@@ -25,10 +25,10 @@ view: inventory {
 
   measure: total_standard_cost {
     label: "Total Standard Cost (On Hand)"
-    description: "Total Cost (cost per unit * number of units) for On Hand Units. Source:netsuite.sales_order_line"
+    description: "Total Cost (cost per unit * number of units) for On Hand Units"
     type:  sum
     value_format: "$#,##0"
-    sql:  ${TABLE}.on_hand * ${unit_standard_cost} ;;
+    sql:  ${TABLE}.on_hand * ${standard_cost.standard_cost} ;;
   }
 
   measure: open_orders {
@@ -73,6 +73,7 @@ view: inventory {
   dimension: standard_cost {
     group_label: " Advanced"
     label: "Unit Standard Cost"
+    hidden: yes
     description: "Source:Inventory snapshot table"
     type:  number
     value_format: "$#,##0.00"

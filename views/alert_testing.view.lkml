@@ -3,913 +3,1403 @@ view: alert_testing {
  derived_table: {
      persist_for: "24 hours"
     sql:
-with session_details as
---this select gets all the session-level metrics aggregated by date with all the separate categories to partition by later
-(select s.session_id
-        ,to_date(s.time) date
-        ,s.UTM_SOURCE
-        ,s.UTM_medium
-        ,s.landing_page
-        ,s.platform
-        ,s.device_Type
-        ,s.browser
-        ,s.region
-        ,s.country
-        ,case when referrer ilike '%purple.com%' then 'purple.com' when referrer ilike '%purple.narvar.com%' then 'purple.narvar.com' when referrer ilike '%pinterest.com%' then 'pinterest.com' else split_part(ltrim(ltrim(split_part(rtrim(referrer,'/'),'//',2),'www.'),'l.'),'/',1) end referrer
-        ,case when utm_medium = 'sr' or utm_medium = 'search' or utm_medium = 'cpc' /*or qsp.search = 1*/ then 'search' when utm_medium = 'so' or utm_medium ilike '%social%' or referrer ilike '%fb%' or referrer ilike '%facebo%' or referrer ilike '%insta%' or referrer ilike '%l%nk%din%' or referrer ilike '%pinteres%' or referrer ilike '%snapch%' then 'social' when utm_medium ilike 'vi' or utm_medium ilike 'video' or referrer ilike '%y%tube%' then 'video' when utm_medium ilike 'nt' or utm_medium ilike 'native' then 'native' when utm_medium ilike 'ds' or utm_medium ilike 'display' or referrer ilike '%outbrain%' or referrer ilike '%doubleclick%' or referrer ilike '%googlesyndica%' then 'display' when utm_medium ilike 'sh' or utm_medium ilike 'shopping' then 'shopping' when utm_medium ilike 'af' or utm_medium ilike 'ir' or utm_medium ilike '%affiliate%' then 'affiliate'   when utm_medium ilike 'em' or utm_medium ilike 'email' or referrer ilike '%mail.%' or referrer ilike '%outlook.live%' then 'email' when utm_medium is null and (referrer ilike '%google%' or referrer ilike '%bing%' or referrer ilike '%yahoo%' or referrer ilike '%ask%' or referrer ilike '%aol%' or referrer ilike '%msn%' or referrer ilike '%yendex%' or referrer ilike '%duckduck%') then 'organic' when utm_medium ilike 'rf' or utm_medium ilike 'referral' or utm_medium ilike '%partner platfo%' or lower(referrer) not like '%purple%' then 'referral' when (referrer ilike '%purple%' and utm_medium is null) or referrer is null then 'direct' else 'undefined' end channel
-        ,pv.pages
-        ,1 session_flag
-        ,sum(session_flag) over (partition by date) total_sessions
-        ,case when pv.pages < 2 then 1 else 0 end bounce_flag
-        ,sn.session_num
-        ,case when sn.session_num > 1 then 1 else 0 end ret_visit_flag
-        ,nvl(p.order_amt,0) order_amt
-        ,case when p.order_amt is null then 0 else 1 end conv_flag
-from heap_data.purple.sessions s
-left join
-    (select session_id
-            ,sum(shopify_amt) order_amt
-            ,count(*) conversions
-     from ANALYTICS.MARKETING.ECOMMERCE
-     where to_date(session_time) > current_date-121
-     and to_date(session_time) < current_date
-     and diff <6000
-     group by 1) p on s.session_id = p.session_id
-left join
-    (select distinct session_id
-            ,count(event_id) over (partition by session_id) pages
-    from heap_data.purple.pageviews
-    where to_date(session_time) > current_date-121
-    and to_date(session_time) < current_date) pv on pv.session_id = s.session_id
-left join
-    (select distinct session_id
-            ,row_number() over (partition by user_id order by time) session_num
-    from heap_data.purple.sessions
-    where to_date(time) > current_date -121
-    and to_date(time) < current_date) sn on sn.session_id = s.session_id
-where to_date(s.time) > current_date -121
-and to_date(s.time) < current_date)
-,
-tot_sessions as
-(select distinct date
-        ,total_sessions
-from session_details)
-,
-pageviews as
---this select captures the
-(select distinct to_date(session_time) date
-        ,session_id
-        ,case when path ilike '%/10304151/checkouts%' then '/checkout' else rtrim(path,'/') end page
-        ,rank() over (partition by session_id order by time) page_sequence
-        ,count(*) over (partition by session_id) session_pages
-        ,case when max(time) over (partition by session_id) = time then 1 else 0 end exit_flag
-        ,page_sequence||' of '||session_pages page_of_session
-from heap_data.purple.pageviews
-where to_date(time) > current_date -121
-and to_date(time) < current_date)
-,
-top_pages as
-(select page
-from
-  (select page
-      ,count(*) views
-  from pageviews
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by views desc)<51)
-,
-top_referrers as
-(select referrer
-from
-  (select referrer
-      ,count(*) sessions
-  from session_details
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by sessions desc)<31)
-,
-top_landing as
-(select landing_page
-from
-  (select landing_page
-      ,count(*) sessions
-  from session_details
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by sessions desc)<31)
-,
-top_source as
-(select UTM_SOURCE
-from
-  (select UTM_SOURCE
-      ,count(*) sessions
-  from session_details
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by sessions desc)<21)
-,
-top_medium as
-(select UTM_MEDIUM
-from
-  (select UTM_MEDIUM
-      ,count(*) sessions
-  from session_details
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by sessions desc)<16)
-,
-top_browser as
-(select browser
-from
-  (select split_part(browser,'.',0) browser
-      ,count(*) sessions
-  from session_details
-  where date > current_date-8
-  group by 1)
-qualify rank() over (order by sessions desc)<21)
-,
-pv_details as (
-select distinct p.date
-        ,p.page
-        ,count(*) over (partition by p.date, p.page) pageviews
-        ,sum(exit_flag) over (partition by p.date, p.page) exits
-        ,sum(conv_flag) over (partition by p.date, p.page) conversions
-        ,sum(nvl(s.ordeR_amt,0)) over (partition by p.date, p.page) revenue
-        ,round(exits/pageviews,3) exit_rate
-        ,round(conversions/pageviews,3) conversion_rate
-        ,round(pageviews/ts.total_sessions,3) pct_sessions_pageview
-        ,round(revenue/pageviews,2) rev_per_pv
-from pageviews p join session_details s on p.session_id = s.session_id
-join top_pages tp on p.page = tp.page
-join tot_sessions ts on p.date = ts.date
-order by 2,1)
-,
-dtc_sales as
-(select trandate date
-        ,sum(case when zero$order_flag=0 and Mattress_Flg = 1 then 1 else 0 end) matt_ord
-        ,sum(case when zero$order_flag=0 and Mattress_Flg = 1 then gross_amt else 0 end) matt_ord_vol
-        ,sum(case when zero$order_flag=0 and Mattress_Flg = 1 then items_ordered else 0 end) matt_ord_units
-        ,round(matt_ord_vol/matt_ord,0) AMOV
-        ,round(matt_ord_units/matt_ord,2) M_UPT
-        ,sum(case when zero$order_flag=0 and mattress_flg = 0 then 1 else 0 end) non_matt_ord
-        ,sum(case when zero$order_flag=0 and mattress_flg = 0 then gross_amt else 0 end) non_matt_ord_vol
-        ,sum(case when zero$order_flag=0 and Mattress_Flg = 0 then items_ordered else 0 end) non_matt_ord_units
-        ,round(non_matt_ord_vol/non_matt_ord,0) NAMOV
-        ,round(non_matt_ord_units/non_matt_ord,2) ACC_UPT
-        ,sum(case when zero$order_flag=1 then 1 else 0 end) zero$_order
-from
-    (select so.trandate
-                ,so.order_id
-                ,so.gross_amt
-                ,sum(case when sl.gross_amt = 0 then 0 else sl.ordered_qty end) items_ordered
-                ,sum(case when i.category = 'MATTRESS' and i.classification = 'FG' then 1 else 0 end) mattress_flg
-                ,sum(case when so.gross_amt = 0 then 1 else 0 end) zero$order_flag
-    from sales_order_line sl join sales_order so on so.order_id = sl.order_id and so.system = sl.system
-    join item i on i.item_id = sl.item_id
-    where so.channel_id = 1
-    and trandate > current_date - 121
-    and trandate < current_date
-    group by 1,2,3)
-group by 1)
+WITH session_details AS
+--this SELECT gets all the session-level metrics aggregated by date WITH all the separate categories to PARTITION BY later
+(SELECT
+ s.session_id
+ ,to_date(s.date_time) date
+ ,s.source
+ ,s.medium
+ ,s.landing_page
+ ,s.platform
+ ,s.device_Type
+ ,s.browser
+ ,s.region
+ ,s.country
+ ,CASE WHEN referrer ilike '%purple.com%' THEN  'purple.com' WHEN referrer ilike '%purple.narvar.com%' THEN  'purple.narvar.com' WHEN referrer ilike '%pinterest.com%' THEN  'pinterest.com' ELSE SPLIT_PART(ltrim(ltrim(SPLIT_PART(rtrim(referrer,'/'),'//',2),'www.'),'l.'),'/',1) END referrer
+ ,CASE WHEN utm_medium = 'sr' OR utm_medium = 'search' OR utm_medium = 'cpc' THEN  'search' WHEN utm_medium = 'so' OR utm_medium ilike '%social%' OR referrer ilike '%fb%' OR referrer ilike '%facebo%' OR referrer ilike '%insta%' OR referrer ilike '%l%nk%din%' OR referrer ilike '%pinteres%' OR referrer ilike '%snapch%' THEN  'social' WHEN utm_medium ilike 'vi' OR utm_medium ilike 'video' OR referrer ilike '%y%tube%' THEN  'video' WHEN utm_medium ilike 'nt' OR utm_medium ilike 'native' THEN  'native' WHEN utm_medium ilike 'ds' OR utm_medium ilike 'display' OR referrer ilike '%outbrain%' OR referrer ilike '%doubleclick%' OR referrer ilike '%googlesyndica%' THEN  'display' WHEN utm_medium ilike 'sh' OR utm_medium ilike 'shopping' THEN  'shopping' WHEN utm_medium ilike 'af' OR utm_medium ilike 'ir' OR utm_medium ilike '%affiliate%' THEN  'affiliate'   WHEN utm_medium ilike 'em' OR utm_medium ilike 'email' OR referrer ilike '%mail.%' OR referrer ilike '%outlook.live%' THEN  'email' WHEN utm_medium is null AND (referrer ilike '%google%' OR referrer ilike '%bing%' OR referrer ilike '%yahoo%' OR referrer ilike '%ASk%' OR referrer ilike '%aol%' OR referrer ilike '%msn%' OR referrer ilike '%endex%' OR referrer ilike '%duckduck%') THEN  'organic' WHEN utm_medium ilike 'rf' OR utm_medium ilike 'referral' OR utm_medium ilike '%partner platfo%' OR lower(referrer) not like '%purple%' THEN  'referral' WHEN (referrer ilike '%purple%' AND utm_medium is null) OR referrer is null THEN  'direct' ELSE 'undefined' END channel
+ ,pv.pages
+ ,1 session_flag
+ ,SUM(session_flag) OVER (PARTITION BY date_time) total_sessions
+ ,CASE WHEN pv.pages < 2 THEN  1 ELSE 0 END bounce_flag
+ ,sn.session_num
+ ,CASE WHEN sn.session_num > 1 THEN  1 ELSE 0 END ret_visit_flag
+ ,NVL(p.order_amt, 0) order_amt
+ ,CASE WHEN p.order_amt is null THEN  0 ELSE 1 END conv_flag
+ ,conversions
+ FROM datagrid.prod.web_session s
+ LEFT JOIN
+    (SELECT
+     session_id
+     ,SUM (shopify_amt) order_amt
+     ,COUNT(*) conversions
+     FROM analytics.marketing.ecommerce
+     WHERE to_date(session_time) > CURRENT_DATE -121
+     AND to_date(session_time) < CURRENT_DATE
+     AND diff <6000
+     GROUP BY 1
+    )p ON s.session_id = p.session_id
+ LEFT JOIN
+    (SELECT
+     DISTINCT session_id
+     ,total_page_views AS pages
+     FROM datagrid.prod.web_session
+     WHERE to_date(date_time) > CURRENT_DATE -121
+     AND to_date(date_time) < CURRENT_DATE
+    )pv ON pv.session_id = s.session_id
+ LEFT JOIN
+    (SELECT
+     DISTINCT session_id
+     ,session_sequence AS session_num
+     FROM datagrid.prod.web_session
+     WHERE to_date(date_time) > CURRENT_DATE -121
+     AND to_date(date_time) < CURRENT_DATE
+    )sn ON sn.session_id = s.session_id
+ WHERE to_date(s.date_time) > CURRENT_DATE -121
+ AND to_date(s.date_time) < CURRENT_DATE
+)
 
-
-
-,
-main_query as
---this is the main select that combines all the single-metric fact queries from the previous CTEs or raw tables. simply union another select on to add another category of metrics
---schema is date-> bus_unit -> metric (this is the partition by in most queries) -> category (description of metric) -> tier (H/M/L for reporting suppression) -> amount
+,tot_sessions AS
 (
---this pulls the CSAT for the call center for a given days
-select distinct to_Date(response_received) date
-    ,'CUSTOMER_CARE' bus_unit
-    ,'RATING' as DIMENSIONS
-    ,'AVERAGE CSAT' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
+  SELECT
+  DISTINCT date
+  ,total_sessions
+  FROM session_details
+)
+
+,pageviews AS
+--this SELECT captures the pageviews
+(
+  SELECT
+  DISTINCT to_date(session_time) date
+  ,session_id
+  ,CASE WHEN path ilike '%/10304151/checkouts%' THEN  '/checkout' ELSE rtrim(path,'/') END page
+  ,rank() OVER (PARTITION BY session_id ORDER BY  time) page_sequence
+  ,COUNT(*) OVER (PARTITION BY session_id) session_pages
+  ,CASE WHEN MAX(time) OVER (PARTITION BY session_id) = time THEN  1 ELSE 0 END exit_flag
+  ,page_sequence||' of '||session_pages page_of_session
+  FROM heap_data.purple.pageviews
+  WHERE to_date(time) > CURRENT_DATE -121
+  AND to_date(time) < CURRENT_DATE
+)
+
+,top_pages AS
+(
+  SELECT page,
+  views
+  FROM
+    (SELECT page
+        ,COUNT(*) views
+    FROM pageviews
+    WHERE date > CURRENT_DATE -8
+    GROUP BY 1)
+  QUALIFY RANK() OVER (ORDER BY views DESC) <51
+)
+
+,top_referrers AS
+(
+  SELECT referrer
+  FROM
+    (SELECT referrer
+        ,COUNT(*) sessions
+    FROM session_details
+    WHERE date > CURRENT_DATE -8
+    GROUP BY 1)
+QUALIFY RANK() OVER (ORDER BY  sessions DESC) <31
+)
+
+,top_landing AS
+(
+  SELECT landing_page
+  FROM
+    (SELECT landing_page
+        ,COUNT(*) sessions
+    FROM session_details
+    WHERE date > CURRENT_DATE -8
+    GROUP BY 1)
+  QUALIFY RANK() OVER (ORDER BY  sessions DESC) <31
+)
+
+,top_source AS
+(
+  SELECT source
+  FROM
+    (SELECT source
+        ,COUNT(*) sessions
+    FROM session_details
+    WHERE date > CURRENT_DATE -8
+   GROUP BY 1)
+  QUALIFY RANK() OVER (ORDER BY  sessions DESC) <21
+)
+
+,top_medium AS
+(
+  SELECT medium
+  FROM
+    (SELECT medium
+        ,COUNT(*) sessions
+    FROM session_details
+    WHERE date > CURRENT_DATE -8
+    GROUP BY 1)
+  QUALIFY RANK() OVER (ORDER BY  sessions desc) <16
+)
+
+,top_browser AS
+(
+  SELECT browser
+  FROM
+    (SELECT SPLIT_PART(browser,'.',0) browser
+        ,COUNT(*) sessions
+    FROM session_details
+    WHERE date > CURRENT_DATE -8
+    GROUP BY 1)
+  QUALIFY RANK() OVER (ORDER BY  sessions DESC) <21
+)
+
+--this CTE gets all the pageview level information FROM the prio CTE's
+,pv_details AS (
+SELECT
+  DISTINCT p.date
+  ,p.page
+  ,COUNT(*) OVER (PARTITION BY p.date, p.page) pageviews
+  ,SUM (exit_flag) OVER (PARTITION BY p.date, p.page) exits
+  ,SUM (conv_flag) OVER (PARTITION BY p.date, p.page) conversions
+  ,SUM (NVL(s.order_amt, 0)) OVER (PARTITION BY p.date, p.page) revenue
+  ,ROUND(exits/pageviews, 3) exit_rate
+  ,ROUND(conversions/pageviews, 3) conversion_rate
+  ,ROUND(pageviews/ts.total_sessions, 3) pct_sessions_pageview
+  ,ROUND(revenue/pageviews, 2) rev_per_pv
+FROM pageviews p JOIN session_details s ON p.session_id = s.session_id
+JOIN top_pages tp ON p.page = tp.page
+JOIN tot_sessions ts ON p.date = ts.date
+ORDER BY 2, 1
+)
+
+--this CTE gets all the order level information for DTC Webiste
+,dtc_sales AS
+(
+  SELECT
+  order_date date
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  1 ELSE 0 END) matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  gross_amt ELSE 0 END) matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  items_ordered ELSE 0 END) matt_ord_units
+  ,ROUND (matt_ord_vol/matt_ord, 0) AMOV
+  ,ROUND (matt_ord_units/matt_ord, 2) M_UPT
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  1 ELSE 0 END) non_matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  gross_amt ELSE 0 END) non_matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 0 THEN  items_ordered ELSE 0 END) non_matt_ord_units
+  ,ROUND (non_matt_ord_vol/non_matt_ord, 0) NAMOV
+  ,ROUND (non_matt_ord_units/non_matt_ord, 2) ACC_UPT
+  ,SUM (CASE WHEN zero$order_flag = 1 THEN  1 ELSE 0 END) zero$_ORder
+  FROM
+    (SELECT
+     so.order_date
+     ,so.order_id
+     ,so.order_value as gross_amt
+     ,SUM (CASE WHEN so.order_value = 0 THEN 0 ELSE so.quantity END) items_ordered
+     ,SUM (CASE WHEN p.category = 'MATTRESS' AND p.classification_group = 'Finished Good' THEN  1 ELSE 0 END) mattress_flg
+     ,SUM (CASE WHEN so.order_value = 0 THEN  1 ELSE 0 END) zero$order_flag
+     FROM datagrid.prod.sales_order so
+     JOIN datagrid.prod.product p ON so.item_id = p.item_id
+     WHERE order_date > CURRENT_DATE -121
+      AND order_date < CURRENT_DATE
+      AND so.channel = 'DTC' AND so.sub_channel = 'Website'
+    GROUP BY 1, 2, 3)
+  GROUP BY 1
+)
+
+--this CTE gets all the order level information for Contact center
+,contact_center_sales AS
+(
+  SELECT
+  order_date date
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  1 ELSE 0 END) matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  gross_amt ELSE 0 END) matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  items_ordered ELSE 0 END) matt_ord_units
+  ,ROUND (matt_ord_vol/matt_ord, 0) AMOV
+  ,ROUND (matt_ord_units/matt_ord, 2) M_UPT
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  1 ELSE 0 END) non_matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  gross_amt ELSE 0 END) non_matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 0 THEN  items_ordered ELSE 0 END) non_matt_ord_units
+  ,ROUND (non_matt_ord_vol/non_matt_ord, 0) NAMOV
+  ,ROUND (non_matt_ord_units/non_matt_ord, 2) ACC_UPT
+  ,SUM (CASE WHEN zero$order_flag = 1 THEN  1 ELSE 0 END) zero$_ORder
+  FROM
+    (SELECT
+     so.order_date
+     ,so.order_id
+     ,so.order_value as gross_amt
+     ,SUM (CASE WHEN so.order_value = 0 THEN 0 ELSE so.quantity END) items_ordered
+     ,SUM (CASE WHEN p.category = 'MATTRESS' AND p.classification_group = 'Finished Good' THEN  1 ELSE 0 END) mattress_flg
+     ,SUM (CASE WHEN so.order_value = 0 THEN  1 ELSE 0 END) zero$order_flag
+     FROM datagrid.prod.sales_order so
+     JOIN datagrid.prod.product p ON so.item_id = p.item_id
+     WHERE order_date > CURRENT_DATE -121
+     AND order_date < CURRENT_DATE
+     AND so.channel = 'DTC' AND so.sub_channel = 'Contact Center'
+     GROUP BY 1, 2, 3)
+  GROUP BY 1
+)
+
+--this CTE gets all the order level information for Amazon Merchant
+,amazon_sales AS
+(
+  SELECT
+  order_date date
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  1 ELSE 0 END) matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  gross_amt ELSE 0 END) matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 1 THEN  items_ordered ELSE 0 END) matt_ord_units
+  ,ROUND (matt_ord_vol/matt_ord, 0) AMOV
+  ,ROUND (matt_ord_units/matt_ord, 2) M_UPT
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  1 ELSE 0 END) non_matt_ord
+  ,SUM (CASE WHEN zero$order_flag = 0 AND mattress_flg = 0 THEN  gross_amt ELSE 0 END) non_matt_ord_vol
+  ,SUM (CASE WHEN zero$order_flag = 0 AND Mattress_Flg = 0 THEN  items_ordered ELSE 0 END) non_matt_ord_units
+  ,ROUND (non_matt_ord_vol/non_matt_ord, 0) NAMOV
+  ,ROUND (non_matt_ord_units/non_matt_ord, 2) ACC_UPT
+  ,SUM (CASE WHEN zero$order_flag = 1 THEN  1 ELSE 0 END) zero$_ORder
+  FROM
+    (SELECT so.order_date
+     ,so.order_id
+     ,so.order_value as gross_amt
+     ,SUM (CASE WHEN so.order_value = 0 THEN 0 ELSE so.quantity END) items_ordered
+     ,SUM (CASE WHEN p.category = 'MATTRESS' AND p.classification_group = 'Finished Good' THEN  1 ELSE 0 END) mattress_flg
+     ,SUM (CASE WHEN so.order_value = 0 THEN  1 ELSE 0 END) zero$order_flag
+     FROM datagrid.prod.sales_order so
+     JOIN datagrid.prod.product p ON so.item_id = p.item_id
+     WHERE order_date > CURRENT_DATE -121
+     AND order_date < CURRENT_DATE
+     AND so.channel = 'DTC' AND so.sub_channel = 'Merchant'
+     GROUP BY 1, 2, 3)
+  GROUP BY 1
+)
+
+,add_to_cart AS
+(
+  SELECT
+  user_id,
+  session_id,
+  time
+  FROM heap_data.purple.all_events e
+  WHERE event_table_name IN ('cart_add_to_cart')
+  AND to_date(time) > CURRENT_DATE -121
+  AND to_date(time) < CURRENT_DATE
+ )
+
+--this is the main select that combines all the single-metric fact queries FROM the previous CTEs or raw tables. simply union another select on to add another category of metrics
+--schema is date-> bus_unit -> dimensions --> metric (this is the partition by in most queries) -> category (description of metric) -> tier(detail level) (H/M/L for reporting suppression) -> amount
+
+,
+main_query AS
+(
+//--this pulls sesisons COUNT for the top 20 UTM_SOURCE by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.source DIMENSIONS
+  ,'SESSIONS BY SOURCE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,avg(star_Rating) over (partition by to_date(response_received)) amount
-  ,'NONE' as HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.source) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.source) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from ANALYTICS.CUSTOMER_CARE.customer_satisfaction_survey
-where to_Date(response_received) > current_date-121
-and to_date(response_received) <= current_date
+FROM session_details s
+JOIN top_source ts ON s.source = ts.source
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls count of 1-star CSAT for the call center for a given day
-select distinct to_Date(response_received) date
-    ,'CUSTOMER_CARE' bus_unit
-    ,'RATING' as DIMENSIONS
-    ,'1-STAR SCORES' METRIC
-    ,'FINE' DETAIL_LEVEL
+--this pulls bounce rate for the top 20 UTM_SOURCE by sessions FROM Heap
+SELECT
+   DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.source DIMENSIONS
+  ,'BOUNCE BY SOURCE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,-1 POLARITY
-    ,sum(star_Rating) over (partition by to_date(response_received)) amount
-  ,'NONE' as HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+  ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date,DIMENSIONS)/SUM(session_flag) OVER (PARTITION BY date,DIMENSIONS), 3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.source) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from ANALYTICS.CUSTOMER_CARE.customer_satisfaction_survey
-where to_Date(response_received) > current_date-121
-and to_date(response_received) <= current_date
-and star_rating = 1
+FROM session_details s
+JOIN top_source ts ON s.source = ts.source
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls count of 5-star CSAT for the call center for a given day
-select distinct to_Date(response_received) date
-    ,'CUSTOMER_CARE' bus_unit
-    ,'RATING' as DIMENSIONS
-    ,'5-STAR SCORES' METRIC
-    ,'FINE' DETAIL_LEVEL
-  ,-1 POLARITY
-    ,sum(star_Rating) over (partition by to_date(response_received)) amount
-  ,'NONE' as HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
+--this pulls QCVR for the top 20 UTM_SOURCE by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.source DIMENSIONS
+  ,'QCVR BY SOURCE' METRIC
+  ,'TIER 3' DETAIL_LEVEL
+  ,1 POLARITY
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date, DIMENSIONS)/ NULLIF((SUM(session_flag) OVER (PARTITION BY date,DIMENSIONS)- SUM(bounce_flag) OVER (PARTITION BY date,DIMENSIONS)),0),3) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.source) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from ANALYTICS.CUSTOMER_CARE.customer_satisfaction_survey
-where to_Date(response_received) > current_date-121
-and to_date(response_received) <= current_date
-and star_rating = 5
+FROM session_details s
+JOIN top_source ts on s.source = ts.source
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---This pulls the count of calls based on disposition
-select distinct to_date(contacted) date
-    ,'CUSTOMER_CARE' bus_unit
-    ,skill DIMENSIONS
-    ,'CALLS' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
+--this pulls RPV for the top 20 UTM_SOURCE by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.source DIMENSIONS
+  ,'RPV BY SOURCE' METRIC
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
-    ,count(*) over (partition by to_date(contacted), skill) amount
-  ,'MINIMUM # CALLS' HURDLE_DESCRIPTION
-  ,20 SIG_HURDLE
-    ,count(*) over (partition by to_date(contacted), skill) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
-from ANALYTICS.CUSTOMER_CARE.RPT_SKILL_WITH_DISPOSITION_COUNT
-where skill in ('Abandon Carts','Customer Service General','Customer Service OB','Inbound Sales','Order Follow Up','Returns - Mattress','Returns - Other','Sales Team OB','Sales Xfer%','Service Recovery','Support Xfer%','Warranty')
-and to_date(contacted) > current_date-121
-and to_date(contacted) < current_date
-UNION
---this pulls the count of missed chats by department_name
-select distinct to_Date(created) date
-    ,'CUSTOMER_CARE' bus_unit
-    ,case when department_name is null then 'UNASSIGNED' else department_name end DIMENSIONS
-    ,'MISSED_CHATS' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
-  ,-1 POLARITY
-    ,sum(case when missed=true then 1 else 0 end) over (partition by to_date(created),department_name) amount
-  ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
-  ,0 HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
-from ANALYTICS.CUSTOMER_CARE.ZENDESK_CHATS
-where to_date(created) > current_date-121
-and to_date(created) < current_date
-UNION
---this pulls sesisons count for the top 20 UTM_SOURCE by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.UTM_SOURCE DIMENSIONS
-    ,'SESSIONS BY SOURCE' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
-    ,count(*) over (partition by s.date, s.UTM_SOURCE) amount
+  ,ROUND(SUM(order_amt) OVER (PARTITION BY date, DIMENSIONS) / NULLIF(SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_source ts on s.utm_source = ts.utm_source
-where date > current_date-121
-and date < current_date
-UNION
---this pulls bounce rate for the top 20 UTM_SOURCE by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.UTM_SOURCE DIMENSIONS
-    ,'BOUNCE BY SOURCE' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
-  ,-1 POLARITY
-  ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
-  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
-  ,2 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_source ts on s.utm_source = ts.utm_source
-where date > current_date-121
-and date < current_date
-UNION
---this pulls QCVR for the top 20 UTM_SOURCE by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.UTM_SOURCE DIMENSIONS
-    ,'QCVR BY SOURCE' METRIC
-    ,'FINE' DETAIL_LEVEL
-  ,1 POLARITY
-    ,round(sum(conv_flag) over (partition by date,DIMENSIONS)/nullif((sum(session_flag) over (partition by date,DIMENSIONS)-sum(bounce_flag) over (partition by date,DIMENSIONS)),0),3) amount
-  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
-  ,3 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_source ts on s.utm_source = ts.utm_source
-where date > current_date-121
-and date < current_date
-UNION
---this pulls RPV for the top 20 UTM_SOURCE by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.UTM_SOURCE DIMENSIONS
-    ,'RPV BY SOURCE' METRIC
-    ,'FINE' DETAIL_LEVEL
-  ,1 POLARITY
-    ,round(sum(order_amt) over (partition by date,DIMENSIONS)/nullif(sum(session_flag) over (partition by date,DIMENSIONS),0),3) amount
-  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.UTM_SOURCE) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.source) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_source ts on s.utm_source = ts.utm_source
-where date > current_date-121
-and date < current_date
+FROM session_details s
+JOIN top_source ts ON s.source = ts.source
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls sesisons count for the top 20 CHANNEL by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.CHANNEL DIMENSIONS
-    ,'SESSIONS BY CHANNEL' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
+--this pulls sesisons COUNT for the top 20 CHANNEL by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.channel DIMENSIONS
+  ,'SESSIONS BY CHANNEL' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,count(*) over (partition by s.date, s.CHANNEL) amount
+  ,COUNT(*) OVER (PARTITION BY s.date, s.channel) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.CHANNEL) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.channel) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s
-where date > current_date-121
-and date < current_date
+FROM session_details s
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls bounce rate for the top 20 CHANNEL by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.CHANNEL DIMENSIONS
-    ,'BOUNCE BY CHANNEL' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
+--this pulls bounce rate for the top 20 CHANNEL by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.channel DIMENSIONS
+  ,'BOUNCE BY CHANNEL' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,-1 POLARITY
-    ,round(sum(bounce_flag) over (partition by date,DIMENSIONS)/sum(session_flag) over (partition by date,DIMENSIONS),3) amount
+  ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date, DIMENSIONS) / SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.CHANNEL) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.channel) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from session_details s
-where date > current_date-121
-and date < current_date
+FROM session_details s
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls QCVR for the top 20 CHANNEL by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.CHANNEL DIMENSIONS
-    ,'QCVR BY CHANNEL' METRIC
-    ,'FINE' DETAIL_LEVEL
+--this pulls QCVR for the top 20 CHANNEL by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.channel DIMENSIONS
+  ,'QCVR BY CHANNEL' METRIC
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
-    ,round(sum(conv_flag) over (partition by date,DIMENSIONS)/nullif((sum(session_flag) over (partition by date,DIMENSIONS)-sum(bounce_flag) over (partition by date,DIMENSIONS)),0),3) amount
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date,DIMENSIONS) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) - SUM(bounce_flag) OVER (PARTITION BY date,DIMENSIONS)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.CHANNEL) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.channel) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from session_details s
-where date > current_date-121
-and date < current_date
+FROM session_details s
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
---this pulls RPV for the top 20 CHANNEL by sessions from Heap
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.CHANNEL DIMENSIONS
-    ,'RPV BY CHANNEL' METRIC
-    ,'FINE' DETAIL_LEVEL
+--this pulls RPV for the top 20 CHANNEL by sessions FROM Heap
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.channel DIMENSIONS
+  ,'RPV BY CHANNEL' METRIC
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
-    ,round(sum(order_amt) over (partition by date,DIMENSIONS)/nullif(sum(session_flag) over (partition by date,DIMENSIONS),0),3) amount
+  ,ROUND(SUM(order_amt) OVER (PARTITION BY date, DIMENSIONS) / NULLIF(SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.CHANNEL) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.channel) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from session_details s
-where date > current_date-121
-and date < current_date
+FROM session_details s
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
 ---top 30 landing pages||channels
-select distinct s.date
-    ,'ACQUISITIONS' bus_unit
-    ,s.landing_page||'||'||s.channel DIMENSIONS
-    ,'SESSIONS BY LANDING PAGE||CHANNEL' METRIC
-    ,'VERY FINE' DETAIL_LEVEL
+SELECT
+  DISTINCT s.date
+  ,'ACQUISITIONS' bus_unit
+  ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,'SESSIONS BY LANDING PAGE||CHANNEL' METRIC
+  ,'TIER 4' DETAIL_LEVEL
   ,1 POLARITY
-    ,count(*) over (partition by date,s.landing_page,s.channel) amount
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page, s.channel) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,500 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page, s.channel) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
 --pulls bounce rate of top 'N' landing page||channel
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
-    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,s.landing_page||'||'||s.channel DIMENSIONS
   ,'LANDING PAGE||CHANNEL BOUNCE' METRIC
-  ,'VERY FINE' DETAIL_LEVEL
+  ,'TIER 4' DETAIL_LEVEL
   ,-1 POLARITY
-  ,round(sum(bounce_flag) over (partition by date,s.landing_page,s.channel)/sum(session_flag) over (partition by date,s.landing_page,s.channel),3) amount
+  ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date, s.landing_page, s.channel)/ SUM(session_flag) OVER (PARTITION BY date, s.landing_page, s.channel), 3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,500 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page, s.channel) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
 --this query returns the qualified conversion rate for the top landing page||channel
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
-    ,s.landing_page||'||'||s.channel DIMENSIONS
+  ,s.landing_page||'||'||s.channel DIMENSIONS
   ,'LANDING PAGE||CHANNEL QCVR' METRIC
-  ,'VERY FINE' DETAIL_LEVEL
+  ,'TIER 4' DETAIL_LEVEL
   ,1 POLARITY
-  ,round(sum(conv_flag) over (partition by date,s.landing_page,s.channel)/nullif((sum(session_flag) over (partition by date,s.landing_page,s.channel)-sum(bounce_flag) over (partition by date,s.landing_page,s.channel)),0),3) amount
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date, s.landing_page, s.channel) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, s.landing_page, s.channel) - SUM(bounce_flag) OVER (PARTITION BY date, s.landing_page, s.channel)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,500 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date,s.landing_page,s.channel) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
 --this query pulls the RPV based on landing page||channel
-select distinct date
+SELECT DISTINCT date
   ,'ACQUISITIONS' bus_unit
     ,s.landing_page||'||'||s.channel DIMENSIONS
   ,'LANDING PAGE||CHANNEL RPV' METRIC
-  ,'VERY FINE' DETAIL_LEVEL
+  ,'TIER 4' DETAIL_LEVEL
   ,1 POLARITY
-  ,round(sum(order_amt) over (partition by date,s.landing_page,s.channel)/nullif(sum(session_flag) over (partition by date,s.landing_page,s.channel),0),3) amount
+  ,ROUND(SUM(order_amt) OVER (PARTITION BY date,s.landing_page,s.channel) / NULLIF(SUM(session_flag) OVER (PARTITION BY date,s.landing_page,s.channel),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,500 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page,s.channel) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date,s.landing_page,s.channel) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
-UNION--this query pulls sessions by state, limited to the top 50 regions in HEAP
-select distinct s.date
-    ,'WEB' bus_unit
-    ,s.region DIMENSIONS
-    ,'SESSIONS BY STATE' METRIC
-    ,'VERY FINE' DETAIL_LEVEL
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
+UNION
+  --this query pulls sessions by state, limited to the top 50 regions in HEAP
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,s.region DIMENSIONS
+  ,'SESSIONS BY STATE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,count(*) over (partition by s.date, s.REGION) amount
+  ,COUNT(*) OVER (PARTITION BY s.date, s.region) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by s.date, s.REGION) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.region) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s
-join
-    (select region
-    from
-    (select REGION
-      ,count(*) sessions
-    from session_details
-    where date < current_date
-    and date > current_date-8
-    and country ilike '%united states%'
-    group by 1)
-    qualify rank() over (order by sessions desc)<=50) s1 on s1.REGION = s.REGION
-where date > current_date-121
-and date < current_date
+FROM session_details s
+JOIN
+    (SELECT region
+    FROM
+      (SELECT REGION
+        ,COUNT(*) sessions
+      FROM session_details
+      WHERE date < CURRENT_DATE
+      AND date > CURRENT_DATE -8
+      AND COUNTry ilike '%united states%'
+      GROUP BY 1)
+      QUALIFY RANK() OVER (ORDER BY sessions DESC) <=50
+    )s1 ON s1.region = s.region
+WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
 UNION
----this query pulls the top 20 promo codes (determined from the past 7 days)
-select distinct trandate date
+---this query pulls the top 20 promo codes (determined FROM the past 7 days)
+SELECT
+  DISTINCT order_date date
   ,'DTC' bus_unit
-  ,split_part(shopify_discount_code,'-',0) DIMENSIONS
+  ,SPLIT_PART(promo_bucket,'-',0) DIMENSIONS
   ,'ORDERS W/ PROMO CODE' METRIC
-  ,'VERY FINE' DETAIL_LEVEL
+  ,'TIER 2' DETAIL_LEVEL
   ,-1 POLARITY
-  ,count(*) over (partition by trandate, DIMENSIONS) amount
+  ,COUNT(*) OVER (PARTITION BY order_date, DIMENSIONS) amount
   ,'MINIMUM ORDERS' HURDLE_DESCRIPTION
   ,10 SIG_HURDLE
-  ,count(*) over (partition by trandate, DIMENSIONS) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY order_date, DIMENSIONS) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from sales_order so
-join
-  (select promo
-  from
-    (select split_part(shopify_discount_code,'-',0) promo
-        ,count(*) orders
-    from sales_order
-    where trandate < current_date
-    and trandate > current_date-8
-    group by 1)
-  qualify rank() over (order by orders desc)<=20) s1 on s1.promo = split_part(so.shopify_discount_code,'-',0)
-where channel_id = 1
-and trandate < current_date
-and trandate > current_Date - 121
+FROM datagrid.prod.sales_order so
+JOIN
+  (SELECT promo
+  FROM
+    (SELECT
+     SPLIT_PART(promo_bucket,'-',0) promo
+     ,COUNT(*) orders
+    FROM datagrid.prod.sales_order
+    WHERE order_date < CURRENT_DATE
+    AND order_date > CURRENT_DATE -8
+    GROUP BY 1)
+    QUALIFY RANK() OVER (ORDER BY orders DESC) <=20
+  )s1 ON s1.promo = SPLIT_PART(so.promo_bucket,'-',0)
+WHERE channel = 'DTC' AND sub_channel = 'Website'
+AND order_date > CURRENT_DATE - 121
+AND order_date < CURRENT_DATE
+
 UNION
 --this select calculates mattress attach rates for non-0 mattress orders
-select distinct(to_Date(sl.created)) date
-    ,'DTC' bus_unit
-    ,i.line||'|'||i.model  DIMENSIONS
-    ,'MATTRESS_ATTACH_RATE' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DISTINCT(TO_DATE(so.order_date)) date
+  ,'DTC' bus_unit
+  ,p.line||'|'||p.model_name  DIMENSIONS
+  ,'MATTRESS_ATTACH_RATE' METRIC
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-    ,round(count(distinct sl.order_id) over (partition by date, i.line||'|'||i.model)/count(distinct sl.order_id) over (partition by date),4) amount
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) amount
   ,'MINIMUM MATTRESS ATTACH RATE' HURDLE_DESCRIPTION
   ,0.03 SIG_HURDLE
-  ,round(count(distinct sl.order_id) over (partition by date, i.line||'|'||i.model)/count(distinct sl.order_id) over (partition by date),4) HURDLE_VALUE
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from sales_order_line sl join item i on sl.item_id = i.item_id
-join
-  (select distinct so.order_id
-  from sales_order so join sales_order_line sl on so.order_id = sl.order_id and so.system = sl.system
-  join item i on sl.item_id = i.item_id
-  where category = 'MATTRESS'
-  and classification = 'FG'
-  and so.trandate > current_Date - 121
-  and so.trandate < current_date
-  and so.gross_amt > 0
-  and so.channel_id = 1) sub on sub.order_id = sl.order_id
+FROM datagrid.prod.sales_order so
+JOIN datagrid.prod.product p on so.item_id = p.item_id
+JOIN
+  (
+    SELECT
+    DISTINCT so.order_id
+    FROM datagrid.prod.sales_order so
+    JOIN datagrid.prod.product p on so.item_id = p.item_id
+    WHERE p.category = 'MATTRESS'
+      AND p.classification_group = 'Finished Good'
+      AND so.order_date > CURRENT_DATE - 121
+      AND so.order_date < CURRENT_DATE
+      AND so.order_value > 0
+      AND so.channel = 'DTC' AND sub_channel = 'Website'
+  )sub ON sub.order_id = so.order_id
+
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'MATTRESS ORDERS' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
+--this select calculates mattress attach rates for non-0 mattress orders for Contact center sales
+SELECT
+  DISTINCT(TO_DATE(so.order_date)) date
+  ,'CONTACT CENTER' bus_unit
+  ,p.line||'|'||p.model_name  DIMENSIONS
+  ,'MATTRESS_ATTACH_RATE' METRIC
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-    ,matt_ord amount
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) amount
+  ,'MINIMUM MATTRESS ATTACH RATE' HURDLE_DESCRIPTION
+  ,0.03 SIG_HURDLE
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM datagrid.prod.sales_order so
+JOIN datagrid.prod.product p on so.item_id = p.item_id
+JOIN
+  (
+    SELECT
+    DISTINCT so.order_id
+    FROM datagrid.prod.sales_order so
+    JOIN datagrid.prod.product p on so.item_id = p.item_id
+    WHERE p.category = 'MATTRESS'
+    AND p.classification_group = 'Finished Good'
+    AND so.order_date > CURRENT_DATE - 121
+    AND so.order_date < CURRENT_DATE
+    AND so.order_value > 0
+    AND so.channel = 'DTC' AND sub_channel = 'Contact Center'
+  )sub ON sub.order_id = so.order_id
+
+
+UNION
+--this select calculates mattress attach rates for non-0 mattress orders for Amazon sales
+SELECT
+  DISTINCT(TO_DATE(so.order_date)) date
+  ,'MERCHANT' bus_unit
+  ,p.line||'|'||p.model_name  DIMENSIONS
+  ,'MATTRESS_ATTACH_RATE' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) amount
+  ,'MINIMUM MATTRESS ATTACH RATE' HURDLE_DESCRIPTION
+  ,0.03 SIG_HURDLE
+  ,ROUND(COUNT(DISTINCT so.order_id) OVER (PARTITION BY date, p.line||'|'||p.model_name) / COUNT(DISTINCT so.order_id) OVER (PARTITION BY date),4) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM datagrid.prod.sales_order so
+JOIN datagrid.prod.product p on so.item_id = p.item_id
+JOIN
+  (
+    SELECT
+    DISTINCT so.order_id
+    FROM datagrid.prod.sales_order so
+    JOIN datagrid.prod.product p on so.item_id = p.item_id
+    WHERE p.category = 'MATTRESS'
+    AND p.classification_group = 'Finished Good'
+    AND so.order_date > CURRENT_DATE - 121
+    AND so.order_date < CURRENT_DATE
+    AND so.order_value > 0
+    AND so.channel = 'DTC' AND sub_channel = 'Merchant'
+  )sub ON sub.order_id = so.order_id
+
+--DTC Webiste related Order Metrics
+UNION
+SELECT
+  date
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS ORDERS' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,matt_ord amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'AMOV' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  date
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'AMOV' METRIC
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-    ,AMOV amount
+  ,AMOV amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'MATTRESS UPT' metric
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DATE
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,m_UPT amount
+  ,m_UPT amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'ACCESSORY_ORDERS' metric
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DATE
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY_ORDERS' metric
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-    ,non_matt_ord amount
+  ,non_matt_ord amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'NAMOV' metric
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DATE
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'NAMOV' metric
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-    ,NAMOV amount
+  ,NAMOV amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,5 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
 UNION
-select date
-    ,'DTC' bus_unit
-    ,'ORDER' DIMENSIONS
-    ,'ACCESSORY UPT' metric
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DATE
+  ,'DTC' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,acc_UPT amount
+  ,acc_UPT amount
   ,'NONE' HURDLE_DESCRIPTION
   ,0 SIG_HURDLE
   ,0 HURDLE_VALUE
   ,6 METRIC_WITHIN_DIMENSIONS
-from dtc_sales
+FROM dtc_sales
+
+--DTC Contact Center related Order Metrics
+UNION
+SELECT
+  date
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS ORDERS' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,matt_ord amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+UNION
+SELECT
+  date
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'AMOV' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,AMOV amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,2 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+UNION
+SELECT
+  DATE
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,m_UPT amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,3 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+UNION
+SELECT
+  DATE
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY_ORDERS' metric
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,non_matt_ord amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,4 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+UNION
+SELECT
+  DATE
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'NAMOV' metric
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,NAMOV amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,5 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+UNION
+SELECT
+  DATE
+  ,'CONTACT CENTER' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,acc_UPT amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,6 METRIC_WITHIN_DIMENSIONS
+FROM contact_center_sales
+
+--DTC Merchant related Order Metrics
+UNION
+SELECT
+  date
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS ORDERS' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,matt_ord amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
+UNION
+SELECT
+  date
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'AMOV' METRIC
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,AMOV amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,2 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
+UNION
+SELECT
+  DATE
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'MATTRESS UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,m_UPT amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,3 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
+UNION
+SELECT
+  DATE
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY_ORDERS' metric
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,non_matt_ord amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,4 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
+UNION
+SELECT
+  DATE
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'NAMOV' metric
+  ,'TIER 1' DETAIL_LEVEL
+  ,1 POLARITY
+  ,NAMOV amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,5 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
+UNION
+SELECT
+  DATE
+  ,'MERCHANT' bus_unit
+  ,'ORDER' DIMENSIONS
+  ,'ACCESSORY UPT' metric
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,acc_UPT amount
+  ,'NONE' HURDLE_DESCRIPTION
+  ,0 SIG_HURDLE
+  ,0 HURDLE_VALUE
+  ,6 METRIC_WITHIN_DIMENSIONS
+FROM amazon_sales
+
 UNION
 --transactions by payment method
-select distinct trandate date
-    ,'WEB' bus_unit
-    ,payment_method DIMENSIONS
-    ,'ORDERS BY PAYMENT METHOD' METRIC
-    ,'HIGH LEVEL' DETAIL_LEVEL
+SELECT
+  DISTINCT order_date date
+  ,'WEB' bus_unit
+  ,payment_method DIMENSIONS
+  ,'ORDERS BY PAYMENT METHOD' METRIC
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-    ,count(*) over (partition by date,payment_method) amount
+  ,COUNT(*) OVER (PARTITION BY date, payment_method) amount
   ,'MINIMUM ORDER COUNT' HURDLE_DESCRIPTION
   ,50 SIG_HURDLE
-  ,count(*) over (partition by date,payment_method) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date, payment_method) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from sales_order
-where channel_id = 1
-and trandate < current_date
-and trandate > current_Date - 121
+FROM datagrid.prod.sales_order
+WHERE channel = 'DTC'
+AND date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 ---top 20 browsers
-select distinct s.date
-    ,'WEB' bus_unit
-    ,split_part(s.browser,'.',0) DIMENSIONS
-    ,'SESSIONS BY BROWSER' METRIC
-    ,'VERY FINE' tier
+SELECT
+  DISTINCT s.date
+  ,'WEB' bus_unit
+  ,SPLIT_PART(s.browser,'.',0) DIMENSIONS
+  ,'SESSIONS BY BROWSER' METRIC
+  ,'TIER 4' tier
   ,1 POLARITY
-    ,count(*) over (partition by date,DIMENSIONS) amount
+  ,COUNT(*) OVER (PARTITION BY date,DIMENSIONS) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,count(*) over (partition by date,DIMENSIONS) HURDLE_VALUE
+  ,1000 SIG_HURDLE --sessions within that browser
+  ,COUNT(*) OVER (PARTITION BY date,DIMENSIONS) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_browser tb on split_part(s.browser,'.',0) = tb.browser
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_browser tb ON SPLIT_PART(s.browser,'.',0) = tb.browser
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 ---top 30 landing pages
-select distinct s.date
-    ,'ACQUISITIONS' bus_unit
-    ,s.landing_page DIMENSIONS
-    ,'SESSIONS BY LANDING PAGE' METRIC
-    ,'MEDIUM' DETAIL_LEVEL
-  ,1 POLARITY
-    ,count(*) over (partition by date,s.landing_page) amount
+SELECT
+  DISTINCT s.date
+  ,'ACQUISITIONS' bus_unit
+  ,s.landing_page DIMENSIONS
+  ,'SESSIONS BY LANDING PAGE' METRIC
+  ,'TIER 3' DETAIL_LEVEL
+  ,1 POLARITY --negative number good or bad, to be able to conditional format to red or green under alerts
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --pulls bounce rate of top 'N' landing pages
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE BOUNCE' METRIC
-  ,'MEDIUM' tier
+  ,'TIER 3' tier
   ,-1 POLARITY
-  ,round(sum(bounce_flag) over (partition by date,s.landing_page)/sum(session_flag) over (partition by date,s.landing_page),3) amount
+  ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date,s.landing_page) / SUM(session_flag) OVER (PARTITION BY date, s.landing_page),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date, s.landing_page) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this query returns the qualified conversion rate for the top landing pages
-select distinct date
+SELECT DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE QCVR' METRIC
-  ,'MEDIUM' tier
+  ,'TIER 3' tier
   ,1 POLARITY
-  ,round(sum(conv_flag) over (partition by date,s.landing_page)/nullif((sum(session_flag) over (partition by date,s.landing_page)-sum(bounce_flag) over (partition by date,s.landing_page)),0),3) amount
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date,s.landing_page) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, s.landing_page) - SUM(bounce_flag) OVER (PARTITION BY date,s.landing_page)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date,s.landing_page) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this query pulls the RPV based on landing page
-select distinct date
+SELECT DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE RPV' METRIC
-  ,'MEDIUM' tier
+  ,'TIER 3' tier
   ,1 POLARITY
-  ,round(sum(order_amt) over (partition by date,s.landing_page)/nullif(sum(session_flag) over (partition by date,s.landing_page),0),3) amount
+  ,ROUND(SUM(order_amt) OVER (PARTITION BY date,s.landing_page) / NULLIF(SUM(session_flag) OVER (PARTITION BY date,s.landing_page),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,count(*) over (partition by date,s.landing_page) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY date,s.landing_page) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_landing t on s.landing_page = t.landing_page
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_landing t ON s.landing_page = t.landing_page
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --query pulls % sessions hitting that particular page
-select distinct p.date
-  ,'WEB' bus_unit
-  ,p.page DIMENSIONS
-  ,'pct_traffic_visting' METRIC
-  ,'FINE' DETAIL_LEVEL
-  ,1 POLARITY
-  ,pct_sessions_pageview amount
-  ,'MINIMUM PAGEVIEW COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,p.pageviews HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
-from pv_details p join top_pages tp on tp.page = p.page
-where p.date > current_date - 121
-and p.date < current_date
+SELECT
+ DISTINCT p.date
+ ,'WEB' bus_unit
+ ,p.page DIMENSIONS
+ ,'pct_traffic_visting' METRIC
+ ,'TIER 3' DETAIL_LEVEL
+ ,1 POLARITY
+ ,pct_sessions_pageview amount
+ ,'MINIMUM PAGEVIEW COUNT' HURDLE_DESCRIPTION
+ ,1000 SIG_HURDLE
+ ,p.pageviews HURDLE_VALUE
+ ,1 METRIC_WITHIN_DIMENSIONS
+FROM pv_details p
+JOIN top_pages tp ON tp.page = p.page
+WHERE p.date > CURRENT_DATE - 121
+AND p.date < CURRENT_DATE
+
 UNION
 --query pulls exit rate by top pages
-select distinct p.date
+SELECT
+  DISTINCT p.date
   ,'WEB' bus_unit
   ,p.page DIMENSIONS
   ,'EXIT RATE BY PAGE' METRIC
-  ,'FINE' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,-1 POLARITY
   ,exit_rate amount
   ,'MINIMUM PAGEVIEW COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,p.pageviews HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from pv_details p join top_pages tp on tp.page = p.page
-where p.date > current_date - 121
-and p.date < current_date
+FROM pv_details p
+JOIN top_pages tp ON tp.page = p.page
+WHERE p.date > CURRENT_DATE - 121
+AND p.date < CURRENT_DATE
+
 UNION
 --query pulls conversion rate by top pages (will exceed site-wide conversion at 3 pageviews can all reflect the same conversion)
-select distinct p.date
+SELECT
+  DISTINCT p.date
   ,'WEB' bus_unit
   ,p.page DIMENSIONS
   ,'QCVR RATE BY PAGE' METRIC
-  ,'FINE' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
   ,conversion_rate amount
   ,'MINIMUM PAGEVIEW COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,p.pageviews HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from pv_details p join top_pages tp on tp.page = p.page
-where p.date > current_date - 121
-and p.date < current_date
+FROM pv_details p
+JOIN top_pages tp ON tp.page = p.page
+WHERE p.date > CURRENT_DATE - 121
+AND p.date < CURRENT_DATE
+
 UNION
 --query pulls revenue per page visit (will exceed total as it is attributing conversions across every page the converter touches
-select p.date
+select
+  p.date
   ,'WEB' bus_unit
   ,p.page DIMENSIONS
   ,'RPV BY PAGE' METRIC
-  ,'FINE' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
   ,rev_per_pv amount
   ,'MINIMUM PAGEVIEW COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,p.pageviews HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from pv_details p join top_pages tp on tp.page = p.page
-where p.date > current_date - 121
-and p.date < current_date
+FROM pv_details p
+JOIN top_pages tp ON tp.page = p.page
+WHERE p.date > CURRENT_DATE - 121
+AND p.date < CURRENT_DATE
+
 UNION
 --query pulls sessions by device type
-select distinct date
+SELECT
+  DISTINCT date
   ,'WEB' bus_unit
   ,device_type DIMENSIONS
   ,'SESSIONS BY DEVICE' METRIC
-  ,'MEDIUM' DETAIL_LEVEL
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-  ,sum(session_flag) over (partition by date, device_type) amount
+  ,SUM(session_flag) OVER (PARTITION BY date, device_type) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,sum(session_flag) over (partition by date, device_type) HURDLE_VALUE
+  ,SUM(session_flag) OVER (PARTITION BY date, device_type) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details
-where date < current_date
-and date > current_date - 121
+FROM session_details
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --new vs repeat site visitors
-select distinct date
+SELECT
+  DISTINCT date
   ,'WEB' bus_unit
-  ,case when ret_visit_flag = 1 then 'RETURN VISIT' else 'FIRST VISIT' end DIMENSIONS
+  ,CASE WHEN ret_visit_flag = 1 THEN 'RETURN VISIT' ELSE 'FIRST VISIT' END AS DIMENSIONS
   ,'SESSION COUNT BY NEW/REPEAT' METRIC
-  ,'HIGH LEVEL' DETAIL_LEVEL
+  ,'TIER 1' DETAIL_LEVEL
   ,1 POLARITY
-  ,sum(session_flag) over (partition by date, DIMENSIONS) amount
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) amount
   ,'NONE' HURDLE_DESCRIPTION
-  ,0 SIG_HURDLE
+  ,0 SIG_HURDLE -- we want to see if we see 0 visits
   ,0 HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details
-where date < current_date
-and date > current_date - 121
+FROM session_details
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --sessions by referrer
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.referrer DIMENSIONS
   ,'SESSIONS BY REFERRER' METRIC
-  ,'MEDIUM' DETAIL_LEVEL
+  ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-  ,sum(session_flag) over (partition by date, DIMENSIONS) Amount
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_referrers t on s.referrer = t.referrer
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_referrers t ON s.referrer = t.referrer
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --bounce by referrer
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.referrer DIMENSIONS
   ,'BOUNCE BY REFERRER' METRIC
-  ,'MEDIUM' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,-1 POLARITY
-  ,round(sum(bounce_flag) over (partition by date,s.referrer)/sum(session_flag) over (partition by date,s.referrer),3) amount
+  ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date,s.referrer) / SUM(session_flag) OVER (PARTITION BY date, s.referrer),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_referrers t on s.referrer = t.referrer
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_referrers t ON s.referrer = t.referrer
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this query returns the qualified conversion rate for the top referrer
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.referrer DIMENSIONS
   ,'REFERRER QCVR' METRIC
-  ,'FINE' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
-  ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date, s.referrer) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, s.referrer) - SUM(bounce_flag) OVER (PARTITION BY date, s.referrer)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_referrers t on s.referrer = t.referrer
-where date < current_date
-and date > current_date - 121
+FROM session_details s
+JOIN top_referrers t ON s.referrer = t.referrer
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this query pulls the RPV based on referrer
-select distinct date
+SELECT
+  DISTINCT date
   ,'ACQUISITIONS' bus_unit
   ,s.referrer DIMENSIONS
   ,'REFERRER RPV' METRIC
-  ,'FINE' DETAIL_LEVEL
+  ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
-  ,round(sum(conv_flag) over (partition by date,s.referrer)/nullif((sum(session_flag) over (partition by date,s.referrer)-sum(bounce_flag) over (partition by date,s.referrer)),0),3) amount
+  ,ROUND(SUM(conv_flag) OVER (PARTITION BY date, s.referrer) / NULLIF((SUM(session_flag) OVER (PARTITION BY date,s.referrer) - SUM(bounce_flag) OVER (PARTITION BY date,s.referrer)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,sum(session_flag) over (partition by date, DIMENSIONS) HURDLE_VALUE
+  ,SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
-from session_details s join top_referrers t on s.referrer = t.referrer
-where date < current_date
-and date > current_date - 121)
+FROM session_details s
+JOIN top_referrers t ON s.referrer = t.referrer
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+UNION
+--query pulls add to cart by browser
+SELECT
+  DISTINCT date
+  ,'WEB' bus_unit
+  ,browser DIMENSIONS
+  ,'ADD TO CARTS BY BROWSER' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.browser) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.browser) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM session_details s
+JOIN add_to_cart ac ON s.session_id = ac.session_id
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+UNION
+--query pulls add to cart by device_type
+SELECT
+  DISTINCT date
+  ,'WEB' bus_unit
+  ,device_type DIMENSIONS
+  ,'ADD TO CARTS BY DEVICE TYPE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.device_type) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.device_type) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM session_details s
+JOIN add_to_cart ac ON s.session_id = ac.session_id
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+UNION
+--query pulls add to cart by referrers
+SELECT
+  DISTINCT date
+  ,'WEB' bus_unit
+  ,referrer DIMENSIONS
+  ,'ADD TO CARTS BY REFERRER' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.referrer) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.referrer) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM session_details s
+JOIN add_to_cart ac ON s.session_id = ac.session_id
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+UNION
+--query pulls add to cart by landing pages
+SELECT
+  DISTINCT date
+  ,'WEB' bus_unit
+  ,landing_page DIMENSIONS
+  ,'ADD TO CARTS BY LANDING PAGE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.landing_page) amount
+  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.landing_page) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM session_details s
+JOIN add_to_cart ac ON s.session_id = ac.session_id
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+//UNION
+//--query pulls abandoned cart by device type
+//SELECT
+//  DISTINCT date
+//  ,'WEB' bus_unit
+//  ,device_type DIMENSIONS
+//  ,'ABANDONED CARTS BY DEVICE TYPE' METRIC
+//  ,'TIER 2' DETAIL_LEVEL
+//  ,1 POLARITY
+//  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.device_type) amount
+//  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+//  ,1000 SIG_HURDLE
+//  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.device_type) HURDLE_VALUE
+//  ,1 METRIC_WITHIN_DIMENSIONS
+//FROM session_details s
+//JOIN abandoned_cart ac ON s.session_id = ac.session_id
+//WHERE date > CURRENT_DATE - 121
+//AND date < CURRENT_DATE
+
+//UNION
+//--query pulls add to cart by browser
+//SELECT
+//  DISTINCT date
+//  ,'WEB' bus_unit
+//  ,browser DIMENSIONS
+//  ,'ADD TO CARTS BY BROWSER' METRIC
+//  ,'TIER 2' DETAIL_LEVEL
+//  ,1 POLARITY
+//  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.browser) - COUNT(s.conversion) OVER (PARTITION BY s.date, s.browser) amount
+//  ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
+//  ,1000 SIG_HURDLE
+//  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.browser) HURDLE_VALUE
+//  ,1 METRIC_WITHIN_DIMENSIONS
+//FROM session_details s
+//JOIN add_to_cart ac ON s.session_id = ac.session_id
+//WHERE date > CURRENT_DATE - 121
+//AND date < CURRENT_DATE
+
+) --closing bracket for main query CTE
 
 ,
-MEDIANS as
-(select distinct date
-            ,bus_unit
-            ,DIMENSIONS
-            ,METRIC
-            ,DETAIL_LEVEL
-            ,AMOUNT
-            ,abs(amount - median(amount) over (partition by DIMENSIONS||metric)) diff_median
-            ,median(amount) over (partition by DIMENSIONS||metric) median
-      ,POLARITY
-      ,HURDLE_DESCRIPTION
-      ,SIG_HURDLE
-      ,HURDLE_VALUE
-      ,METRIC_WITHIN_DIMENSIONS
-from MAIN_QUERY)
+medians AS
+(SELECT
+ DISTINCT date
+,bus_unit
+,DIMENSIONS
+,METRIC
+,DETAIL_LEVEL
+,AMOUNT
+,abs(amount - median(amount) over (PARTITION BY DIMENSIONS||metric||bus_unit)) diff_median
+,median(amount) over (PARTITION BY DIMENSIONS||metric||bus_unit) median
+,POLARITY
+,HURDLE_DESCRIPTION
+,SIG_HURDLE
+,HURDLE_VALUE
+,METRIC_WITHIN_DIMENSIONS
+FROM main_query)
 
 --******// THE MAGIC //*****
-select date
-        ,bus_unit
-        ,DIMENSIONS
-        ,METRIC
-        ,DETAIL_LEVEL
-        ,amount
-        ,median
-        ,median-1.5*(median(diff_median) over (partition by dimensions||metric)) neg_one_SD
-        ,median-3*(median(diff_median) over (partition by dimensions||metric)) neg_two_SD
-        ,median+1.5*(median(diff_median) over (partition by dimensions||metric)) plus_one_SD
-        ,median+3*(median(diff_median) over (partition by dimensions||metric)) plus_two_SD
-        ,lead(amount,1,0) over (partition by dimensions||metric order by date desc) one_day_ago
-        ,lead(amount,2,0) over (partition by dimensions||metric order by date desc) two_days_ago
-        ,case
-            when amount > plus_two_SD then '2 SD above median'
-            when amount < neg_two_SD then '2 SD below median'
-            when amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD then 'Trending above SD'
-            when amount < neg_one_SD  AND one_day_ago < neg_one_SD  AND two_days_ago < neg_one_SD  then 'Trending below SD'
-            else null
-        end alert
-    ,HURDLE_DESCRIPTION
-    ,sig_hurdle
-    ,METRIC_WITHIN_DIMENSIONS
-    ,case when greatest(hurdle_value,median) >= sig_hurdle then 1 else 0 end sig_flag
-    ,case when (amount-median)*polarity > 0 then 'GOOD' else 'BAD' end pos_neg_flag
-from medians
+SELECT
+date
+,bus_unit
+,DIMENSIONS
+,METRIC
+,DETAIL_LEVEL
+,amount
+,median
+,median - 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_one_SD
+,median - 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_two_SD
+,median + 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_one_SD
+,median + 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_two_SD
+,lead(amount,1,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) one_day_ago
+,lead(amount,2,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) two_days_ago
+,CASE WHEN amount > plus_two_SD THEN '2 SD above median'
+    WHEN amount < neg_two_SD THEN '2 SD below median'
+    WHEN amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD THEN 'Trending above SD'
+    WHEN amount < neg_one_SD  AND one_day_ago < neg_one_SD  AND two_days_ago < neg_one_SD  THEN 'Trending below SD'
+    ELSE NULL
+    END AS alert
+,HURDLE_DESCRIPTION
+,sig_hurdle
+,METRIC_WITHIN_DIMENSIONS
+,CASE WHEN greatest(hurdle_value,median) >= sig_hurdle THEN 1 ELSE 0 END sig_flag
+,CASE WHEN (amount-median)*polarity > 0 THEN 'GOOD' ELSE 'BAD' END pos_neg_flag
+FROM medians
 
        ;;
    }
@@ -967,7 +1457,7 @@ from medians
     description: "Metric||Dimension combined into a single field"
     label: "  Metric||Dimension"
     type: string
-    sql: ${metric}||'||'||${dimensions} ;;
+    sql: ${metric}||'||'||${dimensions}||'||'||${bus_unit} ;;
     link: {
       label: "Show trend chart"
       url: "https://purple.looker.com/looks/4647?f[alert_testing.met_dim]={{ value }}"

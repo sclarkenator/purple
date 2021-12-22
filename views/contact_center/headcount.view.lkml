@@ -12,11 +12,6 @@ view: headcount {
         ,ltrim(rtrim(a.team_type)) as team_type
         ,case
             when employee_type is null and team_name is null then 'Other'
-            //when lower(a.name) like '%analy%' then 'Non-Agent'
-            // when a.name like '%API%' then 'Non-Agent'
-            //when a.name like 'Administrator%' then 'Non-Agent'
-            //when t.agent_name is null then 'Non-Agent'
-            //when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
             when t.team_name is not null then ltrim(rtrim(t.team_name))
             end as team_name
         ,to_boolean(trim(rtrim(a.supervisor))) as is_supervisor
@@ -26,6 +21,17 @@ view: headcount {
         ,a.hired::date as hire_date
         ,a.terminated::date as term_date
         ,a.created::date as created_date
+        ,ifnull(a.hired, a.created)::date as start_date
+        ,ifnull(a.terminated, a.inactive)::date as end_date
+        ,case when ifnull(a.terminated, a.inactive) is null
+            then datediff(months, ifnull(a.hired, a.created)::date, current_date())
+          end as tenure
+        ,case when lower(${team_type}) in ('admin', 'wfm', 'qa') then 'Admin'
+          when lower(${team_name}) in ('administrator administrator') then 'Admin'
+          when ${team_type} is null then 'Other'
+          when lower(${team_type}) in ('training', 'sales')
+            or ${team_type} is null then ${team_type}
+          else 'Customer Care' end as team_group
 
       from util.warehouse_date d
 
@@ -122,12 +128,29 @@ view: headcount {
     sql: ${TABLE}.is_active ;;
   }
 
+  dimension: is_agent {
+    label: "Is Agent"
+    group_label: "* Flags"
+    description: "Flags whether a team member is a non-lead agent."
+    type: yesno
+    sql: lower(${team_group}) in ('customer care', 'sales')
+      and ${is_supervisor} = false ;;
+  }
+
   dimension: is_retail {
     label: "Is Retail"
     group_label: "* Flags"
     description: "Does agent currently work in a retail location."
     type: yesno
     sql: ${TABLE}.is_retail ;;
+  }
+
+  dimension: is_specialist {
+    label: "Is Specialist"
+    group_label: "* Flags"
+    description: "Flags whether a team member is a non-lead specialist."
+    type: yesno
+    sql: lower(${team_group}) not in ('customer care', 'sales') ;;
   }
 
   dimension: is_supervisor {
@@ -159,11 +182,7 @@ view: headcount {
     group_label: "* Current Grouping"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when lower(${team_type}) in ('admin', 'wfm', 'qa') then 'Admin'
-      when ${team_type} is null then 'Other'
-      when lower(${team_type}) in ('training', 'sales')
-        or ${team_type} is null then ${team_type}
-      else 'Customer Care' end ;;
+    sql: ${TABLE}.team_group ;;
   }
 
   dimension: team_name {
