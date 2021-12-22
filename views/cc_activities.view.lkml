@@ -49,14 +49,13 @@ view: cc_activities {
       left join customer_care.agent_lkp a
           on c.agent_id::string = a.zendesk_id::string
 
-     union all
+    union all
 
-
-      --messaging (liveperson converations)
+      --messaging chats (liveperson converations)
     select distinct 'chat' as activity_type
         ,case when s.name = 'Sales' then 'sales'
-          when s.name = 'Support' then 'support' else null
-          end as team
+          when s.name = 'Support' then 'support'
+          else null end as team
         , lp.ended as created
         , a.name as agent_name
         , a.email as agent_email
@@ -67,13 +66,19 @@ view: cc_activities {
         , a.incontact_id
         , lp.conversation_id::string as activity_id
     from liveperson.conversation lp
-       left join liveperson.skill s on s.skill_id = lp.last_skill_id
-       left join liveperson.agent ag on ag.agent_id = lp.last_agent_id
-       left join customer_care.agent_lkp a on a.zendesk_id = ag.employee_id
-       left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
-       where lp.ended > '2021-09-08'
-     union all
+      left join liveperson.skill s
+        on s.skill_id = lp.last_skill_id
+      left join liveperson.agent ag
+        on ag.agent_id = lp.last_agent_id
+      left join customer_care.agent_lkp a
+        on a.zendesk_id = ag.employee_id
+      left join analytics_stage.zendesk_sell.users uu
+        on uu.user_id = a.zendesk_sell_user_id
+    where lp.ended > '2021-09-08'
+      and a.name not ilike '%-bot'
+      and a.name not ilike '%virtual%'
 
+    union all
 
     --emails/facebook (zendesk tickets)
     select 'email' as activity_type,
@@ -266,10 +271,10 @@ view: cc_activities {
   }
 
 
+
   measure: count {
     type: count_distinct
     sql: ${activity_id} ;;
-    filters: [missed: "F"]
   }
 
   measure: chats_old {
@@ -280,7 +285,7 @@ view: cc_activities {
   measure: chats {
     type: count_distinct
     sql: ${activity_id} ;;
-    filters: [activity_type: "chat", missed: "F"]
+    filters: [activity_type: "chat"]
   }
 
   measure: calls_old {
@@ -291,7 +296,7 @@ view: cc_activities {
   measure: calls {
     type: count_distinct
     sql: ${activity_id} ;;
-    filters: [activity_type: "call", missed: "F"]
+    filters: [activity_type: "call"]
   }
 
   measure: emails_old {
@@ -302,7 +307,7 @@ view: cc_activities {
   measure: emails {
     type: count_distinct
     sql: ${activity_id} ;;
-    filters: [activity_type: "email", missed: "F"]
+    filters: [activity_type: "email"]
   }
 
   measure: duration {
