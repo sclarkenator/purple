@@ -26,11 +26,11 @@ view: headcount {
         ,case when ifnull(a.terminated, a.inactive) is null
             then datediff(months, ifnull(a.hired, a.created)::date, current_date())
           end as tenure
-        ,case when lower(${team_type}) in ('admin', 'wfm', 'qa') then 'Admin'
-          when lower(${team_name}) in ('administrator administrator') then 'Admin'
-          when ${team_type} is null then 'Other'
-          when lower(${team_type}) in ('training', 'sales')
-            or ${team_type} is null then ${team_type}
+        ,case when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
+          when lower(team_name) in ('administrator administrator') then 'Admin'
+          when team_type is null then 'Other'
+          when lower(team_type) in ('training', 'sales')
+            or team_type is null then team_type
           else 'Customer Care' end as team_group
 
       from util.warehouse_date d
@@ -43,7 +43,7 @@ view: headcount {
           on a.incontact_id = t.incontact_id
           and d.date between t.start_date::date and t.end_date::date
 
-      where d.date between '2019-01-01' and current_date
+      where d.date = dateadd(days, -1, current_date())::date
         and team_type not ilike 'system%'
     ;;
   }
@@ -70,6 +70,7 @@ view: headcount {
 
   dimension_group: date {
     label: "* Headcount" ## Date
+    hidden: yes
     type: time
     timeframes: [
       raw,
