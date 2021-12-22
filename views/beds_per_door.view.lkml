@@ -127,7 +127,6 @@ FROM
   }
 
   dimension: parent_first_store_age {
-    hidden: yes
     type: string
     sql: ${TABLE}."PARENT_FIRST_STORE_AGE" ;;
   }
