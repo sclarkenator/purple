@@ -67,23 +67,18 @@ view: beds_per_door {
     drill_fields: [detail*]
   }
 
-  measure: total_stores {
-    type: number
-    sql: ${TABLE}."TOTAL_STORES" ;;
-  }
-
   measure: mattress_qty_ordered {
-    type: number
+    type: sum
     sql: ${TABLE}."MATTRESS_QTY_ORDERED" ;;
   }
 
   measure: trailing_13_w_avg {
-    type: number
+    type: average
     sql: ${TABLE}."TRAILING_13W_AVG" ;;
   }
 
   measure: days_open {
-    type: number
+    type: min
     sql: ${TABLE}."DAYS_OPEN" ;;
   }
 
