@@ -58,10 +58,38 @@ view: beds_per_door {
        ;;
   }
 
+######################################################################################
+## MEASURES
+######################################################################################
+
   measure: count {
     type: count
     drill_fields: [detail*]
   }
+
+  measure: total_stores {
+    type: number
+    sql: ${TABLE}."TOTAL_STORES" ;;
+  }
+
+  measure: mattress_qty_ordered {
+    type: number
+    sql: ${TABLE}."MATTRESS_QTY_ORDERED" ;;
+  }
+
+  measure: trailing_13_w_avg {
+    type: number
+    sql: ${TABLE}."TRAILING_13W_AVG" ;;
+  }
+
+  measure: days_open {
+    type: number
+    sql: ${TABLE}."DAYS_OPEN" ;;
+  }
+
+######################################################################################
+## DIMENSIONS
+######################################################################################
 
   dimension: dynamic_week {
     type: string
@@ -73,27 +101,8 @@ view: beds_per_door {
     sql: ${TABLE}."WHOLESALE_PARENT_ACCOUNT_NAME" ;;
   }
 
-  dimension: days_open {
-    type: number
-    sql: ${TABLE}."DAYS_OPEN" ;;
-  }
-
-  dimension: total_stores {
-    type: number
-    sql: ${TABLE}."TOTAL_STORES" ;;
-  }
-
-  dimension: mattress_qty_ordered {
-    type: number
-    sql: ${TABLE}."MATTRESS_QTY_ORDERED" ;;
-  }
-
-  dimension: trailing_13_w_avg {
-    type: number
-    sql: ${TABLE}."TRAILING_13W_AVG" ;;
-  }
-
   dimension: parent_first_store_age {
+    hidden: yes
     type: string
     sql: ${TABLE}."PARENT_FIRST_STORE_AGE" ;;
   }
