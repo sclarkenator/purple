@@ -302,6 +302,78 @@ view: order_flag {
 
   }
 
+  dimension: bearaby_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.bearaby_flg = 1 ;;
+  }
+
+  dimension: cloud_pillow_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.cloud_pillow_flg = 1 ;;
+  }
+
+  dimension: twincloud_pillow_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.twincloud_pillow_flg = 1 ;;
+  }
+
+  dimension: complete_comfort_pillowcase_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.complete_comfort_pillowcase_flg = 1 ;;
+  }
+
+  dimension: complete_comfort_sheet_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.complete_comfort_sheet_flg = 1 ;;
+  }
+
+  dimension: softstretch_pillowcase_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.softstretch_pillowcase_flg = 1 ;;
+  }
+
+  dimension: twin_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.twin_flg = 1 ;;
+  }
+
+  dimension: twin_xl_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.twin_xl_flg = 1 ;;
+  }
+
+  dimension: queen_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.queen_flg = 1 ;;
+  }
+
+  dimension: full_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.full_flg = 1 ;;
+  }
+
+  dimension: cal_king_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.cal_king_flg = 1 ;;
+  }
+
+  dimension: king_flg {
+    hidden: yes
+    type:  yesno
+    sql: ${TABLE}.king_flg = 1 ;;
+  }
+
   dimension: order_id {
     primary_key: yes
     hidden: yes
