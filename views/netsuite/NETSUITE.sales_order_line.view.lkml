@@ -1299,7 +1299,7 @@ view: sales_order_line {
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
