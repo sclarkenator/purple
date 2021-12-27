@@ -12,7 +12,7 @@ include: "/dashboards/**/*.dashboard"
 #####################################################################
 ## COMBINED ACTIVITY cj
 
-explore: combined_activity {hidden:yes} #cj
+explore: combined_activities {hidden:yes} #cj
 
 #####################################################################
 #####################################################################

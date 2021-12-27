@@ -35,9 +35,13 @@ view: incontact_phone {
 
   set: performance_summary {
     fields: [
+      handled,
       handled_count,
+      acw_time,
       acw_time_average,
+      handle_time,
       handle_time_average,
+      hold_time,
       hold_time_average
     ]
   }
@@ -227,7 +231,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent waiting for the NICE inContact system to call back after the caller requested a callback."
     type: number
-    sql: cast(${TABLE}."CALLBACK_TIME" / 1000 as integer) ;;
+    sql: cast(${TABLE}.callback_time/ 1000 as integer) ;;
     }
 
   dimension: conference_time {
@@ -235,7 +239,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time agent spent in conference with another agent and the caller."
     type: number
-    sql: ${TABLE}."CONFERENCE_TIME" ;;
+    sql: ${TABLE}.conference_time ;;
     }
 
   dimension: handle_time {
@@ -251,7 +255,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent on hold with an agent."
     type: number
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: ${TABLE}.hold_time ;;
     }
 
   dimension: inqueue_time {
@@ -259,7 +263,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent in the queue waiting for an agetn starting when the contact entered the queue until the contact was answered by the agent."
     type: number
-    sql: ${TABLE}."INQUEUE_TIME" ;;
+    sql: ${TABLE}.inqueue_time ;;
     }
 
   dimension: long_abandon_time {
@@ -450,7 +454,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that were placed in Conference at least once."
     type: yesno
-    sql: ${TABLE}."CONFERENCED" ;;
+    sql: ${TABLE}.conferenced ;;
   }
 
   dimension: handled {
@@ -458,8 +462,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags whether the Inbound or Outbound contact was handled by an agent at some point."
     type: yesno
-    sql: ${handle_time} > 0 ;;
-    # sql: ${TABLE}."HANDLED" ;;
+    sql: ${TABLE}.handled ;;
   }
 
   dimension: held {
@@ -467,7 +470,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that were placed on Hold at least once."
     type: yesno
-    sql: ${TABLE}."HELD" ;;
+    sql: ${TABLE}.held ;;
   }
 
   dimension: in_sla {
@@ -484,7 +487,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that abandoned call after the designated short abandon time."
     type: yesno
-    sql: ${TABLE}."IS_LONG_ABANDON" ;;
+    sql: ${TABLE}.is_long_abandon ;;
   }
 
   dimension: out_sla {
@@ -500,7 +503,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags a contact that exited the system while in the IVR or Prequeue state. Contacts must spend at least 2 seconds within NICE inContact to be counted."
     type: yesno
-    sql: ${TABLE}."PREQUEUE_ABANDON" ;;
+    sql: ${TABLE}.prequeue_abandon ;;
   }
 
   dimension: prequeued {
@@ -508,7 +511,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags a contact that entered the system through the IVR Prequeue state."
     type: yesno
-    sql: ${TABLE}."PREQUEUED" ;;
+    sql: ${TABLE}.prequeued ;;
   }
 
   dimension: queue_offered {
@@ -780,7 +783,7 @@ view: incontact_phone {
     description: "Counts Inbound or Outbound contact that were handled by an agent at some point."
     type: count_distinct
     sql: ${contact_id} ;;
-    filters: [handled: "True"]
+    filters: [handled: "Yes"]
     drill_fields: [detail*]
   }
 
@@ -811,7 +814,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Count of Inbound calls"
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [direction: "Inbound"]
     drill_fields: [detail*]
   }
@@ -821,7 +824,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that abandoned call after the designated short abandon time."
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [long_abandon: "true"]
     drill_fields: [detail*]
   }
@@ -831,7 +834,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that were handled outside the defined Service Level Objective."
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [service_level_flag: "1"]
     drill_fields: [detail*]
   }
@@ -841,7 +844,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Count of outbound calls"
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [direction: "Outbound"]
     drill_fields: [detail*]
   }
@@ -851,7 +854,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Count of prequeue abandon calls"
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [prequeue_abandon: "true"]
     drill_fields: [detail*]
   }
@@ -861,7 +864,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts that enter the skill queue contact_state = Inqueue or Callback for the first time during an interval or time period."
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [queue_offered: "true"]
     drill_fields: [detail*]
   }
@@ -880,7 +883,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Number of times the same contact was refused."
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [refused: "true"]
     drill_fields: [detail*]
   }
@@ -899,7 +902,7 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts contacts in the queue that abandoned call prior to the designated short abandon time."
     type: count_distinct
-    sql: contact_id ;;
+    sql: ${contact_id} ;;
     filters: [short_abandon: "true"]
     drill_fields: [detail*]
   }

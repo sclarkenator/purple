@@ -477,7 +477,7 @@ view: liveperson_combined {
   dimension: visitor_id {
     label: "Visitor ID"
     type: string
-    sql: ${TABLE}${visitor_id} ;;
+    sql: ${TABLE}.visitor_id ;;
     hidden: yes
   }
 
