@@ -322,4 +322,41 @@ view: international_open_po_report {
     type: string
     sql: ${TABLE}."VENDOR_MID" ;;
   }
+
+  dimension: ETD_to_ETA {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${ETA_raw}) ;;
+  }
+
+  dimension: ETD_to_Purple_In_Hand {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Purple_In_Hand {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Discharged {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
+  }
+
+  dimension: Dischareged_to_Purple_In_Hand {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${discharged_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: Cargo_to_Purple_In_Hand {
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${cargo_ready_raw},${purple_in_hand_raw}) ;;
+  }
+
 }
