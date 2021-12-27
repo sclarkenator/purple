@@ -482,4 +482,18 @@ measure: steady_state_average{
     sql: ${throughput_percent}*${target} ;;
   }
 
+  measure: shots_per_hour {
+    description: "Shots/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual},${planned_production_minutes}/60) ;;
+  }
+
+  measure: avg_speed {
+    description: "Actual Shots + Scrap divided by Planned Production Minutes minus Downtime Minutes"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual}+${scrap},(${planned_production_minutes}-${downtime_minutes})/60) ;;
+  }
+
   }
