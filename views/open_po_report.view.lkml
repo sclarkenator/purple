@@ -324,39 +324,80 @@ view: international_open_po_report {
   }
 
   dimension: ETD_to_ETA {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${ETD_raw},${ETA_raw}) ;;
   }
 
   dimension: ETD_to_Purple_In_Hand {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${ETD_raw},${purple_in_hand_raw}) ;;
   }
 
   dimension: ETA_to_Purple_In_Hand {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${ETA_raw},${purple_in_hand_raw}) ;;
   }
 
   dimension: ETA_to_Discharged {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
   }
 
   dimension: Dischareged_to_Purple_In_Hand {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${discharged_raw},${purple_in_hand_raw}) ;;
   }
 
   dimension: Cargo_to_Purple_In_Hand {
+    hidden: yes
     type: number
     group_label: "Days Between"
     sql: DATEDIFF(day,${cargo_ready_raw},${purple_in_hand_raw}) ;;
   }
 
+  measure: Avg_ETD_to_ETA {
+    type: average
+    group_label: "Days Between"
+    sql: ${ETD_to_ETA} ;;
+  }
+
+  measure: Avg_ETD_to_Purple_In_Hand {
+    type: average
+    group_label: "Days Between"
+    sql: ${ETD_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Purple_In_Hand {
+    type: average
+    group_label: "Days Between"
+    sql: ${ETA_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Discharged {
+    type: average
+    group_label: "Days Between"
+    sql: ${ETA_to_Discharged} ;;
+  }
+
+  measure: Avg_Dischareged_to_Purple_In_Hand {
+    type: average
+    group_label: "Days Between"
+    sql: ${Dischareged_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_Cargo_to_Purple_In_Hand {
+    type: average
+    group_label: "Days Between"
+    sql: ${Cargo_to_Purple_In_Hand} ;;
+  }
 }
