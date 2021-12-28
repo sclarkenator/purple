@@ -367,36 +367,42 @@ view: international_open_po_report {
 
   measure: Avg_ETD_to_ETA {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${ETD_to_ETA} ;;
   }
 
   measure: Avg_ETD_to_Purple_In_Hand {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${ETD_to_Purple_In_Hand} ;;
   }
 
   measure: Avg_ETA_to_Purple_In_Hand {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${ETA_to_Purple_In_Hand} ;;
   }
 
   measure: Avg_ETA_to_Discharged {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${ETA_to_Discharged} ;;
   }
 
   measure: Avg_Dischareged_to_Purple_In_Hand {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${Dischareged_to_Purple_In_Hand} ;;
   }
 
   measure: Avg_Cargo_to_Purple_In_Hand {
     type: average
+    value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${Cargo_to_Purple_In_Hand} ;;
   }
