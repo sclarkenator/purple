@@ -43,6 +43,13 @@ explore: liveperson_combined {
   description: "Combined LivePerson data"
   hidden: yes
 
+  join: agent_data {
+    view_label: "Conversation Last Agent Data"
+    type: left_outer
+    sql_on: ${liveperson_combined.last_agent_id} = ${agent_data.liveperson_id} ;;
+    relationship: many_to_one
+  }
+
   join: liveperson_conversation_metrics {
     view_label: "Conversation Data"
     type: full_outer

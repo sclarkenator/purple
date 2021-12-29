@@ -40,6 +40,7 @@ view: liveperson_combined {
         c.campaign_profile_system_default,
         upper(s.name) as last_skill,
         upper(mcs.name) as alerted_mcs,
+        c.last_agent_id,
         a.name as agent_name,
         a.supervisor as is_supervisor,
         a.is_active,
@@ -597,7 +598,7 @@ view: liveperson_combined {
   dimension_group: conversation_dates {
     label: "Active Conversation"
     description: "Reflects conversation dates from start to end dates."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -614,7 +615,7 @@ view: liveperson_combined {
   dimension_group: ended {
     label: "Conversation Closed"
     description: "Time the conversation was closed."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -634,7 +635,7 @@ view: liveperson_combined {
   dimension_group: started {
     label: "Conversation Started"
     description: "Start-time of the conversation."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -666,6 +667,12 @@ view: liveperson_combined {
     type: string
     # hidden: yes
     sql: ${TABLE}.conversation_id ;;
+  }
+
+  dimension: last_agent_id {
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.last_agent_id ;;
   }
 
   dimension: visitor_id {
