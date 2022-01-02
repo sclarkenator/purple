@@ -722,6 +722,7 @@ view: sales_order_line {
     drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
+
   measure:Purple_Qty_eligible_for_SLA{
     label: "Purple Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
