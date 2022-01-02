@@ -87,6 +87,14 @@ include: "/dashboards/**/*.dashboard"
           AND ${team_lead_name.end_date}>=${bridge_enrollment.created_date};;
       relationship: many_to_one
     }
+    query: required_courses_for_compliance{
+        measures: [completion_rate, completions, count]
+        filters: [
+          bridge_course.title: "California Harassment Prevention,California Harassment Prevention | Supervisor,Harassment Prevention,Harassment Prevention | Supervisor,Illinois Human Rights Act,Utah Antidiscrimination Act,New York State Human Rights Law,Code of Ethics,Insider Trading - 2021,HIPAA for Purple Managers,HIPAA Overview for HR,Crisis Communication Policy for Employees,Crisis Communication Policy for Managers,\"Purple's Antitrust Policy Training and Acknowledgement\",Substance Abuse Policy for Safety-Sensitive Positions",
+          bridge_enrollment.is_active: "Yes",
+          bridge_user.department: "-NULL"
+        ]
+      }
   }
 
 #-------------------------------------------------------------------
@@ -291,6 +299,10 @@ explore: alert_testing {
       type: left_outer
       sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
       relationship: many_to_one}
+    join: narvar_customer_feedback {
+      type: left_outer
+      sql_on: ${v_qualtrics_delivery_survey.tranid} = ${narvar_customer_feedback.tranid} ;;
+      relationship: one_to_one}
     }
 
   # explore: columns {hidden: yes}

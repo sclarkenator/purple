@@ -35,9 +35,13 @@ view: incontact_phone {
 
   set: performance_summary {
     fields: [
+      handled,
       handled_count,
+      acw_time,
       acw_time_average,
+      handle_time,
       handle_time_average,
+      hold_time,
       hold_time_average
     ]
   }
@@ -227,7 +231,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent waiting for the NICE inContact system to call back after the caller requested a callback."
     type: number
-    sql: cast(${TABLE}."CALLBACK_TIME" / 1000 as integer) ;;
+    sql: cast(${TABLE}.callback_time/ 1000 as integer) ;;
     }
 
   dimension: conference_time {
@@ -235,7 +239,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time agent spent in conference with another agent and the caller."
     type: number
-    sql: ${TABLE}."CONFERENCE_TIME" ;;
+    sql: ${TABLE}.conference_time ;;
     }
 
   dimension: handle_time {
@@ -251,7 +255,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent on hold with an agent."
     type: number
-    sql: ${TABLE}."HOLD_TIME" ;;
+    sql: ${TABLE}.hold_time ;;
     }
 
   dimension: inqueue_time {
@@ -259,7 +263,7 @@ view: incontact_phone {
     group_label: "* Duration Dimensions"
     description: "Length of time contact spent in the queue waiting for an agetn starting when the contact entered the queue until the contact was answered by the agent."
     type: number
-    sql: ${TABLE}."INQUEUE_TIME" ;;
+    sql: ${TABLE}.inqueue_time ;;
     }
 
   dimension: long_abandon_time {
@@ -450,7 +454,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that were placed in Conference at least once."
     type: yesno
-    sql: ${TABLE}."CONFERENCED" ;;
+    sql: ${TABLE}.conferenced ;;
   }
 
   dimension: handled {
@@ -458,8 +462,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags whether the Inbound or Outbound contact was handled by an agent at some point."
     type: yesno
-    sql: ${handle_time} > 0 ;;
-    # sql: ${TABLE}."HANDLED" ;;
+    sql: ${TABLE}.handled ;;
   }
 
   dimension: held {
@@ -467,7 +470,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that were placed on Hold at least once."
     type: yesno
-    sql: ${TABLE}."HELD" ;;
+    sql: ${TABLE}.held ;;
   }
 
   dimension: in_sla {
@@ -484,7 +487,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags contacts that abandoned call after the designated short abandon time."
     type: yesno
-    sql: ${TABLE}."IS_LONG_ABANDON" ;;
+    sql: ${TABLE}.is_long_abandon ;;
   }
 
   dimension: out_sla {
@@ -500,7 +503,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags a contact that exited the system while in the IVR or Prequeue state. Contacts must spend at least 2 seconds within NICE inContact to be counted."
     type: yesno
-    sql: ${TABLE}."PREQUEUE_ABANDON" ;;
+    sql: ${TABLE}.prequeue_abandon ;;
   }
 
   dimension: prequeued {
@@ -508,7 +511,7 @@ view: incontact_phone {
     group_label: "* Flags"
     description: "Flags a contact that entered the system through the IVR Prequeue state."
     type: yesno
-    sql: ${TABLE}."PREQUEUED" ;;
+    sql: ${TABLE}.prequeued ;;
   }
 
   dimension: queue_offered {
@@ -717,48 +720,50 @@ view: incontact_phone {
     label: "Abandon Count"
     group_label: "Count Measures"
     description: "Counts abandoned contacts that were not resolved by IVR and hung up or exited the system before being offered to an agent."
-    type: sum
-    sql: case when ${abandoned} = true then 1 end ;;
+    type: count_distinct
+    sql: contact_id ;;
+    filters: [abandoned: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: agent_offered_count {
     label: "Agent Offered Count"
     group_label: "Count Measures"
     description: "Counts contacts that were routed to an agent."
-    type: sum
-    sql: case when ${agent_offered} = true then 1 end ;;
+    type: count_distinct
+    sql: contact_id ;;
+    filters: [agent_offered: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: callback_request_count {
     label: "Callback Request Count"
     group_label: "Count Measures"
     description: "Counts contacts that entered the queue and then requested a callback instead of waiting for an agent to become available."
-    type: sum
-    sql: case when ${callback_requested} = true then 1 end ;;
+    type: count_distinct
+    sql: contact_id ;;
+    filters: [callback_requested: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: contact_count {
     label: "Contact Count"
     group_label: "Count Measures"
     description: "Counts all calls."
-    # hidden: yes
-    type: number
-    sql: count(distinct contact_id) ;;
+    type: count_distinct
+    sql: contact_id ;;
     drill_fields: [detail*]
-    }
+  }
 
   measure: conferences_count {
     label: "Conferences Count"
     group_label: "Count Measures"
     description: "Count of conferences."
-    type: sum
-    value_format: "###0"
-    sql: case when ${conferences} > 0 then ${conferences} end ;;
+    type: count_distinct
+    sql: contact_id ;;
+    filters: [conferences: ">0"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: handle_qualified_calls_count {
     label: "Handle Qualified Count"
@@ -777,11 +782,10 @@ view: incontact_phone {
     group_label: "Count Measures"
     description: "Counts Inbound or Outbound contact that were handled by an agent at some point."
     type: count_distinct
-    sql: case when ${handled} = true then ${contact_id} end ;;
-    # sql: ${contact_id} ;;
-    # filters: [handled : "True"]
+    sql: ${contact_id} ;;
+    filters: [handled: "Yes"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: hold_count {
     label: "Hold Count"
@@ -793,59 +797,65 @@ view: incontact_phone {
       when ${held} = true then 1
       else 0 end ;;
     drill_fields: [detail*]
-    }
+  }
 
   measure: in_sla_count {
     label: "In SLA Count"
     group_label: "Count Measures"
     description: "Counts contacts that were handled within the defined Service Level Objective."
-    type: sum
-    sql: case when ${service_level_flag} = 0 then 1 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [service_level_flag: "0"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: inbound_count {
     label: "Inbound Count"
     group_label: "Count Measures"
     description: "Count of Inbound calls"
-    type: sum
-    sql: case when ${direction} = 'Inbound' then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [direction: "Inbound"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: long_abandon_count {
     label: "Long Abandon Count"
     group_label: "Count Measures"
     description: "Counts contacts that abandoned call after the designated short abandon time."
-    type: sum
-    sql: case when ${long_abandon} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [long_abandon: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: out_sla_count {
     label: "Out SLA Count"
     group_label: "Count Measures"
     description: "Counts contacts that were handled outside the defined Service Level Objective."
-    type: sum
-    sql: case when ${service_level_flag} = 1 then 1 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [service_level_flag: "1"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: outbound_count {
     label: "Outbound Count"
     group_label: "Count Measures"
     description: "Count of outbound calls"
-    type: sum
-    sql: case when ${direction} = 'Outbound' then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [direction: "Outbound"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: prequeue_abandon_count {
     label: "Prequeue Abandon Count"
     group_label: "Count Measures"
     description: "Count of prequeue abandon calls"
-    type: sum
-    sql: case when ${prequeue_abandon} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [prequeue_abandon: "true"]
     drill_fields: [detail*]
   }
 
@@ -853,9 +863,9 @@ view: incontact_phone {
     label: "Queue Offered Count"
     group_label: "Count Measures"
     description: "Counts contacts that enter the skill queue contact_state = Inqueue or Callback for the first time during an interval or time period."
-    type: sum
-    # sql: case when ${queue_offered} = true then ${contact_id} end ;;
-    sql: case when ${queue_offered} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [queue_offered: "true"]
     drill_fields: [detail*]
   }
 
@@ -866,16 +876,17 @@ view: incontact_phone {
     type: sum
     sql: ${queue_counter} ;;
     drill_fields: [detail*]
-    }
+  }
 
   measure: refusal_count {
     label: "Refusal Count"
     group_label: "Count Measures"
     description: "Number of times the same contact was refused."
-    type: sum
-    sql: case when ${refused} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [refused: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: routed_count {
     label: "Routed Count"
@@ -884,24 +895,26 @@ view: incontact_phone {
     type: sum
     sql: ${routed} ;;
     drill_fields: [detail*]
-    }
+  }
 
   measure: short_abandon_count {
     label: "Short Abandon Count"
     group_label: "Count Measures"
     description: "Counts contacts in the queue that abandoned call prior to the designated short abandon time."
-    type: sum
-    sql: case when ${short_abandon} = true then 1 else 0 end ;;
+    type: count_distinct
+    sql: ${contact_id} ;;
+    filters: [short_abandon: "true"]
     drill_fields: [detail*]
-    }
+  }
 
   measure: sla_offered_count {
     label: "SLA Offered Count"
     group_label: "Count Measures"
     description: "Count of calls that are counted toward Service Level."
-    type: sum
+    type: count_distinct
     value_format_name: decimal_0
-    sql: case when ${service_level_flag} >= 0 then 1 end ;;
+    sql: contact_id ;;
+    filters: [service_level_flag: ">=0"]
     drill_fields: [detail*]
   }
 
@@ -912,19 +925,20 @@ view: incontact_phone {
     type: sum
     sql: cast(${transferred} as integer) ;;
     drill_fields: [detail*]
-    }
+  }
 
   ##########################################################################################
   ##########################################################################################
   ## AVERAGE MEASURES
 
   measure: abn_time_average {
-    label: "AVG Abandon Time"
+    label: "AVG ABN Time"
     group_label: "Average Measures"
     description: "Average time caller spent in queue before abandoning.  Includes long and short abandons."
     type: average
     value_format: "###0.00"
-    sql: case when ${abandon_time} > 0 then ${abandon_time} end / 60 ;;
+    sql: ${abandon_time} / 60 ;;
+    filters: [abandon_time: ">0"]
     drill_fields: [detail*, abandon_time]
   }
 
@@ -934,7 +948,8 @@ view: incontact_phone {
     description: "Average time caller spent in ACD."
     type: average
     value_format: "###0.00"
-    sql: case when ${acd_time} > 0 then ${acd_time} end / 60 ;;
+    sql: ${acd_time} / 60 ;;
+    filters: [acd_time: ">0"]
     drill_fields: [detail*, acd_time]
   }
 
@@ -944,7 +959,8 @@ view: incontact_phone {
     description: "Average time agent spent in ACW."
     type: average
     value_format: "###0.00"
-    sql: case when ${acw_time} > 0 then ${acw_time} end / 60 ;;
+    sql: ${acw_time} / 60 ;;
+    filters: [acw_time: ">0"]
     drill_fields: [detail*, acw_time]
   }
 
@@ -954,7 +970,8 @@ view: incontact_phone {
     description: "Average time agent spent actively engaged with caller."
     type: average
     value_format: "###0.00"
-    sql: case when ${active_talk_time} > 0 then ${active_talk_time} end / 60 ;;
+    sql: ${active_talk_time} / 60 ;;
+    filters: [active_talk_time: ">0"]
     drill_fields: [detail*, active_talk_time]
   }
 
@@ -965,7 +982,7 @@ view: incontact_phone {
     type: average
     value_format_name: decimal_2
     hidden: yes
-    sql:${holds}  ;;
+    sql: ${holds}  ;;
     drill_fields: [detail*, holds]
   }
 
@@ -975,7 +992,8 @@ view: incontact_phone {
     description: "Average time agent spent in Conference with another agent and the caller."
     type: average
     value_format: "###0.00"
-    sql: case when ${conference_time} > 0 then ${conference_time} end / 60 ;;
+    sql: ${conference_time} / 60 ;;
+    filters: [conference_time: ">0"]
     drill_fields: [detail*, conference_time]
   }
 
@@ -986,7 +1004,8 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     # hidden: yes
-    sql: case when ${handle_time} > 0 then ${handle_time} end / 60 ;;
+    sql: ${handle_time} / 60 ;;
+    filters: [handle_time: ">0"]
     drill_fields: [detail*, handle_time]
   }
 
@@ -997,7 +1016,8 @@ view: incontact_phone {
     type: average
     value_format: "###0.00"
     # hidden: yes
-    sql: case when ${hold_time} > 0 then ${hold_time} end / 60 ;;
+    sql: ${hold_time} / 60 ;;
+    filters: [hold_time: ">0"]
     drill_fields: [detail*, hold_time]
   }
 
@@ -1007,8 +1027,10 @@ view: incontact_phone {
     description: "Average time caller spent in queue."
     type: average
     value_format: "###0.00"
-    sql: case when ${inqueue_time} > 0 then ${inqueue_time} end / 60 ;;
+    sql: ${inqueue_time} / 60 ;;
+    filters: [inqueue_time: ">0"]
     drill_fields: [detail*, inqueue_time]
+    hidden: yes  ## Queue Time is always exceptionally short.
   }
 
   measure: long_abn_time_average {
@@ -1017,7 +1039,8 @@ view: incontact_phone {
     description: "Average time caller spent in queue before abandoning.  Only counts abandons taking place AFTER designated short abandon time."
     type: average
     value_format: "###0.00"
-    sql: case when ${long_abandon_time} > 0 then ${long_abandon_time} end / 60 ;;
+    sql: ${long_abandon_time} / 60 ;;
+    filters: [long_abandon_time: ">0"]
     drill_fields: [detail*, long_abandon_time]
   }
 
@@ -1027,7 +1050,8 @@ view: incontact_phone {
     description: "Average time caller spent in queue before abandoning.  Only counts abandons taking place BEFORE designated short abandon time."
     type: average
     value_format: "###0.00"
-    sql: case when ${short_abandon_time} > 0 then ${short_abandon_time} end / 60 ;;
+    sql: ${short_abandon_time} / 60 ;;
+    filters: [short_abandon_time: ">0"]
     drill_fields: [detail*, short_abandon_time]
   }
 
@@ -1037,7 +1061,8 @@ view: incontact_phone {
     description: "Time that a Handled Contact spent waiting in the queue after requesting to speak to an agent until the call was routed to the agent.  Does NOT include Abandon calls."
     type: average
     value_format: "###0.00"
-    sql: case when ${speed_of_answer} > 0 then ${speed_of_answer} end / 60 ;;
+    sql: ${speed_of_answer} / 60 ;;
+    filters: [speed_of_answer: ">0"]
     drill_fields: [detail*, speed_of_answer]
   }
 
@@ -1047,7 +1072,8 @@ view: incontact_phone {
     description: "Average time caller spent connected with an agent from 'Hello' to 'Goodbye'."
     type: average
     value_format: "###0.00"
-    sql: case when ${talk_time} > 0 then ${talk_time} end / 60 ;;
+    sql: ${talk_time} / 60 ;;
+    filters: [talk_time: ">0"]
     drill_fields: [detail*, talk_time]
   }
 
@@ -1057,7 +1083,8 @@ view: incontact_phone {
     description: "Average total time caller spent on contact. (Prequeue + Inqueue + Active Talk + Hold + Conference + Consult + Postqueue)"
     type: average
     value_format: "###0.00"
-    sql: case when ${total_contact_time} > 0 then ${total_contact_time} end / 60 ;;
+    sql: ${total_contact_time} / 60 ;;
+    filters: [total_contact_time: ">0"]
     drill_fields: [detail*, total_contact_time]
   }
 
@@ -1161,7 +1188,7 @@ view: incontact_phone {
     description: "Total time caller spent in queue before abandoning.  Only counts abandons taking place BEFORE designated short abandon time."
     type: number
     value_format: "###0.00"
-    sql: sum(${short_abandon_time}}) / 60 ;;
+    sql: sum(${short_abandon_time}) / 60 ;;
     drill_fields: [detail*]
   }
 

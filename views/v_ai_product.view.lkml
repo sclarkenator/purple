@@ -32,7 +32,8 @@ view: v_ai_product {
     label: "2. Line Special"
     description: "Use with other Future SKU dimensions to see product information for all products, including forecasts for future releases"
     view_label: "Product"
-    sql: coalesce (${item.line_raw},${TABLE}."PRODUCT_LINE") ;;
+    sql: case when ${TABLE}."PRODUCT_LINE" = 'COIL' then 'HYBRID'
+              else coalesce (${item.line_raw},${TABLE}."PRODUCT_LINE") end;;
   }
 
   dimension: product_model {

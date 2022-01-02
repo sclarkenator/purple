@@ -266,7 +266,7 @@ view: sales_order_line {
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
-            THEN dateadd(d,14,${created_date})
+            THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
   }
@@ -1300,7 +1300,7 @@ view: sales_order_line {
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 

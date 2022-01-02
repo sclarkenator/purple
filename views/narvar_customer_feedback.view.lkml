@@ -4,18 +4,23 @@ view: narvar_customer_feedback {
   sql_table_name: CUSTOMER_CARE.NARVAR_CUSTOMER_FEEDBACK ;;
 
   dimension: tracking_id {
-    type: number
+    type: string
     sql: ${TABLE}."TRACKING_ID" ;;
 
   }
 
-  dimension: order_id {
-    type: number
+  dimension: tranid {
+    label: "Transaction ID"
+    hidden: yes
+    type: string
+    # link: {
+    #   label: "NetSuite"
+    #   url: "https://system.na2.netsuite.com/app/accounting/transactions/salesord.nl?id={{order_id._value}}&whence="
+    #   icon_url: "https://www.google.com/s2/favicons?domain=www.netsuite.com"
+    # }
     sql: ${TABLE}."ORDER_ID" ;;
     primary_key: yes
   }
-
-
 
   dimension_group: created {
     type: time
@@ -31,7 +36,6 @@ view: narvar_customer_feedback {
     datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
-
 
   dimension: ship {
     type: date
@@ -59,20 +63,19 @@ view: narvar_customer_feedback {
   }
 
   dimension: row_id {
+    hidden: yes
     type: number
     sql: ${TABLE}."ROW_ID" ;;
   }
 
   dimension: zendesk_loaded {
+    hidden: yes
     type: yesno
     sql: ${TABLE}."ZENDESK_LOADED" ;;
   }
 
-
-
-
-
   dimension_group: insert_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -88,6 +91,7 @@ view: narvar_customer_feedback {
   }
 
   dimension_group: update_ts {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -102,11 +106,13 @@ view: narvar_customer_feedback {
     sql: ${TABLE}."UPDATE_TS" ;;
   }
 
-
-
   measure: count {
     type: count
   }
 
-
+  measure: average_star_rating{
+    type: average
+    sql: ${star_rating} ;;
+    value_format: "0.##"
+  }
  }

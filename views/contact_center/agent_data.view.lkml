@@ -4,29 +4,73 @@ view: agent_data {
 
   derived_table: {
     sql:
-      select distinct
-          a.*,
-          c.team_name as current_team_name,
-          c.team_email as current_team_email,
-          case when a.inactive is null and a.terminated is null then true else false end as active_flag,
-          la.agent_id as liveperson_id
+      select *
+      from (
+        select distinct  --c.*
+            a.incontact_id,
+            a.email,
+            a.retail,
+            a.inactive,
+            a.location,
+            a.employee_type,
+            a.purple_with_purpose,
+            a.mentor,
+            a.service_recovery_team,
+            nvl(a.hired, a.created) as start_date,
+            nvl(terminated, inactive) as end_date,
+            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
+                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
+              ,nvl(a.name, la.full_name)) as name,
+            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
+                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
+              , c.team_name) as current_team_name,
+            c.team_email as current_team_email,
+            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
+                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
+              ,a.team_type) as  team_type,
+            case when la.agent_id in (3263325330, 3566812330) then 'System'
+                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant'
+                when a.employee_type is null and c.team_name is null then 'Other'
+                when a.team_type in ('Admin', 'WFM', 'QA') then 'Admin'
+                when a.team_type in ('Training', 'Sales') then a.team_type
+                else 'Customer Care' end as team_group,
+            case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then true
+                when a.inactive is not null then false
+                when a.terminated is not null then false
+                when la.enabled = true then true end as active_flag,
+            nvl(case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then false end
+                ,a.supervisor) as supervisor,
+            la.enabled,
+            a.zendesk_id,
+            a.shopify_id,
+            a.zendesk_sell_user_id,
+            a.shopify_id_pos,
+            a.workday_id,
+            la.agent_id as liveperson_id,
+            a.created,
+            a.hired,
+            a.terminated,
+            nvl(row_number()over(partition by nvl(a.incontact_id, la.agent_id)
+              order by la.update_ts desc), 1) as rn
 
-      from analytics.customer_care.agent_lkp a
+        from analytics.customer_care.agent_lkp a
 
-          left join (
+            left join (
               select *,
-                  rank()over(partition by incontact_id order by end_date desc) as rnk
+              rank() over( partition by incontact_id
+                order by end_date desc) as rnk
               from analytics.customer_care.team_lead_name
               where team_name is not null
               ) c
               on a.incontact_id = c.incontact_id
               and c.rnk = 1
 
-          left join liveperson.agent la
-            on a.zendesk_id = la.employee_id
-            or a.incontact_id = la.employee_id
+            full outer join liveperson.agent la
+              on a.zendesk_id = la.employee_id
+              or a.incontact_id = la.employee_id
+      ) x
+      where x.rn = 1
 
-      where team_type not ilike 'system%'
       ;;
   }
 
@@ -79,10 +123,11 @@ view: agent_data {
     label: "Team Group"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when employee_type is null and ${TABLE}.current_team_name is null then 'Other'
-      when ${TABLE}.team_type in ('Admin', 'WFM', 'QA') then 'Admin'
-      when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
-      else 'Customer Care' end ;;
+    sql: ${TABLE}.team_group ;;
+    # sql: case when employee_type is null and ${TABLE}.current_team_name is null then 'Other'
+    #   when ${TABLE}.team_type in ('Admin', 'WFM', 'QA') then 'Admin'
+    #   when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
+    #   else 'Customer Care' end ;;
   }
 
   dimension: team_name {
@@ -103,9 +148,10 @@ view: agent_data {
     label: "Team Type"
     description: "Current Team Type.  Calculated using data from incontact.agent_lkp"
     type: string
-    sql: nullif(case when ${TABLE}.retail = true then 'Retail'
-      when nullif(${TABLE}.team_type, '') is null and ${is_active} = true then 'Admin'
-      else ${TABLE}.team_type end, '') ;;
+    sql: ${TABLE}.team_type ;;
+    # sql: nullif(case when ${TABLE}.retail = true then 'Retail'
+    #   when nullif(${TABLE}.team_type, '') is null and ${is_active} = true then 'Admin'
+    #   else ${TABLE}.team_type end, '') ;;
   }
 
   dimension: tenure {
@@ -114,7 +160,7 @@ view: agent_data {
     description: "Agent tenure in months."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(month, ${start_date}, current_date) end ;;
+    sql: case when not (${TABLE}.employee_type is null and ${TABLE}.current_team_name is null) then datediff(month, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_week {
@@ -123,7 +169,7 @@ view: agent_data {
     description: "Agent tenure in weeks."
     type: number
     value_format_name: decimal_0
-    sql: case when not (employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
+    sql: case when not (${TABLE}.employee_type is null and ${TABLE}.current_team_name is null) then datediff(week, ${start_date}, current_date) end ;;
   }
 
   dimension: tenure_buckets {
@@ -145,6 +191,14 @@ view: agent_data {
     description: "Whether or not this agent is active in the system."
     type: yesno
     sql: ${TABLE}.active_flag ;;
+  }
+
+  dimension: is_enabled {
+    label: "Is Enabled"
+    group_label: "* Agent Flags"
+    description: "Whether agent acount is enabled in LivePerson."
+    type: yesno
+    sql: ${TABLE}.enabled ;;
   }
 
   dimension: is_mentor {
