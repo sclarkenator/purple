@@ -4,13 +4,13 @@ view: combined_activities {
         select distinct c.chat_id::string as id,
             c.created::date as activity_date,
             case when c.department_name ilike '%Sales%' then 'sales'
-            when c.department_name ilike '%support%' then 'support'
-            when c.department_name ilike '%srt%' then 'srt'
-            when a.team_type = 'Sales' then 'sales'
-            when a.team_type = 'Chat' then 'support'
-            when a.team_type = 'SRT' then 'srt'
-            else 'sales' end as team_type,
-            'chat' as activity_type,
+              when c.department_name ilike '%support%' then 'support'
+              when c.department_name ilike '%srt%' then 'srt'
+              when a.team_type = 'Sales' then 'sales'
+              when a.team_type = 'Chat' then 'support'
+              when a.team_type = 'SRT' then 'srt'
+              else 'sales' end as team_type,
+            'Chat' as activity_type,
             case when c.missed = 'T' then true
                 else false end as missed
 
@@ -26,7 +26,7 @@ view: combined_activities {
             l.conversation_id as id,
             l.started::date as activity_date,
             lower(s.name) as type,
-            'chat' as activity_type,
+            'Chat' as activity_type,
             false as missed
 
         from liveperson.conversation l
@@ -45,7 +45,7 @@ view: combined_activities {
             case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales'
               when a.zendesk_id is null then 'none'
               else 'support' end as team_type,
-            'email' as activity_type,
+            'Email' as activity_type,
             false as missed
 
         from customer_care.zendesk_ticket t
@@ -68,7 +68,7 @@ view: combined_activities {
             c.start_ts_mst::date as activity_date,
             case when c.campaign_name ilike 'sales%' then 'sales'
               else 'support' end as team_type,
-            'call' as activity_type,
+            'Call' as activity_type,
             case when c.handled = true then false
                 else true end as missed
 

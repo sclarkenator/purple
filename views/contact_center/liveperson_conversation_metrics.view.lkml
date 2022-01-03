@@ -1,11 +1,11 @@
 view: liveperson_conversation_metrics {
   derived_table: {
     sql:
-with messages as (
-    select m.*
-        ,rank()over(partition by m.conversation_id, m.sender order by m.created, m.seq) sender_rnk
-    from (
-        select
+      with messages as (
+        select m.*
+          ,rank()over(partition by m.conversation_id, m.sender order by m.created, m.seq) sender_rnk
+        from (
+          select
             row_number()over(partition by conversation_id order by created, seq) as rn
             -- ,rank() over(partition by )
             ,conversation_id
@@ -19,100 +19,96 @@ with messages as (
               else cm.sent_by end as Sender
             ,message
             ,case when seq = 0 then 1  -- First message
-                when message like 'You are now connected to%' and message like '%Virtual Assistant.' then 2  -- Connected to Bot
-                when message like 'You are now connected to%' and message not like '%Virtual Assistant.' then 3  -- Connected to human agent
-                when message ilike '% transfer you to a representative%'
-                    and a.full_name ilike '%virtual assistant' then 4 -- Bot starts transferring to human agent
-                end as flag
+              when message like 'You are now connected to%' and message like '%Virtual Assistant.' then 2  -- Connected to Bot
+              when message like 'You are now connected to%' and message not like '%Virtual Assistant.' then 3  -- Connected to human agent
+              when message ilike '% transfer you to a representative%'
+                  and a.full_name ilike '%virtual assistant' then 4 -- Bot starts transferring to human agent
+              end as flag
 
-        from liveperson.conversation_message cm
+          from liveperson.conversation_message cm
 
             left join liveperson.agent a
-                on cm.sent_by = 'Agent'
-                and cm.participant_id = a.agent_id::string
+              on cm.sent_by = 'Agent'
+              and cm.participant_id = a.agent_id::string
 
-        order by conversation_id, created, seq
-        ) m
-    )
+          order by conversation_id, created, seq
+          ) m
+        )
 
-select distinct
-    m1.conversation_id
-    ,m1.created
-    ,round(datediff(seconds, m1.created, m2_1.created)/60, 2) as time_to_first_response_virtual_agent
-    ,round(datediff(seconds, m4.created, m3_1.created)/60, 2) as time_to_first_response_hum_from_bot
-    ,round(datediff(seconds, m1.created, m3.created)/60, 2) as time_to_assignment_human
-    ,round(datediff(seconds, m1.created, m3_1.created)/60, 2) as time_to_first_human_response
-    ,round(datediff(seconds, m3.created, m3_1.created)/60, 2) as time_to_first_human_response_from_assignment
-    ,m10.messages_per_conversation_human
-    ,m10.messages_per_conversation_bot
-    ,m10.messages_per_conversation_virtual_agent
-    ,m10.messages_per_conversation_consumer
-    ,m10.messages_per_conversation
-                                -- ,m3.created
-                                -- ,m3_1.created
-    ,case when round(datediff(seconds, m1.created, m3_1.created)/60, 2) <= 5 then 1
-        else 0 end as in_sla_flag
-    ,m9.agent_segments
+      select distinct
+        m1.conversation_id
+        ,m1.created
+        ,round(datediff(seconds, m1.created, m2_1.created)/60, 2) as time_to_first_response_virtual_agent
+        ,round(datediff(seconds, m4.created, m3_1.created)/60, 2) as time_to_first_response_hum_from_bot
+        ,round(datediff(seconds, m1.created, m3.created)/60, 2) as time_to_assignment_human
+        ,round(datediff(seconds, m1.created, m3_1.created)/60, 2) as time_to_first_human_response
+        ,round(datediff(seconds, m3.created, m3_1.created)/60, 2) as time_to_first_human_response_from_assignment
+        ,m10.messages_per_conversation_human
+        ,m10.messages_per_conversation_bot
+        ,m10.messages_per_conversation_virtual_agent
+        ,m10.messages_per_conversation_consumer
+        ,m10.messages_per_conversation
+        ,case when round(datediff(seconds, m1.created, m3_1.created)/60, 2) <= 5 then 1
+            else 0 end as in_sla_flag
+        ,m9.agent_segments
 
-from (
-    select *
-    from messages
-    where seq = 0
-    ) m1 -- First message
-
-    left join messages m2  -- Connected to Bot
-        on m2.flag = 2
-        and m1.conversation_id = m2.conversation_id
-
-    left join messages m2_1  -- First response from Bot
-        on m1.conversation_id = m2_1.conversation_id
-        and m2_1.sender_rnk = 1
-        and m2_1.sender = 'Virtual Assistant'
-
-    left join (
-        select conversation_id
-            ,min(created) as created
+      from (
+        select *
         from messages
-        where message like 'You are now connected to%' and message not like '%Virtual Assistant.'
-        group by conversation_id
-        ) m3  -- Connected to human agent
-        on m1.conversation_id = m3.conversation_id
+        where seq = 0
+        ) m1 -- First message
 
-    left join (
-        select conversation_id
-            ,min(created) as created
-        from messages
-        where sender = 'Agent'
-        group by conversation_id
-        ) m3_1  --first human agent response
-        on m1.conversation_id = m3_1.conversation_id
-        -- and m3_1.sender_rnk = 1
-        -- and m3_1.sender = 'Agent'
+        left join messages m2  -- Connected to Bot
+          on m2.flag = 2
+          and m1.conversation_id = m2.conversation_id
 
-    left join messages m4
-        on m1.conversation_id = m4.conversation_id
-        and m4.flag = 4
+        left join messages m2_1  -- First response from Bot
+          on m1.conversation_id = m2_1.conversation_id
+          and m2_1.sender_rnk = 1
+          and m2_1.sender = 'Virtual Assistant'
 
-    left join (
-        select conversation_id
+        left join (
+          select conversation_id
+              ,min(created) as created
+          from messages
+          where message like 'You are now connected to%' and message not like '%Virtual Assistant.'
+          group by conversation_id
+          ) m3  -- Connected to human agent
+          on m1.conversation_id = m3.conversation_id
+
+        left join (
+          select conversation_id
+              ,min(created) as created
+          from messages
+          where sender = 'Agent'
+          group by conversation_id
+          ) m3_1  --first human agent response
+          on m1.conversation_id = m3_1.conversation_id
+
+        left join messages m4
+          on m1.conversation_id = m4.conversation_id
+          and m4.flag = 4
+
+        left join (
+          select conversation_id
             ,count(distinct agent_name) as agent_segments
-        from messages
-        where sender = 'Agent'
-        group by conversation_id
-        ) m9
-        on m1.conversation_id = m9.conversation_id
+          from messages
+          where sender = 'Agent'
+          group by conversation_id
+          ) m9
+          on m1.conversation_id = m9.conversation_id
 
-    left join (
-        select conversation_id
+        left join (
+          select conversation_id
             ,count(distinct case when sender = 'Agent' then message_id end) as messages_per_conversation_human
             ,count(distinct case when sender = 'Bot' then message_id end) as messages_per_conversation_bot
             ,count(distinct case when sender = 'Virtual Assistant' then message_id end) as messages_per_conversation_virtual_agent
             ,count(distinct case when sender = 'Consumer' then message_id end) as messages_per_conversation_consumer
             ,count(distinct message_id) as messages_per_conversation
-        from messages
-        group by conversation_id
-        ) m10
-        on m1.conversation_id = m10.conversation_id
+          from messages
+          group by conversation_id
+          ) m10
+          on m1.conversation_id = m10.conversation_id
       ;;
   }
 

@@ -5,12 +5,12 @@ view: cc_agent_attendance {
   derived_table: {
     sql:
       select distinct
-          d.date as event_date,
-          d.incontact_id,
-          a.*,
-          case when is_occurrence = 'Yes' then 1 end as occurrence_count,
-          concat(ic_id, year(combined_dates), right(concat(0, month(combined_dates)), 2), right(concat(0, day(combined_dates)), 2),
-        row_number()over(partition by ic_id, combined_dates order by occurrence, sub_occurrence, notes)) as pk
+        d.date as event_date,
+        d.incontact_id,
+        a.*,
+        case when is_occurrence = 'Yes' then 1 end as occurrence_count,
+        concat(ic_id, ' ', combined_dates, ' '
+          ,row_number()over(partition by ic_id, combined_dates order by occurrence, sub_occurrence, notes)) as pk
 
       from (
           select distinct cast(d.date as date) as date

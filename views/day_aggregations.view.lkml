@@ -573,7 +573,7 @@ view: day_aggregations {
       left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
       left join ${day_aggregations_wholesale_fulfilled.SQL_TABLE_NAME} wholesale_fulfilled on wholesale_fulfilled.fulfilled_date::date = d.date
       left join ${whlsl_roa.SQL_TABLE_NAME} whlsl_roa on whlsl_roa.roa_date::date = d.date
-      where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
+      where date::date >= '2017-01-01' and date::date < '2023-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
     publish_as_db_view: yes
