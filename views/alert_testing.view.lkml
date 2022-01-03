@@ -547,7 +547,7 @@ UNION
 ---this query pulls the top 20 promo codes (determined FROM the past 7 days)
 SELECT
   DISTINCT order_date date
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,SPLIT_PART(promo_bucket,'-',0) DIMENSIONS
   ,'ORDERS W/ PROMO CODE' METRIC
   ,'TIER 2' DETAIL_LEVEL
@@ -578,7 +578,7 @@ UNION
 --this select calculates mattress attach rates for non-0 mattress orders
 SELECT
   DISTINCT(TO_DATE(so.order_date)) date
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,p.line||'|'||p.model_name  DIMENSIONS
   ,'MATTRESS_ATTACH_RATE' METRIC
   ,'TIER 1' DETAIL_LEVEL
@@ -670,7 +670,7 @@ JOIN
 UNION
 SELECT
   date
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'MATTRESS ORDERS' METRIC
   ,'TIER 1' DETAIL_LEVEL
@@ -685,7 +685,7 @@ FROM dtc_sales
 UNION
 SELECT
   date
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'AMOV' METRIC
   ,'TIER 1' DETAIL_LEVEL
@@ -700,7 +700,7 @@ FROM dtc_sales
 UNION
 SELECT
   DATE
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'MATTRESS UPT' metric
   ,'TIER 2' DETAIL_LEVEL
@@ -715,7 +715,7 @@ FROM dtc_sales
 UNION
 SELECT
   DATE
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'ACCESSORY_ORDERS' metric
   ,'TIER 1' DETAIL_LEVEL
@@ -730,7 +730,7 @@ FROM dtc_sales
 UNION
 SELECT
   DATE
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'NAMOV' metric
   ,'TIER 1' DETAIL_LEVEL
@@ -745,7 +745,7 @@ FROM dtc_sales
 UNION
 SELECT
   DATE
-  ,'DTC' bus_unit
+  ,'WEB' bus_unit
   ,'ORDER' DIMENSIONS
   ,'ACCESSORY UPT' metric
   ,'TIER 2' DETAIL_LEVEL
