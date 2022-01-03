@@ -11,9 +11,16 @@ view: international_open_po_report {
   # A dimension is a groupable field that can be used to filter query results.
   # This dimension will be called "Account Values" in Explore.
 
-  dimension: account_values {
+  dimension: account_values_dim {
+    hidden: yes
     type: string
     sql: ${TABLE}."ACCOUNT_VALUES" ;;
+  }
+
+  measure: accounting_value {
+    type: sum
+    value_format: "$#,###.00"
+    sql: cast(replace(replace(replace(replace(${account_values_dim},'$'),','),' - Free Replacement'),'None',0)as number);;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -231,8 +238,8 @@ view: international_open_po_report {
     sql: ${TABLE}."NOTES" ;;
   }
 
-  dimension: ordered_quantity {
-    type: string
+  measure: ordered_quantity {
+    type: sum
     sql: ${TABLE}."ORDERED_QUANTITY" ;;
   }
 
