@@ -73,17 +73,17 @@ view: inventory_snap {
   dimension_group: created {
     label: "Inventory Snap"
     type: time
-    timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [ raw, hour_of_day, time, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     sql: to_timestamp_ntz(${TABLE}.CREATED) ;; }
 
-  dimension: created_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Inventory Snap Week of Year"
-    description: "2021 adjusted week of year number"
-    sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
-              when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
-              else date_part(weekofyear,${created_date::date}) end ;;}
+  # dimension: created_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Inventory Snap Week of Year"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
+  #             when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
+  #             else date_part(weekofyear,${created_date::date}) end ;;}
 
   dimension: week_bucket_old{
     group_label: "Inventory Snap Date"
@@ -105,13 +105,21 @@ view: inventory_snap {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-     sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-            ELSE 'Other' END ;; }
+    # sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #         ELSE 'Other' END ;;
+    sql:  CASE WHEN ${created_week_of_year} = 1  AND ${created_year} = 2022 THEN 'Current Week'
+    WHEN ${created_date} >= '2021-12-27' AND ${created_date} <= '2022-01-02' THEN 'Last Week'
+    WHEN ${created_week_of_year} = 51 AND ${created_year} = 2021 THEN 'Two Weeks Ago'
+    WHEN ${created_week_of_year} = 1  AND ${created_year} = 2021 THEN 'Current Week LY'
+    WHEN ${created_week_of_year} = 52 AND ${created_year} = 2021 THEN 'Last Week LY'
+    WHEN ${created_week_of_year} = 51 AND ${created_year} = 2021 THEN 'Two Weeks Ago LY'
+    ELSE 'Other' END;;
+  }
 
 
   measure: inbound {

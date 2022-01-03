@@ -178,22 +178,22 @@ view: assembly_build {
     ##Scott Clark 1/8/21 removed week_of_year for 2021 adjustment. need to rollback last week in 2021
     type: time
     description: "A mixed timestamp between created and when the iPad reported it created. iPad first then if no data created timestamp"
-    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql:  to_timestamp_ntz(${TABLE}.PRODUCED);;
  }
 
-  dimension: produced_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    group_label: "Produced Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${produced_date::date} >= '2020-12-28' and ${produced_date::date} <= '2021-01-03' then 1
-              when ${produced_year::number}=2021 then date_part(weekofyear,${produced_date::date}) + 1
-              else date_part(weekofyear,${produced_date::date}) end ;;
-  }
+  # dimension: produced_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   group_label: "Produced Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${produced_date::date} >= '2020-12-28' and ${produced_date::date} <= '2021-01-03' then 1
+  #             when ${produced_year::number}=2021 then date_part(weekofyear,${produced_date::date}) + 1
+  #             else date_part(weekofyear,${produced_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -263,13 +263,21 @@ view: assembly_build {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-     sql:  CASE WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${produced_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) AND ${produced_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) -1 AND ${produced_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) +1 AND ${produced_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) AND ${produced_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) -1 AND ${produced_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;; }
+    # sql:  CASE WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${produced_year} = date_part (year,current_date) THEN 'Current Week'
+    #         WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) AND ${produced_year} = date_part (year,current_date) THEN 'Last Week'
+    #         WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) -1 AND ${produced_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #         WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) +1 AND ${produced_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #         WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) AND ${produced_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #         WHEN ${produced_week_of_year} = date_part (weekofyear,current_date) -1 AND ${produced_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #       ELSE 'Other' END ;;
+    sql:  CASE WHEN ${produced_week_of_year} = 1  AND ${produced_year} = 2022 THEN 'Current Week'
+    WHEN ${produced_date} >= '2021-12-27' AND ${produced_date} <= '2022-01-02' THEN 'Last Week'
+    WHEN ${produced_week_of_year} = 51 AND ${produced_year} = 2021 THEN 'Two Weeks Ago'
+    WHEN ${produced_week_of_year} = 1  AND ${produced_year} = 2021 THEN 'Current Week LY'
+    WHEN ${produced_week_of_year} = 52 AND ${produced_year} = 2021 THEN 'Last Week LY'
+    WHEN ${produced_week_of_year} = 51 AND ${produced_year} = 2021 THEN 'Two Weeks Ago LY'
+    ELSE 'Other' END;;
+  }
 
 
   dimension_group: shift_time{

@@ -297,19 +297,19 @@ dimension: page_product_type {
     group_label: "  Session Time"
     description: "Source: HEAP.sessions"
     type: time
-    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour]
+    timeframes: [raw, time, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute,hour, week_of_year]
     sql: ${TABLE}.time ;; }
 
-  dimension: time_week_of_year {
-    ## Scott Clark 1/13/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type:  number
-    label: "Week of Year"
-    group_label: "  Session Time"
-    description: "2021 adjusted week of year number"
-    sql: case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 1
-              when ${time_year::number}=2021 then date_part(weekofyear,${time_date::date}) + 1
-              else date_part(weekofyear,${time_date::date}) end ;;
-  }
+  # dimension: time_week_of_year {
+  #   ## Scott Clark 1/13/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type:  number
+  #   label: "Week of Year"
+  #   group_label: "  Session Time"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${time_date::date} >= '2020-12-28' and ${time_date::date} <= '2021-01-03' then 1
+  #             when ${time_year::number}=2021 then date_part(weekofyear,${time_date::date}) + 1
+  #             else date_part(weekofyear,${time_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/13/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -412,13 +412,21 @@ dimension: page_product_type {
     hidden: no
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
     type: string
-    sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) +1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;;}
+    # sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
+    #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
+    #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) +1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #       ELSE 'Other' END ;;
+    sql:  CASE WHEN ${time_week_of_year} = 1  AND ${time_year} = 2022 THEN 'Current Week'
+    WHEN ${time_date} >= '2021-12-27' AND ${time_date} <= '2022-01-02' THEN 'Last Week'
+    WHEN ${time_week_of_year} = 51 AND ${time_year} = 2021 THEN 'Two Weeks Ago'
+    WHEN ${time_week_of_year} = 1  AND ${time_year} = 2021 THEN 'Current Week LY'
+    WHEN ${time_week_of_year} = 52 AND ${time_year} = 2021 THEN 'Last Week LY'
+    WHEN ${time_week_of_year} = 51 AND ${time_year} = 2021 THEN 'Two Weeks Ago LY'
+    ELSE 'Other' END;;
+  }
 
   dimension: user_id {
     type: number
