@@ -319,8 +319,8 @@ view: sales_order_line_base {
             WHEN ${created_date} >= '2021-12-27' AND ${created_date} <= '2022-01-02' THEN 'Last Week'
             WHEN ${created_week_of_year} = 51 AND ${created_year} = 2021 THEN 'Two Weeks Ago'
             WHEN ${created_week_of_year} = 1  AND ${created_year} = 2021 THEN 'Current Week LY'
-            WHEN ${created_week_of_year} = 52 AND ${created_year} = 2021 THEN 'Last Week LY'
-            WHEN ${created_week_of_year} = 51 AND ${created_year} = 2021 THEN 'Two Weeks Ago LY'
+            WHEN ${created_week_of_year} = 52 AND ${created_year} = 2020 THEN 'Last Week LY'
+            WHEN ${created_week_of_year} = 51 AND ${created_year} = 2020 THEN 'Two Weeks Ago LY'
             ELSE 'Other' END;;
   }
 

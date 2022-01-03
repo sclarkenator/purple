@@ -274,8 +274,8 @@ view: assembly_build {
     WHEN ${produced_date} >= '2021-12-27' AND ${produced_date} <= '2022-01-02' THEN 'Last Week'
     WHEN ${produced_week_of_year} = 51 AND ${produced_year} = 2021 THEN 'Two Weeks Ago'
     WHEN ${produced_week_of_year} = 1  AND ${produced_year} = 2021 THEN 'Current Week LY'
-    WHEN ${produced_week_of_year} = 52 AND ${produced_year} = 2021 THEN 'Last Week LY'
-    WHEN ${produced_week_of_year} = 51 AND ${produced_year} = 2021 THEN 'Two Weeks Ago LY'
+    WHEN ${produced_week_of_year} = 52 AND ${produced_year} = 2020 THEN 'Last Week LY'
+    WHEN ${produced_week_of_year} = 51 AND ${produced_year} = 2020 THEN 'Two Weeks Ago LY'
     ELSE 'Other' END;;
   }
 
