@@ -1376,6 +1376,46 @@ view: sales_order_line {
     sql:  case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 2021 else ${fulfilled_year} end   ;;
   }
 
+  dimension: sla_numerator_d {
+    label: "SLA Numerator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${fulfilled_date} < ${SLA_Target_date} ;;
+  }
+  dimension: due_last_7 {
+    label: "Due Last 7"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${SLA_Target_date} >= dateadd(d,-9,current_date) and ${SLA_Target_date} <= dateadd(d,-2,current_date) ;;
+  }
+  measure: sla_numerator {
+    type: number
+    label: "SLA Numerator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when ${sla_numerator_d} = 'Yes' then ${fulfilled_orders_units} else 0 end ;;
+  }
+  measure: sla_denominator {
+    type: number
+    label: "SLA Denominator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when  ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'Yes' then ${total_units}
+      when ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'No' then ${fulfillment.count}
+      when ${sla_numerator_d} = 'No' and ${due_last_7} = 'Yes' then ${total_units}
+      else 0
+      end ;;
+  }
+  measure: sla_% {
+   type: number
+   label: "SLA %"
+   view_label: "Fulfillment"
+   group_label: "    SLA Percentage"
+  sql: ${sla_numerator}/${sla_denominator}  ;;
+  }
+
 
   measure: last_updated_date_fulfilled {
     view_label: "Fulfillment"
