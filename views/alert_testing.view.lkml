@@ -7,6 +7,7 @@ WITH session_details AS
 --this SELECT gets all the session-level metrics aggregated by date WITH all the separate categories to PARTITION BY later
 (SELECT
  s.session_id
+ ,s.related_tranid
  ,to_date(s.date_time) date
  ,s.source
  ,s.medium
@@ -20,25 +21,23 @@ WITH session_details AS
  ,CASE WHEN utm_medium = 'sr' OR utm_medium = 'search' OR utm_medium = 'cpc' THEN  'search' WHEN utm_medium = 'so' OR utm_medium ilike '%social%' OR referrer ilike '%fb%' OR referrer ilike '%facebo%' OR referrer ilike '%insta%' OR referrer ilike '%l%nk%din%' OR referrer ilike '%pinteres%' OR referrer ilike '%snapch%' THEN  'social' WHEN utm_medium ilike 'vi' OR utm_medium ilike 'video' OR referrer ilike '%y%tube%' THEN  'video' WHEN utm_medium ilike 'nt' OR utm_medium ilike 'native' THEN  'native' WHEN utm_medium ilike 'ds' OR utm_medium ilike 'display' OR referrer ilike '%outbrain%' OR referrer ilike '%doubleclick%' OR referrer ilike '%googlesyndica%' THEN  'display' WHEN utm_medium ilike 'sh' OR utm_medium ilike 'shopping' THEN  'shopping' WHEN utm_medium ilike 'af' OR utm_medium ilike 'ir' OR utm_medium ilike '%affiliate%' THEN  'affiliate'   WHEN utm_medium ilike 'em' OR utm_medium ilike 'email' OR referrer ilike '%mail.%' OR referrer ilike '%outlook.live%' THEN  'email' WHEN utm_medium is null AND (referrer ilike '%google%' OR referrer ilike '%bing%' OR referrer ilike '%yahoo%' OR referrer ilike '%ASk%' OR referrer ilike '%aol%' OR referrer ilike '%msn%' OR referrer ilike '%endex%' OR referrer ilike '%duckduck%') THEN  'organic' WHEN utm_medium ilike 'rf' OR utm_medium ilike 'referral' OR utm_medium ilike '%partner platfo%' OR lower(referrer) not like '%purple%' THEN  'referral' WHEN (referrer ilike '%purple%' AND utm_medium is null) OR referrer is null THEN  'direct' ELSE 'undefined' END channel
  ,pv.pages
  ,1 session_flag
- ,SUM(session_flag) OVER (PARTITION BY date_time) total_sessions
+ ,SUM(session_flag) OVER (PARTITION BY to_date(s.date_time)) total_sessions
  ,CASE WHEN pv.pages < 2 THEN  1 ELSE 0 END bounce_flag
  ,sn.session_num
  ,CASE WHEN sn.session_num > 1 THEN  1 ELSE 0 END ret_visit_flag
  ,NVL(p.order_amt, 0) order_amt
  ,CASE WHEN p.order_amt is null THEN  0 ELSE 1 END conv_flag
- ,conversions
  FROM datagrid.prod.web_session s
  LEFT JOIN
     (SELECT
-     session_id
-     ,SUM (shopify_amt) order_amt
+     related_tranid
+     ,SUM(so.order_value) order_amt
      ,COUNT(*) conversions
-     FROM analytics.marketing.ecommerce
-     WHERE to_date(session_time) > CURRENT_DATE -121
-     AND to_date(session_time) < CURRENT_DATE
-     AND diff <6000
+     FROM datagrid.prod.sales_order so
+     WHERE to_date(order_date) > CURRENT_DATE -121
+     AND to_date(order_date) < CURRENT_DATE
      GROUP BY 1
-    )p ON s.session_id = p.session_id
+    )p ON s.related_tranid = p.related_tranid
  LEFT JOIN
     (SELECT
      DISTINCT session_id
