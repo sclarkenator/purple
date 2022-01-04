@@ -11,7 +11,7 @@ view: _calendar {
         datediff(month,current_date,date) as month_diff,
         datediff(quarter,current_date,date) as quarter_diff,
         datediff(year,current_date,date) as year_diff,
-        date_part(weekofyear,date) as week_of_year,
+        week_of_year,
         week_of_month,
         day_of_year,
         day_of_quarter,
@@ -32,7 +32,7 @@ view: _calendar {
     group_label: "Calendar"
     description: "Source: snowflake.warehouse_date"
     type: time
-    timeframes: [date, day_of_week,week, month,month_name,month_num, quarter, year]
+    timeframes: [date, day_of_week,week, month,month_name,month_num, quarter, year, week_of_year]
     sql: ${TABLE}.date ;;
   }
 
@@ -130,6 +130,12 @@ view: _calendar {
     description: "Source: snowflake.warehouse_date"
     type: string
     sql: ${TABLE}.us_holiday ;;
+  }
+
+  measure: min_date {
+    type: min
+    value_format: "date"
+    sql: ${TABLE}.date ;;
   }
 
 }

@@ -1,4 +1,5 @@
 view: liveperson_combined {
+  view_label: "Conversation Data"
   derived_table: {
     sql:
       select
@@ -39,6 +40,7 @@ view: liveperson_combined {
         c.campaign_profile_system_default,
         upper(s.name) as last_skill,
         upper(mcs.name) as alerted_mcs,
+        c.last_agent_id,
         a.name as agent_name,
         a.supervisor as is_supervisor,
         a.is_active,
@@ -47,7 +49,28 @@ view: liveperson_combined {
         a.team_type,
         a.employee_type,
         a.location
-        -- m.*
+        -- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
+        -- c.art,
+        -- c.artc,
+        -- c.arth,
+        -- c.arta,
+        -- c.artac,
+        -- c.artah,
+        -- c.ttfah,
+        -- c.ttfrah,
+        -- c.ttfrh,
+        -- c.ttfab,
+        -- c.ttfrab,
+        -- c.ttfrb,
+        -- c.ttfrs,
+        -- c.ttfra,
+        -- c.ttfr,
+        -- c.participants,
+        -- c.interactions,
+        -- c.transfers,
+        -- c.messages,
+        -- c.responses
+        -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
 
       from liveperson.conversation c
 
@@ -83,119 +106,9 @@ view: liveperson_combined {
 
         left join liveperson.alerted_mcs_subtype mcs
             on c.alerted_mcs = mcs.subtype_id
-;;
-        # left join (
-        #     select
-        #         m.conversation_id as conversation_id_m,
-        #         m.message_id,
-        #         m.audience,
-        #         m.device,
-        #         m.message,
-        #         -- m.participant_id,
-        #         m.sent_by,
-        #         m.seq,
-        #         m.created,
-        #         case when m.participant_id::string in ('3263325330', '3566812330') then 'Bot'
-        #             when m.participant_id::string in ('3293544230', '3511734130') then 'Virtual Assistant'
-        #             when a.name is null then full_name
-        #             else a.name end as agent_name_m,
-        #         a.supervisor as is_supervisor_m,
-        #         a.is_active as is_active_m,
-        #         a.retail as is_retail_m,
-        #         a.team_lead as team_lead_m,
-        #         a.team_type as team_type_m,
-        #         a.employee_type as employee_type_m,
-        #         a.location as location_m,
-        #         p.name as consumer_name_m
+            ;;
+        }
 
-        #     from liveperson.conversation_message m
-
-        #         join util.warehouse_date d
-        #             on d.date::date = m.created::date
-
-        #         left join (
-        #             select distinct
-        #                 a.*,
-        #                 c.team_name as team_lead,
-        #                 case when a.inactive is null
-        #                     and a.terminated is null then true else false end as is_active,
-        #                 la.agent_id as liveperson_id,
-        #                 la.full_name
-
-        #             from liveperson.agent la
-
-        #                 left join customer_care.agent_lkp a
-        #                     on a.zendesk_id = la.employee_id
-        #                     or a.incontact_id = la.employee_id
-
-        #                 left join (
-        #                     select *,
-        #                         rank()over(partition by incontact_id order by end_date desc) as rnk
-        #                     from analytics.customer_care.team_lead_name
-        #                     where team_name is not null
-        #                     ) c
-        #                     on a.incontact_id = c.incontact_id
-        #                     and c.rnk = 1
-        #             ) a
-        #             on m.sent_by = 'Agent'
-        #             and m.participant_id = a.liveperson_id::string
-
-        #         left join liveperson.consumer_participant p
-        #             on m.participant_id = p.participant_id
-        #       ) m
-        #       on c.conversation_id = m.conversation_id_m
-        #       and d.date = m.created::date
-        #     ;;
-  }
-  view_label: "Conversation Data"
-
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## MESSAGE DATA cj
-
-  # dimension: message_id  {
-  #   label: "Message ID"
-  #   description: "Distinct Message ID"
-  #   view_label: "Message Data"
-  #   type: string
-  #   sql: ${TABLE}.message_id ;;
-  # }
-
-  # dimension: sent_by  {
-  #   label: "Message Sent By"
-  #   description: "Who sent message."
-  #   view_label: "Message Data"
-  #   type: string
-  #   sql: ${TABLE}.sent_by ;;
-  # }
-
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## MESSAGE MEASURES cj
-
-  # measure: message_count {
-  #   label: "Message Count"
-  #   description: "Count of distinct messages"
-  #   view_label: "Message Data"
-  #   type: count_distinct
-  #   sql: ${TABLE}.message_id ;;
-  # }
-
-  # measure: message_from_agent_count {
-  #   label: "Message Count"
-  #   description: "Count of distinct messages"
-  #   view_label: "Message Data"
-  #   type: count_distinct
-  #   sql: case${TABLE}.message_id ;;
-  # }
-
-  # measure: message_from_consumer_count {
-  #   label: "Message Count"
-  #   description: "Count of distinct messages"
-  #   view_label: "Message Data"
-  #   type: count_distinct
-  #   sql: ${TABLE}.message_id ;;
-  # }
 
   ##########################################################################################
   ##########################################################################################
@@ -411,6 +324,179 @@ view: liveperson_combined {
     sql: ${TABLE}.status ;;
   }
 
+  ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
+
+  # dimension: participants {
+  #   label: "Participants"
+  #   group_item_label: "Conversation Metrics"
+  #   description: "Count of participants that acted on the conversation"
+  #   type: number
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.participants ;;
+  # }
+
+  # dimension: interactions {
+  #   label: "Interactions"
+  #   group_item_label: "Conversation Metrics"
+  #   description: "Count of non-system agents that interacted on the conversation"
+  #   type: number
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.interactions ;;
+  # }
+
+  # dimension: transfers {
+  #   label: "Transfers"
+  #   group_item_label: "Conversation Metrics"
+  #   description: "Count of transfers after assignment in the conversation"
+  #   type: number
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.transfers ;;
+  # }
+
+  # dimension: messages {
+  #   label: "Messages"
+  #   group_item_label: "Conversation Metrics"
+  #   description: "Count of messages exchanged during the conversation"
+  #   type: number
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.messages ;;
+  # }
+
+  # dimension: responses {
+  #   label: "Responses"
+  #   group_item_label: "Conversation Metrics"
+  #   description: "Count of back and forth exchanges that took place in the conversation"
+  #   type: number
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.responses ;;
+  # }
+
+  # ##########################################################################################
+  # ##########################################################################################
+  # ## DURATION METRIC DIMENSIONS
+
+  # dimension: art {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Response Time in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.art ;;
+  # }
+
+  # dimension: artc {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Consumer Response Time in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.artc ;;
+  # }
+
+  # dimension: arth {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Human Agent Response Time in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.arth ;;
+  # }
+
+  # dimension: arta {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Response Time after Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.arta ;;
+  # }
+
+  # dimension: artac {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Consumer Response Time after Assignmenbt in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.artac ;;
+  # }
+
+  # dimension: artah {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average Human Agent Response Time after Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.artah ;;
+  # }
+
+  # dimension: ttfah {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time to First Human Agent Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfah ;;
+  # }
+
+  # dimension: ttfrah {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First Human Response After Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfrah ;;
+  # }
+
+  # dimension: ttfrh {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First Human Response in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfrh ;;
+  # }
+
+  # dimension: ttfab {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First Bot Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfab ;;
+  # }
+
+  # dimension: ttfrab {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First Bot Response after Assignment in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfrab ;;
+  # }
+
+  # dimension: ttfrb {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First Bot Response in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfrb ;;
+  # }
+
+  # dimension: ttfrs {
+  #   group_label: "Duration Dimensions"
+  #   description: "Time To First System Response in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfrs ;;
+  # }
+
+  # dimension: ttfra {
+  #   group_label: "Duration Dimensions"
+  #   description: "Average first response time measured as avg of TTFRAH, TTFRAB, TTFRS in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfra ;;
+  # }
+
+  # dimension: ttfr {
+  #   group_label: "Duration Dimensions"
+  #   description: "Calculated as the lesser of TTFRH, TTFRB, TTFRS in minutes"
+  #   hidden: yes
+  #   type: number
+  #   sql: ${TABLE}.ttfr ;;
+  # }
+
+  ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
+
   ##########################################################################################
   ##########################################################################################
   ## CAMPAIGN DIMENSIONS
@@ -512,7 +598,7 @@ view: liveperson_combined {
   dimension_group: conversation_dates {
     label: "Active Conversation"
     description: "Reflects conversation dates from start to end dates."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -529,7 +615,7 @@ view: liveperson_combined {
   dimension_group: ended {
     label: "Conversation Closed"
     description: "Time the conversation was closed."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -549,7 +635,7 @@ view: liveperson_combined {
   dimension_group: started {
     label: "Conversation Started"
     description: "Start-time of the conversation."
-    view_label: "Dates"
+    view_label: "Conversation Dates"
     type: time
     timeframes: [
       raw,
@@ -583,10 +669,16 @@ view: liveperson_combined {
     sql: ${TABLE}.conversation_id ;;
   }
 
+  dimension: last_agent_id {
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.last_agent_id ;;
+  }
+
   dimension: visitor_id {
     label: "Visitor ID"
     type: string
-    sql: ${TABLE}${visitor_id} ;;
+    sql: ${TABLE}.visitor_id ;;
     hidden: yes
   }
 
@@ -623,7 +715,6 @@ view: liveperson_combined {
 
   measure: conversations_ended_count {
     label: "Closed Conversations"
-    # group_label: "Conversation Metrics"
     description: "Count of closed conversations.  This is typically the primary measure used in counting conversations."
     group_label: "Conversation Closure Metrics"
     type: count_distinct
@@ -632,146 +723,243 @@ view: liveperson_combined {
 
   measure: conversations_opened_count {
     label: "Opened Conversations"
-    group_label: "Conversation Metrics"
+    group_label: "Conversation Measures"
     # type: sum
     type: count_distinct
     sql: case when ${conversation_dates_date}::date = ${started_date}::date then ${conversation_id} end ;;
   }
 
+  ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
 
-
-
-  # measure: consumers_active_count {
-  #   label: "Active Consumers Count"
-  #   group_label: "Count Metrics"
-  #   type: count_distinct
-  #   sql: ${visitor_id} ;;
-  # }
-
-  # measure: conversation_duration_avg {
-  #   label: "Conversation Duration Avg"
-  #   description: "Conversation length in minutes."
-  #   group_label: "Conversation Metrics"
+  # measure: participant_avg {
+  #   label: "AVG Participants"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average count of participants that acted on the conversations"
   #   type: average
   #   value_format_name: decimal_0
-  #   sql: ${conversation_duration_minutes} ;;
+  #   sql: ${TABLE}.participants ;;
   # }
 
-  # measure: conversation_first_conversation_average {
-  #   label: "First Conversation Pct"
-  #   group_label: "Conversation Metrics"
-  #   type: number
-  #   value_format_name: percent_1
-  #   sql: sum(case when ${first_conversation} = true and ${conversation_dates_date}::date = ${ended_date}::date then 1 end)
-  #     / nullifzero(sum(case when ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end)) ;;
-  # }
-
-  # measure: first_conversation_closed_count {
-  #   label: "First Conversation Closed Count"
-  #   group_label: "Conversation Metrics"
-  #   description: "Count of conversations that ARE flagged as a first conversation."
-  #   # group_label: "Conversation Metrics"
+  # measure: participant_count {
+  #   label: "Participant Count"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Sum count of participants that acted on the conversations"
   #   type: sum
-  #   sql: case when ${first_conversation} = true
-  #     and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.participants ;;
   # }
 
-  # measure: first_conversation_opened_count {
-  #   label: "First Conversation Opened Count"
-  #   group_label: "Conversation Metrics"
-  #   description: "Count of conversations that ARE flagged as a first conversation."
-  #   # group_label: "Conversation Metrics"
-  #   type: sum
-  #   sql: case when ${first_conversation} = true
-  #     and ${conversation_dates_date}::date = ${started_date}::date then 1 else 0 end ;;
-  # }
-
-  # measure: repeat_conversation_count {
-  #   label: "Repeat Conversation Count"
-  #   group_label: "Conversation Metrics"
-  #   description: "Count of conversations that ARE NOT flagged as a first conversation."
-  #   # group_label: "Conversation Metrics"
-  #   type: sum
-  #   sql: case when ${first_conversation} = false
-  #     and ${conversation_dates_date}::date = ${ended_date}::date then 1 else 0 end ;;
-  # }
-
-  # # measure: closed_conversation_pct {
-  # #   label: "Closed Conversations Pct"
-  # #   group_label: "Conversation Closure Metrics"
-  # #   type: percent_of_total
-  # #   sql: ${conversations_ended_count} ;;
-  # # }
-
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## CONSUMER RELATED MEASURES
-
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## DEVICE RELATED MEASURES
-
-  # measure: device_desktop_count {
-  #   label: "Desktop Conv Count"
-  #   group_label: "Device Metrics"
-  #   type: count_distinct
-  #   sql: case when ${device}  = 'DESKTOP'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
-  # }
-
-  # measure: device_tablet_count {
-  #   label: "Tablet Conv Count"
-  #   group_label: "Device Metrics"
-  #   type: count_distinct
-  #   sql: case when ${device}  = 'TABLET'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
-  # }
-
-  # measure: device_mobile_count {
-  #   label: "Mobile Conv Count"
-  #   group_label: "Device Metrics"
-  #   type: count_distinct
-  #   sql: case when ${device}  = 'MOBILE'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
-  # }
-
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## MCS RELATED MEASURES
-
-  # measure: mcs_avg {
-  #   label: "MCS Average Score"
-  #   group_label: "MCS Metrics"
+  # measure: interaction_avg {
+  #   label: "AVG Interactions"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average count of interactions that acted on the conversations"
   #   type: average
-  #   value_format_name: decimal_2
-  #   sql: ${mcs} ;;
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.interactions ;;
   # }
 
-  # measure: mcs_negative_count {
-  #   label: "MCS Negative Count"
-  #   group_label: "MCS Metrics"
-  #   type: count_distinct
+  # measure: interaction_count {
+  #   label: "Interaction Count"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Sum count of interactions that acted on the conversations"
+  #   type: sum
   #   value_format_name: decimal_0
-  #   sql: case when ${alerted_mcs} = 'Negative'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  #   sql: ${TABLE}.interactions ;;
   # }
 
-  # measure: mcs_neutral_count {
-  #   label: "MCS Neutral Count"
-  #   group_label: "MCS Metrics"
-  #   description: "Count of MCS conversations that "
-  #   type: count_distinct
+  # measure: transfer_avg {
+  #   label: "AVG Transfers"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average count of transfers per the conversations"
+  #   type: average
   #   value_format_name: decimal_0
-  #   sql: case when ${alerted_mcs} = 'Neutral'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  #   sql: ${TABLE}.transfers ;;
   # }
 
-  # measure: mcs_positive_count {
-  #   label: "MCS Positive Count"
-  #   group_label: "MCS Metrics"
-  #   type: count_distinct
+  # measure: transfer_count {
+  #   label: "Transfer Count"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Sum count of transfers"
+  #   type: sum
   #   value_format_name: decimal_0
-  #   sql: case when ${alerted_mcs} = 'Positive'
-  #     and ${conversation_dates_date} = ${ended_date} then ${conversation_id} end ;;
+  #   sql: ${TABLE}.transfers ;;
   # }
+
+  # measure: message_avg {
+  #   label: "AVG Messages"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average count of messages per conversations"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.messages ;;
+  # }
+
+  # measure: message_count {
+  #   label: "Message Count"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Sum count of messages"
+  #   type: sum
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.messages ;;
+  # }
+
+  # measure: response_avg {
+  #   label: "AVG Responses"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average count of responses per conversations"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.responses ;;
+  # }
+
+  # measure: response_count {
+  #   label: "Response Count"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Sum count of responses"
+  #   type: sum
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.responses ;;
+  # }
+
+  # ##########################################################################################
+  # ##########################################################################################
+  # ## DURATION MEASURES
+
+  # measure: art_avg {
+  #   label: "ART"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Response Time in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.art ;;
+  # }
+
+  # measure: artc_avg {
+  #   label: "ARTC"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Consumer Response Time in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.artc ;;
+  # }
+
+  # measure: arth_avg {
+  #   label: "ARTH"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Human Response Time in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.arth ;;
+  # }
+
+  # measure: arta_avg {
+  #   label: "ARTA"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Response Time from Assignment in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.arta ;;
+  # }
+
+  # measure: ARTAC_avg {
+  #   label: "ARTAC"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Consumer Response Time in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ARTAC ;;
+  # }
+
+  # measure: ARTAH_avg {
+  #   label: "ARTAH"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Human Response Time in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ARTAH ;;
+  # }
+
+  # measure: TTFAH_avg {
+  #   label: "TTFAH"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Human Assignment in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.TTFAH ;;
+  # }
+
+  # measure: ttfrah_avg {
+  #   label: "TTFRAH"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Human Response from Assignment in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfrah ;;
+  # }
+
+  # measure: ttfrh_avg {
+  #   label: "TTFRH"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Human Response in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfrh ;;
+  # }
+
+  # measure: ttfab_avg {
+  #   label: "TTFAB"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Bot Assignment in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfab ;;
+  # }
+
+  # measure: ttfrab_avg {
+  #   label: "TTFRAB"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Bot Response after Assignment in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfrab ;;
+  # }
+
+  # measure: ttfrb_avg {
+  #   label: "TTFRB"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First Bot Response in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfrb ;;
+  # }
+
+  # measure: ttfrs_avg {
+  #   label: "TTFRS"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average Time to First System (non-agent) Response in minutes"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfrs ;;
+  # }
+
+  # measure: ttfra_avg {
+  #   label: "TTFRA"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Average first response time measured as avg of TTFRAH, TTFRAB, TTFRS in seconds"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfra ;;
+  # }
+
+  # measure: ttfr_avg {
+  #   label: "TTFR"
+  #   group_item_label: "Conversation Measures"
+  #   description: "Calculated as the lesser of TTFRH, TTFRB, TTFRS in seconds"
+  #   type: average
+  #   value_format_name: decimal_0
+  #   sql: ${TABLE}.ttfr ;;
+  # }
+
+  ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
+
 }

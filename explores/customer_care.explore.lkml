@@ -12,7 +12,7 @@ include: "/dashboards/**/*.dashboard"
 #####################################################################
 ## COMBINED ACTIVITY cj
 
-explore: combined_activity {hidden:yes} #cj
+explore: combined_activities {hidden:yes} #cj
 
 #####################################################################
 #####################################################################
@@ -43,6 +43,13 @@ explore: liveperson_combined {
   description: "Combined LivePerson data"
   hidden: yes
 
+  join: agent_data {
+    view_label: "Conversation Last Agent Data"
+    type: left_outer
+    sql_on: ${liveperson_combined.last_agent_id} = ${agent_data.liveperson_id} ;;
+    relationship: many_to_one
+  }
+
   join: liveperson_conversation_metrics {
     view_label: "Conversation Data"
     type: full_outer
@@ -58,11 +65,13 @@ explore: liveperson_combined {
   #       ;;
   #   relationship: one_to_many
   # }
+
+  # join: liveperson_agent_status?
 }
 
 #####################################################################
 #####################################################################
-## LIVEPERSON COMBINED DATA cj
+## LIVEPERSON COMBINED DATA cj OLD
 
 explore: liveperson_combined_data {
   label: "LivePerson"
@@ -89,6 +98,7 @@ explore: liveperson_combined_data {
     view_label: "* Dates"
     type: cross
     sql_where: ${warehouse_date_table.date_date} >= '2021-08-01' ;; # Liveperson rollout/testing started 8/5/2021
+    relationship: many_to_many
   }
 
   join: agent_data {
@@ -155,6 +165,7 @@ explore: wfm_weekly_performance {
   join: agent_data {
     view_label: "Agent Data"
     type: cross
+    relationship: many_to_many
   }
 
   join: incontact_phone {
@@ -162,6 +173,7 @@ explore: wfm_weekly_performance {
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${incontact_phone.start_ts_mst_date}
       and ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
+    relationship: one_to_many
   }
 
   join: zendesk_ticket_v2 {
@@ -170,6 +182,7 @@ explore: wfm_weekly_performance {
     sql_on: ${wfm_weekly_performance.date_date} = ${zendesk_ticket_v2.tkt_created_date}
       and ${agent_data.incontact_id} = ${zendesk_ticket_v2.assignee_id}
       and ${zendesk_ticket_v2.channel} in ('email', 'web', 'facebook') ;;
+    relationship: one_to_many
   }
 
   join: agent_state {
@@ -177,6 +190,7 @@ explore: wfm_weekly_performance {
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${agent_state.state_start_ts_mst_date}
       and ${agent_data.incontact_id} = ${agent_state.agent_id} ;;
+    relationship: one_to_many
   }
 
   join: liveperson_conversation {
@@ -184,6 +198,7 @@ explore: wfm_weekly_performance {
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${liveperson_conversation.ended_date}
       and ${agent_data.incontact_id} = ${liveperson_conversation.last_agent_id};;
+    relationship: one_to_many
   }
 }
 

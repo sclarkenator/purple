@@ -117,6 +117,42 @@ derived_table: {
     sql: ${TABLE}."NAME" ;;
   }
 
+dimension: hours_to_steady {
+    type: number
+    hidden: yes
+    value_format: "#,##0"
+    sql: case when ${line} = 5 then 5
+              when ${line} = 43 then 2
+              when ${line} = 44 then 3
+              when ${line} = 153 then 1
+         else null end
+         ;; }
+
+
+dimension: startup_hours{
+    type: string
+    hidden: yes
+    sql: case when line = 5 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 11 then 'Startup'
+              when line = 43 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 8 then 'Startup'
+              when line = 44 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 9 then 'Startup'
+              when line = 153 and ${pitch_start_hour_of_day} = 7 then 'Startup'
+              else 'Steady State' end
+         ;; }
+
+measure: startup_average{
+    type: average
+    hidden: yes
+    value_format: "#,##0.0"
+    sql: case when ${startup_hours}='Startup'then ${actual_dim} else null end ;;
+    }
+
+measure: steady_state_average{
+  type: average
+  hidden: yes
+  value_format: "#,##0.0"
+  sql: case when ${startup_hours}='Steady State'then ${actual_dim} else null end ;;
+    }
+
   dimension_group: pitch_end {
     hidden: yes
     description: "Pitch Name (Start of Shift, End of Shift, Break, Lunch, etc); Source: l2l.pitch"
@@ -275,7 +311,6 @@ derived_table: {
     value_format: "#,##0"
     sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
-
 
   measure: actual {
     description: "Total amount of Actual Product Produced; Source: l2l.pitch"
@@ -445,6 +480,20 @@ derived_table: {
     description: "Perfrmance * Taret"
     value_format: "0.0"
     sql: ${throughput_percent}*${target} ;;
+  }
+
+  measure: shots_per_hour {
+    description: "Shots/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual},${planned_production_minutes}/60) ;;
+  }
+
+  measure: avg_speed {
+    description: "Actual Shots + Scrap divided by Planned Production Minutes minus Downtime Minutes"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual}+${scrap},(${planned_production_minutes}-${downtime_minutes})/60) ;;
   }
 
   }

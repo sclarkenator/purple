@@ -346,24 +346,24 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${Due_Date}) ;;
   }
 
-  dimension: SLA_Target_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    hidden:  yes
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "SLA Target Date"
-    description: "2021 adjusted week of year number (SLA)"
-    sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
-              when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
-              else date_part(weekofyear,${SLA_Target_date::date}) end ;;
-  }
+  # dimension: SLA_Target_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   hidden:  yes
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "SLA Target Date"
+  #   description: "2021 adjusted week of year number (SLA)"
+  #   sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
+  #             when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
+  #             else date_part(weekofyear,${SLA_Target_date::date}) end ;;
+  # }
 
   dimension: SLA_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -722,6 +722,7 @@ view: sales_order_line {
     drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
+
   measure:Purple_Qty_eligible_for_SLA{
     label: "Purple Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
@@ -1299,7 +1300,7 @@ view: sales_order_line {
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
@@ -1338,7 +1339,7 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week,day_of_week_index, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week,day_of_week_index, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
@@ -1354,17 +1355,17 @@ view: sales_order_line {
     sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date::date}),${fulfilled_date::date}) + 1 ;;
   }
 
-  dimension: fulfilled_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "    Fulfilled Date"
-    description: "2021 adjusted week of year number for fulfilled date"
-    sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
-              when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
-              else date_part(weekofyear,${fulfilled_date::date}) end ;;
-  }
+  # dimension: fulfilled_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "    Fulfilled Date"
+  #   description: "2021 adjusted week of year number for fulfilled date"
+  #   sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
+  #             when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
+  #             else date_part(weekofyear,${fulfilled_date::date}) end ;;
+  # }
 
   dimension: fulf_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.

@@ -11,9 +11,16 @@ view: international_open_po_report {
   # A dimension is a groupable field that can be used to filter query results.
   # This dimension will be called "Account Values" in Explore.
 
-  dimension: account_values {
+  dimension: account_values_dim {
+    hidden: yes
     type: string
     sql: ${TABLE}."ACCOUNT_VALUES" ;;
+  }
+
+  measure: accounting_value {
+    type: sum
+    value_format: "$#,###.00"
+    sql: cast(replace(replace(replace(replace(${account_values_dim},'$'),','),' - Free Replacement'),'None',0)as number);;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -231,8 +238,8 @@ view: international_open_po_report {
     sql: ${TABLE}."NOTES" ;;
   }
 
-  dimension: ordered_quantity {
-    type: string
+  measure: ordered_quantity {
+    type: sum
     sql: ${TABLE}."ORDERED_QUANTITY" ;;
   }
 
@@ -321,5 +328,89 @@ view: international_open_po_report {
   dimension: vendor_mid {
     type: string
     sql: ${TABLE}."VENDOR_MID" ;;
+  }
+
+  dimension: ETD_to_ETA {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${ETA_raw}) ;;
+  }
+
+  dimension: ETD_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Discharged {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
+  }
+
+  dimension: Dischareged_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${discharged_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: Cargo_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${cargo_ready_raw},${purple_in_hand_raw}) ;;
+  }
+
+  measure: Avg_ETD_to_ETA {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETD_to_ETA} ;;
+  }
+
+  measure: Avg_ETD_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETD_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETA_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Discharged {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETA_to_Discharged} ;;
+  }
+
+  measure: Avg_Dischareged_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Dischareged_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_Cargo_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Cargo_to_Purple_In_Hand} ;;
   }
 }
