@@ -6,11 +6,6 @@ view: v_waste_management_waste_recycling {
     sql: ${TABLE}."AREA" ;;
   }
 
-  dimension: covers {
-    type: string
-    sql: ${TABLE}."COVERS" ;;
-  }
-
   dimension_group: created {
     type: time
     timeframes: [
@@ -157,6 +152,11 @@ view: v_waste_management_waste_recycling {
   measure: used_oil {
     type: sum
     sql: ${TABLE}."USED_OIL" ;;
+  }
+
+  measure: covers {
+    type: sum
+    sql: ${TABLE}."COVERS" ;;
   }
 
   measure: count {
