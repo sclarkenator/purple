@@ -5,7 +5,7 @@ from (select nvl(s.order_id, s2.order_id) as order_id
     , sol.item_id
     , p.hd_status_created as status_date
     , p.*
-    , row_number() over(partition by s.order_id, sol.item_id order by p.hd_status_created::date desc) as rn
+    , row_number() over(partition by s.order_id, sol.item_id order by coalesce(p.hd_status_created,'1900-01-01')::date desc) as rn
     from shipping.pilot_daily p
     left join sales.sales_order s on s.related_tranid = '#' || p.CONSIGNEE_REF
     left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string
