@@ -142,6 +142,42 @@ view: v_fb_all {
     sql: ${TABLE}."OBJECTIVE" ;;
   }
 
+  measure: landing_page_view_1dc {
+    label: "Landing Page View 1DC"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_1_D_CLICK" ;;
+  }
+
+  measure: landing_page_view_1dv {
+    label: "Landing Page View 1DV"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_1_D_VIEW" ;;
+  }
+
+  measure: landing_page_view_7dc {
+    label: "Landing Page View 7DC"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_7_D_CLICK" ;;
+  }
+
+  measure: landing_page_view_7dv {
+    label: "Landing Page View 7DV"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_7_D_VIEW" ;;
+  }
+
+  measure: landing_page_view_28dc {
+    label: "Landing Page View 28DC"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_28_D_CLICK" ;;
+  }
+
+  measure: landing_page_view_28dv {
+    label: "Landing Page View 28DV"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEW_28_D_VIEW" ;;
+  }
+
   measure: purchase_1_dc {
     label: "Purchases 1DC"
     type: sum
