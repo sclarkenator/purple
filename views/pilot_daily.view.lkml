@@ -1,16 +1,15 @@
 view: pilot_daily {
   derived_table: { sql:
-    select t.*
-from (select nvl(s.order_id, s2.order_id) as order_id
-    , sol.item_id
-    , p.hd_status_created as status_date
-    , p.*
-    , row_number() over(partition by s.order_id, sol.item_id order by coalesce(p.hd_status_created,'1900-01-01')::date desc) as rn
-    from shipping.pilot_daily p
-    left join sales.sales_order s on s.related_tranid = '#' || p.CONSIGNEE_REF
-    left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string
-    left join sales.sales_order_line sol on nvl(s.order_id, s2.order_id) = sol.order_id) as t
-    where rn = 1;;
+    with t as (
+        select
+            nvl(s.order_id, s2.order_id) as order_id, sol.item_id, coalesce(p.hd_status_created,'1900-01-01')::date as status_date, p.*
+        from shipping.pilot_daily p
+            left join sales.sales_order s on s.related_tranid = '#' || p.CONSIGNEE_REF
+            left join sales.sales_order s2 on p.SHIPPER_REF::string = s2.tranid::string
+            left join sales.sales_order_line sol on nvl(s.order_id, s2.order_id) = sol.order_id
+    )
+    select * from t
+    qualify row_number() over(partition by order_id, item_id order by status_date desc) = 1;;
   }
 
   dimension: order_id {
