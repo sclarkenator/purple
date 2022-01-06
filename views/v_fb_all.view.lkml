@@ -61,6 +61,21 @@ view: v_fb_all {
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
+  dimension: impression_device {
+    type: string
+    sql: ${TABLE}."IMPRESSION_DEVICE" ;;
+  }
+
+  dimension: publisher_platform {
+    type: string
+    sql: ${TABLE}."PUBLISHER_PLATFORM" ;;
+  }
+
+  dimension: platform_position {
+    type: string
+    sql: ${TABLE}."PLATFORM_POSITION" ;;
+  }
+
   measure: clicks {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
