@@ -411,7 +411,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.model ;;
     order_by_field: model_raw_order
   }
@@ -420,8 +419,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "3. Model"
     description: "Original/Hybird, Harmony/Plush, etc. Source: netsuite.item"
-    #hidden: yes
-    #sql: ${TABLE}.model ;;
     case: {
       when: {sql: ${TABLE}.model = 'KID BED';; label: "1"}
       when: {sql: ${TABLE}.model = 'PURPLE MATTRESS';; label: "2"}
@@ -439,7 +436,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "4. Version"
     description: "Harmony/Harmony Vita, Clip Metal/Metal, OG/NOG rolling up into Harmony, Metal, Purple Mattress etc. Source:netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.version ;;
   }
 
@@ -447,7 +443,6 @@ view: item {
     group_label: "Product Hierarchy"
     label: "5. Name"
     description: "Product Description. Source:netsuite.item"
-    #hidden: yes
     sql: ${TABLE}.product_description ;;
   }
 
@@ -466,26 +461,30 @@ view: item {
 
   dimension: color {
     label: " Product Color"
-    description: "Gives Color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: looker calculation"
+    description: "Gives color for Products with an Assigned Color (Grey, Charchoal, Slate, Sand, etc). Source: NetSuite"
     type: string
-    sql: case when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'GREY'
-      when ${product_description_raw} ilike '%CHARCL%' then 'CHARCOAL'
-      when ${product_description_raw} ilike '%SLATE%' then 'SLATE'
-      when ${product_description_raw} ilike '%SAND%' then 'SAND'
-      when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'WHITE'
-      when ${product_description_raw} ilike '%TRUE WHITE%' then 'TRUE WHITE'
-      when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'PURPLE'
-      when ${product_description_raw} ilike '%NATURAL OAT%' then 'NATURAL OAT'
-      when ${product_description_raw} ilike '%NATURAL GREY%' then 'NATURAL GREY'
-      when ${product_description_raw} ilike '%STORMY%' then 'STORMY GREY'
-      when ${product_description_raw} ilike '%SOFT LILAC%' then 'SOFT LILAC'
-      when ${product_description_raw} ilike '%MORNING%' then 'MORNING MIST'
-      when ${product_description_raw} ilike '%DEEP PURPLE%' then 'DEEP PURPLE'
-      when ${product_description_raw} ilike '%CLOUD WHITE%' then 'CLOUD WHITE'
-      when ${product_description_raw} ilike '%BLUSH PINK%' then 'BLUSH PINK'
-      when ${product_description_raw} ilike '%DUSKY NAVY%' then 'DUSKY NAVY'
-      when ${product_description_raw} ilike '%MISTY BLUE%' then 'MISTY BLUE'
-      else null end ;; }
+    sql: ${TABLE}.color
+     -- commented out by Jared Nov 18 in favor of new NS field
+     -- case when ${TABLE}.color is not null then ${TABLE}.color
+     --  when ${product_description_raw} ilike '%GREY%' AND ${product_description_raw} not ilike '%STORMY%' AND ${product_description_raw} not ilike '%NATURAL%' then 'Grey'
+     --  when ${product_description_raw} ilike '%CHARCL%' then 'Charcoal'
+     --  when ${product_description_raw} ilike '%SLATE%' then 'Slate'
+     --  when ${product_description_raw} ilike '%SAND%' then 'Sand'
+     --  when ${product_description_raw} ilike '%WHITE%' AND ${product_description_raw} not ilike '%TRUE%' then 'White'
+     --  when ${product_description_raw} ilike '%TRUE WHITE%' then 'True White'
+     --  when ${product_description_raw} ilike '%PURPLE' AND ${product_description_raw} not ilike '%DEEP%' then 'Purple'
+     --  when ${product_description_raw} ilike '%NATURAL OAT%' then 'Natural Oat'
+     --  when ${product_description_raw} ilike '%NATURAL GREY%' then 'Natural Grey'
+     --  when ${product_description_raw} ilike '%STORMY%' then 'Stormy Grey'
+     --  when ${product_description_raw} ilike '%SOFT LILAC%' then 'Soft Lilac'
+     --  when ${product_description_raw} ilike '%MORNING%' then 'Morning Mist'
+     --  when ${product_description_raw} ilike '%DEEP PURPLE%' then 'Deep Purple'
+     --  when ${product_description_raw} ilike '%CLOUD WHITE%' then 'Cloud White'
+     --  when ${product_description_raw} ilike '%BLUSH PINK%' then 'Blush Pink'
+     --  when ${product_description_raw} ilike '%DUSKY NAVY%' then 'Dusky Navy'
+     --  when ${product_description_raw} ilike '%MISTY BLUE%' then 'Misty Blue'
+     --  else null end
+     ;; }
 
   dimension_group: created_ts {
     hidden: yes
@@ -504,10 +503,24 @@ view: item {
     label: " Product Size"
     description:  "Size of product from Netsuite (Twin, Full/ Full XL / Queen, Small, etc.). Source: looker calculation"
     type: string
+    order_by_field: size_order
     sql: case when ${TABLE}.size = 'NA' OR ${TABLE}.size is null then 'OTHER'
               when ${product_description_raw} ilike '%SPLIT KING%' then 'SPLIT KING'
               else ${TABLE}.size end ;; }
 
+  dimension: size_order {
+    hidden:  yes
+    case: {
+      when: {sql: ${TABLE}.size = 'Twin';; label: "1"}
+      when: {sql: ${TABLE}.size = 'Twin XL';; label: "2"}
+      when: {sql: ${TABLE}.size = 'Full';; label: "3"}
+      when: {sql: ${TABLE}.size = 'Queen';; label: "4"}
+      when: {sql: ${TABLE}.size = 'King';; label: "5"}
+      when: {sql: ${TABLE}.size = 'Cal King';; label: "6"}
+      else: "7"
+
+    }
+  }
 
   dimension: sku_id {
     label: "SKU ID"
@@ -625,20 +638,28 @@ view: item {
         --Bedding--
         when ${sku_clean} = '10-38-13050' then 'Weighted Blanket'
         when ${sku_clean} in ('10-38-13025','10-38-13030','10-38-13020','10-38-13010','10-38-13011','10-38-13015','10-38-13005','10-38-13016') then 'Duvet'
-
-  --      when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
-        when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891','10-31-12896') then 'Harmony Pillow'
-        when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
-        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
         when ${sku_clean} in ('10-38-22823','10-38-12850','10-38-12793','10-38-12809','10-38-12786','10-38-12849','10-38-12823',
           '10-38-12816','10-38-12779','10-38-12790','10-38-12789','10-38-12787','10-38-12788','10-38-12848','10-38-12830','10-38-12847','10-38-12762') then 'Purple Sheets'
+        when ${sku_clean} in ('10-38-23000', '10-38-23001', '10-38-23002', '10-38-23003', '10-38-23004', '10-38-23005', '10-38-23006', '10-38-23007', '10-38-23008', '10-38-23009',
+          '10-38-23010', '10-38-23011', '10-38-23012', '10-38-23013', '10-38-23014', '10-38-23015', '10-38-23016', '10-38-23017', '10-38-23018', '10-38-23019', '10-38-23020',
+          '10-38-23021', '10-38-23022', '10-38-23023', '10-38-23024', '10-38-23025', '10-38-23026', '10-38-23027') then 'Complete Comfort Sheets'
         when ${sku_clean} in ('10-38-22846','10-38-22856','10-38-22851','10-38-22836','10-38-22841','10-38-22831','10-38-22848','10-38-22858','10-38-22853','10-38-22838',
           '10-38-22843','10-38-22833','10-38-22847','10-38-22857','10-38-22852','10-38-22837','10-38-22842','10-38-22832','10-38-22849','10-38-22859','10-38-22854','10-38-22839',
           '10-38-22844','10-38-22834','10-38-22845','10-38-22855','10-38-22850','10-38-22835','10-38-22840','10-38-22830') then 'SoftStretch Sheets'
+        when ${sku_clean} in ('10-38-23030', '10-38-23031', '10-38-23032', '10-38-23034', '10-38-23035', '10-38-23036', '10-38-23037', '10-38-23039') then 'Complete Comfort Pillowcase'
         when ${sku_clean} in ('10-38-22870','10-38-22864','10-38-22871','10-38-22865','10-38-22866','10-38-22860','10-38-22869','10-38-22863','10-38-22867','10-38-22861',
           '10-38-22868','10-38-22862') then 'SoftStretch Pillowcase'
         when ${sku_clean} in ('10-38-12717','10-38-12748','10-38-12755','10-38-12694','10-38-12700','10-38-12731','10-38-12724','10-38-13919','10-38-13731',
           '10-38-13748','10-38-13900','10-38-13917','10-38-13918','10-38-13924','10-38-13994') then 'Protector'
+        when ${sku_clean} in ('10-38-13051', '10-38-13052', '10-38-13053', '10-38-13054', '10-38-13055') then 'Bearaby'
+
+        --Pillow--
+        when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891','10-31-12896') then 'Harmony Pillow'
+        when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
+        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
+        when ${sku_clean} in ('10-31-12919', '10-31-12920', '10-31-12923', '10-31-12924') then 'Twincloud Pillow'
+        when ${sku_clean} in ('10-31-12921', '10-31-12922') then 'Cloud Pillow'
+    --    when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
 
         --Cushions--
         when ${sku_clean} in ('10-41-12585','10-41-12378','10-41-12582','10-41-12540','10-41-12574','10-41-12583','10-41-12572','10-41-12496',
@@ -711,20 +732,28 @@ view: item {
         --Bedding--
         when ${sku_clean} = '10-38-13050' then 'Weighted Blanket'
         when ${sku_clean} in ('10-38-13025','10-38-13030','10-38-13020','10-38-13010','10-38-13011','10-38-13015','10-38-13005','10-38-13016') then 'Duvet'
-
-    --    when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
-        when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891','10-31-12896') then 'Harmony Pillow'
-        when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
-        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
         when ${sku_clean} in ('10-38-22823','10-38-12850','10-38-12793','10-38-12809','10-38-12786','10-38-12849','10-38-12823',
           '10-38-12816','10-38-12779','10-38-12790','10-38-12789','10-38-12787','10-38-12788','10-38-12848','10-38-12830','10-38-12847','10-38-12762') then 'Purple Sheets'
         when ${sku_clean} in ('10-38-22846','10-38-22856','10-38-22851','10-38-22836','10-38-22841','10-38-22831','10-38-22848','10-38-22858','10-38-22853','10-38-22838',
           '10-38-22843','10-38-22833','10-38-22847','10-38-22857','10-38-22852','10-38-22837','10-38-22842','10-38-22832','10-38-22849','10-38-22859','10-38-22854','10-38-22839',
           '10-38-22844','10-38-22834','10-38-22845','10-38-22855','10-38-22850','10-38-22835','10-38-22840','10-38-22830') then 'SoftStretch Sheets'
+        when ${sku_clean} in ('10-38-23000', '10-38-23001', '10-38-23002', '10-38-23003', '10-38-23004', '10-38-23005', '10-38-23006', '10-38-23007', '10-38-23008', '10-38-23009',
+          '10-38-23010', '10-38-23011', '10-38-23012', '10-38-23013', '10-38-23014', '10-38-23015', '10-38-23016', '10-38-23017', '10-38-23018', '10-38-23019', '10-38-23020',
+          '10-38-23021', '10-38-23022', '10-38-23023', '10-38-23024', '10-38-23025', '10-38-23026', '10-38-23027') then 'Complete Comfort Sheets'
         when ${sku_clean} in ('10-38-22870','10-38-22864','10-38-22871','10-38-22865','10-38-22866','10-38-22860','10-38-22869','10-38-22863','10-38-22867','10-38-22861',
           '10-38-22868','10-38-22862') then 'SoftStretch Pillowcase'
+        when ${sku_clean} in ('10-38-23030', '10-38-23031', '10-38-23032', '10-38-23034', '10-38-23035', '10-38-23036', '10-38-23037', '10-38-23039') then 'Complete Comfort Pillowcase'
         when ${sku_clean} in ('10-38-12717','10-38-12748','10-38-12755','10-38-12694','10-38-12700','10-38-12731','10-38-12724','10-38-13919','10-38-13731',
           '10-38-13748','10-38-13900','10-38-13917','10-38-13918','10-38-13924','10-38-13994') then 'Protector'
+        when ${sku_clean} in ('10-38-13051', '10-38-13052', '10-38-13053', '10-38-13054', '10-38-13055') then 'Bearaby'
+
+        --Pillow--
+        when ${sku_clean} in ('10-31-12890','10-31-12895','10-31-12891','10-31-12896') then 'Harmony Pillow'
+        when ${sku_clean} in ('10-31-12860','10-31-12857','10-31-12862') then 'Plush Pillow'
+        when ${sku_clean} in ('10-31-12855','10-31-12854','10-31-12863') then 'Purple Pillow'
+        when ${sku_clean} in ('10-31-12919', '10-31-12920', '10-31-12923', '10-31-12924') then 'Twincloud Pillow'
+        when ${sku_clean} in ('10-31-12921', '10-31-12922') then 'Cloud Pillow'
+    --    when ${sku_clean} = '10-31-12863' then 'Pillow Booster'
 
         --Cushions--
         when ${sku_clean} in ('10-41-12585','10-41-12378') then 'Back Cushion'

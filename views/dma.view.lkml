@@ -45,100 +45,119 @@ view: dma {
     group_label: "Advanced"
     label: "MFRM DMA?"
     description: "Locations of Mattress Firm Stores. Source: looker.calculation"
-    sql: ${TABLE}.dma_name in ('Abilene-Sweetwater, TX','Atlanta, GA','Austin, TX','Bakersfield, CA','Baltimore, MD','Beaumont-Port Arthur, TX','Bend, OR','Boise, ID','Boston, MA-Manchester, NH','Bowling Green, KY,Kentucky','Buffalo, NY','Champaign & Springfield-Decatur,IL','Charlotte, NC','Charlottesville, VA','Chattanooga, TN','Chicago, IL','Chico-Redding, CA','Cincinnati, OH','Cleveland-Akron (Canton), OH','Colorado Springs-Pueblo, CO','Columbus, OH','Dallas-Ft. Worth, TX','Denver, CO','Detroit, MI','Erie, PA','Eugene, OR','Flint-Saginaw-Bay City, MI','Fresno-Visalia, CA','Ft. Myers-Naples, FL','Ft. Smith-Fayetteville-Springdale-Rogers, AR','Ft. Wayne, IN','Green Bay-Appleton, WI','Greensboro-High Point-Winston Salem, NC','Greenville-Spartanburg, SC-Asheville, NC-Anderson, SC','Harrisburg-Lancaster-Lebanon-York, PA','Harrisonburg, VA','Hartford & New Haven, CT','Houston, TX','Indianapolis, IN','Jackson, TN','Jacksonville, FL','Jonesboro, AR','Kansas City, MO','Knoxville, TN','La Crosse-Eau Claire, WI','Lafayette, IN','Lincoln & Hastings-Kearney, NE','Los Angeles, CA','Lubbock, TX','Medford-Klamath Falls, OR','Memphis, TN','Miami-Ft. Lauderdale, FL','Milwaukee, WI','Minneapolis-St. Paul, MN','Monterey-Salinas, CA','Nashville, TN','New York, NY','Odessa-Midland, TX','Oklahoma City, OK','Omaha, NE','Orlando-Daytona Beach-Melbourne, FL','Palm Springs, CA','Peoria-Bloomington, IL','Philadelphia, PA','Phoenix, AZ','Portland, OR','Portland-Auburn, ME','Providence, RI-New Bedford, MA','Raleigh-Durham (Fayetteville), NC','Reno, NV','Richmond-Petersburg, VA','Rochester, MN-Mason City, IA-Austin, MN','Sacramento-Stockton-Modesto, CA','Salt Lake City, UT','San Angelo, TX','San Antonio, TX','San Diego, CA','San Francisco-Oakland-San Jose, CA','Seattle-Tacoma, WA','Sherman, TX-Ada, OK','South Bend-Elkhart, IN','Spokane, WA','Springfield, MO','St. Joseph, MO','Tampa-St Petersburg (Sarasota), FL','Terre Haute, IN','Toledo, OH','Topeka, KS','Tyler-Longview(Lufkin & Nacogdoches), TX','Waco-Temple-Bryan, TX','Washington, DC (Hagerstown, MD)','Wausau-Rhinelander, WI','West Palm Beach-Ft. Pierce, FL','Wichita Falls, TX & Lawton, OK','Wilkes Barre-Scranton, PA','Yakima-Pasco-Richland-Kennewick, WA','Youngstown, OH') ;;
+    sql: ${TABLE}.dma_name in ('Abilene-Sweetwater, TX','Atlanta, GA','Austin, TX','Bakersfield, CA','Baltimore, MD',
+      'Beaumont-Port Arthur, TX','Bend, OR','Boise, ID','Boston, MA-Manchester, NH','Bowling Green, KY,Kentucky','Buffalo, NY',
+      'Champaign & Springfield-Decatur,IL','Charlotte, NC','Charlottesville, VA','Chattanooga, TN','Chicago, IL',
+      'Chico-Redding, CA','Cincinnati, OH','Cleveland-Akron (Canton), OH','Colorado Springs-Pueblo, CO','Columbus, OH',
+      'Dallas-Ft. Worth, TX','Denver, CO','Detroit, MI','Erie, PA','Eugene, OR','Flint-Saginaw-Bay City, MI','Fresno-Visalia, CA',
+      'Ft. Myers-Naples, FL','Ft. Smith-Fayetteville-Springdale-Rogers, AR','Ft. Wayne, IN','Green Bay-Appleton, WI',
+      'Greensboro-High Point-Winston Salem, NC','Greenville-Spartanburg, SC-Asheville, NC-Anderson, SC',
+      'Harrisburg-Lancaster-Lebanon-York, PA','Harrisonburg, VA','Hartford & New Haven, CT','Houston, TX','Indianapolis, IN',
+      'Jackson, TN','Jacksonville, FL','Jonesboro, AR','Kansas City, MO','Knoxville, TN','La Crosse-Eau Claire, WI',
+      'Lafayette, IN','Lincoln & Hastings-Kearney, NE','Los Angeles, CA','Lubbock, TX','Medford-Klamath Falls, OR','Memphis, TN',
+      'Miami-Ft. Lauderdale, FL','Milwaukee, WI','Minneapolis-St. Paul, MN','Monterey-Salinas, CA','Nashville, TN','New York, NY',
+      'Odessa-Midland, TX','Oklahoma City, OK','Omaha, NE','Orlando-Daytona Beach-Melbourne, FL','Palm Springs, CA',
+      'Peoria-Bloomington, IL','Philadelphia, PA','Phoenix, AZ','Portland, OR','Portland-Auburn, ME',
+      'Providence, RI-New Bedford, MA','Raleigh-Durham (Fayetteville), NC','Reno, NV','Richmond-Petersburg, VA',
+      'Rochester, MN-Mason City, IA-Austin, MN','Sacramento-Stockton-Modesto, CA','Salt Lake City, UT','San Angelo, TX',
+      'San Antonio, TX','San Diego, CA','San Francisco-Oakland-San Jose, CA','Seattle-Tacoma, WA','Sherman, TX-Ada, OK',
+      'South Bend-Elkhart, IN','Spokane, WA','Springfield, MO','St. Joseph, MO','Tampa-St Petersburg (Sarasota), FL',
+      'Terre Haute, IN','Toledo, OH','Topeka, KS','Tyler-Longview(Lufkin & Nacogdoches), TX','Waco-Temple-Bryan, TX',
+      'Washington, DC (Hagerstown, MD)','Wausau-Rhinelander, WI','West Palm Beach-Ft. Pierce, FL',
+      'Wichita Falls, TX & Lawton, OK','Wilkes Barre-Scranton, PA','Yakima-Pasco-Richland-Kennewick, WA','Youngstown, OH') ;;
   }
 
   dimension: geo_condition {
     hidden: no
     label: "Assigned condition"
     view_label: "Geography"
-    description: "Condition grouping for various treatments in Q4 geo-holdout test. Source: looker.calculation"
+    description: "Tweaked condition grouping for various treatments in 2019 Q4 geo-holdout test. Source: looker.calculation"
     group_label: "Geo-holdout test"
     type: string
-    case: {
-        when: {
-          sql: ${dma} in (514,554,642,675,678,743,751,760,765,839) ;;
-          label: "1"
-        }
-        when: {
-          sql: ${dma} in (504,516,557,570,598,616,619,638,773,800,810) ;;
-          label: "2"
-        }
-        when: {
-          sql: ${dma} in (506,529,551,600,606,609,611,691,752,767) ;;
-          label: "3"
-        }
-        when: {
-          sql: ${dma} in (503,524,563,627,635,644,648,744,821,868) ;;
-          label: "4"
-        }
-        when: {
-          sql: ${dma} in (511,522,526,533,566,588,647,652,656,698,736) ;;
-          label: "5"
-        }
-        when: {
-          sql: ${dma} in (509,537,539,550,555,560,571,631,717,881) ;;
-          label: "6"
-        }
-        when: {
-          sql: ${dma} in (520,547,556,558,612,624,673,764,820) ;;
-          label: "7"
-        }
-        when: {
-          sql: ${dma} in (501,515,519,530,536,565,686,755,789,804) ;;
-          label: "8"
-        }
-        when: {
-          sql: ${dma} in (510,521,528,543,581,625,634,659,679,754,762,798) ;;
-          label: "9"
-        }
-        when: {
-          sql: ${dma} in (534,542,545,575,597,640,650,662,711,746,801) ;;
-          label: "10"
-        }
-        when: {
-          sql: ${dma} in (512,523,532,574,633,658,702,749,756,862) ;;
-          label: "11"
-        }
-        when: {
-          sql: ${dma} in (507,567,582,605,613,669,693,725,771,828) ;;
-          label: "12"
-        }
-        when: {
-          sql: ${dma} in (502,518,548,639,671,682,709,758,803,813) ;;
-          label: "13"
-        }
-        when: {
-          sql: ${dma} in (513,559,583,617,623,632,649,676,705,759,866) ;;
-          label: "14"
-        }
-        when: {
-          sql: ${dma} in (505,517,525,531,546,630,651,692,716,802) ;;
-          label: "15"
-        }
-        when: {
-          sql: ${dma} in (576,577,592,618,622,637,641,670,710,737,766) ;;
-          label: "16"
-        }
-        when: {
-          sql: ${dma} in (508,544,564,584,603,628,643,718,724,745,753) ;;
-          label: "17"
-        }
-        when: {
-          sql: ${dma} in (535,541,569,602,610,657,722,734,740,757,790) ;;
-          label: "18"
-        }
-        when: {
-          sql: ${dma} in (500,527,540,549,553,561,573,604,687,819) ;;
-          label: "19"
-        }
-        when: {
-          sql: ${dma} in (538,552,596,626,636,661,747,770,807,811,825,855) ;;
-          label: "OUTLIER"
-        }
+     case: {
 
-        else: "OTHER"
-    }
+      when: {
+        sql: ${dma} in (514,554,642,675,678,743,760,765,839) ;;
+        label: "1"
+      }
+      when: {
+        sql: ${dma} in (516,557,570,598,616,619,638,773,800,810) ;;
+        label: "2"
+      }
+      when: {
+        sql: ${dma} in (506,529,551,600,606,609,611,691,752,767) ;;
+        label: "3"
+      }
+      when: {
+        sql: ${dma} in (503,524,563,627,644,744) ;;
+        label: "4"
+      }
+      when: {
+        sql: ${dma} in (522,526,533,566,588,647,652,656,698,736) ;;
+        label: "5"
+      }
+      when: {
+        sql: ${dma} in (509,537,539,550,555,560,571,631,717,881) ;;
+        label: "6"
+      }
+      when: {
+        sql: ${dma} in (520,547,558,612,624,673,764) ;;
+        label: "7"
+      }
+      when: {
+        sql: ${dma} in (501,519,530,536,565,686,755,789,804) ;;
+        label: "8"
+      }
+      when: {
+        sql: ${dma} in (510,528,543,581,634,659,679,754,762,798) ;;
+        label: "9"
+      }
+      when: {
+        sql: ${dma} in (534,542,575,597,640,650,662,711,746,801) ;;
+        label: "10"
+      }
+      when: {
+        sql: ${dma} in (512,523,532,574,633,658,702,749,756,862) ;;
+        label: "11"
+      }
+      when: {
+        sql: ${dma} in (507,567,582,605,613,669,693,725,771,828) ;;
+        label: "12"
+      }
+      when: {
+        sql: ${dma} in (502,518,548,671,682,709,758,803,813) ;;
+        label: "13"
+      }
+      when: {
+        sql: ${dma} in (559,583,623,632,649,676,705,759,866) ;;
+        label: "14"
+      }
+      when: {
+        sql: ${dma} in (505,517,525,531,546,630,651,692,716,802) ;;
+        label: "15"
+      }
+      when: {
+        sql: ${dma} in (576,592,618,622,637,641,670,710,737,766) ;;
+        label: "16"
+      }
+      when: {
+        sql: ${dma} in (508,544,564,584,603,628,643,718,724,745) ;;
+        label: "17"
+      }
+      when: {
+        sql: ${dma} in (541,569,610,657,722,734,740,757,790) ;;
+        label: "18"
+      }
+      when: {
+        sql: ${dma} in (500,527,540,549,553,561,604,687) ;;
+        label: "19"
+      }
+      when: {
+        sql: ${dma} in (538,552,596,626,636,661,747,770,807,811,825,855) ;;
+        label: "OUTLIER"
+      }
+
+      else: "OTHER"}
   }
 
   dimension: extra_tv {

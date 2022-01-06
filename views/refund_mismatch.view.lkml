@@ -1,6 +1,12 @@
 view: refund_mismatch {
   sql_table_name: CUSTOMER_CARE.V_REFUND_MISMATCH ;;
 
+
+  dimension: tax_discrepancy {
+    type: string
+    sql: ${TABLE}."TAX_DISCREPANCY" ;;
+  }
+
   dimension: amount_diff {
     type: number
     value_format: "$0.00"

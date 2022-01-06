@@ -198,6 +198,7 @@ select zz.new_hep_sku
     , max(zz.sfg_on_hand_psouth) as sfg_on_hand_psouth
     , case when sum(zz.unfulfilled_units_pwest) is null then 0 else sum(zz.unfulfilled_units_pwest) end as fg_unfulfilled_pwest
     , case when sum(zz.unfulfilled_units_psouth) is null then 0 else sum(zz.unfulfilled_units_psouth) end as fg_unfulfilled_psouth
+    , (fg_unfulfilled_pwest + fg_unfulfilled_psouth) as fg_unfulfilled
     , case when sum(zz.total_units_new) is null then 0 else sum(zz.total_units_new) end as total_new_units
     , case when sum(zz.total_units_new_pwest) is null then 0 else sum(zz.total_units_new_pwest) end as total_new_units_pwest
     , case when sum(zz.total_units_new_psouth) is null then 0 else sum(zz.total_units_new_psouth) end as total_new_units_psouth
@@ -222,6 +223,7 @@ select zz.new_hep_sku
        else ((zz."14_DAY_FORECAST_PSOUTH"+zz.unfulfilled_units_psouth)-zz.fg_on_hand_psouth)
      end as fg_beds_needed_psouth
     , zz.forecast_version
+    , (fg_beds_needed_pwest+fg_beds_needed_psouth) as fg_beds_needed
 from (
   select aa.new_hep_sku
       , aa.finished_good_sku
@@ -253,9 +255,8 @@ from (
   left join ee on ee.sku_id = aa.finished_good_sku
   left join ff on ff.sku_id = aa.finished_good_sku
 ) zz
-where forecast_version ='Current S&OP'
-group by 1,2,3,4,23, 24,25,26,27;;
-  }
+--where forecast_version ='Working'
+group by 1,2,3,4,24,25,26,27, 28;;  }
 
   dimension: hep_sku {
     label: "SFG SKU"
@@ -359,6 +360,13 @@ group by 1,2,3,4,23, 24,25,26,27;;
     sql:  ${TABLE}."FG_UNFULFILLED_PSOUTH" ;;
   }
 
+  measure: quantity_remaining {
+    label: "Unfulfilled"
+    description: "source; sales.sales_order_line"
+    type: sum
+    sql:  ${TABLE}."FG_UNFULFILLED" ;;
+  }
+
   measure: total_new_units {
     label: "Total Units Forecasted"
     description: "Total Number of Units Forecasted for the next 8 Weeks; source: production.inventory"
@@ -455,6 +463,13 @@ group by 1,2,3,4,23, 24,25,26,27;;
     description: "source; sales.sales_order_line"
     type: sum
     sql:  ${TABLE}.FG_BEDS_NEEDED_PSOUTH ;;
+  }
+
+  measure: fg_beds_needed {
+    label: "FG Beds Needed"
+    description: "source; sales.sales_order_line"
+    type: sum
+    sql:  ${TABLE}.FG_BEDS_NEEDED ;;
   }
 
 }

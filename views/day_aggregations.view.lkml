@@ -17,7 +17,13 @@ view: day_aggregations_dtc_sales {
       #filters: { field: item.merchandise value: "No" }
       #filters: { field: item.finished_good_flg value: "Yes" }
       #filters: { field: item.modified value: "Yes" }
-      filters: { field: item.product_description value: "-PURPLE SQUISHY MAILER SAMPLE" }
+      filters: { field: item.product_description value: "-3X3 SAMPLE-MAILER" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-10 PK" }
+      filters: { field: item.product_description value: "-SQUISHY MINI-BED" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-50 PK" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-25 PACK" }
+      filters: { field: item.product_description value: "-PURPLE SQUISHIES-2 PK" }
+      filters: { field: item.product_description value: "-MINI BED SQUISHY SAMPLE" }
       filters: { field: item.product_description value: "-SQUISHY 2.0" }
     }
   }
@@ -567,7 +573,7 @@ view: day_aggregations {
       left join ${day_aggregations_scc.SQL_TABLE_NAME} scc on scc.created_date::date = d.date
       left join ${day_aggregations_wholesale_fulfilled.SQL_TABLE_NAME} wholesale_fulfilled on wholesale_fulfilled.fulfilled_date::date = d.date
       left join ${whlsl_roa.SQL_TABLE_NAME} whlsl_roa on whlsl_roa.roa_date::date = d.date
-      where date::date >= '2017-01-01' and date::date < '2022-01-01' ;;
+      where date::date >= '2017-01-01' and date::date < '2023-01-01' ;;
 
     datagroup_trigger: pdt_refresh_6am
     publish_as_db_view: yes
@@ -591,21 +597,21 @@ view: day_aggregations {
   ##Scott Clark, 1/8/21: Deleted week of year.
     label: "Created"
     type: time
-    timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [hour_of_day, date, day_of_week, day_of_week_index, day_of_month, month_num, day_of_year, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: date
     sql: to_timestamp_ntz(${TABLE}.date) ;; }
 
-  dimension: date_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    group_label: "Created Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
-              when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
-              else date_part(weekofyear,${date_date::date}) end ;;
-  }
+  # dimension: date_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   group_label: "Created Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
+  #             when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
+  #             else date_part(weekofyear,${date_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -687,13 +693,21 @@ view: day_aggregations {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-     sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END;; }
+    # sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
+    #         WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
+    #         WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #         WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #         WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #         WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #       ELSE 'Other' END;;
+    sql:  CASE WHEN ${date_week_of_year} = 1  AND ${date_year} = 2022 THEN 'Current Week'
+              WHEN ${date_date} >= '2021-12-27' AND ${date_date} <= '2022-01-02' THEN 'Last Week'
+              WHEN ${date_week_of_year} = 51 AND ${date_year} = 2021 THEN 'Two Weeks Ago'
+              WHEN ${date_week_of_year} = 1  AND ${date_year} = 2021 THEN 'Current Week LY'
+              WHEN ${date_week_of_year} = 52 AND ${date_year} = 2020 THEN 'Last Week LY'
+              WHEN ${date_week_of_year} = 51 AND ${date_year} = 2020 THEN 'Two Weeks Ago LY'
+              ELSE 'Other' END;;
+  }
 
   dimension_group: current {
     label: "Current"

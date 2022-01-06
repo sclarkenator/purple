@@ -146,7 +146,7 @@ view: cc_traffic {
 
   dimension_group: merged {
     type: time
-    timeframes: [date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day]
+    timeframes: [date, day_of_week, day_of_month, day_of_year, week, week_of_year, month, month_name, quarter, quarter_of_year, year, hour_of_day, minute30]
     sql: ${TABLE}.merged  ;;
   }
 

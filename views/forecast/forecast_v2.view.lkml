@@ -26,20 +26,20 @@ view: forecast_v2 {
   dimension_group: date {
     label: "Forecast"
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}.forecast ;; }
 
-  dimension: date_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Forecast Week of Year"
-    description: "2021 adjusted week of year number"
-    sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
-              when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
-              else date_part(weekofyear,${date_date::date}) end ;;
-  }
+  # dimension: date_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Forecast Week of Year"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${date_date::date} >= '2020-12-28' and ${date_date::date} <= '2021-01-03' then 1
+  #             when ${date_year::number}=2021 then date_part(weekofyear,${date_date::date}) + 1
+  #             else date_part(weekofyear,${date_date::date}) end ;;
+  # }
 
   dimension: before_today{
     group_label: "Forecast Date"
@@ -97,13 +97,21 @@ view: forecast_v2 {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year"
     type: string
-    sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
-        WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
-        WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-        WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-        WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-        WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-       ELSE 'Other' END ;; }
+    # sql:  CASE WHEN ${date_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${date_year} = date_part (year,current_date) THEN 'Current Week'
+    #     WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) THEN 'Last Week'
+    #     WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #     WHEN ${date_week_of_year} = date_part (weekofyear,current_date) +1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #     WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #     WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #   ELSE 'Other' END ;;
+    sql:  CASE WHEN ${date_week_of_year} = 1  AND ${date_year} = 2022 THEN 'Current Week'
+    WHEN ${date_date} >= '2021-12-27' AND ${date_date} <= '2022-01-02' THEN 'Last Week'
+    WHEN ${date_week_of_year} = 51 AND ${date_year} = 2021 THEN 'Two Weeks Ago'
+    WHEN ${date_week_of_year} = 1  AND ${date_year} = 2021 THEN 'Current Week LY'
+    WHEN ${date_week_of_year} = 52 AND ${date_year} = 2020 THEN 'Last Week LY'
+    WHEN ${date_week_of_year} = 51 AND ${date_year} = 2020 THEN 'Two Weeks Ago LY'
+    ELSE 'Other' END;;
+  }
 
 
   dimension: sku_id {
@@ -426,13 +434,13 @@ view: forecast_v2 {
     label: "Amazon Units"
     type:  sum
     value_format: "#,##0"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_units_dimension} else 0 end ;;}
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA','Amazon') then ${total_units_dimension} else 0 end ;;}
 
   measure: amazon_amount {
     label: "Amazon Amount"
     type:  sum
     value_format: "$#,##0"
-    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA') then ${total_amount_dimension} else 0 end ;;}
+    sql: case when ${account} in ('AMAZON-US', 'AMAZON-CA','Amazon') then ${total_amount_dimension} else 0 end ;;}
 
   measure: retail_units {
     type:  sum

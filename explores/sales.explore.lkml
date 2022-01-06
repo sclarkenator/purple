@@ -205,7 +205,7 @@ include: "/dashboards/**/*.dashboard"
     join: NETSUITE_cancelled_reason {
       view_label: "Cancellations"
       type: left_outer
-      sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.shopify_cancel_reason_id} ;;
+      sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.cancel_reason_id} ;;
       relationship: many_to_one}
     join: order_flag {
       view_label: "Sales Order"
@@ -221,6 +221,11 @@ include: "/dashboards/**/*.dashboard"
       view_label: "Fulfillment"
       type: full_outer
       sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+      relationship: many_to_one}
+    join: fedex_fulfillment_date{
+      view_label: "Fulfillment"
+      type: full_outer
+      sql_on: ${fulfillment.fulfillment_id} = ${fedex_fulfillment_date.fulfillment_id} ;;
       relationship: many_to_one}
     join: ups_tracking {
       view_label: "Fulfillment"
@@ -420,6 +425,12 @@ include: "/dashboards/**/*.dashboard"
       type: full_outer
       relationship: many_to_one
       sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+    }
+    join: ryder_summary_data {
+      view_label: "Fulfillment"
+      type: full_outer
+      relationship: many_to_one
+      sql_on: ${ryder_summary_data.order_id} =  ${sales_order.order_id};;
     }
     join: optimizely_experiment_lookup {
       view_label: "Sales Order"
@@ -963,7 +974,8 @@ include: "/dashboards/**/*.dashboard"
   explore: wholesale_open_doors {hidden:yes}
   explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-  explore: sales_targets_dim {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+  explore: sales_targets_dim {#hidden:  yes
+    label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
   explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
   explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
@@ -1089,6 +1101,7 @@ explore: sessions_in_tests {hidden: yes}
     sql_on: ${sla.sku_id} = ${item.sku_id} ;;
     relationship: one_to_one}}
   explore: v_sla {hidden: yes}
+  explore: v_sales_flash {hidden: yes}
   explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}
   explore: shop_comm_test {hidden: yes}

@@ -55,6 +55,12 @@ dimension: open_date  {
               WHEN ${store_id} = 'AZ-03' then '2021-09-12'
               WHEN ${store_id} = 'TX-04' then '2021-09-24'
               WHEN ${store_id} = 'GA-01' then '2021-09-17'
+              WHEN ${store_id} = 'WA-01' then '2021-09-30'
+              WHEN ${store_id} = 'DE-01' then '2021-10-29'
+              WHEN ${store_id} = 'TX-03' then '2021-10-29'
+              WHEN ${store_id} = 'NJ-02' then '2021-11-06'
+              WHEN ${store_id} = 'IL-01' then '2021-11-12'
+              WHEN ${store_id} = 'PA-01' then '2021-11-19'
               ELSE ${TABLE}.mindate END;;
   }
 

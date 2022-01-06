@@ -161,6 +161,7 @@ view: customer_table {
       when: { sql: lower(${TABLE}.companyname) like 'gardner%white%' ;; label: "Gardner White Furniture" }
       when: { sql: lower(${TABLE}.companyname) like 'ivan%smith%' ;; label: "Ivan Smith Furniture" }
       when: { sql: lower(${TABLE}.companyname) like '%cardi%department%' ;; label: "Cardi's Department Store" }
+      when: { sql: lower(${TABLE}.companyname) like '%ashley%' ;; label: "Ashley Furniture" }
 
 
       #when: { sql: lower(${TABLE}.companyname) like 'sam%club%' ;; label: "Sam's Club" }

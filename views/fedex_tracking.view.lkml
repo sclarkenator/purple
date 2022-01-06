@@ -1,18 +1,13 @@
 view: fedex_tracking {
-  sql_table_name: analytics.shipping.fedex_tracking ;;
+  sql_table_name: analytics.shipping.v_fedex_tracking ;;
 
-  dimension: account_number {
-    type: string
-    hidden:  yes
-    sql: ${TABLE}."ACCOUNT_NUMBER" ;;
-  }
 
   dimension: completed {
     type: yesno
     view_label: "Fulfillment"
     group_label: "FedEx Details"
     description: "Source: fedex.fedex_tracking"
-    sql: ${TABLE}."COMPLETED" ;;
+    sql: ${TABLE}."FEDEX_STATUS_CODE"='DL' ;;
   }
 
   dimension: fedex_status_code {

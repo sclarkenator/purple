@@ -12,11 +12,6 @@ view: headcount {
         ,ltrim(rtrim(a.team_type)) as team_type
         ,case
             when employee_type is null and team_name is null then 'Other'
-            //when lower(a.name) like '%analy%' then 'Non-Agent'
-            // when a.name like '%API%' then 'Non-Agent'
-            //when a.name like 'Administrator%' then 'Non-Agent'
-            //when t.agent_name is null then 'Non-Agent'
-            //when t.incontact_id in (2612421, 7173618, 2612594) then 'Non-Agent'
             when t.team_name is not null then ltrim(rtrim(t.team_name))
             end as team_name
         ,to_boolean(trim(rtrim(a.supervisor))) as is_supervisor
@@ -26,6 +21,17 @@ view: headcount {
         ,a.hired::date as hire_date
         ,a.terminated::date as term_date
         ,a.created::date as created_date
+        ,ifnull(a.hired, a.created)::date as start_date
+        ,ifnull(a.terminated, a.inactive)::date as end_date
+        ,case when ifnull(a.terminated, a.inactive) is null
+            then datediff(months, ifnull(a.hired, a.created)::date, current_date())
+          end as tenure
+        ,case when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
+          when lower(team_name) in ('administrator administrator') then 'Admin'
+          when team_type is null then 'Other'
+          when a.name in ('Jimmy Drake') then 'Other'
+          when lower(team_type) in ('training', 'sales') then team_type
+          else 'Customer Care' end as team_group
 
       from util.warehouse_date d
 
@@ -38,6 +44,7 @@ view: headcount {
           and d.date between t.start_date::date and t.end_date::date
 
       where d.date between '2019-01-01' and current_date
+        and team_type not ilike 'system%'
     ;;
   }
 
@@ -63,6 +70,7 @@ view: headcount {
 
   dimension_group: date {
     label: "* Headcount" ## Date
+    # hidden: yes
     type: time
     timeframes: [
       raw,
@@ -84,7 +92,7 @@ view: headcount {
   }
 
   dimension_group: end {
-    label: "* End Date"
+    label: "* End"
     description: "Returns lesser value between term  and inactive dates."
     type: time
     timeframes: [
@@ -95,8 +103,7 @@ view: headcount {
       quarter,
       year
     ]
-    sql: case when ${term_date} is null then ${inactive_date}
-      else ${term_date} end ;;
+    sql: ${TABLE}.end_date ;;
   }
 
   dimension: hire_date {
@@ -121,12 +128,29 @@ view: headcount {
     sql: ${TABLE}.is_active ;;
   }
 
+  dimension: is_agent {
+    label: "Is Agent"
+    group_label: "* Flags"
+    description: "Flags whether a team member is a non-lead agent."
+    type: yesno
+    sql: lower(${team_group}) in ('customer care', 'sales')
+      and ${is_supervisor} = false ;;
+  }
+
   dimension: is_retail {
     label: "Is Retail"
     group_label: "* Flags"
     description: "Does agent currently work in a retail location."
     type: yesno
     sql: ${TABLE}.is_retail ;;
+  }
+
+  dimension: is_specialist {
+    label: "Is Specialist"
+    group_label: "* Flags"
+    description: "Flags whether a team member is a non-lead specialist."
+    type: yesno
+    sql: lower(${team_group}) not in ('customer care', 'sales') ;;
   }
 
   dimension: is_supervisor {
@@ -158,11 +182,7 @@ view: headcount {
     group_label: "* Current Grouping"
     description: "The current Team Group for each agent."
     type: string
-    sql: case when lower(${team_type}) in ('admin', 'wfm', 'qa') then 'Admin'
-      when ${team_type} is null then 'Other'
-      when lower(${team_type}) in ('training', 'sales')
-        or ${team_type} is null then ${team_type}
-      else 'Customer Care' end ;;
+    sql: ${TABLE}.team_group ;;
   }
 
   dimension: team_name {
@@ -187,6 +207,22 @@ view: headcount {
     description: "Current team type."
     type: string
     sql: ltrim(rtrim(${TABLE}.team_type)) ;;
+  }
+
+  dimension: tenure {
+    label: "Tenure"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.tenure ;;
+  }
+
+  dimension: tenure_buckets {
+    label: "Tenure Bucket by Month"
+    group_label: "* Tenure Metrics"
+    type: tier
+    style: integer
+    tiers: [0, 4, 7, 10]
+    sql: ${tenure} ;;
   }
 
   dimension: term_date {
@@ -221,10 +257,21 @@ view: headcount {
   ##########################################################################################
   ## MEASURES
 
+  measure: tenure_avg {
+    label: "Tenure Avg"
+    description: "Average tenure in months"
+    type:  average
+    value_format_name: decimal_1
+    sql: ${tenure} ;;
+  }
+
   measure: headcount {
     label: "Headcount"
     type: count_distinct
-    sql: case when ${start_date} > ${date_date} then null
+    sql: case
+      when ${team_name} = 'Jimmy Drake' then null
+      when ${agent_name} = 'Jimmy Drake' then null
+      when ${start_date} > ${date_date} then null
       when ${end_date} is null then ${incontact_id}
       when ${end_date} >= ${date_date} then ${incontact_id} end ;;
     drill_fields: [agent_data*, is_supervisor]
@@ -256,7 +303,7 @@ view: headcount {
   measure: term_count {
     label: "Termed Count"
     type: count_distinct
-    sql: case when ${date_date} = ${end_date} then ${incontact_id} end ;;
+    sql: case when ${date_date} = ifnull(${end_date}, ${term_date}) then ${incontact_id} end ;;
     drill_fields: [agent_data*, end_date, is_supervisor]
     link: {
       label: "View Headcount Detail"

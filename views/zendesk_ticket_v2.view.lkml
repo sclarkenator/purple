@@ -869,7 +869,6 @@ view: zendesk_ticket_v2 {
     description: "Count of tickets"
     type: count
     value_format_name: decimal_0
-    sql: ${TABLE}."TICKET_ID" ;;
   }
 
 

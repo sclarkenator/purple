@@ -165,6 +165,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
       relationship: one_to_one}
+    join: bin_location {
+      type: left_outer
+      view_label: "Inventory"
+      fields: [bin_location.quantity]
+      sql_on: ${bin_location.warehouse_id} = ${warehouse_location.location_id} and ${bin_location.sku} = ${item.sku_id};;
+      relationship:many_to_many}
+
  ##   join: derived_inventory {
 ##      type: left_outer
 ##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
@@ -395,12 +402,12 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${ltol_pitch.actual_product} = ${product.product_id};;
       relationship: one_to_many
     }
-    join: v_dispatch_with_downtime_minutes {
-      view_label: "Dispatch by Date"
-      type: left_outer
-      sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
-      relationship: one_to_many
-    }
+    ##join: v_dispatch_with_downtime_minutes {
+      ##view_label: "Dispatch by Date"
+      ##type: left_outer
+      ##sql_on: ${dispatch.dispatch_id} = ${v_dispatch_with_downtime_minutes.dispatch_id} ;;
+      ##relationship: one_to_many
+    ##}
     join: reason {
       view_label: "Dispatch"
       type: left_outer
@@ -483,6 +490,9 @@ include: "/dashboards/**/*.dashboard"
   explore: v_quality_mrb_cover {hidden: yes label: "Quality MRB Cover" group_label: "L2L"}
   explore: v_quality_mrb_return_bed_qc {hidden: yes label: "Quality MRB Return Bed QC" group_label: "L2L"}
   explore: v_incoming_inspection_form {hidden: yes label: "Incoming Inspection Form" group_label: "L2L"}
+  explore: v_quality_mrb_core_stock_check {hidden: yes label: "Quality MRB Core Stock Check" group_label: "L2L"}
+  explore: v_refurb_pillows_wm {hidden: yes label:"Refurb Pillows WM" group_label: "L2L"}
+  explore: v_waste_management_waste_recycling {hidden:yes label:"Waste Management Waste/Recycling" group_label:"L2L"}
   explore: incoming_inspection_form {
     from:  date_meta
     group_label: "L2L Inspection Form"

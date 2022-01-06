@@ -117,6 +117,42 @@ derived_table: {
     sql: ${TABLE}."NAME" ;;
   }
 
+dimension: hours_to_steady {
+    type: number
+    hidden: yes
+    value_format: "#,##0"
+    sql: case when ${line} = 5 then 5
+              when ${line} = 43 then 2
+              when ${line} = 44 then 3
+              when ${line} = 153 then 1
+         else null end
+         ;; }
+
+
+dimension: startup_hours{
+    type: string
+    hidden: yes
+    sql: case when line = 5 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 11 then 'Startup'
+              when line = 43 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 8 then 'Startup'
+              when line = 44 and ${pitch_start_hour_of_day} >= 7 and ${pitch_start_hour_of_day} <= 9 then 'Startup'
+              when line = 153 and ${pitch_start_hour_of_day} = 7 then 'Startup'
+              else 'Steady State' end
+         ;; }
+
+measure: startup_average{
+    type: average
+    hidden: yes
+    value_format: "#,##0.0"
+    sql: case when ${startup_hours}='Startup'then ${actual_dim} else null end ;;
+    }
+
+measure: steady_state_average{
+  type: average
+  hidden: yes
+  value_format: "#,##0.0"
+  sql: case when ${startup_hours}='Steady State'then ${actual_dim} else null end ;;
+    }
+
   dimension_group: pitch_end {
     hidden: yes
     description: "Pitch Name (Start of Shift, End of Shift, Break, Lunch, etc); Source: l2l.pitch"
@@ -257,7 +293,7 @@ derived_table: {
 
   dimension: cycle_time_dim {
     hidden: yes
-    description: "Dimension Version of the cylce Time; Source l2l.pitch"
+    description: "Dimension Version of the cylce time in seconds; Source l2l.pitch"
     type:number
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
@@ -267,6 +303,13 @@ derived_table: {
     type: sum
     value_format: "0.##"
     sql: ((${planned_production_minutes_dim}-${downtime_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
+  }
+
+  measure: theoretical_max_production_rate{
+    description: "(Planned Production Minutes) * 60 / Cycle Time; Source: Looker Calculation"
+    type: sum
+    value_format: "#,##0"
+    sql: ((${planned_production_minutes_dim})*60/nullif(${cycle_time_dim},0)) ;;
   }
 
   measure: actual {
@@ -284,19 +327,26 @@ derived_table: {
   }
 
   measure: first_pass_yield{
-    label: "FPY"
+    label: "Quality"
     description: "Total # of good parts produced divided by total number of shots"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${actual}+${scrap}) end;;
+    sql: case
+            when ${actual}+${scrap} = 0 then null
+            else div0(${actual},${actual}+${scrap})
+         end;;
   }
 
   measure: throughput_percent{
-    label: "Throughput %"
-    description: "Actual good parts produced divided by pitch demand"
+    label: "Performance"
+    description: "Backing into performance by taking OEE and dividing by (OA * Quality %)"
     type: number
     value_format: "0.0%"
-    sql: case when ${demand} = 0 then null else div0(${actual},${demand}) end;;
+    sql: case
+            when ${operational_availability} = 0 then null
+            when ${cycle_time} = 0 then null
+            else div0(${overall_equipment_effectiveness},(${operational_availability}*${first_pass_yield}))
+         end;;
   }
 
   measure: planned_production_minutes {
@@ -316,6 +366,7 @@ derived_table: {
   measure: cycle_time {
     description: "Source: l2l.pitch"
     type: sum
+    hidden: yes
     value_format: "#,##0"
     sql: ${TABLE}."CYCLE_TIME" ;;
   }
@@ -364,12 +415,16 @@ derived_table: {
 
   measure: overall_equipment_effectiveness {
     label: "OEE"
-    description: "FPY * OA * Throughput %"
+    description: "Pitch Acutal / Theoretical Max Production"
     hidden: no
     type: number
     value_format: "0.0%"
-    sql: ${first_pass_yield}*${throughput_percent}*${operational_availability} ;;
-  }
+    sql: case
+          when ${operational_availability} = 0 or ${operational_availability} is null then null
+          -- when ${cycle_time} = 0 or ${cycle_time} is null then null
+          else div0(${actual},${theoretical_max_production_rate})
+        end;;
+    }
 
   measure: total_operator_count {
     hidden: yes
@@ -403,6 +458,42 @@ derived_table: {
     hidden: yes
     type: count
     drill_fields: [pitch_id, name]
+  }
+
+  measure: target {
+    hidden: yes
+    description: "Target number for Average Shots per Max Machine Per Hour (Set by McKinsy)"
+    type: number
+    sql: case when ${machine.description} = 'Max 2' then 16
+      when ${machine.description} = 'Max 3' then 16
+      when ${machine.description} = 'Max 4' then 18
+      when ${machine.description} = 'Max 5' then 21
+      when ${machine.description} = 'Max 6' then 16
+      when ${machine.description} = 'Max 7' then 20
+      else 0
+      end ;;
+  }
+
+  measure: avgerage_shots {
+    hidden: yes
+    type: number
+    description: "Perfrmance * Taret"
+    value_format: "0.0"
+    sql: ${throughput_percent}*${target} ;;
+  }
+
+  measure: shots_per_hour {
+    description: "Shots/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual},${planned_production_minutes}/60) ;;
+  }
+
+  measure: avg_speed {
+    description: "Actual Shots + Scrap divided by Planned Production Minutes minus Downtime Minutes"
+    type: number
+    value_format: "#,##0"
+    sql: div0(${actual}+${scrap},(${planned_production_minutes}-${downtime_minutes})/60) ;;
   }
 
   }

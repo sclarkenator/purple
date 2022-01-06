@@ -266,7 +266,7 @@ view: sales_order_line {
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
-            THEN dateadd(d,14,${created_date})
+            THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
   }
@@ -346,24 +346,24 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${Due_Date}) ;;
   }
 
-  dimension: SLA_Target_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    hidden:  yes
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "SLA Target Date"
-    description: "2021 adjusted week of year number (SLA)"
-    sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
-              when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
-              else date_part(weekofyear,${SLA_Target_date::date}) end ;;
-  }
+  # dimension: SLA_Target_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   hidden:  yes
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "SLA Target Date"
+  #   description: "2021 adjusted week of year number (SLA)"
+  #   sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
+  #             when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
+  #             else date_part(weekofyear,${SLA_Target_date::date}) end ;;
+  # }
 
   dimension: SLA_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -722,6 +722,7 @@ view: sales_order_line {
     drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
+
   measure:Purple_Qty_eligible_for_SLA{
     label: "Purple Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
@@ -1299,7 +1300,7 @@ view: sales_order_line {
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
@@ -1338,7 +1339,7 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week,day_of_week_index, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
@@ -1354,17 +1355,17 @@ view: sales_order_line {
     sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date::date}),${fulfilled_date::date}) + 1 ;;
   }
 
-  dimension: fulfilled_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "    Fulfilled Date"
-    description: "2021 adjusted week of year number for fulfilled date"
-    sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
-              when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
-              else date_part(weekofyear,${fulfilled_date::date}) end ;;
-  }
+  # dimension: fulfilled_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "    Fulfilled Date"
+  #   description: "2021 adjusted week of year number for fulfilled date"
+  #   sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
+  #             when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
+  #             else date_part(weekofyear,${fulfilled_date::date}) end ;;
+  # }
 
   dimension: fulf_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -1374,6 +1375,46 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
     sql:  case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 2021 else ${fulfilled_year} end   ;;
+  }
+
+  dimension: sla_numerator_d {
+    label: "SLA Numerator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${fulfilled_date} < ${SLA_Target_date} ;;
+  }
+  dimension: due_last_7 {
+    label: "Due Last 7"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${SLA_Target_date} >= dateadd(d,-9,current_date) and ${SLA_Target_date} <= dateadd(d,-2,current_date) ;;
+  }
+  measure: sla_numerator {
+    type: number
+    label: "SLA Numerator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when ${sla_numerator_d} = 'Yes' then ${fulfilled_orders_units} else 0 end ;;
+  }
+  measure: sla_denominator {
+    type: number
+    label: "SLA Denominator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when  ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'Yes' then ${total_units}
+      when ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'No' then ${fulfillment.count}
+      when ${sla_numerator_d} = 'No' and ${due_last_7} = 'Yes' then ${total_units}
+      else 0
+      end ;;
+  }
+  measure: sla_% {
+   type: number
+   label: "SLA %"
+   view_label: "Fulfillment"
+   group_label: "    SLA Percentage"
+  sql: ${sla_numerator}/${sla_denominator}  ;;
   }
 
 
@@ -1570,8 +1611,31 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql: datediff('day',${created_raw}::date,${transmitted_date_raw}::date) ;;
+  }
+
+  measure: order_to_ship_by_days {
+    label: "Order to Ship By (days)"
+    view_label: "Fulfillment"
+    group_label: "Time Between Benchmarks"
+    description: "The average difference between the order date and scheduled ship by date. Source: looker.calculation"
+    drill_fields: [sales_order_line.fulfillment_details]
+    type: average
+    value_format: "0.0"
+    sql: datediff('day',${created_raw}::date,${min_ship_date_raw}::date) ;;
+  }
+
+  measure: ship_by_to_left_purple_days {
+    label: "Ship-by to Left Purple (days)"
+    view_label: "Fulfillment"
+    group_label: "Time Between Benchmarks"
+    description: "The average difference between the scheduled ship-by date and left purple date. Source: looker.calculation"
+    drill_fields: [sales_order_line.fulfillment_details]
+    type: average
+    value_format: "0.0"
+    sql_distinct_key: ${fulfillment.PK} ;;
+    sql: datediff('day',${min_ship_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
 
   measure: order_to_left_purple_days {
@@ -1581,7 +1645,7 @@ view: sales_order_line {
     description: "The average difference between the order date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
@@ -1593,7 +1657,7 @@ view: sales_order_line {
     description: "The average difference between the transmitted date and left purple date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.left_purple_raw}::date) ;;
   }
@@ -1605,7 +1669,7 @@ view: sales_order_line {
     description: "The average difference between the transmitted date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${transmitted_date_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1617,7 +1681,7 @@ view: sales_order_line {
     description: "The average difference between the order date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${created_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1629,7 +1693,7 @@ view: sales_order_line {
     description: "The average difference between the left purple date and in hand date. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: datediff('day',${fulfillment.left_purple_raw}::date,${fulfillment.in_hand_raw}::date) ;;
   }
@@ -1642,7 +1706,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date in hours. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql: timediff('hour',${created_raw},${transmitted_date_raw}) ;;
   }
 
@@ -1654,7 +1718,7 @@ view: sales_order_line {
     description: "The average difference between the order date and transmitted date in hours. Source: looker.calculation"
     drill_fields: [sales_order_line.fulfillment_details]
     type: average
-    value_format: "0.00"
+    value_format: "0.0"
     sql_distinct_key: ${fulfillment.PK} ;;
     sql: timediff('hour',${created_raw},${fulfillment.left_purple_raw}) ;;
   }
@@ -2100,12 +2164,25 @@ view: sales_order_line {
     group_label: " Advanced"
     label: "Order Age (bucket 3)"
     hidden: yes
-    description: "Number of days between today and when order was placed (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
+    description: "Number of days between sales order creation and the date order was fulfilled (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
     Source: netsuite.sales_order"
     type:  tier
     tiers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     style: integer
     sql: datediff(day,${sales_order_line.created_date}, ${sales_order_line.fulfilled_date}) ;;
+  }
+
+  dimension: order_age_bucket_transmitted {
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    label: "Order Age Bucket (Transmitted)"
+    hidden: no
+    description: "Number of days between today and when order was transmitted (1,2,3,4,5,6,7,11,15,21)
+    Source: netsuite.sales_order_line"
+    type:  tier
+    tiers: [1,2,3,4,5,6,7,11,15,21]
+    style: integer
+    sql: datediff(day,${transmitted_date_date}, ${current_date}) ;;
   }
 
   measure: adj_gross_amt {

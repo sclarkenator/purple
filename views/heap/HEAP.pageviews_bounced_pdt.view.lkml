@@ -24,20 +24,20 @@ view: pageviews_bounced_pdt {
       label: "Session Time"
       description: "Time the Session Began"
       type: time
-      timeframes: [date, week, year]
+      timeframes: [date, week, year, week_of_year]
       sql: ${TABLE}.session_time_week ;;
     }
 
-  dimension: session_week_of_year {
-    ## Scott Clark 1/22/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    group_label: "    Session Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${session_date::date} >= '2020-12-28' and ${session_date::date} <= '2021-01-03' then 1
-              when ${session_year::number}=2021 then date_part(weekofyear,${session_date::date}) + 1
-              else date_part(weekofyear,${session_date::date}) end ;;
-  }
+  # dimension: session_week_of_year {
+  #   ## Scott Clark 1/22/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   group_label: "    Session Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${session_date::date} >= '2020-12-28' and ${session_date::date} <= '2021-01-03' then 1
+  #             when ${session_year::number}=2021 then date_part(weekofyear,${session_date::date}) + 1
+  #             else date_part(weekofyear,${session_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.

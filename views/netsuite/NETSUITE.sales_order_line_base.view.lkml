@@ -308,13 +308,20 @@ view: sales_order_line_base {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
-    sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;;
+    # sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+    #       ELSE 'Other' END ;;
+    sql:  CASE WHEN ${created_week_of_year} = 1 AND ${created_year} = 2022 THEN 'Current Week'
+            WHEN ${created_date} >= '2021-12-27' AND ${created_date} <= '2022-01-02' THEN 'Last Week'
+            WHEN ${created_week_of_year} = 51 AND ${created_year} = 2021 THEN 'Two Weeks Ago'
+            WHEN ${created_week_of_year} = 1  AND ${created_year} = 2021 THEN 'Current Week LY'
+            WHEN ${created_week_of_year} = 52 AND ${created_year} = 2020 THEN 'Last Week LY'
+            WHEN ${created_week_of_year} = 51 AND ${created_year} = 2020 THEN 'Two Weeks Ago LY'
+            ELSE 'Other' END;;
   }
 
   dimension: Before_today_ly{
@@ -518,23 +525,23 @@ view: sales_order_line_base {
     label: "    Order"
     description:  "Time and date order was placed. Source: netsuite.sales_order_line"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${TABLE}.Created) ;;
   }
 
-  dimension: created_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    view_label: "Sales Order"
-    group_label: "    Order Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
-              when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
-              else date_part(weekofyear,${created_date::date}) end ;;
-  }
+  # dimension: created_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Sales Order"
+  #   group_label: "    Order Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${created_date::date} >= '2020-12-28' and ${created_date::date} <= '2021-01-03' then 1
+  #             when ${created_year::number}=2021 then date_part(weekofyear,${created_date::date}) + 1
+  #             else date_part(weekofyear,${created_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -650,22 +657,22 @@ view: sales_order_line_base {
     label: "    Current"
     description:  "Current Time/Date for calculations. Source: looker.calculation"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, month, month_num, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql: current_date ;;
   }
 
-  dimension: current_week_of_year {
-    ## Jared Dyer 1/14/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "    Current Week of Year"
-    view_label: "Sales Order"
-    group_label: "    Order Date"
-    description: "2021 adjusted - current week of year number"
-    sql: case when ${current_year::number}=2021 then date_part(weekofyear,${current_date}::date) + 1
-    else date_part(weekofyear,${current_date::date}) end;;
-  }
+  # dimension: current_week_of_year {
+  #   ## Jared Dyer 1/14/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "    Current Week of Year"
+  #   view_label: "Sales Order"
+  #   group_label: "    Order Date"
+  #   description: "2021 adjusted - current week of year number"
+  #   sql: case when ${current_year::number}=2021 then date_part(weekofyear,${current_date}::date) + 1
+  #   else date_part(weekofyear,${current_date::date}) end;;
+  # }
 
 
   dimension: before_day_of_year {
@@ -1066,6 +1073,16 @@ view: sales_order_line_base {
     sql: ${TABLE}.QUANTITY_COMMITTED ;;
   }
 
+    dimension: is_committed {
+      view_label: "Fulfillment"
+      group_label: "By Status"
+      label: "Is Committed"
+      type: yesno
+      drill_fields: [order_details*, sales_order_line.fulfill_details*]
+      description: "Yes when committed units is > 0. Source:netsuite.sales_order_line"
+      sql: ${TABLE}.QUANTITY_COMMITTED>0 ;;
+    }
+
   measure: Qty_Packed {
     view_label: "Fulfillment"
     group_label: "By Status"
@@ -1145,12 +1162,15 @@ view: sales_order_line_base {
           when ${location} is null then 'FBA'
           when ${location} ilike '%100-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
+          when ${location} ilike '%200-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
+          when ${location} ilike '%201-%' AND ${carrier_raw} ilike '%purple home%' then 'Purple Home Delivery'
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike  '%speedy%' then'Speedy Delivery'
           when ${location} ilike  '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%100-%' then 'Purple'
+          when ${location} ilike '%200-%' then 'Purple'
           when ${location} ilike '%le store%' or ${location} ilike '%howroom%' then 'Store take-with'
           else 'Other' end ;;
   }

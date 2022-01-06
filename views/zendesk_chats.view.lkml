@@ -1,6 +1,22 @@
 view: zendesk_chats {
-  sql_table_name: "CUSTOMER_CARE"."ZENDESK_CHATS"
+  derived_table: {
+    sql:
+    select distinct z.*,
+      case when department_name='Sales Chat' then 'Sales Chat'
+        when department_name='Support Chat' then 'Support Chat'
+        when agent_lkp.team_type='Sales' then 'Sales Chat'
+        when agent_lkp.team_type='Chat' then 'Support Chat'
+        when agent_lkp.team_type='SRT' then 'Support Chat'
+        else 'Sales Chat'
+        end as dept_clean
+    from (
+      select *
+      from "CUSTOMER_CARE"."ZENDESK_CHATS" z
+      )z
+      left join customer_care.agent_lkp agent_lkp
+          on z.agent_ids::string = agent_lkp.zendesk_id::string
     ;;
+    }
 
   dimension: agent_id {
     type: string
@@ -123,15 +139,8 @@ view: zendesk_chats {
     type: string
     ##group_label: "Advanced - Chats"
     label: "   Department Name Clean"
-    description: "Temporary calculation to attribute as many chats to the appropriate workgroup until the NULL issue is corrected in Zendesk."
-    sql:
-    case
-      when ${department_name}='Sales Chat' then 'Sales Chat'
-      when ${department_name}='Support Chat' then 'Support Chat'
-      when ${agent_lkp.team_type}='Sales' then 'Sales Chat'
-      when ${agent_lkp.team_type}='Chat' then 'Support Chat'
-      else 'Sales Chat'
-    end ;;
+    description: "Calculation to attribute as many chats to the appropriate workgroup until the NULL issue is corrected in Zendesk."
+    sql: ${TABLE}.dept_clean ;;
   }
 
   dimension: duration {
@@ -326,9 +335,17 @@ view: zendesk_chats {
     sql: case when ${missed} = 'true' then 1 else 0 end ;;
   }
   measure: served_chats {
-    type: sum
+    type: count_distinct
     group_label: "Advanced - Chats"
     label: "Chats Served"
+    description: "Count of chats served by agents"
+    sql: ${zendesk_ticket_id} ;;
+    filters: [missed: "false"]
+  }
+  measure: served_chats_old {
+    type: sum
+    group_label: "Advanced - Chats"
+    label: "Chats Served Old"
     description: "Count of chats served by agents"
     sql: case when ${missed} = 'false' then 1 else 0 end ;;
   }

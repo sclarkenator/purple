@@ -2,9 +2,10 @@ view: cc_activities {
  derived_table: {
   sql:
     --calls (RPT Skills/Incontact)
-    select 'call' as activity_type
+    select distinct 'call' as activity_type
         , case when c.campaign = 'Sales Team Phone' --and c.skill <> 'Sales Xfer (From Support)'
-          then 'sales' else 'support' end as team
+          then 'sales' else 'support'
+          end as team
         , c.contacted as created
         , a.name as agent_name
         , a.email as agent_email
@@ -13,6 +14,7 @@ view: cc_activities {
         , c.skill
         , null as email
         ,a.incontact_id
+        ,contact_id::string as activity_id
     from (
       select row_number () over (partition by c.contacted, c.contact_id order by agent_id desc) as rownum
           , c.*
@@ -20,48 +22,87 @@ view: cc_activities {
       )  c
     left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
     where c.rownum = 1
-    --and c.contacted::date between '2020-06-01' and '2020-06-30'
-    union
+
+    union all
 
     --chats (zendesk tickets)
-    select 'chat' as activity_type
-        , case
-            when c.department_name ilike '%Sales%' then 'sales'
-            when c.department_name ilike '%Support%' then 'support'
-            when a.team_type ilike '%Sales%' then 'sales'
-            when a.team_type ilike '%Chat%' then 'support'
-            else 'sales' end as team
-        , c.created as created
-        , a.name as agent_name
-        , a.email as agent_email
-        , c.duration
-        , c.missed
-        , c.department_name as skill
-        , c.visitor_email
-        ,a.incontact_id
-    from customer_care.v_zendesk_chats c
-    left join customer_care.zendesk_ticket t on c.zendesk_ticket_id = t.ticket_id
-    left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
-    left join analytics_stage.zendesk.user u on u.id = t.requester_id
-    left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
-    union
+    select distinct 'chat' as activity_type,
+      case when c.department_name ilike '%Sales%' then 'sales'
+        when c.department_name ilike '%support%' then 'support'
+        when c.department_name ilike '%srt%' then 'srt'
+        when a.team_type = 'Sales' then 'sales'
+        when a.team_type = 'Chat' then 'support'
+        when a.team_type = 'SRT' then 'srt'
+        else 'sales' end as team,
+      c.created as created,
+      a.name as agent_name,
+      a.email as agent_email,
+      c.duration,
+      c.missed,
+      'ZD Chat' as skill,
+      c.visitor_email,
+      a.incontact_id,
+      chat_id::string as activity_id
 
-    --emails/facebook (zendesk tickets)
-    select  'email' as activity_type
-        , case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales' when a.zendesk_id is null then 'none' else 'support' end as team
-        , t.created as created
+    from customer_care.v_zendesk_chats c
+
+      left join customer_care.agent_lkp a
+          on c.agent_id::string = a.zendesk_id::string
+
+    union all
+
+      --messaging chats (liveperson converations)
+    select distinct 'chat' as activity_type
+        ,case when s.name = 'Sales' then 'sales'
+          when s.name = 'Support' then 'support'
+          else null end as team
+        , lp.ended as created
         , a.name as agent_name
         , a.email as agent_email
         , null as duration
         , 'F' as missed
-        , t.subject
-        , u.email
-        ,a.incontact_id
+        , 'LP Conversation' as skill
+        , null as email
+        , a.incontact_id
+        , lp.conversation_id::string as activity_id
+    from liveperson.conversation lp
+      left join liveperson.skill s
+        on s.skill_id = lp.last_skill_id
+      left join liveperson.agent ag
+        on ag.agent_id = lp.last_agent_id
+      left join customer_care.agent_lkp a
+        on a.zendesk_id = ag.employee_id
+      left join analytics_stage.zendesk_sell.users uu
+        on uu.user_id = a.zendesk_sell_user_id
+    where lp.ended > '2021-09-08'
+      and a.name not ilike '%-bot'
+      and a.name not ilike '%virtual%'
+
+    union all
+
+    --emails/facebook (zendesk tickets)
+    select 'email' as activity_type,
+      case when a.zendesk_sell_user_id is not null and uu.created <= t.created then 'sales'
+          when a.zendesk_id is null then 'none'
+          else 'support' end as team,
+      t.created as created,
+      a.name as agent_name,
+      a.email as agent_email,
+      null as duration,
+      'F' as missed,
+      team as skill,
+      u.email,
+      a.incontact_id,
+      t.ticket_id::string as activity_id
     from customer_care.zendesk_ticket t
-    left join customer_care.agent_lkp a on a.zendesk_id = t.assignee_id
-    left join analytics_stage.zendesk.user u on u.id = t.requester_id
-    left join analytics_stage.zendesk_sell.users uu on uu.user_id = a.zendesk_sell_user_id
+      left join customer_care.agent_lkp a
+        on a.zendesk_id = t.assignee_id
+      left join analytics_stage.zendesk.user u
+        on u.id = t.requester_id
+      left join analytics_stage.zendesk_sell.users uu
+        on uu.user_id = a.zendesk_sell_user_id
     where t.via_channel in ('email','facebook','web')
+
 
   ;;}
 
@@ -146,7 +187,14 @@ view: cc_activities {
     label: "Primary Key"
     type: string
     primary_key: yes
-    sql: concat(${activity_type}, ${TABLE}.created) ;;
+    sql: ${activity_type} || ${TABLE}.created || ${TABLE}.incontact_id ;;
+  }
+
+  dimension: activity_id {
+    label: "Activity ID"
+    type: number
+    sql: ${TABLE}.activity_id ;;
+    hidden: yes
   }
 
   dimension: incontact_id {
@@ -178,7 +226,7 @@ view: cc_activities {
   dimension_group: activity_time {
     type: time
     hidden: no
-    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour]
+    timeframes: [raw, date, day_of_week, day_of_month, day_of_year,hour_of_day, week, week_of_year, month, month_name, quarter, quarter_of_year, year,hour, minute30]
     sql: ${TABLE}.created  ;; }
 
 
@@ -204,7 +252,7 @@ view: cc_activities {
 
   dimension: team_clean {
     type:  string
-    sql: case when ${TABLE}.team = 'sales' then 'sales' else 'support' end ;;
+    sql: case when ${TABLE}.team = 'sales' then 'sales' when ${TABLE}.team = 'support' then 'support' else 'other' end ;;
   }
 
   dimension: email {
@@ -222,23 +270,44 @@ view: cc_activities {
     sql: ${TABLE}.missed = 'T' ;;
   }
 
+
+
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${activity_id} ;;
   }
 
-  measure: chats {
+  measure: chats_old {
     type: sum
     sql: case when ${activity_type} = 'chat' then 1 else 0 end ;;
   }
 
-  measure: calls {
+  measure: chats {
+    type: count_distinct
+    sql: ${activity_id} ;;
+    filters: [activity_type: "chat"]
+  }
+
+  measure: calls_old {
     type: sum
     sql: case when ${activity_type} = 'call' then 1 else 0 end ;;
   }
 
-  measure: emails {
+  measure: calls {
+    type: count_distinct
+    sql: ${activity_id} ;;
+    filters: [activity_type: "call"]
+  }
+
+  measure: emails_old {
     type: sum
     sql: case when ${activity_type} = 'email' then 1 else 0 end ;;
+  }
+
+  measure: emails {
+    type: count_distinct
+    sql: ${activity_id} ;;
+    filters: [activity_type: "email"]
   }
 
   measure: duration {

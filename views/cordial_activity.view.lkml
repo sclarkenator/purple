@@ -1,6 +1,5 @@
 view: cordial_activity {
-  sql_table_name: "MARKETING"."CORDIAL_ACTIVITY"
-    ;;
+  sql_table_name: "MARKETING"."CORDIAL_ACTIVITY";;
 
   dimension: action {
     type: string

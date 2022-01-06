@@ -53,10 +53,10 @@ view: agg_check {
       ), ct as (
         select
             SUM(o.TOTAL_GROSS) as ct_gross_sales,
-            to_date(convert_timezone('America/Denver', o.created)) as created
+            to_date(convert_timezone('America/Denver', o.created)) as created_date
         FROM analytics.commerce_tools.ct_order o
-        WHERE created = dateadd(day,-1,current_date)
-        GROUP BY created
+        WHERE to_date(created) = dateadd(day,-1,current_date)
+        GROUP BY created_date
       )
       select
           a.date as DATE,
@@ -67,8 +67,8 @@ view: agg_check {
           COALESCE(max(Sg.GROSS_SALES), 0) + COALESCE(max(ct.ct_gross_sales), 0) as ETAIL_AMOUNT
       from analytics.agg_check.DAILY_SOURCE_SALES_CHECK A
       left join sg on A.DATE = Sg.CREATED
-      left join ct on A.DATE = ct.CREATED
-      where a.source in ('Shopify - US', 'Shopify - Canada', 'Shopify - POS') and to_date(a.date) = dateadd(day,-1,current_date)
+      left join ct on A.DATE = ct.CREATED_DATE
+      where a.source in ('Shopify - US', 'Shopify - Canada', 'Shopify - POS', 'Commerce Tools') and to_date(a.date) = dateadd(day,-1,current_date)
       group by 1;;  }
 
   measure:NETSUITE_AMOUNT   {

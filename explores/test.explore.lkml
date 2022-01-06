@@ -9,3 +9,5 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 #explore: contact_history {}
+
+explore: test_messages {hidden:yes}

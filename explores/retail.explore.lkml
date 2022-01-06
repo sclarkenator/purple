@@ -11,6 +11,7 @@ include: "/dashboards/**/*.dashboard"
   explore: owned_retail_target_by_location {hidden: yes }
   explore: store_four_wall {hidden:yes}
   explore: retail_goal {hidden:yes description:"Owened Retail Sales and Mattress Unit Goals by date and location"}
+  explore: beds_per_door {hidden: yes description:"Temporary Explore created for discovery and prototyping beds per door exploration"}
 
  explore: retail_base  {
     hidden: yes
