@@ -293,7 +293,7 @@ main_query AS
 //--this pulls sesisons COUNT for the top 20 UTM_SOURCE by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.source DIMENSIONS
   ,'SESSIONS BY SOURCE' METRIC
   ,'TIER 2' DETAIL_LEVEL
@@ -312,7 +312,7 @@ UNION
 --this pulls bounce rate for the top 20 UTM_SOURCE by sessions FROM Heap
 SELECT
    DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.source DIMENSIONS
   ,'BOUNCE BY SOURCE' METRIC
   ,'TIER 2' DETAIL_LEVEL
@@ -331,7 +331,7 @@ UNION
 --this pulls QCVR for the top 20 UTM_SOURCE by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.source DIMENSIONS
   ,'QCVR BY SOURCE' METRIC
   ,'TIER 3' DETAIL_LEVEL
@@ -350,7 +350,7 @@ UNION
 --this pulls RPV for the top 20 UTM_SOURCE by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.source DIMENSIONS
   ,'RPV BY SOURCE' METRIC
   ,'TIER 3' DETAIL_LEVEL
@@ -369,7 +369,7 @@ UNION
 --this pulls sesisons COUNT for the top 20 CHANNEL by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.channel DIMENSIONS
   ,'SESSIONS BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
@@ -387,7 +387,7 @@ UNION
 --this pulls bounce rate for the top 20 CHANNEL by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.channel DIMENSIONS
   ,'BOUNCE BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
@@ -405,7 +405,7 @@ UNION
 --this pulls QCVR for the top 20 CHANNEL by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.channel DIMENSIONS
   ,'QCVR BY CHANNEL' METRIC
   ,'TIER 3' DETAIL_LEVEL
@@ -423,7 +423,7 @@ UNION
 --this pulls RPV for the top 20 CHANNEL by sessions FROM Heap
 SELECT
   DISTINCT s.date
-  ,'WEB' bus_unit
+  ,'ACQUISITIONS' bus_unit
   ,s.channel DIMENSIONS
   ,'RPV BY CHANNEL' METRIC
   ,'TIER 3' DETAIL_LEVEL
@@ -980,7 +980,7 @@ UNION
 ---top 30 landing pages
 SELECT
   DISTINCT s.date
-  ,'ACQUISITIONS' bus_unit
+  ,'WEB' bus_unit
   ,s.landing_page DIMENSIONS
   ,'SESSIONS BY LANDING PAGE' METRIC
   ,'TIER 3' DETAIL_LEVEL
@@ -999,7 +999,7 @@ UNION
 --pulls bounce rate of top 'N' landing pages
 SELECT
   DISTINCT date
-  ,'ACQUISITIONS' bus_unit
+  ,'WEB' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE BOUNCE' METRIC
   ,'TIER 3' tier
@@ -1017,7 +1017,7 @@ AND date < CURRENT_DATE
 UNION
 --this query returns the qualified conversion rate for the top landing pages
 SELECT DISTINCT date
-  ,'ACQUISITIONS' bus_unit
+  ,'WEB' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE QCVR' METRIC
   ,'TIER 3' tier
@@ -1035,7 +1035,7 @@ AND date < CURRENT_DATE
 UNION
 --this query pulls the RPV based on landing page
 SELECT DISTINCT date
-  ,'ACQUISITIONS' bus_unit
+  ,'WEB' bus_unit
   ,s.landing_page DIMENSIONS
   ,'LANDING PAGE RPV' METRIC
   ,'TIER 3' tier
