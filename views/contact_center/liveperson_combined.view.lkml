@@ -48,29 +48,27 @@ view: liveperson_combined {
         a.team_lead,
         a.team_type,
         a.employee_type,
-        a.location
-        -- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
-        -- c.art,
-        -- c.artc,
-        -- c.arth,
-        -- c.arta,
-        -- c.artac,
-        -- c.artah,
-        -- c.ttfah,
-        -- c.ttfrah,
-        -- c.ttfrh,
-        -- c.ttfab,
-        -- c.ttfrab,
-        -- c.ttfrb,
-        -- c.ttfrs,
-        -- c.ttfra,
-        -- c.ttfr,
-        -- c.participants,
-        -- c.interactions,
-        -- c.transfers,
-        -- c.messages,
-        -- c.responses
-        -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
+        a.location,
+        c.art,
+        c.artc,
+        c.arth,
+        c.arta,
+        c.artac,
+        c.artah,
+        c.ttfah,
+        c.ttfrah,
+        c.ttfrh,
+        c.ttfab,
+        c.ttfrab,
+        c.ttfrb,
+        c.ttfrs,
+        --c.ttfra,
+        --c.ttfr,
+        c.participants,
+        c.interactions,
+        c.transfers,
+        c.messages,
+        c.responses
 
       from liveperson.conversation c
 
@@ -324,160 +322,158 @@ view: liveperson_combined {
     sql: ${TABLE}.status ;;
   }
 
-  ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
+  dimension: participants {
+    label: "Participants"
+    group_item_label: "Conversation Metrics"
+    description: "Count of participants that acted on the conversation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.participants ;;
+  }
 
-  # dimension: participants {
-  #   label: "Participants"
-  #   group_item_label: "Conversation Metrics"
-  #   description: "Count of participants that acted on the conversation"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.participants ;;
-  # }
+  dimension: interactions {
+    label: "Interactions"
+    group_item_label: "Conversation Metrics"
+    description: "Count of non-system agents that interacted on the conversation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.interactions ;;
+  }
 
-  # dimension: interactions {
-  #   label: "Interactions"
-  #   group_item_label: "Conversation Metrics"
-  #   description: "Count of non-system agents that interacted on the conversation"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.interactions ;;
-  # }
+  dimension: transfers {
+    label: "Transfers"
+    group_item_label: "Conversation Metrics"
+    description: "Count of transfers after assignment in the conversation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.transfers ;;
+  }
 
-  # dimension: transfers {
-  #   label: "Transfers"
-  #   group_item_label: "Conversation Metrics"
-  #   description: "Count of transfers after assignment in the conversation"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.transfers ;;
-  # }
+  dimension: messages {
+    label: "Messages"
+    group_item_label: "Conversation Metrics"
+    description: "Count of messages exchanged during the conversation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.messages ;;
+  }
 
-  # dimension: messages {
-  #   label: "Messages"
-  #   group_item_label: "Conversation Metrics"
-  #   description: "Count of messages exchanged during the conversation"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.messages ;;
-  # }
+  dimension: responses {
+    label: "Responses"
+    group_item_label: "Conversation Metrics"
+    description: "Count of back and forth exchanges that took place in the conversation"
+    type: number
+    value_format_name: decimal_0
+    sql: ${TABLE}.responses ;;
+  }
 
-  # dimension: responses {
-  #   label: "Responses"
-  #   group_item_label: "Conversation Metrics"
-  #   description: "Count of back and forth exchanges that took place in the conversation"
-  #   type: number
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.responses ;;
-  # }
+  ##########################################################################################
+  ##########################################################################################
+  ## DURATION METRIC DIMENSIONS
 
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## DURATION METRIC DIMENSIONS
+  dimension: art {
+    group_label: "Duration Dimensions"
+    description: "Average Response Time in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.art ;;
+  }
 
-  # dimension: art {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Response Time in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.art ;;
-  # }
+  dimension: artc {
+    group_label: "Duration Dimensions"
+    description: "Average Consumer Response Time in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.artc ;;
+  }
 
-  # dimension: artc {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Consumer Response Time in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.artc ;;
-  # }
+  dimension: arth {
+    group_label: "Duration Dimensions"
+    description: "Average Human Agent Response Time in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.arth ;;
+  }
 
-  # dimension: arth {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Human Agent Response Time in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.arth ;;
-  # }
+  dimension: arta {
+    group_label: "Duration Dimensions"
+    description: "Average Response Time after Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.arta ;;
+  }
 
-  # dimension: arta {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Response Time after Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.arta ;;
-  # }
+  dimension: artac {
+    group_label: "Duration Dimensions"
+    description: "Average Consumer Response Time after Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.artac ;;
+  }
 
-  # dimension: artac {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Consumer Response Time after Assignmenbt in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.artac ;;
-  # }
+  dimension: artah {
+    group_label: "Duration Dimensions"
+    description: "Average Human Agent Response Time after Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.artah ;;
+  }
 
-  # dimension: artah {
-  #   group_label: "Duration Dimensions"
-  #   description: "Average Human Agent Response Time after Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.artah ;;
-  # }
+  dimension: ttfah {
+    group_label: "Duration Dimensions"
+    description: "Time to First Human Agent Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfah ;;
+  }
 
-  # dimension: ttfah {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time to First Human Agent Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfah ;;
-  # }
+  dimension: ttfrah {
+    group_label: "Duration Dimensions"
+    description: "Time To First Human Response After Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfrah ;;
+  }
 
-  # dimension: ttfrah {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First Human Response After Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfrah ;;
-  # }
+  dimension: ttfrh {
+    group_label: "Duration Dimensions"
+    description: "Time To First Human Response in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfrh ;;
+  }
 
-  # dimension: ttfrh {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First Human Response in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfrh ;;
-  # }
+  dimension: ttfab {
+    group_label: "Duration Dimensions"
+    description: "Time To First Bot Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfab ;;
+  }
 
-  # dimension: ttfab {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First Bot Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfab ;;
-  # }
+  dimension: ttfrab {
+    group_label: "Duration Dimensions"
+    description: "Time To First Bot Response after Assignment in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfrab ;;
+  }
 
-  # dimension: ttfrab {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First Bot Response after Assignment in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfrab ;;
-  # }
+  dimension: ttfrb {
+    group_label: "Duration Dimensions"
+    description: "Time To First Bot Response in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfrb ;;
+  }
 
-  # dimension: ttfrb {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First Bot Response in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfrb ;;
-  # }
-
-  # dimension: ttfrs {
-  #   group_label: "Duration Dimensions"
-  #   description: "Time To First System Response in minutes"
-  #   hidden: yes
-  #   type: number
-  #   sql: ${TABLE}.ttfrs ;;
-  # }
+  dimension: ttfrs {
+    group_label: "Duration Dimensions"
+    description: "Time To First System Response in minutes"
+    hidden: yes
+    type: number
+    sql: ${TABLE}.ttfrs ;;
+  }
 
   # dimension: ttfra {
   #   group_label: "Duration Dimensions"
@@ -494,8 +490,6 @@ view: liveperson_combined {
   #   type: number
   #   sql: ${TABLE}.ttfr ;;
   # }
-
-  ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
 
   ##########################################################################################
   ##########################################################################################
