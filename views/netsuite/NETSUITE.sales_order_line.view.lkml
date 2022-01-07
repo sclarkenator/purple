@@ -1049,7 +1049,7 @@ view: sales_order_line {
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [fulfillment_details*]
-    sql: ${total_units}-${fulfillment.count} ;;
+    sql: case when ${total_units} > ${fulfillment.count} then ${total_units}-${fulfillment.count} else 0 end;;
   }
 
   measure: fulfilled_orders {
