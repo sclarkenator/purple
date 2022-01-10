@@ -1300,16 +1300,17 @@ UNION
 SELECT
   DISTINCT date
   ,'WEB' bus_unit
-  ,landing_page DIMENSIONS
-  ,'ADD TO CARTS BY LANDING PAGE' METRIC
+  ,s.page DIMENSIONS
+  ,'ADD TO CARTS BY PAGE' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.landing_page) amount
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.page) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.landing_page) HURDLE_VALUE
+  ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.page) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
-FROM session_details s
+FROM pageviews s
+JOIN top_pages tp on s.page = tp.page
 JOIN add_to_cart ac ON s.session_id = ac.session_id
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
