@@ -1251,7 +1251,7 @@ SELECT
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.browser) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
+  ,5 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 JOIN add_to_cart ac ON s.session_id = ac.session_id
 WHERE date > CURRENT_DATE - 121
@@ -1270,7 +1270,7 @@ SELECT
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.device_type) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
+  ,5 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 JOIN add_to_cart ac ON s.session_id = ac.session_id
 WHERE date > CURRENT_DATE - 121
@@ -1281,7 +1281,7 @@ UNION
 SELECT
   DISTINCT date
   ,'WEB' bus_unit
-  ,referrer DIMENSIONS
+  ,t.referrer DIMENSIONS
   ,'ADD TO CARTS BY REFERRER' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
@@ -1289,8 +1289,9 @@ SELECT
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.referrer) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
+  ,5 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
+JOIN top_referrers t ON s.referrer = t.referrer
 JOIN add_to_cart ac ON s.session_id = ac.session_id
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
@@ -1308,7 +1309,7 @@ SELECT
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
   ,COUNT(ac.session_id) OVER (PARTITION BY s.date, s.page) HURDLE_VALUE
-  ,1 METRIC_WITHIN_DIMENSIONS
+  ,5 METRIC_WITHIN_DIMENSIONS
 FROM pageviews s
 JOIN top_pages tp on s.page = tp.page
 JOIN add_to_cart ac ON s.session_id = ac.session_id
