@@ -419,12 +419,12 @@ dimension: page_product_type {
     #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
     #         WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
     #       ELSE 'Other' END ;;
-    sql:  CASE WHEN ${time_week_of_year} = 1  AND ${time_year} = 2022 THEN 'Current Week'
-    WHEN ${time_date} >= '2021-12-27' AND ${time_date} <= '2022-01-02' THEN 'Last Week'
-    WHEN ${time_week_of_year} = 51 AND ${time_year} = 2021 THEN 'Two Weeks Ago'
-    WHEN ${time_week_of_year} = 1  AND ${time_year} = 2021 THEN 'Current Week LY'
-    WHEN ${time_week_of_year} = 52 AND ${time_year} = 2020 THEN 'Last Week LY'
-    WHEN ${time_week_of_year} = 51 AND ${time_year} = 2020 THEN 'Two Weeks Ago LY'
+    sql: CASE WHEN ${time_week_of_year} = 2  AND ${time_year} = 2022 THEN 'Current Week'
+              WHEN ${time_week_of_year} = 1  AND ${time_year} = 2022 THEN 'Last Week'
+              WHEN ${time_date} >= '2021-12-27' AND ${time_date} <= '2022-01-02' THEN 'Two Weeks Ago'
+              WHEN ${time_week_of_year} = 2  AND ${time_year} = 2021 THEN 'Current Week LY'
+              WHEN ${time_week_of_year} = 1 AND ${time_year} = 2021 THEN 'Last Week LY'
+              WHEN ${time_week_of_year} = 52 AND ${time_year} = 2020 THEN 'Two Weeks Ago LY'
     ELSE 'Other' END;;
   }
 

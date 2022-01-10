@@ -388,12 +388,12 @@ view: day_sku_aggregations {
     #   WHEN ${date_week_of_year} = date_part (weekofyear,current_date) AND ${date_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
     #   WHEN ${date_week_of_year} = date_part (weekofyear,current_date) -1 AND ${date_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
     # ELSE 'Other' END;;
-    sql:  CASE WHEN ${date_week_of_year} = 1  AND ${date_year} = 2022 THEN 'Current Week'
-      WHEN ${date_date} >= '2021-12-27' AND ${date_date} <= '2022-01-02' THEN 'Last Week'
-      WHEN ${date_week_of_year} = 51 AND ${date_year} = 2021 THEN 'Two Weeks Ago'
-      WHEN ${date_week_of_year} = 1  AND ${date_year} = 2021 THEN 'Current Week LY'
-      WHEN ${date_week_of_year} = 52 AND ${date_year} = 2020 THEN 'Last Week LY'
-      WHEN ${date_week_of_year} = 51 AND ${date_year} = 2020 THEN 'Two Weeks Ago LY'
+    sql:  CASE WHEN ${date_week_of_year} = 2  AND ${date_year} = 2022 THEN 'Current Week'
+              WHEN ${date_week_of_year} = 1  AND ${date_year} = 2022 THEN 'Last Week'
+              WHEN ${date_date} >= '2021-12-27' AND ${date_date} <= '2022-01-02' THEN 'Two Weeks Ago'
+              WHEN ${date_week_of_year} = 2  AND ${date_year} = 2021 THEN 'Current Week LY'
+              WHEN ${date_week_of_year} = 1 AND ${date_year} = 2021 THEN 'Last Week LY'
+              WHEN ${date_week_of_year} = 52 AND ${date_year} = 2020 THEN 'Two Weeks Ago LY'
       ELSE 'Other' END;;
     }
 
