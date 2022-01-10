@@ -664,10 +664,11 @@ view: sales_order_line {
     sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${item_order},'_');;
   }
 
+#Jared added cancelled date to fix issues where order had to be cancelled twice and PK issues arose in SLA % exec dash
   dimension: pk_concat {
     hidden: yes
     type: string
-    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||'_'||NVL(${item_order},'_');;
+    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||NVL(${cancelled_order.cancelled_date},'_')||'_'||NVL(${item_order},'_');;
   }
 
   measure: Qty_eligible_for_SLA{

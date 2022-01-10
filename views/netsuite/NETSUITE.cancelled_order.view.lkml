@@ -24,7 +24,7 @@ view: cancelled_order {
     type: count_distinct
     filters: {
       field: refunded
-      value: Yes
+      value: "Yes"
     }
     sql: ${order_id} ;;
     hidden:yes}
