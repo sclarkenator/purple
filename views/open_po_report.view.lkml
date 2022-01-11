@@ -402,11 +402,11 @@ view: international_open_po_report {
     sql: ${ETA_to_Discharged} ;;
   }
 
-  measure: Avg_Dischareged_to_Purple_In_Hand {
+  measure: Avg_Discharged_to_Purple_In_Hand {
     type: average
     value_format: "#,##0.00"
     group_label: "Days Between"
-    sql: ${Dischareged_to_Purple_In_Hand} ;;
+    sql: ${Discharged_to_Purple_In_Hand} ;;
   }
 
   measure: Avg_Cargo_to_Purple_In_Hand {
