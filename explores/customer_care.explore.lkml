@@ -1010,6 +1010,7 @@ explore: perfect_attendance_calc {
     # }
   }
 
+  explore: v_missing_customer_deposit {hidden: yes}
   explore: video_sales_drafts {hidden: yes} #cj
   explore: zendesk_sell {hidden:yes} #cj
   explore: liveperson_conversation_metrics {hidden:yes} #cj

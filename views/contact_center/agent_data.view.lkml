@@ -37,7 +37,8 @@ view: agent_data {
             case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then true
                 when a.inactive is not null then false
                 when a.terminated is not null then false
-                when la.enabled = true then true end as active_flag,
+                when la.enabled = true then true
+                else true end as active_flag,
             nvl(case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then false end
                 ,a.supervisor) as supervisor,
             la.enabled,
