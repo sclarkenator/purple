@@ -75,6 +75,7 @@ view: international_open_po_report {
   }
 
   dimension: description {
+    hidden: no
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
