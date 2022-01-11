@@ -241,6 +241,7 @@ view: international_open_po_report {
 
   measure: ordered_quantity {
     type: sum
+    value_format: "#,##0.00"
     sql: ${TABLE}."ORDERED_QUANTITY" ;;
   }
 
@@ -359,7 +360,7 @@ view: international_open_po_report {
     sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
   }
 
-  dimension: Dischareged_to_Purple_In_Hand {
+  dimension: Discharged_to_Purple_In_Hand {
     hidden: yes
     type: number
     group_label: "Days Between"
