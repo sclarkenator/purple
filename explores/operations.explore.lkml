@@ -305,4 +305,9 @@ explore: bin {
       type: left_outer
       sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
       relationship: many_to_one }
+    join: v_ai_product{
+      view_label: "Product"
+      type: left_outer
+      sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
+      relationship: many_to_one }
     }
