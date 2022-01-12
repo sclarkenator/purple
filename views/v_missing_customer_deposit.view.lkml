@@ -81,6 +81,21 @@ view: v_missing_customer_deposit {
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
   }
 
+  dimension: payment_method_reference {
+    type: string
+    sql: ${TABLE}.payment_method_reference ;;
+  }
+
+  dimension: currency {
+    type: string
+    sql: ${TABLE}.currency ;;
+  }
+
+  dimension: customer_id {
+    type: string
+    sql: ${TABLE}.customer_id::string ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [etail_order_name]
