@@ -1,5 +1,5 @@
 view: forecast_snapshot {
-sql_table_name: analytics.forecast.monthly_snapshot
+sql_table_name: datagrid.prod.forecast_snapshot
   ;;
 
 dimension: primary_key {
