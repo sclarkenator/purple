@@ -1,13 +1,13 @@
 view: sales_targets_dim {
   derived_table: {
     sql: select date, dtc as target, 'DTC' as channel
-      from CSV_UPLOADS.finance_targets
+      from CSV_UPLOADS.finance_targets_new
       union all
       select date, whlsl, 'Wholesale' as channel
-      from CSV_UPLOADS.finance_targets
+      from CSV_UPLOADS.finance_targets_new
       union all
       select date, retail, 'Owned Retail' as channel
-      from CSV_UPLOADS.finance_targets ;;
+      from CSV_UPLOADS.finance_targets_new ;;
   }
 
   dimension_group: date {
