@@ -1,5 +1,5 @@
 view: forecast_snapshot {
-sql_table_name: analytics.forecast.monthly_snapshot
+sql_table_name: datagrid.prod.forecast_snapshot
   ;;
 
 dimension: primary_key {
@@ -17,10 +17,11 @@ dimension_group: date {
   sql: ${TABLE}.forecast ;; }
 
 dimension: snapshot_month {
-  type: date
+  type: date_month
   convert_tz: no
   datatype: date
   sql: ${TABLE}.month ;; }
+
 
 # dimension: date_week_of_year {
 #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.

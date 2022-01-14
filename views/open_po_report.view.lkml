@@ -75,6 +75,7 @@ view: international_open_po_report {
   }
 
   dimension: description {
+    hidden: no
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
@@ -240,6 +241,7 @@ view: international_open_po_report {
 
   measure: ordered_quantity {
     type: sum
+    value_format: "#,##0.00"
     sql: ${TABLE}."ORDERED_QUANTITY" ;;
   }
 
@@ -358,7 +360,7 @@ view: international_open_po_report {
     sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
   }
 
-  dimension: Dischareged_to_Purple_In_Hand {
+  dimension: Discharged_to_Purple_In_Hand {
     hidden: yes
     type: number
     group_label: "Days Between"
@@ -400,11 +402,11 @@ view: international_open_po_report {
     sql: ${ETA_to_Discharged} ;;
   }
 
-  measure: Avg_Dischareged_to_Purple_In_Hand {
+  measure: Avg_Discharged_to_Purple_In_Hand {
     type: average
     value_format: "#,##0.00"
     group_label: "Days Between"
-    sql: ${Dischareged_to_Purple_In_Hand} ;;
+    sql: ${Discharged_to_Purple_In_Hand} ;;
   }
 
   measure: Avg_Cargo_to_Purple_In_Hand {

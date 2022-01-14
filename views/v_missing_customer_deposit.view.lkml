@@ -59,8 +59,11 @@ view: v_missing_customer_deposit {
   }
 
   dimension: order_id {
-    type: number
-    sql: ${TABLE}."ORDER_ID" ;;
+    type: string
+    value_format: "0"
+    link: {label: "netsuite"
+        url: "https://4651144.app.netsuite.com/app/accounting/transactions/salesord.nl?id={{ value }}" }
+    sql: ${TABLE}."ORDER_ID"::string ;;
   }
 
   dimension: source {
@@ -76,6 +79,21 @@ view: v_missing_customer_deposit {
   dimension: transaction_number {
     type: string
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
+  }
+
+  dimension: payment_method_reference {
+    type: string
+    sql: ${TABLE}.payment_method_reference ;;
+  }
+
+  dimension: currency {
+    type: string
+    sql: ${TABLE}.currency ;;
+  }
+
+  dimension: customer_id {
+    type: string
+    sql: ${TABLE}.customer_id::string ;;
   }
 
   measure: count {
