@@ -15,11 +15,6 @@ view: v_fb_all {
     sql: ${TABLE}.date ;;
   }
 
-  dimension: _fivetran_synced {
-    type: date_time
-    sql:${TABLE}."_FIVETRAN_SYNCED";;
-
-  }
 
   dimension: account_id {
     type: number
