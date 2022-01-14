@@ -81,12 +81,6 @@ view: v_fb_all {
     sql: ${TABLE}."CLICKS" ;;
   }
 
-  measure: conversion_rate_ranking {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."CONVERSION_RATE_RANKING" ;;
-  }
-
   dimension_group: date {
     type: time
     timeframes: [
@@ -100,12 +94,6 @@ view: v_fb_all {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."DATE" ;;
-  }
-
-  measure: engagement_rate_ranking {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."ENGAGEMENT_RATE_RANKING" ;;
   }
 
   measure: estimated_ad_recall_rate {
@@ -157,10 +145,10 @@ view: v_fb_all {
     sql: ${TABLE}."OBJECTIVE" ;;
   }
 
-  measure: landing_page_view {
-    label: "Landing Page View"
+  measure: landing_page_views {
+    label: "Landing Page Views"
     type: sum
-    sql: ${TABLE}."LANDING_PAGE_VIEW" ;;
+    sql: ${TABLE}."LANDING_PAGE_VIEWS" ;;
   }
 
   measure: purchase_1_dc {
@@ -239,12 +227,6 @@ view: v_fb_all {
     value_format: "$#,##0.00"
     type: sum
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DV" ;;
-  }
-
-  dimension: quality_ranking {
-    type: string
-    hidden: yes
-    sql: ${TABLE}."QUALITY_RANKING" ;;
   }
 
   measure: reach {
