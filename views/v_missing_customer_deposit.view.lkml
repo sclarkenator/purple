@@ -40,6 +40,7 @@ view: v_missing_customer_deposit {
 
   measure: total_customer_balance {
     type: sum
+    value_format: "#.00"
     sql: ${customer_balance} ;;
   }
 
