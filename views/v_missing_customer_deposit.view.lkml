@@ -56,6 +56,7 @@ view: v_missing_customer_deposit {
 
   measure: total_order_amount {
     type: sum
+    value_format: "#.00"
     sql: ${order_amount} ;;
   }
 
