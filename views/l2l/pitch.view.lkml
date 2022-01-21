@@ -65,6 +65,17 @@ derived_table: {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension_group: current {
+    hidden: yes
+    description: "Source: l2l.pitch"
+    type: time
+    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: CURRENT_TIMESTAMP::TIMESTAMP ;;
+  }
+
+
   dimension: createdby {
     hidden: no
     type: string
@@ -212,6 +223,15 @@ measure: steady_state_average{
     description: "Yes/No for if the date is before the current day of the year. Source: Looker Calculation"
     type: yesno
     sql: ${TABLE}.pitch_start::date < current_date ;;
+  }
+
+  dimension: before_current_hour  {
+    view_label: "Pitch"
+    group_label: "Pitch Start Date"
+    label: "z - Before Current Hour"
+    description: "Yes/No for if the pitch is before the current pitch. Source: Looker Calculation"
+    type: yesno
+    sql:  ${pitch_start_hour}<${current_hour} ;;
   }
 
   dimension: current_week_numb {
