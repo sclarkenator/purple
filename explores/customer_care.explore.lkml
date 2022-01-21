@@ -75,6 +75,7 @@ explore: liveperson_combined {
 
 explore: liveperson_combined_data {
   label: "LivePerson"
+  group_label: "Customer Care"
   description: "Combined LivePerson data"
   view_label: "Agent Data (Conversation Level)"
   from: liveperson_agent
@@ -149,6 +150,7 @@ explore: liveperson_combined_data {
 
 explore: wfm_weekly_performance {
   label: "WFM Weekly Performance Summary"
+  group_label: "Customer Care"
   view_label: "Summary Data"
   from: warehouse_date_table
 

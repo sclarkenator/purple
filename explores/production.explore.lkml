@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  no
+    hidden:  yes
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"
@@ -143,6 +143,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory {
     group_label: "Production"
+    hidden: yes
     label: "Current Inventory"
     description: "Inventory positions, by item by location"
     always_filter: {
@@ -183,6 +184,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory_snap {
     group_label: "Production"
+    hidden: yes
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     always_filter: {
@@ -258,6 +260,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory_adjustment {
     group_label: "Production"
+    hidden: yes
     label: "Inventory Adjustment"
     description: "Inventory Adjustment by Item, Line, etc"
     join: inventory_adjustment_line {
@@ -337,7 +340,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:  area {
-    hidden: no
+    hidden: yes
     group_label: "Production"
     label: "L2L"
     description: "A combination of reports pulled from L2L (Leading2Lean) including Machine Downtime, Dispatch, Pitch, etc."
