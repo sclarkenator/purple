@@ -1,6 +1,6 @@
 include: "/views/_period_comparison.view.lkml"
 view: assembly_build {
-  sql_table_name: PRODUCTION.BUILD ;;
+  sql_table_name: analytics.production.v_assembly_build ;;
   extends: [_period_comparison]
 
   parameter: see_data_by {
