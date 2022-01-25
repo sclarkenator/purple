@@ -333,7 +333,7 @@ measure: steady_state_average{
   }
 
   measure: actual {
-    description: "Total amount of Actual Product Produced; Source: l2l.pitch"
+    description: "Total amount of good product produced; Source: l2l.pitch"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}."ACTUAL" ;;
@@ -341,7 +341,7 @@ measure: steady_state_average{
 
   measure: scrap {
     label: "Scrap"
-    description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
+    description: "Total number of scrap product produced; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
   }
