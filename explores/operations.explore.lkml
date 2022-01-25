@@ -319,3 +319,8 @@ explore: bin {
       sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
       relationship: many_to_one }
     }
+
+explore: labor_hours {
+  hidden: yes
+  group_label: "Workday Labor Hours"
+}
