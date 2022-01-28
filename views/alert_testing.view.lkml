@@ -285,6 +285,25 @@ ORDER BY 2, 1
   AND to_date(time) < CURRENT_DATE
  )
 
+,marketing_spend AS
+(
+  SELECT
+    ads.date
+    ,COALESCE((ads.medium),adr.medium) AS medium
+    ,COALESCE((ads.platform),adr.source) AS medium_source
+    ,NVL(ads.campaign_id,(adr.utm_campaign)) AS campaign_id
+    ,ads.campaign_name AS campaign_name
+    ,COALESCE((ads.campaign_type),adr.campaign_type)  AS campaign_type
+    ,ads.device AS device
+    ,ROUND(COALESCE(SUM(ads.total_spend), 0), 2) AS total_spend
+    ,COALESCE(SUM(ads.impressions), 0) AS total_impressions
+    ,COALESCE(SUM(ads.clicks), 0) AS total_clicks
+  FROM prod.adspend ads
+  FULL JOIN prod.adspend_revenue adr ON adr.pk = ads.revenue_key
+  WHERE to_date(ads.date) > CURRENT_DATE -121
+  AND to_date(ads.date) < CURRENT_DATE
+  GROUP BY 1, 2, 3, 4, 5, 6, 7
+ )
 --this is the main select that combines all the single-metric fact queries FROM the previous CTEs or raw tables. simply union another select on to add another category of metrics
 --schema is date-> bus_unit -> dimensions --> metric (this is the partition by in most queries) -> category (description of metric) -> tier(detail level) (H/M/L for reporting suppression) -> amount
 
@@ -1316,8 +1335,26 @@ JOIN add_to_cart ac ON s.session_id = ac.session_id
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
-) --closing bracket for main query CTE
+--this pull spend by medium
+UNION
+SELECT
+  DISTINCT date
+  ,'ACQUISITIONS' bus_unit
+  ,s.medium DIMENSIONS
+  ,'SPEND BY MEDIUM' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,SUM(total_spend) OVER(PARTITION BY s.date, DIMENSIONS) amount
+  ,'MINIMUM SPEND COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,1 METRIC_WITHIN_DIMENSIONS
+FROM marketing_spend s
+JOIN top_medium t ON s.medium = t.medium
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
 
+) --closing bracket for main query CTE
 ,
 medians AS
 (SELECT
@@ -1345,12 +1382,12 @@ date
 ,DETAIL_LEVEL
 ,amount
 ,median
-,median - 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_one_SD
-,median - 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) neg_two_SD
-,median + 1.5*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_one_SD
-,median + 3*(median(diff_median) over (PARTITION BY dimensions||metric||bus_unit)) plus_two_SD
-,lead(amount,1,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) one_day_ago
-,lead(amount,2,0) over (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) two_days_ago
+,median - 1.5*(median(diff_median) OVER (PARTITION BY dimensions||metric||bus_unit)) neg_one_SD
+,median - 3*(median(diff_median) OVER (PARTITION BY dimensions||metric||bus_unit)) neg_two_SD
+,median + 1.5*(median(diff_median) OVER (PARTITION BY dimensions||metric||bus_unit)) plus_one_SD
+,median + 3*(median(diff_median) OVER (PARTITION BY dimensions||metric||bus_unit)) plus_two_SD
+,LEAD(amount, 1, 0) OVER (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) one_day_ago
+,LEAD(amount, 2, 0) OVER (PARTITION BY dimensions||metric||bus_unit ORDER BY date DESC) two_days_ago
 ,CASE WHEN amount > plus_two_SD THEN '2 SD above median'
     WHEN amount < neg_two_SD THEN '2 SD below median'
     WHEN amount > plus_one_SD AND one_day_ago > plus_one_SD AND two_days_ago > plus_one_SD THEN 'Trending above SD'
@@ -1361,9 +1398,8 @@ date
 ,sig_hurdle
 ,METRIC_WITHIN_DIMENSIONS
 ,CASE WHEN greatest(hurdle_value,median) >= sig_hurdle THEN 1 ELSE 0 END sig_flag
-,CASE WHEN (amount-median)*polarity > 0 THEN 'GOOD' ELSE 'BAD' END pos_neg_flag
+,CASE WHEN (amount - median)*polarity > 0 THEN 'GOOD' ELSE 'BAD' END pos_neg_flag
 FROM medians
-
        ;;
    }
   dimension: metric_within_dimensions {
