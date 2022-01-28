@@ -3,6 +3,7 @@ view: alert_testing {
  derived_table: {
      persist_for: "24 hours"
     sql:
+
 WITH session_details AS
 --this SELECT gets all the session-level metrics aggregated by date WITH all the separate categories to PARTITION BY later
 (SELECT
