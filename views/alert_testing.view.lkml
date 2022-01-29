@@ -289,7 +289,7 @@ ORDER BY 2, 1
 (
   SELECT
     ads.date
-    ,COALESCE((ads.medium),adr.medium) AS medium
+    ,COALESCE((ads.medium),adr.medium) AS channel
     ,COALESCE((ads.platform),adr.source) AS medium_source
     ,NVL(ads.campaign_id,(adr.utm_campaign)) AS campaign_id
     ,ads.campaign_name AS campaign_name
@@ -455,6 +455,26 @@ SELECT
   ,4 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 WHERE date > CURRENT_DATE -121
+AND date < CURRENT_DATE
+
+
+--this pull spend by medium
+UNION
+SELECT
+  DISTINCT date
+  ,'ACQUISITIONS' bus_unit
+  ,s.channel DIMENSIONS
+  ,'SPEND BY CHANNEL' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,SUM(total_spend) OVER(PARTITION BY s.date, DIMENSIONS) amount
+  ,'MINIMUM SPEND COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,5 METRIC_WITHIN_DIMENSIONS
+FROM marketing_spend s
+JOIN top_medium t ON s.medium = t.medium
+WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
 UNION
@@ -1332,25 +1352,6 @@ SELECT
 FROM pageviews s
 JOIN top_pages tp on s.page = tp.page
 JOIN add_to_cart ac ON s.session_id = ac.session_id
-WHERE date > CURRENT_DATE - 121
-AND date < CURRENT_DATE
-
---this pull spend by medium
-UNION
-SELECT
-  DISTINCT date
-  ,'ACQUISITIONS' bus_unit
-  ,s.medium DIMENSIONS
-  ,'SPEND BY CHANNEL' METRIC
-  ,'TIER 2' DETAIL_LEVEL
-  ,1 POLARITY
-  ,SUM(total_spend) OVER(PARTITION BY s.date, DIMENSIONS) amount
-  ,'MINIMUM SPEND COUNT' HURDLE_DESCRIPTION
-  ,1000 SIG_HURDLE
-  ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
-  ,5 METRIC_WITHIN_DIMENSIONS
-FROM marketing_spend s
-JOIN top_medium t ON s.medium = t.medium
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
