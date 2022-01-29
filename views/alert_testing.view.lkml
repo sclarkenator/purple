@@ -473,7 +473,7 @@ SELECT
   ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
   ,5 METRIC_WITHIN_DIMENSIONS
 FROM marketing_spend s
-JOIN top_medium t ON s.medium = t.medium
+JOIN top_medium t ON s.channel = t.medium
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
