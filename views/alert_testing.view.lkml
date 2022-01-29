@@ -289,8 +289,8 @@ ORDER BY 2, 1
 (
   SELECT
     ads.date
-    ,COALESCE((ads.medium),adr.medium) AS channel
-    ,COALESCE((ads.platform),adr.source) AS medium_source
+    ,COALESCE((ads.medium),adr.medium) AS medium
+    ,COALESCE((ads.platform),adr.source) AS source
     ,NVL(ads.campaign_id,(adr.utm_campaign)) AS campaign_id
     ,ads.campaign_name AS campaign_name
     ,COALESCE((ads.campaign_type),adr.campaign_type)  AS campaign_type
@@ -385,12 +385,31 @@ JOIN top_source ts ON s.source = ts.source
 WHERE date > CURRENT_DATE -121
 AND date < CURRENT_DATE
 
+--this pull spend by source
+UNION
+SELECT
+  DISTINCT date
+  ,'ACQUISITIONS' bus_unit
+  ,s.source DIMENSIONS
+  ,'SPEND BY SOURCE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,SUM(total_spend) OVER(PARTITION BY s.date, DIMENSIONS) amount
+  ,'MINIMUM SPEND COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,5 METRIC_WITHIN_DIMENSIONS
+FROM marketing_spend s
+JOIN top_source t ON s.source = t.source
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this pulls sesisons COUNT for the top 20 CHANNEL by sessions FROM Heap
 SELECT
   DISTINCT s.date
   ,'ACQUISITIONS' bus_unit
-  ,s.channel DIMENSIONS
+  ,s.medium DIMENSIONS
   ,'SESSIONS BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
@@ -408,7 +427,7 @@ UNION
 SELECT
   DISTINCT s.date
   ,'ACQUISITIONS' bus_unit
-  ,s.channel DIMENSIONS
+  ,s.medium DIMENSIONS
   ,'BOUNCE BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,-1 POLARITY
@@ -426,7 +445,7 @@ UNION
 SELECT
   DISTINCT s.date
   ,'ACQUISITIONS' bus_unit
-  ,s.channel DIMENSIONS
+  ,s.medium DIMENSIONS
   ,'QCVR BY CHANNEL' METRIC
   ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
@@ -444,7 +463,7 @@ UNION
 SELECT
   DISTINCT s.date
   ,'ACQUISITIONS' bus_unit
-  ,s.channel DIMENSIONS
+  ,s.medium DIMENSIONS
   ,'RPV BY CHANNEL' METRIC
   ,'TIER 3' DETAIL_LEVEL
   ,1 POLARITY
@@ -463,7 +482,7 @@ UNION
 SELECT
   DISTINCT date
   ,'ACQUISITIONS' bus_unit
-  ,s.channel DIMENSIONS
+  ,s.medium DIMENSIONS
   ,'SPEND BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
@@ -473,7 +492,6 @@ SELECT
   ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
   ,5 METRIC_WITHIN_DIMENSIONS
 FROM marketing_spend s
-JOIN top_medium t ON s.channel = t.medium
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
