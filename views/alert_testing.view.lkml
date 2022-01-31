@@ -1498,7 +1498,7 @@ FROM medians
     type: string
     link: {
       label: "Show dimension dashboard"
-      url: "https://purple.looker.com/dashboards/4861?Dimensions={{ value }}"
+      url: "https://purple.looker.com/dashboards/4861?Dimensions={{ value }}&Business%20Unit={{ value }}"
       icon_url: "https://www.google.com/s2/favicons?domain=looker.com" }
     sql: ${TABLE}.dimensions ;;
   }
