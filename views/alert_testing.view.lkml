@@ -291,18 +291,18 @@ ORDER BY 2, 1
     ads.date
     ,COALESCE((ads.medium),adr.medium) AS medium
     ,COALESCE((ads.platform),adr.source) AS source
-    ,NVL(ads.campaign_id,(adr.utm_campaign)) AS campaign_id
     ,ads.campaign_name AS campaign_name
     ,COALESCE((ads.campaign_type),adr.campaign_type)  AS campaign_type
     ,ads.device AS device
     ,ROUND(COALESCE(SUM(ads.total_spend), 0), 2) AS total_spend
     ,COALESCE(SUM(ads.impressions), 0) AS total_impressions
     ,COALESCE(SUM(ads.clicks), 0) AS total_clicks
-  FROM datagrid.prod.adspend ads
-  FULL JOIN datagrid.prod.adspend_revenue adr ON adr.pk = ads.revenue_key
+    ,COALESCE(SUM(ads.conversion_value),0) AS conversion_value
+  FROM prod.adspend ads
+  FULL JOIN prod.adspend_revenue adr ON adr.pk = ads.revenue_key
   WHERE to_date(ads.date) > CURRENT_DATE -121
   AND to_date(ads.date) < CURRENT_DATE
-  GROUP BY 1, 2, 3, 4, 5, 6, 7
+  GROUP BY 1, 2, 3, 4, 5, 6
  )
 --this is the main select that combines all the single-metric fact queries FROM the previous CTEs or raw tables. simply union another select on to add another category of metrics
 --schema is date-> bus_unit -> dimensions --> metric (this is the partition by in most queries) -> category (description of metric) -> tier(detail level) (H/M/L for reporting suppression) -> amount
@@ -404,6 +404,25 @@ JOIN top_source t ON s.source = t.source
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
+--this pull conversion value by source
+UNION
+SELECT
+  DISTINCT date
+  ,'ACQUISITIONS' bus_unit
+  ,s.source DIMENSIONS
+  ,'CONVERSION VALUE BY SOURCE' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,SUM(conversion_value) OVER(PARTITION BY s.date, DIMENSIONS) amount
+  ,'MINIMUM CONVESION VALUE COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,SUM(conversion_value) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,6 METRIC_WITHIN_DIMENSIONS
+FROM marketing_spend s
+JOIN top_source t ON s.source = t.source
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
 UNION
 --this pulls sesisons COUNT for the top 20 CHANNEL by sessions FROM Heap
 SELECT
@@ -413,10 +432,10 @@ SELECT
   ,'SESSIONS BY CHANNEL' METRIC
   ,'TIER 2' DETAIL_LEVEL
   ,1 POLARITY
-  ,COUNT(*) OVER (PARTITION BY s.date, DIMENSIONS) amount
+  ,COUNT(*) OVER (PARTITION BY s.date, s.medium) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,COUNT(*) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.medium) HURDLE_VALUE
   ,1 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 WHERE date > CURRENT_DATE -121
@@ -434,7 +453,7 @@ SELECT
   ,ROUND(SUM(bounce_flag) OVER (PARTITION BY date, DIMENSIONS) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,COUNT(*) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.medium) HURDLE_VALUE
   ,2 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 WHERE date > CURRENT_DATE -121
@@ -452,7 +471,7 @@ SELECT
   ,ROUND(SUM(conv_flag) OVER (PARTITION BY date,DIMENSIONS) / NULLIF((SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS) - SUM(bounce_flag) OVER (PARTITION BY date,DIMENSIONS)),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,COUNT(*) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.medium) HURDLE_VALUE
   ,3 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 WHERE date > CURRENT_DATE -121
@@ -470,12 +489,11 @@ SELECT
   ,ROUND(SUM(order_amt) OVER (PARTITION BY date, DIMENSIONS) / NULLIF(SUM(session_flag) OVER (PARTITION BY date, DIMENSIONS),0),3) amount
   ,'MINIMUM SESSION COUNT' HURDLE_DESCRIPTION
   ,1000 SIG_HURDLE
-  ,COUNT(*) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,COUNT(*) OVER (PARTITION BY s.date, s.medium) HURDLE_VALUE
   ,4 METRIC_WITHIN_DIMENSIONS
 FROM session_details s
 WHERE date > CURRENT_DATE -121
 AND date < CURRENT_DATE
-
 
 --this pull spend by medium
 UNION
@@ -492,6 +510,26 @@ SELECT
   ,SUM(total_spend) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
   ,5 METRIC_WITHIN_DIMENSIONS
 FROM marketing_spend s
+JOIN top_medium t ON s.medium = t.medium
+WHERE date > CURRENT_DATE - 121
+AND date < CURRENT_DATE
+
+--this pull conversion value by medium
+UNION
+SELECT
+  DISTINCT date
+  ,'ACQUISITIONS' bus_unit
+  ,s.medium DIMENSIONS
+  ,'CONVERSION VALUE BY CHANNEL' METRIC
+  ,'TIER 2' DETAIL_LEVEL
+  ,1 POLARITY
+  ,SUM(conversion_value) OVER(PARTITION BY s.date, DIMENSIONS) amount
+  ,'MINIMUM CONVERSION VALUE COUNT' HURDLE_DESCRIPTION
+  ,1000 SIG_HURDLE
+  ,SUM(conversion_value) OVER (PARTITION BY s.date, DIMENSIONS) HURDLE_VALUE
+  ,6 METRIC_WITHIN_DIMENSIONS
+FROM marketing_spend s
+JOIN top_medium t ON s.medium = t.medium
 WHERE date > CURRENT_DATE - 121
 AND date < CURRENT_DATE
 
