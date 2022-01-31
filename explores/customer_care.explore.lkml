@@ -17,7 +17,6 @@ explore: combined_activities {hidden:yes} #cj
 #####################################################################
 #####################################################################
 ## cj
-
 explore: sales_draft_data {
   hidden: yes
   from:  agent_data
@@ -211,6 +210,7 @@ explore: wfm_weekly_performance {
 explore: lp_agent_status {
   label: "LivePerson Agent Status"
   view_label: "Agent Data"
+  group_label: "Customer Care"
   from: agent_data
   fields: [lp_agent_status.agents_minimal_grouping*,
     liveperson_agent_status.default_agent_status*,
@@ -248,6 +248,7 @@ explore: lp_agent_status {
 
 explore: liveperson_conversations {
   label: "LivePerson Conversations"
+
   view_label: "Agent Data"
   from: liveperson_agent
   fields: [liveperson_conversations.default_liveperson_agent_linked*,
