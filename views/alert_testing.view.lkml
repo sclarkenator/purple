@@ -298,8 +298,8 @@ ORDER BY 2, 1
     ,COALESCE(SUM(ads.impressions), 0) AS total_impressions
     ,COALESCE(SUM(ads.clicks), 0) AS total_clicks
     ,COALESCE(SUM(ads.conversion_value),0) AS conversion_value
-  FROM prod.adspend ads
-  FULL JOIN prod.adspend_revenue adr ON adr.pk = ads.revenue_key
+  FROM datagrid.prod.adspend ads
+  FULL JOIN datagrid.prod.adspend_revenue adr ON adr.pk = ads.revenue_key
   WHERE to_date(ads.date) > CURRENT_DATE -121
   AND to_date(ads.date) < CURRENT_DATE
   GROUP BY 1, 2, 3, 4, 5, 6
