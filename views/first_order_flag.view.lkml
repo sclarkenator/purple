@@ -9,6 +9,7 @@ view: first_order_flag {
         case when order_num = 1 then 'NEW' else 'REPEAT' end NEW_FLG
       from sales.sales_order so
       where (so.channel_id = 1 OR so.channel_id = 5)
+      and so.exchange = 'F' and so.warranty = 'F'
       ;;
    }
 

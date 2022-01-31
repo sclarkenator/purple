@@ -171,7 +171,7 @@ include: "/dashboards/**/*.dashboard"
     join: sales_order {
       type: left_outer
       sql_on: lower(${sales_order.email}) = lower(${email_contact_merged.email_join});;
-      relationship: many_to_one
+      relationship: one_to_many
     }
     join: sales_order_line_base {
       type: left_outer
@@ -186,7 +186,7 @@ include: "/dashboards/**/*.dashboard"
     join: order_flag {
       type: left_outer
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
-      relationship: many_to_one
+      relationship: one_to_one
     }
     join: first_order_flag {
       type: left_outer
