@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  yes
+    #hidden:  yes
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"
@@ -340,7 +340,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:  area {
-    hidden: yes
+    #hidden: yes
     group_label: "Production"
     label: "L2L"
     description: "A combination of reports pulled from L2L (Leading2Lean) including Machine Downtime, Dispatch, Pitch, etc."
