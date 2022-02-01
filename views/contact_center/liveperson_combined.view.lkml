@@ -324,7 +324,7 @@ view: liveperson_combined {
 
   dimension: participants {
     label: "Participants"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of participants that acted on the conversation"
     type: number
     value_format_name: decimal_0
@@ -333,7 +333,7 @@ view: liveperson_combined {
 
   dimension: interactions {
     label: "Interactions"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of non-system agents that interacted on the conversation"
     type: number
     value_format_name: decimal_0
@@ -342,7 +342,7 @@ view: liveperson_combined {
 
   dimension: transfers {
     label: "Transfers"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of transfers after assignment in the conversation"
     type: number
     value_format_name: decimal_0
@@ -351,7 +351,7 @@ view: liveperson_combined {
 
   dimension: messages {
     label: "Messages"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of messages exchanged during the conversation"
     type: number
     value_format_name: decimal_0
@@ -360,7 +360,7 @@ view: liveperson_combined {
 
   dimension: responses {
     label: "Responses"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of back and forth exchanges that took place in the conversation"
     type: number
     value_format_name: decimal_0
