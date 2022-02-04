@@ -324,7 +324,7 @@ view: liveperson_combined {
 
   dimension: participants {
     label: "Participants"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of participants that acted on the conversation"
     type: number
     value_format_name: decimal_0
@@ -333,7 +333,7 @@ view: liveperson_combined {
 
   dimension: interactions {
     label: "Interactions"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of non-system agents that interacted on the conversation"
     type: number
     value_format_name: decimal_0
@@ -342,7 +342,7 @@ view: liveperson_combined {
 
   dimension: transfers {
     label: "Transfers"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of transfers after assignment in the conversation"
     type: number
     value_format_name: decimal_0
@@ -351,7 +351,7 @@ view: liveperson_combined {
 
   dimension: messages {
     label: "Messages"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of messages exchanged during the conversation"
     type: number
     value_format_name: decimal_0
@@ -360,7 +360,7 @@ view: liveperson_combined {
 
   dimension: responses {
     label: "Responses"
-    group_item_label: "Conversation Metrics"
+    group_label: "Conversation Metrics"
     description: "Count of back and forth exchanges that took place in the conversation"
     type: number
     value_format_name: decimal_0
@@ -723,218 +723,216 @@ view: liveperson_combined {
     sql: case when ${conversation_dates_date}::date = ${started_date}::date then ${conversation_id} end ;;
   }
 
-  ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv enable when added to SQL database
+  measure: participant_avg {
+    label: "AVG Participants"
+    group_label: "Conversation Measures"
+    description: "Average count of participants that acted on the conversations"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.participants ;;
+  }
 
-  # measure: participant_avg {
-  #   label: "AVG Participants"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average count of participants that acted on the conversations"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.participants ;;
-  # }
+  measure: participant_count {
+    label: "Participant Count"
+    group_label: "Conversation Measures"
+    description: "Sum count of participants that acted on the conversations"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.participants ;;
+  }
 
-  # measure: participant_count {
-  #   label: "Participant Count"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Sum count of participants that acted on the conversations"
-  #   type: sum
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.participants ;;
-  # }
+  measure: interaction_avg {
+    label: "AVG Interactions"
+    group_label: "Conversation Measures"
+    description: "Average count of interactions that acted on the conversations"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.interactions ;;
+  }
 
-  # measure: interaction_avg {
-  #   label: "AVG Interactions"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average count of interactions that acted on the conversations"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.interactions ;;
-  # }
+  measure: interaction_count {
+    label: "Interaction Count"
+    group_label: "Conversation Measures"
+    description: "Sum count of interactions that acted on the conversations"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.interactions ;;
+  }
 
-  # measure: interaction_count {
-  #   label: "Interaction Count"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Sum count of interactions that acted on the conversations"
-  #   type: sum
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.interactions ;;
-  # }
+  measure: transfer_avg {
+    label: "AVG Transfers"
+    group_label: "Conversation Measures"
+    description: "Average count of transfers per the conversations"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.transfers ;;
+  }
 
-  # measure: transfer_avg {
-  #   label: "AVG Transfers"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average count of transfers per the conversations"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.transfers ;;
-  # }
+  measure: transfer_count {
+    label: "Transfer Count"
+    group_label: "Conversation Measures"
+    description: "Sum count of transfers"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.transfers ;;
+  }
 
-  # measure: transfer_count {
-  #   label: "Transfer Count"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Sum count of transfers"
-  #   type: sum
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.transfers ;;
-  # }
+  measure: message_avg {
+    label: "AVG Messages"
+    group_label: "Conversation Measures"
+    description: "Average count of messages per conversations"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.messages ;;
+  }
 
-  # measure: message_avg {
-  #   label: "AVG Messages"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average count of messages per conversations"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.messages ;;
-  # }
+  measure: message_count {
+    label: "Message Count"
+    group_label: "Conversation Measures"
+    description: "Sum count of messages"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.messages ;;
+  }
 
-  # measure: message_count {
-  #   label: "Message Count"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Sum count of messages"
-  #   type: sum
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.messages ;;
-  # }
+  measure: response_avg {
+    label: "AVG Responses"
+    group_label: "Conversation Measures"
+    description: "Average count of responses per conversations"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.responses ;;
+  }
 
-  # measure: response_avg {
-  #   label: "AVG Responses"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average count of responses per conversations"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.responses ;;
-  # }
+  measure: response_count {
+    label: "Response Count"
+    group_label: "Conversation Measures"
+    description: "Sum count of responses"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${TABLE}.responses ;;
+  }
 
-  # measure: response_count {
-  #   label: "Response Count"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Sum count of responses"
-  #   type: sum
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.responses ;;
-  # }
+  ##########################################################################################
+  ##########################################################################################
+  ## DURATION MEASURES
 
-  # ##########################################################################################
-  # ##########################################################################################
-  # ## DURATION MEASURES
+  measure: art_avg {
+    label: "ART"
+    group_label: "Conversation Measures"
+    description: "Average Response Time in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.art ;;
+  }
 
-  # measure: art_avg {
-  #   label: "ART"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Response Time in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.art ;;
-  # }
+  measure: artc_avg {
+    label: "ARTC"
+    group_label: "Conversation Measures"
+    description: "Average Consumer Response Time in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.artc ;;
+  }
 
-  # measure: artc_avg {
-  #   label: "ARTC"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Consumer Response Time in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.artc ;;
-  # }
+  measure: arth_avg {
+    label: "ARTH"
+    group_label: "Conversation Measures"
+    description: "Average Human Response Time in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.arth ;;
+  }
 
-  # measure: arth_avg {
-  #   label: "ARTH"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Human Response Time in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.arth ;;
-  # }
+  measure: arta_avg {
+    label: "ARTA"
+    group_label: "Conversation Measures"
+    description: "Average Response Time from Assignment in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.arta ;;
+  }
 
-  # measure: arta_avg {
-  #   label: "ARTA"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Response Time from Assignment in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.arta ;;
-  # }
+  measure: ARTAC_avg {
+    label: "ARTAC"
+    group_label: "Conversation Measures"
+    description: "Average Consumer Response Time in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ARTAC ;;
+  }
 
-  # measure: ARTAC_avg {
-  #   label: "ARTAC"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Consumer Response Time in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ARTAC ;;
-  # }
+  measure: ARTAH_avg {
+    label: "ARTAH"
+    group_label: "Conversation Measures"
+    description: "Average Human Response Time in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ARTAH ;;
+  }
 
-  # measure: ARTAH_avg {
-  #   label: "ARTAH"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Human Response Time in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ARTAH ;;
-  # }
+  measure: TTFAH_avg {
+    label: "TTFAH"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Human Assignment in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.TTFAH ;;
+  }
 
-  # measure: TTFAH_avg {
-  #   label: "TTFAH"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Human Assignment in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.TTFAH ;;
-  # }
+  measure: ttfrah_avg {
+    label: "TTFRAH"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Human Response from Assignment in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfrah ;;
+  }
 
-  # measure: ttfrah_avg {
-  #   label: "TTFRAH"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Human Response from Assignment in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfrah ;;
-  # }
+  measure: ttfrh_avg {
+    label: "TTFRH"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Human Response in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfrh ;;
+  }
 
-  # measure: ttfrh_avg {
-  #   label: "TTFRH"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Human Response in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfrh ;;
-  # }
+  measure: ttfab_avg {
+    label: "TTFAB"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Bot Assignment in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfab ;;
+  }
 
-  # measure: ttfab_avg {
-  #   label: "TTFAB"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Bot Assignment in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfab ;;
-  # }
+  measure: ttfrab_avg {
+    label: "TTFRAB"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Bot Response after Assignment in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfrab ;;
+  }
 
-  # measure: ttfrab_avg {
-  #   label: "TTFRAB"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Bot Response after Assignment in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfrab ;;
-  # }
+  measure: ttfrb_avg {
+    label: "TTFRB"
+    group_label: "Conversation Measures"
+    description: "Average Time to First Bot Response in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfrb ;;
+  }
 
-  # measure: ttfrb_avg {
-  #   label: "TTFRB"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First Bot Response in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfrb ;;
-  # }
-
-  # measure: ttfrs_avg {
-  #   label: "TTFRS"
-  #   group_item_label: "Conversation Measures"
-  #   description: "Average Time to First System (non-agent) Response in minutes"
-  #   type: average
-  #   value_format_name: decimal_0
-  #   sql: ${TABLE}.ttfrs ;;
-  # }
+  measure: ttfrs_avg {
+    label: "TTFRS"
+    group_label: "Conversation Measures"
+    description: "Average Time to First System (non-agent) Response in minutes"
+    type: average
+    value_format_name: decimal_0
+    sql: ${TABLE}.ttfrs ;;
+  }
 
   # measure: ttfra_avg {
   #   label: "TTFRA"
@@ -953,7 +951,5 @@ view: liveperson_combined {
   #   value_format_name: decimal_0
   #   sql: ${TABLE}.ttfr ;;
   # }
-
-  ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ enable when added to SQL database
 
 }
