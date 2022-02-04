@@ -234,7 +234,7 @@ view: sales_order_line {
     sql: Case
           When sales_order.channel_id <> 2 THEN
             Case
-              When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
+              When upper(${carrier_raw}) not in ('XPO','MANNA','PILOT') THEN
               Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
                Else
                  Case
@@ -259,13 +259,13 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS') and ${sales_order.minimum_ship_date} > ${created_date}
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
           -- fedex without min ship date is created + 3
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN dateadd(d,3,${created_date})
           --whiteglove is created + 14
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
           Else dateadd(d,3,${created_date}) END ;;
@@ -277,7 +277,7 @@ view: sales_order_line {
     type: date
     sql: case
           --white glove carriers have 14 days from date of transmission
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN dateadd(d,14,${transmitted_date_date})
           --catch all is creatd +3
           Else dateadd(d,3,${transmitted_date_date}) END ;;
@@ -743,9 +743,10 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -790,9 +791,10 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -808,9 +810,10 @@ view: sales_order_line {
     description: "What was eligible to be fulfilled in SLA from the time the order was transmitted - Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             when ${transmitted_date_date} is null THEN 0
             When ${cancelled_order.cancelled_date} < ${White_Glove_Due_Date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${White_Glove_Due_Date} THEN ${ordered_qty}
@@ -829,8 +832,8 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
         else 0
       END ;;
@@ -846,9 +849,9 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${White_Glove_Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfillment.left_purple_date} <= ${White_Glove_Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
         Else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
@@ -885,9 +888,10 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -930,11 +934,13 @@ view: sales_order_line {
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
+    hidden: yes
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -949,6 +955,7 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
+    hidden: yes
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
@@ -965,7 +972,7 @@ view: sales_order_line {
     label: "Other SLA Achievement %"
     group_label: "Fulfillment SLA (units)"
     description: "Source: looker.calculation"
-    hidden: no
+    hidden: yes
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
@@ -1608,7 +1615,7 @@ view: sales_order_line {
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: case when ${carrier_raw} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
       when ${carrier_raw} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
-      when ${carrier} = 'Carry Out' then ${created_raw}
+      when ${carrier_raw} = 'Carry Out' then ${created_raw}
       when ${carrier_raw} = 'Ryder' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'NEHDS' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'Purple Home Delivery' then ${N_3PL_TRANSMITTED_date}
@@ -1956,7 +1963,7 @@ view: sales_order_line {
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , ${created_raw}
             )
@@ -2008,7 +2015,7 @@ view: sales_order_line {
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , NVL(${transmitted_date_raw},${created_raw})
             )
@@ -2060,7 +2067,7 @@ view: sales_order_line {
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 7 else 3 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 7 else 3 end
             --using min ship by if it has one
             , ${created_raw}
             )
@@ -2112,7 +2119,7 @@ view: sales_order_line {
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 6 else 2 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 6 else 2 end
             --using min ship by if it has one
             , NVL(${fulfillment.left_purple_raw},${created_raw})
             )
