@@ -142,6 +142,17 @@ view: fulfillment {
     type: sum
     sql: ${TABLE}.quantity ;; }
 
+  dimension: fulfillment_record_quantity_dim {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.quantity ;; }
+
+  dimension: bundle_quantity_dim {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.BUNDLE_QUANTITY ;;
+  }
+
   dimension: shipping {
     hidden: yes
     type: number

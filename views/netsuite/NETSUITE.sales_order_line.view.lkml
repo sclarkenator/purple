@@ -678,31 +678,43 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
   }
-
+#change to qty shipped in SLA/on-time?
   measure: Qty_Fulfilled_in_SLA{
     label: "Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
-    description: "Source: looker.calculation"
+    description: "Quantity that shipped on-time. Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
   }
+
+#Added by Jared Dyer to prep for updating qty fulfilled and eligble for SLA Feb 2, 2022
+  dimension: fulfilled_count_dim {
+    group_label: " Advanced"
+    label: "Units Fulfilled Test"
+    description: "Count of items fulfilled. Source:netsuite.fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details*]
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
+      when nvl(${fulfillment.bundle_quantity_dim},0) > 0 then ${fulfillment.bundle_quantity_dim}
+      else ${fulfillment.fulfillment_record_quantity_dim} END ;;}
+
 
   dimension: SLA_fulfilled {
     label: "     * Is Fulfilled in SLA"
@@ -752,9 +764,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
   }
@@ -818,9 +830,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
@@ -894,9 +906,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -941,9 +953,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
