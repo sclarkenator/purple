@@ -20,7 +20,7 @@ view: international_open_po_report {
   measure: accounting_value {
     type: sum
     value_format: "$#,###.00"
-    sql: cast(replace(replace(replace(replace(${account_values_dim},'$'),','),' - Free Replacement'),'None',0)as number);;
+    sql: cast(replace(replace(replace(replace(replace(${account_values_dim},'$'),','),' - Free Replacement'),'None',0),' None',0) as number);;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
