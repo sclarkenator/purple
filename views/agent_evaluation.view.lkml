@@ -1,8 +1,14 @@
 view: agent_evaluation {
   derived_table: {
     sql:
-      select *
-      from analytics.customer_care.agent_evaluation e
+        select *
+        from (select distinct SEQUENCE_ID as AGENT_EVALUATION_ID,
+                EMPLOYEE_CUSTOM_ID as EVALUATED_ID,
+                REVIEWER_CUSTOM_ID as EVALUATOR_ID,
+                SCORE,
+                SCORECARD_NAME as FORM_NAME,
+                COMPLETED_AT as CREATED
+              from analytics.customer_care.stella_connect_review) e
           left join (
             select team_name as evaluator_team_name, incontact_id, rank()over(partition by incontact_id order by end_date desc) as rank
             from analytics.customer_care.team_lead_name
@@ -14,8 +20,20 @@ view: agent_evaluation {
             select team_type as evaluator_team_type, name as evaluator_name, email as evaluator_email, supervisor as is_supervisor, incontact_id
             from analytics.customer_care.agent_lkp
             ) a
-            on e.evaluator_id = a.incontact_id
-      ;;
+            on e.evaluator_id = a.incontact_id;;
+      # from analytics.customer_care.agent_evaluation e
+      #     left join (
+      #       select team_name as evaluator_team_name, incontact_id, rank()over(partition by incontact_id order by end_date desc) as rank
+      #       from analytics.customer_care.team_lead_name
+      #       where team_name is not null
+      #       ) t
+      #       on e.evaluator_id = t.incontact_id
+      #       and t.rank = 1
+      #     left join (
+      #       select team_type as evaluator_team_type, name as evaluator_name, email as evaluator_email, supervisor as is_supervisor, incontact_id
+      #       from analytics.customer_care.agent_lkp
+      #       ) a
+      #       on e.evaluator_id = a.incontact_id;;
   }
   #sql_table_name: CUSTOMER_CARE.AGENT_EVALUATION ;;
 

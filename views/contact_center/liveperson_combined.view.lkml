@@ -728,7 +728,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average count of participants that acted on the conversations"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_1
     sql: ${TABLE}.participants ;;
   }
 
@@ -746,7 +746,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average count of interactions that acted on the conversations"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_1
     sql: ${TABLE}.interactions ;;
   }
 
@@ -764,7 +764,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average count of transfers per the conversations"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_1
     sql: ${TABLE}.transfers ;;
   }
 
@@ -782,7 +782,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average count of messages per conversations"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_1
     sql: ${TABLE}.messages ;;
   }
 
@@ -800,7 +800,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average count of responses per conversations"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_1
     sql: ${TABLE}.responses ;;
   }
 
@@ -822,7 +822,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Response Time in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.art ;;
   }
 
@@ -831,7 +831,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Consumer Response Time in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.artc ;;
   }
 
@@ -840,7 +840,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Human Response Time in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.arth ;;
   }
 
@@ -849,7 +849,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Response Time from Assignment in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.arta ;;
   }
 
@@ -858,7 +858,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Consumer Response Time in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ARTAC ;;
   }
 
@@ -867,7 +867,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Human Response Time in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ARTAH ;;
   }
 
@@ -876,7 +876,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Human Assignment in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.TTFAH ;;
   }
 
@@ -885,7 +885,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Human Response from Assignment in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfrah ;;
   }
 
@@ -894,7 +894,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Human Response in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfrh ;;
   }
 
@@ -903,7 +903,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Bot Assignment in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfab ;;
   }
 
@@ -912,7 +912,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Bot Response after Assignment in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfrab ;;
   }
 
@@ -921,7 +921,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First Bot Response in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfrb ;;
   }
 
@@ -930,7 +930,7 @@ view: liveperson_combined {
     group_label: "Conversation Measures"
     description: "Average Time to First System (non-agent) Response in minutes"
     type: average
-    value_format_name: decimal_0
+    value_format_name: decimal_2
     sql: ${TABLE}.ttfrs ;;
   }
 
@@ -939,7 +939,7 @@ view: liveperson_combined {
   #   group_item_label: "Conversation Measures"
   #   description: "Average first response time measured as avg of TTFRAH, TTFRAB, TTFRS in seconds"
   #   type: average
-  #   value_format_name: decimal_0
+  #   value_format_name: decimal_2
   #   sql: ${TABLE}.ttfra ;;
   # }
 
@@ -948,7 +948,7 @@ view: liveperson_combined {
   #   group_item_label: "Conversation Measures"
   #   description: "Calculated as the lesser of TTFRH, TTFRB, TTFRS in seconds"
   #   type: average
-  #   value_format_name: decimal_0
+  #   value_format_name: decimal_2
   #   sql: ${TABLE}.ttfr ;;
   # }
 
