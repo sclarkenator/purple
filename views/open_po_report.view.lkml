@@ -299,6 +299,26 @@ view: international_open_po_report {
   dimension: status {
     type: string
     sql: ${TABLE}."STATUS" ;;
+    order_by_field: status_order
+  }
+
+  dimension: status_order {
+    hidden: yes
+    case: {
+    when: {sql: ${TABLE}."STATUS" ilike '%NEED TO BOOK%';; label: "1"}
+    when: {sql: ${TABLE}."STATUS" ilike '%BOOKING IN PROCESS%';; label: "2"}
+    when: {sql: ${TABLE}."STATUS" ilike '%BOOKED PENDING EQUIP/FOB%';; label: "3"}
+    when: {sql: ${TABLE}."STATUS" ilike '%DEPT ORIGIN PENDING DOCS%';; label: "4"}
+    when: {sql: ${TABLE}."STATUS" ilike '%INTRANSIT-PENDING TO%';; label: "5"}
+    when: {sql: ${TABLE}."STATUS" ilike '%INTRANSIT-OTW%';; label: "6"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD PORT-PENDING INLAND/DELIVERY%';; label: "7"}
+    when: {sql: ${TABLE}."STATUS" ilike '%TRANSLOADING%';; label: "8"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD INLAND PEND DELIV%';; label: "9"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD FINAL-PENDING UNLOAD%';; label: "10"}
+    when: {sql: ${TABLE}."STATUS" ilike '%SHIPPER ROUTED%';; label: "11"}
+    when: {sql: ${TABLE}."STATUS" ilike '%CANCELLED ORDER%';; label: "12"}
+    else: "13"
+    }
   }
 
   dimension: supplier {
