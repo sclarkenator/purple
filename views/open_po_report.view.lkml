@@ -372,6 +372,13 @@ view: international_open_po_report {
     sql: DATEDIFF(day,${discharged_raw},${purple_in_hand_raw}) ;;
   }
 
+  dimension: Cargo_to_ETD {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${cargo_ready_raw},${ETD_date}) ;;
+  }
+
   dimension: Cargo_to_Purple_In_Hand {
     hidden: yes
     type: number
@@ -384,6 +391,13 @@ view: international_open_po_report {
     value_format: "#,##0.00"
     group_label: "Days Between"
     sql: ${ETD_to_ETA} ;;
+  }
+
+  measure: Avg_Cargo_to_ETD {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Cargo_to_ETD} ;;
   }
 
   measure: Avg_ETD_to_Purple_In_Hand {
