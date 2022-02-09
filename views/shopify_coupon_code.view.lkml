@@ -1,5 +1,5 @@
 view: shopify_coupon_code {
-  sql_table_name: CUSTOMER_CARE.SHOPIFY_COUPON_CODE ;;
+  sql_table_name: CUSTOMER_CARE.V_SHOPIFY_COUPON_CODE ;;
 
   dimension: coupon_code {
     type: string
@@ -34,6 +34,11 @@ view: shopify_coupon_code {
     type: string
     sql: ${TABLE}."TRANID" ;;
     primary_key: yes
+  }
+
+  dimension: order_name {
+    type: string
+    sql: ${TABLE}."ORDER_NAME" ;;
   }
 
   measure: count {
