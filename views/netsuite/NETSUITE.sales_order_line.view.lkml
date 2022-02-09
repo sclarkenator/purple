@@ -833,7 +833,7 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-        when ${fulfillment.left_purple_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
         else 0
       END ;;
@@ -850,7 +850,7 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
-        when ${fulfillment.left_purple_date} <= ${White_Glove_Due_Date} THEN ${fulfilled_count_dim}
+        when ${fulfilled_date} <= ${White_Glove_Due_Date} THEN ${fulfilled_count_dim}
         when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
         Else 0
       END ;;
