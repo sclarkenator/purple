@@ -55,6 +55,7 @@ view: production_goal_by_item {
   measure: units_fg_produced {
     label: "Finished Goods Produced (units)"
     view_label: "Production Goals"
+    hidden: yes
     description: "Number of Finished Goods Produced (units) by SKU"
     type: sum
     value_format: "#,##0"
@@ -64,6 +65,7 @@ view: production_goal_by_item {
   measure: units_peak_produced {
     label: "Peak Produced (units)"
     view_label: "Production Goals"
+    hidden: yes
     description: "Number of Peaks Produced (units) by SKU"
     type: sum
     sql: ${TABLE}."UNITS_PEAK_PRODUCED" ;;

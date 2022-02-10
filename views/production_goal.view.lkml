@@ -72,6 +72,24 @@ view: production_goal {
     sql: ${TABLE}."PEAK_PRODUCED" ;;
   }
 
+  measure: units_fg_produced {
+    label: "Finished Goods Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Finished Goods Produced (units)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."FG_PRODUCED" ;;
+  }
+
+  measure: units_peak_produced {
+    label: "Peak Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Peaks Produced (units)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."PEAK_PRODUCED" ;;
+  }
+
   measure: pw_fg_produced {
     label: "P-West FG Goal"
     view_label: "Production Goals"
