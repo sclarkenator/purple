@@ -517,7 +517,7 @@ explore: perfect_attendance_calc {
   view_label: "Agent Attendance"
   view_name: cc_agent_attendance
   hidden: yes
-  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, agent_data.is_supervisor, agent_data.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
 
   join: agent_data {
     view_label: "Agent Attendance"
