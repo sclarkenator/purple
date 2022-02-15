@@ -152,6 +152,7 @@ explore: wfm_weekly_performance {
   group_label: "Customer Care"
   view_label: "Summary Data"
   from: warehouse_date_table
+  hidden: yes
 
   fields: [
     wfm_weekly_performance.default_fields*,
@@ -211,6 +212,7 @@ explore: lp_agent_status {
   label: "LivePerson Agent Status"
   view_label: "Agent Data"
   group_label: "Customer Care"
+  hidden: yes
   from: agent_data
   fields: [lp_agent_status.agents_minimal_grouping*,
     liveperson_agent_status.default_agent_status*,
