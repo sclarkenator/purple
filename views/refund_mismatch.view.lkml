@@ -109,30 +109,30 @@ view: refund_mismatch {
     sql: ${TABLE}."RELATED_TRANID";;
   }
 
-  dimension: shopify_calculated_refund {
+  dimension: etail_calculated_refund {
     type: string
-    sql: ${TABLE}."SHOPIFY_CALCULATED_REFUND" ;;
+    sql: ${TABLE}."ETAIL_CALCULATED_REFUND" ;;
   }
 
-  dimension: shopify_order_id {
+  dimension: etail_order_id {
     type: number
-    sql: ${TABLE}."SHOPIFY_ORDER_ID" ;;
+    sql: ${TABLE}."ETAIL_ORDER_ID" ;;
   }
 
-  dimension: shopify_refund_amounts {
+  dimension: etail_refund_amounts {
     type: string
-    sql: ${TABLE}."SHOPIFY_REFUND_AMOUNTS" ;;
+    sql: ${TABLE}."ETAIL_REFUND_AMOUNTS" ;;
   }
 
-  dimension: shopify_refund_updated {
+  dimension: etail_refund_updated {
     type: string
-    label: "Shopify Refund Exported"
-    sql: ${TABLE}."SHOPIFY_REFUND_UPDATED" ;;
+    label: "Etail Refund Exported"
+    sql: ${TABLE}."ETAIL_REFUND_UPDATED" ;;
   }
 
-  dimension: shopify_total_refunded {
+  dimension: etail_total_refunded {
     type: number
-    sql: ${TABLE}."SHOPIFY_TOTAL_REFUNDED" ;;
+    sql: ${TABLE}."ETAIL_TOTAL_REFUNDED" ;;
   }
 
   dimension: source {
@@ -149,7 +149,7 @@ view: refund_mismatch {
     type: string
     link: {
       label: "Shopify"
-      url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{shopify_order_id._value}}"
+      url: "https://{{url_shopify._value}}.myshopify.com/admin/orders/{{etail_order_id._value}}"
       icon_url: "https://www.google.com/s2/favicons?domain=www.shopify.com"
     }
     sql: ${TABLE}."TRANSACTION_NUMBER" ;;
