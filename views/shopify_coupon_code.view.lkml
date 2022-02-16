@@ -25,6 +25,11 @@ view: shopify_coupon_code {
     sql: ${TABLE}."ORDER_ID" ;;
   }
 
+  dimension: pre_discount_total {
+    type: number
+    sql: ${TABLE}."PRE_DISCOUNT_TOTAL" ;;
+  }
+
   dimension: order_total {
     type: number
     sql: ${TABLE}."ORDER_TOTAL" ;;
