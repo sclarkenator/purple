@@ -28,6 +28,42 @@ view: international_open_po_report {
         as number);;
   }
 
+  dimension: est_freight_charges_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."ESTIMATED_FREIGHT_CHARGES" ;;
+  }
+
+  measure: est_freight_charges {
+    hidden:  no
+    type:  sum
+    value_format: "$#,###.00"
+    sql: cast(
+        case
+          when ${est_freight_charges_dim} is null or ${est_freight_charges_dim}='' then 0
+          else replace(replace(replace(replace(${est_freight_charges_dim},'$'),','),'None',0),' None',0)
+          end
+        as number) ;;
+  }
+
+  dimension: actual_freight_charges_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."ACTUAL_FREIGHT_CHARGES" ;;
+  }
+
+  measure: actual_freight_charges {
+    hidden:  no
+    type:  sum
+    value_format: "$#,###.00"
+    sql: cast(
+        case
+          when ${actual_freight_charges_dim} is null or ${actual_freight_charges_dim}='' then 0
+          else replace(replace(replace(replace(${actual_freight_charges_dim},'$'),','),'None',0),' None',0)
+          end
+        as number) ;;
+  }
+
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
@@ -350,6 +386,46 @@ view: international_open_po_report {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."UPLOAD_DATE" ;;
+  }
+
+  dimension_group: container_emptied {
+    view_label: "Dates"
+    hidden: no
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_year,
+      week,
+      week_of_year,
+      month,
+      month_num,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CONTAINER_EMPTIED" ;;
+  }
+
+  dimension_group: confirmed_cargo_ready{
+    view_label: "Dates"
+    hidden: no
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_year,
+      week,
+      week_of_year,
+      month,
+      month_num,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CONFIRMED_CARGE_READY_DATE" ;;
   }
 
   dimension: vendor_mid {
