@@ -135,11 +135,11 @@ view: inventory {
 
   measure: to_build {
     label: "To Build"
-    description: "Difference between NS Preferred Stock and current On Hand"
+    description: "The sum of NS Preferred Stock and On Order minus current On Hand"
     type: sum
     hidden:  no
-    sql: case when ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND > 0
-              then ${TABLE}.PREFERRED_STOCK_LEVEL - ${TABLE}.ON_HAND
+    sql: case when ${TABLE}.PREFERRED_STOCK_LEVEL + nvl(${TABLE}.open_order,0) - ${TABLE}.ON_HAND  > 0
+              then ${TABLE}.PREFERRED_STOCK_LEVEL + nvl(${TABLE}.open_order,0) - ${TABLE}.ON_HAND
           else 0 end;; }
 
 

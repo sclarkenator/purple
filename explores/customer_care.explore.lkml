@@ -17,7 +17,6 @@ explore: combined_activities {hidden:yes} #cj
 #####################################################################
 #####################################################################
 ## cj
-
 explore: sales_draft_data {
   hidden: yes
   from:  agent_data
@@ -75,6 +74,7 @@ explore: liveperson_combined {
 
 explore: liveperson_combined_data {
   label: "LivePerson"
+  group_label: "Customer Care"
   description: "Combined LivePerson data"
   view_label: "Agent Data (Conversation Level)"
   from: liveperson_agent
@@ -149,8 +149,10 @@ explore: liveperson_combined_data {
 
 explore: wfm_weekly_performance {
   label: "WFM Weekly Performance Summary"
+  group_label: "Customer Care"
   view_label: "Summary Data"
   from: warehouse_date_table
+  hidden: yes
 
   fields: [
     wfm_weekly_performance.default_fields*,
@@ -209,6 +211,8 @@ explore: wfm_weekly_performance {
 explore: lp_agent_status {
   label: "LivePerson Agent Status"
   view_label: "Agent Data"
+  group_label: "Customer Care"
+  hidden: yes
   from: agent_data
   fields: [lp_agent_status.agents_minimal_grouping*,
     liveperson_agent_status.default_agent_status*,
@@ -246,6 +250,7 @@ explore: lp_agent_status {
 
 explore: liveperson_conversations {
   label: "LivePerson Conversations"
+
   view_label: "Agent Data"
   from: liveperson_agent
   fields: [liveperson_conversations.default_liveperson_agent_linked*,
@@ -514,7 +519,7 @@ explore: perfect_attendance_calc {
   view_label: "Agent Attendance"
   view_name: cc_agent_attendance
   hidden: yes
-  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, agent_data.is_supervisor, agent_data.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
 
   join: agent_data {
     view_label: "Agent Attendance"

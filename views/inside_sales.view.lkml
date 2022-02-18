@@ -62,6 +62,12 @@ view: inside_sales {
     sql: ${TABLE}.RETAIL_AGENT = 'TRUE' ;;
   }
 
+  dimension: LIVEPERSON_AGENT_ID {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.LIVEPERSON_AGENT_ID ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []

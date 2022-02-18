@@ -10,7 +10,7 @@ include: "/dashboards/**/*.dashboard"
     from:  daily_adspend
     group_label: "Marketing"
     description: "Adspend by platform aggregated by date"
-    hidden: no
+    hidden: yes
     join: adspend_target {
       type: full_outer
       sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
@@ -42,6 +42,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: hotjar_data {
     group_label: "Marketing"
+    hidden: no
     label: "Post-purchase survey results"
     description: "Results form Hotjar post-purchase survey"
     view_label: "Survey Data"
@@ -170,7 +171,7 @@ include: "/dashboards/**/*.dashboard"
     join: sales_order {
       type: left_outer
       sql_on: lower(${sales_order.email}) = lower(${email_contact_merged.email_join});;
-      relationship: many_to_one
+      relationship: one_to_many
     }
     join: sales_order_line_base {
       type: left_outer
@@ -185,7 +186,7 @@ include: "/dashboards/**/*.dashboard"
     join: order_flag {
       type: left_outer
       sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
-      relationship: many_to_one
+      relationship: one_to_one
     }
     join: first_order_flag {
       type: left_outer
@@ -258,6 +259,7 @@ explore: email_mymove_contact {
   explore: email_crm {
     from:  sales_order_line_base
     label:  " Sales"
+    hidden: yes
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
@@ -272,7 +274,6 @@ explore: email_mymove_contact {
       type: left_outer
       sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
       relationship: one_to_one}
-    hidden: yes
     join: cordial_activity {
       type: left_outer
       sql_on: lower(${cordial_activity.email}) = lower(${sales_order.email})
@@ -308,7 +309,8 @@ explore: email_mymove_contact {
     }
 }
 
-  explore: talkable_referral {hidden: yes
+  explore: talkable_referral {
+    hidden: yes
     join: sales_order {
       type: left_outer
       relationship: one_to_one

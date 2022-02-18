@@ -1,5 +1,5 @@
 view: wholesale_stores {
-  sql_table_name: analytics.retail.retail_store ;;
+  sql_table_name: datagrid.prod.retail_location_geo ;;
 
   dimension: Customer {
     label: "Parent Account"
@@ -10,13 +10,13 @@ view: wholesale_stores {
   dimension: Store_name {
     label: "Store Name"
     type: string
-    sql: ${TABLE}.account_name ;;
+    sql: ${TABLE}.location_name ;;
   }
 
   dimension: salesforce_store_id {
     label: "Store ID"
     type: string
-    sql: ${TABLE}.SALESFORCE_RETAIL_STORES_ID;;
+    sql: ${TABLE}.LOCATION_ID;;
   }
 
   dimension: Address {
@@ -83,8 +83,13 @@ view: wholesale_stores {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${open_date_date}, ${salesforce_store_id}) ;;
+    sql: ${TABLE}.pk;;
     hidden: yes
+  }
+
+  dimension:  location_type{
+    type: string
+    sql:  ${TABLE}.location_type ;;
   }
 
   measure: count {

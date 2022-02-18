@@ -308,20 +308,13 @@ view: sales_order_line_base {
     label: "z - Week Bucket"
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: netsuite.sales_order_line"
     type: string
-    # sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
-    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
-    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) +1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-    #         WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-    #       ELSE 'Other' END ;;
-    sql:   CASE WHEN ${created_week_of_year} = 2  AND ${created_year} = 2022 THEN 'Current Week'
-              WHEN ${created_week_of_year} = 1  AND ${created_year} = 2022 THEN 'Last Week'
-              WHEN ${created_date} >= '2021-12-27' AND ${created_date} <= '2022-01-02' THEN 'Two Weeks Ago'
-              WHEN ${created_week_of_year} = 2  AND ${created_year} = 2021 THEN 'Current Week LY'
-              WHEN ${created_week_of_year} = 1 AND ${created_year} = 2021 THEN 'Last Week LY'
-              WHEN ${created_week_of_year} = 52 AND ${created_year} = 2020 THEN 'Two Weeks Ago LY'
-            ELSE 'Other' END;;
+     sql:  CASE WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) THEN 'Current Week'
+             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) THEN 'Last Week'
+             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -2 AND ${created_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) AND ${created_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -1 AND ${created_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+             WHEN ${created_week_of_year} = date_part (weekofyear,current_date) -2 AND ${created_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;
   }
 
   dimension: Before_today_ly{
@@ -1167,6 +1160,7 @@ view: sales_order_line_base {
           when ${location} ilike '%nehds%' then 'NEHDS'
           when ${location} ilike '%ryder%' then 'Ryder'
           when ${location} ilike  '%speedy%' then'Speedy Delivery'
+          when ${location} ilike '%select%' then 'Select Express'
           when ${location} ilike  '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%101-%' AND ${carrier_raw} ilike '%fragilepak%' then 'FragilePak'
           when ${location} ilike '%100-%' then 'Purple'
@@ -1182,7 +1176,7 @@ view: sales_order_line_base {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot. Source:netsuite.sales_order_line"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(coalesce(${carrier},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
+    sql:  CASE WHEN upper(coalesce(${carrier_raw},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
   }
 
   dimension: ship_flag {

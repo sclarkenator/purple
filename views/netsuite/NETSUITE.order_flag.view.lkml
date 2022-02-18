@@ -1092,6 +1092,14 @@ view: order_flag {
     type:  yesno
     sql:  ${TABLE}.bearaby_weighted_blanket_flg =1 ;; }
 
+  dimension: cloud_pillow_flag {
+    hidden: yes
+    group_label: "    * Orders has:"
+    label: "a Cloud Pillow"
+    description: "1/0; 1 if there is a Cloud Pillow n this order. Source: looker.calculation"
+    type: yesno
+    sql: ${TABLE}.cloud_pillow_flg > 0 ;; }
+
 # Bundle flags and measures
   dimension: is_bundle{
     group_label: "eComm Bundle Flags"
