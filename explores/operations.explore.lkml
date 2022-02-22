@@ -327,7 +327,7 @@ explore: etq_ncr {
   view_label: "NCR"
   hidden: yes
   join: etq_ncr_item {
-    view_label: " NCR Item"
+    view_label: " NCR Details"
     type: left_outer
     sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
     relationship: one_to_many
