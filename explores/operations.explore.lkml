@@ -289,38 +289,59 @@ explore: bin {
   label: "Highjump Bin Location"
 }
 
-  explore: international_open_po_report {
-    hidden: yes
-    view_label:"International Open POs"
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
-      relationship: many_to_one}
-    }
-  explore: day_pending {hidden:yes group_label: "Operations"}
-  explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
-  explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
-  explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedited Shipping"}
-  explore: ai_transaction {hidden:yes group_label: "Operations"}
-  explore: aop_combined {hidden:yes view_label:"AOP Combined"}
-  explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
-  explore: item_raw {from: item hidden:yes}
-  explore: forecast_snapshot {
-    hidden:yes
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one }
-    join: v_ai_product{
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
-      relationship: many_to_one }
-    }
-
-explore: labor_hours {
+explore: international_open_po_report {
   hidden: yes
-  group_label: "Workday Labor Hours"
+  view_label:"International Open POs"
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
+    relationship: many_to_one}
+  }
+
+explore: day_pending {hidden:yes group_label: "Operations"}
+explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
+explore: back_ordered {hidden: yes group_label: "Operations" label: "Back Ordered"}
+explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedited Shipping"}
+explore: ai_transaction {hidden:yes group_label: "Operations"}
+explore: aop_combined {hidden:yes view_label:"AOP Combined"}
+explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
+explore: item_raw {from: item hidden:yes}
+explore: forecast_snapshot {
+  hidden:yes
+  join: item {
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
+    relationship: many_to_one }
+  join: v_ai_product{
+    view_label: "Product"
+    type: left_outer
+    sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
+    relationship: many_to_one }
+  }
+explore: labor_hours {hidden: yes group_label: "Workday Labor Hours"}
+explore: etq_scar {hidden: yes label: "ETQ - Scar"}
+explore: etq_ncr {
+  label: "ETQ - NCR"
+  view_label: "NCR"
+  hidden: yes
+  join: etq_ncr_item {
+    view_label: " NCR Item"
+    type: left_outer
+    sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
+    relationship: one_to_many
+  }
+  join: item {
+    view_label: "Item"
+    type: left_outer
+    sql_on: ${etq_ncr_item.part_number} = ${item.kit_sku_id} ;;
+    relationship: one_to_one
+  }
+  join: standard_cost {
+    view_label: "Item"
+    type: left_outer
+    sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+    relationship: one_to_one
+    }
 }
