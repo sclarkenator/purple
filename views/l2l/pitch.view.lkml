@@ -503,7 +503,7 @@ measure: steady_state_average{
   }
 
   measure: shots_per_hour {
-    description: "Shots/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
+    description: "Actuals/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
     type: number
     value_format: "#,##0"
     sql: div0(${actual},${planned_production_minutes}/60) ;;
@@ -514,6 +514,20 @@ measure: steady_state_average{
     type: number
     value_format: "#,##0"
     sql: div0(${actual}+${scrap},(${planned_production_minutes}-${downtime_minutes})/60) ;;
+  }
+
+  measure: cycle_good_parts {
+    description: "Planned Production minus Downtime divided by Actual Shots (seconds/good parts)"
+    type: number
+    value_format: "#,##0"
+    sql: div0((${planned_production_minutes}-${downtime_minutes})*60,${actual}) ;;
+  }
+
+  measure: cycle_total_parts {
+    description: "Planned Production minus Downtime divided by Actual Shots plus Scrap (seconds/total parts)"
+    type: number
+    value_format: "#,##0"
+    sql: div0((${planned_production_minutes}-${downtime_minutes})*60,${actual}+${scrap}) ;;
   }
 
   }
