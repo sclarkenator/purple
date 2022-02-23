@@ -163,6 +163,8 @@ select
     , round(((total_units_new_dtcor/8)*2),0) "14_DAY_FORECAST_DTCOR"
     , round(((total_units_new_pwest/8)*2),0) "14_DAY_FORECAST_PWEST"
     , round(((total_units_new_psouth/8)*2),0) "14_DAY_FORECAST_PSOUTH"
+    , round(((total_units_new_pwest/8)*3),0) "21_DAY_FORECAST_PWEST"
+    , round(((total_units_new_psouth/8)*3),0) "21_DAY_FORECAST_PSOUTH"
     , round(("14_DAY_FORECAST"/14),0) daily_forecast
     , round(("14_DAY_FORECAST_WHOLESALE"/14),0) daily_forecast_wholesale
     , round(("14_DAY_FORECAST_DTCOR"/14),0) daily_forecast_dtcor
@@ -181,7 +183,7 @@ from sales.v_forecast fc
 where ((fc.forecast  < (to_date(dateadd('day', 63, date_trunc('week', current_date()))))))
     and ((fc.forecast  >= (to_date(dateadd('day', 7, date_trunc('week', current_date()))))))
     and (i.category = 'MATTRESS')
-group by 1,2,18
+group by 1,2,20
 
 )
 
@@ -205,6 +207,8 @@ select zz.new_hep_sku
     , case when sum(zz."14_DAY_FORECAST") is null then 0 else sum(zz."14_DAY_FORECAST") end as fourteen_day_forecast
     , case when sum(zz."14_DAY_FORECAST_PWEST") is null then 0 else sum(zz."14_DAY_FORECAST_PWEST") end as fourteen_day_forecast_pwest
     , case when sum(zz."14_DAY_FORECAST_PSOUTH") is null then 0 else sum(zz."14_DAY_FORECAST_PSOUTH") end as fourteen_day_forecast_psouth
+    , case when sum(zz."21_DAY_FORECAST_PWEST") is null then 0 else sum(zz."21_DAY_FORECAST_PWEST") end as twentyone_day_forecast_pwest
+    , case when sum(zz."21_DAY_FORECAST_PSOUTH") is null then 0 else sum(zz."21_DAY_FORECAST_PSOUTH") end as twentyone_day_forecast_psouth
     , case when sum(zz.daily_forecast) is null then 0 else sum(zz.daily_forecast) end as daily_forecast
     , case when sum(zz.daily_forecast_pwest) is null then 0 else sum(zz.daily_forecast_pwest) end as daily_forecast_pwest
     , case when sum(zz.daily_forecast_psouth) is null then 0 else sum(zz.daily_forecast_psouth) end as daily_forecast_psouth
@@ -243,9 +247,11 @@ from (
       , ff.daily_forecast as daily_forecast
       , ff.total_units_new_pwest as total_units_new_pwest
       , ff."14_DAY_FORECAST_PWEST" as "14_DAY_FORECAST_PWEST"
+      , ff."21_DAY_FORECAST_PWEST" as "21_DAY_FORECAST_PWEST"
       , ff.daily_forecast_pwest as daily_forecast_pwest
       , ff.total_units_new_psouth as total_units_new_psouth
       , ff."14_DAY_FORECAST_PSOUTH" as "14_DAY_FORECAST_PSOUTH"
+      , ff."21_DAY_FORECAST_PSOUTH" as "21_DAY_FORECAST_PSOUTH"
       , ff.daily_forecast_psouth as daily_forecast_psouth
       , ff.forecast_version as forecast_version
   from aa
@@ -256,7 +262,7 @@ from (
   left join ff on ff.sku_id = aa.finished_good_sku
 ) zz
 --where forecast_version ='Working'
-group by 1,2,3,4,24,25,26,27, 28;;  }
+group by 1,2,3,4,26,27,28,29,30;;  }
 
   dimension: hep_sku {
     label: "SFG SKU"
@@ -407,6 +413,20 @@ group by 1,2,3,4,24,25,26,27, 28;;  }
     description: "source; production.inventory"
     type: sum
     sql:  ${TABLE}.FOURTEEN_DAY_FORECAST_PSOUTH ;;
+  }
+
+  measure: twentyone_day_forecast_pwest {
+    label: "21 Day West Forecast"
+    description: "source; production.inventory"
+    type: sum
+    sql:  ${TABLE}.TWENTYONE_DAY_FORECAST_PWEST ;;
+  }
+
+  measure: twentyone_day_forecast_psouth {
+    label: "21 Day South Forecast"
+    description: "source; production.inventory"
+    type: sum
+    sql:  ${TABLE}.TWENTYONE_DAY_FORECAST_PSOUTH ;;
   }
 
   measure: daily_forecast {
