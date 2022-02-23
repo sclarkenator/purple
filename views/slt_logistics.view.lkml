@@ -139,7 +139,7 @@ view: slt_logistics {
     sql: ${TABLE}."OOS_ITEM" ;;
   }
 
-  dimension_group: report {
+  dimension_group: reported {
     type: time
     timeframes: [
       raw,
