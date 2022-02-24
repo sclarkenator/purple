@@ -17,6 +17,7 @@ view: slt_safety {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
@@ -160,6 +161,7 @@ view: slt_safety {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
