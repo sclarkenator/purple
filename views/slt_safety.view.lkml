@@ -30,9 +30,23 @@ view: slt_safety {
   # This dimension will be called "First Aid" in Explore.
 
   dimension: first_aid {
+    hidden: yes
     type: number
-    value_format_name: id
     sql: ${TABLE}."FIRST_AID" ;;
+  }
+
+  measure: total_first_aid {
+    group_label: "Totals"
+    label: "First Aid"
+    type: sum
+    sql: ${first_aid} ;;
+  }
+
+  measure: average_first_aid {
+    group_label: "Averages"
+    label: "First Aid"
+    type: average
+    sql: ${first_aid} ;;
   }
 
   dimension_group: insert_ts {
@@ -155,6 +169,7 @@ view: slt_safety {
   }
 
   dimension: recordable_incident_rate {
+    hidden: yes
     type: number
     sql: ${TABLE}."TOTAL_RECORDABLE_INCIDENT_RATE" ;;
   }
