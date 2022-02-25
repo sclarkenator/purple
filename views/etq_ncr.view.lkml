@@ -40,7 +40,7 @@ view: etq_ncr {
   }
 
   dimension: non_conformance_origin {
-    label: "Non-Conformance Orgin"
+    label: "Non-Conformance Origin"
     type: string
     sql: ${TABLE}."NON_CONFORMANCE_ORIGIN" ;;
   }
