@@ -45,7 +45,7 @@ view: v_fit_affirm {
        join         analytics.commerce_tools.ct_payment                 p   on t.payment_id = p.payment_id
        join         analytics.commerce_tools.ct_order_payment           op  on p.payment_id = op.payment_id
        join         analytics.commerce_tools.ct_order                   o   on op.order_id = o.order_id
-       left join    analytics.commerce_tools.ct_payment_gateway_link    gl  on t.interaction_id = gl.interaction_id
+       left join    analytics.commerce_tools.ct_interaction    gl  on t.interaction_id = gl.interaction_id
        left join    analytics.accounting.affirm_transaction             aft on gl.gateway_link = aft.event_id
        left join    analytics.accounting.affirm_header                  afh on aft.entry_id = afh.id
 
