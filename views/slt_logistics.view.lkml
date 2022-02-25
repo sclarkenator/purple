@@ -22,15 +22,16 @@ view: slt_logistics {
   # Click on the type parameter to see all the options in the Quick Help panel on the right.
 
   measure: total_containers_arrived_pending_unload {
-    group_label: "Totals"
+    group_label: "Inbound"
     label: "Containers Pending Unload"
     type: sum
     sql: ${containers_arrived_pending_unload} ;;
   }
 
   measure: average_containers_arrived_pending_unload {
-    group_label: "Averages"
-    label: "Containers Pending Unload"
+    hidden:  yes
+    group_label: "Inbound"
+    label: "Avg. Containers Pending Unload"
     type: average
     sql: ${containers_arrived_pending_unload} ;;
   }
@@ -42,15 +43,16 @@ view: slt_logistics {
   }
 
   measure: total_containers_in_yard_with_oos{
-    group_label: "Totals"
+    group_label: "Inbound"
     label: "Containers in Yard w/Out of Stock Items"
     type: sum
     sql: ${containers_in_yard_with_oos} ;;
   }
 
   measure: average_containers_in_yard_with_oos {
-    group_label: "Averages"
-    label: "Containers in Yard w/Out of Stock Items"
+    hidden:  yes
+    group_label: "Inbound"
+    label: "Avg. Containers in Yard w/Out of Stock Items"
     type: average
     sql: ${containers_in_yard_with_oos} ;;
   }
@@ -62,15 +64,16 @@ view: slt_logistics {
   }
 
   measure: total_fedex_trailers_picked_up {
-    group_label: "Totals"
+    group_label: "Outbound"
     label: "Fedex Trailers Picked Up"
     type: sum
     sql: ${fedex_trailers_picked_up} ;;
   }
 
   measure: average_fedex_trailers_picked_up {
-    group_label: "Averages"
-    label: "Fedex Trailers Picked Up"
+    hidden:  yes
+    group_label: "Outbound"
+    label: "Avg. Fedex Trailers Picked Up"
     type: average
     sql: ${fedex_trailers_picked_up} ;;
   }
@@ -82,15 +85,16 @@ view: slt_logistics {
   }
 
   measure: total_inbound_shipments_departed {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "Inbound Shipments Departed"
     type: sum
     sql: ${inbound_shipments_departed} ;;
   }
 
   measure: average_inbound_shipments_departed {
-    group_label: "Averages"
-    label: "Inbound Shipments Departed"
+    hidden:  yes
+    group_label: "Transportation"
+    label: "Avg. Inbound Shipments Departed"
     type: average
     sql: ${inbound_shipments_departed} ;;
   }
@@ -120,20 +124,22 @@ view: slt_logistics {
   }
 
   measure: total_oldest_container_in_yard_days {
-    group_label: "Totals"
+    group_label: "Inbound"
     label: "Oldest Container Age (days)"
     type: sum
     sql: ${oldest_container_in_yard_days} ;;
   }
 
   measure: average_oldest_container_in_yard_days {
-    group_label: "Averages"
-    label: "Oldest Container Age (days)"
+    hidden: yes
+    group_label: "Inbound"
+    label: "Avg. Oldest Container Age (days)"
     type: average
     sql: ${oldest_container_in_yard_days} ;;
   }
 
   dimension: oos_item {
+    group_label: "Inbound"
     label: "Out of Stock Items"
     type: string
     sql: ${TABLE}."OOS_ITEM" ;;
@@ -167,15 +173,16 @@ view: slt_logistics {
   }
 
   measure: total_to_ftl {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "TO FTLs"
     type: sum
     sql: ${to_ftl} ;;
   }
 
   measure: average_to_ftl {
-    group_label: "Averages"
-    label: "TO FTLs"
+    hidden: yes
+    group_label: "Transportation"
+    label: "Avg. TO FTLs"
     type: average
     sql: ${to_ftl} ;;
   }
@@ -187,57 +194,60 @@ view: slt_logistics {
   }
 
   measure: total_to_ltl {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "TO LTLs"
     type: sum
     sql: ${to_ltl} ;;
   }
 
   measure: average_to_ltl {
-    group_label: "Averages"
-    label: "TO LTLs"
+    hidden: yes
+    group_label: "Transportation"
+    label: "Avg. TO LTLs"
     type: average
     sql: ${to_ltl} ;;
   }
 
-  dimension: to_mattresses_shipped {
-    hidden:  yes
-    type: number
-    sql: ${TABLE}."TO_MATTRESSES_SHIPPED" ;;
-  }
-
-  measure: total_to_mattresses_shipped {
-    group_label: "Totals"
-    label: "TO Mattresses Shipped"
-    type: sum
-    sql: ${to_mattresses_shipped} ;;
-  }
-
-  measure: average_to_mattresses_shipped {
-    group_label: "Averages"
-    label: "TO Mattresses Shipped"
-    type: average
-    sql: ${to_mattresses_shipped} ;;
-  }
-
-  dimension: inbound_loads {
+  dimension: inbound_loads_domestic {
     hidden: yes
     type: number
-    sql: ${TABLE}."TOTAL_INBOUND_LOADS" ;;
+    sql: ${TABLE}."TOTAL_INBOUND_LOADS_DOMESTIC" ;;
   }
 
   measure: total_inbound_loads {
-    group_label: "Totals"
-    label: "Inbound Loads"
+    group_label: "Inbound"
+    label: "Inbound Loads Domestic"
     type: sum
-    sql: ${inbound_loads} ;;
+    sql: ${inbound_loads_domestic} ;;
   }
 
   measure: average_inbound_loads {
-    group_label: "Averages"
-    label: "Inbound Loads"
+    hidden:  yes
+    group_label: "Inbound"
+    label: "Avg. Inbound Loads Domestic"
     type: average
-    sql: ${inbound_loads} ;;
+    sql: ${inbound_loads_domestic} ;;
+  }
+
+  dimension: inbound_loads_international {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."TOTAL_INBOUND_LOADS_INTERNATIONAL" ;;
+  }
+
+  measure: total_inbound_loads_international {
+    group_label: "Inbound"
+    label: "Inbound Loads International"
+    type: sum
+    sql: ${inbound_loads_international} ;;
+  }
+
+  measure: average_inbound_loads_international {
+    hidden:  yes
+    group_label: "Inbound"
+    label: "Avg. Inbound Loads International"
+    type: average
+    sql: ${inbound_loads_international} ;;
   }
 
   dimension: ups_trailers_picked_up {
@@ -247,15 +257,16 @@ view: slt_logistics {
   }
 
   measure: total_ups_trailers_picked_up {
-    group_label: "Totals"
+    group_label: "Outbound"
     label: "UPS Trailers Picked Up"
     type: sum
     sql: ${ups_trailers_picked_up} ;;
   }
 
   measure: average_ups_trailers_picked_up {
-    group_label: "Averages"
-    label: "UPS Trailers Picked Up"
+    hidden:  yes
+    group_label: "Outbound"
+    label: "Avg. UPS Trailers Picked Up"
     type: average
     sql: ${ups_trailers_picked_up} ;;
   }
@@ -267,15 +278,16 @@ view: slt_logistics {
   }
 
   measure: total_wholesale_ftl {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "Wholesale FTLs"
     type: sum
     sql: ${wholesale_ftl} ;;
   }
 
   measure: average_wholesale_ftl {
-    group_label: "Averages"
-    label: "Wholesale FTLs"
+    hidden: yes
+    group_label: "Transportation"
+    label: "Avg. Wholesale FTLs"
     type: average
     sql: ${wholesale_ftl} ;;
   }
@@ -287,15 +299,16 @@ view: slt_logistics {
   }
 
   measure: total_wholesale_ltl {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "Wholesale LTLs"
     type: sum
     sql: ${wholesale_ltl} ;;
   }
 
   measure: average_wholesale_ltl {
-    group_label: "Averages"
-    label: "Wholesale LTLs"
+    hidden:  yes
+    group_label: "Transportation"
+    label: "Avg. Wholesale LTLs"
     type: average
     sql: ${wholesale_ltl} ;;
   }
@@ -307,15 +320,16 @@ view: slt_logistics {
   }
 
   measure: total_yard_moves {
-    group_label: "Totals"
+    group_label: "Transportation"
     label: "Yard Moves"
     type: sum
     sql: ${yard_moves} ;;
   }
 
   measure: average_yard_moves {
-    group_label: "Averages"
-    label: "Yard Moves"
+    hidden: yes
+    group_label: "Transportation"
+    label: "Avg. Yard Moves"
     type: average
     sql: ${yard_moves} ;;
   }
