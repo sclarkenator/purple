@@ -345,3 +345,5 @@ explore: etq_ncr {
     relationship: one_to_one
     }
 }
+explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logistics"}
+explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}

@@ -47,7 +47,7 @@ view: v_fb_all {
   }
 
   dimension: campaign_id {
-    type: number
+    type: string
     sql: ${TABLE}."CAMPAIGN_ID" ;;
   }
 
