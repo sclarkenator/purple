@@ -1013,6 +1013,17 @@ explore: perfect_attendance_calc {
     # }
   }
 
+  explore: liveperson_conversation_transfer{
+    hidden: yes
+
+    join: agent_data {
+      type: left_outer
+      view_label: "Agent Data"
+      sql_on: ${liveperson_conversation_transfer.transfered_by_id}=${agent_data.liveperson_id} ;;
+      relationship: many_to_one
+    }
+  }
+
   explore: v_missing_customer_deposit {hidden: yes}
   explore: video_sales_drafts {hidden: yes} #cj
   explore: zendesk_sell {hidden:yes} #cj
@@ -1021,7 +1032,6 @@ explore: perfect_attendance_calc {
   # explore: liveperson_profile {hidden: yes} #cj
   explore: wfh_comparisons {hidden: yes} #cj
   # explore: activities_all_sources {hidden: yes} #cj
-  explore: liveperson_conversation_transfer {hidden: yes} #cj
   explore: liveperson_agent {hidden: yes} #cj
   explore: liveperson_skill {hidden: yes} #cj
   explore: agent_data {group_label: "Customer Care"} #cj
