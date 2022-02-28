@@ -30,6 +30,11 @@ view: v_site_feedback {
     sql: ${TABLE}."RESPONSE_ID" ;;
   }
 
+  dimension: qm_replay_url {
+    type: string
+    sql: ${TABLE}.qm_replay_url;;
+  }
+
   dimension_group: start {
     type: time
     timeframes: [
@@ -41,6 +46,6 @@ view: v_site_feedback {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}."START_DATE" AS TIMESTAMP_NTZ) ;;
+    sql: CAST(${TABLE}.start_date AS TIMESTAMP_NTZ) ;;
   }
 }
