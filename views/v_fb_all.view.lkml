@@ -47,7 +47,7 @@ view: v_fb_all {
   }
 
   dimension: campaign_id {
-    type: number
+    type: string
     sql: ${TABLE}."CAMPAIGN_ID" ;;
   }
 
@@ -222,6 +222,43 @@ view: v_fb_all {
     value_format: "$#,##0.00"
     type: sum
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DV" ;;
+  }
+
+
+  measure: add_to_cart_1_dc {
+    label: "Add to Cart 1DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_1DC" ;;
+  }
+
+  measure: add_to_cart_1_dv {
+    label: "Add to Cart 1DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_1DV" ;;
+  }
+
+  measure: add_to_cart_28_dc {
+    label: "Add to Cart 28DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_28DC" ;;
+  }
+
+  measure: add_to_cart_28_dv {
+    label: "Add to Cart 28DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_28DV" ;;
+  }
+
+  measure: add_to_cart_7_dc {
+    label: "Add to Cart 7DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_7DC" ;;
+  }
+
+  measure: add_to_cart_7_dv {
+    label: "Add to Cart 7DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_7DV" ;;
   }
 
   measure: reach {
