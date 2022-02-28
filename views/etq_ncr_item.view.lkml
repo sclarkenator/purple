@@ -81,6 +81,24 @@ view: etq_ncr_item {
     sql: ${TABLE}."PART_NUMBER" ;;
   }
 
+  dimension: qty_inspected_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."QTY_INSPECTED" ;;
+  }
+
+  dimension: qty_rejected_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."QTY_REJECTED" ;;
+  }
+
+  dimension: qty_returned_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."QTY_RETURNED" ;;
+  }
+
   measure: qty_inspected {
     type: sum
     sql: ${TABLE}."QTY_INSPECTED" ;;
@@ -94,6 +112,21 @@ view: etq_ncr_item {
   measure: qty_returned {
     type: sum
     sql: ${TABLE}."QTY_RETURNED" ;;
+  }
+
+  measure: scrap_cost {
+    type: sum
+    value_format: "$#,##0"
+    sql: ${qty_rejected_dim} * ${standard_cost.standard_cost} ;;
+    filters: [disposition_type: "Scrap"]
+  }
+
+  measure: rtv_cost {
+    label: "RTV Cost"
+    type: sum
+    value_format: "$#,##0"
+    sql: ${qty_rejected_dim} * ${standard_cost.standard_cost} ;;
+    filters: [disposition_type: "Return to Supplier"]
   }
 
   dimension: reference_number {
