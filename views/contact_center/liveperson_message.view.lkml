@@ -288,8 +288,8 @@ view: liveperson_message {
     description: "Average response time in secondsfor human, bot, and virtual assistant agents."
     group_label: "* All Agent Measures"
     type: string
-    sql: concat(0 + floor(avg(case when in ('Agent', 'Bot', 'Virtual Assistant') then ${response_time} end)/60), ':'
-      , right(concat('0', floor(mod(avg(case when ${sender}in ('Agent', 'Bot', 'Virtual Assistant')  then ${response_time} end), 60))), 2)) ;;
+    sql: concat(0 + floor(avg(case when ${sender} in ('Agent', 'Bot', 'Virtual Assistant') then ${response_time} end)/60), ':'
+      , right(concat('0', floor(mod(avg(case when ${sender} in ('Agent', 'Bot', 'Virtual Assistant')  then ${response_time} end), 60))), 2)) ;;
   }
 
   ##########################################################################################
