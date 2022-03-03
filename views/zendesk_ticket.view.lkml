@@ -1,6 +1,19 @@
+include: "/views/_period_comparison.view.lkml"
 view: zendesk_ticket {
+  extends: [_period_comparison]
   sql_table_name: "CUSTOMER_CARE"."ZENDESK_TICKET"
     ;;
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.created;;
+  }
 
   dimension: allow_channelback {
     type: yesno
