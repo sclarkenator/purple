@@ -16,7 +16,7 @@ view: cc_call_service_level_csl {
       week,month,month_num,quarter,quarter_of_year,year]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.created;;
+    sql: ${TABLE}.date;;
   }
 
   measure: count {
