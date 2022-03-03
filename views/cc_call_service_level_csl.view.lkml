@@ -1,9 +1,22 @@
+include: "/views/_period_comparison.view.lkml"
 view: cc_call_service_level_csl {
+  extends: [_period_comparison]
   derived_table: {
     sql: select sla_date date, service_level, contacts_within_SLA, contacts_outside_sla,  contacts_within_SLA+contacts_outside_sla as first_contacts, total_contacts, skill_name
       from customer_care.sla_summary slas
        left join customer_care.skill sk on slas.skill_id = sk.skill_id
        ;;
+  }
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.created;;
   }
 
   measure: count {
