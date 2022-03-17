@@ -56,6 +56,11 @@ view: v_shopify_refund_status {
     sql: ${TABLE}."NOTE" ;;
   }
 
+  dimension: method {
+    type: string
+    sql: ${TABLE}."METHOD" ;;
+  }
+
   set: detail {
     fields: [
       source,
@@ -65,7 +70,8 @@ view: v_shopify_refund_status {
       etail_order_id,
       amount,
       message,
-      status
+      status,
+      method
     ]
   }
 }
