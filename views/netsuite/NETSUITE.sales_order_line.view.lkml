@@ -235,7 +235,7 @@ view: sales_order_line {
           When sales_order.channel_id <> 2 THEN
             Case
               When upper(${carrier_raw}) not in ('XPO','MANNA','PILOT') THEN
-              Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
+              Case When sales_order.minimum_ship is null Then dateadd(d,4,${created_date})
                Else
                  Case
                      When sales_order.minimum_ship = ${created_date} THEN dateadd(d,3,sales_order.minimum_ship)
@@ -244,8 +244,8 @@ view: sales_order_line {
                   END
                Else dateadd(d,14,${created_date})
             END
-          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,3,${created_date}) END
-          Else dateadd(d,3,${created_date})
+          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,4,${created_date}) END
+          Else dateadd(d,4,${created_date})
         END
               ;;
   }
@@ -261,14 +261,14 @@ view: sales_order_line {
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
-          -- fedex without min ship date is created + 3
+          -- fedex without min ship date is created + 4
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
-            THEN dateadd(d,3,${created_date})
+            THEN dateadd(d,4,${created_date})
           --whiteglove is created + 14
           WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: White_Glove_Due_Date {
@@ -296,7 +296,7 @@ view: sales_order_line {
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${v_sla_days.sla_days},5),${created_date})
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: wg_sla_ship {
@@ -330,7 +330,7 @@ view: sales_order_line {
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},5),${created_date})
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: due_date_dif_flag {
@@ -1134,7 +1134,7 @@ view: sales_order_line {
 ##      field: sales_order.channel_id
 ##      value: "1" }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,3,${created_date})) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,4,${created_date})) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
@@ -1399,6 +1399,7 @@ view: sales_order_line {
 
   dimension: sla_numerator_d {
     label: "SLA Numerator"
+    hidden: yes
     view_label: "Fulfillment"
     group_label: "    SLA Percentage"
     type: yesno
@@ -1413,6 +1414,7 @@ view: sales_order_line {
   }
   measure: sla_numerator {
     type: number
+    hidden: yes
     label: "SLA Numerator"
     view_label: "Fulfillment"
     group_label: "    SLA Percentage"
@@ -1420,6 +1422,7 @@ view: sales_order_line {
   }
   measure: sla_denominator {
     type: number
+    hidden: yes
     label: "SLA Denominator"
     view_label: "Fulfillment"
     group_label: "    SLA Percentage"
@@ -1432,6 +1435,7 @@ view: sales_order_line {
   measure: sla_% {
    type: number
    label: "SLA %"
+   hidden: yes
    view_label: "Fulfillment"
    group_label: "    SLA Percentage"
   sql: ${sla_numerator}/${sla_denominator}  ;;
