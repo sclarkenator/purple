@@ -12,7 +12,7 @@ include: "/dashboards/**/*.dashboard"
     label: "Sales NEW"
     group_label: " Sales"
     description: "Simplified view into sales"
-    hidden: no
+    hidden: yes
     query: sales_last_30 {
       dimensions: [sales.order_date]
       measures: [sales.gross_amt]
@@ -69,6 +69,7 @@ include: "/dashboards/**/*.dashboard"
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
+    hidden: yes
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
@@ -908,7 +909,7 @@ include: "/dashboards/**/*.dashboard"
     description: "Sales, Forecast, Adspend, aggregated to a day (for calculating ROAs, and % to Goal)"
     from: day_aggregations
     group_label: " Sales"
-    hidden:no
+    hidden:yes
     query: sales_last_30 {
       dimensions: [day_aggregations.date_date]
       measures: [day_aggregations.total_gross_sales, day_aggregations.forecast_total_amount]
@@ -974,7 +975,7 @@ include: "/dashboards/**/*.dashboard"
   explore: wholesale_open_doors {hidden:yes}
   explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-  explore: sales_targets_dim {#hidden:  yes
+  explore: sales_targets_dim {hidden:  yes
     label: "Finance targets"  description: "Monthly finance targets, spread by day"}
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
   explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
@@ -1060,7 +1061,8 @@ explore: sessions_in_tests {hidden: yes}
     }
   }
 
-  explore: mattress_firm_sales {hidden:no
+  explore: mattress_firm_sales {
+    hidden: yes
     label: "Mattress Firm"
     group_label: " Sales"
     description: "Mattress Firm Units Sold by Store"
@@ -1109,7 +1111,9 @@ explore: sessions_in_tests {hidden: yes}
   explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+  explore: net_rev_daily_forecast {hidden: yes label:"Daily DS forecast"}
   explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
+
     join: dma {
       view_label: "Geography"
       type:  left_outer

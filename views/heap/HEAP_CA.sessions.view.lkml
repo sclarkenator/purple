@@ -298,13 +298,14 @@ view: heap_ca_sessions {
     hidden: no
     description: "Grouping by week, for comparing last week, to the week before, to last year. Source: looker calculation"
     type: string
-    sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) + 1 AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) +1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
-            WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
-           ELSE 'Other' END ;;}
+     sql:  CASE WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) THEN 'Current Week'
+             WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) THEN 'Last Week'
+             WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -2 AND ${time_year} = date_part (year,current_date) THEN 'Two Weeks Ago'
+             WHEN ${time_week_of_year} = date_part (weekofyear,current_date) AND ${time_year} = date_part (year,current_date) -1 THEN 'Current Week LY'
+             WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -1 AND ${time_year} = date_part (year,current_date) -1 THEN 'Last Week LY'
+             WHEN ${time_week_of_year} = date_part (weekofyear,current_date) -2 AND ${time_year} = date_part (year,current_date) -1 THEN 'Two Weeks Ago LY'
+           ELSE 'Other' END ;;
+  }
 
   dimension: user_id {
     type: number

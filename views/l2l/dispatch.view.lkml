@@ -17,6 +17,15 @@ view: dispatch {
     sql: ${TABLE}."ASSIGNED_TECHS" ;;
   }
 
+  dimension_group: dispatch_created {
+    description: "Source: l2l.dispatch"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
+    convert_tz: no
+    datatype: timestamp
+    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+  }
+
   dimension_group: dispatch_completed {
     description: "Source: l2l.dispatch"
     type: time
@@ -26,13 +35,23 @@ view: dispatch {
     sql: CAST(${TABLE}."COMPLETED" AS TIMESTAMP_NTZ) ;;
   }
 
-  dimension_group: dispatch_created {
+  dimension_group: dispatched {
+    hidden: no
     description: "Source: l2l.dispatch"
     type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
     convert_tz: no
     datatype: timestamp
-    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+    sql: CAST(${TABLE}."DISPATCHED" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension_group: dispatch_reported {
+    description: "Source: l2l.dispatch"
+    type: time
+    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
+    convert_tz: no
+    datatype: timestamp
+    sql: CAST(${TABLE}."REPORTED" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension: created_by {
@@ -63,16 +82,6 @@ view: dispatch {
     sql: ${TABLE}."DISPATCH_TYPE_ID" ;;
   }
 
-  dimension_group: dispatched {
-    hidden: no
-    description: "Source: l2l.dispatch"
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year, time]
-    convert_tz: no
-    datatype: timestamp
-    sql: CAST(${TABLE}."DISPATCHED" AS TIMESTAMP_NTZ) ;;
-  }
-
   dimension: downtime {
     hidden: yes
     description: "Source: l2l.dispatch"
@@ -91,15 +100,6 @@ view: dispatch {
     hidden: yes
     type: number
     sql: ${TABLE}."MACHINE_ID" ;;
-  }
-
-  dimension_group: dispatch_reported {
-    description: "Source: l2l.dispatch"
-    type: time
-    timeframes: [raw, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
-    convert_tz: no
-    datatype: timestamp
-    sql: CAST(${TABLE}."REPORTED" AS TIMESTAMP_NTZ) ;;
   }
 
   dimension: technicians {
@@ -135,8 +135,14 @@ view: dispatch {
     sql: ${TABLE}."REASON" ;;
   }
 
+  measure: new_downtime_minutes {
+    label: "Downtime Minutes"
+    type: sum
+    sql: timediff(minutes, ${dispatch_reported_time}, ${dispatch_completed_time}) ;;
+  }
+
   measure: downtime_minutes {
-    hidden: no
+    hidden: yes
     type: sum
     description: "Source: l2l.dispatch"
     value_format: "#,##0"
@@ -144,7 +150,7 @@ view: dispatch {
   }
 
   measure: downtime_hours {
-    hidden: no
+    hidden: yes
     type: sum
     description: "Source: Looker Calculation"
     value_format: "#,##0.00"

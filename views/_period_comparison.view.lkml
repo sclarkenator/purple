@@ -258,6 +258,13 @@ view: _period_comparison {
       ;;
   }
 
+ dimension: is_within_comparison_period {
+    hidden: yes
+    type: yesno
+    sql: ${is_comparison_period} = true
+      ;;
+  }
+
   dimension: period {
     view_label: "Period over Period"
     #group_label: "Period Comparison"

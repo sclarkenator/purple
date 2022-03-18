@@ -1,5 +1,5 @@
 view: sales_targets {
-  sql_table_name: CSV_UPLOADS.finance_targets ;;
+  sql_table_name: CSV_UPLOADS.finance_targets_new ;;
 
   measure: dtc_target {
     label: "Daily DTC Sales Target"

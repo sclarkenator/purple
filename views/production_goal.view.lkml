@@ -25,22 +25,22 @@ view: production_goal {
   dimension_group: forecast {
     view_label: "Production Goals"
     type: time
-    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: date
     sql: ${TABLE}."FORECAST" ;;
   }
 
-  dimension: forecast_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    group_label: "Produced Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${forecast_date::date} >= '2020-12-28' and ${forecast_date::date} <= '2021-01-03' then 1
-              when ${forecast_year::number}=2021 then date_part(weekofyear,${forecast_date::date}) + 1
-              else date_part(weekofyear,${forecast_date::date}) end ;;
-  }
+  # dimension: forecast_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   group_label: "Produced Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${forecast_date::date} >= '2020-12-28' and ${forecast_date::date} <= '2021-01-03' then 1
+  #             when ${forecast_year::number}=2021 then date_part(weekofyear,${forecast_date::date}) + 1
+  #             else date_part(weekofyear,${forecast_date::date}) end ;;
+  # }
 
 
   dimension_group: current {
@@ -70,6 +70,72 @@ view: production_goal {
     hidden: yes
     type: number
     sql: ${TABLE}."PEAK_PRODUCED" ;;
+  }
+
+  measure: units_fg_produced {
+    label: "Finished Goods Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Finished Goods Produced (units)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."FG_PRODUCED" ;;
+  }
+
+  measure: units_peak_produced {
+    label: "Peak Produced (units)"
+    view_label: "Production Goals"
+    description: "Number of Peaks Produced (units)"
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."PEAK_PRODUCED" ;;
+  }
+
+  measure: pw_fg_produced {
+    label: "P-West FG Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.pw_fg_produced ;;
+  }
+
+  measure: pw_peaks_produced {
+    label: "P-West Peaks Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.pw_peak_produced ;;
+  }
+
+  measure: ps_fg_produced {
+    label: "P-South FG Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.ps_fg_produced ;;
+  }
+
+  measure: ps_peaks_produced {
+    label: "P-South Peaks Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.ps_peak_produced ;;
+  }
+
+  measure: outsourced_fg_produced {
+    label: "Outsourced FG Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.outsourced_fg_produced ;;
+  }
+
+  measure: outsourced_peaks_produced {
+    label: "Outsourced Peaks Goal"
+    view_label: "Production Goals"
+    group_label: "  Location Goals"
+    type: sum
+    sql: ${TABLE}.outsourced_peak_produced ;;
   }
 
   dimension: us_holiday {

@@ -50,7 +50,7 @@ view: mattress_firm_sales {
     label: "Order"
     description: "When order was placed @ Mattress Firm"
     type:  time
-    timeframes: [date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [date, day_of_week, day_of_month, day_of_year, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     datatype: date
     sql: ${TABLE}.finalized_date ;; }
 
@@ -122,16 +122,16 @@ view: mattress_firm_sales {
 
 
 
-  dimension: created_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    group_label: "Order Date"
-    description: "2021 adjusted week of year number"
-    sql: case when ${finalized_date::date} >= '2020-12-28' and ${finalized_date::date} <= '2021-01-03' then 1
-              when ${finalized_year::number}=2021 then date_part(weekofyear,${finalized_date::date}) + 1
-              else date_part(weekofyear,${finalized_date::date}) end ;;
-  }
+  # dimension: created_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   group_label: "Order Date"
+  #   description: "2021 adjusted week of year number"
+  #   sql: case when ${finalized_date::date} >= '2020-12-28' and ${finalized_date::date} <= '2021-01-03' then 1
+  #             when ${finalized_year::number}=2021 then date_part(weekofyear,${finalized_date::date}) + 1
+  #             else date_part(weekofyear,${finalized_date::date}) end ;;
+  # }
 
   dimension: adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.

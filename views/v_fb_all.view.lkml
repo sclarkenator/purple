@@ -15,11 +15,6 @@ view: v_fb_all {
     sql: ${TABLE}.date ;;
   }
 
-  dimension: _fivetran_synced {
-    type: date_time
-    sql:${TABLE}."_FIVETRAN_SYNCED";;
-
-  }
 
   dimension: account_id {
     type: number
@@ -52,7 +47,7 @@ view: v_fb_all {
   }
 
   dimension: campaign_id {
-    type: number
+    type: string
     sql: ${TABLE}."CAMPAIGN_ID" ;;
   }
 
@@ -61,15 +56,24 @@ view: v_fb_all {
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
+  dimension: impression_device {
+    type: string
+    sql: ${TABLE}."IMPRESSION_DEVICE" ;;
+  }
+
+  dimension: publisher_platform {
+    type: string
+    sql: ${TABLE}."PUBLISHER_PLATFORM" ;;
+  }
+
+  dimension: platform_position {
+    type: string
+    sql: ${TABLE}."PLATFORM_POSITION" ;;
+  }
+
   measure: clicks {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
-  }
-
-  measure: conversion_rate_ranking {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."CONVERSION_RATE_RANKING" ;;
   }
 
   dimension_group: date {
@@ -85,12 +89,6 @@ view: v_fb_all {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."DATE" ;;
-  }
-
-  measure: engagement_rate_ranking {
-    type: number
-    hidden: yes
-    sql: ${TABLE}."ENGAGEMENT_RATE_RANKING" ;;
   }
 
   measure: estimated_ad_recall_rate {
@@ -140,6 +138,12 @@ view: v_fb_all {
   dimension: objective {
     type: string
     sql: ${TABLE}."OBJECTIVE" ;;
+  }
+
+  measure: landing_page_views {
+    label: "Landing Page Views"
+    type: sum
+    sql: ${TABLE}."LANDING_PAGE_VIEWS" ;;
   }
 
   measure: purchase_1_dc {
@@ -220,10 +224,41 @@ view: v_fb_all {
     sql: ${TABLE}."PURCHASE_CONVERSION_VALUE_7DV" ;;
   }
 
-  dimension: quality_ranking {
-    type: string
-    hidden: yes
-    sql: ${TABLE}."QUALITY_RANKING" ;;
+
+  measure: add_to_cart_1_dc {
+    label: "Add to Cart 1DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_1DC" ;;
+  }
+
+  measure: add_to_cart_1_dv {
+    label: "Add to Cart 1DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_1DV" ;;
+  }
+
+  measure: add_to_cart_28_dc {
+    label: "Add to Cart 28DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_28DC" ;;
+  }
+
+  measure: add_to_cart_28_dv {
+    label: "Add to Cart 28DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_28DV" ;;
+  }
+
+  measure: add_to_cart_7_dc {
+    label: "Add to Cart 7DC"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_7DC" ;;
+  }
+
+  measure: add_to_cart_7_dv {
+    label: "Add to Cart 7DV"
+    type: sum
+    sql: ${TABLE}."ADD_TO_CART_7DV" ;;
   }
 
   measure: reach {

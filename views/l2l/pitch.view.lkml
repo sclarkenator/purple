@@ -65,6 +65,17 @@ derived_table: {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension_group: current {
+    hidden: yes
+    description: "Source: l2l.pitch"
+    type: time
+    timeframes: [raw, hour, hour_of_day, date, day_of_week, day_of_week_index, day_of_month, day_of_year, week, week_of_year, month, month_num, month_name, quarter, quarter_of_year, year]
+    convert_tz: no
+    datatype: timestamp
+    sql: CURRENT_TIMESTAMP::TIMESTAMP ;;
+  }
+
+
   dimension: createdby {
     hidden: no
     type: string
@@ -214,6 +225,15 @@ measure: steady_state_average{
     sql: ${TABLE}.pitch_start::date < current_date ;;
   }
 
+  dimension: before_current_hour  {
+    view_label: "Pitch"
+    group_label: "Pitch Start Date"
+    label: "z - Before Current Hour"
+    description: "Yes/No for if the pitch is before the current pitch. Source: Looker Calculation"
+    type: yesno
+    sql:  ${pitch_start_hour}<${current_hour} ;;
+  }
+
   dimension: current_week_numb {
     view_label: "Pitch"
     group_label: "Pitch Start Date"
@@ -313,7 +333,7 @@ measure: steady_state_average{
   }
 
   measure: actual {
-    description: "Total amount of Actual Product Produced; Source: l2l.pitch"
+    description: "Total amount of good product produced; Source: l2l.pitch"
     type: sum
     value_format: "#,##0"
     sql: ${TABLE}."ACTUAL" ;;
@@ -321,7 +341,7 @@ measure: steady_state_average{
 
   measure: scrap {
     label: "Scrap"
-    description: "Total number of Actual products produced that are Scrap; Source: l2l.pitch"
+    description: "Total number of scrap product produced; Source: l2l.pitch"
     type: sum
     sql: ${TABLE}."SCRAP" ;;
   }
@@ -483,7 +503,7 @@ measure: steady_state_average{
   }
 
   measure: shots_per_hour {
-    description: "Shots/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
+    description: "Actuals/Hour = Actual Shots / Scheduled Time (Planned Production Minutes)"
     type: number
     value_format: "#,##0"
     sql: div0(${actual},${planned_production_minutes}/60) ;;
@@ -494,6 +514,20 @@ measure: steady_state_average{
     type: number
     value_format: "#,##0"
     sql: div0(${actual}+${scrap},(${planned_production_minutes}-${downtime_minutes})/60) ;;
+  }
+
+  measure: cycle_good_parts {
+    description: "Planned Production minus Downtime divided by Actual Shots (seconds/good parts)"
+    type: number
+    value_format: "#,##0"
+    sql: div0((${planned_production_minutes}-${downtime_minutes})*60,${actual}) ;;
+  }
+
+  measure: cycle_total_parts {
+    description: "Planned Production minus Downtime divided by Actual Shots plus Scrap (seconds/total parts)"
+    type: number
+    value_format: "#,##0"
+    sql: div0((${planned_production_minutes}-${downtime_minutes})*60,${actual}+${scrap}) ;;
   }
 
   }

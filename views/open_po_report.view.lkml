@@ -11,9 +11,57 @@ view: international_open_po_report {
   # A dimension is a groupable field that can be used to filter query results.
   # This dimension will be called "Account Values" in Explore.
 
-  dimension: account_values {
+  dimension: account_values_dim {
+    hidden: yes
     type: string
     sql: ${TABLE}."ACCOUNT_VALUES" ;;
+  }
+
+  measure: accounting_value {
+    type: sum
+    value_format: "$#,###.00"
+    sql:cast(
+        case
+          when ${account_values_dim} is null or ${account_values_dim}='' then 0
+          else replace(replace(replace(replace(replace(${account_values_dim},'$'),','),' - Free Replacement'),'None',0),' None',0)
+          end
+        as number);;
+  }
+
+  dimension: est_freight_charges_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."ESTIMATED_FREIGHT_CHARGES" ;;
+  }
+
+  measure: est_freight_charges {
+    hidden:  no
+    type:  sum
+    value_format: "$#,###.00"
+    sql: cast(
+        case
+          when ${est_freight_charges_dim} is null or ${est_freight_charges_dim}='' then 0
+          else replace(replace(replace(replace(${est_freight_charges_dim},'$'),','),'None',0),' None',0)
+          end
+        as number) ;;
+  }
+
+  dimension: actual_freight_charges_dim {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."ACTUAL_FREIGHT_CHARGES" ;;
+  }
+
+  measure: actual_freight_charges {
+    hidden:  no
+    type:  sum
+    value_format: "$#,###.00"
+    sql: cast(
+        case
+          when ${actual_freight_charges_dim} is null or ${actual_freight_charges_dim}='' then 0
+          else replace(replace(replace(replace(${actual_freight_charges_dim},'$'),','),'None',0),' None',0)
+          end
+        as number) ;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -68,6 +116,7 @@ view: international_open_po_report {
   }
 
   dimension: description {
+    hidden: no
     type: string
     sql: ${TABLE}."DESCRIPTION" ;;
   }
@@ -231,8 +280,9 @@ view: international_open_po_report {
     sql: ${TABLE}."NOTES" ;;
   }
 
-  dimension: ordered_quantity {
-    type: string
+  measure: ordered_quantity {
+    type: sum
+    value_format: "#,##0.00"
     sql: ${TABLE}."ORDERED_QUANTITY" ;;
   }
 
@@ -285,6 +335,26 @@ view: international_open_po_report {
   dimension: status {
     type: string
     sql: ${TABLE}."STATUS" ;;
+    order_by_field: status_order
+  }
+
+  dimension: status_order {
+    hidden: yes
+    case: {
+    when: {sql: ${TABLE}."STATUS" ilike '%NEED TO BOOK%';; label: "1"}
+    when: {sql: ${TABLE}."STATUS" ilike '%BOOKING IN PROCESS%';; label: "2"}
+    when: {sql: ${TABLE}."STATUS" ilike '%BOOKED PENDING EQUIP/FOB%';; label: "3"}
+    when: {sql: ${TABLE}."STATUS" ilike '%DEPT ORIGIN PENDING DOCS%';; label: "4"}
+    when: {sql: ${TABLE}."STATUS" ilike '%INTRANSIT-PENDING TO%';; label: "5"}
+    when: {sql: ${TABLE}."STATUS" ilike '%INTRANSIT-OTW%';; label: "6"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD PORT-PENDING INLAND/DELIVERY%';; label: "7"}
+    when: {sql: ${TABLE}."STATUS" ilike '%TRANSLOADING%';; label: "8"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD INLAND PEND DELIV%';; label: "9"}
+    when: {sql: ${TABLE}."STATUS" ilike '%ARVD FINAL-PENDING UNLOAD%';; label: "10"}
+    when: {sql: ${TABLE}."STATUS" ilike '%SHIPPER ROUTED%';; label: "11"}
+    when: {sql: ${TABLE}."STATUS" ilike '%CANCELLED ORDER%';; label: "12"}
+    else: "13"
+    }
   }
 
   dimension: supplier {
@@ -318,8 +388,146 @@ view: international_open_po_report {
     sql: ${TABLE}."UPLOAD_DATE" ;;
   }
 
+  dimension_group: container_emptied {
+    view_label: "Dates"
+    hidden: no
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_year,
+      week,
+      week_of_year,
+      month,
+      month_num,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CONTAINER_EMPTIED" ;;
+  }
+
+  dimension_group: confirmed_cargo_ready{
+    view_label: "Dates"
+    hidden: no
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_year,
+      week,
+      week_of_year,
+      month,
+      month_num,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CONFIRMED_CARGE_READY_DATE" ;;
+  }
+
   dimension: vendor_mid {
     type: string
     sql: ${TABLE}."VENDOR_MID" ;;
+  }
+
+  dimension: ETD_to_ETA {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${ETA_raw}) ;;
+  }
+
+  dimension: ETD_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETD_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: ETA_to_Discharged {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${ETA_raw},${discharged_raw}) ;;
+  }
+
+  dimension: Discharged_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${discharged_raw},${purple_in_hand_raw}) ;;
+  }
+
+  dimension: Cargo_to_ETD {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${cargo_ready_raw},${ETD_date}) ;;
+  }
+
+  dimension: Cargo_to_Purple_In_Hand {
+    hidden: yes
+    type: number
+    group_label: "Days Between"
+    sql: DATEDIFF(day,${cargo_ready_raw},${purple_in_hand_raw}) ;;
+  }
+
+  measure: Avg_ETD_to_ETA {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETD_to_ETA} ;;
+  }
+
+  measure: Avg_Cargo_to_ETD {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Cargo_to_ETD} ;;
+  }
+
+  measure: Avg_ETD_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETD_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETA_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_ETA_to_Discharged {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${ETA_to_Discharged} ;;
+  }
+
+  measure: Avg_Discharged_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Discharged_to_Purple_In_Hand} ;;
+  }
+
+  measure: Avg_Cargo_to_Purple_In_Hand {
+    type: average
+    value_format: "#,##0.00"
+    group_label: "Days Between"
+    sql: ${Cargo_to_Purple_In_Hand} ;;
   }
 }

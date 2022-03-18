@@ -26,7 +26,9 @@ view: headcount {
         ,case when ifnull(a.terminated, a.inactive) is null
             then datediff(months, ifnull(a.hired, a.created)::date, current_date())
           end as tenure
-        ,case when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
+        ,case when a.name in ('Siena Edwards') then 'Other'
+          when lower(team_type) in ('admin', 'wfm', 'qa') then 'Admin'
+          when lower(team_type) in ('account executive') then 'Sales'
           when lower(team_name) in ('administrator administrator') then 'Admin'
           when team_type is null then 'Other'
           when a.name in ('Jimmy Drake') then 'Other'

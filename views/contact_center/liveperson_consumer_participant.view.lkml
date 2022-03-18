@@ -139,7 +139,7 @@ view: liveperson_consumer_participant {
   ##########################################################################################
   ## MEASURES
   measure: measure_count {
-    label: "Measure Count"
+    label: "Consumer Count"
     type: count
     hidden: yes
     drill_fields: [first_name, name, last_name]

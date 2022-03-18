@@ -24,7 +24,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore: dispatch_info{
-    hidden:  no
+    #hidden:  yes
     group_label: "Production"
     label: "L2L Dispatch Data"
     description: "The log of all L2L dispatches"
@@ -143,6 +143,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory {
     group_label: "Production"
+    hidden: yes
     label: "Current Inventory"
     description: "Inventory positions, by item by location"
     always_filter: {
@@ -183,6 +184,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory_snap {
     group_label: "Production"
+    hidden: yes
     label: "Historical Inventory"
     description: "Inventory positions, by item by location over time"
     always_filter: {
@@ -258,6 +260,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: inventory_adjustment {
     group_label: "Production"
+    hidden: yes
     label: "Inventory Adjustment"
     description: "Inventory Adjustment by Item, Line, etc"
     join: inventory_adjustment_line {
@@ -337,7 +340,7 @@ include: "/dashboards/**/*.dashboard"
   }
 
   explore:  area {
-    hidden: no
+    #hidden: yes
     group_label: "Production"
     label: "L2L"
     description: "A combination of reports pulled from L2L (Leading2Lean) including Machine Downtime, Dispatch, Pitch, etc."
@@ -491,6 +494,8 @@ include: "/dashboards/**/*.dashboard"
   explore: v_quality_mrb_return_bed_qc {hidden: yes label: "Quality MRB Return Bed QC" group_label: "L2L"}
   explore: v_incoming_inspection_form {hidden: yes label: "Incoming Inspection Form" group_label: "L2L"}
   explore: v_quality_mrb_core_stock_check {hidden: yes label: "Quality MRB Core Stock Check" group_label: "L2L"}
+  explore: v_refurb_pillows_wm {hidden: yes label:"Refurb Pillows WM" group_label: "L2L"}
+  explore: v_waste_management_waste_recycling {hidden:yes label:"Waste Management Waste/Recycling" group_label:"L2L"}
   explore: incoming_inspection_form {
     from:  date_meta
     group_label: "L2L Inspection Form"

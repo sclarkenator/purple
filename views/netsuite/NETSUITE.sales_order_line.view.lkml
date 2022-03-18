@@ -234,8 +234,8 @@ view: sales_order_line {
     sql: Case
           When sales_order.channel_id <> 2 THEN
             Case
-              When upper(${carrier}) not in ('XPO','MANNA','PILOT') THEN
-              Case When sales_order.minimum_ship is null Then dateadd(d,3,${created_date})
+              When upper(${carrier_raw}) not in ('XPO','MANNA','PILOT') THEN
+              Case When sales_order.minimum_ship is null Then dateadd(d,4,${created_date})
                Else
                  Case
                      When sales_order.minimum_ship = ${created_date} THEN dateadd(d,3,sales_order.minimum_ship)
@@ -244,8 +244,8 @@ view: sales_order_line {
                   END
                Else dateadd(d,14,${created_date})
             END
-          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,3,${created_date}) END
-          Else dateadd(d,3,${created_date})
+          WHEN sales_order.channel_id = 2 THEN Case When sales_order.SHIP_BY is not null Then sales_order.SHIP_BY Else dateadd(d,4,${created_date}) END
+          Else dateadd(d,4,${created_date})
         END
               ;;
   }
@@ -259,16 +259,16 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK') and ${sales_order.minimum_ship_date} > ${created_date}
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS') and ${sales_order.minimum_ship_date} > ${created_date}
             THEN ${sales_order.minimum_ship_date}
-          -- fedex without min ship date is created + 3
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
-            THEN dateadd(d,3,${created_date})
+          -- fedex without min ship date is created + 4
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) not in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
+            THEN dateadd(d,4,${created_date})
           --whiteglove is created + 14
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN greatest(${sales_order.minimum_ship_date}, dateadd(d,14,${created_date}))
           --catch all is creatd +3
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: White_Glove_Due_Date {
@@ -277,7 +277,7 @@ view: sales_order_line {
     type: date
     sql: case
           --white glove carriers have 14 days from date of transmission
-          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK')
+          WHEN ${sales_order.channel_id} <> 2 and upper(${carrier_raw}) in ('XPO','MANNA','PILOT','RYDER','NEHDS','SPEEDY DELIVERY','PURPLE HOME DELIVERY','FRAGILEPAK','SELECT EXPRESS')
             THEN dateadd(d,14,${transmitted_date_date})
           --catch all is creatd +3
           Else dateadd(d,3,${transmitted_date_date}) END ;;
@@ -296,7 +296,7 @@ view: sales_order_line {
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${v_sla_days.sla_days},5),${created_date})
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: wg_sla_ship {
@@ -330,7 +330,7 @@ view: sales_order_line {
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
           WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},5),${created_date})
-          Else dateadd(d,3,${created_date}) END ;;
+          Else dateadd(d,4,${created_date}) END ;;
   }
 
   dimension: due_date_dif_flag {
@@ -346,24 +346,24 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     type: time
-    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year]
+    timeframes: [raw, date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     datatype: timestamp
     sql: to_timestamp_ntz(${Due_Date}) ;;
   }
 
-  dimension: SLA_Target_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    hidden:  yes
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "SLA Target Date"
-    description: "2021 adjusted week of year number (SLA)"
-    sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
-              when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
-              else date_part(weekofyear,${SLA_Target_date::date}) end ;;
-  }
+  # dimension: SLA_Target_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   hidden:  yes
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "SLA Target Date"
+  #   description: "2021 adjusted week of year number (SLA)"
+  #   sql: case when ${SLA_Target_date::date} >= '2020-12-28' and ${SLA_Target_date::date} <= '2021-01-03' then 1
+  #             when ${SLA_Target_year::number}=2021 then date_part(weekofyear,${SLA_Target_date::date}) + 1
+  #             else date_part(weekofyear,${SLA_Target_date::date}) end ;;
+  # }
 
   dimension: SLA_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -534,7 +534,7 @@ view: sales_order_line {
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${TABLE}.gross_amt
             ELSE 0
           END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery, FragilePak, Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery, FragilePak, Purple Home Delivery, Select Express", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_sales_Fulfilled_in_SLA{
@@ -551,7 +551,7 @@ view: sales_order_line {
           when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${gross_amt}
           Else 0
         END;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
 
   measure: white_glove_zSLA_Achievement_prct {
@@ -664,10 +664,11 @@ view: sales_order_line {
     sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${item_order},'_');;
   }
 
+#Jared added cancelled date to fix issues where order had to be cancelled twice and PK issues arose in SLA % exec dash
   dimension: pk_concat {
     hidden: yes
     type: string
-    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||'_'||NVL(${item_order},'_');;
+    sql:  NVL(${fulfillment.PK},'_')||'_'||NVL(${cancelled_order.item_order},'_')||NVL(${cancelled_order.cancelled_date},'_')||'_'||NVL(${item_order},'_');;
   }
 
   measure: Qty_eligible_for_SLA{
@@ -677,31 +678,43 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
   }
-
+#change to qty shipped in SLA/on-time?
   measure: Qty_Fulfilled_in_SLA{
     label: "Qty Fulfilled in SLA"
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
-    description: "Source: looker.calculation"
+    description: "Quantity that shipped on-time. Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
   }
+
+#Added by Jared Dyer to prep for updating qty fulfilled and eligble for SLA Feb 2, 2022
+  dimension: fulfilled_count_dim {
+    group_label: " Advanced"
+    label: "Units Fulfilled Test"
+    description: "Count of items fulfilled. Source:netsuite.fulfillment"
+    drill_fields: [sales_order_line.fulfillment_details*]
+    sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} in ('Amazon-FBA-US','Amazon-FBA-CA') then ${sales_order_line.total_units_raw}
+      when nvl(${fulfillment.bundle_quantity_dim},0) > 0 then ${fulfillment.bundle_quantity_dim}
+      else ${fulfillment.fulfillment_record_quantity_dim} END ;;}
+
 
   dimension: SLA_fulfilled {
     label: "     * Is Fulfilled in SLA"
@@ -722,6 +735,7 @@ view: sales_order_line {
     drill_fields: [fulfillment_details*]
     sql: Case when ${Qty_eligible_for_SLA} = 0 then 0 Else ${Qty_Fulfilled_in_SLA}/${Qty_eligible_for_SLA} End ;;
   }
+
   measure:Purple_Qty_eligible_for_SLA{
     label: "Purple Qty Eligible SLA"
     group_label: "Fulfillment SLA (units)"
@@ -729,9 +743,10 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -750,9 +765,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier: "-XPO,-Pilot", item.finished_good_flg: "Yes"]
   }
@@ -776,15 +791,16 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
 
   measure:White_Glove_Qty_eligible_for_Carrier_SLA{
@@ -794,16 +810,17 @@ view: sales_order_line {
     description: "What was eligible to be fulfilled in SLA from the time the order was transmitted - Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             when ${transmitted_date_date} is null THEN 0
             When ${cancelled_order.cancelled_date} < ${White_Glove_Due_Date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${White_Glove_Due_Date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
             Else 0
             END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_Qty_Fulfilled_in_SLA{
@@ -815,12 +832,12 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
 
  measure: White_Glove_Qty_Fulfilled_in_Carrier_SLA{
@@ -832,12 +849,12 @@ view: sales_order_line {
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
-        when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${White_Glove_Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
+        when ${cancelled_order.cancelled_date} < ${fulfillment.left_purple_date} Then 0
+        when ${fulfilled_date} <= ${White_Glove_Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
         Else 0
       END ;;
-    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery", item.finished_good_flg: "Yes"]
+    filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "DTC,Owned Retail", carrier_raw: "XPO,Pilot,NEHDS,Ryder,Speedy Delivery,FragilePak,Purple Home Delivery,Select Express", item.finished_good_flg: "Yes"]
   }
 
   measure: White_Glove_SLA_Achievement_prct {
@@ -871,9 +888,10 @@ view: sales_order_line {
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -892,9 +910,9 @@ view: sales_order_line {
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "Mattress Firm,Mattress Firm Promos,Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -916,11 +934,13 @@ view: sales_order_line {
     group_label: "Fulfillment SLA (units)"
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
+    hidden: yes
     drill_fields: [fulfillment_details*]
     type: sum_distinct
-    sql_distinct_key: ${pk_concat} ;;
+    sql_distinct_key: NVL(${cancelled_order.cancelled_date},'_')||NVL(${sales_order.order_system},'0')||NVL(${sales_order_line.item_order},'0')|| NVL(${fulfillment.PK},'_') ;;
     sql: Case
-            when ${cancelled_order.cancelled_date} is null THEN ${ordered_qty}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is not null THEN ${fulfilled_count_dim}
+            when ${cancelled_order.cancelled_date} is null and ${fulfilled_date} is null THEN ${ordered_qty}
             When ${cancelled_order.cancelled_date} < ${SLA_Target_date} THEN 0
             WHEN ${cancelled_order.cancelled_date} > ${SLA_Target_date} THEN ${ordered_qty}
             WHEN ${cancelled_order.cancelled_date} >= ${fulfillment.left_purple_date} THEN ${ordered_qty}
@@ -935,13 +955,14 @@ view: sales_order_line {
     view_label: "Fulfillment"
     description: "Source: looker.calculation"
     drill_fields: [fulfillment_details*]
+    hidden: yes
     type: sum_distinct
     sql_distinct_key: ${pk_concat} ;;
     sql: Case
         when ${cancelled_order.cancelled_date} < ${fulfilled_date} Then 0
-        when ${fulfilled_date} <= ${Due_Date} THEN ${ordered_qty}
-        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${ordered_qty}
-        Else 0
+        when ${fulfilled_date} <= ${Due_Date} THEN ${fulfilled_count_dim}
+        when ${sales_order.channel_id} = 2 and ${fulfillment.left_purple_date} <= ${sales_order.ship_order_by_date} THEN ${fulfilled_count_dim}
+        else 0
       END ;;
     filters: [customer_table.companyname: "-Mattress Firm,-Mattress Firm Promos,-Mattress Firm Warehouse", sales_order.channel: "Wholesale"]
   }
@@ -951,7 +972,7 @@ view: sales_order_line {
     label: "Other SLA Achievement %"
     group_label: "Fulfillment SLA (units)"
     description: "Source: looker.calculation"
-    hidden: no
+    hidden: yes
     value_format_name: percent_1
     type: number
     drill_fields: [fulfillment_details*]
@@ -1048,7 +1069,7 @@ view: sales_order_line {
     type: number
     #sql_distinct_key: ${pk_concat_ful_sales_order};;
     drill_fields: [fulfillment_details*]
-    sql: ${total_units}-${fulfillment.count} ;;
+    sql: case when ${total_units} > ${fulfillment.count} then ${total_units}-${fulfillment.count} else 0 end;;
   }
 
   measure: fulfilled_orders {
@@ -1113,7 +1134,7 @@ view: sales_order_line {
 ##      field: sales_order.channel_id
 ##      value: "1" }
     type:  sum
-    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,3,${created_date})) then ${ordered_qty} else 0 end ;;
+    sql: case when ${cancelled_order.cancelled_date} is null or to_Date(${cancelled_order.cancelled_date}) > to_date(dateadd(d,4,${created_date})) then ${ordered_qty} else 0 end ;;
   }
 
   measure: SLA_achieved{
@@ -1299,7 +1320,7 @@ view: sales_order_line {
     group_label: "Product"
     drill_fields: [sales_order_details*]
     type:  sum
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
     sql:  ${TABLE}.ordered_qty * ${standard_cost.standard_cost} ;;
   }
 
@@ -1338,7 +1359,7 @@ view: sales_order_line {
     description:  "Date item within order shipped for Fed-ex orders, date customer receives delivery from Manna or date order is on truck for wholesale.
       Source: looker.calculation"
     type: time
-    timeframes: [raw,hour,date, day_of_week,day_of_week_index, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year]
+    timeframes: [raw,hour,date, day_of_week,day_of_week_index, day_of_month, day_of_year, week, month, month_name, month_num, quarter, quarter_of_year, year, week_of_year]
     convert_tz: no
     #datatype: date
     sql: case when ${sales_order.transaction_type} = 'Cash Sale' or ${sales_order.source} = 'Amazon-FBA-US'  then ${sales_order.created} else ${fulfillment.fulfilled_F_raw} end ;;
@@ -1354,17 +1375,17 @@ view: sales_order_line {
     sql: DATEDIFF('day',date_trunc('quarter',${fulfilled_date::date}),${fulfilled_date::date}) + 1 ;;
   }
 
-  dimension: fulfilled_week_of_year {
-    ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
-    type: number
-    label: "Week of Year"
-    view_label: "Fulfillment"
-    group_label: "    Fulfilled Date"
-    description: "2021 adjusted week of year number for fulfilled date"
-    sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
-              when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
-              else date_part(weekofyear,${fulfilled_date::date}) end ;;
-  }
+  # dimension: fulfilled_week_of_year {
+  #   ## Scott Clark 1/8/21: Added to replace week_of_year for better comps. Remove final week in 2021.
+  #   type: number
+  #   label: "Week of Year"
+  #   view_label: "Fulfillment"
+  #   group_label: "    Fulfilled Date"
+  #   description: "2021 adjusted week of year number for fulfilled date"
+  #   sql: case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 1
+  #             when ${fulfilled_year::number}=2021 then date_part(weekofyear,${fulfilled_date::date}) + 1
+  #             else date_part(weekofyear,${fulfilled_date::date}) end ;;
+  # }
 
   dimension: fulf_adj_year {
     ## Scott Clark 1/8/21: Added to replace year for clean comps. Remove final week in 2021.
@@ -1374,6 +1395,50 @@ view: sales_order_line {
     group_label: "    Fulfilled Date"
     description: "Year adjusted to align y/y charts when using week_number. DO NOT USE OTHERWISE"
     sql:  case when ${fulfilled_date::date} >= '2020-12-28' and ${fulfilled_date::date} <= '2021-01-03' then 2021 else ${fulfilled_year} end   ;;
+  }
+
+  dimension: sla_numerator_d {
+    label: "SLA Numerator"
+    hidden: yes
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${fulfilled_date} < ${SLA_Target_date} ;;
+  }
+  dimension: due_last_7 {
+    label: "Due Last 7"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    type: yesno
+    sql: ${SLA_Target_date} >= dateadd(d,-9,current_date) and ${SLA_Target_date} <= dateadd(d,-2,current_date) ;;
+  }
+  measure: sla_numerator {
+    type: number
+    hidden: yes
+    label: "SLA Numerator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when ${sla_numerator_d} = 'Yes' then ${fulfilled_orders_units} else 0 end ;;
+  }
+  measure: sla_denominator {
+    type: number
+    hidden: yes
+    label: "SLA Denominator"
+    view_label: "Fulfillment"
+    group_label: "    SLA Percentage"
+    sql: case when  ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'Yes' then ${total_units}
+      when ${sla_numerator_d} = 'Yes' and ${due_last_7} = 'No' then ${fulfillment.count}
+      when ${sla_numerator_d} = 'No' and ${due_last_7} = 'Yes' then ${total_units}
+      else 0
+      end ;;
+  }
+  measure: sla_% {
+   type: number
+   label: "SLA %"
+   hidden: yes
+   view_label: "Fulfillment"
+   group_label: "    SLA Percentage"
+  sql: ${sla_numerator}/${sla_denominator}  ;;
   }
 
 
@@ -1554,12 +1619,13 @@ view: sales_order_line {
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
     sql: case when ${carrier_raw} = 'Pilot' then ${v_transmission_dates.TRANSMITTED_TO_PILOT_raw}
       when ${carrier_raw} = 'Mainfreight' then ${v_transmission_dates.TRANSMITTED_TO_MAINFREIGHT_raw}
-      when ${carrier} = 'Carry Out' then ${created_raw}
+      when ${carrier_raw} = 'Carry Out' then ${created_raw}
       when ${carrier_raw} = 'Ryder' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'NEHDS' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'Purple Home Delivery' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'Speedy Delivery' then ${N_3PL_TRANSMITTED_date}
       when ${carrier_raw} = 'FragilePak' then ${N_3PL_TRANSMITTED_date}
+      when ${carrier_raw} = 'Select Express' then ${N_3PL_TRANSMITTED_date}
       else ${v_transmission_dates.download_to_warehouse_edge_raw} end;;
   }
 
@@ -1901,7 +1967,7 @@ view: sales_order_line {
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , ${created_raw}
             )
@@ -1953,7 +2019,7 @@ view: sales_order_line {
         when  ${fulfillment.left_purple_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 1 else 1 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 1 else 1 end
             --using min ship by if it has one
             , NVL(${transmitted_date_raw},${created_raw})
             )
@@ -2005,7 +2071,7 @@ view: sales_order_line {
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 7 else 3 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 7 else 3 end
             --using min ship by if it has one
             , ${created_raw}
             )
@@ -2057,7 +2123,7 @@ view: sales_order_line {
         when  ${fulfillment.in_hand_raw} <
             dateadd('day'
             --dynamic hours based on carrier
-            , case when ${carrier} in ('XPO', 'Pilot') then 6 else 2 end
+            , case when ${carrier_raw} in ('XPO', 'Pilot') then 6 else 2 end
             --using min ship by if it has one
             , NVL(${fulfillment.left_purple_raw},${created_raw})
             )
