@@ -67,8 +67,8 @@ view: showroom_pnl {
 
   measure: total_gl_distribution_amount {
     type: sum
-    sql: ${TABLE}."GL_DISTRIBUTION_AMOUNT"
-    value_format:"$#.00;($#.00)";;
+    sql: ${TABLE}."GL_DISTRIBUTION_AMOUNT";;
+    value_format:"$#.00;($#.00)"
   }
 
 }
