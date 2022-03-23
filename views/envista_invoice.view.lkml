@@ -35,6 +35,7 @@ view: envista {
   }
 
   measure: avg_actual_weight {
+    hidden:  yes
     group_label: "Weights & Dims"
     type: average
     value_format: "#,###.00"
@@ -56,6 +57,7 @@ view: envista {
   }
 
   measure: avg_adjustments {
+    hidden:  yes
     group_label: "Charges"
     type: average
     value_format: "$#,###.00"
@@ -77,6 +79,7 @@ view: envista {
   }
 
   measure: avg_approved_charges {
+    hidden: yes
     group_label: "Charges"
     type: average
     value_format: "$#,###.00"
@@ -97,6 +100,7 @@ view: envista {
   }
 
   measure: avg_bill_weight {
+    hidden: yes
     group_label: "Weights & Dims"
     type: average
     value_format: "#,###.00"
@@ -241,6 +245,7 @@ view: envista {
   }
 
   measure: avg_line_charges {
+    hidden:  yes
     group_label: "Charges"
     type: average
     value_format: "$#,###.00"
@@ -441,6 +446,7 @@ view: envista {
   }
 
   measure: charge_per_tracking_number {
+    hidden: yes
     type: number
     value_format: "$#,###.00"
     sql:  div0(${total_line_charges},${tracking_number_count});;
