@@ -280,10 +280,21 @@ view: international_open_po_report {
     sql: ${TABLE}."NOTES" ;;
   }
 
+  dimension: ordered_quantity_dim {
+    hidden:  no
+    type: string
+    sql: ${TABLE}."ORDERED_QUANTITY" ;;
+  }
+
   measure: ordered_quantity {
     type: sum
-    value_format: "#,##0.00"
-    sql: ${TABLE}."ORDERED_QUANTITY" ;;
+    value_format: "#,###.00"
+    sql:cast(
+        case
+          when ${ordered_quantity_dim} is null or ${ordered_quantity_dim}=' ' or ${ordered_quantity_dim}='' then 0
+          else ${ordered_quantity_dim}
+          end
+        as number);;
   }
 
   dimension: origin {
