@@ -2493,7 +2493,7 @@ view: sales_order_line {
     type: sum
     value_format: "$#,##0"
     sql: case when ${agent_name.merged_name} is not null
-      and ${zendesk_sell.name} is not null
+      and ${agent_name.zendesk_sell_id} is not null
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
@@ -2508,7 +2508,7 @@ view: sales_order_line {
     type: count_distinct
     value_format: "#,##0"
     sql: case when ${agent_name.merged_name} is not null
-      and ${zendesk_sell.name} is not null
+      and ${agent_name.zendesk_sell_id} is not null
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
@@ -2535,7 +2535,7 @@ view: sales_order_line {
     type: sum
     value_format: "$#,##0"
     sql: case when ${agent_name.merged_name} is not null
-      and ${zendesk_sell.name} is null
+      and ${agent_name.zendesk_sell_id} is null
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}
@@ -2548,7 +2548,7 @@ view: sales_order_line {
     type: count_distinct
     value_format: "#,##0"
     sql: case when ${agent_name.merged_name} is not null
-      and ${zendesk_sell.name} is null
+      and ${agent_name.zendesk_sell_id} is null
       and NOT ${sales_order.is_exchange}
       and NOT ${sales_order.is_upgrade}
       and NOT ${sales_order.warranty_order_flg}

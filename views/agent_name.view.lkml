@@ -17,6 +17,13 @@ dimension: zendesk_id {
   sql: ${TABLE}.zendesk_id ;;
 }
 
+  dimension: zendesk_sell_id {
+    description: "The ZenDesk Sell ID for this agent. Source: incontact.agent_lkp"
+    type:  number
+    hidden: yes
+    sql: ${TABLE}.zendesk_sell_user_id ;;
+  }
+
 dimension: shopify_id {
   description: "The Shopify ID for this agent. Source: incontact.agent_lkp"
   type:  number
