@@ -335,7 +335,7 @@ explore: etq_ncr {
   join: item {
     view_label: "Item"
     type: left_outer
-    sql_on: ${etq_ncr_item.part_number} = ${item.kit_sku_id} ;;
+    sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
     relationship: one_to_one
   }
   join: standard_cost {
