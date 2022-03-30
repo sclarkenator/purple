@@ -8,73 +8,75 @@ view: gtms {
     sql: ${TABLE}."LADING_ID" ;;
   }
 
-  dimension: accs_cost {
-    type: number
-    sql: ${TABLE}."ACCS_COST" ;;
-  }
-
-  measure: total_accs_cost {
+  measure: accs_cost {
     type: sum
-    sql: ${accs_cost} ;;
-  }
-
-  measure: average_accs_cost {
-    type: average
-    sql: ${accs_cost} ;;
+    value_format: "$#,##0"
+    sql: ${TABLE}."ACCS_COST" ;;
   }
 
   dimension: bill_to_adr1 {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_ADR1" ;;
   }
 
   dimension: bill_to_adr2 {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_ADR2" ;;
   }
 
   dimension: bill_to_city {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_CITY" ;;
   }
 
   dimension: bill_to_name {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_NAME" ;;
   }
 
   dimension: bill_to_state {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_STATE" ;;
   }
 
   dimension: bill_to_zip {
     type: string
+    group_label: " Bill To"
     sql: ${TABLE}."BILL_TO_ZIP" ;;
   }
 
   dimension: carrier_bol_no {
     type: string
+    group_label: " Carrier"
     sql: ${TABLE}."CARRIER_BOL_NO" ;;
   }
 
   dimension: carrier_code {
     type: string
+    group_label: " Carrier"
     sql: ${TABLE}."CARRIER_CODE" ;;
   }
 
   dimension: carrier_name {
     type: string
+    group_label: " Carrier"
     sql: ${TABLE}."CARRIER_NAME" ;;
   }
 
   dimension: carrier_notes {
     type: string
+    group_label: " Carrier"
     sql: ${TABLE}."CARRIER_NOTES" ;;
   }
 
   dimension: carrier_type {
     type: string
+    group_label: " Carrier"
     sql: ${TABLE}."CARRIER_TYPE" ;;
   }
 
@@ -91,6 +93,8 @@ view: gtms {
 
   dimension_group: created {
     type: time
+    group_label: "  Created"
+    view_label: "Dates"
     timeframes: [
       raw,
       time,
@@ -110,6 +114,8 @@ view: gtms {
 
   dimension_group: delivery {
     type: time
+    group_label: "  Delivery"
+    view_label: "Dates"
     timeframes: [
       raw,
       time,
@@ -124,56 +130,67 @@ view: gtms {
 
   dimension: dest_adr1 {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_ADR1" ;;
   }
 
   dimension: dest_adr2 {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_ADR2" ;;
   }
 
   dimension: dest_city {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_CITY" ;;
   }
 
   dimension: dest_contact_person {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_CONTACT_PERSON" ;;
   }
 
   dimension: dest_contact_phone {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_CONTACT_PHONE" ;;
   }
 
   dimension: dest_country {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_COUNTRY" ;;
   }
 
   dimension: dest_email {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_EMAIL" ;;
   }
 
   dimension: dest_name {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_NAME" ;;
   }
 
   dimension: dest_state {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_STATE" ;;
   }
 
   dimension: dest_terminal_name {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_TERMINAL_NAME" ;;
   }
 
   dimension: dest_zip {
     type: string
+    group_label: " Destination"
     sql: ${TABLE}."DEST_ZIP" ;;
   }
 
@@ -187,37 +204,27 @@ view: gtms {
     sql: ${TABLE}."EQUIPMENT" ;;
   }
 
-  dimension: freight_cost {
-    type: number
+  measure: freight_cost {
+    type: sum
+    value_format: "$#,##0"
     sql: ${TABLE}."FREIGHT_COST" ;;
   }
 
-  dimension: fuel_cost {
-    type: number
+  measure: fuel_cost {
+    type: sum
+    value_format: "$#,##0"
     sql: ${TABLE}."FUEL_COST" ;;
   }
 
-  dimension_group: insert_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
-  }
-
-  dimension: miles {
-    type: number
+  measure: miles {
+    type: sum
     sql: ${TABLE}."MILES" ;;
   }
 
   dimension_group: modified {
     type: time
+    group_label: "  Modified"
+    view_label: "Dates"
     timeframes: [
       raw,
       time,
@@ -237,56 +244,67 @@ view: gtms {
 
   dimension: org_adr1 {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_ADR1" ;;
   }
 
   dimension: org_adr2 {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_ADR2" ;;
   }
 
   dimension: org_city {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_CITY" ;;
   }
 
   dimension: org_country {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_COUNTRY" ;;
   }
 
   dimension: org_name {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_NAME" ;;
   }
 
   dimension: org_state {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_STATE" ;;
   }
 
   dimension: org_zip {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORG_ZIP" ;;
   }
 
   dimension: origin_contact_person {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORIGIN_CONTACT_PERSON" ;;
   }
 
   dimension: origin_contact_phone {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORIGIN_CONTACT_PHONE" ;;
   }
 
   dimension: origin_email {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORIGIN_EMAIL" ;;
   }
 
   dimension: origin_terminal_name {
     type: string
+    group_label: " Origin"
     sql: ${TABLE}."ORIGIN_TERMINAL_NAME" ;;
   }
 
@@ -297,6 +315,8 @@ view: gtms {
 
   dimension_group: pickup {
     type: time
+    group_label: "  Pickup"
+    view_label: "Dates"
     timeframes: [
       raw,
       time,
@@ -331,6 +351,8 @@ view: gtms {
 
   dimension_group: pro {
     type: time
+    group_label: "  Pro"
+    view_label: "Dates"
     timeframes: [
       raw,
       date,
@@ -356,6 +378,8 @@ view: gtms {
 
   dimension_group: quote {
     type: time
+    group_label: "  Quote"
+    view_label: "Dates"
     timeframes: [
       raw,
       date,
@@ -376,6 +400,8 @@ view: gtms {
 
   dimension_group: requested_delivery {
     type: time
+    group_label: "  Requested Delivery"
+    view_label: "Dates"
     timeframes: [
       raw,
       date,
@@ -391,16 +417,20 @@ view: gtms {
 
   dimension: requested_delivery_from {
     type: string
+    group_label: " Requested"
     sql: ${TABLE}."REQUESTED_DELIVERY_FROM" ;;
   }
 
   dimension: requested_delivery_to {
     type: string
+    group_label: " Requested"
     sql: ${TABLE}."REQUESTED_DELIVERY_TO" ;;
   }
 
   dimension_group: requested_pickup {
     type: time
+    group_label: "  Requested Pickup"
+    view_label: "Dates"
     timeframes: [
       raw,
       date,
@@ -416,11 +446,13 @@ view: gtms {
 
   dimension: requested_pickup_from {
     type: string
+    group_label: " Requested"
     sql: ${TABLE}."REQUESTED_PICKUP_FROM" ;;
   }
 
   dimension: requested_pickup_to {
     type: string
+    group_label: " Requested"
     sql: ${TABLE}."REQUESTED_PICKUP_TO" ;;
   }
 
@@ -434,8 +466,9 @@ view: gtms {
     sql: ${TABLE}."SEAL_NO" ;;
   }
 
-  dimension: ship_cost {
-    type: number
+  measure: ship_cost {
+    type: sum
+    value_format: "$#,##0"
     sql: ${TABLE}."SHIP_COST" ;;
   }
 
@@ -471,16 +504,19 @@ view: gtms {
 
   dimension: total_height {
     type: number
+    group_label: " Dimensions"
     sql: ${TABLE}."TOTAL_HEIGHT" ;;
   }
 
   dimension: total_length {
     type: number
+    group_label: " Dimensions"
     sql: ${TABLE}."TOTAL_LENGTH" ;;
   }
 
   dimension: total_width {
     type: number
+    group_label: " Dimensions"
     sql: ${TABLE}."TOTAL_WIDTH" ;;
   }
 
@@ -507,25 +543,6 @@ view: gtms {
   dimension: truck_no {
     type: string
     sql: ${TABLE}."TRUCK_NO" ;;
-  }
-
-  dimension_group: update_ts {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
-  }
-
-  measure: count {
-    type: count
-    drill_fields: [detail*]
   }
 
   set: detail {
