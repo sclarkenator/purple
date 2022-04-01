@@ -65,7 +65,7 @@ view: gtms {
   dimension: carrier_name {
     type: string
     group_label: " Carrier"
-    sql: ${TABLE}."CARRIER_NAME" ;;
+    sql: upper(${TABLE}."CARRIER_NAME") ;;
   }
 
   dimension: carrier_notes {
