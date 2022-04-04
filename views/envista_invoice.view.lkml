@@ -343,7 +343,9 @@ view: envista {
       raw,
       date,
       week,
+      week_of_year,
       month,
+      month_name,
       quarter,
       year
     ]
