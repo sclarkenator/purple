@@ -45,7 +45,7 @@ dimension: employee_department_location {
 
   measure: total_hours {
     type: sum
-    value_format: "0"
+    value_format: "#,##0"
     sql: ${TABLE}."HOURS" ;;
   }
 
