@@ -82,6 +82,7 @@ view: gtms {
 
   dimension: client_lading_no {
     type: string
+    label: "Bill of Lading #"
     sql: ${TABLE}."CLIENT_LADING_NO" ;;
   }
 
