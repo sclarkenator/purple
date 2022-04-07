@@ -150,6 +150,17 @@ view: etq_ncr_item {
     sql: ${TABLE}."TRANSFER_ORDER_NUMBER" ;;
   }
 
+  dimension: ncr_accuracy {
+    label: "Is Accurate?"
+    type: string
+    sql: ${TABLE}."NCR_ACCURACY" ;;
+  }
+
+  dimension: inaccuracy_reason {
+    type: string
+    sql: ${TABLE}."INACCURACY_REASON" ;;
+  }
+
   dimension_group: insert_ts {
     hidden: yes
     type: time
