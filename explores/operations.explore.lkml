@@ -349,3 +349,14 @@ explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logist
 explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}
 explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
 explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
+explore: transaction_detail {
+  label: "High Jump Transactions"
+  view_label: "HJ Transaction Detail"
+  hidden: yes
+  join: transaction_header {
+    view_label: "HJ Transaction Header"
+    type: left_outer
+    sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
+    relationship: many_to_one
+  }
+}
