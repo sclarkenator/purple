@@ -33,6 +33,7 @@ view: zendesk_ticket {
       time,
       date,
       week,
+      week_of_year,
       month,
       month_name,
       quarter,
