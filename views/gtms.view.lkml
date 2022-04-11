@@ -316,7 +316,7 @@ view: gtms {
 
   dimension_group: pickup {
     type: time
-    group_label: "  Pickup"
+    group_label: "   Pickup"
     view_label: "Dates"
     timeframes: [
       raw,
