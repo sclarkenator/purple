@@ -19,6 +19,7 @@ view: transaction_detail {
 
   dimension_group: created {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
