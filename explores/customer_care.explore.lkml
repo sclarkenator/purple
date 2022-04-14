@@ -841,6 +841,11 @@ explore: perfect_attendance_calc {
       sql_on: ${cc_agent_data.incontact_id} = ${agent_state.agent_id} ;;
       relationship: one_to_many
     }
+    join: labor_hours {
+      type: left_outer
+      sql_on: ${cc_agent_data.workday_id} = ${labor_hours.employee_id} ;;
+      relationship: one_to_many
+    }
     required_access_grants: [is_customer_care_manager]
   }
 
@@ -888,7 +893,8 @@ explore: perfect_attendance_calc {
       sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
       relationship: many_to_one
-    }}
+    }
+  }
 
   explore: exchange_items {hidden: yes
     join: item {
