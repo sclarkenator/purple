@@ -19,6 +19,7 @@ view: transaction_detail {
 
   dimension_group: created {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -63,11 +64,13 @@ view: transaction_detail {
 
   dimension: po_number {
     type: string
+    label: "PO Number"
     sql: ${TABLE}."PO_NUMBER" ;;
   }
 
   dimension: po_number_ext {
     type: string
+    label: "PO Number Ext."
     sql: ${TABLE}."PO_NUMBER_EXT" ;;
   }
 
@@ -81,13 +84,15 @@ view: transaction_detail {
     sql: ${TABLE}."PRODUCT_DESCRIPTION" ;;
   }
 
-  dimension: quantity_ordered {
-    type: number
+  measure: quantity_ordered {
+    type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."QUANTITY_ORDERED" ;;
   }
 
-  dimension: quantity_received {
-    type: number
+  measure: quantity_received {
+    type: sum
+    value_format: "#,##0"
     sql: ${TABLE}."QUANTITY_RECEIVED" ;;
   }
 
@@ -118,6 +123,7 @@ view: transaction_detail {
 
   dimension_group: update_ts {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
