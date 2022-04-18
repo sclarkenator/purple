@@ -22,6 +22,20 @@ view: etq_ncr {
     datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
+  dimension_group: completed {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."COMPLETED" ;;
+  }
 
   dimension: current_phase {
     type: string

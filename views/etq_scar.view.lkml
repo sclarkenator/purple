@@ -43,6 +43,21 @@ view: etq_scar {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  dimension_group: modified {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."MODIFIED" ;;
+  }
+
   dimension: created_by {
     type: string
     sql: ${TABLE}."CREATED_BY" ;;
@@ -109,6 +124,11 @@ view: etq_scar {
   dimension: supplier_name {
     type: string
     sql: ${TABLE}."SUPPLIER_NAME" ;;
+  }
+
+  dimension: phase {
+    type: string
+    sql: ${TABLE}."PHASE" ;;
   }
 
   measure: count {

@@ -70,7 +70,7 @@ view: fulfillment {
     #hidden: yes
     type: time
     timeframes: [raw, date, hour_of_day, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
-    sql: coalesce(${TABLE}.PURPLE_SLA, ${fulfilled_F_raw}) ;; }
+    sql: coalesce(${TABLE}.PURPLE_SLA, ${fulfilled_F_raw})::date ;; }
 
   dimension_group: in_hand {
     label: "In Hand"

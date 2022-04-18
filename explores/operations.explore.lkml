@@ -320,7 +320,7 @@ explore: forecast_snapshot {
     sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
     relationship: many_to_one }
   }
-explore: labor_hours {hidden: yes group_label: "Workday Labor Hours"}
+explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
 explore: etq_scar {hidden: yes label: "ETQ - Scar"}
 explore: etq_ncr {
   label: "ETQ - NCR"
@@ -335,7 +335,7 @@ explore: etq_ncr {
   join: item {
     view_label: "Item"
     type: left_outer
-    sql_on: ${etq_ncr_item.part_number} = ${item.kit_sku_id} ;;
+    sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
     relationship: one_to_one
   }
   join: standard_cost {
@@ -347,4 +347,18 @@ explore: etq_ncr {
 }
 explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logistics"}
 explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}
+explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safety Details"}
+explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
 explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
+explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
+explore: transaction_detail {
+  label: "High Jump Transactions"
+  view_label: "HJ Transaction Detail"
+  hidden: yes
+  join: transaction_header {
+    view_label: "HJ Transaction Header"
+    type: left_outer
+    sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
+    relationship: many_to_one
+  }
+}
