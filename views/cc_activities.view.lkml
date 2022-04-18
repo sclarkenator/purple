@@ -1,27 +1,30 @@
 view: cc_activities {
  derived_table: {
   sql:
-    --calls (RPT Skills/Incontact)
-    select distinct 'call' as activity_type
-        , case when c.campaign = 'Sales Team Phone' --and c.skill <> 'Sales Xfer (From Support)'
-          then 'sales' else 'support'
-          end as team
-        , c.contacted as created
-        , a.name as agent_name
-        , a.email as agent_email
-        , c.handle_time
-        , case when c.handle_time > 0 then 'F' else 'T' end as missed
-        , c.skill
-        , null as email
-        ,a.incontact_id
-        ,contact_id::string as activity_id
-    from (
-      select row_number () over (partition by c.contacted, c.contact_id order by agent_id desc) as rownum
-          , c.*
-      from customer_care.rpt_skill_with_disposition_count c
-      )  c
-    left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
-    where c.rownum = 1
+    --calls (Incontact Phone)
+      select distinct
+        'call' as activity_type,
+        case when c.campaign_name ilike 'sales%' then 'sales'
+          else 'support' end as team,
+        c.start_ts_mst::date as created,
+        a.name as agent_name,
+        a.email as agent_email,
+        c.handle_time as duration,
+        case when c.handled = true then false
+          else true end as missed,
+        c.skill_name as skill,
+        null as email,
+        a.incontact_id,
+        c.contact_id::string as activity_id
+
+      from (
+            select *,
+                row_number () over (partition by c.contact_id order by c.start_ts_mst desc) as rn
+            from Analytics.customer_care.v_contacts_phone c
+            ) c
+        left join customer_care.agent_lkp a on a.incontact_id = c.agent_id
+        where skill_name not in ('Test IB', 'Test Line')
+            and rn = 1
 
     union all
 
