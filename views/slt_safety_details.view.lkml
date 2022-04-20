@@ -64,6 +64,11 @@ view: slt_safety_details {
     sql: ${TABLE}."TREATMENT" ;;
   }
 
+  dimension: incident_group{
+    type:  string
+    sql: iff(treatment is null,'Near Miss',treatment);;
+  }
+
   measure: count {
     type: count
     drill_fields: []
