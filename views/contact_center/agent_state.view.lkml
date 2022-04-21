@@ -328,6 +328,15 @@ view: agent_state {
     sql: sum(${TABLE}."STATE_DURATION")/60 ;;
   }
 
+  measure: state_duration_sum_hrs{
+    label: "State Duration Hrs"
+    group_label: "Sum Measures"
+    description: "Duration in hours agent was in a given state."
+    type: number
+    value_format_name: decimal_2
+    sql: (sum(${TABLE}."STATE_DURATION")/60)/60 ;;
+  }
+
   measure: unavailable_duration_sum_min{
     label: "Unavailable Time"
     group_label: "Sum Measures"
@@ -356,5 +365,14 @@ view: agent_state {
     sql: (sum(${TABLE}."STATE_DURATION") - (case when (sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
       ) is Null then '0' else ( sum(case when ${TABLE}.unavailable_code_name in ('Break', 'Lunch', 'Personal') then ${TABLE}."STATE_DURATION" end)
       ) end ))/60 ;;
+  }
+
+  measure: acw_avg {
+    label: "ACW Average"
+    group_label: "Average Measures"
+    description: "Average time an agent spends in the Unavailable Wrap Up state"
+    type: average
+    value_format_name: decimal_2
+    sql: (case when ${TABLE}.unavailable_code_name = 'Wrap Up' then ${TABLE}."STATE_DURATION" end)/60 ;;
   }
 }
