@@ -86,6 +86,11 @@ view: gtms {
     sql: ${TABLE}."CLIENT_LADING_NO" ;;
   }
 
+  measure: distinct_BOLs {
+    type:  count_distinct
+    sql: ${client_lading_no} ;;
+  }
+
   dimension: consignee_notes {
     type: string
     sql: ${TABLE}."CONSIGNEE_NOTES" ;;
@@ -203,6 +208,18 @@ view: gtms {
   dimension: equipment {
     type: string
     sql: ${TABLE}."EQUIPMENT" ;;
+  }
+
+  dimension: equipment_group {
+    type: string
+    sql: case
+          when ${equipment} = 'LTL' then 'LTL'
+          when ${equipment} = 'VOLUME' then 'LTL'
+          when ${equipment} = 'Expedite' then 'Service Level'
+          when ${equipment} = 'Guaranteed' then 'Service Level'
+          when ${equipment} ilike '%intermodal%' then 'Intermodal'
+          else 'FTL'
+        end;;
   }
 
   measure: freight_cost {
