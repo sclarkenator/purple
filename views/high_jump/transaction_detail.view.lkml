@@ -25,6 +25,7 @@ view: transaction_detail {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
@@ -96,6 +97,8 @@ view: transaction_detail {
 
   dimension: row_id {
     type: string
+    hidden: yes
+    primary_key: yes
     sql: ${TABLE}."ROW_ID" ;;
   }
 

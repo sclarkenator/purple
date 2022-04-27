@@ -66,6 +66,8 @@ view: transaction_header {
 
   dimension: row_id {
     type: string
+    hidden: yes
+    primary_key: yes
     sql: ${TABLE}."ROW_ID" ;;
   }
 
