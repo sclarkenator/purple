@@ -1088,6 +1088,16 @@ view: incontact_phone {
     drill_fields: [detail*, total_contact_time]
   }
 
+  measure: holds_per_call {
+    label: "Holds per Call Handled"
+    group_label: "Average Measures"
+    description: "Total number of holds per call."
+    type: number
+    value_format: "###0.00"
+    sql: (${hold_count})/${handled_count} ;;
+    drill_fields: [detail*]
+  }
+
   ##########################################################################################
   ##########################################################################################
   ## SUM MEASURES
@@ -1132,15 +1142,18 @@ view: incontact_phone {
     drill_fields: [detail*]
   }
 
-  measure: holds_per_call_sum {
-    label: "Sum Holds"
+
+  measure: hold_time_sum {
+    label: "SUM Hold Time"
     group_label: "Sum Measures"
-    description: "Total number of holds per call."
+    description: "Total hold time."
     type: number
     value_format: "###0.00"
-    sql: sum(${holds}) ;;
-    drill_fields: [detail*]
+    # hidden: yes
+    sql: sum(${hold_time}) / 60 ;;
+    drill_fields: [detail*, hold_time]
   }
+
 
   measure: conference_time_sum {
     label: "Sum Conference Time"
