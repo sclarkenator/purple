@@ -19,7 +19,6 @@ view: transaction_detail {
 
   dimension_group: created {
     type: time
-    hidden: yes
     timeframes: [
       raw,
       time,
@@ -82,12 +81,6 @@ view: transaction_detail {
   dimension: product_description {
     type: string
     sql: ${TABLE}."PRODUCT_DESCRIPTION" ;;
-  }
-
-  measure: quantity_ordered {
-    type: sum
-    value_format: "#,##0"
-    sql: ${TABLE}."QUANTITY_ORDERED" ;;
   }
 
   measure: quantity_received {

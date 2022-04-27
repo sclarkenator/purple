@@ -12,19 +12,6 @@ view: transaction_header {
     sql: ${TABLE}."BUYER" ;;
   }
 
-  dimension_group: created {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
-  }
 
   dimension_group: due {
     type: time
