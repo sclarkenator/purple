@@ -41,6 +41,7 @@ view: transaction_header {
 
   dimension: po_number {
     type: string
+    hidden: yes
     sql: ${TABLE}."PO_NUMBER" ;;
   }
 
