@@ -47,6 +47,7 @@ view: transaction_header {
 
   dimension: received_by {
     type: string
+    hidden: yes
     sql: ${TABLE}."RECEIVED_BY" ;;
   }
 
