@@ -132,6 +132,11 @@ view: transaction_detail {
     sql: CAST(${TABLE}."UPDATE_TS" AS TIMESTAMP_NTZ) ;;
   }
 
+  dimension: receiving_user_id {
+    type: string
+    sql: ${TABLE}."USER_ID" ;;
+  }
+
   dimension: wave {
     type: number
     sql: ${TABLE}."WAVE" ;;
