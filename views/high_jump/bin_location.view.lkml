@@ -58,6 +58,7 @@ view: bin_location {
     hidden: no
     label: "HJ - Quantity (Unfiltered)"
     description: "Includes all Zones"
+    value_format: "#,##0"
     sql: ${TABLE}."QUANTITY" ;;
   }
 
