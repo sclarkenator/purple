@@ -156,8 +156,8 @@ select
     , round(coalesce(sum(fc.total_units), 0),0) total_units_new
     , round(coalesce(sum(case when fc.channel = 'Wholesale' then fc.total_units else 0 end), 0),0) total_units_new_wholesale
     , round(coalesce(sum(case when fc.channel in ('DTC', 'Owned Retail') then fc.total_units else 0 end), 0),0) total_units_new_dtcor
-    , round((total_units_new_wholesale*0.5 + total_units_new_dtcor*0.32),0) total_units_new_pwest
-    , round((total_units_new_wholesale*0.5 + total_units_new_dtcor*0.68),0) total_units_new_psouth
+    , round((total_units_new_wholesale*0.65 + total_units_new_dtcor*0.65),0) total_units_new_pwest
+    , round((total_units_new_wholesale*0.35 + total_units_new_dtcor*0.35),0) total_units_new_psouth
     , round(((total_units_new/8)*2),0) "14_DAY_FORECAST"
     , round(((total_units_new_wholesale/8)*2),0) "14_DAY_FORECAST_WHOLESALE"
     , round(((total_units_new_dtcor/8)*2),0) "14_DAY_FORECAST_DTCOR"
