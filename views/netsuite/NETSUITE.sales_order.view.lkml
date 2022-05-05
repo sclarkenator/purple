@@ -11,6 +11,14 @@ view: sales_order {
     sql: ${TABLE}.shipping_address_validated ;;
   }
 
+  dimension: phone_number_reference {
+    type: string
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: ${TABLE}.phone_number_reference ;;
+  }
+
   dimension: cannot_ship{
     type: string
     hidden:  yes

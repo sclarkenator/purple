@@ -272,7 +272,6 @@ explore: forecast_compared_to_actual_sales {
       relationship: many_to_one}
     }
 
-
   explore: bin_location {
     hidden: yes
     group_label:"Production"
@@ -351,6 +350,7 @@ explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safet
 explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
 explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
 explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
+
 explore: transaction_detail {
   label: "High Jump Transactions"
   view_label: "HJ Transaction Detail"
@@ -359,6 +359,21 @@ explore: transaction_detail {
     view_label: "HJ Transaction Header"
     type: left_outer
     sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
-    relationship: many_to_one
+    relationship: many_to_one}
   }
-}
+
+  explore: rf_log {
+    label: "High Jump RF Logs"
+    view_label: "HJ RF Log"
+    hidden: yes
+    join: bin {
+      type: left_outer
+      sql_on: ${rf_log.bin_label} = ${bin.bin_label} ;;
+      relationship: many_to_one}
+    join: item {
+      view_label: "Item"
+      type: left_outer
+      sql_on: ${rf_log.sku} = ${item.sku_id} ;;
+      relationship: one_to_one
+    }
+  }
