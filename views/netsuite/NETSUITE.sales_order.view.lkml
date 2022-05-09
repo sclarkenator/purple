@@ -17,6 +17,7 @@ view: sales_order {
     view_label: "Fulfillment"
     group_label: " Advanced"
     sql: ${TABLE}.phone_number_reference ;;
+    required_access_grants:[can_view_pii]
   }
 
   dimension: cannot_ship{
