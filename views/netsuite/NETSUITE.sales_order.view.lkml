@@ -11,7 +11,7 @@ view: sales_order {
     sql: ${TABLE}.shipping_address_validated ;;
   }
 
-  dimension: phone_number_reference {
+  dimension: ship_to_phone{
     type: string
     hidden:  no
     view_label: "Fulfillment"
