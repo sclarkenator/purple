@@ -376,4 +376,10 @@ explore: transaction_detail {
       sql_on: ${rf_log.sku} = ${item.sku_id} ;;
       relationship: one_to_one
     }
+    join: standard_cost_direct_materials  {
+      type: left_outer
+      sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+      relationship: one_to_one
+    }
+
   }
