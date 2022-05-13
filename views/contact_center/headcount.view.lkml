@@ -317,5 +317,10 @@ view: headcount {
     }
   }
 
+  measure: days_employed{
+    type: number
+    sql: DATEDIFF(day,${start_date},ifnull(${end_date}, GETDATE())) ;;
+  }
+
 
 }
