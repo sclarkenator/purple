@@ -90,6 +90,13 @@ view: transaction_detail {
     sql: ${TABLE}."QUANTITY_RECEIVED" ;;
   }
 
+  measure: amount_received {
+    type: sum
+    label: "$ Amount Received"
+    value_format: "$#,##0"
+    sql: ${TABLE}."QUANTITY_RECEIVED"*${standard_cost_direct_materials.dm_standard_cost} ;;
+  }
+
   dimension: rma_code {
     type: number
     sql: ${TABLE}."RMA_CODE" ;;

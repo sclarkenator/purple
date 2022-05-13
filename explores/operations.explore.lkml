@@ -360,6 +360,15 @@ explore: transaction_detail {
     type: left_outer
     sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
     relationship: many_to_one}
+  join: item {
+    view_label: "Item"
+    type: left_outer
+    sql_on: ${transaction_detail.sku} = ${item.sku_id} ;;
+    relationship: one_to_one}
+  join: standard_cost_direct_materials  {
+    type: left_outer
+    sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+    relationship: one_to_one}
   }
 
   explore: rf_log {
@@ -374,12 +383,10 @@ explore: transaction_detail {
       view_label: "Item"
       type: left_outer
       sql_on: ${rf_log.sku} = ${item.sku_id} ;;
-      relationship: one_to_one
-    }
+      relationship: one_to_one}
     join: standard_cost_direct_materials  {
       type: left_outer
       sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
-      relationship: one_to_one
-    }
+      relationship: one_to_one}
 
   }
