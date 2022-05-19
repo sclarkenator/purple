@@ -1,5 +1,5 @@
 view: cordial_message_analytic {
-  sql_table_name: "MARKETING"."CORDIAL_MESSAGE_ANALYTIC"
+  sql_table_name: "MARKETING"."CORDIAL_ANALYTIC_EMAIL"
     ;;
 
   measure: aov {
