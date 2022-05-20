@@ -7,7 +7,8 @@ view: agent_evaluation {
                 REVIEWER_CUSTOM_ID as EVALUATOR_ID,
                 SCORE,
                 SCORECARD_NAME as FORM_NAME,
-                COMPLETED_AT as CREATED
+                COMPLETED_AT as CREATED,
+                COUNT_TOWARD_SCORE
               from analytics.customer_care.stella_connect_review) e
           left join (
             select team_name as evaluator_team_name, incontact_id, rank()over(partition by incontact_id order by end_date desc) as rank
@@ -41,6 +42,11 @@ view: agent_evaluation {
     primary_key: yes
     type: number
     sql: ${TABLE}."AGENT_EVALUATION_ID" ;;
+  }
+
+  dimension: count_toward_score {
+    type: yesno
+    sql: ${TABLE}."COUNT_TOWARD_SCORE" ;;
   }
 
   dimension_group: created {
