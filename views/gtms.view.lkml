@@ -578,6 +578,12 @@ view: gtms {
     sql: ${TABLE}."TRANSIT_DAYS" ;;
   }
 
+  measure: avg_transit_days{
+    type: average
+    value_format: "##.0"
+    sql: ${transit_days} ;;
+  }
+
   dimension: truck_no {
     type: string
     sql: ${TABLE}."TRUCK_NO" ;;
@@ -586,6 +592,18 @@ view: gtms {
   measure: weight {
     type: sum
     sql: ${TABLE}."WEIGHT" ;;
+  }
+
+  dimension: pickup_to_delivery {
+    type: number
+    hidden: yes
+    sql: datediff(day,${pickup_date},${delivery_date}) ;;
+  }
+
+  measure: avg_pickup_to_delivery {
+    type: average
+    value_format: "##.0"
+    sql: ${pickup_to_delivery} ;;
   }
 
   set: detail {
