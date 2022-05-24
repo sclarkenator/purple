@@ -145,7 +145,7 @@ view: agent_evaluation {
   measure: average_eval_score {
     label: "Average Evaluation Score"
     type: average
-    value_format: "#"
+    value_format: "#.0"
     sql: ${TABLE}."SCORE" ;;
   }
 
