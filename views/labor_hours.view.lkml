@@ -33,6 +33,11 @@ dimension: employee_department_location_clock {
     sql: ${TABLE}."EMPLOYEE_ID" ;;
   }
 
+  dimension: status {
+    type:  string
+    sql: ${TABLE}."STATUS" ;;
+  }
+
   dimension: location {
     type: string
     sql: ${TABLE}."LOCATION" ;;
