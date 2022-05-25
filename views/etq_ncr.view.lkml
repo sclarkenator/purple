@@ -67,7 +67,7 @@ view: etq_ncr {
 
   dimension: supplier_name {
     type: string
-    sql: ${TABLE}."SUPPLIER_NAME" ;;
+    sql: case when ${TABLE}."SUPPLIER_NAME" ilike '%Leggett%' then 'Leggett & Platt' else  ${TABLE}."SUPPLIER_NAME" end ;;
   }
 
   dimension: supplier_number {
