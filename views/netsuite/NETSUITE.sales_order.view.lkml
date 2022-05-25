@@ -11,12 +11,13 @@ view: sales_order {
     sql: ${TABLE}.shipping_address_validated ;;
   }
 
-  dimension: phone_number_reference {
+  dimension: ship_to_phone{
     type: string
     hidden:  no
     view_label: "Fulfillment"
     group_label: " Advanced"
     sql: ${TABLE}.phone_number_reference ;;
+    required_access_grants:[can_view_pii]
   }
 
   dimension: cannot_ship{

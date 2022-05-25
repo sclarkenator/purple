@@ -894,6 +894,11 @@ explore: perfect_attendance_calc {
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
       relationship: many_to_one
     }
+    join: labor_hours {
+      type: left_outer
+      sql_on: ${agent_lkp.workday_id} = ${labor_hours.employee_id} ;;
+      relationship: one_to_many
+    }
   }
 
   explore: exchange_items {hidden: yes

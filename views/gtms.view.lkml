@@ -8,10 +8,10 @@ view: gtms {
     sql: ${TABLE}."LADING_ID" ;;
   }
 
-  measure: accs_cost {
+  measure: quoted_accs_cost {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}."ACCS_COST" ;;
+    sql: ${TABLE}.quoted_accs_cost;;
   }
 
   dimension: bill_to_adr1 {
@@ -222,21 +222,26 @@ view: gtms {
         end;;
   }
 
-  measure: freight_cost {
+  measure: quoted_freight_cost {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}."FREIGHT_COST" ;;
+    sql: ${TABLE}.quoted_freight_cost ;;
   }
 
-  measure: fuel_cost {
+  measure: quoted_fuel_cost {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}."FUEL_COST" ;;
+    sql: ${TABLE}.quoted_fuel_cost ;;
   }
 
   measure: miles {
     type: sum
     sql: ${TABLE}."MILES" ;;
+  }
+
+  dimension: mode {
+    type: string
+    sql: ${TABLE}."MODE" ;;
   }
 
   dimension_group: modified {
@@ -326,9 +331,24 @@ view: gtms {
     sql: ${TABLE}."ORIGIN_TERMINAL_NAME" ;;
   }
 
+  measure: paid_amount {
+    type: sum
+    sql: ${TABLE}."PAID_AMOUNT" ;;
+  }
+
+  measure: pallets {
+    type: sum
+    sql: ${TABLE}."PALLETS" ;;
+  }
+
   dimension: payment_term {
     type: string
     sql: ${TABLE}."PAYMENT_TERM" ;;
+  }
+
+  measure: pieces {
+    type: sum
+    sql: ${TABLE}."PIECES" ;;
   }
 
   dimension_group: pickup {
@@ -484,10 +504,10 @@ view: gtms {
     sql: ${TABLE}."SEAL_NO" ;;
   }
 
-  measure: ship_cost {
+  measure: quoted_ship_cost {
     type: sum
     value_format: "$#,##0"
-    sql: ${TABLE}."SHIP_COST" ;;
+    sql: ${TABLE}.quoted_ship_cost ;;
   }
 
   dimension: shipment_direction {
@@ -558,9 +578,32 @@ view: gtms {
     sql: ${TABLE}."TRANSIT_DAYS" ;;
   }
 
+  measure: avg_transit_days{
+    type: average
+    value_format: "##.0"
+    sql: ${transit_days} ;;
+  }
+
   dimension: truck_no {
     type: string
     sql: ${TABLE}."TRUCK_NO" ;;
+  }
+
+  measure: weight {
+    type: sum
+    sql: ${TABLE}."WEIGHT" ;;
+  }
+
+  dimension: pickup_to_delivery {
+    type: number
+    hidden: yes
+    sql: datediff(day,${pickup_date},${delivery_date}) ;;
+  }
+
+  measure: avg_pickup_to_delivery {
+    type: average
+    value_format: "##.0"
+    sql: ${pickup_to_delivery} ;;
   }
 
   set: detail {
