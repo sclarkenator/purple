@@ -15,6 +15,7 @@ view: etq_ncr {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
