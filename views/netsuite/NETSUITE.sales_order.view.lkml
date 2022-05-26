@@ -20,6 +20,15 @@ view: sales_order {
     required_access_grants:[can_view_pii]
   }
 
+  dimension: shipping_phone_number{
+    type: string
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: ${TABLE}.shipping_phone_number ;;
+    required_access_grants:[can_view_pii]
+  }
+
   dimension: cannot_ship{
     type: string
     hidden:  yes
