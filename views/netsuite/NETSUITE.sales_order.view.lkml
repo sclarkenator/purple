@@ -29,6 +29,14 @@ view: sales_order {
     required_access_grants:[can_view_pii]
   }
 
+  dimension: missing_phone_number{
+    type: yesno
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: " Advanced"
+    sql: ${TABLE}.shipping_phone_number is null and ${TABLE}.phone_number_reference is null ;;
+  }
+
   dimension: cannot_ship{
     type: string
     hidden:  yes
