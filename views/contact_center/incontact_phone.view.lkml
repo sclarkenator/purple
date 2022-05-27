@@ -105,6 +105,12 @@ view: incontact_phone {
     sql: ${TABLE}."DIRECTION" ;;
     }
 
+  dimension: disposition {
+    label: "Disposition"
+    type: string
+    sql:  ${TABLE}."DISPOSITION" ;;
+  }
+
   dimension: disposition_notes {
     label: "Disposition Notes"
     type: string
