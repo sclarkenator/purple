@@ -2,6 +2,8 @@ view: cordial_message_analytic {
   sql_table_name: "MARKETING"."CORDIAL_ANALYTIC_EMAIL"
     ;;
 
+  # 5/20/2022 - Updated the source table from analytics.marketing.cordial_message_analytic (old) to analytics.marketing.cordial_message_analytic (old). Since main sales model is being sunsetted we did not update the naming in Looker.
+
   measure: aov {
     type: average
     sql: ${TABLE}."AOV" ;;
