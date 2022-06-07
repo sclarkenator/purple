@@ -78,7 +78,7 @@ view: cordial_analytic_sms {
     sql: ${click_rate_dim};;
   }
 
-  dimension: clicks {
+  dimension: total_clicks_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."CLICKS_TOTAL" ;;
@@ -88,10 +88,10 @@ view: cordial_analytic_sms {
     # hidden: yes
     type: sum
     value_format: "#,##0"
-    sql: ${clicks};;
+    sql: ${total_clicks_dim};;
   }
 
-  dimension: clicks_unique {
+  dimension: total_unique_clicks_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."CLICKS_UNIQUE" ;;
@@ -101,22 +101,36 @@ view: cordial_analytic_sms {
     # hidden: yes
     type: sum
     value_format: "#,##0"
-    sql: ${clicks_unique};;
+    sql: ${total_unique_clicks_dim};;
   }
 
-  dimension: delivered_rate {
+  dimension: delivered_rate_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."DELIVERED_RATE" ;;
   }
 
-  dimension: delivered_total {
+  measure: delivered_rate {
+    # hidden: yes
+    type: average
+    value_format: "0.0\%"
+    sql: ${delivered_rate_dim};;
+  }
+
+  dimension: total_delivered_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."DELIVERED_TOTAL" ;;
   }
 
-  dimension: revenue {
+  measure: total_delivered {
+    # hidden: yes
+    type: sum
+    value_format: "#,##0"
+    sql: ${total_delivered_dim};;
+  }
+
+  dimension: total_revenue_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."REVENUE" ;;
@@ -124,10 +138,10 @@ view: cordial_analytic_sms {
 
   measure: total_revenue {
     type: sum
-    sql: ${revenue} ;;
+    sql: ${total_revenue_dim} ;;
   }
 
-  dimension: sent {
+  dimension: total_sent_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."SENT_TOTAL" ;;
@@ -140,13 +154,20 @@ view: cordial_analytic_sms {
     # description: "Calculation is not required. This is already given."
     type: sum
     value_format: "#,##0"
-    sql: ${sent};;
+    sql: ${total_sent_dim};;
   }
 
-  dimension: total_purchases {
+  dimension: total_purchases_dim {
     hidden: yes
     type: number
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
+  }
+
+  measure: total_purchases {
+    # hidden: yes
+    type: sum
+    value_format: "$#,##0"
+    sql: ${total_purchases_dim};;
   }
 
 ########################################################################################
