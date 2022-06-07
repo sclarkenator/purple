@@ -120,11 +120,11 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
       relationship: many_to_one
     }
-    # join: cordial_analytic_sms {
-    #   type: left_outer
-    #   sql_on: ${cordial_activity.bm_id} = ${cordial_analytic_sms.message_id} ;;
-    #   relationship: many_to_one
-    # }
+    join: cordial_analytic_sms {
+      type: left_outer
+      sql_on: ${cordial_activity.bm_id} = ${cordial_analytic_sms.message_id} ;;
+      relationship: many_to_one
+    }
     join: cordial_bulk_message {
       type: left_outer
       sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;

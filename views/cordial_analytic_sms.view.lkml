@@ -1,12 +1,15 @@
 view: cordial_analytic_sms {
+  label: "Cordial SMS"
   sql_table_name: "MARKETING"."CORDIAL_ANALYTIC_SMS"
     ;;
 
 ########################################################################################
-## PRIMARY KEY
+## IDs
 ########################################################################################
 
+
   dimension: message_id {
+    primary_key: yes
     hidden: yes
     label: "Message ID"
     group_label: "IDs"
@@ -14,10 +17,6 @@ view: cordial_analytic_sms {
     type: string
     sql: ${TABLE}."MESSAGE_ID" ;;
   }
-
-########################################################################################
-## IDs
-########################################################################################
 
   dimension: message_key {
     type: string
@@ -38,51 +37,87 @@ view: cordial_analytic_sms {
     sql: ${TABLE}."MESSAGE_NAME" ;;
   }
 
-########################################################################################
+#####################
 # FLAGS
-########################################################################################
+#####################
 
 ########################################################################################
 ## MEASURES / FACTS
 ########################################################################################
 
   measure: record_count {
-    hidden: yes
+    # hidden: yes
     type: count
     drill_fields: [message_id]
   }
 
-  dimension: aov {
+  dimension: aov_dim {
+    hidden: yes
     type: number
     sql: ${TABLE}."AOV" ;;
   }
 
-  dimension: click_rate {
+  measure: aov {
+    # hidden: yes
+    label: "AOV"
+    type: average
+    value_format: "$#,##0"
+    sql: ${aov_dim};;
+  }
+
+  dimension: click_rate_dim {
+    hidden: yes
     type: number
     sql: ${TABLE}."CLICK_RATE" ;;
   }
 
-  dimension: clicks_total {
+  measure: click_rate {
+    # hidden: yes
+    type: average
+    value_format: "0.0\%"
+    sql: ${click_rate_dim};;
+  }
+
+  dimension: clicks {
+    hidden: yes
     type: number
     sql: ${TABLE}."CLICKS_TOTAL" ;;
   }
 
+  measure: total_clicks {
+    # hidden: yes
+    type: sum
+    value_format: "#,##0"
+    sql: ${clicks};;
+  }
+
   dimension: clicks_unique {
+    hidden: yes
     type: number
     sql: ${TABLE}."CLICKS_UNIQUE" ;;
   }
 
+  measure: total_unique_clicks {
+    # hidden: yes
+    type: sum
+    value_format: "#,##0"
+    sql: ${clicks_unique};;
+  }
+
   dimension: delivered_rate {
+    hidden: yes
     type: number
     sql: ${TABLE}."DELIVERED_RATE" ;;
   }
 
   dimension: delivered_total {
+    hidden: yes
     type: number
     sql: ${TABLE}."DELIVERED_TOTAL" ;;
   }
 
   dimension: revenue {
+    hidden: yes
     type: number
     sql: ${TABLE}."REVENUE" ;;
   }
@@ -92,12 +127,24 @@ view: cordial_analytic_sms {
     sql: ${revenue} ;;
   }
 
-  dimension: sent_total {
+  dimension: sent {
+    hidden: yes
     type: number
     sql: ${TABLE}."SENT_TOTAL" ;;
   }
 
+  measure: total_sent {
+    # hidden: yes
+    # label:
+    # group_label: "As needed."
+    # description: "Calculation is not required. This is already given."
+    type: sum
+    value_format: "#,##0"
+    sql: ${sent};;
+  }
+
   dimension: total_purchases {
+    hidden: yes
     type: number
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
   }
