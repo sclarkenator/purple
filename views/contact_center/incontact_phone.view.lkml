@@ -571,13 +571,13 @@ view: incontact_phone {
     sql: ${TABLE}."SPAWNED" ;;
   }
 
-  dimension: transferred {
-    label: "Transferred"
-    group_label: "* Flags"
-    description: "Flags contacts that were transferred to another queue or agent at least once."
-    type: yesno
-    sql: ${TABLE}.transferred  ;;
-  }
+  # dimension: transferred {
+  #   label: "Transferred"
+  #   group_label: "* Flags"
+  #   description: "Flags contacts that were transferred to another queue or agent at least once."
+  #   type: yesno
+  #   sql: ${TABLE}.transferred  ;;
+  # }
 
   ##########################################################################################
   ##########################################################################################
@@ -924,14 +924,14 @@ view: incontact_phone {
     drill_fields: [detail*]
   }
 
-  measure: transfer_count {
-    label: "Transfer Count"
-    group_label: "Count Measures"
-    description: "Counts contacts transferred from original queued agent."
-    type: sum
-    sql: cast(${transferred} as integer) ;;
-    drill_fields: [detail*]
-  }
+  # measure: transfer_count {
+  #   label: "Transfer Count"
+  #   group_label: "Count Measures"
+  #   description: "Counts contacts transferred from original queued agent."
+  #   type: sum
+  #   sql: cast(${transferred} as integer) ;;
+  #   drill_fields: [detail*]
+  # }
 
   ##########################################################################################
   ##########################################################################################
