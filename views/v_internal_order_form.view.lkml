@@ -49,8 +49,6 @@ view: v_internal_order_form {
       quarter,
       year
     ]
-    convert_tz: no
-    datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
 
