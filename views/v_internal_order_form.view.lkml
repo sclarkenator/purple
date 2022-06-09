@@ -7,11 +7,6 @@ view: v_internal_order_form {
     sql: ${TABLE}."ADDRESS_LINE_1" ;;
   }
 
-  dimension: approval {
-    type: string
-    sql: ${TABLE}."APPROVAL" ;;
-  }
-
   dimension: category {
     type: string
     sql: ${TABLE}."CATEGORY" ;;
@@ -82,6 +77,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."FIRST_NAME" ;;
   }
 
+  dimension: full_name {
+    type: string
+    sql: ${TABLE}."FULL_NAME" ;;
+  }
+
   dimension: influencer_order {
     type: yesno
     sql: ${TABLE}."INFLUENCER_ORDER" ;;
@@ -150,11 +150,6 @@ view: v_internal_order_form {
   dimension: ste_or_apt {
     type: string
     sql: ${TABLE}."STE_OR_APT" ;;
-  }
-
-  dimension: survey_id {
-    type: string
-    sql: ${TABLE}."SURVEY_ID" ;;
   }
 
   dimension: type {
