@@ -49,7 +49,9 @@ view: v_internal_order_form {
       quarter,
       year
     ]
-    sql: ${TABLE}.CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."CREATED" ;;
   }
 
   dimension: department {
