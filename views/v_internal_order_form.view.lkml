@@ -117,6 +117,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."PRODUCT" ;;
   }
 
+  dimension: profile {
+    type: string
+    sql: ${TABLE}."PROFILE" ;;
+  }
+
   dimension: quantity {
     type: string
     sql: ${TABLE}."QUANTITY" ;;
@@ -155,11 +160,6 @@ view: v_internal_order_form {
   dimension: type {
     type: string
     sql: ${TABLE}."TYPE" ;;
-  }
-
-  dimension: workday_manager {
-    type: string
-    sql: ${TABLE}."WORKDAY_MANAGER" ;;
   }
 
   dimension: zip_code {
