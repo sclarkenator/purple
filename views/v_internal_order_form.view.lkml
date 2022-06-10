@@ -49,6 +49,7 @@ view: v_internal_order_form {
       quarter,
       year
     ]
+    datatype: date
     sql: ${TABLE}."CREATED" ;;
   }
 
