@@ -32,6 +32,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."COMPANY" ;;
   }
 
+  dimension: completed {
+    type: yesno
+    sql: ${TABLE}."COMPLETED" ;;
+  }
+
   dimension: country {
     type: string
     map_layer_name: countries
