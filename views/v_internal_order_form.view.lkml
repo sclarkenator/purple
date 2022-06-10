@@ -7,6 +7,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."ADDRESS_LINE_1" ;;
   }
 
+  dimension: carrier {
+    type: string
+    sql: ${TABLE}."CARRIER" ;;
+  }
+
   dimension: category {
     type: string
     sql: ${TABLE}."CATEGORY" ;;
@@ -80,6 +85,11 @@ view: v_internal_order_form {
   dimension: full_name {
     type: string
     sql: ${TABLE}."FULL_NAME" ;;
+  }
+
+  dimension: fullfillment_method {
+    type: string
+    sql: ${TABLE}."FULLFILLMENT_METHOD" ;;
   }
 
   dimension: influencer_order {
