@@ -87,9 +87,9 @@ view: v_internal_order_form {
     sql: ${TABLE}."FULL_NAME" ;;
   }
 
-  dimension: fullfillment_method {
+  dimension: fulfillment_method {
     type: string
-    sql: ${TABLE}."FULLFILLMENT_METHOD" ;;
+    sql: ${TABLE}."FULFILLMENT_METHOD" ;;
   }
 
   dimension: influencer_order {
