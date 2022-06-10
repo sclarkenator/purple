@@ -137,6 +137,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."SHIPPING_METHOD" ;;
   }
 
+  dimension: shipping_option {
+    type: string
+    sql: ${TABLE}."SHIPPING_OPTION" ;;
+  }
+
   dimension: signature_required {
     type: yesno
     sql: ${TABLE}."SIGNATURE_REQUIRED" ;;
