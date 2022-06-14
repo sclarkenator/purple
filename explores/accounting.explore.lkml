@@ -6,45 +6,46 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-  explore: finance_bill{
-    hidden: yes
-    group_label: "Accounting"
-    label: "Finance Bill Items"
-    description: "A joined view of finance bill headers and bill line items"
-    join: finance_bill_line {
-      type: left_outer
-      sql_on: ${finance_bill.bill_id}=${finance_bill_line.bill_id} ;;
-      relationship: one_to_many
-    }
-    join: finance_bill_payment {
-      type:  inner
-      sql_on: ${finance_bill.bill_id}=${finance_bill_payment.bill_payment_id} ;;
-      relationship: one_to_one
-    }
-    join: finance_bill_payment_line {
-      type: full_outer
-      sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
-      relationship:  one_to_many
-    }
-    join: account {
-      view_label: "Account"
-      type: left_outer
-      sql_on: ${finance_bill_line.account_id} = ${account.account_id};;
-      relationship:  many_to_one
-    }
-    join: accounting_period {
-      view_label: "Accounting Period"
-      type: left_outer
-      sql_on: ${finance_bill.accounting_period_id} = ${accounting_period.accounting_period_id} ;;
-      relationship:  many_to_one
-    }
-    join: entity {
-      view_label: "Entity"
-      type: left_outer
-      sql_on: ${finance_bill.entity_id} = ${entity.entity_id} ;;
-      relationship: many_to_many
-    }
-  }
+  # It appears this explore doesn't have the underlying views. Disabling it on 6/14/22
+  # explore: finance_bill{
+  #   hidden: yes
+  #   group_label: "Accounting"
+  #   label: "Finance Bill Items"
+  #   description: "A joined view of finance bill headers and bill line items"
+  #   join: finance_bill_line {
+  #     type: left_outer
+  #     sql_on: ${finance_bill.bill_id}=${finance_bill_line.bill_id} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: finance_bill_payment {
+  #     type:  inner
+  #     sql_on: ${finance_bill.bill_id}=${finance_bill_payment.bill_payment_id} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: finance_bill_payment_line {
+  #     type: full_outer
+  #     sql_on: ${finance_bill.bill_id}=${finance_bill_payment_line.bill_payment_id} ;;
+  #     relationship:  one_to_many
+  #   }
+  #   join: account {
+  #     view_label: "Account"
+  #     type: left_outer
+  #     sql_on: ${finance_bill_line.account_id} = ${account.account_id};;
+  #     relationship:  many_to_one
+  #   }
+  #   join: accounting_period {
+  #     view_label: "Accounting Period"
+  #     type: left_outer
+  #     sql_on: ${finance_bill.accounting_period_id} = ${accounting_period.accounting_period_id} ;;
+  #     relationship:  many_to_one
+  #   }
+  #   join: entity {
+  #     view_label: "Entity"
+  #     type: left_outer
+  #     sql_on: ${finance_bill.entity_id} = ${entity.entity_id} ;;
+  #     relationship: many_to_many
+  #   }
+  # }
 
   explore: v_gift_card {
     label: "Gift Card Transactions"
