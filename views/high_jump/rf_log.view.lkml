@@ -33,6 +33,12 @@ view: rf_log {
     sql: ${TABLE}."CREATED" ;;
   }
 
+  measure: expected {
+    type: sum
+    value_format: "#,##0"
+    sql: ${TABLE}."EXPECTED" ;;
+  }
+
   dimension: license_plate {
     type: string
     sql: ${TABLE}."LICENSE_PLATE" ;;
@@ -76,9 +82,58 @@ view: rf_log {
 
   measure: quantity {
     type: sum
+    value_format: "#,##0"
+    description: "Matches raw quantity field from RF Logs - means something different for different actions."
+    hidden: yes
     sql: ${TABLE}."QUANTITY" ;;
   }
 
+  measure: quantity_counted {
+    type: sum
+    value_format: "#,##0"
+    sql: case when action in ('CYCL-CPL','CYCL-OK') then ${TABLE}."QUANTITY"
+              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALER"*${TABLE}."QUANTITY")
+              else 0 end;;
+  }
+
+  measure: amount_counted {
+    type: sum
+    value_format: "$#,##0"
+    sql: (case when action in ('CYCL-CPL','CYCL-OK') then ${TABLE}."QUANTITY"
+              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALER"*${TABLE}."QUANTITY")
+              else 0 end) * ${standard_cost_direct_materials.dm_standard_cost} ;;
+  }
+
+  measure: adjustment_quantity{
+    type: sum
+    value_format: "#,##0"
+    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALER"*${TABLE}."QUANTITY"
+      else 0 end) ;;
+  }
+
+  measure: adjustment_amount {
+    type: sum
+    value_format: "$#,##0"
+    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALER"*${TABLE}."QUANTITY"
+              else 0 end) * ${standard_cost_direct_materials.dm_standard_cost} ;;
+  }
+
+  measure: bin_label_count {
+    type: count
+    hidden: yes
+    sql: ${TABLE}."BIN_LABEL" ;;
+  }
+
+  measure: adjustment_count {
+    type: count
+    filters: [action: "CYCL-ADJ"]
+    sql: ${TABLE}."BIN_LABEL";;
+  }
+
+  measure: distinct_bin_count {
+    type: count_distinct
+    sql: ${TABLE}."BIN_LABEL";;
+  }
 
   dimension: sku {
     type: string
