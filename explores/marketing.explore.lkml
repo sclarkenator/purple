@@ -469,6 +469,10 @@ explore: all_events {
     }
 # I commented this out to see if performance changes
 ## Blake
+
+# UPDATE: It looks like performance went to pot becuase I see that the aggregate table and materialization are no longer commented out.
+## Rho
+
   aggregate_table: rollup__sessions_time_week_of_year__sessions_time_year {
     query: {
       dimensions: [sessions.time_week_of_year, sessions.time_year]
