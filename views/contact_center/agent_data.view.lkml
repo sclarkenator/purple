@@ -2,78 +2,7 @@ view: agent_data {
   ## Tracks agent data from agent_lkp table along with current team information
   ## Does not track historic data
 
-  derived_table: {
-    sql:
-      select *
-      from (
-        select distinct  --c.*
-            a.incontact_id,
-            a.email,
-            a.retail,
-            a.inactive,
-            a.location,
-            a.employee_type,
-            a.purple_with_purpose,
-            a.mentor,
-            a.service_recovery_team,
-            nvl(a.hired, a.created) as start_date,
-            nvl(terminated, inactive) as end_date,
-            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
-                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
-              ,nvl(a.name, la.full_name)) as name,
-            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
-                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
-              , c.team_name) as current_team_name,
-            c.team_email as current_team_email,
-            nvl(case when la.agent_id in (3263325330, 3566812330) then 'System'
-                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant' end
-              ,a.team_type) as  team_type,
-            case when la.agent_id in (3263325330, 3566812330) then 'System'
-                when agent_id in (3293544230, 3511734130) then 'Virtual Assistant'
-                when a.employee_type is null and c.team_name is null then 'Other'
-                when a.team_type in ('Admin', 'WFM', 'QA') then 'Admin'
-                when a.team_type in ('Training', 'Sales') then a.team_type
-                else 'Customer Care' end as team_group,
-            case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then true
-                when a.inactive is not null then false
-                when a.terminated is not null then false
-                when la.enabled = true then true
-                else true end as active_flag,
-            nvl(case when la.agent_id in (3263325330, 3566812330, 3293544230, 3511734130) then false end
-                ,a.supervisor) as supervisor,
-            la.enabled,
-            a.zendesk_id,
-            a.shopify_id,
-            a.zendesk_sell_user_id,
-            a.shopify_id_pos,
-            a.workday_id,
-            la.agent_id as liveperson_id,
-            a.created,
-            a.hired,
-            a.terminated,
-            nvl(row_number()over(partition by nvl(a.incontact_id, la.agent_id)
-              order by la.update_ts desc), 1) as rn
-
-        from analytics.customer_care.agent_lkp a
-
-            left join (
-              select *,
-              rank() over( partition by incontact_id
-                order by end_date desc) as rnk
-              from analytics.customer_care.team_lead_name
-              where team_name is not null
-              ) c
-              on a.incontact_id = c.incontact_id
-              and c.rnk = 1
-
-            full outer join liveperson.agent la
-              on a.zendesk_id = la.employee_id
-              or a.incontact_id = la.employee_id
-      ) x
-      where x.rn = 1
-
-      ;;
-  }
+  sql_table_name: analytics.customer_care.agent_data ;;
 
   set: agents_minimal_grouping {
     fields: [
