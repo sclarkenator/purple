@@ -174,30 +174,30 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: ecommerce_canada {
-    from: heap_ca_sessions
-    group_label: "Marketing"
-    label: "eCommerce Canada"
-    view_label: "Sessions"
-    description: "Combined Website and Sales Data for Canada (Sleep Country)"
-    hidden: yes
-    join: heap_ca_page_views {
-      type: left_outer
-      sql_on: ${heap_ca_page_views.session_id} = ${ecommerce_canada.session_id} ;;
-      relationship: one_to_many
-    }
-    join: heap_ca_purchase {
-      view_label: "Purchase"
-      type: left_outer
-      sql_on: ${heap_ca_purchase.session_id} = ${ecommerce_canada.session_id} ;;
-      relationship: one_to_many
-    }
+  # explore: ecommerce_canada {
+  #   from: heap_ca_sessions
+  #   group_label: "Marketing"
+  #   label: "eCommerce Canada"
+  #   view_label: "Sessions"
+  #   description: "Combined Website and Sales Data for Canada (Sleep Country)"
+  #   hidden: yes
+  #   join: heap_ca_page_views {
+  #     type: left_outer
+  #     sql_on: ${heap_ca_page_views.session_id} = ${ecommerce_canada.session_id} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: heap_ca_purchase {
+  #     view_label: "Purchase"
+  #     type: left_outer
+  #     sql_on: ${heap_ca_purchase.session_id} = ${ecommerce_canada.session_id} ;;
+  #     relationship: one_to_many
+  #   }
 
 
-  }
+  # }
 
   #Created for Mason on 2020-11-18
-  explore: heap_checkout_abandonment {hidden:yes group_label: "Marketing" description:"Check abandonment details"}
+  # explore: heap_checkout_abandonment {hidden:yes group_label: "Marketing" description:"Check abandonment details"}
 
   explore: heap_page_views_holiday {
     hidden: yes
@@ -210,8 +210,8 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore:v_site_feedback{hidden: yes}
-  explore: v_session_hour_projection {hidden:yes}
+#  explore:v_site_feedback{hidden: yes}
+#  explore: v_session_hour_projection {hidden:yes}
 
 #   explore: ecommerce_qualtrics {
 #     hidden: yes
