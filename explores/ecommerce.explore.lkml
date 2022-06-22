@@ -199,16 +199,16 @@ include: "/dashboards/**/*.dashboard"
   #Created for Mason on 2020-11-18
   explore: heap_checkout_abandonment {hidden:yes group_label: "Marketing" description:"Check abandonment details"}
 
-  explore: heap_page_views_holiday {
-    hidden: yes
-    group_label: "Marketing"
-    description:"This data updates every two hours during holiday periods"
-    join: holiday_sessions {
-      type: left_outer
-      sql_on: ${holiday_sessions.session_id} = ${heap_page_views_holiday.session_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: heap_page_views_holiday {
+  #   hidden: yes
+  #   group_label: "Marketing"
+  #   description:"This data updates every two hours during holiday periods"
+  #   join: holiday_sessions {
+  #     type: left_outer
+  #     sql_on: ${holiday_sessions.session_id} = ${heap_page_views_holiday.session_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 #  explore:v_site_feedback{hidden: yes}
 #  explore: v_session_hour_projection {hidden:yes}
