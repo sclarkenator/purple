@@ -1177,7 +1177,7 @@ view: sales_order_line_base {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot. Source:netsuite.sales_order_line"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(coalesce(${carrier_raw},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
+    sql:  CASE WHEN upper(coalesce(${carrier_raw},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS','CRST') THEN 'Purple' Else ${carrier} END;;
   }
 
   dimension: ship_flag {
