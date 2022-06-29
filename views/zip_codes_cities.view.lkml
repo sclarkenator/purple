@@ -1,15 +1,6 @@
 view: zip_codes_city {
 
-  derived_table: {
-    sql: -- selecting the lowest zip code per city
-      SELECT city
-        , state_name
-        , min(zip_string) as city_zip
-      FROM analytics.csv_uploads.zip_codes
-      where city IS NOT NULL and in_dma = FALSE
-      GROUP BY city, state_name
-      ;;
-  }
+  sql_table_name: analytics.heap.v_ecommerce_zip_codes_city ;;
 
   dimension: city {
     label: "City Name"
