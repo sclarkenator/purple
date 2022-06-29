@@ -4,16 +4,17 @@
 #-------------------------------------------------------------------
 include: "/views/_period_comparison.view.lkml"
 view: sessions {
-   derived_table: {
-     sql:
-        select *
-        from heap_data.purple.sessions
-        where browser not in ('SchemaBot 1.2','KlarnaBot','KlarnaPriceWatcherBot 1.0','BrandVeritySpider 1.0','SemrushBot')
-        --where browser not ilike ('%bot%')
-        ;;
+
+  # derived_table: {
+  #   sql:
+  #       select *
+  #       from heap_data.purple.sessions
+  #       where browser not in ('SchemaBot 1.2','KlarnaBot','KlarnaPriceWatcherBot 1.0','BrandVeritySpider 1.0','SemrushBot')
+  #       --where browser not ilike ('%bot%')
+  #       ;;
 #     datagroup_trigger: pdt_refresh_6am
-   }
-#  sql_table_name: heap_data.purple.sessions ;;
+  # }
+  sql_table_name: ANALYTICS.HEAP.V_SESSIONS_FOR_ECOMMERCE ;;
 
    extends: [_period_comparison]
    #### Used with period comparison view
