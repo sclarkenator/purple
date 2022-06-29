@@ -5,16 +5,7 @@
 
 view: session_facts {
   derived_table: {
-    sql: SELECT
-        all_events.session_id || '-' || all_events.user_id AS session_unique_id,
-        all_events.session_id,
-        user_id,
-        row_number() over( partition by user_id order by min(all_events.time)) as session_sequence_number,
-        min(all_events.time) AS session_start_time,
-        max(all_events.time) AS session_end_time,
-        COUNT(distinct(all_events.session_id || '-' || all_events.user_id)) AS all_events_count
-      FROM heap_data.purple.all_events AS all_events
-      GROUP BY 1,2,3  ;;
+    sql: select * from analytics.heap.v_session_facts_for_ecommerce ;;
 
     datagroup_trigger: pdt_refresh_6am
   }
