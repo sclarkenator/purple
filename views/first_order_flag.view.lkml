@@ -1,17 +1,5 @@
 view: first_order_flag {
-   derived_table: {
-     sql:
-      select
-        order_id,
-        email,
-        system,
-        row_number () over (partition by email order by so.created) order_num,
-        case when order_num = 1 then 'NEW' else 'REPEAT' end NEW_FLG
-      from sales.sales_order so
-      where (so.channel_id = 1 OR so.channel_id = 5)
-      and so.exchange = 'F' and so.warranty = 'F'
-      ;;
-   }
+  sql_table_name: analytics.heap.v_ecommerce_first_order_flag ;;
 
   dimension: pk {
     description: "Primary key for order lookup"
