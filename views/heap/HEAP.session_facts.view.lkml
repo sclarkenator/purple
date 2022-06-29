@@ -5,7 +5,7 @@
 
 view: session_facts {
   derived_table: {
-    sql: select * from analytics.heap.v_session_facts_for_ecommerce ;;
+    sql: select * from analytics.heap.v_ecommerce_session_facts ;;
 
     datagroup_trigger: pdt_refresh_6am
   }

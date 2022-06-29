@@ -14,7 +14,7 @@ view: sessions {
   #       ;;
 #     datagroup_trigger: pdt_refresh_6am
   # }
-  sql_table_name: ANALYTICS.HEAP.V_SESSIONS_FOR_ECOMMERCE ;;
+  sql_table_name: ANALYTICS.HEAP.V_ECOMMERCE_SESSIONS ;;
 
    extends: [_period_comparison]
    #### Used with period comparison view
