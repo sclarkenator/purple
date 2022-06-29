@@ -69,10 +69,10 @@ view: rf_log {
     sql: ${TABLE}."PO_NUMBER" ;;
   }
 
-  dimension: q_scaler {
+  dimension: q_scalar {
     type: number
     description: "Used by some actions like CYCL-ADJ to indicate where the qty should be negative (need to use scalar as a multiplier of qty)."
-    sql: ${TABLE}."Q_SCALER" ;;
+    sql: ${TABLE}."Q_SCALAR" ;;
   }
 
 
@@ -94,7 +94,7 @@ view: rf_log {
     value_format: "#,##0"
     description: "Total units counted in a bin"
     sql: case when action in ('CYCL-CPL','CYCL-OK') then ${TABLE}."QUANTITY"
-              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALER"*${TABLE}."QUANTITY")
+              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALAR"*${TABLE}."QUANTITY")
               else 0 end;;
   }
 
@@ -103,7 +103,7 @@ view: rf_log {
     value_format: "$#,##0"
     description: "Multiples DM SC and the total units counted in a bin"
     sql: (case when action in ('CYCL-CPL','CYCL-OK') then ${TABLE}."QUANTITY"
-              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALER"*${TABLE}."QUANTITY")
+              when action = 'CYCL-ADJ' then ${TABLE}."EXPECTED"+ (${TABLE}."Q_SCALAR"*${TABLE}."QUANTITY")
               else 0 end) * ${standard_cost_direct_materials.dm_standard_cost} ;;
   }
 
@@ -111,7 +111,7 @@ view: rf_log {
     type: sum
     description: "Represents how much a bin's quantity was adjusted by"
     value_format: "#,##0"
-    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALER"*${TABLE}."QUANTITY"
+    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALAR"*${TABLE}."QUANTITY"
       else 0 end) ;;
   }
 
@@ -119,7 +119,7 @@ view: rf_log {
     type: sum
     description: "$ amount by which a bin was adjusted. Multiples DM SC and the Adjusted unit count"
     value_format: "$#,##0"
-    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALER"*${TABLE}."QUANTITY"
+    sql: (case when action = 'CYCL-ADJ' then ${TABLE}."Q_SCALAR"*${TABLE}."QUANTITY"
               else 0 end) * ${standard_cost_direct_materials.dm_standard_cost} ;;
   }
 
