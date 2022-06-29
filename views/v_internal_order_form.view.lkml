@@ -7,6 +7,11 @@ view: v_internal_order_form {
     sql: ${TABLE}."ADDRESS_LINE_1" ;;
   }
 
+  dimension: approval {
+    type: string
+    sql: ${TABLE}."APPROVAL" ;;
+  }
+
   dimension: carrier {
     type: string
     sql: ${TABLE}."CARRIER" ;;
