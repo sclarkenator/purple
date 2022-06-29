@@ -1,5 +1,5 @@
 view: first_order_flag {
-  sql_table_name: analytics.heap.v_ecommerce_first_order_flag ;;
+  sql_table_name: ANALYTICS.sales.v_main_sales_first_order_flag ;;
 
   dimension: pk {
     description: "Primary key for order lookup"
