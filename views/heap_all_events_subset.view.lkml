@@ -1,22 +1,6 @@
   view: heap_all_events_subset {
     #This view contains only the information related to the heap events: add to cart, purchase, and email capture. Added some for bundle tracking 2/25/2020
-    derived_table: {
-      sql:
-      select *
-      from heap_data.purple.all_events
-      where event_table_name in (
-      --add to cart, purchase, and email capture
-      'checkout_submit_customer_info','cart_add_to_cart','cart_mattress_add_to_cart','product_detail_page_pdp_add_to_cart','purchase',
-      --bundle tracking
-      'bundle_testing_combo_add_bundle_to_cart', 'bundle_testing_last_chance_bundle_add_to_cart', 'bundle_testing_pdp_add_to_cart_with_bundle_checked',
-      --5th anniversary hero event
-      'carousel_banner_hero_cta_click'
-      --store finder events for yext
-      ,'store_finder_all_top_nav_stores', 'store_finder_clicked_shop_mattresses', 'store_finder_individual_store_page_clicked_get_directions'
-      , 'store_finder_clicked_get_directions', 'store_finder_individual_store_page_clicked_call_store', 'store_finder_individual_store_page_clicked_shop_mattresses'
-      , 'store_finder_clicked_appointment', 'store_finder_individual_store_page_clicked_book_appointment'
-      ) ;;
-    }
+    sql_table_name: analytics.heap.v_ecommerce_heap_all_events_subset ;;
 
     dimension: event_id {
       description: "ID number for each event. Source: looker calculation"
