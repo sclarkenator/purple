@@ -190,7 +190,7 @@ group by 1,2,20
 
 ), gg as (
 
---Produced Beds/Scrim Last 28 Days (20 Workdays)
+--Produced Beds Last 28 Days (20 Workdays)
 select
   i.sku_id
   , i.product_description
@@ -205,7 +205,30 @@ select
 from production.v_assembly_build prod
     left join sales.item i on prod.item_id = i.item_id
     left join sales.location l on prod.location_id = l.location_id
-where ((i.category = 'MATTRESS' and i.classification_new = 'FG') or i.model = 'MATTRESS SCRIM PEAK') and (i.sku_id not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','111')
+where i.category = 'MATTRESS' and i.classification_new = 'FG' and (i.sku_id not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','111')
+    and prod.produced  < current_date()
+    and prod.produced >= (to_date(dateadd('day', -28, current_date())))
+group by 1,2,3,4
+order by 5 desc
+
+), hh as (
+
+--Produced Scrim Last 28 Days (20 Workdays)
+select
+  i.sku_id
+  , i.product_description
+  , i.model
+  , i.category
+  , round(coalesce(sum(prod.quantity), 0),0) quantity_produced
+  , round((quantity_produced/20),0) avg_daily_produced
+  , sum(case when l.location_id = '111' then prod.quantity else 0 end) psouth_quantity
+  , round((psouth_quantity/20),0) avg_daily_produced_psouth
+  , sum(case when l.location_id = '4' then prod.quantity else 0 end) pwest_quantity
+  , round((pwest_quantity/20),0) avg_daily_produced_pwest
+from production.v_assembly_build prod
+    left join sales.item i on prod.item_id = i.item_id
+    left join sales.location l on prod.location_id = l.location_id
+where i.model = 'MATTRESS SCRIM PEAK' and (i.sku_id not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','111')
     and prod.produced  < current_date()
     and prod.produced >= (to_date(dateadd('day', -28, current_date())))
 group by 1,2,3,4
@@ -257,8 +280,10 @@ select zz.new_hep_sku
      end as fg_beds_needed_psouth
     , zz.forecast_version
     , (fg_beds_needed_pwest+fg_beds_needed_psouth) as fg_beds_needed
-    , sum(avg_daily_produced_pwest) as avg_daily_produced_pwest
-    , sum(avg_daily_produced_psouth) as avg_daily_produced_psouth
+    , sum(zz.daily_beds_produced_pwest) as daily_beds_produced_pwest
+    , sum(zz.daily_beds_produced_psouth) as daily_beds_produced_psouth
+    , max(zz.daily_peaks_produced_pwest) as daily_peaks_produced_pwest
+    , max(zz.daily_peaks_produced_pwest) as daily_peaks_produced_psouth
 from (
   select aa.new_hep_sku
       , aa.finished_good_sku
@@ -288,8 +313,10 @@ from (
       , ff."21_DAY_FORECAST_PSOUTH" as "21_DAY_FORECAST_PSOUTH"
       , ff.daily_forecast_psouth as daily_forecast_psouth
       , ff.forecast_version as forecast_version
-      , gg.avg_daily_produced_pwest as avg_daily_produced_pwest
-      , gg.avg_daily_produced_psouth as avg_daily_produced_psouth
+      , gg.avg_daily_produced_pwest as daily_beds_produced_pwest
+      , gg.avg_daily_produced_psouth as daily_beds_produced_psouth
+      , hh.avg_daily_produced_pwest as daily_peaks_produced_pwest
+      , hh.avg_daily_produced_psouth as daily_peaks_produced_psouth
 
   from aa
   left join bb on bb.sku_id = aa.finished_good_sku
@@ -297,7 +324,8 @@ from (
   left join dd on dd.sku_id = aa.finished_good_sku
   left join ee on ee.sku_id = aa.finished_good_sku
   left join ff on ff.sku_id = aa.finished_good_sku
-  left join gg on gg.sku_id = coalesce (aa.new_hep_sku,aa.finished_good_sku)
+  left join gg on gg.sku_id = aa.finished_good_sku
+  left join hh on hh.sku_id = aa.new_hep_sku
 ) zz
 group by 1,2,3,4,5,6,7,29,30,31,32,33;;  }
 
@@ -305,6 +333,7 @@ group by 1,2,3,4,5,6,7,29,30,31,32,33;;  }
     label: "SFG SKU"
     description: "SFG SKU number; source:production.fg_to_sfg"
     type: string
+    primary_key: yes
     sql: ${TABLE}."NEW_HEP_SKU" ;;
   }
 
@@ -389,21 +418,21 @@ group by 1,2,3,4,5,6,7,29,30,31,32,33;;  }
   measure: sfg_on_hand {
     label: "SFG on Hand"
     description: "source; looker calculation"
-    type: max
+    type: sum_distinct
     sql:  ${TABLE}."SFG_ON_HAND" ;;
   }
 
   measure: sfg_on_hand_pwest {
     label: "SFG on Hand P-West"
     description: "source; looker calculation"
-    type: max
+    type: sum_distinct
     sql:  ${TABLE}."SFG_ON_HAND_PWEST" ;;
   }
 
   measure: sfg_on_hand_psouth {
     label: "SFG on Hand P-South"
     description: "source; looker calculation"
-    type: max
+    type: sum_distinct
     sql:  ${TABLE}."SFG_ON_HAND_PSOUTH" ;;
   }
 
@@ -547,18 +576,32 @@ group by 1,2,3,4,5,6,7,29,30,31,32,33;;  }
     sql:  ${TABLE}.FG_BEDS_NEEDED ;;
   }
 
-  measure: avg_daily_produced_pwest {
-    label: "P-West Daily Produced"
-    description: "Average Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
+  measure: daily_beds_produced_pwest {
+    label: "P-West Daily Beds Produced"
+    description: "Average Beds Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
     type: sum
-    sql:  ${TABLE}.avg_daily_produced_pwest ;;
+    sql:  ${TABLE}.daily_beds_produced_pwest ;;
   }
 
-  measure: avg_daily_produced_psouth {
-    label: "P-South Daily Produced"
-    description: "Average Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
+  measure: daily_beds_produced_psouth {
+    label: "P-South Daily Beds Produced"
+    description: "Average Beds Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
     type: sum
-    sql:  ${TABLE}.avg_daily_produced_psouth ;;
+    sql:  ${TABLE}.daily_beds_produced_psouth ;;
+  }
+
+  measure: daily_peaks_produced_pwest {
+    label: "P-West Daily Peaks Produced"
+    description: "Average Beds Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
+    type: sum_distinct
+    sql:  ${TABLE}.daily_peaks_produced_pwest ;;
+  }
+
+  measure: daily_peaks_produced_psouth {
+    label: "P-South Daily Peaks Produced"
+    description: "Average Beds Produced/Workday. Looks at last 28 complete days, divided by 20 work days"
+    type: sum_distinct
+    sql:  ${TABLE}.daily_peaks_produced_psouth ;;
   }
 
 }
