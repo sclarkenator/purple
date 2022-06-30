@@ -6,7 +6,8 @@ view: core_events_click_any_element {
     primary_key: yes
     group_label: "Click Events"
     hidden: yes
-    sql:  ${TABLE}.user_id||${TABLE}.session_id||${TABLE}.event_id;;
+    #sql:  ${TABLE}.user_id||${TABLE}.session_id||${TABLE}.event_id;;
+    sql:  ${TABLE}.pk ;;
   }
 
   dimension: user_id {
