@@ -21,10 +21,10 @@ view: aov_driver {
    dimension: chose_aov_driver {
      description: "Were items added from AOV driver section"
      type: yesno
-     sql: ${TABLE}.chose_aov_driver='true' ;; }
+     sql: ${TABLE}.chose_aov_driver ;; }
 
   dimension: pk {
     primary_key: yes
     hidden: yes
-    sql: ${user_id}||'-'||${session_id} ;; }
+    sql: ${TABLE}.pk ;; }
  }
