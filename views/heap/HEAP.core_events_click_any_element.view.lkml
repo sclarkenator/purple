@@ -1,5 +1,5 @@
 view: core_events_click_any_element {
-  sql_table_name: heap_data.heap.core_events_click_any_element ;;
+  sql_table_name: ANALYTICS.HEAP.V_core_events_click_any_element ;;
 
   dimension: PK {
     type: string
