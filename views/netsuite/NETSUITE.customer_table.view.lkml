@@ -3,7 +3,7 @@ view: customer_table {
 
   dimension: customer_id {
     label: "   Customer ID"
-    description: "Hyperlink to customer record in netsuite by internal id. Source:netsuite.customers"
+    description: "Hyperlink to customer record in Netsuite by internal id. Source:netsuite.customers"
     group_label: "  Customer details"
     type: string
     primary_key: yes
@@ -13,7 +13,7 @@ view: customer_table {
   dimension: companyname {
     label: "Wholesale Customer Name"
     group_label: "  Wholesale"
-    description: "Company Name from netsuite.
+    description: "Company Name from Netsuite.
       Source:netsuite.customers"
     type: string
     sql: ${TABLE}.companyname ;; }
@@ -21,7 +21,7 @@ view: customer_table {
   dimension: full_name {
     group_label: "  Customer details"
     label: "Customer Name"
-    description: "Merging first and last name from netsuite. Source: netsuite.customers"
+    description: "Merging first and last name from Netsuite. Source: netsuite.customers"
     type: string
     sql:  initcap(lower(${TABLE}.firstname))||' '||initcap(lower(${TABLE}.lastname));;
     required_access_grants:[can_view_pii] }
@@ -29,7 +29,7 @@ view: customer_table {
   dimension: first_name {
     group_label: "  Customer details"
     label: "First Name"
-    description: "First name from netsuite. Source: netsuite.customers"
+    description: "First name from Netsuite. Source: netsuite.customers"
     type: string
     sql:  UPPER(${TABLE}.firstname);;
     required_access_grants:[can_view_pii] }
@@ -37,7 +37,7 @@ view: customer_table {
   dimension: last_name {
     group_label: "  Customer details"
     label: "Last Name"
-    description: "Last name from netsuite. Source: netsuite.customers"
+    description: "Last name from Netsuite. Source: netsuite.customers"
     type: string
     sql:  UPPER(${TABLE}.lastname) ;;
     required_access_grants:[can_view_pii] }
