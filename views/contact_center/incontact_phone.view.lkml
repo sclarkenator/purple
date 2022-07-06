@@ -1240,7 +1240,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of queued calls that were abandoned."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: sum(case when ${queued} = TRUE and ${abandoned} = true then 1 end)
       / nullifzero(sum(case when queued = true then 1 end)) ;;
     drill_fields: [detail*]
@@ -1251,7 +1251,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of calls that were inbound."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: sum(case when ${direction} = 'Inbound' then 1 end) / nullifzero(count(*)) ;;
     drill_fields: [detail*]
     }
@@ -1261,7 +1261,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of queued calls that were handled within the defined Service Level Agreement objective."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: case when sum(case when ${service_level_flag} >= 0 then 1 end) > 0 then ${in_sla_count} / nullifzero(${sla_offered_count}) else 0 end ;;
     # sql: sum(case when ${in_sla} = true then 1 else 0 end) /
     #   nullifzero(sum(case when ${service_level_flag} between 0 and 1 then 1 else 0 end)) ;;
@@ -1273,7 +1273,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of calls handled by agent. [Handled] / ([Queued] + [Outbound])"
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: sum(case when ${handled} = true then 1 end)
       / nullifzero(sum(case when ${queued} = true then 1
       when ${direction} = 'Outbound' then 1 else 0 end)) ;;
@@ -1285,7 +1285,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of agent offered calls that were abandoned after short abandon threshhold."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: sum(case when ${queued} = TRUE and ${long_abandon} = true then 1 end)
       / nullifzero(sum(case when queued = true then 1 end)) ;;
     drill_fields: [detail*, long_abandon, agent_offered]
@@ -1296,7 +1296,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of queued calls that were NOT handled within the defined Service Level Agreement objective."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: ${out_sla_count} / nullifzero(${sla_offered_count}) ;;
     drill_fields: [detail*, in_sla]
     }
@@ -1306,7 +1306,7 @@ view: incontact_phone {
     group_label: "Percentage Measures"
     description: "Percent of calls that were outbound."
     type: number
-    value_format_name: percent_1
+    value_format_name: percent_2
     sql: sum(case when ${direction} = 'Outbound' then 1 end) /
       nullifzero(count(*)) ;;
     drill_fields: [detail*]

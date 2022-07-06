@@ -1,16 +1,7 @@
 include: "/views/_period_comparison.view.lkml"
 view: sales_order_line_base {
   #sql_table_name: SALES.SALES_ORDER_LINE ;;
-  derived_table: {
-    sql:
-    select
-      sol.*,
-      case when so.channel_id = 2 and co.cancelled is not NULL then TRUE else FALSE end as is_cancelled_wholesale
-    from analytics.sales.sales_order_line sol
-      left join analytics.sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
-      left join analytics.sales.cancelled_order co on sol.order_id = co.order_id and sol.item_id = co.item_id and sol.system = co.system
-    ;;
-  }
+  sql_table_name: analytics.sales.v_main_sales_sales_order_line_base ;;
   extends: [_period_comparison]
 
   dimension: is_cancelled_wholesale {
@@ -1177,7 +1168,7 @@ view: sales_order_line_base {
     description: "From Netsuite sales order line, the carrier field grouped into Purple, XPO, and Pilot. Source:netsuite.sales_order_line"
     hidden: no
     type: string
-    sql:  CASE WHEN upper(coalesce(${carrier_raw},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS') THEN 'Purple' Else ${carrier} END;;
+    sql:  CASE WHEN upper(coalesce(${carrier_raw},'')) not in ('XPO','MANNA','PILOT','MAINFREIGHT','PURPLE HOME DELIVERY','SPEEDY DELIVERY','RYDER','FRAGILEPAK','NEHDS','CRST') THEN 'Purple' Else ${carrier} END;;
   }
 
   dimension: ship_flag {

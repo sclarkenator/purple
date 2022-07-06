@@ -3,7 +3,7 @@
 # This data updates every two hours during holiday periods
 #-------------------------------------------------------------------
 view: heap_page_views_holiday {
-  sql_table_name: analytics.heap.session_page_flow_holiday ;;
+  sql_table_name: analytics.heap.v_session_page_flow_holiday ;;
 
 
   dimension: session_id {
@@ -24,7 +24,7 @@ view: heap_page_views_holiday {
     hidden: yes
     primary_key: yes
     type: string
-    sql:concat( ${TABLE}.session_id , ${TABLE}.event_time );;
+    sql:${TABLE}.session_id_and_event_time;;
   }
 
   dimension_group: session_time {
@@ -126,14 +126,14 @@ view: heap_page_views_holiday {
     label: "   * Bounced"
     description: "Yes: Only viewed 1 page. Source: looker.calculation"
     type: yesno
-    sql: ${TABLE}.count_pages_viewed = 1 ;;
+    sql: ${TABLE}.bounced ;;
   }
 
   dimension: exit_page {
     label: "Exit Page"
     description: "Yes: Last page viewed before leaving the site. Source: looker.calculation"
     type: yesno
-    sql: ${TABLE}.exit_page = 1 ;;
+    sql: ${TABLE}.exit_page_flg ;;
   }
 
   #verify exit_pages
@@ -172,7 +172,7 @@ view: heap_page_views_holiday {
     hidden: yes
     view_label: "Sessions"
     type: string
-    sql: split_part(split_part(${query}, 'gclid=',  2), '&', 1) ;;
+    sql: ${TABLE}.gclid;;
   }
 
   dimension: path {
