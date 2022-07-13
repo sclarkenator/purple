@@ -283,7 +283,7 @@ select zz.new_hep_sku
     , sum(zz.daily_beds_produced_pwest) as daily_beds_produced_pwest
     , sum(zz.daily_beds_produced_psouth) as daily_beds_produced_psouth
     , max(zz.daily_peaks_produced_pwest) as daily_peaks_produced_pwest
-    , max(zz.daily_peaks_produced_pwest) as daily_peaks_produced_psouth
+    , max(zz.daily_peaks_produced_psouth) as daily_peaks_produced_psouth
 from (
   select aa.new_hep_sku
       , aa.finished_good_sku
