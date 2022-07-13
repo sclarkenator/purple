@@ -76,8 +76,7 @@ include: "/dashboards/**/*.dashboard"
   explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
   explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
-  # explore: v_scc_sales {label: "Sleep Country Canada Sales" group_label: "Accounting" hidden:yes} // Deprecated on 6/14/22 because underlying view does not exist.
-
+  explore: v_scc_sales {label: "Sleep Country Canada Sales" group_label: "Accounting" hidden:yes}
   explore: v_paypal {hidden: yes group_label: "Accounting"}
   explore: v_fit_paypal {hidden: yes group_label: "Accounting"}
   explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
