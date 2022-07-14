@@ -26,6 +26,8 @@
       sql: ${TABLE}.user_id ;;
     }
 
+    ## 7/14/2022 - this needs to be deprecated or moved. It's too large to migrate to Snowflake for our lift and shift
+    ##           - we can discuss with the domain owner what to do with it
     dimension: email_signup_test {
       description: "ID number for each user. Source: looker calculation"
       view_label: "Sessions"
