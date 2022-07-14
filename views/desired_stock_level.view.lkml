@@ -60,95 +60,39 @@ order by 4 desc
 ), dd as (
 
 --Open Orders by Mattress SKU PWest
-with sales_order_line as (select
-      sol.*,
-      case when so.channel_id = 2 and co.cancelled is not null then true else false end as is_cancelled_wholesale
-    from sales.sales_order_line sol
-      left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
-      left join sales.cancelled_order co on sol.order_id = co.order_id and sol.item_id = co.item_id and sol.system = co.system
-    )
-select
-  i.sku_id,
-  i.product_description,
-  (coalesce(coalesce(cast( ( sum(distinct (cast(floor(coalesce(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.ordered_qty  else null end
-,0)*(1000000*1.0)) as decimal(38,0))) + (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0) ) - sum(distinct (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0)) ) as double precision) / cast((1000000*1.0) as double precision), 0), 0))-(coalesce(sum(case when so.transaction_type = 'Cash Sale' or so.source in ('Amazon-FBA-US','Amazon-FBA-CA') then sol.ordered_qty
-      when nvl(f.bundle_quantity,0) > 0 then f.bundle_quantity
-      else f.quantity end ), 0))  unfulfilled_orders_units
-from sales_order_line sol
-      left join sales.item i on sol.item_id = i.item_id
-      left join sales.fulfillment f on (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system
-      left join sales.sales_order so on (sol.order_id||'-'||sol.system) = (so.order_id||'-'||so.system)
-      left join analytics_stage.ns.customers c on (c.customer_id::int) = so.customer_id
-where ((sol.location in ('100-Purple West', '101-XPO PWest', '101-Home Delivery','P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC','S10 - Speedy Delivery Auburn','S20 - Speedy Delivery UC'))) and ((i.type in ('Assembly/Bill of Materials', 'Inventory Item', 'Kit/Package'))) and (i.category = 'MATTRESS') and
-((case when so.channel_id = 1 then 'DTC'
-               when so.channel_id = 2 then 'Wholesale'
-               when so.channel_id = 3 then 'General'
-               when so.channel_id = 4 then 'Employee Store'
-               when so.channel_id = 5 then 'Owned Retail'
-              else 'Other' end in ('DTC', 'Wholesale', 'Owned Retail', 'General'))) and ((so.status in ('Partially Fulfilled', 'Pending Approval', 'Pending Billing/Partially Fulfilled', 'Pending Fulfillment'))) and (c.shipping_hold = 'F')
-group by 1,2
-having
-  ((coalesce(coalesce(cast( ( sum(distinct (cast(floor(coalesce(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.ordered_qty  else null end
-,0)*(1000000*1.0)) as decimal(38,0))) + (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0) ) - sum(distinct (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0)) )  as double precision) / CAST((1000000*1.0) as double precision), 0), 0))-(coalesce(sum(case when so.transaction_type = 'Cash Sale' or so.source in ('Amazon-FBA-US','Amazon-FBA-CA') then sol.ordered_qty
-      when nvl(f.bundle_quantity,0) > 0 then f.bundle_quantity
-      else f.quantity end ), 0))  > 0)
-order by 3 desc
+SELECT
+    product."SKU_ID"  AS sku_id,
+    product."PRODUCT_DESCRIPTION"  AS "product.product_description",
+    COALESCE(SUM(( fulfillment."SOLD_QUANTITY"  ) ), 0) AS unfulfilled_orders_units
+FROM "DATAGRID"."PROD"."FULFILLMENT_NEW"
+     AS fulfillment
+LEFT JOIN "DATAGRID"."PROD"."PRODUCT"
+     AS product ON (fulfillment."ITEM_ID") = (product."ITEM_ID")
+WHERE ((fulfillment."ORDER_STATUS" ) <> 'Closed' AND (fulfillment."ORDER_STATUS" ) <> 'Cancelled' OR (fulfillment."ORDER_STATUS" ) IS NULL)
+AND ((( CAST(fulfillment."ORDER_PLACED" AS TIMESTAMP_NTZ)  ) >= ((DATEADD('month', -5, DATE_TRUNC('month', CURRENT_DATE())))) AND ( CAST(fulfillment."ORDER_PLACED" AS TIMESTAMP_NTZ)  ) < ((DATEADD('month', 6, DATEADD('month', -5, DATE_TRUNC('month', CURRENT_DATE())))))))
+AND (((( CAST(fulfillment."ACTUAL_SHIP" AS TIMESTAMP_NTZ)  )) IS NULL)) AND (((( CAST(fulfillment."EXPECTED_SHIP" AS TIMESTAMP_NTZ)  )) IS NOT NULL))
+AND (product."CATEGORY" ) = 'MATTRESS'
+AND fulfillment."WAREHOUSE_NAME"  in ('100-Purple West', '101-XPO PWest', '101-Home Delivery','P10 - Pilot Columbus DC', 'P20 - Pilot Salt Lake DC','S10 - Speedy Delivery Auburn','S20 - Speedy Delivery UC')
+GROUP BY
+    1,2
 
 ), ee as (
 
 --Open Orders by Mattress SKU PSouth
-with sales_order_line as (select
-      sol.*,
-      case when so.channel_id = 2 and co.cancelled is not null then true else false end as is_cancelled_wholesale
-    from sales.sales_order_line sol
-      left join sales.sales_order so on sol.order_id = so.order_id and sol.system = so.system
-      left join sales.cancelled_order co on sol.order_id = co.order_id and sol.item_id = co.item_id and sol.system = co.system
-    )
-select
-  i.sku_id,
-  i.product_description,
-  (coalesce(coalesce(cast( ( sum(distinct (cast(floor(coalesce(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.ordered_qty  else null end
-,0)*(1000000*1.0)) as decimal(38,0))) + (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0) ) - sum(distinct (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0)) ) as double precision) / cast((1000000*1.0) as double precision), 0), 0))-(coalesce(sum(case when so.transaction_type = 'Cash Sale' or so.source in ('Amazon-FBA-US','Amazon-FBA-CA') then sol.ordered_qty
-      when nvl(f.bundle_quantity,0) > 0 then f.bundle_quantity
-      else f.quantity end ), 0))  unfulfilled_orders_units
-from sales_order_line sol
-      left join sales.item i on sol.item_id = i.item_id
-      left join sales.fulfillment f on (sol.item_id||'-'||sol.order_id||'-'||sol.system) = (case when f.parent_item_id = 0 or f.parent_item_id is null then f.item_id else f.parent_item_id end)||'-'||f.order_id||'-'||f.system
-      left join sales.sales_order so on (sol.order_id||'-'||sol.system) = (so.order_id||'-'||so.system)
-      left join analytics_stage.ns.customers c on (c.customer_id::int) = so.customer_id
-where ((sol.location in ('200-Purple South', 'M20 - Manna Chicago DC', 'M70 - Manna Atlanta DC', 'P30 - PILOT DFW DC','R10 - Ryder Atlanta DC','R20 - Ryder Minneapolis DC','R30 - Ryder Baltimore DC','R40 - Ryder Chicago DC','R50 - Ryder Boston DC'))) and ((i.type in ('Assembly/Bill of Materials', 'Inventory Item', 'Kit/Package'))) and (i.category = 'MATTRESS') and ((case when so.channel_id = 1 then 'DTC'
-               when so.channel_id = 2 then 'Wholesale'
-               when so.channel_id = 3 then 'General'
-               when so.channel_id = 4 then 'Employee Store'
-               when so.channel_id = 5 then 'Owned Retail'
-              else 'Other' end in ('DTC', 'Wholesale', 'Owned Retail', 'General'))) and ((so.status in ('Partially Fulfilled', 'Pending Approval', 'Pending Billing/Partially Fulfilled', 'Pending Fulfillment'))) and (c.shipping_hold = 'F')
-group by 1,2
-having
-  ((coalesce(coalesce(cast( ( sum(distinct (cast(floor(coalesce(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.ordered_qty  else null end
-,0)*(1000000*1.0)) as decimal(38,0))) + (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0) ) - sum(distinct (to_number(MD5(case when (case when sol.is_cancelled_wholesale then 1 else 0 end
-) = 0 then sol.item_id||'-'||sol.order_id||'-'||sol.system  else null end
-), 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') % 1.0e27)::numeric(38, 0)) )  as double precision) / CAST((1000000*1.0) as double precision), 0), 0))-(coalesce(sum(case when so.transaction_type = 'Cash Sale' or so.source in ('Amazon-FBA-US','Amazon-FBA-CA') then sol.ordered_qty
-      when nvl(f.bundle_quantity,0) > 0 then f.bundle_quantity
-      else f.quantity end ), 0))  > 0)
-order by 3 desc
+SELECT
+    product."SKU_ID"  AS sku_id,
+    product."PRODUCT_DESCRIPTION"  AS "product.product_description",
+    COALESCE(SUM(( fulfillment."SOLD_QUANTITY"  ) ), 0) AS unfulfilled_orders_units
+FROM "DATAGRID"."PROD"."FULFILLMENT_NEW"
+     AS fulfillment
+LEFT JOIN "DATAGRID"."PROD"."PRODUCT"
+     AS product ON (fulfillment."ITEM_ID") = (product."ITEM_ID")
+WHERE ((fulfillment."ORDER_STATUS" ) <> 'Closed' AND (fulfillment."ORDER_STATUS" ) <> 'Cancelled' OR (fulfillment."ORDER_STATUS" ) IS NULL)
+AND ((( CAST(fulfillment."ORDER_PLACED" AS TIMESTAMP_NTZ)  ) >= ((DATEADD('month', -5, DATE_TRUNC('month', CURRENT_DATE())))) AND ( CAST(fulfillment."ORDER_PLACED" AS TIMESTAMP_NTZ)  ) < ((DATEADD('month', 6, DATEADD('month', -5, DATE_TRUNC('month', CURRENT_DATE())))))))
+AND (((( CAST(fulfillment."ACTUAL_SHIP" AS TIMESTAMP_NTZ)  )) IS NULL)) AND (((( CAST(fulfillment."EXPECTED_SHIP" AS TIMESTAMP_NTZ)  )) IS NOT NULL))
+AND (product."CATEGORY" ) = 'MATTRESS'
+AND fulfillment."WAREHOUSE_NAME"  in ('200-Purple South', 'M20 - Manna Chicago DC', 'M70 - Manna Atlanta DC', 'P30 - PILOT DFW DC','R10 - Ryder Atlanta DC','R20 - Ryder Minneapolis DC','R30 - Ryder Baltimore DC','R40 - Ryder Chicago DC','R50 - Ryder Boston DC','E10 - Select Express NJ','E30 - Select Express Orlando','C10 - CRST Jessup DC','E20 - Select Express Miami','E40 - Select Express Tampa')
+GROUP BY 1,2
 
 ), ff as (
 
