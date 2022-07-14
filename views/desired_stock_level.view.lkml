@@ -156,9 +156,9 @@ order by 3 desc
 select
   coalesce (i.sku_id, aip.sku_id) sku_id
     , i.product_description
-    , round(coalesce(sum(fc.total_units), 0),0) total_units_new
-    , round(coalesce(sum(case when fc.channel = 'Wholesale' then fc.total_units else 0 end), 0),0) total_units_new_wholesale
-    , round(coalesce(sum(case when fc.channel in ('DTC', 'Owned Retail') then fc.total_units else 0 end), 0),0) total_units_new_dtcor
+    , round(coalesce(sum(fc.subtotal_units), 0),0) total_units_new
+    , round(coalesce(sum(case when fc.channel = 'Wholesale' then fc.subtotal_units else 0 end), 0),0) total_units_new_wholesale
+    , round(coalesce(sum(case when fc.channel in ('DTC', 'Owned Retail') then fc.subtotal_units else 0 end), 0),0) total_units_new_dtcor
     , round((total_units_new_wholesale*0.65 + total_units_new_dtcor*0.65),0) total_units_new_pwest
     , round((total_units_new_wholesale*0.35 + total_units_new_dtcor*0.35),0) total_units_new_psouth
     , round(((total_units_new/8)*2),0) "14_DAY_FORECAST"
@@ -173,19 +173,13 @@ select
     , round(("14_DAY_FORECAST_DTCOR"/14),0) daily_forecast_dtcor
     , round(("14_DAY_FORECAST_PWEST"/14),0) daily_forecast_pwest
     , round(("14_DAY_FORECAST_PSOUTH"/14),0) daily_forecast_psouth
-    , case
-        when fc.version = 'Working'  then 'Working'
-        when fc.version = 'Current S&OP'  then 'Current S&OP'
-        when fc.version = 'Last Month S&OP'  then 'Last Month S&OP'
-        when fc.version = 'Two Month S&OP'  then 'Two Month S&OP'
-        when fc.version = 'Running 4 Month'  then 'Running 4 Month'
-    end as forecast_version
-from sales.v_forecast fc
+    , fc.version
+from DATAGRID.PROD.MERCHANDISE_PLANNING fc
     left join sales.item i on fc.sku_id = i.sku_id
     left join forecast.v_ai_product aip on fc.sku_id = aip.sku_id
-where ((fc.forecast  < (to_date(dateadd('day', 63, date_trunc('week', current_date()))))))
-    and ((fc.forecast  >= (to_date(dateadd('day', 7, date_trunc('week', current_date()))))))
-    and (i.category = 'MATTRESS')
+where ((fc.date  < (to_date(dateadd('day', 63, date_trunc('week', current_date()))))))
+    and ((fc.date  >= (to_date(dateadd('day', 7, date_trunc('week', current_date()))))))
+    and i.category = 'MATTRESS'
 group by 1,2,20
 
 ), gg as (
@@ -312,7 +306,7 @@ from (
       , ff."14_DAY_FORECAST_PSOUTH" as "14_DAY_FORECAST_PSOUTH"
       , ff."21_DAY_FORECAST_PSOUTH" as "21_DAY_FORECAST_PSOUTH"
       , ff.daily_forecast_psouth as daily_forecast_psouth
-      , ff.forecast_version as forecast_version
+      , ff.version as forecast_version
       , gg.avg_daily_produced_pwest as daily_beds_produced_pwest
       , gg.avg_daily_produced_psouth as daily_beds_produced_psouth
       , hh.avg_daily_produced_pwest as daily_peaks_produced_pwest
@@ -381,9 +375,9 @@ group by 1,2,3,4,5,6,7,29,30,31,32,33;;  }
     type: string
     description: "Working is the current data in Adaptive, Current S&OP is locked at the first Saturday of the current month, Previous is 1 month previos.  Rolling 4 month is looking at the forecast data from 4 months previous to the date being forecasted. "
     case: {
-      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Working' ;; label: "Working" }
-      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Current S&OP' ;; label: "Current S&OP" }
-      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Running 4 Month' ;; label: "Running 4 Month" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'S&OP' ;; label: "S&OP" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'WP' ;; label: "Working Plan" }
+      when: { sql: ${TABLE}."FORECAST_VERSION" = 'Modeling' ;; label: "Modeling" }
     }
   }
 
