@@ -1,12 +1,12 @@
 view: heap_banner_view {
-    sql_table_name: heap_data.heap.carousel_banner_change ;;
+    sql_table_name: analytics.heap.v_ecommerce_carousel_banner_change ;;
 
     dimension: PK {
       type: string
       primary_key: yes
       group_label: "Hero Banner"
       hidden: yes
-      sql:  ${TABLE}.user_id||${TABLE}.session_id||${TABLE}.event_id;;
+      sql:  ${TABLE}.primary_key;;
     }
 
     dimension: user_id {
