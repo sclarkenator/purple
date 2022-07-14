@@ -1,5 +1,5 @@
 view: ecommerce1 {
-  sql_table_name: analytics.marketing.ecommerce  ;;
+  sql_table_name: analytics.marketing.v_ecommerce  ;;
   #this view is currently being built by Nathan Hollingworth and is not ready to use
 
   dimension: uid {
@@ -27,7 +27,7 @@ view: ecommerce1 {
     #this is used for the heap_checkout_abandonment explore
     hidden: yes
     type: string
-    sql: iff(${session_id} is not null,'purchase','no_purchase') ;;
+    sql: ${TABLE}.ordered ;;
   }
 
   dimension: session_id {
