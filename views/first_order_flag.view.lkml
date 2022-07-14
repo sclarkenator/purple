@@ -6,7 +6,7 @@ view: first_order_flag {
     primary_key: yes
     hidden:  yes
     type: string
-    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
+    sql: ${TABLE}.primary_key ;;
   }
 
   dimension: new_flg {
