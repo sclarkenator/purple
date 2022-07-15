@@ -25,7 +25,7 @@ view: heap_page_views {
     hidden: yes
     primary_key: yes
     type: string
-    sql:concat( ${TABLE}.session_id , ${TABLE}.event_time );;
+    sql:${TABLE}.session_id_and_event_time;;
   }
 
   dimension_group: session_time {
@@ -48,6 +48,7 @@ view: heap_page_views {
     sql: to_timestamp_ntz(${TABLE}.event_time) ;;
   }
 
+  # I think these three need to be in Looker, the datediff is done after different dimensions are applied.
   measure: event_time_min {
     hidden: yes
     type: date_time
@@ -68,6 +69,7 @@ view: heap_page_views {
     sql: datediff(minute,${event_time_min},${event_time_max}) ;;
   }
 
+  # I don't know what page flow is: leaving this in Looker as migrating to SF could affect calculations.
   measure: max_page_flow {
     hidden: yes
     type: number
@@ -111,7 +113,7 @@ view: heap_page_views {
     label: "   * Bounced"
     description: "Yes: Only viewed 1 page. Source: looker.calculation"
     type: yesno
-    sql: ${TABLE}.count_pages_viewed = 1 ;;
+    sql: ${TABLE}.bounced ;;
   }
 
   dimension: exit_page {
@@ -155,7 +157,7 @@ view: heap_page_views {
     hidden: yes
     view_label: "Sessions"
     type: string
-    sql: split_part(split_part(${query}, 'gclid=',  2), '&', 1) ;;
+    sql: ${TABLE}.g_clid ;;
   }
 
   dimension: utm_adset {
@@ -165,7 +167,7 @@ view: heap_page_views {
     hidden: no
     view_label: "Sessions"
     type: string
-    sql: split_part(split_part(${query}, 'utm_adset=',  2), '&', 1) ;;
+    sql: ${TABLE}.utm_adset ;;
   }
   dimension: utm_ad {
     label: "Query - utm_ad"
@@ -174,7 +176,7 @@ view: heap_page_views {
     hidden: no
     view_label: "Sessions"
     type: string
-    sql: split_part(split_part(${query}, 'utm_ad=',  2), '&', 1) ;;
+    sql: ${TABLE}.utm_ad ;;
   }
   dimension: path {
     label: "Parsed Page URL"
@@ -189,21 +191,7 @@ view: heap_page_views {
 #    hidden: yes
     description: "The string after purple.com excluding tags. Source: heap.session_page_flow.path"
     type: string
-    sql: case when ${path} ilike '%blog%' then 'blog'
-              when ${path} ilike '%harmony%' then 'pillow'
-              when ${path} ilike '%mattress-prot%' then 'bedding'
-              when ${path} ilike '%pillow%' then 'pillow'
-              when ${path} ilike '%frame%' then 'base'
-              when ${path} ilike '%sheets%' then 'bedding'
-              when ${path} ilike '%mattress%' then 'mattress'
-              when ${path} ilike '%seat-%' then 'seating'
-              when ${path} ilike '%blanket%' then 'bedding'
-              when ${path} ilike '%platform%' then 'base'
-              when ${path} ilike '%royal%' then 'seating'
-              when ${path} ilike '%bedding%' then 'bedding'
-              when ${path} ilike '%pet-%' then 'pet'
-              when ${path} ilike '%home-office%' then 'seating'
-              else 'other' end ;;
+    sql: ${TABLE}.product_page ;;
   }
 
   measure: count {
