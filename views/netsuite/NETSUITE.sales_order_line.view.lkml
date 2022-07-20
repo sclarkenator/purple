@@ -329,7 +329,7 @@ view: sales_order_line {
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},5),${created_date})
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},4),${created_date})
           Else dateadd(d,4,${created_date}) END ;;
   }
 
