@@ -1,19 +1,20 @@
 view: order_utm {
- derived_table: {
-   sql:
-        select s.created
-      , s.order_id
-      , s.SYSTEM
-      , s.email
-      , gross_amt
-      , e.utm_medium
-      , e.utm_source
-      , e.utm_term
-    from sales.sales_order s
-    left join marketing.ecommerce e on e.order_number = s.related_tranid
-    --where s.created > '2020-11-01' and e.session_id is not null
-    ;;
- }
+  sql_table_name: ANALYTICS.MARKETING.V_ORDER_UTM ;;
+# derived_table: {
+#   sql:
+#         select s.created
+#       , s.order_id
+#       , s.SYSTEM
+#       , s.email
+#       , gross_amt
+#       , e.utm_medium
+#       , e.utm_source
+#       , e.utm_term
+#     from sales.sales_order s
+#     left join marketing.ecommerce e on e.order_number = s.related_tranid
+#     --where s.created > '2020-11-01' and e.session_id is not null
+#     ;;
+# }
 
   # 7/6/2021 - unhid created date for use in cordial_activity explore. -Stevie
   dimension: created {
@@ -40,7 +41,7 @@ view: order_utm {
     primary_key: yes
     hidden:  yes
     type: string
-    sql: ${TABLE}.order_id||'-'||${TABLE}.system ;;
+    sql: ${TABLE}.primary_key;;
   }
 
   dimension: email {
