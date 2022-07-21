@@ -74,7 +74,7 @@ view: adspend_out_of_range_yesterday {
 
   dimension: primary_key {
     primary_key: yes
-    sql: CONCAT(${ad_date}, ${spend_platform}) ;;
+    sql: ${TABLE}.primary_key ;;
   }
 
 
