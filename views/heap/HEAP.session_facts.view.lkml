@@ -61,7 +61,7 @@ view: session_facts {
     label: "Session Durations (minutes)"
     description: "Source: looker calculation"
     type: number
-    sql: ((datediff('seconds',session_start_time,session_end_time))/60)::number ;;
+    sql: ${TABLE}.session_duration_minutes ;;
     value_format_name: decimal_2 }
 
   dimension: duration_tier {
@@ -71,8 +71,7 @@ view: session_facts {
     type: tier
     style:  integer
     tiers: [0,1,5,10,15,20,25,30]
-    sql: case when datediff('seconds',session_start_time,session_end_time) < 10 then '-1'::int
-          else datediff('minutes',session_start_time,session_end_time)::int  end;;}
+    sql: ${TABLE}.duration_tier;;}
 
   dimension: event_count {
     group_label: "Advanced"
@@ -86,7 +85,7 @@ view: session_facts {
     description: "Bounced (yes) if total time on site is < 2 seconds. Source: looker calculation"
     hidden:  yes
     type: yesno
-    sql: datediff('seconds',session_start_time,session_end_time) < 1 ;; }
+    sql: ${TABLE}.is_bounced ;; }
 
   measure: average_events_per_session {
     label: "Average Events per Session"
