@@ -1,5 +1,5 @@
 view: c3_conversion_count {
-  sql_table_name: ANALYTICS.MARKETING.V_c3_conversion_count ;;
+  sql_table_name: ANALYTICS.MARKETING.V_C3_CONVERSION_COUNT ;;
   # derived_table: {
   #   sql:
   #     select order_id
