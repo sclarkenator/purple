@@ -383,7 +383,7 @@ explore: email_mymove_contact {
   explore: v_google_keyword_page_report {hidden: yes}
   explore: fb_attribution { hidden: yes}
   explore: fb_attribution_v2 { hidden: yes}
-  explore: roas_pdt { hidden: yes group_label: "Marketing"}
+  # explore: roas_pdt { hidden: yes group_label: "Marketing"}
   #explore: adspend_target { hidden:yes group_label: "Marketing"}
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}
   explore: shawn_ryan_view {hidden: yes group_label: "Marketing"}
