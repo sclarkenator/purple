@@ -24,21 +24,21 @@ include: "/dashboards/**/*.dashboard"
     hidden: yes
   }
 
-  explore: c3 {
-    from: c3_conversion
-    group_label: "Marketing"
-    hidden: yes
-    label: "Attribution (C3)"
-    view_label: "C3 Data"
-    description: "Each touch point from marketing leading up to an order"
+  # explore: c3 {
+  #   from: c3_conversion
+  #   group_label: "Marketing"
+  #   hidden: yes
+  #   label: "Attribution (C3)"
+  #   view_label: "C3 Data"
+  #   description: "Each touch point from marketing leading up to an order"
 
-    join: c3_conversion_count {
-      view_label: "C3 Data"
-      type: left_outer
-      sql_on: ${c3.order_id} = ${c3_conversion_count.order_id} ;;
-      relationship: one_to_many
-    }
-  }
+  #   join: c3_conversion_count {
+  #     view_label: "C3 Data"
+  #     type: left_outer
+  #     sql_on: ${c3.order_id} = ${c3_conversion_count.order_id} ;;
+  #     relationship: one_to_many
+  #   }
+  # }
 
   explore: hotjar_data {
     group_label: "Marketing"
