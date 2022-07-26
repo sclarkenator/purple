@@ -388,7 +388,7 @@ explore: email_mymove_contact {
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}
   explore: shawn_ryan_view {hidden: yes group_label: "Marketing"}
   explore: weekly_acquisition_report_snapchat  {hidden: yes group_label: "Marketing"}
-  explore: c3_roa {hidden: yes group_label: "Marketing"}
+  # explore: c3_roa {hidden: yes group_label: "Marketing"}
   explore: spend_sessions_ndt {hidden: yes group_label: "Marketing"}
   explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
   explore: marketing_magazine {hidden: yes group_label: "Marketing"}
