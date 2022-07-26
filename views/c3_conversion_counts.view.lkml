@@ -1,13 +1,13 @@
 view: c3_conversion_count {
-  sql_table_name: ANALYTICS.MARKETING.V_C3_CONVERSION_COUNT ;;
-  # derived_table: {
-  #   sql:
-  #     select order_id
-  #       , max (sale_amount) as sale_amount
-  #     from analytics.marketing.C3_CONVERSION
-  #     group by 1
-  #   ;;
-  # }
+  # sql_table_name: ANALYTICS.MARKETING.V_C3_CONVERSION_COUNT ;;
+  derived_table: {
+    sql:
+      select order_id
+        , max (sale_amount) as sale_amount
+      from analytics.marketing.C3_CONVERSION
+      group by 1
+    ;;
+  }
 
   dimension: order_id {
     type: number
