@@ -22,7 +22,7 @@ view: zendesk_chats {
     type: string
     group_label: "Advanced - Chats"
     description: "Zendesk Agent IDs of all agents who were assigned the chat"
-    sql: ${TABLE}."AGENT_ID" ;;
+    sql: ${TABLE}."AGENT_IDS" ;;
     hidden: yes
   }
 
