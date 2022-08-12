@@ -1,24 +1,26 @@
 include: "/views/_period_comparison.view.lkml"
 view: zendesk_chats {
   extends: [_period_comparison]
-  derived_table: {
-    sql:
-    select distinct z.*,
-      case when department_name='Sales Chat' then 'Sales Chat'
-        when department_name='Support Chat' then 'Support Chat'
-        when agent_lkp.team_type='Sales' then 'Sales Chat'
-        when agent_lkp.team_type='Chat' then 'Support Chat'
-        when agent_lkp.team_type='SRT' then 'Support Chat'
-        else 'Sales Chat'
-        end as dept_clean
-    from (
-      select *
-      from "CUSTOMER_CARE"."ZENDESK_CHATS" z
-      )z
-      left join customer_care.agent_lkp agent_lkp
-          on z.agent_ids::string = agent_lkp.zendesk_id::string
-    ;;
-    }
+  sql_table_name: ANALYTICS.CUSTOMER_CARE.V_ZENDESK_CHATS_WITH_DEPT_CLEAN ;;
+  # Deprecated derived table on 8/2. Lift and shift looker logic down from zendesk_chats.view to ANALYTICS.CUSTOMER_CARE.V_ZENDESK_CHATS_WITH_DEPT_CLEAN
+  # derived_table: {
+  #   sql:
+  #   select distinct z.*,
+  #     case when department_name='Sales Chat' then 'Sales Chat'
+  #       when department_name='Support Chat' then 'Support Chat'
+  #       when agent_lkp.team_type='Sales' then 'Sales Chat'
+  #       when agent_lkp.team_type='Chat' then 'Support Chat'
+  #       when agent_lkp.team_type='SRT' then 'Support Chat'
+  #       else 'Sales Chat'
+  #       end as dept_clean
+  #   from (
+  #     select *
+  #     from "CUSTOMER_CARE"."ZENDESK_CHATS" z
+  #     )z
+  #     left join customer_care.agent_lkp agent_lkp
+  #         on z.agent_ids::string = agent_lkp.zendesk_id::string
+  #   ;;
+  #   }
 
   #### Used with period comparison view
   dimension_group: event {
@@ -59,22 +61,24 @@ view: zendesk_chats {
     type: string
     group_label: "Flags - History"
     description: "1/0 if history contains mention of warranty or return. Source: zendesk_chats.zendesk_chats"
-    sql:case when ${history} ilike '%warranty%'
-               OR ${history} ilike '%return%'
-               then 1 else 0 end
-    ;;
+    sql: ${TABLE}.return_warranty_flag ;;
+    # sql:case when ${history} ilike '%warranty%'
+    #           OR ${history} ilike '%return%'
+    #           then 1 else 0 end
+    # ;;
   }
 
   dimension: bases_platform_flag{
     type: string
     group_label: "Flags - History"
     description: "1/0 if history contains mention of platform, base, frame, or foundation. Source: zendesk_chats.zendesk_chats"
-    sql:case when ${history} ilike '%platform%'
-               OR ${history} ilike '%base%'
-               OR ${history} ilike '%frame%'
-               OR ${history} ilike '%foundation%'
-               then 1 else 0 end
-    ;;
+    sql: ${TABLE}.bases_platform_flag ;;
+    # sql:case when ${history} ilike '%platform%'
+    #           OR ${history} ilike '%base%'
+    #           OR ${history} ilike '%frame%'
+    #           OR ${history} ilike '%foundation%'
+    #           then 1 else 0 end
+    # ;;
   }
 
 
