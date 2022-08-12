@@ -1,4 +1,6 @@
+include: "/views/_period_comparison.view.lkml"
 view: incontact_phone {
+  extends: [_period_comparison]
   ## Phone and call performance data from InContact database
 
   # sql_table_name: Analytics.customer_care.v_contacts_phone ;;
@@ -582,6 +584,17 @@ view: incontact_phone {
   ##########################################################################################
   ##########################################################################################
   ## DATE DIMENSION GROUPS
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: CAST(${TABLE}."START_TS_MST" AS TIMESTAMP_NTZ);;
+  }
 
   dimension_group: insert_ts {
     label: "* Insert TS UTC"

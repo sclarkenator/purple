@@ -1,4 +1,6 @@
+include: "/views/_period_comparison.view.lkml"
 view: zendesk_chats {
+  extends: [_period_comparison]
   derived_table: {
     sql:
     select distinct z.*,
@@ -17,6 +19,18 @@ view: zendesk_chats {
           on z.agent_ids::string = agent_lkp.zendesk_id::string
     ;;
     }
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: to_timestamp(${TABLE}."CREATED") ;;
+  }
+
 
   dimension: agent_id {
     type: string
