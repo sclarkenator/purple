@@ -1,5 +1,5 @@
 view: customer_table {
-  sql_table_name: analytics.heap.v_ecommerce_customer_table ;;
+  sql_table_name: analytics.heap.v_ecommerce_customer ;;
 
   dimension: customer_id {
     label: "   Customer ID"
