@@ -121,7 +121,7 @@ view: employee_lkp {
 
 
   dimension: incontact_id {
-    type: string
+    type: number
     sql: ${TABLE}."INCONTACT_ID" ;;
   }
 
