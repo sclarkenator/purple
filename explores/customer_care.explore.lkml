@@ -408,14 +408,14 @@ explore: agent_state {
 explore: CC_KPIs {
 
   label: "CC KPIs"
-  view_name: agent_lkp
+  view_name: employee_lkp
   view_label: "Agent Data"
   hidden: yes
 
   join: zendesk_ticket {
     view_label: "Zendesk Tickets"
     type: left_outer
-    sql_on: ${agent_lkp.zendesk_id} = ${zendesk_ticket.assignee_id} ;;
+    sql_on: ${employee_lkp.zendesk_id} = ${zendesk_ticket.assignee_id} ;;
     relationship: many_to_one
   }
 
@@ -538,14 +538,14 @@ explore: perfect_attendance_calc {
     group_label: "Customer Care"
     hidden: yes
     description: "Customer satisfaction of interactions with Customer Care agents"
-    join: agent_lkp {
+    join: employee_lkp {
       type: left_outer
-      sql_on: ${customer_satisfaction_survey.agent_id} = ${agent_lkp.incontact_id} ;;
+      sql_on: ${customer_satisfaction_survey.agent_id} = ${employee_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
       type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
           AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
           AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
       relationship: many_to_one
@@ -612,16 +612,16 @@ explore: perfect_attendance_calc {
       sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
       relationship: one_to_many
       }
-      join: agent_lkp {
+      join: employee_lkp {
         type: left_outer
         view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${agent_lkp.zendesk_id}  ;;
+        sql_on: ${zendesk_chat_engagements.zendesk_id}=${employee_lkp.zendesk_id}  ;;
         relationship: many_to_one
       }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
         AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
       relationship: many_to_one
@@ -655,16 +655,16 @@ explore: perfect_attendance_calc {
   #       sql_on: ${group.id} = ${ticket.group_id} ;;
   #       relationship: many_to_one
   #     }
-  join: agent_lkp {
+  join: employee_lkp {
     type: left_outer
     view_label: "Agent Lookup"
-    sql_on: ${user.id}=${agent_lkp.zendesk_id} ;;
+    sql_on: ${user.id}=${employee_lkp.zendesk_id} ;;
     relationship: many_to_one
   }
   join: team_lead_name {
     type:  left_outer
     view_label: "Agent Lookup"
-    sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+    sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
         AND ${team_lead_name.start_date}<=${zendesk_ticket.created_date}
         AND ${team_lead_name.end_date}>=${zendesk_ticket.created_date};;
     relationship: many_to_one
@@ -716,16 +716,16 @@ explore: perfect_attendance_calc {
       relationship:one_to_one
       sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
     }
-    join: agent_lkp {
+    join: employee_lkp {
       type: left_outer
       view_label: "Agent Lookup"
-      sql_on: ${rpt_skill_with_disposition_count.agent_id}=${agent_lkp.incontact_id} ;;
+      sql_on: ${rpt_skill_with_disposition_count.agent_id}=${employee_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
         AND ${team_lead_name.start_date}<=${rpt_skill_with_disposition_count.reported_date}
         AND ${team_lead_name.end_date}>=${rpt_skill_with_disposition_count.reported_date};;
       relationship: many_to_one
@@ -733,41 +733,42 @@ explore: perfect_attendance_calc {
   }
 
   explore: agent_lkp {
+    view_name: employee_lkp
     hidden: yes
     label: "Agents"
     group_label: "Customer Care"
     join: agent_company_value {
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
+      sql_on: ${employee_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
       relationship: one_to_many}
     join: agent_evaluation {
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
+      sql_on: ${employee_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
       relationship: one_to_many}
     join: rpt_agent_stats {
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+      sql_on: ${employee_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
       relationship: one_to_many}
     join: v_agent_state {
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
+      sql_on: ${employee_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
       relationship: one_to_many}
     join: agent_attendance{
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
+      sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
       relationship: one_to_many}
     join: agent_draft_orders {
       type: left_outer
-      sql_on: ${agent_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
+      sql_on: ${employee_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
       relationship: one_to_many}
     join: customer_satisfaction_survey {
       type: full_outer
-      sql_on: ${agent_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
+      sql_on: ${employee_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
       relationship:  one_to_many
     }
     join: team_lead_name {
       type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
           AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
           AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
       relationship: many_to_one
@@ -777,7 +778,7 @@ explore: perfect_attendance_calc {
 
   explore: cc_agent_data {
     hidden: yes
-    from:  agent_lkp
+    from:  employee_lkp
     label: "CC Agent Data"
     group_label: "Customer Care"
 
@@ -824,7 +825,7 @@ explore: perfect_attendance_calc {
       relationship: one_to_one
     }
     join: agent_lkp_eval {
-      from: agent_lkp
+      from: employee_lkp
       relationship: many_to_one
       type: left_outer
       sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
@@ -881,22 +882,22 @@ explore: perfect_attendance_calc {
   }
 
   explore: cc_activities {hidden: yes group_label: "Customer Care"
-    join: agent_lkp {
+    join: employee_lkp {
       type: left_outer
       view_label: "Agent Lookup"
-      sql_on: ${cc_activities.incontact_id}=${agent_lkp.incontact_id} ;;
+      sql_on: ${cc_activities.incontact_id}=${employee_lkp.incontact_id} ;;
       relationship: many_to_one
     }
     join: team_lead_name {
       type:  left_outer
       view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
         and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
       relationship: many_to_one
     }
     join: labor_hours {
       type: left_outer
-      sql_on: ${agent_lkp.workday_id} = ${labor_hours.employee_id} ;;
+      sql_on: ${employee_lkp.workday_id} = ${labor_hours.employee_id} ;;
       relationship: one_to_many
     }
   }
@@ -945,10 +946,10 @@ explore: perfect_attendance_calc {
         and ${team_lead_name.end_date} >= ${cc_headcount.by_date};;
       relationship: many_to_one
     }
-    join: agent_lkp {
+    join: employee_lkp {
       view_label: "Team Lead"
       type: left_outer
-      sql_on: ${team_lead_name.incontact_id} = ${agent_lkp.incontact_id} ;;
+      sql_on: ${team_lead_name.incontact_id} = ${employee_lkp.incontact_id} ;;
       relationship: many_to_one
     }
   }
