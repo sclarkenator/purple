@@ -74,15 +74,15 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one
       sql_on: ${bridge_user.id} = ${bridge_enrollment.learner_id} ;;
     }
-    join: agent_lkp {
+    join: employee_lkp {
       type: left_outer
       view_label: "Agent Lookup"
-      sql_on: ${bridge_user.email}=lower(${agent_lkp.email} );;
+      sql_on: ${bridge_user.email}=lower(${employee_lkp.email} );;
       relationship: one_to_one
     }
     join: team_lead_name {
       type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${agent_lkp.incontact_id}
+      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
           AND ${team_lead_name.start_date}<=${bridge_enrollment.created_date}
           AND ${team_lead_name.end_date}>=${bridge_enrollment.created_date};;
       relationship: many_to_one
