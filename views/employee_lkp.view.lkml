@@ -112,18 +112,13 @@ view: employee_lkp {
   }
 
   dimension_group: inactive {
+    description: "Date agent became inactive. Source: incontact.agent_lkp"
     type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.CAST(${TABLE}."INACTIVE" AS TIMESTAMP_NTZ) ;;
+    timeframes: [raw, date, day_of_week, day_of_month, week, week_of_year, month, month_name, quarter, quarter_of_year, year]
+    datatype: timestamp
+    sql: ${TABLE}.inactive ;;
   }
+
 
   dimension: incontact_id {
     type: string
@@ -170,8 +165,9 @@ view: employee_lkp {
   }
 
   dimension: name {
-    type: string
-    sql: ${TABLE}."NAME" ;;
+    description: "The name of this agent. Source: incontact.agent_lkp"
+    type:  string
+    sql: ${TABLE}.name ;;
   }
 
   dimension: preferred_first_name {
@@ -235,7 +231,7 @@ view: employee_lkp {
     sql: ${TABLE}."SHOPIFY_ID_POS" ;;
   }
 
-  dimension: supervisor {
+  dimension: is_supervisor {
     type: yesno
     sql: ${TABLE}."SUPERVISOR" ;;
   }
