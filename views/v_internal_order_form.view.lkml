@@ -178,11 +178,6 @@ view: v_internal_order_form {
     sql: ${TABLE}."STATE" ;;
   }
 
-  dimension: ste_or_apt {
-    type: string
-    sql: ${TABLE}."STE_OR_APT" ;;
-  }
-
   dimension: type {
     type: string
     sql: ${TABLE}."TYPE" ;;
