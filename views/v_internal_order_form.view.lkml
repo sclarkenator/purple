@@ -2,9 +2,9 @@ view: v_internal_order_form {
   sql_table_name: "CUSTOMER_CARE"."V_INTERNAL_ORDER_FORM"
     ;;
 
-  dimension: address_line_1 {
+  dimension: address {
     type: string
-    sql: ${TABLE}."ADDRESS_LINE_1" ;;
+    sql: ${TABLE}."ADDRESS" ;;
   }
 
   dimension: approval {
