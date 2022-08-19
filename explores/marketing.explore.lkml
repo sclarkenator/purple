@@ -171,34 +171,34 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: email_contact_merged {
-    hidden: yes
-    join: sales_order {
-      type: left_outer
-      sql_on: lower(${sales_order.email}) = lower(${email_contact_merged.email_join});;
-      relationship: one_to_many
-    }
-    join: sales_order_line_base {
-      type: left_outer
-      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
-      relationship: one_to_many
-    }
-    join: item {
-      type: left_outer
-      sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
-      relationship: many_to_one
-    }
-    join: order_flag {
-      type: left_outer
-      sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
-      relationship: one_to_one
-    }
-    join: first_order_flag {
-      type: left_outer
-      sql_on: LOWER(${email_contact_merged.email_join}) =  LOWER(${first_order_flag.email});;
-      relationship: one_to_one
-    }
-  }
+  # explore: email_contact_merged { -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  #   hidden: yes
+  #   join: sales_order {
+  #     type: left_outer
+  #     sql_on: lower(${sales_order.email}) = lower(${email_contact_merged.email_join});;
+  #     relationship: one_to_many
+  #   }
+  #   join: sales_order_line_base {
+  #     type: left_outer
+  #     sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+  #     relationship: one_to_many
+  #   }
+  #   join: item {
+  #     type: left_outer
+  #     sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: order_flag {
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: first_order_flag {
+  #     type: left_outer
+  #     sql_on: LOWER(${email_contact_merged.email_join}) =  LOWER(${first_order_flag.email});;
+  #     relationship: one_to_one
+  #   }
+  # }
 
 explore: email_mymove_contact {
   #don't use this, use the one above
@@ -225,34 +225,34 @@ explore: email_mymove_contact {
   }
 }
 
-  explore: cordial_bulk_message {
-    group_label: "Cordial"
-    hidden: yes
-    label: "Cordial Information"
-    join: cordial_activity{
-      type: left_outer
-      sql_on: ${cordial_bulk_message.bm_id} = ${cordial_activity.bm_id} ;;
-      relationship: one_to_many
-    }
-  }
+  # explore: cordial_bulk_message { -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  #   group_label: "Cordial"
+  #   hidden: yes
+  #   label: "Cordial Information"
+  #   join: cordial_activity{
+  #     type: left_outer
+  #     sql_on: ${cordial_bulk_message.bm_id} = ${cordial_activity.bm_id} ;;
+  #     relationship: one_to_many
+  #   }
+  # }
 
-  explore: conversions_by_campaign {
-    hidden:  yes
-    label: "Conversions by Campaign"
-    group_label: "Marketing"
-    description: "Aggregated campaign data by date and campaign"
-    join: adspend_by_campaign {
-      type: left_outer
-      sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
-        and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};;
-      relationship:one_to_one
-    }
-    join: external_campaign {
-      type: left_outer
-      sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
-      relationship: many_to_one
-    }
-  }
+  # explore: conversions_by_campaign { -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  #   hidden:  yes
+  #   label: "Conversions by Campaign"
+  #   group_label: "Marketing"
+  #   description: "Aggregated campaign data by date and campaign"
+  #   join: adspend_by_campaign {
+  #     type: left_outer
+  #     sql_on:  ${adspend_by_campaign.campaign_id} = ${conversions_by_campaign.campaign_id} and ${adspend_by_campaign.date} = ${conversions_by_campaign.date_date}
+  #       and ${adspend_by_campaign.platform} = ${conversions_by_campaign.platform};;
+  #     relationship:one_to_one
+  #   }
+  #   join: external_campaign {
+  #     type: left_outer
+  #     sql_on: ${external_campaign.campaign_id} = coalesce (${conversions_by_campaign.campaign_id}, ${adspend_by_campaign.campaign_id});;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 
 # dimension: order_system {
@@ -314,30 +314,30 @@ explore: email_mymove_contact {
 #     }
 # }
 
-  explore: talkable_referral {
-    hidden: yes
-    join: sales_order {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${sales_order.email} = ${talkable_referral.referred_email} ;;
-    }
-    join: sales_order_line_base {
-      type: left_outer
-      relationship: one_to_many
-      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id}
-        and ${sales_order_line_base.system} = ${sales_order.system};;
-    }
-    join: item {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
-    }
-    join: customer_table {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${sales_order.customer_id} = ${customer_table.customer_id} ;;
-    }
-  }
+  # explore: talkable_referral { -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  #   hidden: yes
+  #   join: sales_order {
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${sales_order.email} = ${talkable_referral.referred_email} ;;
+  #   }
+  #   join: sales_order_line_base {
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id}
+  #       and ${sales_order_line_base.system} = ${sales_order.system};;
+  #   }
+  #   join: item {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${item.item_id} = ${sales_order_line_base.item_id} ;;
+  #   }
+  #   join: customer_table {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${sales_order.customer_id} = ${customer_table.customer_id} ;;
+  #   }
+  # }
 
   explore: crm_customer_health {
     hidden:yes
@@ -378,30 +378,30 @@ explore: email_mymove_contact {
 
   explore: v_fb_adset_freq_weekly {hidden: yes}
   explore: v_fb_all {hidden: yes}
-  explore: v_fb_all_breakdown {hidden: yes}
+  # explore: v_fb_all_breakdown {hidden: yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: v_google_search_site_report {hidden: yes}
   explore: v_google_keyword_page_report {hidden: yes}
-  explore: fb_attribution { hidden: yes}
-  explore: fb_attribution_v2 { hidden: yes}
+  # explore: fb_attribution { hidden: yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  # explore: fb_attribution_v2 { hidden: yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: roas_pdt { hidden: yes group_label: "Marketing"}
   #explore: adspend_target { hidden:yes group_label: "Marketing"}
   explore: zipcode_radius {hidden: yes group_label: "Marketing"}
-  explore: shawn_ryan_view {hidden: yes group_label: "Marketing"}
-  explore: weekly_acquisition_report_snapchat  {hidden: yes group_label: "Marketing"}
+  # explore: shawn_ryan_view {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  # explore: weekly_acquisition_report_snapchat  {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: c3_roa {hidden: yes group_label: "Marketing"}
   explore: spend_sessions_ndt {hidden: yes group_label: "Marketing"}
   explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
-  explore: marketing_magazine {hidden: yes group_label: "Marketing"}
+  # explore: marketing_magazine {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: sessions {hidden: yes group_label: "Marketing"}
   explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}
-  explore: conversions {hidden: yes group_label: "Marketing"}
-  explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}
+  # explore: conversions {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
+  # explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}-- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: target_adspend {hidden: yes group_label: "Marketing"}
   explore: promotion {hidden:yes group_label: "Marketing"}
 #  explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
 
   explore: narvarcustomer{hidden:yes}
-  explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"}
+  # explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: narvar_customer_feedback {
     hidden: yes
     group_label: "Marketing"
@@ -504,7 +504,7 @@ explore: all_events {
   #     relationship: one_to_one
   #   }
   # }
-  explore: scorecard {hidden:yes}
+  # explore: scorecard {hidden:yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: pageviews_bounced_pdt {hidden: yes group_label: "Marketing" label: "Pageviews Bounced"}
   explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
   explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}
