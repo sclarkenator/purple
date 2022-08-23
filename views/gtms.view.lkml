@@ -241,6 +241,12 @@ view: gtms {
     sql: ${TABLE}."MILES" ;;
   }
 
+  measure: avg_miles {
+    type: average
+    value_format: "#0"
+    sql: ${TABLE}."MILES" ;;
+  }
+
   dimension: mode {
     type: string
     sql: ${TABLE}."MODE" ;;
