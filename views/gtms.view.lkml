@@ -185,7 +185,8 @@ view: gtms {
   dimension: dest_state {
     type: string
     group_label: " Destination"
-    sql: ${TABLE}."DEST_STATE" ;;
+    map_layer_name: us_states
+    sql: concat(upper(substring(${TABLE}."DEST_STATE",0,1)),lower(substring(${TABLE}."DEST_STATE",2))) ;;
   }
 
   dimension: dest_terminal_name {
@@ -197,6 +198,7 @@ view: gtms {
   dimension: dest_zip {
     type: string
     group_label: " Destination"
+    map_layer_name: us_zipcode_tabulation_areas
     sql: ${TABLE}."DEST_ZIP" ;;
   }
 
