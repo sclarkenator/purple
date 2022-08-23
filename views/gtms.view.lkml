@@ -5,6 +5,10 @@ view: gtms {
   dimension: lading_id {
     type: number
     primary_key: yes
+    link: {
+        label: "Bill of Lading"
+        url: "https://tms.gtms.us/CrReports/Viewers/RptBolCustom.aspx?LadingID={{value}}&BolTemplate=77&ClientID=1152"
+    }
     sql: ${TABLE}."LADING_ID" ;;
   }
 
