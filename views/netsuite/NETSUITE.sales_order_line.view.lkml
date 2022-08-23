@@ -322,15 +322,28 @@ view: sales_order_line {
     group_label: "Website SLAs"
     label: "Site SLA ship-by"
     description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
-    hidden: no
+    hidden: yes
     type: date
     sql: case
           -- wholesale is ship by date (from sales order)
           WHEN ${sales_order.channel_id} = 2 and ${sales_order.ship_by_date} is not null
             THEN ${sales_order.ship_by_date}
           -- fedex is min ship date
-          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},5),${created_date})
+          WHEN ${sales_order.channel_id} <> 2 THEN dateadd(d,coalesce(${sla.sla},4),${created_date})
           Else dateadd(d,4,${created_date}) END ;;
+  }
+
+  dimension_group: site_SLA {
+    hidden:  no
+    view_label: "Fulfillment"
+    group_label: "Site SLA ship-by"
+    label: "Site SLA ship-by"
+    description: "DO NOT USE FOR WHOLESALE. This is the ship-by date in order to meet the website specific SLA for that SKU on that order date. "
+    type: time
+    timeframes: [date, day_of_week, day_of_month, week, month, month_name, quarter, quarter_of_year, year, week_of_year]
+    convert_tz: no
+    datatype: timestamp
+    sql: to_timestamp_ntz(${sla_ship}) ;;
   }
 
   dimension: due_date_dif_flag {

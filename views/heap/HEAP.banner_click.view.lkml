@@ -39,8 +39,8 @@
 #     timeframes: [date, week, month, year]
 #     sql: ${TABLE}.time ;;
 #   }
-
 #   dimension: banner_heading_click {
+#     hidden: yes
 #     group_label: "Hero Banner"
 #     description: "Click event: clicked HERO banner, CTA (Call to Action) Source: heap.carousel_banner_home_ hero_click_hero_cta"
 #     type: string
@@ -51,7 +51,7 @@
 #     group_label: "Hero Banner"
 #     description: "Count Click event: clicked HERO banner, CTA (Call to Action) Source: heap.carousel_banner_home_ hero_click_hero_cta"
 #     type: count_distinct
-#     sql: ${TABLE}.banner_heading ;;
+#     sql: ${banner_heading_click} ;;
 #   }
 
 # }

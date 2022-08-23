@@ -1,6 +1,6 @@
 view: promotion {
-  #sql_table_name: MARKETING.PROMOTION ;;
-  derived_table: {sql:select * from marketing.promotion where not deleted ;;}
+  sql_table_name: ANALYTICS.MARKETING.V_promotion ;;
+  #derived_table: {sql:select * from marketing.promotion where not deleted ;;}
 
 
   dimension: id {

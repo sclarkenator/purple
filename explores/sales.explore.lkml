@@ -282,11 +282,11 @@ include: "/dashboards/**/*.dashboard"
       required_joins: [warranty_order]
       sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
       relationship: many_to_one}
-    join: c3_conversion_ft_lt {
-      view_label: "Marketing Attribution"
-      type:  full_outer
-      sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
-      relationship: one_to_one}
+    # join: c3_conversion_ft_lt {
+    #   view_label: "Marketing Attribution"
+    #   type:  full_outer
+    #   sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
+    #   relationship: one_to_one}
     join: mymove {
       view_label: "Marketing Attribution"
       type: left_outer
