@@ -1096,12 +1096,14 @@ explore: sessions_in_tests {hidden: yes}
       fields: [zcta5.fulfillment_region_1]}
   }
 
-  explore: sla {
-    hidden: yes
-    join: item {
-    type: left_outer
-    sql_on: ${sla.sku_id} = ${item.sku_id} ;;
-    relationship: one_to_one}}
+  # explore: sla {
+  #   hidden: yes
+  #   join: item {
+  #   type: left_outer
+  #   sql_on: ${sla.sku_id} = ${item.sku_id} ;;
+  #   relationship: one_to_one}
+  # }
+
   explore: v_sla {hidden: yes}
   explore: v_sales_flash {hidden: yes}
   explore: v_new_roa {hidden: yes}
