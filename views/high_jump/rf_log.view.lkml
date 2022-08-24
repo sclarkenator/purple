@@ -141,7 +141,7 @@ view: rf_log {
   }
 
   measure: adjustment_count {
-    type: count
+    type: count_distinct
     filters: [action: "CYCL-ADJ"]
     sql: ${TABLE}."BIN_LABEL";;
   }

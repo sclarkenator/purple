@@ -35,7 +35,7 @@ view: fedex_fulfillment_date {
   }
 
   measure: fulfillment_id_count_delivered {
-    type: count
+    type: count_distinct
     view_label: "Fulfillment"
     group_label: "FedEx Delivered"
     sql: ${TABLE}."FULFILLMENT_ID" ;;
