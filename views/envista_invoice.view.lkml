@@ -207,7 +207,7 @@ view: envista {
   measure: avg_height {
     group_label: "Weights & Dims"
     type: average
-    value_format: "#,###.0"
+    value_format: "#,##0.0"
     sql: ${item_height} ;;
   }
 
@@ -220,7 +220,7 @@ view: envista {
   measure: avg_length {
     group_label: "Weights & Dims"
     type: average
-    value_format: "#,###.0"
+    value_format: "#,##0.0"
     sql: ${item_length} ;;
   }
 
@@ -233,7 +233,7 @@ view: envista {
   measure: avg_width {
     group_label: "Weights & Dims"
     type: average
-    value_format: "#,###.0"
+    value_format: "#,##0.0"
     sql: ${item_width} ;;
   }
 

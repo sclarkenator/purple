@@ -136,7 +136,7 @@ view: rf_log {
   }
 
   measure: bin_label_count {
-    type: count
+    type: count_distinct
     sql: ${TABLE}."BIN_LABEL" ;;
   }
 

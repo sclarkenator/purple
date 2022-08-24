@@ -163,11 +163,13 @@ include: "/dashboards/**/*.dashboard"
       type: left_outer
       view_label: "NPS"
       sql_on: lower(${cordial_activity.email}) = lower(${v_email_nps.email}) ;;
+      relationship: many_to_one
     }
     join: cordial_propensity_scores {
       type: left_outer
       view_label: "Cordial Propensity Scores"
       sql_on: lower(${cordial_activity.email}) = lower(${cordial_propensity_scores.email});;
+      relationship: many_to_one
     }
   }
 
