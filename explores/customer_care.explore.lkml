@@ -314,7 +314,7 @@ explore: liveperson_conversations {
 #     relationship: one_to_many
 #     # fields: [*]
 #   }
-#   }
+# }
 
 #####################################################################
 #####################################################################
@@ -431,24 +431,24 @@ explore: agent_state {
 #####################################################################
 ## CONTACT HISTORY cj
 
-# explore: contact_history {
-#   view_label: "Contact History"
-#   hidden:yes
+explore: contact_history {
+   view_label: "Contact History"
+   hidden:yes
 
-#   join: agent_data {
-#     view_label: "Agent Data"
-#     type: left_outer
-#     sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
-#     relationship: many_to_one
-#   }
+   join: agent_data {
+     view_label: "Agent Data"
+     type: left_outer
+     sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
+     relationship: many_to_one
+   }
 
-  # join: agent_state {
-  #   view_label: "Agent State"
-  #   # from: agent_team_history
-  #   type: left_outer
-  #   sql_on:  ${contact_history.agent_id} = ${agent_state.agent_id} ;;
-  #   relationship: many_to_one
-  # }
+ join: agent_state {
+   view_label: "Agent State"
+   # from: agent_team_history
+   type: left_outer
+   sql_on:  ${contact_history.agent_id} = ${agent_state.agent_id} ;;
+   relationship: many_to_one
+ }
 }
 
 
@@ -954,7 +954,7 @@ explore: perfect_attendance_calc {
     }
   }
 
-    # explore: agent_stats_w_agent{ #cj
+  # explore: agent_stats_w_agent{ #cj
     #   hidden: yes
     #   label: "Agent Stats w/ Agent Data"
     #   view_label: "Agent Data"
