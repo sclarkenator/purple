@@ -879,6 +879,11 @@ explore: perfect_attendance_calc {
       #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
       relationship: one_to_one
     }
+    join: zendesk_sell {
+      type: left_outer
+      sql_on: ${agent_name.incontact_id}=${zendesk_sell.contact_id} ;;
+      relationship: one_to_one
+    }
   }
 
   explore: cc_activities {hidden: yes group_label: "Customer Care"
