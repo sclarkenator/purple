@@ -134,7 +134,6 @@ view: _calendar {
 
   measure: min_date {
     type: min
-    value_format: "date"
     sql: ${TABLE}.date ;;
   }
 
