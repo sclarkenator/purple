@@ -7,64 +7,64 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 
-  explore: sales {
-    from: sales_base
-    label: "Sales NEW"
-    group_label: " Sales"
-    description: "Simplified view into sales"
-    hidden: yes
-    query: sales_last_30 {
-      dimensions: [sales.order_date]
-      measures: [sales.gross_amt]
-      label: "DTC Sales By Day"
-      description: "Total DTC Sales by Day for the Last 30 Days"
-      #pivots: [dimension1, dimension2, … ]
-      sorts: [sales.order_date: asc]
-      filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
-      #timezone: timezone
-      limit: 100
-    }
-    query: sales_product {
-      dimensions: [sales.category_name]
-      measures: [sales.total_units]
-      label: "Units by Product Category"
-      description: "Total Units Sold by Category in the last 7 Days"
-      #pivots: [dimension1, dimension2, … ]
-      sorts: [sales.category_name: asc]
-      filters: [sales.order_date: "7 days ago for 7 days"]
-      #timezone: timezone
-      limit: 100
-    }
-    query: period_over_period {
-      dimensions: [sales.date_in_period_date, sales.period]
-      measures: [sales.gross_amt]
-      label: "Period Over Period"
-      description: "Last 30 days compared to the previous 30"
-      pivots: [sales.period]
-      sorts: [sales.date_in_period_date: desc]
-      filters: [sales.comparison_period: "previous",
-        sales.date_filter: "30 days",
-        sales.within_dates: "Yes"]
-    }
-    query: retail_sales {
-      dimensions: [sales.store_name]
-      measures: [sales.gross_amt]
-      label: "Sales by Retail Store"
-      description: "Gross sales by store for each retail store location"
-      #sorts: [sales.date_in_period_date: desc]
-      filters: [sales.channel2: "Owned Retail",
-        sales.order_date: "30 days"]
-    }
-    aggregate_table: date_sku {
-      query: {
-        dimensions: [order_date,sku_id]
-        measures: [adj_gross_amt, gm_rate, gross_amt, gross_margin]
-      }
-      materialization: {
-        datagroup_trigger: pdt_refresh_6am
-      }
-    }
-  }
+  # explore: sales {
+  #   from: sales_base
+  #   label: "Sales NEW"
+  #   group_label: " Sales"
+  #   description: "Simplified view into sales"
+  #   hidden: yes
+  #   query: sales_last_30 {
+  #     dimensions: [sales.order_date]
+  #     measures: [sales.gross_amt]
+  #     label: "DTC Sales By Day"
+  #     description: "Total DTC Sales by Day for the Last 30 Days"
+  #     #pivots: [dimension1, dimension2, … ]
+  #     sorts: [sales.order_date: asc]
+  #     filters: [sales.order_date: "30 days ago for 30 days",sales.channel2: "DTC"]
+  #     #timezone: timezone
+  #     limit: 100
+  #   }
+  #   query: sales_product {
+  #     dimensions: [sales.category_name]
+  #     measures: [sales.total_units]
+  #     label: "Units by Product Category"
+  #     description: "Total Units Sold by Category in the last 7 Days"
+  #     #pivots: [dimension1, dimension2, … ]
+  #     sorts: [sales.category_name: asc]
+  #     filters: [sales.order_date: "7 days ago for 7 days"]
+  #     #timezone: timezone
+  #     limit: 100
+  #   }
+  #   query: period_over_period {
+  #     dimensions: [sales.date_in_period_date, sales.period]
+  #     measures: [sales.gross_amt]
+  #     label: "Period Over Period"
+  #     description: "Last 30 days compared to the previous 30"
+  #     pivots: [sales.period]
+  #     sorts: [sales.date_in_period_date: desc]
+  #     filters: [sales.comparison_period: "previous",
+  #       sales.date_filter: "30 days",
+  #       sales.within_dates: "Yes"]
+  #   }
+  #   query: retail_sales {
+  #     dimensions: [sales.store_name]
+  #     measures: [sales.gross_amt]
+  #     label: "Sales by Retail Store"
+  #     description: "Gross sales by store for each retail store location"
+  #     #sorts: [sales.date_in_period_date: desc]
+  #     filters: [sales.channel2: "Owned Retail",
+  #       sales.order_date: "30 days"]
+  #   }
+  #   aggregate_table: date_sku {
+  #     query: {
+  #       dimensions: [order_date,sku_id]
+  #       measures: [adj_gross_amt, gm_rate, gross_amt, gross_margin]
+  #     }
+  #     materialization: {
+  #       datagroup_trigger: pdt_refresh_6am
+  #     }
+  #   }
+  # }
 
   explore: sales_order_line{
     from:  sales_order_line
@@ -966,11 +966,11 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: hour_assumptions {
-    label: "Hour Assumptions"
-    description: "% of day's sales by hour for dtc day prediction"
-    hidden: yes
-  }
+  # explore: hour_assumptions {
+  #   label: "Hour Assumptions"
+  #   description: "% of day's sales by hour for dtc day prediction"
+  #   hidden: yes
+  # }
 
   explore: wholesale_open_doors {hidden:yes}
   explore: target_dtc {hidden: yes}
