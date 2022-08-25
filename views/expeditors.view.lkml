@@ -21,7 +21,7 @@ view: expeditors {
 
   dimension_group: entry {
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [
       raw,
       date,
