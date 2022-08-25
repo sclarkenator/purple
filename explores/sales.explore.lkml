@@ -893,16 +893,16 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many}
   }
 
-  explore: logan_fulfillment {
-    group_label: " Sales"
-    description: "Stop gap on fulfillment data"
-    hidden: yes
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${logan_fulfillment.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-  }
+  # explore: logan_fulfillment {
+  #   group_label: " Sales"
+  #   description: "Stop gap on fulfillment data"
+  #   hidden: yes
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${logan_fulfillment.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  # }
 
   explore: day_aggregations {
     label: "Data By Date"
@@ -973,30 +973,33 @@ include: "/dashboards/**/*.dashboard"
   # }
 
   explore: wholesale_open_doors {hidden:yes}
-  explore: target_dtc {hidden: yes}
+  # explore: target_dtc {hidden: yes}
   explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
-  explore: sales_targets_dim {hidden:  yes
-    label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+
+  # explore: sales_targets_dim {hidden:  yes
+  #   label: "Finance targets"  description: "Monthly finance targets, spread by day"
+  # }
+
   explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
-  explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
-  explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
+  # explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
+  # explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
 
 
-  explore: unbounce {
-    hidden: yes
-    extends: [sales_order_line]
-    label:  "Unbounce"
-    group_label: " Sales"
-    view_label: "Sales Order Line"
-    description:  "All sales orders for wholesale channel"
-    always_join: [fulfillment]
-    join: unbounce_lead {
-      view_label: "Unbounce Leads"
-      sql_on: lower(${unbounce_lead.email_join}) = lower(${customer_table.email_join}) ;;
-      type: left_outer
-      relationship: many_to_many
-    }
-  }
+  # explore: unbounce {
+  #   hidden: yes
+  #   extends: [sales_order_line]
+  #   label:  "Unbounce"
+  #   group_label: " Sales"
+  #   view_label: "Sales Order Line"
+  #   description:  "All sales orders for wholesale channel"
+  #   always_join: [fulfillment]
+  #   join: unbounce_lead {
+  #     view_label: "Unbounce Leads"
+  #     sql_on: lower(${unbounce_lead.email_join}) = lower(${customer_table.email_join}) ;;
+  #     type: left_outer
+  #     relationship: many_to_many
+  #   }
+  # }
 
   explore: optimizely {
     hidden: yes
@@ -1039,8 +1042,8 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-explore: conversion {hidden: yes}
-explore: sessions_in_tests {hidden: yes}
+# explore: conversion {hidden: yes}
+# explore: sessions_in_tests {hidden: yes}
 
 #-------------------------------------------------------------------
 #
@@ -1108,23 +1111,25 @@ explore: sessions_in_tests {hidden: yes}
   explore: v_sales_flash {hidden: yes}
   explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}
-  explore: shop_comm_test {hidden: yes}
-  explore: sequential_rules {hidden: yes}
-  explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
-  explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
-  explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
+  # explore: shop_comm_test {hidden: yes}
+  # explore: sequential_rules {hidden: yes}
+  # explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
+  # explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
+  # explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
   explore: net_rev_daily_forecast {hidden: yes label:"Daily DS forecast"}
-  explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
 
-    join: dma {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${combined_sellthrough_pdt.zipcode} = ${dma.zip} ;;
-      relationship: many_to_many
-      fields: [dma.dma_name,dma.dma_mfrm]}
-    join: zcta5 {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${combined_sellthrough_pdt.zipcode} = (${zcta5.zipcode})  ;;
-      relationship: many_to_one
-      fields: [zcta5.fulfillment_region_1]}}
+  # explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
+
+  #   join: dma {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${combined_sellthrough_pdt.zipcode} = ${dma.zip} ;;
+  #     relationship: many_to_many
+  #     fields: [dma.dma_name,dma.dma_mfrm]}
+  #   join: zcta5 {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${combined_sellthrough_pdt.zipcode} = (${zcta5.zipcode})  ;;
+  #     relationship: many_to_one
+  #     fields: [zcta5.fulfillment_region_1]}
+  # }
