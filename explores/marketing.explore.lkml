@@ -508,5 +508,5 @@ explore: all_events {
   # }
   # explore: scorecard {hidden:yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: pageviews_bounced_pdt {hidden: yes group_label: "Marketing" label: "Pageviews Bounced"}
-  explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
+  # explore: heap_page_views_web_analytics {hidden:yes label: "Web Analytics Test"  group_label: "Marketing"  description: "Test for Web Analytics"}
   explore: heap_page_views {hidden:yes label: "HEAP Page Views"  group_label: "Marketing"  description: "Page View Only Explore"}
