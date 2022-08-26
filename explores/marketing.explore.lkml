@@ -395,7 +395,7 @@ include: "/dashboards/**/*.dashboard"
   explore: adspend_out_of_range_yesterday {group_label: "Marketing" label: "Adspend Out of Range Yesterday" description: "Platform daily Adspend outside of the 95% Confidence Interval." hidden: yes}
   # explore: marketing_magazine {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: sessions {hidden: yes group_label: "Marketing"}
-  explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}
+  # explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}
   # explore: conversions {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}-- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: target_adspend {hidden: yes group_label: "Marketing"}
