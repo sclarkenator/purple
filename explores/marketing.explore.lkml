@@ -19,10 +19,10 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one}
   }
 
-  explore: attribution_temp {
-    from: v_attribution_temp
-    hidden: yes
-  }
+  # explore: attribution_temp {
+  #   from: v_attribution_temp
+  #   hidden: yes
+  # }
 
   # explore: c3 {
   #   from: c3_conversion
