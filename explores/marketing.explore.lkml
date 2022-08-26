@@ -399,7 +399,7 @@ include: "/dashboards/**/*.dashboard"
   # explore: conversions {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}-- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   explore: target_adspend {hidden: yes group_label: "Marketing"}
-  explore: promotion {hidden:yes group_label: "Marketing"}
+  # explore: promotion {hidden:yes group_label: "Marketing"}
 #  explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
 
   explore: narvarcustomer{hidden:yes}
