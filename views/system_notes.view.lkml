@@ -39,6 +39,11 @@ view: system_notes {
     description: "Date the fraud check was approved"
     type: date_time
     sql: ${TABLE}.kount_status_approved ;;
+  }
 
+  dimension: pending_approval_status {
+    description: "Date the order entered Pending Approval Status, if applicable"
+    type: date_time
+    sql: ${TABLE}.pending_approval_status ;;
   }
 }
