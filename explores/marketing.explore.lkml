@@ -379,7 +379,7 @@ include: "/dashboards/**/*.dashboard"
 
 
   explore: v_fb_adset_freq_weekly {hidden: yes}
-  explore: v_fb_all {hidden: yes}
+  # explore: v_fb_all {hidden: yes}
   # explore: v_fb_all_breakdown {hidden: yes} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: v_google_search_site_report {hidden: yes}
   # explore: v_google_keyword_page_report {hidden: yes}
