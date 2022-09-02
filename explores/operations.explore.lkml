@@ -282,11 +282,11 @@ explore: forecast_compared_to_actual_sales {
       relationship: many_to_one}
     }
 
-explore: bin {
-  hidden: yes
-  group_label:"Production"
-  label: "Highjump Bin Location"
-}
+# explore: bin {
+#   hidden: yes
+#   group_label:"Production"
+#   label: "Highjump Bin Location"
+# }
 
 explore: international_open_po_report {
   hidden: yes
