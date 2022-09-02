@@ -371,22 +371,22 @@ explore: transaction_detail {
     relationship: one_to_one}
   }
 
-  explore: rf_log {
-    label: "High Jump RF Logs"
-    view_label: "HJ RF Log"
-    hidden: yes
-    join: bin {
-      type: left_outer
-      sql_on: ${rf_log.bin_label} = ${bin.bin_label} ;;
-      relationship: many_to_one}
-    join: item {
-      view_label: "Item"
-      type: left_outer
-      sql_on: ${rf_log.sku} = ${item.sku_id} ;;
-      relationship: one_to_one}
-    join: standard_cost_direct_materials  {
-      type: left_outer
-      sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
-      relationship: one_to_one}
+  # explore: rf_log {
+  #   label: "High Jump RF Logs"
+  #   view_label: "HJ RF Log"
+  #   hidden: yes
+  #   join: bin {
+  #     type: left_outer
+  #     sql_on: ${rf_log.bin_label} = ${bin.bin_label} ;;
+  #     relationship: many_to_one}
+  #   join: item {
+  #     view_label: "Item"
+  #     type: left_outer
+  #     sql_on: ${rf_log.sku} = ${item.sku_id} ;;
+  #     relationship: one_to_one}
+  #   join: standard_cost_direct_materials  {
+  #     type: left_outer
+  #     sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+  #     relationship: one_to_one}
 
-  }
+  # }
