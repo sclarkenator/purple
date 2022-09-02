@@ -351,25 +351,25 @@ explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Ship
 explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
 explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
 
-explore: transaction_detail {
-  label: "High Jump Transactions"
-  view_label: "HJ Transaction Detail"
-  hidden: yes
-  join: transaction_header {
-    view_label: "HJ Transaction Header"
-    type: left_outer
-    sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
-    relationship: many_to_one}
-  join: item {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${transaction_detail.sku} = ${item.sku_id} ;;
-    relationship: one_to_one}
-  join: standard_cost_direct_materials  {
-    type: left_outer
-    sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
-    relationship: one_to_one}
-  }
+# explore: transaction_detail {
+#   label: "High Jump Transactions"
+#   view_label: "HJ Transaction Detail"
+#   hidden: yes
+#   join: transaction_header {
+#     view_label: "HJ Transaction Header"
+#     type: left_outer
+#     sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
+#     relationship: many_to_one}
+#   join: item {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${transaction_detail.sku} = ${item.sku_id} ;;
+#     relationship: one_to_one}
+#   join: standard_cost_direct_materials  {
+#     type: left_outer
+#     sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+#     relationship: one_to_one}
+#   }
 
   # explore: rf_log {
   #   label: "High Jump RF Logs"
