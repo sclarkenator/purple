@@ -347,7 +347,7 @@ explore: etq_ncr {
 explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logistics"}
 explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}
 explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safety Details"}
-explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
+# explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
 # explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
 # explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
 
