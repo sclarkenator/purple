@@ -288,15 +288,15 @@ explore: forecast_compared_to_actual_sales {
 #   label: "Highjump Bin Location"
 # }
 
-explore: international_open_po_report {
-  hidden: yes
-  view_label:"International Open POs"
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
-    relationship: many_to_one}
-  }
+# explore: international_open_po_report {
+#   hidden: yes
+#   view_label:"International Open POs"
+#   join: item {
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
+#     relationship: many_to_one}
+#   }
 
 explore: day_pending {hidden:yes group_label: "Operations"}
 explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
