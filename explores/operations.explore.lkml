@@ -324,29 +324,30 @@ explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
 explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
 explore: etq_scar {hidden: yes label: "ETQ - Scar"}
 
-explore: etq_ncr {
-  label: "ETQ - NCR"
-  view_label: "NCR"
-  hidden: yes
-  join: etq_ncr_item {
-    view_label: " NCR Details"
-    type: left_outer
-    sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
-    relationship: one_to_many
-  }
-  join: item {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
-    relationship: one_to_one
-  }
-  join: standard_cost {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
-    relationship: one_to_one
-    }
-}
+# explore: etq_ncr {
+#   label: "ETQ - NCR"
+#   view_label: "NCR"
+#   hidden: yes
+#   join: etq_ncr_item {
+#     view_label: " NCR Details"
+#     type: left_outer
+#     sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
+#     relationship: one_to_many
+#   }
+#   join: item {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
+#     relationship: one_to_one
+#   }
+#   join: standard_cost {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+#     relationship: one_to_one
+#     }
+# }
+
 explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logistics"}
 explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}
 # explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safety Details"}
