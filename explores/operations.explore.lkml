@@ -306,21 +306,24 @@ explore: ai_transaction {hidden:yes group_label: "Operations"}
 explore: aop_combined {hidden:yes view_label:"AOP Combined"}
 explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
 explore: item_raw {from: item hidden:yes}
-explore: forecast_snapshot {
-  hidden:yes
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
-    relationship: many_to_one }
-  join: v_ai_product{
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
-    relationship: many_to_one }
-  }
+
+# explore: forecast_snapshot {
+#   hidden:yes
+#   join: item {
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
+#     relationship: many_to_one }
+#   join: v_ai_product{
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
+#     relationship: many_to_one }
+#   }
+
 explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
 explore: etq_scar {hidden: yes label: "ETQ - Scar"}
+
 explore: etq_ncr {
   label: "ETQ - NCR"
   view_label: "NCR"
