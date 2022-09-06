@@ -255,22 +255,22 @@ explore: forecast_compared_to_actual_sales {
     }
   }
 
-  explore: v_mattress_cogs {
-    hidden: yes
-    join: parent {
-      from: item
-      view_label: "Finished good"
-      type:left_outer
-      sql_on: ${v_mattress_cogs.item_id} = ${parent.item_id};;
-      relationship: many_to_one
-    }
-    join: subcomponent {
-      from: item
-      view_label: "Component"
-      type:left_outer
-      sql_on: ${v_mattress_cogs.sub_component} = ${subcomponent.item_id};;
-      relationship: many_to_one}
-    }
+  # explore: v_mattress_cogs {
+  #   hidden: yes
+  #   join: parent {
+  #     from: item
+  #     view_label: "Finished good"
+  #     type:left_outer
+  #     sql_on: ${v_mattress_cogs.item_id} = ${parent.item_id};;
+  #     relationship: many_to_one
+  #   }
+  #   join: subcomponent {
+  #     from: item
+  #     view_label: "Component"
+  #     type:left_outer
+  #     sql_on: ${v_mattress_cogs.sub_component} = ${subcomponent.item_id};;
+  #     relationship: many_to_one}
+  #   }
 
   explore: bin_location {
     hidden: yes
@@ -305,7 +305,7 @@ explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedit
 explore: ai_transaction {hidden:yes group_label: "Operations"}
 explore: aop_combined {hidden:yes view_label:"AOP Combined"}
 explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
-explore: item_raw {from: item hidden:yes}
+# explore: item_raw {from: item hidden:yes}
 
 # explore: forecast_snapshot {
 #   hidden:yes
