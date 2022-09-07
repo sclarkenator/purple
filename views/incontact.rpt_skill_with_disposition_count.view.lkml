@@ -154,7 +154,7 @@ dimension: primary_key {
             then 'Sales Inbound'
         when ${skill} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty','Support Tier 1 to Tier 2 xfer')
             then 'Support Inbound'
-        when ${skill} in ('Service Recovery','Sleep Country Canada','Sleep County Canada')
+        when ${skill} in ('Service Recovery','Sleep Country Canada','Sleep County Canada','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
             then 'SRT'
         when ${skill} = 'Customer Service OB'
             then 'Support OB'
@@ -164,7 +164,7 @@ dimension: primary_key {
             then 'Sales OB'
         when ${skill} = 'PurpleBoysPodcast'
             then 'PurpleBoysPodcast'
-        when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
+        when ${skill} in ('Operations Support','Ops Service Recovery','Purple Delivery','Shipping (Manna)','Shipping (XPO Logistics)')
             then 'Ops'
         else 'Other/Unknown'
     end

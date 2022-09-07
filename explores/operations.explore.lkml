@@ -255,22 +255,22 @@ explore: forecast_compared_to_actual_sales {
     }
   }
 
-  explore: v_mattress_cogs {
-    hidden: yes
-    join: parent {
-      from: item
-      view_label: "Finished good"
-      type:left_outer
-      sql_on: ${v_mattress_cogs.item_id} = ${parent.item_id};;
-      relationship: many_to_one
-    }
-    join: subcomponent {
-      from: item
-      view_label: "Component"
-      type:left_outer
-      sql_on: ${v_mattress_cogs.sub_component} = ${subcomponent.item_id};;
-      relationship: many_to_one}
-    }
+  # explore: v_mattress_cogs {
+  #   hidden: yes
+  #   join: parent {
+  #     from: item
+  #     view_label: "Finished good"
+  #     type:left_outer
+  #     sql_on: ${v_mattress_cogs.item_id} = ${parent.item_id};;
+  #     relationship: many_to_one
+  #   }
+  #   join: subcomponent {
+  #     from: item
+  #     view_label: "Component"
+  #     type:left_outer
+  #     sql_on: ${v_mattress_cogs.sub_component} = ${subcomponent.item_id};;
+  #     relationship: many_to_one}
+  #   }
 
   explore: bin_location {
     hidden: yes
@@ -282,21 +282,21 @@ explore: forecast_compared_to_actual_sales {
       relationship: many_to_one}
     }
 
-explore: bin {
-  hidden: yes
-  group_label:"Production"
-  label: "Highjump Bin Location"
-}
+# explore: bin {
+#   hidden: yes
+#   group_label:"Production"
+#   label: "Highjump Bin Location"
+# }
 
-explore: international_open_po_report {
-  hidden: yes
-  view_label:"International Open POs"
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
-    relationship: many_to_one}
-  }
+# explore: international_open_po_report {
+#   hidden: yes
+#   view_label:"International Open POs"
+#   join: item {
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${international_open_po_report.item_number} = ${item.sku_id} ;;
+#     relationship: many_to_one}
+#   }
 
 explore: day_pending {hidden:yes group_label: "Operations"}
 explore: at_risk_amount {hidden: yes group_label: "Operations" label: "At Risk Orders"}
@@ -305,88 +305,92 @@ explore: expedited_shipping {hidden:yes group_label: "Operations" label:"Expedit
 explore: ai_transaction {hidden:yes group_label: "Operations"}
 explore: aop_combined {hidden:yes view_label:"AOP Combined"}
 explore: lrp_combined {hidden:yes view_label:"LRP Combined"}
-explore: item_raw {from: item hidden:yes}
-explore: forecast_snapshot {
-  hidden:yes
-  join: item {
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
-    relationship: many_to_one }
-  join: v_ai_product{
-    view_label: "Product"
-    type: left_outer
-    sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
-    relationship: many_to_one }
-  }
+# explore: item_raw {from: item hidden:yes}
+
+# explore: forecast_snapshot {
+#   hidden:yes
+#   join: item {
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${forecast_snapshot.sku_id} = ${item.sku_id} ;;
+#     relationship: many_to_one }
+#   join: v_ai_product{
+#     view_label: "Product"
+#     type: left_outer
+#     sql_on: ${forecast_snapshot.sku_id} = ${v_ai_product.sku_raw} ;;
+#     relationship: many_to_one }
+#   }
+
 explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
 explore: etq_scar {hidden: yes label: "ETQ - Scar"}
-explore: etq_ncr {
-  label: "ETQ - NCR"
-  view_label: "NCR"
-  hidden: yes
-  join: etq_ncr_item {
-    view_label: " NCR Details"
-    type: left_outer
-    sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
-    relationship: one_to_many
-  }
-  join: item {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
-    relationship: one_to_one
-  }
-  join: standard_cost {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
-    relationship: one_to_one
-    }
-}
+
+# explore: etq_ncr {
+#   label: "ETQ - NCR"
+#   view_label: "NCR"
+#   hidden: yes
+#   join: etq_ncr_item {
+#     view_label: " NCR Details"
+#     type: left_outer
+#     sql_on: ${etq_ncr.ncr_number} = ${etq_ncr_item.ncr_number} ;;
+#     relationship: one_to_many
+#   }
+#   join: item {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${etq_ncr_item.part_number} = ${item.sku_id} ;;
+#     relationship: one_to_one
+#   }
+#   join: standard_cost {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+#     relationship: one_to_one
+#     }
+# }
+
 explore: slt_logistics {hidden: yes group_label: "Operations" label: "SLT Logistics"}
 explore: slt_safety {hidden: yes group_label: "Operations" label: "SLT Safety"}
-explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safety Details"}
-explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
-explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
-explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
+# explore: slt_safety_details {hidden: yes group_label: "Operations" label: "Safety Details"}
+# explore: slt_shipping_queue { hidden: yes group_label: "Operations" label: "Shipping Queue"}
+# explore: envista {hidden: yes group_label: "Operations" label: "Envista"}
+# explore: gtms {hidden: yes group_label: "Operations" label: "GTMS"}
 
-explore: transaction_detail {
-  label: "High Jump Transactions"
-  view_label: "HJ Transaction Detail"
-  hidden: yes
-  join: transaction_header {
-    view_label: "HJ Transaction Header"
-    type: left_outer
-    sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
-    relationship: many_to_one}
-  join: item {
-    view_label: "Item"
-    type: left_outer
-    sql_on: ${transaction_detail.sku} = ${item.sku_id} ;;
-    relationship: one_to_one}
-  join: standard_cost_direct_materials  {
-    type: left_outer
-    sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
-    relationship: one_to_one}
-  }
+# explore: transaction_detail {
+#   label: "High Jump Transactions"
+#   view_label: "HJ Transaction Detail"
+#   hidden: yes
+#   join: transaction_header {
+#     view_label: "HJ Transaction Header"
+#     type: left_outer
+#     sql_on: ${transaction_detail.transaction_number} = ${transaction_header.transaction_number} ;;
+#     relationship: many_to_one}
+#   join: item {
+#     view_label: "Item"
+#     type: left_outer
+#     sql_on: ${transaction_detail.sku} = ${item.sku_id} ;;
+#     relationship: one_to_one}
+#   join: standard_cost_direct_materials  {
+#     type: left_outer
+#     sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+#     relationship: one_to_one}
+#   }
 
-  explore: rf_log {
-    label: "High Jump RF Logs"
-    view_label: "HJ RF Log"
-    hidden: yes
-    join: bin {
-      type: left_outer
-      sql_on: ${rf_log.bin_label} = ${bin.bin_label} ;;
-      relationship: many_to_one}
-    join: item {
-      view_label: "Item"
-      type: left_outer
-      sql_on: ${rf_log.sku} = ${item.sku_id} ;;
-      relationship: one_to_one}
-    join: standard_cost_direct_materials  {
-      type: left_outer
-      sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
-      relationship: one_to_one}
+  # explore: rf_log {
+  #   label: "High Jump RF Logs"
+  #   view_label: "HJ RF Log"
+  #   hidden: yes
+  #   join: bin {
+  #     type: left_outer
+  #     sql_on: ${rf_log.bin_label} = ${bin.bin_label} ;;
+  #     relationship: many_to_one}
+  #   join: item {
+  #     view_label: "Item"
+  #     type: left_outer
+  #     sql_on: ${rf_log.sku} = ${item.sku_id} ;;
+  #     relationship: one_to_one}
+  #   join: standard_cost_direct_materials  {
+  #     type: left_outer
+  #     sql_on: ${item.item_id} = ${standard_cost_direct_materials.item_id} ;;
+  #     relationship: one_to_one}
 
-  }
+  # }
