@@ -156,7 +156,7 @@ explore: wfm_weekly_performance {
 
   fields: [
     wfm_weekly_performance.default_fields*,
-    agent_data.agents_minimal_grouping*,
+    employee_lkp.agents_minimal_grouping*,
     incontact_phone.performance_summary*,
     zendesk_ticket_v2.ticket_count,
     agent_state.working_rate,
@@ -164,8 +164,8 @@ explore: wfm_weekly_performance {
     liveperson_conversation.conversations_ended_count
   ]
 
-  join: agent_data {
-    view_label: "Agent Data"
+  join: employee_lkp {
+    view_label: "Employee Lookup"
     type: cross
     relationship: many_to_many
   }
@@ -174,7 +174,7 @@ explore: wfm_weekly_performance {
     view_label: "Summary Data"
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${incontact_phone.start_ts_mst_date}
-      and ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
+      and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
     relationship: one_to_many
   }
 
@@ -182,7 +182,7 @@ explore: wfm_weekly_performance {
     view_label: "Summary Data"
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${zendesk_ticket_v2.tkt_created_date}
-      and ${agent_data.incontact_id} = ${zendesk_ticket_v2.assignee_id}
+      and ${employee_lkp.incontact_id} = ${zendesk_ticket_v2.assignee_id}
       and ${zendesk_ticket_v2.channel} in ('email', 'web', 'facebook') ;;
     relationship: one_to_many
   }
@@ -191,7 +191,7 @@ explore: wfm_weekly_performance {
     view_label: "Summary Data"
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${agent_state.state_start_ts_mst_date}
-      and ${agent_data.incontact_id} = ${agent_state.agent_id} ;;
+      and ${employee_lkp.incontact_id} = ${agent_state.agent_id} ;;
     relationship: one_to_many
   }
 
@@ -199,7 +199,7 @@ explore: wfm_weekly_performance {
     view_label: "Summary Data"
     type: left_outer
     sql_on: ${wfm_weekly_performance.date_date} = ${liveperson_conversation.ended_date}
-      and ${agent_data.incontact_id} = ${liveperson_conversation.last_agent_id};;
+      and ${employee_lkp.incontact_id} = ${liveperson_conversation.last_agent_id};;
     relationship: one_to_many
   }
 }
@@ -324,13 +324,13 @@ explore:agent_team_history {
   group_label: "Historic Data"
   view_name: agent_team_history
   hidden: yes
-  fields: [agent_data.agent_name, agent_team_history.incontact_id, agent_team_history.current_team_flag, agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_name, agent_team_history.team_email]
+  fields: [employee_lkp.name, agent_team_history.incontact_id, agent_team_history.current_team_flag, agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_name, agent_team_history.team_email]
 
-  join: agent_data {
+  join: employee_lkp {
     view_label: "Agent Team History"
-    from: agent_data
+    from: employee_lkp
     type: inner
-    sql_on: ${agent_team_history.incontact_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${agent_team_history.incontact_id} = ${employee_lkp.incontact_id} ;;
     relationship: one_to_many
   }
   }
@@ -342,14 +342,14 @@ explore:agent_team_history {
 explore:agent_attendance {
   label: "Agent Attendance"
   view_label: "Agent Data"
-  view_name: agent_data
+  view_name: employee_lkp
   hidden: yes
 
   join: agent_attendance {
     view_label: "Attendance Data"
     from: cc_agent_attendance
     type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${agent_attendance.incontact_id} ;;
+    sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.incontact_id} ;;
     sql_where: ${agent_attendance.added_by} is not null ;;
     relationship: one_to_many
   }
@@ -358,9 +358,9 @@ explore:agent_attendance {
     view_label: "Attendance Data"
     fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
     type: left_outer
-    sql_on: ${agent_data.incontact_id} = ${agent_current_warning_level.incontact_id}
-      and ${agent_data.incontact_id} is not null
-      and ${agent_data.incontact_id} <> '2612383' ;;
+    sql_on: ${employee_lkp.incontact_id} = ${agent_current_warning_level.incontact_id}
+      and ${employee_lkp.incontact_id} is not null
+      and ${employee_lkp.incontact_id} <> '2612383' ;;
     relationship: one_to_one
   }
 
@@ -368,7 +368,7 @@ explore:agent_attendance {
     view_label: "Agent Data"
     # from: agent_team_history
     type: left_outer
-    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+    sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
       and ${agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date} ;;
     fields: [agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_email, agent_team_history.team_name, agent_team_history.current_team_flag]
     relationship: many_to_one
@@ -383,10 +383,10 @@ explore: agent_state {
   view_label: "Agent States"
   hidden: yes
 
-  join: agent_data {
+  join: employee_lkp {
     view_label: "Agent Data"
     type: left_outer
-    sql_on: ${agent_state.agent_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${agent_state.agent_id} = ${employee_lkp.incontact_id} ;;
     # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
     relationship: many_to_one
   }
@@ -395,7 +395,7 @@ explore: agent_state {
     view_label: "Agent Data"
     # from: agent_team_history
     type: left_outer
-    sql_on:  ${agent_data.incontact_id} = ${agent_team_history.incontact_id}
+    sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
       and ${agent_state.state_start_ts_mst_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
     relationship: many_to_one
   }
@@ -435,10 +435,10 @@ explore: contact_history {
    view_label: "Contact History"
    hidden:yes
 
-   join: agent_data {
+   join: employee_lkp {
      view_label: "Agent Data"
      type: left_outer
-     sql_on: ${contact_history.agent_id} = ${agent_data.incontact_id} ;;
+     sql_on: ${contact_history.agent_id} = ${employee_lkp.incontact_id} ;;
      relationship: many_to_one
    }
 
@@ -499,13 +499,13 @@ explore: incontact_phone {
   label: "InContact Phone"
   view_label: "Agent Data"
   description: "Tracks phone related contact data."
-  view_name: agent_data
+  view_name: employee_lkp
   hidden: yes
 
   join: incontact_phone {
     view_label: "Phone Calls"
     type: full_outer
-    sql_on: ${agent_data.incontact_id} = ${incontact_phone.agent_id} ;;
+    sql_on: ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
     relationship: one_to_many
   }
 }
@@ -519,13 +519,13 @@ explore: perfect_attendance_calc {
   view_label: "Agent Attendance"
   view_name: cc_agent_attendance
   hidden: yes
-  fields: [agent_data.agent_name, agent_data.is_active, agent_data.is_retail, agent_data.inactive_date, agent_data.is_supervisor, agent_data.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+  fields: [employee_lkp.name, employee_lkp.is_active, employee_lkp.retail, employee_lkp.inactive_date, employee_lkp.is_supervisor, employee_lkp.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
 
-  join: agent_data {
+  join: employee_lkp {
     view_label: "Agent Attendance"
-    from: agent_data
+    from: employee_lkp
     type: inner
-    sql_on: ${cc_agent_attendance.incontact_id} = ${agent_data.incontact_id} ;;
+    sql_on: ${cc_agent_attendance.incontact_id} = ${employee_lkp.incontact_id} ;;
     relationship: one_to_many
   }
 }
@@ -832,11 +832,11 @@ explore: perfect_attendance_calc {
       view_label: "Agent Evaluation Team"
       fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
     }
-    join: agent_data {
-      type: full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${agent_data.incontact_id} ;;
-      relationship: one_to_many
-    }
+    # join: agent_data {
+    #   type: full_outer
+    #   sql_on: ${cc_agent_data.incontact_id} = ${agent_data.incontact_id} ;;
+    #   relationship: one_to_many
+    # }
     join: agent_state {
       type:  full_outer
       sql_on: ${cc_agent_data.incontact_id} = ${agent_state.agent_id} ;;
@@ -1054,7 +1054,9 @@ explore: perfect_attendance_calc {
   # explore: activities_all_sources {hidden: yes} #cj
   # explore: liveperson_agent {hidden: yes} #cj
   # explore: liveperson_skill {hidden: yes} #cj
-  explore: agent_data {group_label: "Customer Care"} #cj
+  explore: agent_data {
+    from:  employee_lkp
+    group_label: "Customer Care"} #cj
   # explore: agent_current_warning_level {hidden: yes} #cj
   explore: shopify_refund {hidden:yes}
   explore: zendesk_macros {hidden:yes}

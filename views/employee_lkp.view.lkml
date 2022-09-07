@@ -2,6 +2,19 @@ view: employee_lkp {
   sql_table_name: "CUSTOMER_CARE"."EMPLOYEE_LKP"
     ;;
 
+  set: agents_minimal_grouping {
+    fields: [
+      name,
+      team_group,
+      team_type,
+      boss_name,
+      incontact_id,
+      is_active,
+      retail,
+      is_supervisor
+    ]
+  }
+
   dimension_group: birthday {
     type: time
     timeframes: [
@@ -48,7 +61,21 @@ view: employee_lkp {
       quarter,
       year
     ]
-    sql: ${TABLE}.CAST(${TABLE}."CREATED" AS TIMESTAMP_NTZ) ;;
+    sql: ${TABLE}."CREATED";;
+  }
+
+  dimension_group: end {
+    label: "- End"
+    description: "Termination Date if not null, else Inactive Date. (Customer Care)"
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      # quarter,
+      year]
+    sql: case when ${terminated_date} is not null then ${terminated_date}
+      else ${inactive_date} end;;
   }
 
   dimension: email {
@@ -137,6 +164,12 @@ view: employee_lkp {
       year
     ]
     sql: ${TABLE}.CAST(${TABLE}."INSERT_TS" AS TIMESTAMP_NTZ) ;;
+  }
+
+  dimension: is_active {
+    type: yesno
+    description: "Whether or not this agent is active in the Customer Care system."
+    sql: ${terminated_date} is null;;
   }
 
   dimension: location {
@@ -231,14 +264,74 @@ view: employee_lkp {
     sql: ${TABLE}."SHOPIFY_ID_POS" ;;
   }
 
+  dimension_group: start {
+    label: "- Start"
+    description: "Hire Date if not null, else Created Date."
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      # quarter,
+      year]
+    sql: case when ${hired_date} is not null then ${hired_date}
+      else ${created_date} end;;
+  }
+
   dimension: is_supervisor {
     type: yesno
     sql: ${TABLE}."SUPERVISOR" ;;
   }
 
+  dimension: team_group {
+    label: "Team Group"
+    description: "The current Team Group for each agent."
+    type: string
+    # sql: ${TABLE}.team_group ;;
+    sql: case when employee_type is null and ${TABLE}.boss_name is null then 'Other'
+      when ${TABLE}.team_type in ('Admin', 'WFM', 'QA', 'CX', 'Spec Proj') then 'Admin'
+      when ${TABLE}.team_type in ('Training', 'Sales') then ${TABLE}.team_type
+      when ${TABLE}.team_type in ('Account Executive') then 'Sales'
+      else 'Customer Care' end ;;
+  }
+
   dimension: team_type {
     type: string
     sql: ${TABLE}."TEAM_TYPE" ;;
+  }
+
+  dimension: tenure {
+    label: "Tenure by Month"
+    group_label: "* Tenure Metrics"
+    description: "Agent tenure in months."
+    type: number
+    value_format_name: decimal_0
+    sql: case when not (${TABLE}.employee_type is null and ${TABLE}.boss_name is null) then datediff(month, ${start_date}, current_date) end ;;
+  }
+
+  measure: tenure_average {
+    label: "Tenure Average"
+    description: "Average tenure in months."
+    type: average
+    value_format_name: decimal_1
+    sql: ${tenure} ;;
+    link: {
+      label: "View Tenure Detail"
+      url: "https://purple.looker.com/looks/5759"
+    }
+    link: {
+      label: "Go To Headcount Dashboard"
+      url: "https://purple.looker.com/dashboards-next/4502?Headcount%20Date=today&Team%20Type=&Employee%20Type=&Team%20Lead%20Name=-Other&Team%20Group="
+    }
+  }
+
+  dimension: tenure_buckets {
+    label: "Tenure Bucket by Month"
+    group_label: "* Tenure Metrics"
+    type: tier
+    style: integer
+    tiers: [0, 4, 7, 10]
+    sql: ${tenure} ;;
   }
 
   dimension_group: terminated {
@@ -253,7 +346,7 @@ view: employee_lkp {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."TERMINATED" ;;
+    sql: ${TABLE}."TERMINATED";;
   }
 
   dimension: termination {

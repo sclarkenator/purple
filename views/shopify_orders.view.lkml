@@ -170,7 +170,7 @@ view: shopify_orders {
 
   dimension: user_id {
     hidden: yes
-    type: string
+    type: number
     sql: ${TABLE}.user_id ;;
   }
 

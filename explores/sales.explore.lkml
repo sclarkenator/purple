@@ -573,7 +573,38 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
+  explore: sales_agent_metrics {
+    hidden: no
+    from: employee_lkp
+    label: "Sales Agents"
+    description: "Sales Agents Metrics"
+    join: zendesk_chat_engagements {
+      view_label: "Chat Engagements"
+      sql_on: ${zendesk_chat_engagements.zendesk_id} = ${sales_agent_metrics.zendesk_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+    join: labor_hours {
+      view_label: "Labor Hours"
+      sql_on: ${labor_hours.employee_id} = ${sales_agent_metrics.workday_id} ;;
+      type: left_outer
+      relationship: one_to_many
+    }
+  #   join: incontact_phone {
+  #     view_label: "Incontact"
+  #     sql_on: ${incontact_phone.start_ts_mst_date} =${zendesk_agent_events.started_date} and ${incontact_phone.agent_id} = ${sales_agent_metrics.incontact_id} ;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  #   join: zendesk_agent_events {
+  #     view_label: "Zendesk Agent Events"
+  #     sql_on: ${zendesk_agent_events.zendesk_agent_id} = ${sales_agent_metrics.zendesk_id} ;;
+  #     type:  left_outer
+  #     relationship: one_to_many
+  #   }
+  }
 
+  # explore: zendesk_agent_events {}
 
   # explore: sales_test {
   #   from: sales_order_line
