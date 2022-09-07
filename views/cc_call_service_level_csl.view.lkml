@@ -98,7 +98,7 @@ view: cc_call_service_level_csl {
             then 'Sales Inbound'
         when ${skill_name} in ('Customer Service General','Customer Service Spanish','Order Follow Up','Purple Outlet Store','Retail Support','Returns','Returns - Mattress','Returns - Other','Support Xfer (From Sales)','Training - Support Xfer','Warranty')
             then 'Support Inbound'
-        when ${skill_name} in ('Service Recovery','Sleep Country Canada','Sleep County Canada')
+        when ${skill_name} in ('Service Recovery','Sleep Country Canada','Sleep County Canada','Showrooms (Purple owned Retail','Showrooms (Purple owned Retail)')
             then 'SRT'
         when  ${skill_name} = 'Customer Service OB'
             then 'Support OB'
