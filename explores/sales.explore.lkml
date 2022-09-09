@@ -596,12 +596,12 @@ include: "/dashboards/**/*.dashboard"
   #     type: left_outer
   #     relationship: one_to_many
   #   }
-  #   join: zendesk_agent_events {
-  #     view_label: "Zendesk Agent Events"
-  #     sql_on: ${zendesk_agent_events.zendesk_agent_id} = ${sales_agent_metrics.zendesk_id} ;;
-  #     type:  left_outer
-  #     relationship: one_to_many
-  #   }
+    join: zendesk_agent_events {
+      view_label: "Zendesk Agent Events"
+      sql_on: ${zendesk_agent_events.zendesk_agent_id} = ${sales_agent_metrics.zendesk_id} ;;
+      type:  left_outer
+      relationship: one_to_many
+    }
   }
 
   # explore: zendesk_agent_events {}

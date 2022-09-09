@@ -2,10 +2,10 @@ view: labor_hours {
   sql_table_name: "WORKDAY"."LABOR_HOURS";;
 
 
-dimension: employee_department_location_clock {
+dimension: employee_hours_department_location_clock_status {
   hidden: yes
   primary_key: yes
-  sql: ${employee_id}||'-'||${department}||'-'||${location}||'-'||${clocked_in_raw};;
+  sql: ${employee_id}||'-'||${hours}||'-'||${department}||'-'||${location}||'-'||${clocked_in_raw}||'-'||COALESCE(${status}, 'NULL');;
 }
 
   dimension_group: clocked_in {
@@ -43,9 +43,15 @@ dimension: employee_department_location_clock {
     sql: ${TABLE}."LOCATION" ;;
   }
 
+  dimension: hours {
+    hidden: yes
+    type: number
+    sql: ${TABLE}."HOURS" ;;
+  }
+
   measure: employee_count {
     type: count_distinct
-    sql: ${TABLE}."EMPLOYEE_ID"  ;;
+    sql: ${TABLE}."EMPLOYEE_ID" ;;
   }
 
   measure: total_hours {

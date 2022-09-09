@@ -6,11 +6,11 @@ view: zendesk_agent_events {
   dimension: primary_key {
     label: "Primary Key"
     group_label: "* IDs"
-    description: "Primary key field.  [Agent ID - Started]"
+    description: "Primary key field.  [Agent ID - Started - Duration]"
     primary_key: yes
     hidden:  no
     type: string
-    sql: ${TABLE}."AGENT_ID" || ${TABLE}."STARTED" || ${TABLE}."STATUS";;
+    sql: ${TABLE}."AGENT_ID" || '-' || ${TABLE}."STARTED" || '-' || ${TABLE}."DURATION_IN_SECONDS";;
   }
 
   dimension: zendesk_agent_id {

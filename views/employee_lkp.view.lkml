@@ -2,6 +2,12 @@ view: employee_lkp {
   sql_table_name: "CUSTOMER_CARE"."EMPLOYEE_LKP"
     ;;
 
+  dimension: purple_employee_id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}."PURPLE_EMPLOYEE_ID" ;;
+  }
+
   set: agents_minimal_grouping {
     fields: [
       name,
@@ -208,11 +214,6 @@ view: employee_lkp {
     sql: ${TABLE}."PREFERRED_FIRST_NAME" ;;
   }
 
-  dimension: purple_employee_id {
-    type: number
-    sql: ${TABLE}."PURPLE_EMPLOYEE_ID" ;;
-  }
-
   dimension_group: purple_with_purpose {
     type: time
     timeframes: [
@@ -394,7 +395,7 @@ view: employee_lkp {
   }
 
   measure: count {
-    hidden: yes
+    hidden: no
     type: count
     drill_fields: [boss_name, preferred_first_name, name]
   }
