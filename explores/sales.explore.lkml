@@ -919,16 +919,16 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-  explore: return_form_entry {
-    hidden: yes
-    group_label: " Sales"
-    label: "Return Form"
-    description: "Entries from Customer Care Return Forms"
-    join: return_form_reason {
-      type: left_outer
-      sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
-      relationship: one_to_many}
-  }
+  # explore: return_form_entry {
+  #   hidden: yes
+  #   group_label: " Sales"
+  #   label: "Return Form"
+  #   description: "Entries from Customer Care Return Forms"
+  #   join: return_form_reason {
+  #     type: left_outer
+  #     sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
+  #     relationship: one_to_many}
+  # }
 
   # explore: logan_fulfillment {
   #   group_label: " Sales"
