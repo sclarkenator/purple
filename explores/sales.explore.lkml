@@ -1144,8 +1144,8 @@ include: "/dashboards/**/*.dashboard"
   #   relationship: one_to_one}
   # }
 
-  explore: v_sla {hidden: yes}
-  explore: v_sales_flash {hidden: yes}
+  # explore: v_sla {hidden: yes}
+  # explore: v_sales_flash {hidden: yes}
   explore: v_new_roa {hidden: yes}
   explore: v_ct_test {hidden: yes}
   # explore: shop_comm_test {hidden: yes}
