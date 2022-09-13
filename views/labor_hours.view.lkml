@@ -3,7 +3,7 @@ view: labor_hours {
 
 
 dimension: employee_hours_department_location_clock_status {
-  hidden: yes
+  hidden: no
   primary_key: yes
   sql: ${employee_id}||'-'||${hours}||'-'||${department}||'-'||${location}||'-'||${clocked_in_raw}||'-'||COALESCE(${status}, 'NULL');;
 }

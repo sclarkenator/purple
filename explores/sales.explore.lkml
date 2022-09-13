@@ -69,7 +69,7 @@ include: "/dashboards/**/*.dashboard"
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
-    hidden: yes
+    hidden: no
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
@@ -573,38 +573,88 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: sales_agent_metrics {
-    hidden: no
-    from: employee_lkp
-    label: "Sales Agents"
-    description: "Sales Agents Metrics"
-    join: zendesk_chat_engagements {
-      view_label: "Chat Engagements"
-      sql_on: ${zendesk_chat_engagements.zendesk_id} = ${sales_agent_metrics.zendesk_id} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-    join: labor_hours {
-      view_label: "Labor Hours"
-      sql_on: ${labor_hours.employee_id} = ${sales_agent_metrics.workday_id} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-  #   join: incontact_phone {
-  #     view_label: "Incontact"
-  #     sql_on: ${incontact_phone.start_ts_mst_date} =${zendesk_agent_events.started_date} and ${incontact_phone.agent_id} = ${sales_agent_metrics.incontact_id} ;;
+  # explore: sales_agent_metrics {
+  #   hidden: no
+  #   from: employee_lkp
+  #   sql_always_where: ${zendesk_id} is not null and ${workday_id} is not null ;;
+  #   label: "Sales Agents"
+  #   description: "Sales Agents Metrics"
+  #   join: zendesk_chat_engagements {
+  #     view_label: "Chat Engagements"
+  #     sql_on: ${zendesk_chat_engagements.zendesk_id} = ${sales_agent_metrics.zendesk_id}
+  #             and ${zendesk_chat_engagements.zendesk_id} is not null
+  #             and ${sales_agent_metrics.zendesk_id} is not null
+  #             and ${sales_agent_metrics.zendesk_id} != '392176472792'
+  #             and ${sales_agent_metrics.zendesk_id} != '369087776231';;
   #     type: left_outer
   #     relationship: one_to_many
   #   }
-    join: zendesk_agent_events {
-      view_label: "Zendesk Agent Events"
-      sql_on: ${zendesk_agent_events.zendesk_agent_id} = ${sales_agent_metrics.zendesk_id} ;;
-      type:  left_outer
-      relationship: one_to_many
-    }
-  }
+  #   # join: zendesk_agent_events {
+  #   #   view_label: "Zendesk Agent Events"
+  #   #   sql_on: ${zendesk_agent_events.zendesk_agent_id} = ${sales_agent_metrics.zendesk_id}
+  #   #     and ${sales_agent_metrics.zendesk_id} is not null;;
+  #   #   type:  left_outer
+  #   #   relationship: many_to_many
+  #   # }
+  #   join: labor_hours {
+  #     view_label: "Labor Hours"
+  #     sql_on: ${labor_hours.employee_id} = ${sales_agent_metrics.workday_id}
+  #             and ${labor_hours.employee_id} is not null
+  #             and ${sales_agent_metrics.workday_id} is not null;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  #   join: incontact_phone {
+  #     view_label: "Incontact"
+  #     sql_on: ${incontact_phone.agent_id} = ${sales_agent_metrics.incontact_id}
+  #       and ${incontact_phone.agent_id} is not null
+  #       and ${sales_agent_metrics.incontact_id} is not null
+  #       and ${sales_agent_metrics.zendesk_id} != '392176472792'
+  #       and ${sales_agent_metrics.zendesk_id} != '369087776231';;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  # }
 
-  # explore: zendesk_agent_events {}
+    explore: sales_agent_metrics {
+      hidden: no
+      from: warehouse_date_table
+      label: "Sales Agent Metrics"
+      description: "Sales Agents Metrics"
+      join: employee_lkp {
+        view_label: "Employee Lookup"
+        type: cross
+        relationship: many_to_many
+      }
+      join: zendesk_chat_engagements {
+        view_label: "Chat Engagements"
+        sql_on: ${sales_agent_metrics.date_date} = ${zendesk_chat_engagements.engagement_start_date}
+          and ${employee_lkp.zendesk_id} = ${zendesk_chat_engagements.zendesk_id};;
+        type: left_outer
+        relationship: one_to_many
+      }
+      join: incontact_phone {
+        view_label: "Incontact Phone"
+        sql_on: ${sales_agent_metrics.date_date} = ${incontact_phone.start_ts_mst_date}
+          and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+        type: left_outer
+        relationship: one_to_many
+      }
+      join: labor_hours {
+        view_label: "Labor Hours"
+        sql_on: ${sales_agent_metrics.date_date} = ${labor_hours.clocked_in_date}
+          and ${employee_lkp.workday_id} = ${labor_hours.employee_id};;
+        type: left_outer
+        relationship: one_to_many
+      }
+    #   join: zendesk_agent_events {
+    #     view_label: "Zendesk Agent Events"
+    #     sql_on: ${sales_agent_metrics_speedtest.date_date} = ${zendesk_agent_events.started_date}
+    #       and ${employee_lkp.zendesk_id} = ${zendesk_agent_events.zendesk_agent_id};;
+    #     type:  left_outer
+    #     relationship: one_to_many
+    # }
+  }
 
   # explore: sales_test {
   #   from: sales_order_line
