@@ -969,16 +969,16 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-  explore: return_form_entry {
-    hidden: yes
-    group_label: " Sales"
-    label: "Return Form"
-    description: "Entries from Customer Care Return Forms"
-    join: return_form_reason {
-      type: left_outer
-      sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
-      relationship: one_to_many}
-  }
+  # explore: return_form_entry {
+  #   hidden: yes
+  #   group_label: " Sales"
+  #   label: "Return Form"
+  #   description: "Entries from Customer Care Return Forms"
+  #   join: return_form_reason {
+  #     type: left_outer
+  #     sql_on: ${return_form_entry.entry_id} = ${return_form_reason.entry_id} ;;
+  #     relationship: one_to_many}
+  # }
 
   # explore: logan_fulfillment {
   #   group_label: " Sales"
@@ -1067,7 +1067,7 @@ include: "/dashboards/**/*.dashboard"
   #   label: "Finance targets"  description: "Monthly finance targets, spread by day"
   # }
 
-  explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
+  # explore: v_intransit { hidden: yes  label: "In-Transit Report"  group_label: " Sales"}
   # explore: accessory_products_to_mattress {hidden: yes label: "Accessory Products to Mattress" group_label: " Sales"}
   # explore: max_by_day {hidden: yes group_label: " Sales" label: "Max by Day"}
 
@@ -1127,6 +1127,8 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_many
     }
   }
+
+  explore: v_new_roa {hidden: yes}
 
 
 # explore: conversion {hidden: yes}
@@ -1194,16 +1196,16 @@ include: "/dashboards/**/*.dashboard"
   #   relationship: one_to_one}
   # }
 
-  explore: v_sla {hidden: yes}
-  explore: v_sales_flash {hidden: yes}
-  explore: v_new_roa {hidden: yes}
-  explore: v_ct_test {hidden: yes}
+  # explore: v_sla {hidden: yes}
+  # explore: v_sales_flash {hidden: yes}
+
+  # explore: v_ct_test {hidden: yes}
   # explore: shop_comm_test {hidden: yes}
   # explore: sequential_rules {hidden: yes}
   # explore: mattress_firm_po_detail {hidden: yes label: "Mattress Firm POD" group_label: "Wholesale"}
   # explore: wholesale_mfrm_manual_asn  {hidden:  yes label: "Wholesale Mattress Firm Manual ASN" group_label: "Wholesale"}
   # explore: store_locations_3_mar2020 {hidden: yes label:"Wholesale and Retail Locations"}
-  explore: net_rev_daily_forecast {hidden: yes label:"Daily DS forecast"}
+  # explore: net_rev_daily_forecast {hidden: yes label:"Daily DS forecast"}
 
   # explore: combined_sellthrough_pdt { hidden: yes label: "Combined Sell-Through PDT" group_label: "Wholesale"
 
