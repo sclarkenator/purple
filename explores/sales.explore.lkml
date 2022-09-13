@@ -1061,7 +1061,7 @@ include: "/dashboards/**/*.dashboard"
 
   explore: wholesale_open_doors {hidden:yes}
   # explore: target_dtc {hidden: yes}
-  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"}
+  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"} # used by data by date
 
   # explore: sales_targets_dim {hidden:  yes
   #   label: "Finance targets"  description: "Monthly finance targets, spread by day"
