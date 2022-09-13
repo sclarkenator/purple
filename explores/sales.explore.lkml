@@ -69,7 +69,7 @@ include: "/dashboards/**/*.dashboard"
   explore: sales_order_line{
     from:  sales_order_line
     label:  " Sales"
-    hidden: no
+    hidden: yes
     group_label: " Sales"
     view_label: "Sales Order Line"
     view_name: sales_order_line
@@ -617,7 +617,7 @@ include: "/dashboards/**/*.dashboard"
   # }
 
     explore: sales_agent_metrics {
-      hidden: no
+      hidden: yes
       from: warehouse_date_table
       label: "Sales Agent Metrics"
       description: "Sales Agents Metrics"
