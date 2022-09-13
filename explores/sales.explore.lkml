@@ -1153,40 +1153,40 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: mattress_firm_sales {
-    hidden: yes
-    label: "Mattress Firm"
-    group_label: " Sales"
-    description: "Mattress Firm Units Sold by Store"
-    view_label: "Store Details"
-    join: mattress_firm_store_details {
-      view_label: "Store Details"
-      sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
-      type: left_outer
-      relationship: many_to_one}
-    join: mattress_firm_item {
-      view_label: "Store Details"
-      sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
-      type:  left_outer
-      relationship: many_to_one}
-    join: item {
-      view_label: "Product"
-      sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
-      type: left_outer
-      relationship: many_to_one}
-    join: dma {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${mattress_firm_store_details.zipcode} = ${dma.zip} ;;
-      relationship: many_to_many
-      fields: [dma.dma_name,dma.dma_mfrm]}
-    join: zcta5 {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${mattress_firm_store_details.zipcode} = (${zcta5.zipcode}) AND ${mattress_firm_store_details.state} = ${zcta5.state};;
-      relationship: many_to_one
-      fields: [zcta5.fulfillment_region_1]}
-  }
+  # explore: mattress_firm_sales {
+  #   hidden: yes
+  #   label: "Mattress Firm"
+  #   group_label: " Sales"
+  #   description: "Mattress Firm Units Sold by Store"
+  #   view_label: "Store Details"
+  #   join: mattress_firm_store_details {
+  #     view_label: "Store Details"
+  #     sql_on: ${mattress_firm_store_details.store_id} = ${mattress_firm_sales.store} ;;
+  #     type: left_outer
+  #     relationship: many_to_one}
+  #   join: mattress_firm_item {
+  #     view_label: "Store Details"
+  #     sql_on: ${mattress_firm_item.mf_sku} = ${mattress_firm_sales.product_id} ;;
+  #     type:  left_outer
+  #     relationship: many_to_one}
+  #   join: item {
+  #     view_label: "Product"
+  #     sql_on: ${item.item_id} = ${mattress_firm_item.item_id} ;;
+  #     type: left_outer
+  #     relationship: many_to_one}
+  #   join: dma {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${mattress_firm_store_details.zipcode} = ${dma.zip} ;;
+  #     relationship: many_to_many
+  #     fields: [dma.dma_name,dma.dma_mfrm]}
+  #   join: zcta5 {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${mattress_firm_store_details.zipcode} = (${zcta5.zipcode}) AND ${mattress_firm_store_details.state} = ${zcta5.state};;
+  #     relationship: many_to_one
+  #     fields: [zcta5.fulfillment_region_1]}
+  # }
 
   # explore: sla {
   #   hidden: yes
