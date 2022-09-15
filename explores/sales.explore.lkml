@@ -1088,45 +1088,45 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: optimizely {
-    hidden: yes
-    extends: [sales_order_line]
-    label:  "Optimizely"
-    group_label: " Sales"
-    view_label: "Sales Order Line"
-    description:  "All sales orders for wholesale channel"
-    always_join: [fulfillment]
-    join: v_optimizely_conversions {
-      view_label: "Optimizely"
-      sql_on: ${v_optimizely_conversions.related_tranid} = ${sales_order.related_tranid} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-    join: holdout_acquisition_emails  {
-      view_label: "Holdout Test"
-      sql_on: ${holdout_acquisition_emails.email} = ${customer_table.email} ;;
-      type: left_outer
-      relationship: many_to_one
-    }
-    join: optimizely_campaign {
-      view_label: "Optimizely"
-      sql_on: ${v_optimizely_conversions.campaign_id} = ${optimizely_campaign.campaign_id} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-    join: optimizely_experiment {
-      view_label: "Optimizely"
-      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_experiment.experiment_id} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-    join: optimizely_variation {
-      view_label: "Optimizely"
-      sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.variation_id} = ${optimizely_variation.variation_id} ;;
-      type: left_outer
-      relationship: one_to_many
-    }
-  }
+  # explore: optimizely {
+  #   hidden: yes
+  #   extends: [sales_order_line]
+  #   label:  "Optimizely"
+  #   group_label: " Sales"
+  #   view_label: "Sales Order Line"
+  #   description:  "All sales orders for wholesale channel"
+  #   always_join: [fulfillment]
+  #   join: v_optimizely_conversions {
+  #     view_label: "Optimizely"
+  #     sql_on: ${v_optimizely_conversions.related_tranid} = ${sales_order.related_tranid} ;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  #   join: holdout_acquisition_emails  {
+  #     view_label: "Holdout Test"
+  #     sql_on: ${holdout_acquisition_emails.email} = ${customer_table.email} ;;
+  #     type: left_outer
+  #     relationship: many_to_one
+  #   }
+  #   join: optimizely_campaign {
+  #     view_label: "Optimizely"
+  #     sql_on: ${v_optimizely_conversions.campaign_id} = ${optimizely_campaign.campaign_id} ;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  #   join: optimizely_experiment {
+  #     view_label: "Optimizely"
+  #     sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_experiment.experiment_id} ;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  #   join: optimizely_variation {
+  #     view_label: "Optimizely"
+  #     sql_on: ${v_optimizely_conversions.experiment_id} = ${optimizely_variation.experiment_id} and ${v_optimizely_conversions.variation_id} = ${optimizely_variation.variation_id} ;;
+  #     type: left_outer
+  #     relationship: one_to_many
+  #   }
+  # }
 
   explore: v_new_roa {hidden: yes}
 
