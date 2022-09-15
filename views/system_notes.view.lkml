@@ -62,7 +62,7 @@ from
         pending_approval_status,
         backorder,
         shipping_hold)
-    ;
+
       ;;
   }
 
