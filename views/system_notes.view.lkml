@@ -91,4 +91,14 @@ from
     type: date_time
     sql: ${TABLE}.pending_approval_status ;;
   }
+  dimension: backorder {
+    description: "Latest date the order recorded a backorder, if applicable"
+    type: date_time
+    sql: ${TABLE}.backorder ;;
+  }
+  dimension: shipping_hold {
+    description: "Latest date the order was put on hold, if applicable"
+    type: date_time
+    sql: ${TABLE}.shipping_hold ;;
+  }
 }
