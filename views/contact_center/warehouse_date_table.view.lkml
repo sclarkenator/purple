@@ -1,4 +1,6 @@
+include: "/views/_period_comparison.view.lkml"
 view: warehouse_date_table {
+  extends: [_period_comparison]
   sql_table_name: "UTIL"."WAREHOUSE_DATE"
     ;;
 
@@ -135,6 +137,17 @@ view: warehouse_date_table {
   ##########################################################################################
   ##########################################################################################
   ## DATE DIMENSIONS
+
+  #### Used with period comparison view
+  dimension_group: event {
+    hidden: yes
+    type: time
+    timeframes: [ raw,time,time_of_day,date,day_of_week,day_of_week_index,day_of_month,day_of_year,
+      week,month,month_num,quarter,quarter_of_year,year]
+    convert_tz: no
+    datatype: date
+    sql: CAST(${TABLE}."DATE" AS TIMESTAMP_NTZ);;
+  }
 
   dimension_group: date {
     type: time
