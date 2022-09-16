@@ -127,8 +127,8 @@ include: "/dashboards/**/*.dashboard"
   #   hidden: yes
   # }
 
-  explore: transaction_details {
-    group_label: "Accounting"
-    label: "Transaction Details"
-    hidden: yes
-  }
+  # explore: transaction_details {
+  #   group_label: "Accounting"
+  #   label: "Transaction Details"
+  #   hidden: yes
+  # }
