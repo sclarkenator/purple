@@ -934,39 +934,39 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one}
   }
 
-  explore: scc {
-    from: sleep_country_canada_sales
-    hidden: yes
-    #fields: [ALL_FIELDS*]
-    label: "SCC Orders"
-    group_label: " Orders"
-    description: "Sales Orders for SCC"
-    join: sleep_country_canada_store {
-      type: left_outer
-      sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
-      relationship: many_to_one}
-    join: sleep_country_canada_product {
-      type: left_outer
-      sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
-      relationship: many_to_one}
-    join: item {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
-    }
-    join: v_scc_order_flg {
-      type: left_outer
-      view_label: "Scc"
-      relationship:  many_to_one
-      sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
-    }
-    join: scc_targets {
-      type: full_outer
-      view_label: "Targets"
-      relationship: many_to_one
-      sql_on: ${scc.created_date} = ${scc_targets.date_date} and ${scc_targets.source} = ${sleep_country_canada_store.source} ;;
-    }
-  }
+  # explore: scc {
+  #   from: sleep_country_canada_sales
+  #   hidden: yes
+  #   #fields: [ALL_FIELDS*]
+  #   label: "SCC Orders"
+  #   group_label: " Orders"
+  #   description: "Sales Orders for SCC"
+  #   join: sleep_country_canada_store {
+  #     type: left_outer
+  #     sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
+  #     relationship: many_to_one}
+  #   join: sleep_country_canada_product {
+  #     type: left_outer
+  #     sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
+  #     relationship: many_to_one}
+  #   join: item {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
+  #   }
+  #   join: v_scc_order_flg {
+  #     type: left_outer
+  #     view_label: "Scc"
+  #     relationship:  many_to_one
+  #     sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
+  #   }
+  #   join: scc_targets {
+  #     type: full_outer
+  #     view_label: "Targets"
+  #     relationship: many_to_one
+  #     sql_on: ${scc.created_date} = ${scc_targets.date_date} and ${scc_targets.source} = ${sleep_country_canada_store.source} ;;
+  #   }
+  # }
 
 
   # explore: return_form_entry {
