@@ -79,7 +79,7 @@ include: "/dashboards/**/*.dashboard"
   # explore: v_scc_sales {label: "Sleep Country Canada Sales" group_label: "Accounting" hidden:yes}
   # explore: v_paypal {hidden: yes group_label: "Accounting"}
   # explore: v_fit_paypal {hidden: yes group_label: "Accounting"}
-  explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
+  # explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
   # explore: v_fit_first_data {hidden: yes group_label: "Accounting"}
   # explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
   explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
