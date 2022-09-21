@@ -1141,18 +1141,18 @@ include: "/dashboards/**/*.dashboard"
 #
 #-------------------------------------------------------------------
 
-  # explore: wholesale {
-  #   extends: [sales_order_line]
-  #   hidden: yes
-  #   label:  "Wholesale"
-  #   group_label: " Sales"
-  #   view_label: "Sales Order Line"
-  #   description:  "All sales orders for wholesale channel"
-  #   always_join: [fulfillment]
-  #   always_filter: {
-  #     filters: {field: sales_order.channel      value: "Wholesale"}
-  #   }
-  # }
+  explore: wholesale {
+    extends: [sales_order_line]
+    hidden: yes
+    label:  "Wholesale"
+    group_label: " Sales"
+    view_label: "Sales Order Line"
+    description:  "All sales orders for wholesale channel"
+    always_join: [fulfillment]
+    always_filter: {
+      filters: {field: sales_order.channel      value: "Wholesale"}
+    }
+  }
 
   # explore: mattress_firm_sales {
   #   hidden: yes
