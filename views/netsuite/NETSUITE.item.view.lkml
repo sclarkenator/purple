@@ -17,7 +17,7 @@ view: item {
   dimension: finished_good_flg {
     label: " Is Finished Good Filter"
     view_label: "Filters"
-    hidden:  yes
+    # hidden:  yes
     type: yesno
     sql: ${classification} = 'FG' ;;}
 
@@ -88,7 +88,7 @@ view: item {
   dimension: merchandise {
     label: "Is Merchandising Filter"
     view_label: "Filters"
-    hidden:  yes
+    # hidden:  yes
     type: yesno
     sql: ${TABLE}.merchandise = 1 ;;
   }
@@ -103,7 +103,7 @@ view: item {
   dimension: modified {
     label: "Includes Modifications Filter"
     view_label: "Filters"
-    hidden: yes
+    # hidden: yes
     type: yesno
     #sql: ${TABLE}.bi_update = 1 ;;
     sql:  1 ;;
