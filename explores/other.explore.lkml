@@ -279,14 +279,14 @@ explore: alert_testing {
   #   }
   # }
 
-  explore: load_history {
-    hidden: yes
-    fields: [ALL_FIELDS*,-tables.table_name,-tables.id]
-    join: tables {
-      sql_on: ${load_history.table_id} = ${tables.id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: load_history {
+  #   hidden: yes
+  #   fields: [ALL_FIELDS*,-tables.table_name,-tables.id]
+  #   join: tables {
+  #     sql_on: ${load_history.table_id} = ${tables.id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   explore: storage_usage {hidden: yes}
 
