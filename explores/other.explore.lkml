@@ -251,9 +251,9 @@ explore: alert_testing {
 # https://looker.com/platform/blocks/source/cost-and-usage-analysis-by-snowflake
 #-------------------------------------------------------------------
 
-  explore: login_history {
-    hidden: yes
-  }
+  # explore: login_history {
+  #   hidden: yes
+  # }
 
   explore: query_history {
     hidden: yes
