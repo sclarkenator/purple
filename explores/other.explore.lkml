@@ -292,18 +292,18 @@ explore: alert_testing {
 
   explore: warehouse_metering_history {hidden: yes}
 
-  explore: v_qualtrics_delivery_survey {
-    hidden: yes
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: narvar_customer_feedback {
-      type: left_outer
-      sql_on: ${v_qualtrics_delivery_survey.tranid} = ${narvar_customer_feedback.tranid} ;;
-      relationship: one_to_one}
-    }
+  # explore: v_qualtrics_delivery_survey {
+  #   hidden: yes
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  #   join: narvar_customer_feedback {
+  #     type: left_outer
+  #     sql_on: ${v_qualtrics_delivery_survey.tranid} = ${narvar_customer_feedback.tranid} ;;
+  #     relationship: one_to_one}
+  #   }
 
   # explore: columns {hidden: yes}
   #
