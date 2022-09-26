@@ -40,66 +40,66 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: hotjar_data {
-    group_label: "Marketing"
-    hidden: no
-    label: "Post-purchase survey results"
-    description: "Results form Hotjar post-purchase survey"
-    view_label: "Survey Data"
-    join: hotjar_whenheard {
-      view_label: "Survey Data"
-      type:  left_outer
-      sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
-      relationship: many_to_one}
-    join: shopify_orders {
-      type: inner
-      sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
-      relationship: many_to_one
-      fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_date, shopify_orders.gross_sales]}
-    join: sales_order {
-      type:  left_outer
-      sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-      relationship: one_to_one
-      fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink, sales_order.average_order_size, sales_order.Order_size_buckets, sales_order.created_date, sales_order.gross_amt]}
-    join: order_flag {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
-      relationship:  one_to_one}
-    join: first_order_flag {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
-      relationship:  one_to_one}
-    join: sales_order_line {
-      type:  left_outer
-      sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
-      relationship: one_to_many
-      fields: []}
-    join: sf_zipcode_facts {
-      view_label: "Customer"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
-      relationship: many_to_one
-      fields: []}
-    join: zcta5 {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
-      relationship: many_to_one
-      fields: [zcta5.fulfillment_region_1,zcta5.state_1]}
-    join: dma {
-      view_label: "Customer"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
-      relationship: many_to_many
-      fields: [dma.dma_name]}
-    join: shopify_discount_codes {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
-      relationship: many_to_many}
-  }
+  # explore: hotjar_data {
+  #   group_label: "Marketing"
+  #   hidden: no
+  #   label: "Post-purchase survey results"
+  #   description: "Results form Hotjar post-purchase survey"
+  #   view_label: "Survey Data"
+  #   join: hotjar_whenheard {
+  #     view_label: "Survey Data"
+  #     type:  left_outer
+  #     sql_on: ${hotjar_data.token} = ${hotjar_whenheard.token} ;;
+  #     relationship: many_to_one}
+  #   join: shopify_orders {
+  #     type: inner
+  #     sql_on: ${hotjar_data.token} = ${shopify_orders.checkout_token} ;;
+  #     relationship: many_to_one
+  #     fields: [shopify_orders.call_in_order_Flag, shopify_orders.created_date, shopify_orders.gross_sales]}
+  #   join: sales_order {
+  #     type:  left_outer
+  #     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+  #     relationship: one_to_one
+  #     fields: [-unique_customers,sales_order.is_exchange,sales_order.is_upgrade,sales_order.payment_method_flag,sales_order.warranty_order_flg, sales_order.order_id, sales_order.order_type_hyperlink, sales_order.average_order_size, sales_order.Order_size_buckets, sales_order.created_date, sales_order.gross_amt]}
+  #   join: order_flag {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id} = ${order_flag.order_id} ;;
+  #     relationship:  one_to_one}
+  #   join: first_order_flag {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id}||'-'||${sales_order.system} = ${first_order_flag.pk} ;;
+  #     relationship:  one_to_one}
+  #   join: sales_order_line {
+  #     type:  left_outer
+  #     sql_on: ${sales_order.order_id}= ${sales_order_line.order_id} ;;
+  #     relationship: one_to_many
+  #     fields: []}
+  #   join: sf_zipcode_facts {
+  #     view_label: "Customer"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip} = (${sf_zipcode_facts.zipcode})::varchar ;;
+  #     relationship: many_to_one
+  #     fields: []}
+  #   join: zcta5 {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
+  #     relationship: many_to_one
+  #     fields: [zcta5.fulfillment_region_1,zcta5.state_1]}
+  #   join: dma {
+  #     view_label: "Customer"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+  #     relationship: many_to_many
+  #     fields: [dma.dma_name]}
+  #   join: shopify_discount_codes {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
+  #     relationship: many_to_many}
+  # }
 
   explore: cordial_activity {
     hidden: yes
