@@ -9,15 +9,15 @@ include: "/dashboards/**/*.dashboard"
 
 explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
 # explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
-explore: combined_activities {hidden:yes} #cj
-explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
-explore: shopify_refund {hidden:yes}
-explore: wfh_comparisons {hidden: yes} #cj
-explore: v_missing_customer_deposit {hidden: yes}
-explore: v_retail_orders_without_showroom {hidden:yes}
-explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
-explore: v_zendesk_articles {hidden: yes}
-explore: zendesk_macros {hidden:yes}
+# explore: combined_activities {hidden:yes} #cj
+# explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
+# explore: shopify_refund {hidden:yes}
+# explore: wfh_comparisons {hidden: yes} #cj
+# explore: v_missing_customer_deposit {hidden: yes}
+# explore: v_retail_orders_without_showroom {hidden:yes}
+# explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
+# explore: v_zendesk_articles {hidden: yes}
+# explore: zendesk_macros {hidden:yes}
 explore: zendesk_sell {hidden:yes} #cj
 
 #####################################################################
