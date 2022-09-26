@@ -5,7 +5,7 @@
   elements:
   - title: Data Loading
     name: Data Loading
-    model: main
+    model: datagrid
     explore: load_history
     type: single_value
     fields: [load_history.total_row_count, load_history.total_error_count]
@@ -65,7 +65,7 @@
     height: 7
   - title: Total Rows Loaded - Last 2 Weeks
     name: Total Rows Loaded - Last 2 Weeks
-    model: main
+    model: datagrid
     explore: load_history
     type: looker_column
     fields: [load_history.total_row_count, load_history.last_load_time_date]
@@ -906,7 +906,7 @@
     height: 7
   - title: Failed Logins by User and Connecting Client (MTD)
     name: Failed Logins by User and Connecting Client (MTD)
-    model: main
+    model: datagrid
     explore: login_history
     type: table
     fields: [login_history.user_name, login_history.logins, login_history.total_failed_logins,
@@ -968,7 +968,7 @@
     height: 9
   - title: Failed Logins by User (MTD)
     name: Failed Logins by User (MTD)
-    model: main
+    model: datagrid
     explore: login_history
     type: table
     fields: [login_history.user_name, login_history.logins, login_history.total_failed_logins,
