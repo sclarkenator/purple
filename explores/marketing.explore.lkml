@@ -404,24 +404,24 @@ include: "/dashboards/**/*.dashboard"
 
   # explore: narvarcustomer{hidden:yes}
   # explore: narvar_dashboard_track_metrics {hidden: yes group_label: "Marketing" label: "Narvar Track Metrics"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
-  explore: narvar_customer_feedback {
-    hidden: yes
-    group_label: "Marketing"
-    label: "Narvar customer feedback"
-    join: sales_order {
-      type: left_outer
-      sql_on: ${narvar_customer_feedback.tranid} = ${sales_order.tranid}  ;;
-      relationship: one_to_one }
-    join: v_qualtrics_delivery_survey {
-      type: left_outer
-      sql_on:  ${narvar_customer_feedback.tranid} = ${v_qualtrics_delivery_survey.tranid} ;;
-      relationship: one_to_one}
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    }
+  # explore: narvar_customer_feedback {
+  #   hidden: yes
+  #   group_label: "Marketing"
+  #   label: "Narvar customer feedback"
+  #   join: sales_order {
+  #     type: left_outer
+  #     sql_on: ${narvar_customer_feedback.tranid} = ${sales_order.tranid}  ;;
+  #     relationship: one_to_one }
+  #   join: v_qualtrics_delivery_survey {
+  #     type: left_outer
+  #     sql_on:  ${narvar_customer_feedback.tranid} = ${v_qualtrics_delivery_survey.tranid} ;;
+  #     relationship: one_to_one}
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${v_qualtrics_delivery_survey.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  #   }
 
 #-------------------------------------------------------------------
 #
