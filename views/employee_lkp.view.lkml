@@ -298,7 +298,8 @@ view: employee_lkp {
 
   dimension: team_type {
     type: string
-    sql: ${TABLE}."TEAM_TYPE" ;;
+    sql: case when ${TABLE}."RETAIL" in ('TRUE') then 'Retail'
+      else ${TABLE}."TEAM_TYPE" end;;
   }
 
   dimension: tenure {
