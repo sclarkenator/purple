@@ -162,7 +162,8 @@ view: agent_state {
       week,
       month,
       quarter,
-      year
+      year,
+      time_of_day
     ]
     sql: CAST(${TABLE}."STATE_START_TS_MST" AS TIMESTAMP_NTZ) ;;
   }

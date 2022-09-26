@@ -85,6 +85,14 @@ view: bridge_enrollment {
     sql: CAST(${TABLE}."UPDATED_AT" AS TIMESTAMP_NTZ) ;;
   }
 
+  dimension: is_deleted {
+    type: yesno
+    sql: CASE
+          WHEN ${TABLE}.deleted_at IS NULL then FALSE
+          ELSE TRUE
+         END ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []

@@ -47,15 +47,15 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: v_gift_card {
-    label: "Gift Card Transactions"
-    group_label: "Accounting"
-    hidden:yes
-    join: sales_order {
-      type: left_outer
-      sql_on:  ${sales_order.related_tranid} = ${v_gift_card.order_number} ;;
-      relationship: one_to_one}
-  }
+  # explore: v_gift_card {
+  #   label: "Gift Card Transactions"
+  #   group_label: "Accounting"
+  #   hidden:yes
+  #   join: sales_order {
+  #     type: left_outer
+  #     sql_on:  ${sales_order.related_tranid} = ${v_gift_card.order_number} ;;
+  #     relationship: one_to_one}
+  # }
 
   # explore: warranty_timeline {
   #   label: "Warranty Timeline"
@@ -76,16 +76,16 @@ include: "/dashboards/**/*.dashboard"
   # explore: v_amazon_pay_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
   # explore: v_stripe_to_netsuite {label: "Amazon Pay to Netsuite" group_label: "Accounting" hidden:yes}
   # explore: v_shopify_gift_card {label: "Shopify Gift Card Transactions" group_label: "Accounting" hidden:yes}
-  explore: v_scc_sales {label: "Sleep Country Canada Sales" group_label: "Accounting" hidden:yes}
-  explore: v_paypal {hidden: yes group_label: "Accounting"}
+  # explore: v_scc_sales {label: "Sleep Country Canada Sales" group_label: "Accounting" hidden:yes}
+  # explore: v_paypal {hidden: yes group_label: "Accounting"}
   # explore: v_fit_paypal {hidden: yes group_label: "Accounting"}
-  explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
+  # explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
   # explore: v_fit_first_data {hidden: yes group_label: "Accounting"}
-  explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
+  # explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
   explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
   # explore: v_fit_shopify_payment {hidden: yes group_label: "Accounting"}
   # explore: v_fit_stripe {hidden: yes group_label: "Accounting"}
-  explore: v_splitit {hidden: yes group_label: "Accounting"}
+  # explore: v_splitit {hidden: yes group_label: "Accounting"}
   explore: splitit {hidden: yes group_label: "Accounting" description:"The date filter will change the date range in the SQL query."}
   # explore: fit_first_data {hidden: yes group_label: "Accounting"}
   explore: katapult {hidden: yes group_label: "Accounting"}
@@ -127,8 +127,8 @@ include: "/dashboards/**/*.dashboard"
   #   hidden: yes
   # }
 
-  explore: transaction_details {
-    group_label: "Accounting"
-    label: "Transaction Details"
-    hidden: yes
-  }
+  # explore: transaction_details {
+  #   group_label: "Accounting"
+  #   label: "Transaction Details"
+  #   hidden: yes
+  # }

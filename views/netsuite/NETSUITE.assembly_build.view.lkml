@@ -1,6 +1,7 @@
 include: "/views/_period_comparison.view.lkml"
 view: assembly_build {
-  sql_table_name: analytics.production.v_assembly_build ;;
+  # sql_table_name: analytics.production.v_assembly_build ;;
+  sql_table_name: analytics.production.v_work_order ;;
   extends: [_period_comparison]
 
   parameter: see_data_by {
@@ -73,14 +74,14 @@ view: assembly_build {
   }
 
   dimension: assembly_build_id {
-    label: "  Assembly Build Id"
+    label: "  ID"
     primary_key: yes
     description: "Netsuites transaction ID, used to hyperlink directly to record"
     html: <a href = "https://system.na2.netsuite.com/app/accounting/transactions/build.nl?id={{value}}&whence=" target="_blank"> {{value}} </a> ;;
     hidden:  no
     type: number
 
-    sql: ${TABLE}.build_id ;;}
+    sql: ${TABLE}.id ;;}
 
   dimension: accounting_period_id {
     hidden: yes
@@ -129,12 +130,12 @@ view: assembly_build {
     type: string
     sql: ${TABLE}.description ;; }
 
-  dimension: type {
-    label: "  Transaction Type"
-    description: "The build type. Assembly builds are positive and unbuilds are negative"
-    hidden: no
-    type: string
-    sql: ${TABLE}.type ;; }
+  # dimension: type {
+  #   label: "  Transaction Type"
+  #   description: "The build type. Assembly builds are positive and unbuilds are negative"
+  #   hidden: no
+  #   type: string
+  #   sql: ${TABLE}.type ;; }
 
   dimension: created_by {
     label: "Created By"
