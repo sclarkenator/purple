@@ -8,7 +8,7 @@ include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
 explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
-explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
+# explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 explore: combined_activities {hidden:yes} #cj
 explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
 explore: shopify_refund {hidden:yes}
