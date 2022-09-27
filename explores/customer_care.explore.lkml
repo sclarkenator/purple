@@ -611,41 +611,41 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: cc_deals {
-    hidden: yes
-    group_label: "Customer Care"
-    join: sales_order {
-      type:left_outer
-      relationship: one_to_one
-      sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;
-    }
-    join: sales_order_line_base {
-      type: left_outer
-      relationship:one_to_many
-      sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;}
-    join: order_flag {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
-    }
-    join: agent_name {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${agent_name.email_join} = ${cc_deals.agent_email} ;;
-    }
-    join: team_lead_name {
-      type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
-        and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
-      #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
-      relationship: one_to_one
-    }
-    join: zendesk_sell {
-      type: left_outer
-      sql_on: ${agent_name.incontact_id}=${zendesk_sell.contact_id} ;;
-      relationship: one_to_one
-    }
-  }
+  # explore: cc_deals {
+  #   hidden: yes
+  #   group_label: "Customer Care"
+  #   join: sales_order {
+  #     type:left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${sales_order.order_id} = ${cc_deals.order_id} ;;
+  #   }
+  #   join: sales_order_line_base {
+  #     type: left_outer
+  #     relationship:one_to_many
+  #     sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;}
+  #   join: order_flag {
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+  #   }
+  #   join: agent_name {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${agent_name.email_join} = ${cc_deals.agent_email} ;;
+  #   }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     sql_on:  ${team_lead_name.incontact_id}=${agent_name.incontact_id}
+  #       and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+  #     #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+  #     relationship: one_to_one
+  #   }
+  #   join: zendesk_sell {
+  #     type: left_outer
+  #     sql_on: ${agent_name.incontact_id}=${zendesk_sell.contact_id} ;;
+  #     relationship: one_to_one
+  #   }
+  # }
 
 #####################################################################
 #####################################################################
