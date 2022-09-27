@@ -107,50 +107,50 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one  }
   }
 
-  explore: forecast_combined {
-    from:  forecast_v2
-    label: "Forecast"
-    description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
-    group_label: "Operations"
-    always_filter: {
-      filters: [forecast_combined.version: "Current S&OP"]
-    }
-    #hidden: yes
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one }
-    join: v_ai_product{
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${forecast_combined.sku_id} = ${v_ai_product.sku_raw} ;;
-      relationship: many_to_one }
-    join:fg_to_sfg{
-      view_label: "FG to SFG"
-      sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
-      type: left_outer
-      relationship: one_to_one }
-    join: actual_sales {
-      view_label: "Actual Sales by Created Date"
-      sql_on: ${forecast_combined.date_date} = ${actual_sales.created_date}
-      and ${forecast_combined.channel} = ${actual_sales.channel}
-      and ${forecast_combined.sku_id} = ${actual_sales.sku_id} ;;
-      type: left_outer
-      relationship: many_to_many
-      #fields: [actual_sales.channel,actual_sales.item_id,actual_sales.source,actual_sales.total_gross_Amt_amazon,actual_sales.total_gross_Amt_dtc,actual_sales.total_gross_Amt_non_rounded,actual_sales.total_gross_Amt_retail,actual_sales.total_gross_Amt_wholesale,actual_sales.total_sku_ids,actual_sales.total_units,actual_sales.total_units_amazon,actual_sales.total_units_dtc,actual_sales.total_units_retail,actual_sales.total_units_wholesale,actual_sales.tranid,actual_sales.full_name]
-    }
-    join: actual_sales_by_ship{
-      from: actual_sales
-      view_label: "Actual Sales by Ship Order By Date"
-      sql_on: ${forecast_combined.date_date} = ${actual_sales_by_ship.ship_order_by_date}
-              and ${forecast_combined.channel} = ${actual_sales_by_ship.channel}
-              and ${forecast_combined.sku_id} = ${actual_sales_by_ship.sku_id} ;;
-      type: left_outer
-      relationship: many_to_many
-      #fields: [actual_sales_by_ship.channel,actual_sales_by_ship.item_id,actual_sales_by_ship.source,actual_sales_by_ship.total_gross_Amt_amazon,actual_sales_by_ship.total_gross_Amt_dtc,actual_sales_by_ship.total_gross_Amt_non_rounded,actual_sales_by_ship.total_gross_Amt_retail,actual_sales_by_ship.total_gross_Amt_wholesale,actual_sales_by_ship.total_sku_ids,actual_sales_by_ship.total_units,actual_sales_by_ship.total_units_amazon,actual_sales_by_ship.total_units_dtc,actual_sales_by_ship.total_units_retail,actual_sales_by_ship.total_units_wholesale,actual_sales_by_ship.tranid,actual_sales_by_ship.full_name]
-    }
-  }
+  # explore: forecast_combined {
+  #   from:  forecast_v2
+  #   label: "Forecast"
+  #   description: "Combined Forecast including units and dollars forecasted for DTC, Wholesale, Retail, and Amazon"
+  #   group_label: "Operations"
+  #   always_filter: {
+  #     filters: [forecast_combined.version: "Current S&OP"]
+  #   }
+  #   #hidden: yes
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${forecast_combined.sku_id} = ${item.sku_id} ;;
+  #     relationship: many_to_one }
+  #   join: v_ai_product{
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${forecast_combined.sku_id} = ${v_ai_product.sku_raw} ;;
+  #     relationship: many_to_one }
+  #   join:fg_to_sfg{
+  #     view_label: "FG to SFG"
+  #     sql_on: ${fg_to_sfg.fg_item_id}=${item.item_id} ;;
+  #     type: left_outer
+  #     relationship: one_to_one }
+  #   join: actual_sales {
+  #     view_label: "Actual Sales by Created Date"
+  #     sql_on: ${forecast_combined.date_date} = ${actual_sales.created_date}
+  #     and ${forecast_combined.channel} = ${actual_sales.channel}
+  #     and ${forecast_combined.sku_id} = ${actual_sales.sku_id} ;;
+  #     type: left_outer
+  #     relationship: many_to_many
+  #     #fields: [actual_sales.channel,actual_sales.item_id,actual_sales.source,actual_sales.total_gross_Amt_amazon,actual_sales.total_gross_Amt_dtc,actual_sales.total_gross_Amt_non_rounded,actual_sales.total_gross_Amt_retail,actual_sales.total_gross_Amt_wholesale,actual_sales.total_sku_ids,actual_sales.total_units,actual_sales.total_units_amazon,actual_sales.total_units_dtc,actual_sales.total_units_retail,actual_sales.total_units_wholesale,actual_sales.tranid,actual_sales.full_name]
+  #   }
+  #   join: actual_sales_by_ship{
+  #     from: actual_sales
+  #     view_label: "Actual Sales by Ship Order By Date"
+  #     sql_on: ${forecast_combined.date_date} = ${actual_sales_by_ship.ship_order_by_date}
+  #             and ${forecast_combined.channel} = ${actual_sales_by_ship.channel}
+  #             and ${forecast_combined.sku_id} = ${actual_sales_by_ship.sku_id} ;;
+  #     type: left_outer
+  #     relationship: many_to_many
+  #     #fields: [actual_sales_by_ship.channel,actual_sales_by_ship.item_id,actual_sales_by_ship.source,actual_sales_by_ship.total_gross_Amt_amazon,actual_sales_by_ship.total_gross_Amt_dtc,actual_sales_by_ship.total_gross_Amt_non_rounded,actual_sales_by_ship.total_gross_Amt_retail,actual_sales_by_ship.total_gross_Amt_wholesale,actual_sales_by_ship.total_sku_ids,actual_sales_by_ship.total_units,actual_sales_by_ship.total_units_amazon,actual_sales_by_ship.total_units_dtc,actual_sales_by_ship.total_units_retail,actual_sales_by_ship.total_units_wholesale,actual_sales_by_ship.tranid,actual_sales_by_ship.full_name]
+  #   }
+  # }
 
 explore: forecast_v2 {
   label: "Forecast"
