@@ -24,62 +24,62 @@ include: "/dashboards/**/*.dashboard"
 #####################################################################
 ## WFM WEEKLY PERFORMANCE - consolidates performance fields cj
 
-explore: wfm_weekly_performance {
-  label: "WFM Weekly Performance Summary"
-  group_label: "Customer Care"
-  view_label: "Summary Data"
-  from: warehouse_date_table
-  hidden: yes
+# explore: wfm_weekly_performance {
+#   label: "WFM Weekly Performance Summary"
+#   group_label: "Customer Care"
+#   view_label: "Summary Data"
+#   from: warehouse_date_table
+#   hidden: yes
 
-  fields: [
-    wfm_weekly_performance.default_fields*,
-    employee_lkp.agents_minimal_grouping*,
-    incontact_phone.performance_summary*,
-    zendesk_ticket_v2.ticket_count,
-    agent_state.working_rate,
-    agent_state.unavailable_pct,
-    liveperson_conversation.conversations_ended_count
-  ]
+#   fields: [
+#     wfm_weekly_performance.default_fields*,
+#     employee_lkp.agents_minimal_grouping*,
+#     incontact_phone.performance_summary*,
+#     zendesk_ticket_v2.ticket_count,
+#     agent_state.working_rate,
+#     agent_state.unavailable_pct,
+#     liveperson_conversation.conversations_ended_count
+#   ]
 
-  join: employee_lkp {
-    view_label: "Employee Lookup"
-    type: cross
-    relationship: many_to_many
-  }
+#   join: employee_lkp {
+#     view_label: "Employee Lookup"
+#     type: cross
+#     relationship: many_to_many
+#   }
 
-  join: incontact_phone {
-    view_label: "Summary Data"
-    type: left_outer
-    sql_on: ${wfm_weekly_performance.date_date} = ${incontact_phone.start_ts_mst_date}
-      and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
-    relationship: one_to_many
-  }
+#   join: incontact_phone {
+#     view_label: "Summary Data"
+#     type: left_outer
+#     sql_on: ${wfm_weekly_performance.date_date} = ${incontact_phone.start_ts_mst_date}
+#       and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+#     relationship: one_to_many
+#   }
 
-  join: zendesk_ticket_v2 {
-    view_label: "Summary Data"
-    type: left_outer
-    sql_on: ${wfm_weekly_performance.date_date} = ${zendesk_ticket_v2.tkt_created_date}
-      and ${employee_lkp.incontact_id} = ${zendesk_ticket_v2.assignee_id}
-      and ${zendesk_ticket_v2.channel} in ('email', 'web', 'facebook') ;;
-    relationship: one_to_many
-  }
+#   join: zendesk_ticket_v2 {
+#     view_label: "Summary Data"
+#     type: left_outer
+#     sql_on: ${wfm_weekly_performance.date_date} = ${zendesk_ticket_v2.tkt_created_date}
+#       and ${employee_lkp.incontact_id} = ${zendesk_ticket_v2.assignee_id}
+#       and ${zendesk_ticket_v2.channel} in ('email', 'web', 'facebook') ;;
+#     relationship: one_to_many
+#   }
 
-  join: agent_state {
-    view_label: "Summary Data"
-    type: left_outer
-    sql_on: ${wfm_weekly_performance.date_date} = ${agent_state.state_start_ts_mst_date}
-      and ${employee_lkp.incontact_id} = ${agent_state.agent_id} ;;
-    relationship: one_to_many
-  }
+#   join: agent_state {
+#     view_label: "Summary Data"
+#     type: left_outer
+#     sql_on: ${wfm_weekly_performance.date_date} = ${agent_state.state_start_ts_mst_date}
+#       and ${employee_lkp.incontact_id} = ${agent_state.agent_id} ;;
+#     relationship: one_to_many
+#   }
 
-  join: liveperson_conversation {
-    view_label: "Summary Data"
-    type: left_outer
-    sql_on: ${wfm_weekly_performance.date_date} = ${liveperson_conversation.ended_date}
-      and ${employee_lkp.incontact_id} = ${liveperson_conversation.last_agent_id};;
-    relationship: one_to_many
-  }
-}
+#   join: liveperson_conversation {
+#     view_label: "Summary Data"
+#     type: left_outer
+#     sql_on: ${wfm_weekly_performance.date_date} = ${liveperson_conversation.ended_date}
+#       and ${employee_lkp.incontact_id} = ${liveperson_conversation.last_agent_id};;
+#     relationship: one_to_many
+#   }
+# }
 
 #####################################################################
 #####################################################################
