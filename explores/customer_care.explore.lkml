@@ -184,27 +184,27 @@ explore:agent_attendance {
 #####################################################################
 # AGENT STATE cj
 
-explore: agent_state {
-  view_label: "Agent States"
-  hidden: yes
+# explore: agent_state {
+#   view_label: "Agent States"
+#   hidden: yes
 
-  join: employee_lkp {
-    view_label: "Agent Data"
-    type: left_outer
-    sql_on: ${agent_state.agent_id} = ${employee_lkp.incontact_id} ;;
-    # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
-    relationship: many_to_one
-  }
+#   join: employee_lkp {
+#     view_label: "Agent Data"
+#     type: left_outer
+#     sql_on: ${agent_state.agent_id} = ${employee_lkp.incontact_id} ;;
+#     # and cast(${agent_state.state_start_ts_mst_date} as date) between ${agent_data.team_begin_date} and ${agent_data.team_end_date} ;;
+#     relationship: many_to_one
+#   }
 
-  join: agent_team_history {
-    view_label: "Agent Data"
-    # from: agent_team_history
-    type: left_outer
-    sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
-      and ${agent_state.state_start_ts_mst_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
-    relationship: many_to_one
-  }
-}
+#   join: agent_team_history {
+#     view_label: "Agent Data"
+#     # from: agent_team_history
+#     type: left_outer
+#     sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
+#       and ${agent_state.state_start_ts_mst_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date}  ;;
+#     relationship: many_to_one
+#   }
+# }
 
 #####################################################################
 #####################################################################
@@ -650,26 +650,26 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: cc_activities {hidden: yes group_label: "Customer Care"
-    join: employee_lkp {
-      type: left_outer
-      view_label: "Agent Lookup"
-      sql_on: ${cc_activities.incontact_id}=${employee_lkp.incontact_id} ;;
-      relationship: many_to_one
-    }
-    join: team_lead_name {
-      type:  left_outer
-      view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-        and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
-      relationship: many_to_one
-    }
-    join: labor_hours {
-      type: left_outer
-      sql_on: ${employee_lkp.workday_id} = ${labor_hours.employee_id} ;;
-      relationship: one_to_many
-    }
-  }
+  # explore: cc_activities {hidden: yes group_label: "Customer Care"
+  #   join: employee_lkp {
+  #     type: left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on: ${cc_activities.incontact_id}=${employee_lkp.incontact_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #       and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+  #     relationship: many_to_one
+  #   }
+  #   join: labor_hours {
+  #     type: left_outer
+  #     sql_on: ${employee_lkp.workday_id} = ${labor_hours.employee_id} ;;
+  #     relationship: one_to_many
+  #   }
+  # }
 
 #####################################################################
 #####################################################################
