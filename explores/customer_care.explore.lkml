@@ -320,12 +320,12 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: refund_mismatch {
-    label: "Refund Mismatch"
-    group_label: "Customer Care"
-    hidden: yes
-    description: "NetSuite refunds missing in Shopify"
-  }
+  # explore: refund_mismatch {
+  #   label: "Refund Mismatch"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   description: "NetSuite refunds missing in Shopify"
+  # }
 
 #####################################################################
 #####################################################################
