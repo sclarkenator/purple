@@ -255,20 +255,20 @@ explore: headcount_v2 {
 #####################################################################
 # INCONTACT PHONE cj
 
-explore: incontact_phone {
-  label: "InContact Phone"
-  view_label: "Agent Data"
-  description: "Tracks phone related contact data."
-  view_name: employee_lkp
-  hidden: yes
+# explore: incontact_phone {
+#   label: "InContact Phone"
+#   view_label: "Agent Data"
+#   description: "Tracks phone related contact data."
+#   view_name: employee_lkp
+#   hidden: yes
 
-  join: incontact_phone {
-    view_label: "Phone Calls"
-    type: full_outer
-    sql_on: ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
-    relationship: one_to_many
-  }
-}
+#   join: incontact_phone {
+#     view_label: "Phone Calls"
+#     type: full_outer
+#     sql_on: ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+#     relationship: one_to_many
+#   }
+# }
 
 #####################################################################
 #####################################################################
