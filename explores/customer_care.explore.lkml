@@ -7,7 +7,7 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
+# explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
 # explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
 # explore: combined_activities {hidden:yes} #cj
 # explore: rpt_service_levels { hidden: yes group_label:"Customer Care" description: "Incontact servive level by campaign"}
@@ -18,7 +18,7 @@ explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
 # explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
 # explore: v_zendesk_articles {hidden: yes}
 # explore: zendesk_macros {hidden:yes}
-explore: zendesk_sell {hidden:yes} #cj
+# explore: zendesk_sell {hidden:yes} #cj
 
 #####################################################################
 #####################################################################
@@ -320,22 +320,22 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: refund_mismatch {
-    label: "Refund Mismatch"
-    group_label: "Customer Care"
-    hidden: yes
-    description: "NetSuite refunds missing in Shopify"
-  }
+  # explore: refund_mismatch {
+  #   label: "Refund Mismatch"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   description: "NetSuite refunds missing in Shopify"
+  # }
 
 #####################################################################
 #####################################################################
 
-  explore: shopify_net_payment {
-    label: "Shopify Net Payment"
-    group_label: "Customer Care"
-    hidden: yes
-    description: "Shopify Orders with Customer's Net Payment Under $10"
-  }
+  # explore: shopify_net_payment {
+  #   label: "Shopify Net Payment"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   description: "Shopify Orders with Customer's Net Payment Under $10"
+  # }
 
 
 #####################################################################
@@ -355,31 +355,31 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: zendesk_chats {
-    label: "Zendesk Website Chats"
-    group_label: "Customer Care"
-    hidden: yes
-    join: zendesk_chat_engagements {
-      view_label: "Zendesk Chat Engagements"
-      type: left_outer
-      sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
-      relationship: one_to_many
-      }
-      join: employee_lkp {
-        type: left_outer
-        view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${employee_lkp.zendesk_id}  ;;
-        relationship: many_to_one
-      }
-    join: team_lead_name {
-      type:  left_outer
-      view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-        AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
-        AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
-      relationship: many_to_one
-      }
-    }
+  # explore: zendesk_chats {
+  #   label: "Zendesk Website Chats"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   join: zendesk_chat_engagements {
+  #     view_label: "Zendesk Chat Engagements"
+  #     type: left_outer
+  #     sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
+  #     relationship: one_to_many
+  #     }
+  #     join: employee_lkp {
+  #       type: left_outer
+  #       view_label: "Agent Lookup"
+  #       sql_on: ${zendesk_chat_engagements.zendesk_id}=${employee_lkp.zendesk_id}  ;;
+  #       relationship: many_to_one
+  #     }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #       AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
+  #       AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
+  #     relationship: many_to_one
+  #     }
+  #   }
 #####################################################################
 #####################################################################
 
@@ -534,79 +534,79 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: cc_agent_data {
-    hidden: yes
-    from:  employee_lkp
-    label: "CC Agent Data"
-    group_label: "Customer Care"
+  # explore: cc_agent_data {
+  #   hidden: yes
+  #   from:  employee_lkp
+  #   label: "CC Agent Data"
+  #   group_label: "Customer Care"
 
-    join: agent_company_value {
-      type: full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${agent_company_value.agent_id} ;;
-      relationship: one_to_many}
+  #   join: agent_company_value {
+  #     type: full_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${agent_company_value.agent_id} ;;
+  #     relationship: one_to_many}
 
-    join: agent_evaluation {
-      type: full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
-      relationship: one_to_many}
+  #   join: agent_evaluation {
+  #     type: full_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${agent_evaluation.evaluated_id};;
+  #     relationship: one_to_many}
 
-    join: rpt_agent_stats {
-      type: full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
-      relationship: one_to_many}
+  #   join: rpt_agent_stats {
+  #     type: full_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+  #     relationship: one_to_many}
 
-    join: agent_attendance{
-      type: full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${agent_attendance.agent_id} ;;
-      relationship: one_to_many}
+  #   join: agent_attendance{
+  #     type: full_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${agent_attendance.agent_id} ;;
+  #     relationship: one_to_many}
 
-    join: agent_draft_orders {
-      type: left_outer
-      sql_on: ${cc_agent_data.shopify_id} = ${agent_draft_orders.user_id} ;;
-      relationship: one_to_many}
+  #   join: agent_draft_orders {
+  #     type: left_outer
+  #     sql_on: ${cc_agent_data.shopify_id} = ${agent_draft_orders.user_id} ;;
+  #     relationship: one_to_many}
 
-    join: v_agent_state {
-      type: full_outer
-      sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.agent_id};;
-      relationship:  one_to_many}
+  #   join: v_agent_state {
+  #     type: full_outer
+  #     sql_on:  ${cc_agent_data.incontact_id}= ${v_agent_state.agent_id};;
+  #     relationship:  one_to_many}
 
-    join: customer_satisfaction_survey {
-      type: left_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
-      relationship:  one_to_many}
+  #   join: customer_satisfaction_survey {
+  #     type: left_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${customer_satisfaction_survey.agent_id}  ;;
+  #     relationship:  one_to_many}
 
-    join: team_lead_name {
-      type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${cc_agent_data.incontact_id}
-        and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
-      #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
-      relationship: one_to_one
-    }
-    join: agent_lkp_eval {
-      from: employee_lkp
-      relationship: many_to_one
-      type: left_outer
-      sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
-      view_label: "Agent Evaluation Team"
-      fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
-    }
-    # join: agent_data {
-    #   type: full_outer
-    #   sql_on: ${cc_agent_data.incontact_id} = ${agent_data.incontact_id} ;;
-    #   relationship: one_to_many
-    # }
-    join: agent_state {
-      type:  full_outer
-      sql_on: ${cc_agent_data.incontact_id} = ${agent_state.agent_id} ;;
-      relationship: one_to_many
-    }
-    join: labor_hours {
-      type: left_outer
-      sql_on: ${cc_agent_data.workday_id} = ${labor_hours.employee_id} ;;
-      relationship: one_to_many
-    }
-    required_access_grants: [is_customer_care_manager]
-  }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     sql_on:  ${team_lead_name.incontact_id}=${cc_agent_data.incontact_id}
+  #       and  ${team_lead_name.end_date}::date > '2089-12-31'::date;;
+  #     #and ${cc_agent_data.created_date}::date >= ${team_lead_name.start_date}::date;;
+  #     relationship: one_to_one
+  #   }
+  #   join: agent_lkp_eval {
+  #     from: employee_lkp
+  #     relationship: many_to_one
+  #     type: left_outer
+  #     sql_on: ${agent_lkp_eval.incontact_id} = ${agent_evaluation.evaluator_id};;
+  #     view_label: "Agent Evaluation Team"
+  #     fields: [agent_lkp_eval.name, agent_lkp_eval.email, agent_lkp_eval.is_supervisor]
+  #   }
+  #   # join: agent_data {
+  #   #   type: full_outer
+  #   #   sql_on: ${cc_agent_data.incontact_id} = ${agent_data.incontact_id} ;;
+  #   #   relationship: one_to_many
+  #   # }
+  #   join: agent_state {
+  #     type:  full_outer
+  #     sql_on: ${cc_agent_data.incontact_id} = ${agent_state.agent_id} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: labor_hours {
+  #     type: left_outer
+  #     sql_on: ${cc_agent_data.workday_id} = ${labor_hours.employee_id} ;;
+  #     relationship: one_to_many
+  #   }
+  #   required_access_grants: [is_customer_care_manager]
+  # }
 
 #####################################################################
 #####################################################################
