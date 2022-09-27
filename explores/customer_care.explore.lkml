@@ -18,7 +18,7 @@ include: "/dashboards/**/*.dashboard"
 # explore: v_shopify_refund_status { hidden: yes group_label:"Customer Care" }
 # explore: v_zendesk_articles {hidden: yes}
 # explore: zendesk_macros {hidden:yes}
-explore: zendesk_sell {hidden:yes} #cj
+# explore: zendesk_sell {hidden:yes} #cj
 
 #####################################################################
 #####################################################################
@@ -330,12 +330,12 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: shopify_net_payment {
-    label: "Shopify Net Payment"
-    group_label: "Customer Care"
-    hidden: yes
-    description: "Shopify Orders with Customer's Net Payment Under $10"
-  }
+  # explore: shopify_net_payment {
+  #   label: "Shopify Net Payment"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   description: "Shopify Orders with Customer's Net Payment Under $10"
+  # }
 
 
 #####################################################################
