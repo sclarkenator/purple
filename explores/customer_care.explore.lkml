@@ -713,27 +713,27 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: cc_headcount {
-    from: cc_headcount_bydate
-    hidden: yes
-    group_label: "Customer Care"
-    view_label: "Agent Info"
-    join: team_lead_name {
-      view_label: "Team Lead"
-      fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
-      type: left_outer
-      sql_on: ${team_lead_name.incontact_id} = ${cc_headcount.incontact_id}
-        and ${team_lead_name.start_date} <= ${cc_headcount.by_date}
-        and ${team_lead_name.end_date} >= ${cc_headcount.by_date};;
-      relationship: many_to_one
-    }
-    join: employee_lkp {
-      view_label: "Team Lead"
-      type: left_outer
-      sql_on: ${team_lead_name.incontact_id} = ${employee_lkp.incontact_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: cc_headcount {
+  #   from: cc_headcount_bydate
+  #   hidden: yes
+  #   group_label: "Customer Care"
+  #   view_label: "Agent Info"
+  #   join: team_lead_name {
+  #     view_label: "Team Lead"
+  #     fields: [team_lead_name.incontact_id, team_lead_name.start_date, team_lead_name.end_date, team_lead_name.team_lead_id]
+  #     type: left_outer
+  #     sql_on: ${team_lead_name.incontact_id} = ${cc_headcount.incontact_id}
+  #       and ${team_lead_name.start_date} <= ${cc_headcount.by_date}
+  #       and ${team_lead_name.end_date} >= ${cc_headcount.by_date};;
+  #     relationship: many_to_one
+  #   }
+  #   join: employee_lkp {
+  #     view_label: "Team Lead"
+  #     type: left_outer
+  #     sql_on: ${team_lead_name.incontact_id} = ${employee_lkp.incontact_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 
 ## DEPRECATED EXPLORES
