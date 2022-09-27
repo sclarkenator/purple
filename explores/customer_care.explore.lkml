@@ -355,31 +355,31 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: zendesk_chats {
-    label: "Zendesk Website Chats"
-    group_label: "Customer Care"
-    hidden: yes
-    join: zendesk_chat_engagements {
-      view_label: "Zendesk Chat Engagements"
-      type: left_outer
-      sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
-      relationship: one_to_many
-      }
-      join: employee_lkp {
-        type: left_outer
-        view_label: "Agent Lookup"
-        sql_on: ${zendesk_chat_engagements.zendesk_id}=${employee_lkp.zendesk_id}  ;;
-        relationship: many_to_one
-      }
-    join: team_lead_name {
-      type:  left_outer
-      view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-        AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
-        AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
-      relationship: many_to_one
-      }
-    }
+  # explore: zendesk_chats {
+  #   label: "Zendesk Website Chats"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   join: zendesk_chat_engagements {
+  #     view_label: "Zendesk Chat Engagements"
+  #     type: left_outer
+  #     sql_on: ${zendesk_chats.chat_id} = ${zendesk_chat_engagements.chat_id} ;;
+  #     relationship: one_to_many
+  #     }
+  #     join: employee_lkp {
+  #       type: left_outer
+  #       view_label: "Agent Lookup"
+  #       sql_on: ${zendesk_chat_engagements.zendesk_id}=${employee_lkp.zendesk_id}  ;;
+  #       relationship: many_to_one
+  #     }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #       AND ${team_lead_name.start_date}<=${zendesk_chat_engagements.engagement_start_date}
+  #       AND ${team_lead_name.end_date}>=${zendesk_chat_engagements.engagement_start_date};;
+  #     relationship: many_to_one
+  #     }
+  #   }
 #####################################################################
 #####################################################################
 
