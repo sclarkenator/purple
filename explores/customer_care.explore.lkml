@@ -234,22 +234,22 @@ explore: contact_history {
 #####################################################################
 # HEADCOUNT V2 cj
 
-explore: headcount_v2 {
-  view_label: "Headcount"
-  view_name: headcount
-  hidden: yes
+# explore: headcount_v2 {
+#   view_label: "Headcount"
+#   view_name: headcount
+#   hidden: yes
 
-  join: agent_state {
-    view_label: "Headcount"
-    type: left_outer
-    fields: [agent_state.state_percentage, working_rate]
-    sql_on: ${headcount.incontact_id} = ${agent_state.agent_id}
-      and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
-    relationship: one_to_many
-  }
+#   join: agent_state {
+#     view_label: "Headcount"
+#     type: left_outer
+#     fields: [agent_state.state_percentage, working_rate]
+#     sql_on: ${headcount.incontact_id} = ${agent_state.agent_id}
+#       and cast(${headcount.date_date} as date) = cast(${agent_state.state_start_ts_utc_date} as date) ;;
+#     relationship: one_to_many
+#   }
 
-  sql_always_where: ${headcount.team_group} <> 'Other' ;;
-}
+#   sql_always_where: ${headcount.team_group} <> 'Other' ;;
+# }
 
 #####################################################################
 #####################################################################
