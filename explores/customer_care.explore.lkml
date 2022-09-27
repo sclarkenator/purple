@@ -274,21 +274,21 @@ explore: contact_history {
 #####################################################################
 ## PERFECT ATTENDANCE cj
 
-explore: perfect_attendance_calc {
+# explore: perfect_attendance_calc {
 
-  view_label: "Agent Attendance"
-  view_name: cc_agent_attendance
-  hidden: yes
-  fields: [employee_lkp.name, employee_lkp.is_active, employee_lkp.retail, employee_lkp.inactive_date, employee_lkp.is_supervisor, employee_lkp.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
+#   view_label: "Agent Attendance"
+#   view_name: cc_agent_attendance
+#   hidden: yes
+#   fields: [employee_lkp.name, employee_lkp.is_active, employee_lkp.retail, employee_lkp.inactive_date, employee_lkp.is_supervisor, employee_lkp.team_type, cc_agent_attendance.event_date_month, cc_agent_attendance.occurrence_count]
 
-  join: employee_lkp {
-    view_label: "Agent Attendance"
-    from: employee_lkp
-    type: inner
-    sql_on: ${cc_agent_attendance.incontact_id} = ${employee_lkp.incontact_id} ;;
-    relationship: one_to_many
-  }
-}
+#   join: employee_lkp {
+#     view_label: "Agent Attendance"
+#     from: employee_lkp
+#     type: inner
+#     sql_on: ${cc_agent_attendance.incontact_id} = ${employee_lkp.incontact_id} ;;
+#     relationship: one_to_many
+#   }
+# }
 
 #####################################################################
 #####################################################################
