@@ -691,14 +691,14 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: cc_traffic { hidden: yes
-    join:bridge_by_agent {
-      type: left_outer
-      relationship: many_to_one
-      view_label: "Bridge Courses"
-      sql_on: ${bridge_by_agent.email} = ${cc_traffic.agent_email};;
-    }
-  }
+  # explore: cc_traffic { hidden: yes
+  #   join:bridge_by_agent {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     view_label: "Bridge Courses"
+  #     sql_on: ${bridge_by_agent.email} = ${cc_traffic.agent_email};;
+  #   }
+  # }
 
 #####################################################################
 #####################################################################
