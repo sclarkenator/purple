@@ -293,29 +293,29 @@ explore: contact_history {
 #####################################################################
 #####################################################################
 
-  explore: customer_satisfaction_survey {
-    label: "Agent CSAT"
-    group_label: "Customer Care"
-    hidden: yes
-    description: "Customer satisfaction of interactions with Customer Care agents"
-    join: employee_lkp {
-      type: left_outer
-      sql_on: ${customer_satisfaction_survey.agent_id} = ${employee_lkp.incontact_id} ;;
-      relationship: many_to_one
-    }
-    join: team_lead_name {
-      type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-          AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
-          AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
-      relationship: many_to_one
-    }
-    join: zendesk_ticket {
-      type:  left_outer
-      sql_on:  ${zendesk_ticket.ticket_id}=${customer_satisfaction_survey.ticket_id};;
-      relationship: many_to_one
-    }
-  }
+  # explore: customer_satisfaction_survey {
+  #   label: "Agent CSAT"
+  #   group_label: "Customer Care"
+  #   hidden: yes
+  #   description: "Customer satisfaction of interactions with Customer Care agents"
+  #   join: employee_lkp {
+  #     type: left_outer
+  #     sql_on: ${customer_satisfaction_survey.agent_id} = ${employee_lkp.incontact_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #         AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+  #         AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+  #     relationship: many_to_one
+  #   }
+  #   join: zendesk_ticket {
+  #     type:  left_outer
+  #     sql_on:  ${zendesk_ticket.ticket_id}=${customer_satisfaction_survey.ticket_id};;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 #####################################################################
 #####################################################################
