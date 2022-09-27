@@ -674,19 +674,19 @@ explore: contact_history {
 #####################################################################
 #####################################################################
 
-  explore: exchange_items {hidden: yes
-    join: item {
-      type:  left_outer
-      sql_on:  ${item.item_id} = ${exchange_items.original_order_item_id} ;;
-      relationship: many_to_one
-      view_label: "Original Item"}
-    join: item_2 {
-      from: item
-      type:  left_outer
-      sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
-      relationship: many_to_one
-      view_label: "Exchange Item"}
-  }
+  # explore: exchange_items {hidden: yes
+  #   join: item {
+  #     type:  left_outer
+  #     sql_on:  ${item.item_id} = ${exchange_items.original_order_item_id} ;;
+  #     relationship: many_to_one
+  #     view_label: "Original Item"}
+  #   join: item_2 {
+  #     from: item
+  #     type:  left_outer
+  #     sql_on:  ${item.item_id} = ${exchange_items.exchange_order_item_id} ;;
+  #     relationship: many_to_one
+  #     view_label: "Exchange Item"}
+  # }
 
 #####################################################################
 #####################################################################
