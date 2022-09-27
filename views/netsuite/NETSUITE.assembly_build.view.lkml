@@ -144,6 +144,12 @@ view: assembly_build {
     type: string
     sql: ${TABLE}.CREATED_BY ;; }
 
+  dimension: source {
+    label: "Source"
+    description: "Where the transaction originated: Assembly Build vs Work Order"
+    type: string
+    sql: ${TABLE}.SOURCE ;; }
+
 
   dimension_group: insert_ts {
     hidden: yes
