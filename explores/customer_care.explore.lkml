@@ -487,49 +487,49 @@ explore: perfect_attendance_calc {
 #####################################################################
 #####################################################################
 
-  explore: agent_lkp {
-    view_name: employee_lkp
-    hidden: yes
-    label: "Agents"
-    group_label: "Customer Care"
-    join: agent_company_value {
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
-      relationship: one_to_many}
-    join: agent_evaluation {
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
-      relationship: one_to_many}
-    join: rpt_agent_stats {
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
-      relationship: one_to_many}
-    join: v_agent_state {
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
-      relationship: one_to_many}
-    join: agent_attendance{
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
-      relationship: one_to_many}
-    join: agent_draft_orders {
-      type: left_outer
-      sql_on: ${employee_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
-      relationship: one_to_many}
-    join: customer_satisfaction_survey {
-      type: full_outer
-      sql_on: ${employee_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
-      relationship:  one_to_many
-    }
-    join: team_lead_name {
-      type:  left_outer
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-          AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
-          AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
-      relationship: many_to_one
-    }
-    required_access_grants: [is_customer_care_manager]
-  }
+  # explore: agent_lkp {
+  #   view_name: employee_lkp
+  #   hidden: yes
+  #   label: "Agents"
+  #   group_label: "Customer Care"
+  #   join: agent_company_value {
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id} = ${agent_company_value.agent_id} ;;
+  #     relationship: one_to_many}
+  #   join: agent_evaluation {
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id} = ${agent_evaluation.evaluated_id} ;;
+  #     relationship: one_to_many}
+  #   join: rpt_agent_stats {
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id} = ${rpt_agent_stats.agent_id} ;;
+  #     relationship: one_to_many}
+  #   join: v_agent_state {
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id} = ${v_agent_state.agent_id} ;;
+  #     relationship: one_to_many}
+  #   join: agent_attendance{
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.agent_id} ;;
+  #     relationship: one_to_many}
+  #   join: agent_draft_orders {
+  #     type: left_outer
+  #     sql_on: ${employee_lkp.shopify_id} = ${agent_draft_orders.user_id} ;;
+  #     relationship: one_to_many}
+  #   join: customer_satisfaction_survey {
+  #     type: full_outer
+  #     sql_on: ${employee_lkp.incontact_id}::string = ${customer_satisfaction_survey.agent_id}::string ;;
+  #     relationship:  one_to_many
+  #   }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #         AND ${team_lead_name.start_date}<=${customer_satisfaction_survey.created_date}
+  #         AND ${team_lead_name.end_date}>=${customer_satisfaction_survey.created_date};;
+  #     relationship: many_to_one
+  #   }
+  #   required_access_grants: [is_customer_care_manager]
+  # }
 
 #####################################################################
 #####################################################################
