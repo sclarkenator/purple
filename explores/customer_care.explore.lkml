@@ -85,40 +85,40 @@ explore: wfm_weekly_performance {
 #####################################################################
 ## LIVEPERSON CONVERSATION cj
 
-explore: liveperson_conversations {
-  label: "LivePerson Conversations"
+# explore: liveperson_conversations {
+#   label: "LivePerson Conversations"
 
-  view_label: "Agent Data"
-  from: liveperson_agent
-  fields: [liveperson_conversations.default_liveperson_agent_linked*,
-    liveperson_conversation*
-    ]
-  hidden: yes
+#   view_label: "Agent Data"
+#   from: liveperson_agent
+#   fields: [liveperson_conversations.default_liveperson_agent_linked*,
+#     liveperson_conversation*
+#     ]
+#   hidden: yes
 
-  join: agent_data {
-    view_label: "Agent Data"
-    type: full_outer
-    # fields: [agent_data.agents_minimal_grouping*, -agent_data.agent_name, -agent_data.team_type, -agent_data.team_group]
-    sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id} ;;
-    relationship: one_to_one
-  }
+#   join: agent_data {
+#     view_label: "Agent Data"
+#     type: full_outer
+#     # fields: [agent_data.agents_minimal_grouping*, -agent_data.agent_name, -agent_data.team_type, -agent_data.team_group]
+#     sql_on: ${liveperson_conversations.employee_id} = ${agent_data.zendesk_id} ;;
+#     relationship: one_to_one
+#   }
 
-  join: liveperson_conversation {
-    view_label: "Conversations"
-    type: full_outer
-    sql_on: ${liveperson_conversations.agent_id} = ${liveperson_conversation.last_agent_id} ;;
-    relationship: many_to_one
-  }
+#   join: liveperson_conversation {
+#     view_label: "Conversations"
+#     type: full_outer
+#     sql_on: ${liveperson_conversations.agent_id} = ${liveperson_conversation.last_agent_id} ;;
+#     relationship: many_to_one
+#   }
 
-  # join: liveperson_campaign {
-  #   view_label: "Conversations"
-  #   type: full_outer
-  #   # fields: [liveperson_campaign.campaign_default*]
-  #   sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id}
-  #     and ${liveperson_conversation.conversation_id} = ${liveperson_campaign.conversation_id};;
-  #   relationship: one_to_one
-  # }
-}
+#   # join: liveperson_campaign {
+#   #   view_label: "Conversations"
+#   #   type: full_outer
+#   #   # fields: [liveperson_campaign.campaign_default*]
+#   #   sql_on: ${liveperson_conversation.campaign_id} = ${liveperson_campaign.campaign_id}
+#   #     and ${liveperson_conversation.conversation_id} = ${liveperson_campaign.conversation_id};;
+#   #   relationship: one_to_one
+#   # }
+# }
 
 #####################################################################
 #####################################################################
