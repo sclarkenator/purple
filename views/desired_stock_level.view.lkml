@@ -140,7 +140,7 @@ select
   , round((psouth_quantity/20),0) avg_daily_produced_psouth
   , sum(case when l.location_id = '4' then prod.quantity else 0 end) pwest_quantity
   , round((pwest_quantity/20),0) avg_daily_produced_pwest
-from production.v_assembly_build prod
+from production.v_work_order prod
     left join sales.item i on prod.item_id = i.item_id
     left join sales.location l on prod.location_id = l.location_id
 where i.category = 'MATTRESS' and i.classification_new = 'FG' and (i.sku_id not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','111')
@@ -163,7 +163,7 @@ select
   , round((psouth_quantity/20),0) avg_daily_produced_psouth
   , sum(case when l.location_id = '4' then prod.quantity else 0 end) pwest_quantity
   , round((pwest_quantity/20),0) avg_daily_produced_pwest
-from production.v_assembly_build prod
+from production.v_work_order prod
     left join sales.item i on prod.item_id = i.item_id
     left join sales.location l on prod.location_id = l.location_id
 where i.model = 'MATTRESS SCRIM PEAK' and (i.sku_id not like '%AC%' or i.sku_id is null) and l.INACTIVE = 0 and l.location_id in ('4','111')
