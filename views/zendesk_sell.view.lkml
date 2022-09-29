@@ -119,7 +119,7 @@ view: zendesk_sell {
   # }
 
   dimension: zendesk_id {
-    type: string
+    type: number
     group_label: "Advanced - Sell"
     description: "Source: incontact.agent_lkp"
     sql: ${TABLE}.zendesk_id ;;

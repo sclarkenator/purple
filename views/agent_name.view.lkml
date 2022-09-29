@@ -81,6 +81,14 @@ dimension: name {
     #sql: REPLACE(${TABLE}.name, '  ', ' ')  ;;
   }
 
+  dimension: merged_shopify_id{
+    group_label: " Advanced"
+    label: "User/Shopify ID"
+    description: "The User ID on the order, and if null the linked agent's Shopify ID"
+    type:  number
+    sql: REPLACE(nvl(${shopify_orders.user_id},${TABLE}.shopify_id), '  ', ' ')  ;;
+  }
+
   dimension: primary_location{
     label: "Primary Location"
     group_label: " Advanced"

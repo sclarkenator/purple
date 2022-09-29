@@ -393,7 +393,7 @@ include: "/dashboards/**/*.dashboard"
     join: agent_name {
       view_label: "Sales Order"
       type: left_outer
-      sql_on: ${agent_name.shopify_id}=${shopify_orders.user_id} ;;
+      sql_on: ${agent_name.zendesk_id}=${zendesk_sell.zendesk_id};;
       relationship: many_to_one
     }
     join: team_lead_name {
@@ -571,6 +571,7 @@ include: "/dashboards/**/*.dashboard"
       sql_on: ${sales_order_line.order_id} = ${system_notes.transaction_id};;
       relationship: many_to_one
     }
+
   }
 
   # explore: sales_agent_metrics {
