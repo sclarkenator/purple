@@ -6,18 +6,18 @@
 include: "/views/**/*.view"
 include: "/dashboards/**/*.dashboard"
 
-  explore: daily_adspend {
-    from:  daily_adspend
-    group_label: "Marketing"
-    description: "Adspend by platform aggregated by date"
-    hidden: yes
-    join: adspend_target {
-      type: full_outer
-      sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
-      and ${adspend_target.medium} = ${daily_adspend.medium}
-      and ${adspend_target.country} = ${daily_adspend.country};;
-      relationship: many_to_one}
-  }
+  # explore: daily_adspend {
+  #   from:  daily_adspend
+  #   group_label: "Marketing"
+  #   description: "Adspend by platform aggregated by date"
+  #   hidden: yes
+  #   join: adspend_target {
+  #     type: full_outer
+  #     sql_on: ${adspend_target.target_date} = ${daily_adspend.ad_date}
+  #     and ${adspend_target.medium} = ${daily_adspend.medium}
+  #     and ${adspend_target.country} = ${daily_adspend.country};;
+  #     relationship: many_to_one}
+  # }
 
   # explore: attribution_temp {
   #   from: v_attribution_temp

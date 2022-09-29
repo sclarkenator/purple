@@ -429,60 +429,60 @@ explore: contact_history {
 #####################################################################
 #####################################################################
 
-  explore: rpt_skill_with_disposition_count {
-    label: "Inbound Calls"
-    group_label: "Customer Care"
-    description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
-    join:  magazine_numbers {
-      type: full_outer
-      sql_on: ${magazine_numbers.phone_number}::text = ${rpt_skill_with_disposition_count.contact_info_to}::text
-            --and  ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date
-            ;;
-      relationship: many_to_many}
-    join: customer_table{
-      type: left_outer
-      relationship: many_to_many
-      sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}::text
-            else ${rpt_skill_with_disposition_count.contact_info_to}::text end
-            = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
-    }
-    join: sales_order {
-      type: left_outer
-      relationship: one_to_many
-      sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
-    }
-    join: sales_order_line_base {
-      type: left_outer
-      relationship: one_to_many
-      sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
-    }
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-    join: v_wholesale_manager {
-      view_label: "Customer"
-      type:left_outer
-      relationship:one_to_one
-      sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
-    }
-    join: employee_lkp {
-      type: left_outer
-      view_label: "Agent Lookup"
-      sql_on: ${rpt_skill_with_disposition_count.agent_id}=${employee_lkp.incontact_id} ;;
-      relationship: many_to_one
-    }
-    join: team_lead_name {
-      type:  left_outer
-      view_label: "Agent Lookup"
-      sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
-        AND ${team_lead_name.start_date}<=${rpt_skill_with_disposition_count.reported_date}
-        AND ${team_lead_name.end_date}>=${rpt_skill_with_disposition_count.reported_date};;
-      relationship: many_to_one
-    }
-  }
+  # explore: rpt_skill_with_disposition_count {
+  #   label: "Inbound Calls"
+  #   group_label: "Customer Care"
+  #   description: "All inbound calls segmented by skill and disposition (rpt skills with dispositions)"
+  #   join:  magazine_numbers {
+  #     type: full_outer
+  #     sql_on: ${magazine_numbers.phone_number}::text = ${rpt_skill_with_disposition_count.contact_info_to}::text
+  #           --and  ${magazine_numbers.launch_date}::date >= ${rpt_skill_with_disposition_count.reported_date}::date
+  #           ;;
+  #     relationship: many_to_many}
+  #   join: customer_table{
+  #     type: left_outer
+  #     relationship: many_to_many
+  #     sql_on:case when ${rpt_skill_with_disposition_count.inbound_flag} = 'Yes' then ${rpt_skill_with_disposition_count.contact_info_from}::text
+  #           else ${rpt_skill_with_disposition_count.contact_info_to}::text end
+  #           = replace(replace(replace(replace(replace(replace(replace(${customer_table.phone}::text,'-',''),'1 ',''),'+81 ',''),'+',''),'(',''),')',''),' ','') ;;
+  #   }
+  #   join: sales_order {
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: ${sales_order.customer_id}::text = ${customer_table.customer_id}::text and ${sales_order.created_date} >= ${rpt_skill_with_disposition_count.reported_date} ;;
+  #   }
+  #   join: sales_order_line_base {
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: ${sales_order.order_id} = ${sales_order_line_base.order_id} and ${sales_order.system} = ${sales_order_line_base.system} ;;
+  #   }
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line_base.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: v_wholesale_manager {
+  #     view_label: "Customer"
+  #     type:left_outer
+  #     relationship:one_to_one
+  #     sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  #   }
+  #   join: employee_lkp {
+  #     type: left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on: ${rpt_skill_with_disposition_count.agent_id}=${employee_lkp.incontact_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: team_lead_name {
+  #     type:  left_outer
+  #     view_label: "Agent Lookup"
+  #     sql_on:  ${team_lead_name.incontact_id}=${employee_lkp.incontact_id}
+  #       AND ${team_lead_name.start_date}<=${rpt_skill_with_disposition_count.reported_date}
+  #       AND ${team_lead_name.end_date}>=${rpt_skill_with_disposition_count.reported_date};;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 #####################################################################
 #####################################################################
