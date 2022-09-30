@@ -101,77 +101,77 @@ include: "/dashboards/**/*.dashboard"
   #     relationship: many_to_many}
   # }
 
-  explore: cordial_activity {
-    hidden: yes
-    group_label: "Marketing"
-    label: "Email (cordial)"
-    join:cordial_id  {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${cordial_id.email_join} = lower(${cordial_activity.email}) ;;
-    }
-    join: cordial_subscribe {
-      type: left_outer
-      relationship: one_to_many
-      sql_on: ${cordial_id.email_join} = lower(${cordial_subscribe.email}) ;;
-    }
-    join: cordial_message_analytic {
-      type: left_outer
-      sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
-      relationship: many_to_one
-    }
-    join: cordial_analytic_sms {
-      type: left_outer
-      sql_on: ${cordial_activity.bm_id} = ${cordial_analytic_sms.message_id} ;;
-      relationship: many_to_one
-    }
-    join: cordial_bulk_message {
-      type: left_outer
-      sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
-      relationship: many_to_one
-    }
-    join: order_utm {
-      type: left_outer
-      sql_on: lower(${cordial_activity.email}) = lower(${order_utm.email})
-        and ${cordial_activity.time_time} < ${order_utm.created} and ${cordial_activity.time_time} >= dateadd('day',-7,${order_utm.created})
-        and ${cordial_activity.action} in ('message-sent','open');;
-      relationship: many_to_one
-    }
-    # Added 12/10/2020 to get new/repeat customers - Mason
-    join: first_order_flag {
-      type: left_outer
-      sql_on: ${order_utm.pk} = ${first_order_flag.pk} ;;
-      relationship: many_to_one
-    }
-  # Added 12/30/2020 to get orders and items - Mason
-  # 07/08/2021 - Exposed full sales_order_line to explore
-    join: sales_order_line {
-      type: left_outer
-      sql_on: ${order_utm.order_id} = ${sales_order_line.order_id} ;;
-      # fields: [sales_order_line.order_id,sales_order_line.item_id]
-      fields: []
-      relationship: one_to_one
-    }
-    # Added 12/30/2020 to get products - Mason
-    join: item {
-      type: left_outer
-      view_label: "Product"
-      sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
-      relationship: many_to_one
-    }
-    join: v_email_nps  {
-      type: left_outer
-      view_label: "NPS"
-      sql_on: lower(${cordial_activity.email}) = lower(${v_email_nps.email}) ;;
-      relationship: many_to_one
-    }
-    join: cordial_propensity_scores {
-      type: left_outer
-      view_label: "Cordial Propensity Scores"
-      sql_on: lower(${cordial_activity.email}) = lower(${cordial_propensity_scores.email});;
-      relationship: many_to_one
-    }
-  }
+  # explore: cordial_activity {
+  #   hidden: yes
+  #   group_label: "Marketing"
+  #   label: "Email (cordial)"
+  #   join:cordial_id  {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${cordial_id.email_join} = lower(${cordial_activity.email}) ;;
+  #   }
+  #   join: cordial_subscribe {
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: ${cordial_id.email_join} = lower(${cordial_subscribe.email}) ;;
+  #   }
+  #   join: cordial_message_analytic {
+  #     type: left_outer
+  #     sql_on: ${cordial_activity.bm_id} = ${cordial_message_analytic.message_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: cordial_analytic_sms {
+  #     type: left_outer
+  #     sql_on: ${cordial_activity.bm_id} = ${cordial_analytic_sms.message_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: cordial_bulk_message {
+  #     type: left_outer
+  #     sql_on: ${cordial_activity.bm_id} = ${cordial_bulk_message.bm_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: order_utm {
+  #     type: left_outer
+  #     sql_on: lower(${cordial_activity.email}) = lower(${order_utm.email})
+  #       and ${cordial_activity.time_time} < ${order_utm.created} and ${cordial_activity.time_time} >= dateadd('day',-7,${order_utm.created})
+  #       and ${cordial_activity.action} in ('message-sent','open');;
+  #     relationship: many_to_one
+  #   }
+  #   # Added 12/10/2020 to get new/repeat customers - Mason
+  #   join: first_order_flag {
+  #     type: left_outer
+  #     sql_on: ${order_utm.pk} = ${first_order_flag.pk} ;;
+  #     relationship: many_to_one
+  #   }
+  # # Added 12/30/2020 to get orders and items - Mason
+  # # 07/08/2021 - Exposed full sales_order_line to explore
+  #   join: sales_order_line {
+  #     type: left_outer
+  #     sql_on: ${order_utm.order_id} = ${sales_order_line.order_id} ;;
+  #     # fields: [sales_order_line.order_id,sales_order_line.item_id]
+  #     fields: []
+  #     relationship: one_to_one
+  #   }
+  #   # Added 12/30/2020 to get products - Mason
+  #   join: item {
+  #     type: left_outer
+  #     view_label: "Product"
+  #     sql_on: ${item.item_id} = ${sales_order_line.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: v_email_nps  {
+  #     type: left_outer
+  #     view_label: "NPS"
+  #     sql_on: lower(${cordial_activity.email}) = lower(${v_email_nps.email}) ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: cordial_propensity_scores {
+  #     type: left_outer
+  #     view_label: "Cordial Propensity Scores"
+  #     sql_on: lower(${cordial_activity.email}) = lower(${cordial_propensity_scores.email});;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   # explore: email_contact_merged { -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   #   hidden: yes
