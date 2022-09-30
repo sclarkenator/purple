@@ -35,17 +35,17 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: ltol_pitch {
-    hidden: yes
-    label: "L2L Production Pitch Data"
-    group_label: "Production"
-    description: "The Pitch hourly data from L2L"
-    join: ltol_line {
-      type: left_outer
-      sql_on: ${ltol_line.line_id} = ${ltol_pitch.line} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: ltol_pitch {
+  #   hidden: yes
+  #   label: "L2L Production Pitch Data"
+  #   group_label: "Production"
+  #   description: "The Pitch hourly data from L2L"
+  #   join: ltol_line {
+  #     type: left_outer
+  #     sql_on: ${ltol_line.line_id} = ${ltol_pitch.line} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   explore: assembly_build {
     hidden: no
