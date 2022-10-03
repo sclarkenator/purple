@@ -47,42 +47,42 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: assembly_build {
-    hidden: no
-    group_label: "Production"
-    label: "Production Assembly Data"
-    description: "NetSuite Header Level Assembly and Unbuild Data. Adding in the Unbuilds provides a better final number of what is produced."
-    always_filter: {
-      filters: {
-        field: scrap
-        value: "0"
-      }
-      filters: {
-        field: item.merchandise
-        value: "0"
-      }
-    }
-    join: item {
-      type: left_outer
-      sql_on: ${assembly_build.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-    join: warehouse_location {
-      sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one
-      type: left_outer
-    }
-    join: production_goal {
-      type: left_outer
-      sql_on: ${assembly_build.produced_date} = ${production_goal.forecast_date} ;;
-      relationship: many_to_one
-    }
-    join: production_goal_by_item {
-      type: left_outer
-      sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
-      relationship: one_to_many
-    }
-  }
+  # explore: assembly_build {
+  #   hidden: no
+  #   group_label: "Production"
+  #   label: "Production Assembly Data"
+  #   description: "NetSuite Header Level Assembly and Unbuild Data. Adding in the Unbuilds provides a better final number of what is produced."
+  #   always_filter: {
+  #     filters: {
+  #       field: scrap
+  #       value: "0"
+  #     }
+  #     filters: {
+  #       field: item.merchandise
+  #       value: "0"
+  #     }
+  #   }
+  #   join: item {
+  #     type: left_outer
+  #     sql_on: ${assembly_build.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: warehouse_location {
+  #     sql_on: ${assembly_build.location_id} = ${warehouse_location.location_id} ;;
+  #     relationship: many_to_one
+  #     type: left_outer
+  #   }
+  #   join: production_goal {
+  #     type: left_outer
+  #     sql_on: ${assembly_build.produced_date} = ${production_goal.forecast_date} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: production_goal_by_item {
+  #     type: left_outer
+  #     sql_on: ${production_goal.pk} = ${production_goal_by_item.forecast_date} ;;
+  #     relationship: one_to_many
+  #   }
+  # }
 
   explore: project_config {
     group_label: "Production"
