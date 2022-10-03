@@ -182,31 +182,31 @@ include: "/dashboards/**/*.dashboard"
   }
 
 
-  explore: inventory_snap {
-    group_label: "Production"
-    hidden: yes
-    label: "Historical Inventory"
-    description: "Inventory positions, by item by location over time"
-    always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}
-      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
-    join: item {
-      type: left_outer
-      sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: warehouse_location {
-      sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one}
-    join: standard_cost {
-      view_label:  "Item"
-      type: left_outer
-      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
-      relationship: one_to_one}
-    join: mainfreight_inventory_snapshot {
-      type: left_outer
-      sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
-      relationship: one_to_many}
-  }
+  # explore: inventory_snap {
+  #   group_label: "Production"
+  #   hidden: yes
+  #   label: "Historical Inventory"
+  #   description: "Inventory positions, by item by location over time"
+  #   always_filter: {
+  #     filters: {field: warehouse_location.location_Active      value: "No"}
+  #     filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
+  #   join: item {
+  #     type: left_outer
+  #     sql_on: ${inventory_snap.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  #   join: warehouse_location {
+  #     sql_on: ${inventory_snap.location_id} = ${warehouse_location.location_id} ;;
+  #     relationship: many_to_one}
+  #   join: standard_cost {
+  #     view_label:  "Item"
+  #     type: left_outer
+  #     sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+  #     relationship: one_to_one}
+  #   join: mainfreight_inventory_snapshot {
+  #     type: left_outer
+  #     sql_on: ${item.sku_id} = ${mainfreight_inventory_snapshot.sku_id} ;;
+  #     relationship: one_to_many}
+  # }
 
   explore: mainfreight_inventory{
     hidden: yes
