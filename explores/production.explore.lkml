@@ -258,22 +258,22 @@ include: "/dashboards/**/*.dashboard"
       relationship: many_to_one }
   }
 
-  explore: inventory_adjustment {
-    group_label: "Production"
-    hidden: yes
-    label: "Inventory Adjustment"
-    description: "Inventory Adjustment by Item, Line, etc"
-    join: inventory_adjustment_line {
-      type: left_outer
-      sql_on: ${inventory_adjustment.inventory_adjustment_id} = ${inventory_adjustment_line.inventory_adjustment_id} ;;
-      relationship: one_to_many }
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on:  ${inventory_adjustment_line.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: inventory_adjustment {
+  #   group_label: "Production"
+  #   hidden: yes
+  #   label: "Inventory Adjustment"
+  #   description: "Inventory Adjustment by Item, Line, etc"
+  #   join: inventory_adjustment_line {
+  #     type: left_outer
+  #     sql_on: ${inventory_adjustment.inventory_adjustment_id} = ${inventory_adjustment_line.inventory_adjustment_id} ;;
+  #     relationship: one_to_many }
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on:  ${inventory_adjustment_line.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   explore: bom_demand_matrix {
     hidden:  yes
