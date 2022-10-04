@@ -480,7 +480,7 @@ include: "/dashboards/**/*.dashboard"
   explore: pilot_daily_report {hidden:yes group_label: "Production"}
   explore: v_fedex_to_xpo {hidden:  yes group_label: "Production"}
   explore: v_work_order_quality_checklist {hidden: yes group_label: "L2L"}
-  explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
+  ##explore: desired_stock_level {hidden: yes label: "Peak Bed Desired Stock Level" group_label: "Production"}
   explore: vendor {hidden:yes}
   explore: l2_l_checklist_answers {hidden: yes group_label: "L2L"}
   explore: l2_l_checklists {hidden: yes group_label: "L2L"}
