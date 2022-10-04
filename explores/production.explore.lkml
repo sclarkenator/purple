@@ -488,7 +488,7 @@ include: "/dashboards/**/*.dashboard"
   explore: l2l_quality_yellow_card {hidden: yes group_label: "L2L"}
   explore: l2l_shift_line_1_glue_process {hidden: yes group_label: "L2L"}
   explore: l2l_machine_downtime {hidden: yes group_label: "L2L"}
-  explore: v_quality_mrb_cores_final_disposition {hidden: yes label: "Quality MRB Cores Final Disposition" group_label: "L2L"}
+  # explore: v_quality_mrb_cores_final_disposition {hidden: yes label: "Quality MRB Cores Final Disposition" group_label: "L2L"}
   explore: v_quality_mrb_rework_finished_bed {hidden: yes label: "Quality MRB Rework Finished Bed" group_label: "L2L"}
   explore: v_quality_mrb_cover {hidden: yes label: "Quality MRB Cover" group_label: "L2L"}
   explore: v_quality_mrb_return_bed_qc {hidden: yes label: "Quality MRB Return Bed QC" group_label: "L2L"}
