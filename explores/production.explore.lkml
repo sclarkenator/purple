@@ -329,15 +329,15 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: machine {
-    hidden: yes
-    group_label: "Production"
-    join: l2l_machine_downtime {
-      type: left_outer
-      sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
-      relationship: one_to_many
-    }
-  }
+  # explore: machine {
+  #   hidden: yes
+  #   group_label: "Production"
+  #   join: l2l_machine_downtime {
+  #     type: left_outer
+  #     sql_on: ${machine.machine_id} = ${l2l_machine_downtime.machine_id} ;;
+  #     relationship: one_to_many
+  #   }
+  # }
 
   # explore:  area {
   #   #hidden: yes
