@@ -462,13 +462,13 @@ include: "/dashboards/**/*.dashboard"
   # }
 
 
-  explore: expeditors { hidden: yes
-    join:item {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${expeditors.item_number} = ${item.sku_id} ;;
-    }
-  }
+  # explore: expeditors { hidden: yes
+  #   join:item {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${expeditors.item_number} = ${item.sku_id} ;;
+  #   }
+  # }
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
