@@ -306,28 +306,28 @@ include: "/dashboards/**/*.dashboard"
       relationship: one_to_one
     }
   }
-  explore: v_demand_planning {
-    hidden: yes
-    group_label: "Production"
-    view_label: "Demand Planning"
-    label: "Demand Planning"
-    description: ""
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${v_demand_planning.item_id} = ${item.item_id} ;;
-      relationship: many_to_one
-    }
-    join: inventory {
-      type: left_outer
-      sql_on: ${v_demand_planning.item_id} = ${inventory.item_id} ;;
-      relationship: many_to_one
-    }
-    join: warehouse_location {
-      sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: v_demand_planning {
+  #   hidden: yes
+  #   group_label: "Production"
+  #   view_label: "Demand Planning"
+  #   label: "Demand Planning"
+  #   description: ""
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${v_demand_planning.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: inventory {
+  #     type: left_outer
+  #     sql_on: ${v_demand_planning.item_id} = ${inventory.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: warehouse_location {
+  #     sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   explore: machine {
     hidden: yes
