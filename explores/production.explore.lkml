@@ -431,44 +431,44 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: bill_of_materials {
-    hidden: yes
-    join: bill_of_materials_p {
-      from: bill_of_materials
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${bill_of_materials_p.child_id} = ${bill_of_materials.parent_id} and ${bill_of_materials.component_id} = ${bill_of_materials_p.component_id} ;;
-      view_label: "Parent Item Quantity"
-    }
-    join: p_item {
-      from: item
-      view_label: "Parent Item"
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${bill_of_materials.parent_id} = ${p_item.item_id} ;;
-    }
-    join: c_item {
-      from: item
-      view_label: "Child Item"
-      relationship: many_to_one
-      sql_on: ${bill_of_materials.child_id} = ${c_item.item_id} ;;
-    }
-    join: com_item {
-      from: item
-      view_label: "Component Item"
-      relationship: many_to_one
-      sql_on: ${bill_of_materials.component_id} = ${com_item.item_id} ;;
-    }
-  }
+  # explore: bill_of_materials {
+  #   hidden: yes
+  #   join: bill_of_materials_p {
+  #     from: bill_of_materials
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${bill_of_materials_p.child_id} = ${bill_of_materials.parent_id} and ${bill_of_materials.component_id} = ${bill_of_materials_p.component_id} ;;
+  #     view_label: "Parent Item Quantity"
+  #   }
+  #   join: p_item {
+  #     from: item
+  #     view_label: "Parent Item"
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${bill_of_materials.parent_id} = ${p_item.item_id} ;;
+  #   }
+  #   join: c_item {
+  #     from: item
+  #     view_label: "Child Item"
+  #     relationship: many_to_one
+  #     sql_on: ${bill_of_materials.child_id} = ${c_item.item_id} ;;
+  #   }
+  #   join: com_item {
+  #     from: item
+  #     view_label: "Component Item"
+  #     relationship: many_to_one
+  #     sql_on: ${bill_of_materials.component_id} = ${com_item.item_id} ;;
+  #   }
+  # }
 
 
-  explore: expeditors { hidden: yes
-    join:item {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${expeditors.item_number} = ${item.sku_id} ;;
-    }
-  }
+  # explore: expeditors { hidden: yes
+  #   join:item {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${expeditors.item_number} = ${item.sku_id} ;;
+  #   }
+  # }
   explore: v_dispatch {hidden: yes group_label: "Production" label: "L2L Dispatch Data" description: "The log of all L2L dispatches"}
   explore: oee {hidden:  yes group_label: "Production" label: "Historical OEE Table" description: "Static OEE Dataset in Snowflake"}
   explore: v_usertime_minutes {hidden: yes group_label: "Production" view_label: "Usertime" label: "Usertime" description: "Shows the amount of time and line an operator worked"}
