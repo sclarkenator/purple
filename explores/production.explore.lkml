@@ -141,45 +141,45 @@ include: "/dashboards/**/*.dashboard"
     }
   }
 
-  explore: inventory {
-    group_label: "Production"
-    hidden: yes
-    label: "Current Inventory"
-    description: "Inventory positions, by item by location"
-    always_filter: {
-      filters: {field: warehouse_location.location_Active      value: "No"}
-      filters: [item.sku_id: "-%AC-%"]
-      filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
-    join: item {
-      type: left_outer
-      sql_on: ${inventory.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: warehouse_location {
-      sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
-      relationship: many_to_one}
-    join: mainfreight_inventory {
-      type: left_outer
-      sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
-      relationship: one_to_many}
-    join: standard_cost {
-      view_label: "Item"
-      type: left_outer
-      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
-      relationship: one_to_one}
-    join: bin_location {
-      type: left_outer
-      view_label: "Inventory"
-      fields: [bin_location.quantity]
-      sql_on: ${bin_location.warehouse_id} = ${warehouse_location.location_id} and ${bin_location.sku} = ${item.sku_id};;
-      relationship:many_to_many}
+  # explore: inventory {
+  #   group_label: "Production"
+  #   hidden: yes
+  #   label: "Current Inventory"
+  #   description: "Inventory positions, by item by location"
+  #   always_filter: {
+  #     filters: {field: warehouse_location.location_Active      value: "No"}
+  #     filters: [item.sku_id: "-%AC-%"]
+  #     filters: [warehouse_location.warehouse_bucket: "Purple, White Glove"]}
+  #   join: item {
+  #     type: left_outer
+  #     sql_on: ${inventory.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  #   join: warehouse_location {
+  #     sql_on: ${inventory.location_id} = ${warehouse_location.location_id} ;;
+  #     relationship: many_to_one}
+  #   join: mainfreight_inventory {
+  #     type: left_outer
+  #     sql_on: ${item.sku_id} = ${mainfreight_inventory.sku_id} ;;
+  #     relationship: one_to_many}
+  #   join: standard_cost {
+  #     view_label: "Item"
+  #     type: left_outer
+  #     sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+  #     relationship: one_to_one}
+  #   join: bin_location {
+  #     type: left_outer
+  #     view_label: "Inventory"
+  #     fields: [bin_location.quantity]
+  #     sql_on: ${bin_location.warehouse_id} = ${warehouse_location.location_id} and ${bin_location.sku} = ${item.sku_id};;
+  #     relationship:many_to_many}
 
- ##   join: derived_inventory {
-##      type: left_outer
-##      sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
-##      relationship: one_to_one
-##    }
+  #   # join: derived_inventory {
+  #   #   type: left_outer
+  #   #   sql_on: ${derived_inventory.location_id} = ${inventory.location_id} and ${derived_inventory.item_id} = ${inventory.item_id} ;;
+  #   #   relationship: one_to_one
+  #   # }
 
-  }
+  # }
 
 
   # explore: inventory_snap {
