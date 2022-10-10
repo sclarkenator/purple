@@ -1,10 +1,12 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Retail Care Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
 
 

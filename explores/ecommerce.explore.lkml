@@ -1,10 +1,12 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # eCommerce Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
   # explore: ecommerce {
   #   from: sessions
