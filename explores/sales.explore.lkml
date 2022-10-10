@@ -773,131 +773,131 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: customers {
-    from:  v_visitors_view_normailized_ids
-    hidden: yes
+  # explore: customers {
+  #   from:  v_visitors_view_normailized_ids
+  #   hidden: yes
 
-    join: customer_flags_by_order {
-      view_label: "Order History Details"
-      from: email_order_flag
-      type: left_outer
-      relationship: one_to_one
-      sql_on: LOWER(${customer_flags_by_order.email}) = LOWER(${customers.vp_customer_email});;
-    }
-    join: customer_flags_by_sessions {
-      view_label: "Web Sessions Details"
-      from: v_customer_metrics
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${customer_flags_by_sessions.visitor_id}::string = ${customers.visitor_id}::string ;;
-    }
-    join: customer_flags_by_email{
-      view_label: "Email Marketing Details"
-      from: cordial_customer_activity
-      type: left_outer
-      relationship: one_to_one
-      sql_on: LOWER(${customer_flags_by_email.email}) = LOWER(${customers.vp_customer_email}) ;;
-    }
-    join: customer_flags_by_audience{
-      view_label: "Tealium Audiences"
-      from: tealium_visitors_view_normalized
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
-    }
-    join: contact {
-      view_label: "Contact"
-      from: customer
-      type: left_outer
-      relationship: one_to_one
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
-    }
-    # join: customer_order_sequence {
-    #   view_label: " Order Sequence"
-    #   from: v_customer_order_sequence
-    #   type: left_outer
-    #   relationship: one_to_many
-    #   sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_order_sequence.email}) ;;
-    # }
-    join: customer_first_order {
-      view_label: " 1st Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_first_order.email}) AND ${customer_first_order.order_sequence} = 1 ;;
-    }
-    join: customer_second_order {
-      view_label: " 2nd Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_second_order.email}) AND ${customer_second_order.order_sequence} = 2 ;;
-    }
-    join: customer_third_order {
-      view_label: " 3rd Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_third_order.email}) AND ${customer_third_order.order_sequence} = 3;;
-    }
-    join: customer_fourth_order {
-      view_label: " 4th Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fourth_order.email}) AND ${customer_fourth_order.order_sequence} = 4;;
-    }
-    join: customer_fifth_order {
-      view_label: " 5th Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fifth_order.email}) AND ${customer_fifth_order.order_sequence} = 5;;
-    }
-    join: customer_last_order {
-      view_label: " Last Order"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_last_order.email}) AND ${customer_last_order.last_order} = true;;
-    }
-    join: customer_all_orders {
-      view_label: " All Orders"
-      from: v_customer_order_sequence
-      type: left_outer
-      relationship: one_to_many
-      sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_all_orders.email});;
-    }
-    join: customer_journey {
-      view_label: "Customer Journey"
-      from:  customer_journey
-      type:  left_outer
-      relationship:  one_to_one
-      sql_on:  LOWER(${customers.vp_customer_email}) = LOWER(${customer_journey.email});;
-    }
-    # join: customer_table {
-    #   view_label: "Customers"
-    #   type: left_outer
-    #   sql_on: ${customer_table.email} = ${customers.vp_customer_email} ;;
-    #   relationship: one_to_one}
-    # join: customer_first_order {
-    #   view_label: "Customers"
-    #   type:  left_outer
-    #   sql_on: ${customers.vp_customer_email} = ${customer_first_order.email} ;;
-    #   relationship: one_to_one}
-    # join: heap_id {
-    #   from: tealium_v_heap_id
-    #   type: left_outer
-    #   relationship: one_to_many
-    #   sql_on: ${customers.visitor_id}::string = ${heap_id.visitor_id}::string ;;
-    # }
-    # join: heap_customer{
-    #   from: customer
-    #   type: left_outer
-    #   relationship: one_to_many
-    #   sql_on: ${customers.visitor_id} = ${heap_customer.customer_id} ;;
-    # }
-  }
+  #   join: customer_flags_by_order {
+  #     view_label: "Order History Details"
+  #     from: email_order_flag
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: LOWER(${customer_flags_by_order.email}) = LOWER(${customers.vp_customer_email});;
+  #   }
+  #   join: customer_flags_by_sessions {
+  #     view_label: "Web Sessions Details"
+  #     from: v_customer_metrics
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${customer_flags_by_sessions.visitor_id}::string = ${customers.visitor_id}::string ;;
+  #   }
+  #   join: customer_flags_by_email{
+  #     view_label: "Email Marketing Details"
+  #     from: cordial_customer_activity
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: LOWER(${customer_flags_by_email.email}) = LOWER(${customers.vp_customer_email}) ;;
+  #   }
+  #   join: customer_flags_by_audience{
+  #     view_label: "Tealium Audiences"
+  #     from: tealium_visitors_view_normalized
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${customer_flags_by_audience.visitor_id}::STRING = ${customers.vp_customer_email}::STRING ;;
+  #   }
+  #   join: contact {
+  #     view_label: "Contact"
+  #     from: customer
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${contact.email_address}) ;;
+  #   }
+  #   # join: customer_order_sequence {
+  #   #   view_label: " Order Sequence"
+  #   #   from: v_customer_order_sequence
+  #   #   type: left_outer
+  #   #   relationship: one_to_many
+  #   #   sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_order_sequence.email}) ;;
+  #   # }
+  #   join: customer_first_order {
+  #     view_label: " 1st Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_first_order.email}) AND ${customer_first_order.order_sequence} = 1 ;;
+  #   }
+  #   join: customer_second_order {
+  #     view_label: " 2nd Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_second_order.email}) AND ${customer_second_order.order_sequence} = 2 ;;
+  #   }
+  #   join: customer_third_order {
+  #     view_label: " 3rd Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_third_order.email}) AND ${customer_third_order.order_sequence} = 3;;
+  #   }
+  #   join: customer_fourth_order {
+  #     view_label: " 4th Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fourth_order.email}) AND ${customer_fourth_order.order_sequence} = 4;;
+  #   }
+  #   join: customer_fifth_order {
+  #     view_label: " 5th Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_fifth_order.email}) AND ${customer_fifth_order.order_sequence} = 5;;
+  #   }
+  #   join: customer_last_order {
+  #     view_label: " Last Order"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_last_order.email}) AND ${customer_last_order.last_order} = true;;
+  #   }
+  #   join: customer_all_orders {
+  #     view_label: " All Orders"
+  #     from: v_customer_order_sequence
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: LOWER(${customers.vp_customer_email}) = LOWER(${customer_all_orders.email});;
+  #   }
+  #   join: customer_journey {
+  #     view_label: "Customer Journey"
+  #     from:  customer_journey
+  #     type:  left_outer
+  #     relationship:  one_to_one
+  #     sql_on:  LOWER(${customers.vp_customer_email}) = LOWER(${customer_journey.email});;
+  #   }
+  #   # join: customer_table {
+  #   #   view_label: "Customers"
+  #   #   type: left_outer
+  #   #   sql_on: ${customer_table.email} = ${customers.vp_customer_email} ;;
+  #   #   relationship: one_to_one}
+  #   # join: customer_first_order {
+  #   #   view_label: "Customers"
+  #   #   type:  left_outer
+  #   #   sql_on: ${customers.vp_customer_email} = ${customer_first_order.email} ;;
+  #   #   relationship: one_to_one}
+  #   # join: heap_id {
+  #   #   from: tealium_v_heap_id
+  #   #   type: left_outer
+  #   #   relationship: one_to_many
+  #   #   sql_on: ${customers.visitor_id}::string = ${heap_id.visitor_id}::string ;;
+  #   # }
+  #   # join: heap_customer{
+  #   #   from: customer
+  #   #   type: left_outer
+  #   #   relationship: one_to_many
+  #   #   sql_on: ${customers.visitor_id} = ${heap_customer.customer_id} ;;
+  #   # }
+  # }
 
 
   # explore: warranty {
