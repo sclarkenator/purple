@@ -617,45 +617,45 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-    explore: sales_agent_metrics {
-      hidden: yes
-      from: warehouse_date_table
-      label: "Sales Agent Metrics"
-      description: "Sales Agents Metrics"
-      join: employee_lkp {
-        view_label: "Employee Lookup"
-        type: cross
-        relationship: many_to_many
-      }
-      join: zendesk_chat_engagements {
-        view_label: "Chat Engagements"
-        sql_on: ${sales_agent_metrics.date_date} = ${zendesk_chat_engagements.engagement_start_date}
-          and ${employee_lkp.zendesk_id} = ${zendesk_chat_engagements.zendesk_id};;
-        type: left_outer
-        relationship: one_to_many
-      }
-      join: incontact_phone {
-        view_label: "Incontact Phone"
-        sql_on: ${sales_agent_metrics.date_date} = ${incontact_phone.start_ts_mst_date}
-          and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
-        type: left_outer
-        relationship: one_to_many
-      }
-      join: labor_hours {
-        view_label: "Labor Hours"
-        sql_on: ${sales_agent_metrics.date_date} = ${labor_hours.clocked_in_date}
-          and ${employee_lkp.workday_id} = ${labor_hours.employee_id};;
-        type: left_outer
-        relationship: one_to_many
-      }
-    #   join: zendesk_agent_events {
-    #     view_label: "Zendesk Agent Events"
-    #     sql_on: ${sales_agent_metrics_speedtest.date_date} = ${zendesk_agent_events.started_date}
-    #       and ${employee_lkp.zendesk_id} = ${zendesk_agent_events.zendesk_agent_id};;
-    #     type:  left_outer
-    #     relationship: one_to_many
-    # }
-  }
+  #   explore: sales_agent_metrics {
+  #     hidden: yes
+  #     from: warehouse_date_table
+  #     label: "Sales Agent Metrics"
+  #     description: "Sales Agents Metrics"
+  #     join: employee_lkp {
+  #       view_label: "Employee Lookup"
+  #       type: cross
+  #       relationship: many_to_many
+  #     }
+  #     join: zendesk_chat_engagements {
+  #       view_label: "Chat Engagements"
+  #       sql_on: ${sales_agent_metrics.date_date} = ${zendesk_chat_engagements.engagement_start_date}
+  #         and ${employee_lkp.zendesk_id} = ${zendesk_chat_engagements.zendesk_id};;
+  #       type: left_outer
+  #       relationship: one_to_many
+  #     }
+  #     join: incontact_phone {
+  #       view_label: "Incontact Phone"
+  #       sql_on: ${sales_agent_metrics.date_date} = ${incontact_phone.start_ts_mst_date}
+  #         and ${employee_lkp.incontact_id} = ${incontact_phone.agent_id} ;;
+  #       type: left_outer
+  #       relationship: one_to_many
+  #     }
+  #     join: labor_hours {
+  #       view_label: "Labor Hours"
+  #       sql_on: ${sales_agent_metrics.date_date} = ${labor_hours.clocked_in_date}
+  #         and ${employee_lkp.workday_id} = ${labor_hours.employee_id};;
+  #       type: left_outer
+  #       relationship: one_to_many
+  #     }
+  #   #   join: zendesk_agent_events {
+  #   #     view_label: "Zendesk Agent Events"
+  #   #     sql_on: ${sales_agent_metrics_speedtest.date_date} = ${zendesk_agent_events.started_date}
+  #   #       and ${employee_lkp.zendesk_id} = ${zendesk_agent_events.zendesk_agent_id};;
+  #   #     type:  left_outer
+  #   #     relationship: one_to_many
+  #   # }
+  # }
 
   # explore: sales_test {
   #   from: sales_order_line
@@ -936,39 +936,39 @@ include: "/dashboards/**/*.dashboard"
   # }
 
 
-  explore: scc { # The scc explore needs to remain until we can migrate day_aggregations
-    from: sleep_country_canada_sales
-    hidden: yes
-    #fields: [ALL_FIELDS*]
-    label: "SCC Orders"
-    group_label: " Orders"
-    description: "Sales Orders for SCC"
-    join: sleep_country_canada_store {
-      type: left_outer
-      sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
-      relationship: many_to_one}
-    join: sleep_country_canada_product {
-      type: left_outer
-      sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
-      relationship: many_to_one}
-    join: item {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
-    }
-    join: v_scc_order_flg {
-      type: left_outer
-      view_label: "Scc"
-      relationship:  many_to_one
-      sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
-    }
-    join: scc_targets {
-      type: full_outer
-      view_label: "Targets"
-      relationship: many_to_one
-      sql_on: ${scc.created_date} = ${scc_targets.date_date} and ${scc_targets.source} = ${sleep_country_canada_store.source} ;;
-    }
-  }
+  # explore: scc {
+  #   from: sleep_country_canada_sales
+  #   hidden: yes
+  #   #fields: [ALL_FIELDS*]
+  #   label: "SCC Orders"
+  #   group_label: " Orders"
+  #   description: "Sales Orders for SCC"
+  #   join: sleep_country_canada_store {
+  #     type: left_outer
+  #     sql_on: ${scc.store_id} = ${sleep_country_canada_store.store_id} ;;
+  #     relationship: many_to_one}
+  #   join: sleep_country_canada_product {
+  #     type: left_outer
+  #     sql_on: ${scc.sku}  = ${sleep_country_canada_product.scc_sku} ;;
+  #     relationship: many_to_one}
+  #   join: item {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${sleep_country_canada_product.item_id} = ${item.item_id} ;;
+  #   }
+  #   join: v_scc_order_flg {
+  #     type: left_outer
+  #     view_label: "Scc"
+  #     relationship:  many_to_one
+  #     sql_on: ${scc.order_id} = ${v_scc_order_flg.order_id} ;;
+  #   }
+  #   join: scc_targets {
+  #     type: full_outer
+  #     view_label: "Targets"
+  #     relationship: many_to_one
+  #     sql_on: ${scc.created_date} = ${scc_targets.date_date} and ${scc_targets.source} = ${sleep_country_canada_store.source} ;;
+  #   }
+  # }
 
 
   # explore: return_form_entry {
@@ -993,35 +993,35 @@ include: "/dashboards/**/*.dashboard"
   #     relationship: many_to_one}
   # }
 
-  explore: day_aggregations {
-    label: "Data By Date"
-    description: "Sales, Forecast, Adspend, aggregated to a day (for calculating ROAs, and % to Goal)"
-    from: day_aggregations
-    group_label: " Sales"
-    hidden:yes
-    query: sales_last_30 {
-      dimensions: [day_aggregations.date_date]
-      measures: [day_aggregations.total_gross_sales, day_aggregations.forecast_total_amount]
-      label: "Sales to Forecast"
-      description: "Last 12 months, sales to forecast by month"
-      #pivots: [dimension1, dimension2, … ]
-      sorts: [day_aggregations.date_date: asc]
-      filters: [day_aggregations.date_date: "30 days ago for 30 days"]
-      #timezone: timezone
-      limit: 100
-    }
-    query: period_over_period {
-      dimensions: [day_aggregations.date_in_period_date, day_aggregations.period]
-      measures: [day_aggregations.total_gross_sales]
-      label: "Period Over Period"
-      description: "Last 30 days sales compared to the previous 30"
-      pivots: [day_aggregations.period]
-      sorts: [day_aggregations.date_in_period_date: desc]
-      filters: [day_aggregations.comparison_period: "previous",
-        day_aggregations.date_filter: "30 days",
-        day_aggregations.within_dates: "Yes"]
-    }
-  }
+  # explore: day_aggregations {
+  #   label: "Data By Date"
+  #   description: "Sales, Forecast, Adspend, aggregated to a day (for calculating ROAs, and % to Goal)"
+  #   from: day_aggregations
+  #   group_label: " Sales"
+  #   hidden:yes
+  #   query: sales_last_30 {
+  #     dimensions: [day_aggregations.date_date]
+  #     measures: [day_aggregations.total_gross_sales, day_aggregations.forecast_total_amount]
+  #     label: "Sales to Forecast"
+  #     description: "Last 12 months, sales to forecast by month"
+  #     #pivots: [dimension1, dimension2, … ]
+  #     sorts: [day_aggregations.date_date: asc]
+  #     filters: [day_aggregations.date_date: "30 days ago for 30 days"]
+  #     #timezone: timezone
+  #     limit: 100
+  #   }
+  #   query: period_over_period {
+  #     dimensions: [day_aggregations.date_in_period_date, day_aggregations.period]
+  #     measures: [day_aggregations.total_gross_sales]
+  #     label: "Period Over Period"
+  #     description: "Last 30 days sales compared to the previous 30"
+  #     pivots: [day_aggregations.period]
+  #     sorts: [day_aggregations.date_in_period_date: desc]
+  #     filters: [day_aggregations.comparison_period: "previous",
+  #       day_aggregations.date_filter: "30 days",
+  #       day_aggregations.within_dates: "Yes"]
+  #   }
+  # }
 
   explore: day_sku {
     from: day_sku_aggregations
@@ -1061,9 +1061,9 @@ include: "/dashboards/**/*.dashboard"
   #   hidden: yes
   # }
 
-  explore: wholesale_open_doors {hidden:yes}
+  # explore: wholesale_open_doors {hidden:yes}
   # explore: target_dtc {hidden: yes}
-  explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"} # used by data by date
+  # explore: sales_targets {hidden:  yes label: "Finance targets"  description: "Monthly finance targets, spread by day"} # used by data by date
 
   # explore: sales_targets_dim {hidden:  yes
   #   label: "Finance targets"  description: "Monthly finance targets, spread by day"
@@ -1130,7 +1130,7 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: v_new_roa {hidden: yes}
+  # explore: v_new_roa {hidden: yes}
 
 
 # explore: conversion {hidden: yes}
