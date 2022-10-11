@@ -341,41 +341,41 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: crm_customer_health {
-    hidden:yes
-    label: "CRM: Customer Health"
-    group_label: "Marketing"
-    view_label:"Customer Health"
-    join: crm_customer_health_lifetime {
-      view_label: "Customer Lifetime"
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${crm_customer_health.email_join} =  ${crm_customer_health_lifetime.email_join} ;;
-    }
-    join: order_utm {
-      view_label: "Orders"
-      type: left_outer
-      relationship: one_to_many
-      sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
-    }
-    join: sales_order {
-      type: left_outer
-      sql_on: lower(${sales_order.email}) = ${crm_customer_health.email_join} ;;
-      relationship: many_to_one
-      #fields: []
-    }
-    join: sales_order_line_base {
-      type: left_outer
-      sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
-      relationship: one_to_many
-      fields: []
-    }
-    join: item {
-      type: left_outer
-      sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # explore: crm_customer_health {
+  #   hidden:yes
+  #   label: "CRM: Customer Health"
+  #   group_label: "Marketing"
+  #   view_label:"Customer Health"
+  #   join: crm_customer_health_lifetime {
+  #     view_label: "Customer Lifetime"
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${crm_customer_health.email_join} =  ${crm_customer_health_lifetime.email_join} ;;
+  #   }
+  #   join: order_utm {
+  #     view_label: "Orders"
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: lower(${crm_customer_health.email}) = lower(${order_utm.email}) ;;
+  #   }
+  #   join: sales_order {
+  #     type: left_outer
+  #     sql_on: lower(${sales_order.email}) = ${crm_customer_health.email_join} ;;
+  #     relationship: many_to_one
+  #     #fields: []
+  #   }
+  #   join: sales_order_line_base {
+  #     type: left_outer
+  #     sql_on: ${sales_order_line_base.order_id} = ${sales_order.order_id} and ${sales_order_line_base.system} = ${sales_order.system};;
+  #     relationship: one_to_many
+  #     fields: []
+  #   }
+  #   join: item {
+  #     type: left_outer
+  #     sql_on:  ${item.item_id} = ${sales_order_line_base.item_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
 
   explore: v_fb_adset_freq_weekly {hidden: yes}
@@ -398,7 +398,7 @@ include: "/dashboards/**/*.dashboard"
   # explore: impact_radius_autosend {hidden: yes group_label: "Marketing"}
   # explore: conversions {hidden: yes group_label: "Marketing"} -- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
   # explore: veritone_pixel_matchback { hidden:yes group_label: "Marketing"}-- Deprecated on 8/18/22 because i see no assets in Looker using this explore. RL
-  explore: target_adspend {hidden: yes group_label: "Marketing"}
+  # explore: target_adspend {hidden: yes group_label: "Marketing"}
   # explore: promotion {hidden:yes group_label: "Marketing"}
   # explore: crm_customer_health {hidden:yes group_label: "Marketing" label:"CRM: Customer Health"}
 
