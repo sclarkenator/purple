@@ -1,3 +1,5 @@
+# DEPRECATED
+
 ##########################################################################################
 #
 # Use for testing new views
@@ -5,9 +7,9 @@
 ##########################################################################################
 
 
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
-#explore: contact_history {}
+# #explore: contact_history {}
 
-explore: test_messages {hidden:yes}
+# explore: test_messages {hidden:yes}
