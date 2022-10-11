@@ -1,11 +1,13 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Customer Care Explores
 #
 #-------------------------------------------------------------------
 
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
 # explore: agent_data {from:  employee_lkp group_label: "Customer Care"} #cj
 # explore: cc_call_service_level_csl { description: "Calculated service levels" hidden: yes group_label: "Customer Care" }
@@ -124,61 +126,61 @@ include: "/dashboards/**/*.dashboard"
 #####################################################################
 ## AGENT TEAM HISTORY cj
 
-explore:agent_team_history {
-  view_label: "Agent Team History"
-  group_label: "Historic Data"
-  view_name: agent_team_history
-  hidden: yes
-  fields: [employee_lkp.name, agent_team_history.incontact_id, agent_team_history.current_team_flag, agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_name, agent_team_history.team_email]
+# explore:agent_team_history {
+#   view_label: "Agent Team History"
+#   group_label: "Historic Data"
+#   view_name: agent_team_history
+#   hidden: yes
+#   fields: [employee_lkp.name, agent_team_history.incontact_id, agent_team_history.current_team_flag, agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_name, agent_team_history.team_email]
 
-  join: employee_lkp {
-    view_label: "Agent Team History"
-    from: employee_lkp
-    type: inner
-    sql_on: ${agent_team_history.incontact_id} = ${employee_lkp.incontact_id} ;;
-    relationship: one_to_many
-  }
-  }
+#   join: employee_lkp {
+#     view_label: "Agent Team History"
+#     from: employee_lkp
+#     type: inner
+#     sql_on: ${agent_team_history.incontact_id} = ${employee_lkp.incontact_id} ;;
+#     relationship: one_to_many
+#   }
+#   }
 
 #####################################################################
 #####################################################################
 ## AGENT ATTENDANCE cj
 
-explore:agent_attendance {
-  label: "Agent Attendance"
-  view_label: "Agent Data"
-  view_name: employee_lkp
-  hidden: yes
+# explore:agent_attendance {
+#   label: "Agent Attendance"
+#   view_label: "Agent Data"
+#   view_name: employee_lkp
+#   hidden: yes
 
-  join: agent_attendance {
-    view_label: "Attendance Data"
-    from: cc_agent_attendance
-    type: left_outer
-    sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.incontact_id} ;;
-    sql_where: ${agent_attendance.added_by} is not null ;;
-    relationship: one_to_many
-  }
+#   join: agent_attendance {
+#     view_label: "Attendance Data"
+#     from: cc_agent_attendance
+#     type: left_outer
+#     sql_on: ${employee_lkp.incontact_id} = ${agent_attendance.incontact_id} ;;
+#     sql_where: ${agent_attendance.added_by} is not null ;;
+#     relationship: one_to_many
+#   }
 
-  join: agent_current_warning_level {
-    view_label: "Attendance Data"
-    fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
-    type: left_outer
-    sql_on: ${employee_lkp.incontact_id} = ${agent_current_warning_level.incontact_id}
-      and ${employee_lkp.incontact_id} is not null
-      and ${employee_lkp.incontact_id} <> '2612383' ;;
-    relationship: one_to_one
-  }
+#   join: agent_current_warning_level {
+#     view_label: "Attendance Data"
+#     fields: [agent_current_warning_level.warning_level, agent_current_warning_level.current_points]
+#     type: left_outer
+#     sql_on: ${employee_lkp.incontact_id} = ${agent_current_warning_level.incontact_id}
+#       and ${employee_lkp.incontact_id} is not null
+#       and ${employee_lkp.incontact_id} <> '2612383' ;;
+#     relationship: one_to_one
+#   }
 
-  join: agent_team_history {
-    view_label: "Agent Data"
-    # from: agent_team_history
-    type: left_outer
-    sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
-      and ${agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date} ;;
-    fields: [agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_email, agent_team_history.team_name, agent_team_history.current_team_flag]
-    relationship: many_to_one
-  }
-}
+#   join: agent_team_history {
+#     view_label: "Agent Data"
+#     # from: agent_team_history
+#     type: left_outer
+#     sql_on:  ${employee_lkp.incontact_id} = ${agent_team_history.incontact_id}
+#       and ${agent_attendance.event_date_date} between ${agent_team_history.start_date} and ${agent_team_history.end_date} ;;
+#     fields: [agent_team_history.start_date, agent_team_history.end_date, agent_team_history.team_email, agent_team_history.team_name, agent_team_history.current_team_flag]
+#     relationship: many_to_one
+#   }
+# }
 
 #####################################################################
 #####################################################################
@@ -210,25 +212,25 @@ explore:agent_attendance {
 #####################################################################
 ## CONTACT HISTORY cj
 
-explore: contact_history {
-   view_label: "Contact History"
-   hidden:yes
+# explore: contact_history {
+#   view_label: "Contact History"
+#   hidden:yes
 
-   join: employee_lkp {
-     view_label: "Agent Data"
-     type: left_outer
-     sql_on: ${contact_history.agent_id} = ${employee_lkp.incontact_id} ;;
-     relationship: many_to_one
-   }
+#   join: employee_lkp {
+#     view_label: "Agent Data"
+#     type: left_outer
+#     sql_on: ${contact_history.agent_id} = ${employee_lkp.incontact_id} ;;
+#     relationship: many_to_one
+#   }
 
- join: agent_state {
-   view_label: "Agent State"
-   # from: agent_team_history
-   type: left_outer
-   sql_on:  ${contact_history.agent_id} = ${agent_state.agent_id} ;;
-   relationship: many_to_one
- }
-}
+# join: agent_state {
+#   view_label: "Agent State"
+#   # from: agent_team_history
+#   type: left_outer
+#   sql_on:  ${contact_history.agent_id} = ${agent_state.agent_id} ;;
+#   relationship: many_to_one
+# }
+# }
 
 #####################################################################
 #####################################################################
@@ -703,12 +705,12 @@ explore: contact_history {
 #####################################################################
 #####################################################################
 
-  explore: orphan_orders {
-    hidden:  yes
-    group_label: "Customer Care"
-    label: "Orphan orders"
-    description: "Orders that exist in Shopify that aren't yet in Netsuite"
-  }
+  # explore: orphan_orders {
+  #   hidden:  yes
+  #   group_label: "Customer Care"
+  #   label: "Orphan orders"
+  #   description: "Orders that exist in Shopify that aren't yet in Netsuite"
+  # }
 
 #####################################################################
 #####################################################################
