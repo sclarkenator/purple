@@ -1,16 +1,18 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Other Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
-  explore: russ_order_validation {
-    label: "Order Validation"
-    description: "Constructed table comparing orders from different sources"
-    hidden:yes
-  }
+  # explore: russ_order_validation {
+  #   label: "Order Validation"
+  #   description: "Constructed table comparing orders from different sources"
+  #   hidden:yes
+  # }
 
   # explore: pii_review {
   #   group_label: "Legal"
@@ -103,61 +105,61 @@ include: "/dashboards/**/*.dashboard"
 #
 #-------------------------------------------------------------------
 
-  explore: qualtrics {
-    hidden:yes
-    from: qualtrics_survey
-    view_label: "Survey"
-    join: qualtrics_response {
-      type: left_outer
-      sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
-      relationship: one_to_many
-      view_label: "Response"}
-    join: qualtrics_customer {
-      type: left_outer
-      sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
-      relationship: many_to_one
-      view_label: "Qualtrics Customer"}
-    join: qualtrics_answer {
-      type: left_outer
-      sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
-      relationship: one_to_many
-      view_label: "Answer"}
-    join: item {
-      view_label: "Product"
-      sql_on: ${item.item_id}::text = ${qualtrics_answer.question_id};;
-      # TRY_CAST(${item.item_id} as INTEGER) = TRY_CAST(${qualtrics_answer.question_name} as INTEGER) or TRY_CAST(${qualtrics_answer.question_id} as INTEGER);;
-      type: left_outer
-      relationship: many_to_one}
-    join: customer_table {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
-      relationship: many_to_one}
-    join: sales_order {
-      type:  left_outer
-      sql_on: ${qualtrics_response.order_id}::text = ${sales_order.order_id}::text ;;
-      relationship: one_to_one }
-    join: sales_order_line_base {
-      type:  left_outer
-      sql_on: ${qualtrics_response.order_id}::text = ${sales_order_line_base.order_id}::text and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
-      relationship: one_to_many}
-    join: first_order_flag {
-      view_label: "Sales Header"
-      type: left_outer
-      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
-      relationship: one_to_one}
-    join: zendesk_sell {
-      view_label: "Zendesk"
-      type: full_outer
-      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
-      relationship: one_to_one
-    }
-    join: order_flag {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one}
-  }
+  # explore: qualtrics {
+  #   hidden:yes
+  #   from: qualtrics_survey
+  #   view_label: "Survey"
+  #   join: qualtrics_response {
+  #     type: left_outer
+  #     sql_on: ${qualtrics.id} = ${qualtrics_response.survey_id} ;;
+  #     relationship: one_to_many
+  #     view_label: "Response"}
+  #   join: qualtrics_customer {
+  #     type: left_outer
+  #     sql_on: ${qualtrics_response.recipient_email} = ${qualtrics_customer.email} ;;
+  #     relationship: many_to_one
+  #     view_label: "Qualtrics Customer"}
+  #   join: qualtrics_answer {
+  #     type: left_outer
+  #     sql_on: ${qualtrics.id} = ${qualtrics_answer.survey_id} AND ${qualtrics_answer.response_id} = ${qualtrics_response.response_id} ;;
+  #     relationship: one_to_many
+  #     view_label: "Answer"}
+  #   join: item {
+  #     view_label: "Product"
+  #     sql_on: ${item.item_id}::text = ${qualtrics_answer.question_id};;
+  #     # TRY_CAST(${item.item_id} as INTEGER) = TRY_CAST(${qualtrics_answer.question_name} as INTEGER) or TRY_CAST(${qualtrics_answer.question_id} as INTEGER);;
+  #     type: left_outer
+  #     relationship: many_to_one}
+  #   join: customer_table {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: ${customer_table.customer_id}::text = ${qualtrics_response.netsuite_customer_id} ;;
+  #     relationship: many_to_one}
+  #   join: sales_order {
+  #     type:  left_outer
+  #     sql_on: ${qualtrics_response.order_id}::text = ${sales_order.order_id}::text ;;
+  #     relationship: one_to_one }
+  #   join: sales_order_line_base {
+  #     type:  left_outer
+  #     sql_on: ${qualtrics_response.order_id}::text = ${sales_order_line_base.order_id}::text and ${sales_order.system}::text = ${sales_order_line_base.system}::text ;;
+  #     relationship: one_to_many}
+  #   join: first_order_flag {
+  #     view_label: "Sales Header"
+  #     type: left_outer
+  #     sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+  #     relationship: one_to_one}
+  #   join: zendesk_sell {
+  #     view_label: "Zendesk"
+  #     type: full_outer
+  #     sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: order_flag {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+  #     relationship: one_to_one}
+  # }
 
 #   explore: qualtrics1 {
 #     hidden:yes
