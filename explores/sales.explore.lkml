@@ -66,513 +66,513 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: sales_order_line{
-    from:  sales_order_line
-    label:  " Sales"
-    hidden: yes
-    group_label: " Sales"
-    view_label: "Sales Order Line"
-    view_name: sales_order_line
-    description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
-    always_join: [fulfillment]
-    always_filter: {
-      filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
-      filters: [sales_order.is_exchange_upgrade_warranty: ""]
-    }
-    join: sf_zipcode_facts {
-      view_label: "Customer"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip_1}::varchar = (${sf_zipcode_facts.zipcode})::varchar ;;
-      relationship: many_to_one}
-    join: zcta5 {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
-      relationship: many_to_one}
-    join: dma {
-      view_label: "Customer"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
-      relationship: many_to_many}
-    join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
-      relationship: many_to_one}
-    join: fulfillment {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
-      relationship: one_to_many}
-    join: visible {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
-      relationship: one_to_many}
-    join: sales_order {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
-      relationship: many_to_one}
-    join: wholesale_customer_warehouses {
-      view_label: "Wholesale Warehouses"
-      type: left_outer
-      sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
-      relationship: many_to_one}
-    join: shopify_orders {
-      view_label: "Sales Order Line"
-      type:  left_outer
-      fields: [shopify_orders.call_in_order_Flag,shopify_orders.user_id]
-      sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
-      relationship:  many_to_many}
-    join: return_order_line {
-      view_label: "Returns"
-      type: full_outer
-      sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
-      relationship: one_to_many}
-    join: return_order {
-      view_label: "Returns"
-      type: full_outer
-      required_joins: [return_order_line]
-      sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
-      relationship: many_to_one}
-    join: return_reason_v2 {
-      view_label: "Returns"
-      type: left_outer
-      sql_on: ${sales_order.order_id} = ${return_reason_v2.order_id} ;;
-      relationship: one_to_many }
-    join: return_reason {
-      view_label: "Returns"
-      type: full_outer
-      sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
-      relationship: many_to_one}
-    join: return_option {
-      view_label: "Returns"
-      type: left_outer
-      sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
-      relationship: many_to_one}
-    join: restocked_warranties {
-      from: restocked_returns
-      view_label: "Warranties"
-      # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
-      # This view is joined in twice to display the same measure under the Returns and Warranties Views.
-      type: left_outer
-      relationship: one_to_one
-      required_joins: [warranty_order_line]
-      sql_on:
-      ( ${restocked_warranties.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_warranties.item_id} = ${return_order_line.item_id} ) OR
-      ( ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id} ) ;; }
-    join: restocked_returns {
-      from: restocked_returns
-      view_label: "Returns"
-      # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
-      # This view is joined in twice to display the same measure under the Returns and Warranties Views.
-      type: left_outer
-      relationship: one_to_one
-      required_joins: [warranty_order_line]
-      sql_on:
-      ( ${restocked_returns.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id} ) OR
-      ( ${restocked_returns.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_returns.item_id} = ${warranty_order_line.item_id} ) ;; }
-    join: customer_table {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
-      relationship: many_to_one}
-    join: customer_order_history {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: ${sales_order.email} = ${customer_order_history.email} ;;
-      relationship: many_to_one}
-    join: customer_first_order {
-      view_label: "Customer"
-      type:  left_outer
-      sql_on: ${sales_order.email} = ${customer_first_order.email} ;;
-      relationship: many_to_one}
-    join: retroactive_discount {
-      view_label: "Retro Discounts"
-      type: left_outer
-      sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
-      relationship: one_to_many}
-    join: discount_code {
-      view_label: "Retro Discounts"
-      type:  left_outer
-      sql_on: ${retroactive_discount.discount_code_id} = ${discount_code.discount_code_id} ;;
-      relationship: many_to_one}
-    join: cancelled_order {
-      view_label: "Cancellations"
-      type: left_outer
-      sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
-      relationship: one_to_one }
-    join: NETSUITE_cancelled_reason {
-      view_label: "Cancellations"
-      type: left_outer
-      sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.cancel_reason_id} ;;
-      relationship: many_to_one}
-    join: order_flag {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one}
-    join: fulfillment_dates {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one}
-    join: fedex_tracking {
-      view_label: "Fulfillment"
-      type: full_outer
-      sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
-      relationship: many_to_one}
-    join: fedex_fulfillment_date{
-      view_label: "Fulfillment"
-      type: full_outer
-      sql_on: ${fulfillment.fulfillment_id} = ${fedex_fulfillment_date.fulfillment_id} ;;
-      relationship: many_to_one}
-    join: ups_tracking {
-      view_label: "Fulfillment"
-      type: full_outer
-      sql_on: ${fulfillment.tracking_numbers} = ${ups_tracking.tracking_number} ;;
-      relationship: many_to_one}
-    join: state_tax_reconciliation {
-      view_label: "State Tax Reconciliation"
-      type: left_outer
-      sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_many}
-    join: shopify_discount_codes {
-      view_label: "Promo"
-      type: left_outer
-      sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
-      relationship: many_to_many}
-    join: marketing_sms_codes {
-      view_label: "Promo"
-      type: left_outer
-      sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
-      relationship:many_to_many}
-    join: marketing_promo_codes {
-      view_label: "Promo"
-      type: left_outer
-      sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
-      relationship: many_to_one}
-    join: first_order_flag {
-      view_label: "Sales Header"
-      type: left_outer
-      sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
-      relationship: one_to_one}
-    join: v_wholesale_manager {
-      view_label: "Customer"
-      type:left_outer
-      sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
-      relationship:one_to_one}
-    join: warranty_order {
-      view_label: "Warranties"
-      type: full_outer
-      #required_joins: [warranty_order_line]
-      sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.original_system} ;;
-      #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
-      relationship: one_to_many}
-    join: warranty_order_line {
-      view_label: "Warranties"
-      type:  full_outer
-      sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
-      #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
-      relationship: many_to_many}
-    join: warranty_reason {
-      view_label: "Warranties"
-      type: left_outer
-      required_joins: [warranty_order]
-      sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
-      relationship: many_to_one}
-    # join: c3_conversion_ft_lt {
-    #   view_label: "Marketing Attribution"
-    #   type:  full_outer
-    #   sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
-    #   relationship: one_to_one}
-    join: mymove {
-      view_label: "Marketing Attribution"
-      type: left_outer
-      sql_on: ${mymove.order_id} = ${sales_order.order_id} and ${mymove.system} = ${sales_order.system} ;;
-      relationship: one_to_one
-    }
-    join : slicktext_textword {
-      view_label: "Promo"
-      type:full_outer
-      sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
-      relationship: many_to_many}
-    join: slicktext_contact {
-      view_label: "Promo"
-      type: full_outer
-      sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
-      relationship: one_to_many}
-    join: slicktext_opt_out {
-      view_label: "Promo"
-      type: full_outer
-      sql_on: ${slicktext_contact.email}=${slicktext_opt_out.email} ;;
-      relationship: many_to_many}
-    join: standard_cost {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
-      relationship: one_to_one}
-    join: referral_sales_orders {
-      type: left_outer
-      sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
-      relationship: one_to_one
-    }
-    join: affiliate_sales_order {
-      type: left_outer
-      sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
-      relationship: one_to_one
-    }
-    join: zipcode_radius {
-      type: left_outer
-      sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
-      relationship: one_to_many
-    }
-    join: shopify_discount_titles {
-      type: left_outer
-      sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
-      relationship: one_to_one
-    }
-    join: mainchain_transaction_outwards_detail {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
-        and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
-      relationship: one_to_many
-    }
-    join: calls_to_orders {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${calls_to_orders.order_id}::string =  ${sales_order.etail_order_id}::string;;
-      relationship: many_to_one
-    }
-    join: exchange_order_line {
-      view_label: "Returns"
-      type: left_outer
-      sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
-        and ${sales_order_line.system} = ${exchange_order_line.system} ;;
-      relationship: one_to_many
-    }
-    join: exchange_order {
-      view_label: "Returns"
-      type: left_outer
-      sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
-      relationship: many_to_one
-    }
-    join: zendesk_sell {
-      view_label: "Zendesk"
-      type: full_outer
-      sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
-      relationship: one_to_one
-    }
-    join: zendesk_sell_deal {
-      view_label: "Zendesk"
-      type: full_outer
-      sql_on: ${zendesk_sell.deal_id}=${zendesk_sell_deal.deal_id};;
-      relationship: one_to_one
-    }
-    join: cc_deals {
-      view_label: "Zendesk"
-      type: left_outer
-      relationship: one_to_one
-      fields: [cc_deals.order_id, cc_deals.source_clean]
-      sql_on: ${cc_deals.order_id} = ${sales_order.order_id} ;;
-    }
-    join: warranty_original_information {
-      view_label: "Warranties"
-      type: left_outer
-      sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.sku_merged} = ${warranty_original_information.sku_merged} ;;
-      relationship: one_to_one
-    }
-    join: first_purchase_date {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
-      relationship: one_to_one
-    }
-    join: agent_name {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${agent_name.zendesk_id}=${zendesk_sell.zendesk_id};;
-      relationship: many_to_one
-    }
-    join: team_lead_name {
-      view_label: "Zendesk"
-      type: left_outer
-      sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or ${team_lead_name.agent_email} = ${zendesk_sell.email})
-        and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
-      relationship: many_to_one
-    }
-    join: promotions_combined {
-      view_label: "Sales Order"
-      type: left_outer
-      sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
-      relationship: one_to_one
-    }
-    join: highjump_fulfillment {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
-      relationship: one_to_many
-    }
-    join: v_transmission_dates {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
-      relationship: one_to_one
-    }
-    join: pilot_daily {
-      view_label: "Fulfillment"
-      type: full_outer
-      relationship: many_to_one
-      sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
-    }
-    join: ryder_summary_data {
-      view_label: "Fulfillment"
-      type: full_outer
-      relationship: many_to_one
-      sql_on: ${ryder_summary_data.order_id} =  ${sales_order.order_id};;
-    }
-    join: optimizely_experiment_lookup {
-      view_label: "Sales Order"
-      type: left_outer
-      relationship: one_to_many
-      sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
-    }
-    join: item_price {
-      view_label: "Product"
-      type: left_outer
-      relationship: many_to_many
-      sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
-    }
-    join: v_chat_sales {
-      view_label: "Zendesk"
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${v_chat_sales.order_id} = ${sales_order.order_id} and ${v_chat_sales.system} = ${sales_order.system};;
-    }
-    join: zendesk_chats {
-      view_label: "Zendesk"
-      type: left_outer
-      relationship: many_to_many
-      sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
-    }
-    join: item_return_rate {
-      type: left_outer
-      relationship: many_to_one
-      sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order_line.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
-    }
-    join: shipping {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
-    }
-    join: acquisition_recent_customer_test_segments {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email_join} ;;
-      view_label: "Customer"
-    }
-    join: acquisition_test_purchasers {
-      type: left_outer
-      relationship: one_to_one
-      sql_on: ${sales_order.order_system} = ${acquisition_test_purchasers.order_system} ;;
-      view_label: "Customer"
-    }
-    join: us_zipcode_mapping {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${sales_order_line.zip} = ${us_zipcode_mapping.zip} ;;
-      relationship: many_to_many
-    }
-    join: us_zipcode {
-      view_label: "Geography"
-      type:  left_outer
-      sql_on: ${us_zipcode_mapping.parent_zcta} = ${us_zipcode.zip} ;;
-      relationship: many_to_many
-    }
-    join: aura_vision_traffic {
-      view_label: "Owned Retail"
-      type:  left_outer
-      sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
-      relationship: many_to_many
-    }
-    join: privacy_request {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: ${sales_order.email} = ${privacy_request.email_join};;
-      relationship: many_to_one
-    }
-    join: v_financed_retail {
-      view_label: "Owned Retail"
-      type: left_outer
-      sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
-      relationship: one_to_one
-    }
-    join: paycom_labor_hours {
-      type: left_outer
-      sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date};;
-      relationship: many_to_many
-      fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
-    }
-    join: site_slas {
-      ##join added by Scott Clark on 11/5/2020 to get website-stated SLA reflected somewhere
-      type: left_outer
-      sql_on: ${sales_order.trandate_date} >= ${site_slas.start_date} and ${sales_order.trandate_date} < coalesce(${site_slas.end_date},'2050-01-01') and ${site_slas.sku_id} = ${item.sku_id} ;;
-      relationship: many_to_one
-    }
-    join: cordial_id {
-      view_label: "Customer"
-      type: left_outer
-      sql_on: lower(${sales_order.email}) = lower(${cordial_id.email_join});;
-      relationship: many_to_one
-      fields: [cordial_id.subscribe_status]
-    }
+  # explore: sales_order_line{
+  #   from:  sales_order_line
+  #   label:  " Sales"
+  #   hidden: yes
+  #   group_label: " Sales"
+  #   view_label: "Sales Order Line"
+  #   view_name: sales_order_line
+  #   description:  "All sales orders for DTC, Wholesale, Owned Retail channel"
+  #   always_join: [fulfillment]
+  #   always_filter: {
+  #     filters: [sales_order.channel: "DTC, Wholesale, Owned Retail"]
+  #     filters: [sales_order.is_exchange_upgrade_warranty: ""]
+  #   }
+  #   join: sf_zipcode_facts {
+  #     view_label: "Customer"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip_1}::varchar = (${sf_zipcode_facts.zipcode})::varchar ;;
+  #     relationship: many_to_one}
+  #   join: zcta5 {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip_1}::varchar = (${zcta5.zipcode})::varchar AND ${sales_order_line.state} = ${zcta5.state};;
+  #     relationship: many_to_one}
+  #   join: dma {
+  #     view_label: "Customer"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip} = ${dma.zip} ;;
+  #     relationship: many_to_many}
+  #   join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.item_id} = ${item.item_id} ;;
+  #     relationship: many_to_one}
+  #   join: fulfillment {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.item_order} = ${fulfillment.item_id}||'-'||${fulfillment.order_id}||'-'||${fulfillment.system} ;;
+  #     relationship: one_to_many}
+  #   join: visible {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.order_id} = ${visible.order_id} and ${sales_order_line.item_id} = ${visible.item_id} ;;
+  #     relationship: one_to_many}
+  #   join: sales_order {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.order_system} = ${sales_order.order_system} ;;
+  #     relationship: many_to_one}
+  #   join: wholesale_customer_warehouses {
+  #     view_label: "Wholesale Warehouses"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.street_address} = ${wholesale_customer_warehouses.street_address} and ${wholesale_customer_warehouses.customer_id} = ${sales_order.customer_id} ;;
+  #     relationship: many_to_one}
+  #   join: shopify_orders {
+  #     view_label: "Sales Order Line"
+  #     type:  left_outer
+  #     fields: [shopify_orders.call_in_order_Flag,shopify_orders.user_id]
+  #     sql_on: ${shopify_orders.order_ref} = ${sales_order.related_tranid} ;;
+  #     relationship:  many_to_many}
+  #   join: return_order_line {
+  #     view_label: "Returns"
+  #     type: full_outer
+  #     sql_on: ${sales_order_line.item_order} = ${return_order_line.item_order} ;;
+  #     relationship: one_to_many}
+  #   join: return_order {
+  #     view_label: "Returns"
+  #     type: full_outer
+  #     required_joins: [return_order_line]
+  #     sql_on: ${return_order_line.return_order_id} = ${return_order.return_order_id} ;;
+  #     relationship: many_to_one}
+  #   join: return_reason_v2 {
+  #     view_label: "Returns"
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id} = ${return_reason_v2.order_id} ;;
+  #     relationship: one_to_many }
+  #   join: return_reason {
+  #     view_label: "Returns"
+  #     type: full_outer
+  #     sql_on: ${return_reason.list_id} = ${return_order.return_reason_id} ;;
+  #     relationship: many_to_one}
+  #   join: return_option {
+  #     view_label: "Returns"
+  #     type: left_outer
+  #     sql_on: ${return_option.list_id} = ${return_order.return_option_id} ;;
+  #     relationship: many_to_one}
+  #   join: restocked_warranties {
+  #     from: restocked_returns
+  #     view_label: "Warranties"
+  #     # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
+  #     # This view is joined in twice to display the same measure under the Returns and Warranties Views.
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     required_joins: [warranty_order_line]
+  #     sql_on:
+  #     ( ${restocked_warranties.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_warranties.item_id} = ${return_order_line.item_id} ) OR
+  #     ( ${restocked_warranties.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_warranties.item_id} = ${warranty_order_line.item_id} ) ;; }
+  #   join: restocked_returns {
+  #     from: restocked_returns
+  #     view_label: "Returns"
+  #     # This view is used to calculate the total Restocked Units for items from both Warranties and Returns.
+  #     # This view is joined in twice to display the same measure under the Returns and Warranties Views.
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     required_joins: [warranty_order_line]
+  #     sql_on:
+  #     ( ${restocked_returns.original_transaction_id} = ${return_order_line.return_order_id} and ${restocked_returns.item_id} = ${return_order_line.item_id} ) OR
+  #     ( ${restocked_returns.original_transaction_id} = ${warranty_order_line.warranty_order_id} and ${restocked_returns.item_id} = ${warranty_order_line.item_id} ) ;; }
+  #   join: customer_table {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: ${customer_table.customer_id} = ${sales_order.customer_id} ;;
+  #     relationship: many_to_one}
+  #   join: customer_order_history {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: ${sales_order.email} = ${customer_order_history.email} ;;
+  #     relationship: many_to_one}
+  #   join: customer_first_order {
+  #     view_label: "Customer"
+  #     type:  left_outer
+  #     sql_on: ${sales_order.email} = ${customer_first_order.email} ;;
+  #     relationship: many_to_one}
+  #   join: retroactive_discount {
+  #     view_label: "Retro Discounts"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.item_order} = ${retroactive_discount.item_order_refund} ;;
+  #     relationship: one_to_many}
+  #   join: discount_code {
+  #     view_label: "Retro Discounts"
+  #     type:  left_outer
+  #     sql_on: ${retroactive_discount.discount_code_id} = ${discount_code.discount_code_id} ;;
+  #     relationship: many_to_one}
+  #   join: cancelled_order {
+  #     view_label: "Cancellations"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.item_order} = ${cancelled_order.item_order} ;;
+  #     relationship: one_to_one }
+  #   join: NETSUITE_cancelled_reason {
+  #     view_label: "Cancellations"
+  #     type: left_outer
+  #     sql_on: ${NETSUITE_cancelled_reason.list_id} = ${cancelled_order.cancel_reason_id} ;;
+  #     relationship: many_to_one}
+  #   join: order_flag {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${order_flag.order_id} = ${sales_order.order_id} ;;
+  #     relationship: one_to_one}
+  #   join: fulfillment_dates {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${fulfillment_dates.order_id} = ${sales_order.order_id} ;;
+  #     relationship: one_to_one}
+  #   join: fedex_tracking {
+  #     view_label: "Fulfillment"
+  #     type: full_outer
+  #     sql_on: ${fulfillment.tracking_numbers} = ${fedex_tracking.tracking_number} ;;
+  #     relationship: many_to_one}
+  #   join: fedex_fulfillment_date{
+  #     view_label: "Fulfillment"
+  #     type: full_outer
+  #     sql_on: ${fulfillment.fulfillment_id} = ${fedex_fulfillment_date.fulfillment_id} ;;
+  #     relationship: many_to_one}
+  #   join: ups_tracking {
+  #     view_label: "Fulfillment"
+  #     type: full_outer
+  #     sql_on: ${fulfillment.tracking_numbers} = ${ups_tracking.tracking_number} ;;
+  #     relationship: many_to_one}
+  #   join: state_tax_reconciliation {
+  #     view_label: "State Tax Reconciliation"
+  #     type: left_outer
+  #     sql_on: ${state_tax_reconciliation.order_id} = ${sales_order.order_id} ;;
+  #     relationship: one_to_many}
+  #   join: shopify_discount_codes {
+  #     view_label: "Promo"
+  #     type: left_outer
+  #     sql_on: ${shopify_discount_codes.etail_order_name} = ${sales_order.related_tranid} ;;
+  #     relationship: many_to_many}
+  #   join: marketing_sms_codes {
+  #     view_label: "Promo"
+  #     type: left_outer
+  #     sql_on: lower(coalesce(${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) = lower(${marketing_sms_codes.sms}) ;;
+  #     relationship:many_to_many}
+  #   join: marketing_promo_codes {
+  #     view_label: "Promo"
+  #     type: left_outer
+  #     sql_on: lower(${marketing_promo_codes.promo}) = lower(coalesce(${marketing_sms_codes.promo},${sales_order.shopify_discount_code},${shopify_discount_codes.promo})) ;;
+  #     relationship: many_to_one}
+  #   join: first_order_flag {
+  #     view_label: "Sales Header"
+  #     type: left_outer
+  #     sql_on: ${first_order_flag.pk} = ${sales_order.order_system} ;;
+  #     relationship: one_to_one}
+  #   join: v_wholesale_manager {
+  #     view_label: "Customer"
+  #     type:left_outer
+  #     sql_on: ${sales_order.order_id} = ${v_wholesale_manager.order_id} and ${sales_order.system} = ${v_wholesale_manager.system};;
+  #     relationship:one_to_one}
+  #   join: warranty_order {
+  #     view_label: "Warranties"
+  #     type: full_outer
+  #     #required_joins: [warranty_order_line]
+  #     sql_on: ${sales_order.order_id} = ${warranty_order.order_id} and ${sales_order.system} = ${warranty_order.original_system} ;;
+  #     #sql_on: ${warranty_order_line.order_id} = ${warranty_order.order_id} ;;
+  #     relationship: one_to_many}
+  #   join: warranty_order_line {
+  #     view_label: "Warranties"
+  #     type:  full_outer
+  #     sql_on: ${warranty_order_line.warranty_order_id} = ${warranty_order.warranty_order_id} and  ${warranty_order_line.item_id} = ${sales_order_line.item_id};;
+  #     #sql_on: ${warranty_order_line.item_order} = ${sales_order_line.item_order};;
+  #     relationship: many_to_many}
+  #   join: warranty_reason {
+  #     view_label: "Warranties"
+  #     type: left_outer
+  #     required_joins: [warranty_order]
+  #     sql_on: ${warranty_order.warranty_reason_code_id} = ${warranty_reason.list_id} ;;
+  #     relationship: many_to_one}
+  #   # join: c3_conversion_ft_lt {
+  #   #   view_label: "Marketing Attribution"
+  #   #   type:  full_outer
+  #   #   sql_on: ${sales_order.order_id}=${c3_conversion_ft_lt.analytics_order_id} ;;
+  #   #   relationship: one_to_one}
+  #   join: mymove {
+  #     view_label: "Marketing Attribution"
+  #     type: left_outer
+  #     sql_on: ${mymove.order_id} = ${sales_order.order_id} and ${mymove.system} = ${sales_order.system} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join : slicktext_textword {
+  #     view_label: "Promo"
+  #     type:full_outer
+  #     sql_on:  ${slicktext_textword.word}=${shopify_discount_codes.promo} ;;
+  #     relationship: many_to_many}
+  #   join: slicktext_contact {
+  #     view_label: "Promo"
+  #     type: full_outer
+  #     sql_on: ${slicktext_textword.id}=${slicktext_contact.textword_id} ;;
+  #     relationship: one_to_many}
+  #   join: slicktext_opt_out {
+  #     view_label: "Promo"
+  #     type: full_outer
+  #     sql_on: ${slicktext_contact.email}=${slicktext_opt_out.email} ;;
+  #     relationship: many_to_many}
+  #   join: standard_cost {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${standard_cost.item_id} = ${item.item_id} or ${standard_cost.ac_item_id} = ${item.item_id};;
+  #     relationship: one_to_one}
+  #   join: referral_sales_orders {
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id}=${referral_sales_orders.order_id_referral} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: affiliate_sales_order {
+  #     type: left_outer
+  #     sql_on: ${sales_order.related_tranid}=${affiliate_sales_order.order_id} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: zipcode_radius {
+  #     type: left_outer
+  #     sql_on: ${sf_zipcode_facts.zipcode}=${zipcode_radius.zipcode} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: shopify_discount_titles {
+  #     type: left_outer
+  #     sql_on: ${shopify_discount_titles.order_id} = ${sales_order.order_id} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: mainchain_transaction_outwards_detail {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${mainchain_transaction_outwards_detail.order_id} = ${sales_order.order_id} and ${sales_order_line.item_id} = ${mainchain_transaction_outwards_detail.item_id}
+  #       and ${mainchain_transaction_outwards_detail.system} = ${sales_order.system} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: calls_to_orders {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${calls_to_orders.order_id}::string =  ${sales_order.etail_order_id}::string;;
+  #     relationship: many_to_one
+  #   }
+  #   join: exchange_order_line {
+  #     view_label: "Returns"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.order_id} = ${exchange_order_line.order_id} and ${sales_order_line.item_id} = ${exchange_order_line.item_id}
+  #       and ${sales_order_line.system} = ${exchange_order_line.system} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: exchange_order {
+  #     view_label: "Returns"
+  #     type: left_outer
+  #     sql_on: ${exchange_order_line.exchange_order_id} = ${exchange_order.exchange_order_id} and ${exchange_order_line.replacement_order_id} = ${exchange_order.replacement_order_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: zendesk_sell {
+  #     view_label: "Zendesk"
+  #     type: full_outer
+  #     sql_on: ${zendesk_sell.order_id}=${sales_order.order_id} and ${sales_order.system}='NETSUITE' ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: zendesk_sell_deal {
+  #     view_label: "Zendesk"
+  #     type: full_outer
+  #     sql_on: ${zendesk_sell.deal_id}=${zendesk_sell_deal.deal_id};;
+  #     relationship: one_to_one
+  #   }
+  #   join: cc_deals {
+  #     view_label: "Zendesk"
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     fields: [cc_deals.order_id, cc_deals.source_clean]
+  #     sql_on: ${cc_deals.order_id} = ${sales_order.order_id} ;;
+  #   }
+  #   join: warranty_original_information {
+  #     view_label: "Warranties"
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id} = ${warranty_original_information.replacement_order_id} and ${item.sku_merged} = ${warranty_original_information.sku_merged} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: first_purchase_date {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: ${first_purchase_date.email} = ${sales_order.email} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: agent_name {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${agent_name.zendesk_id}=${zendesk_sell.zendesk_id};;
+  #     relationship: many_to_one
+  #   }
+  #   join: team_lead_name {
+  #     view_label: "Zendesk"
+  #     type: left_outer
+  #     sql_on: (${team_lead_name.incontact_id}=${agent_name.incontact_id} or ${team_lead_name.agent_email} = ${zendesk_sell.email})
+  #       and  ${team_lead_name.end_date}::date > '2089-12-31'::date ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: promotions_combined {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.created_date} = ${promotions_combined.promotion_date} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: highjump_fulfillment {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order.tranid} = ${highjump_fulfillment.transaction_number} AND ${item.sku_clean} = ${highjump_fulfillment.sku} ;;
+  #     relationship: one_to_many
+  #   }
+  #   join: v_transmission_dates {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.order_id} = ${v_transmission_dates.order_id} and ${sales_order_line.system} = ${v_transmission_dates.system} and ${sales_order_line.item_id} = ${v_transmission_dates.item_id} ;;
+  #     relationship: one_to_one
+  #   }
+  #   join: pilot_daily {
+  #     view_label: "Fulfillment"
+  #     type: full_outer
+  #     relationship: many_to_one
+  #     sql_on: ${pilot_daily.order_id} =  ${sales_order.order_id};;
+  #   }
+  #   join: ryder_summary_data {
+  #     view_label: "Fulfillment"
+  #     type: full_outer
+  #     relationship: many_to_one
+  #     sql_on: ${ryder_summary_data.order_id} =  ${sales_order.order_id};;
+  #   }
+  #   join: optimizely_experiment_lookup {
+  #     view_label: "Sales Order"
+  #     type: left_outer
+  #     relationship: one_to_many
+  #     sql_on: ${sales_order.related_tranid} = ${optimizely_experiment_lookup.shopify_order_id} ;;
+  #   }
+  #   join: item_price {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     relationship: many_to_many
+  #     sql_on: ${sales_order_line.item_id} = ${item_price.item_id} and ${sales_order.trandate_date} between ${item_price.start_date} and ${item_price.end_date} ;;
+  #   }
+  #   join: v_chat_sales {
+  #     view_label: "Zendesk"
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${v_chat_sales.order_id} = ${sales_order.order_id} and ${v_chat_sales.system} = ${sales_order.system};;
+  #   }
+  #   join: zendesk_chats {
+  #     view_label: "Zendesk"
+  #     type: left_outer
+  #     relationship: many_to_many
+  #     sql_on: ${v_chat_sales.chat_id} = ${zendesk_chats.chat_id};;
+  #   }
+  #   join: item_return_rate {
+  #     type: left_outer
+  #     relationship: many_to_one
+  #     sql_on: ${item.sku_id} = ${item_return_rate.sku_id} and ${item_return_rate.channel} = ${sales_order_line.channel_ret} and ${item_return_rate.order_id} = ${sales_order.order_id};;
+  #   }
+  #   join: shipping {
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${sales_order_line.item_id} = ${shipping.item_id} and ${sales_order_line.order_id} = ${shipping.order_id}  ;;
+  #   }
+  #   join: acquisition_recent_customer_test_segments {
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${acquisition_recent_customer_test_segments.customer_email} = ${customer_table.email_join} ;;
+  #     view_label: "Customer"
+  #   }
+  #   join: acquisition_test_purchasers {
+  #     type: left_outer
+  #     relationship: one_to_one
+  #     sql_on: ${sales_order.order_system} = ${acquisition_test_purchasers.order_system} ;;
+  #     view_label: "Customer"
+  #   }
+  #   join: us_zipcode_mapping {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${sales_order_line.zip} = ${us_zipcode_mapping.zip} ;;
+  #     relationship: many_to_many
+  #   }
+  #   join: us_zipcode {
+  #     view_label: "Geography"
+  #     type:  left_outer
+  #     sql_on: ${us_zipcode_mapping.parent_zcta} = ${us_zipcode.zip} ;;
+  #     relationship: many_to_many
+  #   }
+  #   join: aura_vision_traffic {
+  #     view_label: "Owned Retail"
+  #     type:  left_outer
+  #     sql_on: ${sales_order.store_id} = ${aura_vision_traffic.showroom_name} and ${sales_order.created_date} = ${aura_vision_traffic.created_date};;
+  #     relationship: many_to_many
+  #   }
+  #   join: privacy_request {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: ${sales_order.email} = ${privacy_request.email_join};;
+  #     relationship: many_to_one
+  #   }
+  #   join: v_financed_retail {
+  #     view_label: "Owned Retail"
+  #     type: left_outer
+  #     sql_on: ${sales_order.order_id} = ${v_financed_retail.order_id};;
+  #     relationship: one_to_one
+  #   }
+  #   join: paycom_labor_hours {
+  #     type: left_outer
+  #     sql_on:${agent_name.email_join} = ${paycom_labor_hours.email_join} and ${sales_order.created_date} = ${paycom_labor_hours.clocked_in_or_date};;
+  #     relationship: many_to_many
+  #     fields: [paycom_labor_hours.clocked_in_or_date,paycom_labor_hours.clocked_in_or_month,paycom_labor_hours.clocked_in_or_week,paycom_labor_hours.department_filter,paycom_labor_hours.hours_or,paycom_labor_hours.department_filter,paycom_labor_hours.location_code_or]
+  #   }
+  #   join: site_slas {
+  #     ##join added by Scott Clark on 11/5/2020 to get website-stated SLA reflected somewhere
+  #     type: left_outer
+  #     sql_on: ${sales_order.trandate_date} >= ${site_slas.start_date} and ${sales_order.trandate_date} < coalesce(${site_slas.end_date},'2050-01-01') and ${site_slas.sku_id} = ${item.sku_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: cordial_id {
+  #     view_label: "Customer"
+  #     type: left_outer
+  #     sql_on: lower(${sales_order.email}) = lower(${cordial_id.email_join});;
+  #     relationship: many_to_one
+  #     fields: [cordial_id.subscribe_status]
+  #   }
 
-    join: fips {
-      type: left_outer
-      sql_on: right(concat ('00000',${fips.fips}),5)=right(concat ('00000',${dma.FIPS}),5);;
-      relationship: many_to_one
-    }
+  #   join: fips {
+  #     type: left_outer
+  #     sql_on: right(concat ('00000',${fips.fips}),5)=right(concat ('00000',${dma.FIPS}),5);;
+  #     relationship: many_to_one
+  #   }
 
-    join: retail_order_flag {
-      view_label: "Owned Retail"
-      type: left_outer
-      sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
-      relationship:  one_to_one
-    }
-    join: talkable_referral {
-      type: full_outer
-      sql_on: ${talkable_referral.order_number} = ${sales_order.related_tranid} ;;
-      relationship: one_to_one
-    }
+  #   join: retail_order_flag {
+  #     view_label: "Owned Retail"
+  #     type: left_outer
+  #     sql_on: ${sales_order.etail_order_id} = ${retail_order_flag.order_id} ;;
+  #     relationship:  one_to_one
+  #   }
+  #   join: talkable_referral {
+  #     type: full_outer
+  #     sql_on: ${talkable_referral.order_number} = ${sales_order.related_tranid} ;;
+  #     relationship: one_to_one
+  #   }
 
-    join: v_purple_showroom {
-      view_label: "Owned Retail"
-      type:  left_outer
-      sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
-      relationship: one_to_one
-    }
-    join: v_sla_days {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
-      relationship: many_to_one
-      }
-    join: sla {
-      view_label: "Fulfillment"
-      type: left_outer
-      sql_on: ${sales_order_line.created_date} = ${sla.order_date} and ${item.sku_id} = ${sla.sku_id} and ${sales_order.channel_id} in (1,5) ;;
-      relationship: many_to_one
-    }
-    join: system_notes {
-      view_label: "System Notes"
-      type: left_outer
-      sql_on: ${sales_order_line.order_id} = ${system_notes.transaction_id};;
-      relationship: many_to_one
-    }
+  #   join: v_purple_showroom {
+  #     view_label: "Owned Retail"
+  #     type:  left_outer
+  #     sql_on: ${sales_order.store_id} = ${v_purple_showroom.purple_showroom_name};;
+  #     relationship: one_to_one
+  #   }
+  #   join: v_sla_days {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.created_date} = ${v_sla_days.sla_date} and ${sales_order_line.item_id} = ${v_sla_days.item_id} ;;
+  #     relationship: many_to_one
+  #     }
+  #   join: sla {
+  #     view_label: "Fulfillment"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.created_date} = ${sla.order_date} and ${item.sku_id} = ${sla.sku_id} and ${sales_order.channel_id} in (1,5) ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: system_notes {
+  #     view_label: "System Notes"
+  #     type: left_outer
+  #     sql_on: ${sales_order_line.order_id} = ${system_notes.transaction_id};;
+  #     relationship: many_to_one
+  #   }
 
-  }
+  # }
 
   # explore: sales_agent_metrics {
   #   hidden: no
@@ -1023,37 +1023,37 @@ include: "/dashboards/**/*.dashboard"
   #   }
   # }
 
-  explore: day_sku {
-    from: day_sku_aggregations
-    hidden: yes
+  # explore: day_sku {
+  #   from: day_sku_aggregations
+  #   hidden: yes
 
-   join: item {
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
-      relationship: many_to_one
-    }
-    join: v_ai_product{
-      view_label: "Product"
-      type: left_outer
-      sql_on: ${day_sku.sku_id} = ${v_ai_product.sku_raw} ;;
-      relationship: many_to_one
-    }
-    join: day_sku_no_channel {
-      view_label: "test"
-      type: left_outer
-      fields: [day_sku_no_channel.purchased_units_recieved,day_sku_no_channel.produced_units,day_sku_no_channel.forecast_units,day_sku_no_channel.units_available]
-      sql_on: ${day_sku.date_date} = ${day_sku_no_channel.date_date} and ${day_sku.sku_id} = ${day_sku_no_channel.sku_id} and ${day_sku.channel}<>'NA' ;;
-      relationship: many_to_one
-    }
-    join: sku_summary {
-      view_label: "test"
-      type: left_outer
-      fields: [sku_summary.exception_class,sku_summary.trend_type]
-      sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
-      relationship: many_to_one
-    }
-  }
+  # join: item {
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${item.sku_id} = ${day_sku.sku_id} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: v_ai_product{
+  #     view_label: "Product"
+  #     type: left_outer
+  #     sql_on: ${day_sku.sku_id} = ${v_ai_product.sku_raw} ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: day_sku_no_channel {
+  #     view_label: "test"
+  #     type: left_outer
+  #     fields: [day_sku_no_channel.purchased_units_recieved,day_sku_no_channel.produced_units,day_sku_no_channel.forecast_units,day_sku_no_channel.units_available]
+  #     sql_on: ${day_sku.date_date} = ${day_sku_no_channel.date_date} and ${day_sku.sku_id} = ${day_sku_no_channel.sku_id} and ${day_sku.channel}<>'NA' ;;
+  #     relationship: many_to_one
+  #   }
+  #   join: sku_summary {
+  #     view_label: "test"
+  #     type: left_outer
+  #     fields: [sku_summary.exception_class,sku_summary.trend_type]
+  #     sql_on: ${sku_summary.sku_id} = ${day_sku.sku_id} ;;
+  #     relationship: many_to_one
+  #   }
+  # }
 
   # explore: hour_assumptions {
   #   label: "Hour Assumptions"
