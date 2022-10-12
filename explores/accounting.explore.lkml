@@ -82,13 +82,14 @@ include: "/dashboards/**/*.dashboard"
   # explore: v_firstdata {label: "FirstData" group_label: "Accounting" hidden:yes}
   # explore: v_fit_first_data {hidden: yes group_label: "Accounting"}
   # explore: v_fit_amazon {hidden: yes group_label: "Accounting"}
-  explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
+  # explore: v_fit_axomo { hidden: yes group_label: "Accounting"}
   # explore: v_fit_shopify_payment {hidden: yes group_label: "Accounting"}
   # explore: v_fit_stripe {hidden: yes group_label: "Accounting"}
   # explore: v_splitit {hidden: yes group_label: "Accounting"}
   explore: splitit {hidden: yes group_label: "Accounting" description:"The date filter will change the date range in the SQL query."}
   # explore: fit_first_data {hidden: yes group_label: "Accounting"}
-  explore: katapult {hidden: yes group_label: "Accounting"}
+  # explore: katapult {hidden: yes group_label: "Accounting"}
+
   explore: v_fit_affirm {hidden: yes group_label: "Accounting"
     join: v_fit_affirm_details {
       view_label: "Affirm Details"
