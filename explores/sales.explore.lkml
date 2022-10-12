@@ -1,10 +1,12 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Sales Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
 
   # explore: sales {
