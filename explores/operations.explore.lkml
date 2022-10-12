@@ -1,10 +1,12 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Operations Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
   # explore: purcahse_and_transfer_ids {
   #   label: "Transfer and Purchase Orders"
@@ -321,7 +323,7 @@ include: "/dashboards/**/*.dashboard"
 #     relationship: many_to_one }
 #   }
 
-explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
+# explore: labor_hours {hidden: no group_label: "Operations" label: "Workday Labor Hours"}
 # explore: etq_scar {hidden: yes label: "ETQ - Scar"}
 
 # explore: etq_ncr {
