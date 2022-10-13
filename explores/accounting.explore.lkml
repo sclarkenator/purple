@@ -1,10 +1,12 @@
+# DEPRECATED
+
 #-------------------------------------------------------------------
 #
 # Accounting Explores
 #
 #-------------------------------------------------------------------
-include: "/views/**/*.view"
-include: "/dashboards/**/*.dashboard"
+# include: "/views/**/*.view"
+# include: "/dashboards/**/*.dashboard"
 
   # It appears this explore doesn't have the underlying views. Disabling it on 6/14/22
   # explore: finance_bill{
@@ -68,7 +70,7 @@ include: "/dashboards/**/*.dashboard"
   #     relationship: many_to_one}
   # }
 
-  explore: affirm_daily_lto_funnel {hidden:yes group_label: "Accounting"}
+  # explore: affirm_daily_lto_funnel {hidden:yes group_label: "Accounting"}
   # explore: v_affirm_order_num {label: "Affirm Order Numbers" group_label: "Accounting" hidden:yes}
   # explore: v_amazon_order_num {label: "Amazon Order Numbers" group_label: "Accounting" hidden:yes}
   # explore: v_affirm_to_netsuite {label: "Affirm to Netsuite" group_label: "Accounting" hidden:yes}
